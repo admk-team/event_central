@@ -24,6 +24,7 @@ import {
 //redux
 import { useSelector, useDispatch } from "react-redux";
 import { createSelector } from 'reselect';
+import { LAYOUT_TYPES } from '../Components/constants/layout';
 
 const Layout = ({children} : any) => {
     const [headerClass, setHeaderClass] = useState<any>("");
@@ -33,7 +34,7 @@ const Layout = ({children} : any) => {
     const selectLayoutProperties = createSelector(
         selectLayoutState,
         (layout:any) => ({
-            layoutType: layout.layoutType,
+            layoutType: LAYOUT_TYPES.VERTICAL,
             leftSidebarType: layout.leftSidebarType,
             layoutModeType: layout.layoutModeType,
             layoutWidthType: layout.layoutWidthType,

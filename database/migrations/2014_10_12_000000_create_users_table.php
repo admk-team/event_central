@@ -23,7 +23,7 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
-        // User::create(["name" => "Admin", "email" => "admin@themesbrand.com", "password" => Hash::make(12345678), "email_verified_at" => now()]);
+        User::create(["name" => "Admin", "email" => "admin@themesbrand.com", "role" => "admin", "password" => Hash::make(12345678), "email_verified_at" => now()]);
     }
 
     /**
