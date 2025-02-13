@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use Inertia\Inertia;
 use Illuminate\Http\Request;
+use Spatie\Permission\Models\Role;
+use App\Http\Controllers\Controller;
 
 class RoleController extends Controller
 {
@@ -12,7 +14,8 @@ class RoleController extends Controller
      */
     public function index()
     {
-        //
+        $roles = Role::latest()->paginate($request->per_page ?? 10);
+        return Inertia::render("Admin/Roles/Index", compact('roles'));
     }
 
     /**
@@ -20,7 +23,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render("Admin/Roles/CreateOrEdit");
     }
 
     /**
