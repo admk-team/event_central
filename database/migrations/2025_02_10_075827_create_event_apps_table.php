@@ -28,6 +28,9 @@ return new class extends Migration
             $table->enum('schedual_type', ['singleday', 'multiday', 'recurring']);
             $table->timestamps();
         });
+        Schema::table('color_schemes', function (Blueprint $table) {
+            $table->foreign('event_id')->references('id')->on('event_apps');
+        });
     }
 
     /**
