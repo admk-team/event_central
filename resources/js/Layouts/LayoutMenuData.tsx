@@ -54,6 +54,7 @@ const Navdata = () => {
     // Multi Level
     const [isLevel1, setIsLevel1] = useState<boolean>(false);
     const [isLevel2, setIsLevel2] = useState<boolean>(false);
+    const [isUserManagement, setisUserManagement] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
 
@@ -113,6 +114,9 @@ const Navdata = () => {
         if (iscurrentState !== 'Landing') {
             setIsLanding(false);
         }
+        if (iscurrentState !== 'UserManagement') {
+            setisUserManagement(false);
+        }
     }, [
         history,
         iscurrentState,
@@ -158,6 +162,73 @@ const Navdata = () => {
                     id: "crm",
                     label: "CRM",
                     link: "/dashboard-crm",
+                    parentId: "dashboard",
+                },
+                {
+                    id: "ecommerce",
+                    label: "Ecommerce",
+                    link: "/dashboard",
+                    parentId: "dashboard",
+                },
+                {
+                    id: "crypto",
+                    label: "Crypto",
+                    link: "/dashboard-crypto",
+                    parentId: "dashboard",
+                },
+                {
+                    id: "projects",
+                    label: "Projects",
+                    link: "/dashboard-projects",
+                    parentId: "dashboard",
+                },
+                {
+                    id: "nft",
+                    label: "NFT",
+                    link: "/dashboard-nft",
+                    parentId: "dashboard",
+                },
+                {
+                    id: "job",
+                    label: "Job",
+                    link: "/dashboard-job",
+                    parentId: "dashboard",
+                    // badgeColor: "success",
+                    // badgeName: "New",
+                },
+                {
+                    id: "blog",
+                    label: "Blog",
+                    link: "/dashboard-blog",
+                    parentId: "dashboard",
+                    badgeColor: "success",
+                    badgeName: "New",
+                },
+            ],
+        },
+        {
+            id: "UserManagement",
+            label: "UserManagement",
+            icon: "bx bxs-user",
+            link: "/#",
+            stateVariables: isUserManagement,
+            click: function (e: any) {
+                e.preventDefault();
+                setisUserManagement(!isUserManagement);
+                setIscurrentState('UserManagement');
+                updateIconSidebar(e);
+            },
+            subItems: [
+                {
+                    id: "Users",
+                    label: "Admin Users",
+                    link: "/admin/users",
+                    parentId: "dashboard",
+                },
+                {
+                    id: "RoleManagement",
+                    label: "RoleManagement",
+                    link: "/admin/roles",
                     parentId: "dashboard",
                 },
                 {

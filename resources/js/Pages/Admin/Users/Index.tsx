@@ -31,7 +31,7 @@ function Index({ users }: any) {
     }
 
     const handleDelete = () => {
-        deleteForm.post(route('admin.users.destroy', deleteUser.id));
+        deleteForm.delete(route('admin.users.destroy', deleteUser.id));
         setShowDeleteConfirmation(false);
     }
 
