@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use Inertia\Inertia;
-use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RoleRequest;
+use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
 {
@@ -23,15 +24,20 @@ class RoleController extends Controller
      */
     public function create()
     {
-        return Inertia::render("Admin/Roles/CreateOrEdit");
+        $permissions = Permission::get();
+        return Inertia::render("Admin/Roles/CreateOrEdit", compact('permissions'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(RoleRequest $request)
     {
-        //
+        $input = $request->validated();
+        $role =  Role::create(['name' => $input['name']]);
+        $role->givePermissionTo($input['permissions']);
+
+        return to_route('admin.roles.index');
     }
 
     /**
@@ -45,24 +51,30 @@ class RoleController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Role $role)
     {
-        //
+        $roleSpecific = $role->permissions()->get();
+        $permissions = Permission::get();
+        return Inertia::render("Admin/Roles/CreateOrEdit", compact('role', 'permissions', 'roleSpecific'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(RoleRequest $request, Role $role)
     {
-        //
+        $input = $request->validated();
+        $role->syncPermissions($input['permissions']);
+        return to_route('admin.roles.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Role $role)
     {
-        //
+        $role->delete();
+
+        return back();
     }
 }

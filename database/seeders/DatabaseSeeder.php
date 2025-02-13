@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
         $role->givePermissionTo($permission2);
 
         $role1->givePermissionTo($permission1);
-        $role1->givePermissionTo($permission2);
+        // $role1->givePermissionTo($permission2);
 
         $sadmin->assignRole([$role->id]);
     }

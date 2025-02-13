@@ -30,7 +30,7 @@ function Index({ roles }: any) {
     }
 
     const handleDelete = () => {
-        deleteForm.delete(route('admin.roles.destroy', deleteRole.id));
+        deleteForm.post(route('admin.roles.destroy', deleteRole.id));
         setShowDeleteConfirmation(false);
     }
 
@@ -65,7 +65,7 @@ function Index({ roles }: any) {
                                                         <td>{role.name}</td>
                                                         <td>
                                                             <div className="hstack gap-3 fs-15">
-                                                                <span className="link-primary cursor-pointer" onClick={() => editAction(role)}><i className="ri-edit-fill"></i></span>
+                                                                <Link href={route('admin.roles.edit', role.id)}><span className="link-primary cursor-pointer"><i className="ri-edit-fill"></i></span></Link>
                                                                 <span className="link-danger cursor-pointer" onClick={() => deleteAction(role)}>
                                                                     <i className="ri-delete-bin-5-line"></i>
                                                                 </span>
