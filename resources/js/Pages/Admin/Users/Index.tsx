@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Col, Container, Row, Table } from 'react-bootstrap';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
 import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import Layout from '../../../Layouts';
 import Pagination from '../../../Components/Common/Pagination';
@@ -8,10 +8,31 @@ import Pagination2 from '../../../Components/Common/Pagination2';
 import Create from './Components/CreateEditModal';
 import CreateModal from './Components/CreateEditModal';
 import CreateEditModal from './Components/CreateEditModal';
+import DeleteModal from '../../../Components/Common/DeleteModal';
 
 function Index({ users }: any) {
     const [showCreateEditModal, setShowCreateEditModal] = React.useState(false);
     const [editUser, setEditUser] = React.useState<any>(null);
+    const [deleteUser, setDeleteUser] = React.useState<any>(null);
+    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+
+    const deleteForm = useForm();
+
+    const editAction = (user: any) => {
+        setEditUser(user);
+        setShowCreateEditModal(true);
+    }
+
+    const deleteAction = (user: any) => {
+        setDeleteUser(user);
+        setShowDeleteConfirmation(true);
+    }
+
+    const handleDelete = () => {
+        deleteForm.delete(route('admin.users.destroy', deleteUser.id));
+        setShowDeleteConfirmation(false);
+    }
+
     return (
         <React.Fragment>
             <Head title='Starter | Velzon - React Admin & Dashboard Template' />
@@ -48,11 +69,10 @@ function Index({ users }: any) {
                                                         <td><span className="badge bg-success-subtle text-success">{user.role}</span></td>
                                                         <td>
                                                             <div className="hstack gap-3 fs-15">
-                                                                <span className="link-primary" onClick={() => {
-                                                                    setEditUser(user);
-                                                                    setShowCreateEditModal(true);
-                                                                }}><i className="ri-edit-fill"></i></span>
-                                                                <Link href="#" className="link-danger"><i className="ri-delete-bin-5-line"></i></Link>
+                                                                <span className="link-primary cursor-pointer" onClick={() => editAction(user)}><i className="ri-edit-fill"></i></span>
+                                                                <span className="link-danger cursor-pointer" onClick={() => deleteAction(user)}>
+                                                                    <i className="ri-delete-bin-5-line"></i>
+                                                                </span>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -65,7 +85,7 @@ function Index({ users }: any) {
                                     {users.links.length > 3 && (
                                         <Pagination2
                                             links={users.links}
-                                            
+
                                         />
                                     )}
                                 </div>
@@ -74,11 +94,20 @@ function Index({ users }: any) {
                     </Row>
                 </Container>
             </div>
-            <CreateEditModal 
-                show={showCreateEditModal} 
-                hide={() => setShowCreateEditModal(false)} 
-                onHide={() => setShowCreateEditModal(false)} 
-                user={editUser}
+
+            {showCreateEditModal && (
+                <CreateEditModal
+                    show={showCreateEditModal}
+                    hide={() => setShowCreateEditModal(false)}
+                    onHide={() => setShowCreateEditModal(false)}
+                    user={editUser}
+                />
+            )}
+
+            <DeleteModal
+                show={showDeleteConfirmation}
+                onDeleteClick={handleDelete}
+                onCloseClick={() => { setShowDeleteConfirmation(false) }} 
             />
         </React.Fragment>
     )
