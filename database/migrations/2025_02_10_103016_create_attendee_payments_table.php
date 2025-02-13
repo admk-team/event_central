@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('event_pass_id');
             $table->foreign('event_pass_id')->references('id')->on('event_app_passes');
             $table->unsignedBigInteger('attendee_id');
-            $table->foreign('attendee_id')->references('id')->on('attendees');
+            $table->foreign('attendee_id')->references('id')->on('attendees')->cascadeOnDelete();
             $table->enum('payment_method', ['stripe', 'paypal']);
             $table->timestamps();
         });

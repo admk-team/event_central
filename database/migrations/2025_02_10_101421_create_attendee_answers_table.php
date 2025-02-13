@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('regis_form_id');
             $table->foreign('regis_form_id')->references('id')->on('registration_forms');
             $table->unsignedBigInteger('attendee_id');
-            $table->foreign('attendee_id')->references('id')->on('attendees');
+            $table->foreign('attendee_id')->references('id')->on('attendees')->cascadeOnDelete();
             $table->json('answers');
             $table->timestamps();
         });

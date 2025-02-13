@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('session_check_ins', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('attendee_id');
-            $table->foreign('attendee_id')->references('id')->on('attendees');
+            $table->foreign('attendee_id')->references('id')->on('attendees')->cascadeOnDelete();
             $table->unsignedBigInteger('session_id');
             $table->foreign('session_id')->references('id')->on('event_sessions');
             $table->dateTime('checked_in');

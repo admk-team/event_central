@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('color_schemes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete();
             $table->string('title');
             $table->string('bg_color');
             $table->string('header_bg_color');

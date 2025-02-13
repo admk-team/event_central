@@ -16,7 +16,9 @@ function Index({ users }: any) {
     const [deleteUser, setDeleteUser] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
-    const deleteForm = useForm();
+    const deleteForm = useForm({
+        _method: 'DELETE'
+    });
 
     const editAction = (user: any) => {
         setEditUser(user);
@@ -29,7 +31,7 @@ function Index({ users }: any) {
     }
 
     const handleDelete = () => {
-        deleteForm.delete(route('admin.users.destroy', deleteUser.id));
+        deleteForm.post(route('admin.users.destroy', deleteUser.id));
         setShowDeleteConfirmation(false);
     }
 
@@ -107,7 +109,7 @@ function Index({ users }: any) {
             <DeleteModal
                 show={showDeleteConfirmation}
                 onDeleteClick={handleDelete}
-                onCloseClick={() => { setShowDeleteConfirmation(false) }} 
+                onCloseClick={() => { setShowDeleteConfirmation(false) }}
             />
         </React.Fragment>
     )

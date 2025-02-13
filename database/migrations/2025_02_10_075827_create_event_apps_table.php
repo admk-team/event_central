@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('event_apps', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('organizer_id');
-            $table->foreign('organizer_id')->references('id')->on('users');
+            $table->foreign('organizer_id')->references('id')->on('users')->cascadeOnDelete();
             $table->unsignedBigInteger('regis_page_id');
             $table->foreign('regis_page_id')->references('id')->on('registration_pages');
             // $table->string('information');
