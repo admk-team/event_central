@@ -11,10 +11,17 @@ import CreateEditModal from './Components/CreateEditModal';
 import DeleteModal from '../../../Components/Common/DeleteModal';
 
 function Index({ users }: any) {
-    const [showCreateEditModal, setShowCreateEditModal] = React.useState(false);
+    const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
     const [editUser, setEditUser] = React.useState<any>(null);
     const [deleteUser, setDeleteUser] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+
+    const setShowCreateEditModal = (state: boolean) => {
+        _setShowCreateEditModal(state);
+        if (state === false) {
+            setEditUser(null);
+        }
+    }
 
     const deleteForm = useForm({
         _method: 'DELETE'
