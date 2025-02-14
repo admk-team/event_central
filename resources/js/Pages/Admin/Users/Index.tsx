@@ -43,6 +43,7 @@ function Index({ users }: any) {
         {
             header: () => 'ID',
             cell: (user) => user.id,
+            cellClass: "fw-medium"
         },
         {
             header: () => 'Name',
@@ -81,7 +82,6 @@ function Index({ users }: any) {
                                 data={users}
                                 columns={columns}
                                 title="Users"
-                                description="A list of admin users"
                                 actions={[
                                     {
                                         render: <Button onClick={() => setShowCreateEditModal(true)}>Add New</Button>
