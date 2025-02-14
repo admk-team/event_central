@@ -10,7 +10,7 @@ use Inertia\Inertia;
 class OrderController extends Controller
 {
     public function index() {
-        return Inertia::render('Ecommerce/EcommerceOrders/index', [
+        return Inertia::render('Theme/Ecommerce/EcommerceOrders/index', [
             'orders' => Orders::all(),
             'delivered' => Orders::where('delivery_status', 'Delivered')->get(),
             'pickups' => Orders::where('delivery_status', 'Pickups')->get(),

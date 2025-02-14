@@ -2,7 +2,7 @@ import React from 'react';
 import { Container } from 'react-bootstrap';
 
 // import Components
-import BreadCrumb from '../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../Components/Common/BreadCrumb';
 
 import TileBoxs from './TileBoxs';
 import OtherWidgets from './OtherWidgets';
@@ -10,7 +10,7 @@ import UpcomingActivity from './UpcomingActivities';
 import ChartMapWidgets from './Chart&MapWidgets';
 import EcommerceWidgets from './EcommerceWidgets';
 import CreditCard from './CreditCard';
-import Layout from '../../../../Layouts';
+import Layout from '../../../Layouts/Theme';
 import { Head } from '@inertiajs/react';
 
 const Widgets = () => {

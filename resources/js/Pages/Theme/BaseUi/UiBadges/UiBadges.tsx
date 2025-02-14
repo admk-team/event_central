@@ -1,13 +1,13 @@
 import React from 'react';
 import { Badge, Button, Card, Col, Container, Row, } from 'react-bootstrap';
 
-import PreviewCardHeader from '../../../../../../Components/Common/PreviewCardHeader';
+import PreviewCardHeader from '../../../../Components/Common/PreviewCardHeader';
 
 // Import Content
-import UiContent from '../../../../../../Components/Common/UiContent';
+import UiContent from '../../../../Components/Common/UiContent';
 
 //import Components
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 
 import {
     DefaultBadgesExample,
@@ -24,7 +24,7 @@ import {
     GradientBadgesExample
 } from './UiBadgesCode';
 import { Head } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 
 const UiBadges = () => {

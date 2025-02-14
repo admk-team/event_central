@@ -1,11 +1,11 @@
 import React from 'react';
 import { Container, Col, Row } from 'react-bootstrap';
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 import Comments from './Comments';
 import Summary from './Summary';
 import TimeTracking from "./TimeTracking";
 import { Head } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 
 const TaskDetails = () => {

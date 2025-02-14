@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Col, Row, Dropdown, Form, Button } from 'react-bootstrap';
-import DeleteModal from "../../../../../../Components/Common/DeleteModal";
+import DeleteModal from "../../../../Components/Common/DeleteModal";
 import { ToastContainer } from 'react-toastify';
 
 //redux
@@ -11,7 +11,7 @@ import FeatherIcon from "feather-icons-react";
 
 import { createSelector } from 'reselect';
 import { Link } from '@inertiajs/react';
-import { onDeleteProjectList, onGetProjectList } from '../../../../../../slices/thunk';
+import { onDeleteProjectList, onGetProjectList } from '../../../../slices/thunk';
 
 const List = () => {
     const dispatch: any = useDispatch();

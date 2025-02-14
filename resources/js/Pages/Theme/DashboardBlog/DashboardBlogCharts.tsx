@@ -1,4 +1,4 @@
-import getChartColorsArray from "../../../../Components/Common/ChartsDynamicColor";
+import getChartColorsArray from "../../../Components/Common/ChartsDynamicColor";
 import React from 'react'
 import ReactApexChart from "react-apexcharts";
 

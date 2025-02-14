@@ -1,8 +1,8 @@
 import React from 'react'
 
-import small4 from "../../../../../../../../../../images/small/img-4.jpg"
-import small6 from "../../../../../../../../../../images/small/img-6.jpg"
-import small7 from "../../../../../../../../../../images/small/img-7.jpg"
+import small4 from "../../../../../../images/small/img-4.jpg"
+import small6 from "../../../../../../images/small/img-6.jpg"
+import small7 from "../../../../../../images/small/img-7.jpg"
 import { Card, CardBody, Col } from 'react-bootstrap'
 import { Link } from '@inertiajs/react'
 

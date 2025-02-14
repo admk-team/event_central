@@ -1,16 +1,16 @@
 import React from 'react';
-import UiContent from "../../../../../../Components/Common/UiContent";
+import UiContent from "../../../../Components/Common/UiContent";
 
 //import Components
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 import { Card, Col, Container, Form, InputGroup, Row } from 'react-bootstrap';
-import PreviewCardHeader from '../../../../../../Components/Common/PreviewCardHeader';
+import PreviewCardHeader from '../../../../Components/Common/PreviewCardHeader';
 import { FormGrid, Gutters, VerticalForm, HorizontalForm, HorizontalFormLabelSizing, ColumnSizing, AutoSizing, InlineForms, FloatingLabels } from './FormlayoutsCode';
 
 //Import Flatepicker
 import Flatpickr from "react-flatpickr";
 import { Head, Link } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 const Formlayouts = () => {
     

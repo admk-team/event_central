@@ -5,14 +5,14 @@ import SimpleBar from 'simplebar-react';
 
 // Import Images
 
-import product2 from "../../../../../../images/products/img-2.png";
-import product8 from "../../../../../../images/products/img-8.png";
-import product10 from "../../../../../../images/products/img-10.png";
+import product2 from "../../../../images/products/img-2.png";
+import product8 from "../../../../images/products/img-8.png";
+import product10 from "../../../../images/products/img-10.png";
 
-import avatar2 from "../../../../../../images/users/avatar-2.jpg";
-import avatar3 from "../../../../../../images/users/avatar-3.jpg";
+import avatar2 from "../../../../images/users/avatar-2.jpg";
+import avatar3 from "../../../../images/users/avatar-3.jpg";
 
-import { widgetsActivities, widgetsTasks } from "../../../../common/data/index";
+import { widgetsActivities, widgetsTasks } from "../../../common/data/index";
 import { OtherWidgetsCharts } from './WidgetsCharts';
 import { Link } from '@inertiajs/react';
 

@@ -1,7 +1,7 @@
 import { Head, Link } from "@inertiajs/react";
-import GuestLayout from "../../../../../../Layouts/GuestLayout";
+import GuestLayout from "../../../../Layouts/Theme/GuestLayout";
 import { Col, Container, Row, Card, } from 'react-bootstrap';
-import logoLight from '../../../../../../../../images/logo-light.png';
+import logoLight from '../../../../../images/logo-light.png';
 export default function BasicSuccessMsg() {
     return (
         <GuestLayout>

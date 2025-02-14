@@ -2,9 +2,9 @@ import React from "react";
 import { Carousel, Image } from "react-bootstrap";
 
 // Carousel images
-import img1 from "../../../../../../../../../../images/small/img-1.jpg";
-import img2 from "../../../../../../../../../../images/small/img-2.jpg";
-import img3 from "../../../../../../../../../../images/small/img-3.jpg";
+import img1 from "../../../../../../images/small/img-1.jpg";
+import img2 from "../../../../../../images/small/img-2.jpg";
+import img3 from "../../../../../../images/small/img-3.jpg";
 const Slide = () => {
   return (
     <React.Fragment>

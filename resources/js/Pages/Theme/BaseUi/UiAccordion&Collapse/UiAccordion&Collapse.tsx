@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import PreviewCardHeader from '../../../../../../Components/Common/PreviewCardHeader';
+import PreviewCardHeader from '../../../../Components/Common/PreviewCardHeader';
 import { Accordion, Button, Card, Col, Collapse, Container, Row } from 'react-bootstrap';
 
 
 // Import Content
-import UiContent from '../../../../../../Components/Common/UiContent';
+import UiContent from '../../../../Components/Common/UiContent';
 
 //import Components
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 import { DefaultAccordionExample, FlushAccordionExample, IconAccordionExample, WithIconAccordionExample, PlusIconAccordionExample, LeftIconAccordionExample, BorderedAccordionExample, NestingAccordionExample, FillColoredAccordionExample, CollapseExample, HorizontalCollapseExample, IconCollapseExample, InlineBLockCollapseExample, MultipleTargetCollapseExample } from './UiAccordion&CollapseCode';
 import { Head, Link } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 const UiAccordions = () => {
 

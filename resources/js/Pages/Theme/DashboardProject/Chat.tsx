@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card, Col, Dropdown } from 'react-bootstrap';
 
-import { dashboardChat } from '../../../../common/data';
+import { dashboardChat } from '../../../common/data';
 
 //Import Scrollbar
 import PerfectScrollbar from "react-perfect-scrollbar";

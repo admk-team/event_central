@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactApexChart from "react-apexcharts";
-import getChartColorsArray from "../../../../Components/Common/ChartsDynamicColor";
+import getChartColorsArray from "../../../Components/Common/ChartsDynamicColor";
 
 const ProjectsOverviewCharts = ({ dataColors,series }:any) => {
     var linechartcustomerColors = getChartColorsArray(dataColors);

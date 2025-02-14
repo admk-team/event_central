@@ -1,8 +1,8 @@
 import React from 'react';
 import ReactApexChart from "react-apexcharts";
-import user from "../../../../../../../../../../images/small/img-4.jpg";
+import user from "../../../../../../images/small/img-4.jpg";
 
-import getChartColorsArray from "../../../../../../../../Components/Common/ChartsDynamicColor";
+import getChartColorsArray from "../../../../../Components/Common/ChartsDynamicColor";
 
 const Basic = ({ dataColors } : any) => {
     var BasicColors = getChartColorsArray(dataColors);

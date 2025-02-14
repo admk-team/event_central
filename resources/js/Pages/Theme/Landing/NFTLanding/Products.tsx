@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Nav, } from 'react-bootstrap';
-import { productData } from '../../../../../../common/data';
+import { productData } from '../../../../common/data';
 import { Link } from '@inertiajs/react';
 
 const Products = () => {

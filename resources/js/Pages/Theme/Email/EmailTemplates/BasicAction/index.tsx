@@ -1,12 +1,12 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
-import BreadCrumb from "../../../../../../../../Components/Common/BreadCrumb";
+import BreadCrumb from "../../../../../Components/Common/BreadCrumb";
 import BasicAction from "./BasicAction";
 import SubscribeAction from "./SubscribeAction";
 import EmailVerifyAction from "./EmailVerifyAction";
 import PasswordChangeAction from "./PasswordChangeAction";
 import { Head } from '@inertiajs/react';
-import Layout from '../../../../../../../../Layouts';
+import Layout from '../../../../../Layouts/Theme';
 
 
 const index = () => {

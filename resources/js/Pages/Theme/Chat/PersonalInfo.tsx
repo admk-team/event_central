@@ -5,9 +5,9 @@ import {
   Offcanvas,
   OffcanvasBody,
 } from "react-bootstrap";
-import Img9 from "../../../../../../images/small/img-9.jpg";
-import dummyImage from "../../../../../../images/users/user-dummy-img.jpg";
-import { attachements } from "../../../../common/data/chat";
+import Img9 from "../../../../images/small/img-9.jpg";
+import dummyImage from "../../../../images/users/user-dummy-img.jpg";
+import { attachements } from "../../../common/data/chat";
 import { Link } from "@inertiajs/react";
 
 const Attachements = (props:any) => {

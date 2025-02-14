@@ -1,13 +1,13 @@
 import React from "react";
 import { Container, Row } from "react-bootstrap";
-import BreadCrumb from "../../../../../../Components/Common/BreadCrumb";
-import UsersByDevice from "../../../../DashboardAnalytics/UsersByDevice";
+import BreadCrumb from "../../../../Components/Common/BreadCrumb";
+import UsersByDevice from "../../DashboardAnalytics/UsersByDevice";
 import JobSummary from "./JobSummary";
 import NatworkSummary from "./NatworkSummary";
 import VisitorGraph from "./VisitorGraph";
 import Widgets from "./Widgets";
 import { Head } from "@inertiajs/react";
-import Layout from "../../../../../../Layouts";
+import Layout from "../../../../Layouts/Theme";
 
 const Statistics = () => {
 

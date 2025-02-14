@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 import { Link } from '@inertiajs/react';
-import { discoverItemsData } from '../../../../../../common/data';
+import { discoverItemsData } from '../../../../common/data';
 
 const favouriteBtn = (ele : any) => {
     if (ele.closest("button").classList.contains("active")) {

@@ -5,7 +5,7 @@ import JobDescription from "./JobDescription";
 import RelatedJobs from "./RelatedJobs";
 import RightSection from "./RightSection";
 import { Head } from "@inertiajs/react";
-import Layout from "../../../../../../../../Layouts";
+import Layout from "../../../../../Layouts/Theme";
 
 const JobOverview = () => {
 

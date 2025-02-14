@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Thumbs } from "swiper/modules";
@@ -11,20 +11,20 @@ import "swiper/css/free-mode";
 import "swiper/css/navigation";
 import "swiper/css/thumbs";
 //import Images
-import avatar5 from "../../../../../../../../images/users/avatar-5.jpg";
-import avatar4 from "../../../../../../../../images/users/avatar-4.jpg";
-import avatar3 from "../../../../../../../../images/users/avatar-3.jpg";
-import avatar7 from "../../../../../../../../images/users/avatar-7.jpg";
+import avatar5 from "../../../../../images/users/avatar-5.jpg";
+import avatar4 from "../../../../../images/users/avatar-4.jpg";
+import avatar3 from "../../../../../images/users/avatar-3.jpg";
+import avatar7 from "../../../../../images/users/avatar-7.jpg";
 
-import small2 from "../../../../../../../../images/small/img-2.jpg";
-import small3 from "../../../../../../../../images/small/img-3.jpg";
-import small4 from "../../../../../../../../images/small/img-4.jpg";
-import small6 from "../../../../../../../../images/small/img-6.jpg";
-import small7 from "../../../../../../../../images/small/img-7.jpg";
-import small10 from "../../../../../../../../images/small/img-10.jpg";
-import small9 from "../../../../../../../../images/small/img-9.jpg";
+import small2 from "../../../../../images/small/img-2.jpg";
+import small3 from "../../../../../images/small/img-3.jpg";
+import small4 from "../../../../../images/small/img-4.jpg";
+import small6 from "../../../../../images/small/img-6.jpg";
+import small7 from "../../../../../images/small/img-7.jpg";
+import small10 from "../../../../../images/small/img-10.jpg";
+import small9 from "../../../../../images/small/img-9.jpg";
 import { Head, Link } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 const Timeline = () => {
 

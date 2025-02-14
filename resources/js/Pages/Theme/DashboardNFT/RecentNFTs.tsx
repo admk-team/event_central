@@ -1,15 +1,15 @@
 import React from 'react';
 import { Card, Col, Row, Dropdown } from 'react-bootstrap';
-import { recentNFTsData } from "../../../../common/data/dashboardNFT";
-import { topCollectionData } from "../../../../common/data/dashboardNFT";
-import { popularCreatorsData } from "../../../../common/data/dashboardNFT";
+import { recentNFTsData } from "../../../common/data/dashboardNFT";
+import { topCollectionData } from "../../../common/data/dashboardNFT";
+import { popularCreatorsData } from "../../../common/data/dashboardNFT";
 
 // Import Images
-import usFlag from "../../../../../../images/flags/us.svg";
-import russiaFlag from "../../../../../../images/flags/russia.svg";
-import spainFlag from "../../../../../../images/flags/spain.svg";
-import italyFlag from "../../../../../../images/flags/italy.svg";
-import germanyFlag from "../../../../../../images/flags/germany.svg";
+import usFlag from "../../../../images/flags/us.svg";
+import russiaFlag from "../../../../images/flags/russia.svg";
+import spainFlag from "../../../../images/flags/spain.svg";
+import italyFlag from "../../../../images/flags/italy.svg";
+import germanyFlag from "../../../../images/flags/germany.svg";
 
 // Swiper
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -20,7 +20,7 @@ import { Pagination, Navigation, Autoplay } from "swiper/modules";
 
 // Vector Map
 import { VectorMap } from '@south-paw/react-vector-maps'
-import world from '../../../../common/world.svg.json';
+import world from '../../../common/world.svg.json';
 import { Link } from '@inertiajs/react';
 
 const RecentNFTs = () => {

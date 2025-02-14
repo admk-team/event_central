@@ -3,13 +3,13 @@ import { Alert, Button, Card, Col,ListGroup, ProgressBar, Row, Dropdown } from '
 
 import CountUp from "react-countup";
 import { VectorMap } from '@south-paw/react-vector-maps'
-import world from '../../../../common/world.svg.json';
-import at from '../../../../common/world.svg.json'
+import world from '../../../common/world.svg.json';
+import at from '../../../common/world.svg.json'
 import { MyPortfolioCharts } from './WidgetsCharts';
 import { SessionsByCountriesCharts } from './WidgetsCharts';
 import { AudiencesMetricsCharts } from './WidgetsCharts';
 import { TopReferralsPagesCharts } from './WidgetsCharts';
-import { widgetsAudiences, widgetsPortfolio, } from "../../../../common/data/index";
+import { widgetsAudiences, widgetsPortfolio, } from "../../../common/data/index";
 import { Link } from '@inertiajs/react';
 
 const ChartMapWidgets = () => {

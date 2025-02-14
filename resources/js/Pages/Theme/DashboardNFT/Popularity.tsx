@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Col } from 'react-bootstrap';
-import { popularityData } from "../../../../common/data/dashboardNFT";
+import { popularityData } from "../../../common/data/dashboardNFT";
 
 // Import Chart
 import { PopularityChart } from "./DashboardNFTCharts";

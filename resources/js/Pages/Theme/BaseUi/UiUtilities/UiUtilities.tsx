@@ -2,19 +2,19 @@ import React from 'react';
 import { Button, Card, Col, Container, Form, Row, } from 'react-bootstrap';
 
 // Import Content
-import UiContent from '../../../../../../Components/Common/UiContent';
+import UiContent from '../../../../Components/Common/UiContent';
 //import Components
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 
 // Import Images
-import avatar1 from "../../../../../../../../images/users/avatar-1.jpg";
-import avatar2 from "../../../../../../../../images/users/avatar-2.jpg";
+import avatar1 from "../../../../../images/users/avatar-1.jpg";
+import avatar2 from "../../../../../images/users/avatar-2.jpg";
 
-import img2 from "../../../../../../../../images/small/img-2.jpg";
+import img2 from "../../../../../images/small/img-2.jpg";
 import { StacksVerticalExample, StacksHorizontalExample, TextSelectionExample, PointerEventsExample, OverflowExample, PositionExample, ShadowsExample, WidthExample, HeightExample } from './UiUtilitiesCode';
 import { Head, Link } from '@inertiajs/react';
-import PreviewCardHeader from '../../../../../../Components/Common/PreviewCardHeader';
-import Layout from '../../../../../../Layouts';
+import PreviewCardHeader from '../../../../Components/Common/PreviewCardHeader';
+import Layout from '../../../../Layouts/Theme';
 
 
 const UiUtilities = () => {

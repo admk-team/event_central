@@ -11,11 +11,11 @@ import {
 
 import Flatpickr from "react-flatpickr";
 
-import BreadCrumb from "../../../../Components/Common/BreadCrumb";
+import BreadCrumb from "../../../Components/Common/BreadCrumb";
 import Select from "react-select";
 
-import logoDark from "../../../../../../images/logo-dark.png";
-import logoLight from "../../../../../../images/logo-light.png";
+import logoDark from "../../../../images/logo-dark.png";
+import logoLight from "../../../../images/logo-light.png";
 
 //formik
 import { useFormik } from "formik";
@@ -23,10 +23,10 @@ import * as Yup from "yup";
 
 //redux
 import { useDispatch } from "react-redux";
-import { onAddNewInvoice } from "../../../../slices/thunk";
+import { onAddNewInvoice } from "../../../slices/thunk";
 import { Head, Link } from "@inertiajs/react";
-import { invoiceTable } from "../../../../common/data";
-import Layout from "../../../../Layouts";
+import { invoiceTable } from "../../../common/data";
+import Layout from "../../../Layouts/Theme";
 
 const InvoiceCreate = () => {
   const dispatch :any= useDispatch();

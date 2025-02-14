@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, Col, Container, Row } from "react-bootstrap";
-import { categories } from "../../../../../../common/data/jobLanding";
+import { categories } from "../../../../common/data/jobLanding";
 import { Link } from "@inertiajs/react";
 
 const Categories = () => {

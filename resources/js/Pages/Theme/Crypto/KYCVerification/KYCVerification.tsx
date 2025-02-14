@@ -8,7 +8,7 @@ import {
   Row,
   Tab
 } from "react-bootstrap";
-import vertication from "../../../../../../../../images/verification-img.png";
+import vertication from "../../../../../images/verification-img.png";
 import Select from "react-select";
 import Flatpickr from "react-flatpickr";
 import Dropzone from "react-dropzone";

@@ -2,9 +2,9 @@ import React from "react";
 import { Carousel, Image } from "react-bootstrap";
 
 // Carousel images
-import img10 from "../../../../../../../../../../images/small/img-10.jpg";
-import img11 from "../../../../../../../../../../images/small/img-11.jpg";
-import img12 from "../../../../../../../../../../images/small/img-12.jpg";
+import img10 from "../../../../../../images/small/img-10.jpg";
+import img11 from "../../../../../../images/small/img-11.jpg";
+import img12 from "../../../../../../images/small/img-12.jpg";
 
 const IndividualInterval = () => {
   return (

@@ -3,7 +3,7 @@ import { Card, Col, Dropdown } from 'react-bootstrap';
 import { useSelector, useDispatch } from "react-redux";
 import { PrjectsStatusCharts } from './DashboardProjectCharts';
 import { createSelector } from 'reselect';
-import { ongetProjectStatusChartsData } from '../../../../slices/dashboardProject/thunk';
+import { ongetProjectStatusChartsData } from '../../../slices/dashboardProject/thunk';
 
 const ProjectsStatus = () => {
     const dispatch: any = useDispatch();

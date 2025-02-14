@@ -1,28 +1,28 @@
 import React, { useState } from "react";
 import { Card, Col, Container, Nav, Row, Dropdown, Tab } from "react-bootstrap";
-import BreadCrumb from "../../../../../../Components/Common/BreadCrumb";
+import BreadCrumb from "../../../../Components/Common/BreadCrumb";
 import Countdown from "react-countdown";
 
 // Import Images
-import Img1 from "../../../../../../../../images/nft/img-01.jpg";
-import Img2 from "../../../../../../../../images/nft/img-02.jpg";
-import Img3 from "../../../../../../../../images/nft/img-03.jpg";
-import Img5 from "../../../../../../../../images/nft/img-05.jpg";
-import Img6 from "../../../../../../../../images/nft/img-06.jpg";
+import Img1 from "../../../../../images/nft/img-01.jpg";
+import Img2 from "../../../../../images/nft/img-02.jpg";
+import Img3 from "../../../../../images/nft/img-03.jpg";
+import Img5 from "../../../../../images/nft/img-05.jpg";
+import Img6 from "../../../../../images/nft/img-06.jpg";
 
-import avatar1 from "../../../../../../../../images/users/avatar-1.jpg";
-import avatar3 from "../../../../../../../../images/users/avatar-3.jpg";
-import avatar5 from "../../../../../../../../images/users/avatar-5.jpg";
-import avatar8 from "../../../../../../../../images/users/avatar-8.jpg";
+import avatar1 from "../../../../../images/users/avatar-1.jpg";
+import avatar3 from "../../../../../images/users/avatar-3.jpg";
+import avatar5 from "../../../../../images/users/avatar-5.jpg";
+import avatar8 from "../../../../../images/users/avatar-8.jpg";
 
-import SImg10 from "../../../../../../../../images/small/img-10.jpg";
-import SImg11 from "../../../../../../../../images/small/img-11.jpg";
-import SImg12 from "../../../../../../../../images/small/img-12.jpg";
+import SImg10 from "../../../../../images/small/img-10.jpg";
+import SImg11 from "../../../../../images/small/img-11.jpg";
+import SImg12 from "../../../../../images/small/img-12.jpg";
 
 //SimpleBar
 import SimpleBar from "simplebar-react";
 import { Head, Link } from "@inertiajs/react";
-import Layout from "../../../../../../Layouts";
+import Layout from "../../../../Layouts/Theme";
 
 
 const ItemDetails = () => {

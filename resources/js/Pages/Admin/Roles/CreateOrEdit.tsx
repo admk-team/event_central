@@ -3,7 +3,7 @@ import { Button, Col, Container, Row, Table } from 'react-bootstrap';
 import { Head, useForm, Link } from '@inertiajs/react';
 import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import { Form, FormGroup, Modal, Spinner } from "react-bootstrap";
-import Layout from '../../../Layouts';
+import Layout from '../../../Layouts/Admin';
 
 function CreateOrEdit({ role, permissions, roleSpecific }: { role: any | null, permissions: any[], roleSpecific: any[] }) {
     const isEdit = role != null;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
 //import Images
-import logo_dark from "../../../../../../../../../../images/logo-dark.png";
+import logo_dark from "../../../../../../images/logo-dark.png";
 import { Link } from '@inertiajs/react';
 
 const EmailVerifyAction = () => {

@@ -1,8 +1,8 @@
 import React from "react";
 import { Button, Card, Col, Container, NavLink, Row } from "react-bootstrap";
-import img8 from "../../../../../../../../images/small/img-8.jpg";
-import img6 from "../../../../../../../../images/small/img-6.jpg";
-import img9 from "../../../../../../../../images/small/img-9.jpg";
+import img8 from "../../../../../images/small/img-8.jpg";
+import img6 from "../../../../../images/small/img-6.jpg";
+import img9 from "../../../../../images/small/img-9.jpg";
 const Blog = () => {
   return (
     <React.Fragment>

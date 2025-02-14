@@ -1,11 +1,11 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
-import BreadCrumb from "../../../../../../../../Components/Common/BreadCrumb";
+import BreadCrumb from "../../../../../Components/Common/BreadCrumb";
 import InvoiceAction from "./InvoiceAction";
 import FeedbackAction from "./FeedbackAction";
 import RatingTemplate from "./RatingTemplate";
 import { Head } from '@inertiajs/react';
-import Layout from '../../../../../../../../Layouts';
+import Layout from '../../../../../Layouts/Theme';
 
 const index = () => {
    

@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, Col, Table } from "react-bootstrap";
-import { featuredCompany } from "../../../../common/data/dashboardJobs";
+import { featuredCompany } from "../../../common/data/dashboardJobs";
 import { Link } from "@inertiajs/react";
 
 const FeaturedCompanies = () => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import CountUp from "react-countup";
 import { Card, Col } from 'react-bootstrap';
-import { cyptoWidgets } from '../../../../common/data';
+import { cyptoWidgets } from '../../../common/data';
 
 const Widgets = () => {
     return (

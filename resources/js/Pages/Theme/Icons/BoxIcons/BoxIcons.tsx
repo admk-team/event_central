@@ -1,8 +1,8 @@
 import React from "react";
 import { Row, Col, Card, Container} from "react-bootstrap";
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 import { Head } from "@inertiajs/react";
-import Layout from "../../../../../../Layouts";
+import Layout from "../../../../Layouts/Theme";
 const IconBoxicons = () => {
  
   return (

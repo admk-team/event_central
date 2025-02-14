@@ -1,17 +1,17 @@
-import BreadCrumb from '../../../../../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../../../Components/Common/BreadCrumb';
 import React from 'react'
 import { Container } from 'react-bootstrap';
 
-import overview from "../../../../../../../../../../images/blog/overview.jpg"
-import avatar2 from "../../../../../../../../../../images/users/avatar-2.jpg"
-import avatar6 from "../../../../../../../../../../images/users/avatar-6.jpg"
-import avatar8 from "../../../../../../../../../../images/users/avatar-8.jpg"
-import avatar10 from "../../../../../../../../../../images/users/avatar-10.jpg"
-import small4 from "../../../../../../../../../../images/small/img-4.jpg"
-import small5 from "../../../../../../../../../../images/small/img-5.jpg"
+import overview from "../../../../../../images/blog/overview.jpg"
+import avatar2 from "../../../../../../images/users/avatar-2.jpg"
+import avatar6 from "../../../../../../images/users/avatar-6.jpg"
+import avatar8 from "../../../../../../images/users/avatar-8.jpg"
+import avatar10 from "../../../../../../images/users/avatar-10.jpg"
+import small4 from "../../../../../../images/small/img-4.jpg"
+import small5 from "../../../../../../images/small/img-5.jpg"
 import SimpleBar from 'simplebar-react';
 import { Link } from '@inertiajs/react';
-import Layout from '../../../../../../../../Layouts';
+import Layout from '../../../../../Layouts/Theme';
 
 const PageBlogOverview = () => {
 

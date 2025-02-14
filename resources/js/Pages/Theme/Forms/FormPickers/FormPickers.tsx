@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Card, Container, Form, Row, Col, } from 'react-bootstrap';
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 import ColorPicker from "@vtaits/react-color-picker";
 import { SketchPicker } from "react-color";
 
 //Import Flatepicker
 import Flatpickr from "react-flatpickr";
 import { Head } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 import 'flatpickr/dist/themes/material_green.css';
 
 const FormPickers = () => {

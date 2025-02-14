@@ -2,14 +2,14 @@ import React from 'react';
 import { Button, Card, Col, Container, Row, Popover, Tooltip, Spinner, Pagination, Breadcrumb, BreadcrumbItem, OverlayTrigger } from 'react-bootstrap';
 
 // Import Content
-import UiContent from '../../../../../../Components/Common/UiContent';
+import UiContent from '../../../../Components/Common/UiContent';
 //import Components
-import BreadCrumbpage from '../../../../../../Components/Common/BreadCrumb';
-import PreviewCardHeader from '../../../../../../Components/Common/PreviewCardHeader';
+import BreadCrumbpage from '../../../../Components/Common/BreadCrumb';
+import PreviewCardHeader from '../../../../Components/Common/PreviewCardHeader';
 
 import { PopoversExample, TooltipsExample, BreadcrumbExample, PaginationExample, SpinnersExample } from './UiGeneralCode';
 import { Head } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 
 const UiGeneral = () => {

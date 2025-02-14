@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactApexChart from "react-apexcharts";
-import { seriesData } from "../../series";
-import logoSm from "../../../../../../../../../../images/logo-sm.png";
+import { seriesData } from "../series";
+import logoSm from "../../../../../../images/logo-sm.png";
 
-import getChartColorsArray from "../../../../../../../../Components/Common/ChartsDynamicColor";
+import getChartColorsArray from "../../../../../Components/Common/ChartsDynamicColor";
 
 const BasicLineCharts = ({ dataColors } :any) => {
     var linechartBasicColors = getChartColorsArray(dataColors);

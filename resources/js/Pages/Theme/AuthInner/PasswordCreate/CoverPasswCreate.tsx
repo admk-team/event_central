@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Card, Col, Container, Row, Form, } from 'react-bootstrap';
 
-import AuthSlider from '../../authCarousel';
+import AuthSlider from '../authCarousel';
 
 //formik
 import { useFormik } from 'formik';

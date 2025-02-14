@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {MarketplaceChart} from "./DashboardNFTCharts";
 import { createSelector } from 'reselect';
 import { Link } from '@inertiajs/react';
-import { ongetMarketChartsDatas } from '../../../../slices/thunk';
+import { ongetMarketChartsDatas } from '../../../slices/thunk';
 
 const Marketplace = () => {
     const dispatch : any= useDispatch();

@@ -7,7 +7,7 @@ import "swiper/css/pagination";
 
 // import required modules
 import { Autoplay, Mousewheel } from "swiper/modules";
-import { cryptoSlider } from '../../../../common/data';
+import { cryptoSlider } from '../../../common/data';
 import { WidgetsCharts } from './DashboardCryptoCharts';
 
 const Widgets1 = () => {

@@ -1,7 +1,7 @@
 import React, { useMemo} from "react";
 import { Col, Card, Row, Form } from "react-bootstrap";
-import TableContainer from "../../../../Components/Common/TableContainerReactTable";
-import { recomendedJob } from "../../../../common/data";
+import TableContainer from "../../../Components/Common/TableContainerReactTable";
+import { recomendedJob } from "../../../common/data";
 
 const RecomendedJobs = () => {
   const columns = useMemo(

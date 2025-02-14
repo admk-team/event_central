@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Flatpickr from "react-flatpickr";
 
 //Import Breadcrumb
-import BreadCrumb from "../../../../../../Components/Common/BreadCrumb";
+import BreadCrumb from "../../../../Components/Common/BreadCrumb";
 import {
   Container,
   Card,
@@ -23,8 +23,8 @@ import { useSelector, useDispatch } from "react-redux";
 import SellerChats from "./SellerChats";
 import { createSelector } from "reselect";
 import { Head, Link } from "@inertiajs/react";
-import Layout from "../../../../../../Layouts";
-import { onGetSellers } from "../../../../../../slices/thunk";
+import Layout from "../../../../Layouts/Theme";
+import { onGetSellers } from "../../../../slices/thunk";
 
 const EcommerceSellers = () => {
   const dispatch: any = useDispatch();

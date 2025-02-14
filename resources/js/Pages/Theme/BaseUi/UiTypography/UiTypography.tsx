@@ -1,14 +1,14 @@
 import React from 'react';
 import { Badge, Button, Card, Col, Container, Row, } from 'react-bootstrap';
 // Import Content
-import UiContent from '../../../../../../Components/Common/UiContent';
+import UiContent from '../../../../Components/Common/UiContent';
 //import Components
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 
 import { DisplayHeadingExample, HeadingsExample, BlockquotesExample, BlockquoteColorExample, BlockquoteBorderColorExample, InlineTextExample, UnstyleListExample, InlineListExample, DescriptionListExample, TextWrappingExample, FontSizeExample, WordBreakExample, FontWeightExample, LineHeightExample, TextTransformExample, TextDecrationExample, TextTruncationExample, VisibilityExample, ClearfixExample } from './UiTypographyCode';
 import { Head, Link } from '@inertiajs/react';
-import PreviewCardHeader from '../../../../../../Components/Common/PreviewCardHeader';
-import Layout from '../../../../../../Layouts';
+import PreviewCardHeader from '../../../../Components/Common/PreviewCardHeader';
+import Layout from '../../../../Layouts/Theme';
 
 
 const UiTypography = () => {

@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button, Card, Col, Container, Dropdown, Form, Modal, Offcanvas, Row } from 'react-bootstrap';
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
-import DeleteModal from "../../../../../../Components/Common/DeleteModal";
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
+import DeleteModal from "../../../../Components/Common/DeleteModal";
 import { ToastContainer } from 'react-toastify';
 
 //User Images
-import avatar2 from '../../../../../../../../images/users/avatar-2.jpg';
-import userdummyimg from '../../../../../../../../images/users/user-dummy-img.jpg';
+import avatar2 from '../../../../../images/users/avatar-2.jpg';
+import userdummyimg from '../../../../../images/users/user-dummy-img.jpg';
 
 //Small Images
-import smallImage9 from '../../../../../../../../images/small/img-9.jpg';
+import smallImage9 from '../../../../../images/small/img-9.jpg';
 //redux
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -18,8 +18,8 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import { createSelector } from 'reselect';
 import { Head, Link } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
-import { onAddTeamData, onDeleteTeamData, onGetTeamData, onUpdateTeamData } from '../../../../../../slices/team/thunk';
+import Layout from '../../../../Layouts/Theme';
+import { onAddTeamData, onDeleteTeamData, onGetTeamData, onUpdateTeamData } from '../../../../slices/team/thunk';
 
 const Team = () => {
 

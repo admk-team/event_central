@@ -2,21 +2,21 @@ import React from 'react';
 import { Card, Col, Container, Row, } from 'react-bootstrap';
 
 // Import Content
-import UiContent from '../../../../../../Components/Common/UiContent';
+import UiContent from '../../../../Components/Common/UiContent';
 //import Components
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
-import PreviewCardHeader from '../../../../../../Components/Common/PreviewCardHeader';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
+import PreviewCardHeader from '../../../../Components/Common/PreviewCardHeader';
 
 // Import Images
-import avatar2 from "../../../../../../../../images/users/avatar-2.jpg";
-import avatar3 from "../../../../../../../../images/users/avatar-3.jpg";
-import avatar4 from "../../../../../../../../images/users/avatar-4.jpg";
-import avatar6 from "../../../../../../../../images/users/avatar-6.jpg";
-import avatar8 from "../../../../../../../../images/users/avatar-8.jpg";
+import avatar2 from "../../../../../images/users/avatar-2.jpg";
+import avatar3 from "../../../../../images/users/avatar-3.jpg";
+import avatar4 from "../../../../../images/users/avatar-4.jpg";
+import avatar6 from "../../../../../images/users/avatar-6.jpg";
+import avatar8 from "../../../../../images/users/avatar-8.jpg";
 
 import { DefultExample, NestingExample, MediaExample } from './UiMediaobjectCode';
 import { Head } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 
 const UiMediaobject = () => {

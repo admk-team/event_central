@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
-import { connectData } from '../../../../../../common/data';
+import { connectData } from '../../../../common/data';
 import { Link } from '@inertiajs/react';
 
 const Connect = () => {

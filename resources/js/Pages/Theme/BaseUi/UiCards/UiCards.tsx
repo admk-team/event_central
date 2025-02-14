@@ -2,39 +2,39 @@ import React, { useState } from 'react';
 import { Button, Card, Col, Collapse, Container, Row } from 'react-bootstrap';
 
 // Import Content
-import UiContent from '../../../../../../Components/Common/UiContent';
+import UiContent from '../../../../Components/Common/UiContent';
 //import Components
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 
 import Masonry from 'react-masonry-css';
 import "./masonry.css";
 
 // Import Images
-import img1 from "../../../../../../../../images/small/img-1.jpg";
-import img2 from "../../../../../../../../images/small/img-2.jpg";
-import img3 from "../../../../../../../../images/small/img-3.jpg";
-import img4 from "../../../../../../../../images/small/img-4.jpg";
-import img5 from "../../../../../../../../images/small/img-5.jpg";
-import img6 from "../../../../../../../../images/small/img-6.jpg";
-import img7 from "../../../../../../../../images/small/img-7.jpg";
-import img8 from "../../../../../../../../images/small/img-8.jpg";
-import img9 from "../../../../../../../../images/small/img-9.jpg";
-import img10 from "../../../../../../../../images/small/img-10.jpg";
-import img11 from "../../../../../../../../images/small/img-11.jpg";
-import img12 from "../../../../../../../../images/small/img-12.jpg";
+import img1 from "../../../../../images/small/img-1.jpg";
+import img2 from "../../../../../images/small/img-2.jpg";
+import img3 from "../../../../../images/small/img-3.jpg";
+import img4 from "../../../../../images/small/img-4.jpg";
+import img5 from "../../../../../images/small/img-5.jpg";
+import img6 from "../../../../../images/small/img-6.jpg";
+import img7 from "../../../../../images/small/img-7.jpg";
+import img8 from "../../../../../images/small/img-8.jpg";
+import img9 from "../../../../../images/small/img-9.jpg";
+import img10 from "../../../../../images/small/img-10.jpg";
+import img11 from "../../../../../images/small/img-11.jpg";
+import img12 from "../../../../../images/small/img-12.jpg";
 
-import avatar1 from "../../../../../../../../images/users/avatar-1.jpg";
-import avatar2 from "../../../../../../../../images/users/avatar-2.jpg";
-import avatar3 from "../../../../../../../../images/users/avatar-3.jpg";
-import avatar4 from "../../../../../../../../images/users/avatar-4.jpg";
-import avatar5 from "../../../../../../../../images/users/avatar-5.jpg";
-import avatar6 from "../../../../../../../../images/users/avatar-6.jpg";
-import avatar7 from "../../../../../../../../images/users/avatar-7.jpg";
-import avatar8 from "../../../../../../../../images/users/avatar-8.jpg";
+import avatar1 from "../../../../../images/users/avatar-1.jpg";
+import avatar2 from "../../../../../images/users/avatar-2.jpg";
+import avatar3 from "../../../../../images/users/avatar-3.jpg";
+import avatar4 from "../../../../../images/users/avatar-4.jpg";
+import avatar5 from "../../../../../images/users/avatar-5.jpg";
+import avatar6 from "../../../../../images/users/avatar-6.jpg";
+import avatar7 from "../../../../../images/users/avatar-7.jpg";
+import avatar8 from "../../../../../images/users/avatar-8.jpg";
 
-import spinner1 from "../../../../../../../../images/logo-sm.png";
+import spinner1 from "../../../../../images/logo-sm.png";
 import { Head, Link } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 
 

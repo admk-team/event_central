@@ -3,8 +3,7 @@ import React, { useState } from 'react';
 import { Button, Col, Container, Row, Table } from 'react-bootstrap';
 import { Head, useForm, Link } from '@inertiajs/react';
 import BreadCrumb from '../../../Components/Common/BreadCrumb';
-import Layout from '../../../Layouts';
-import Pagination from '../../../Components/Common/Pagination';
+import Layout from '../../../Layouts/Admin';
 import DeleteModal from '../../../Components/Common/DeleteModal';
 import DataTable, { ColumnDef } from '../../../Components/DataTable';
 

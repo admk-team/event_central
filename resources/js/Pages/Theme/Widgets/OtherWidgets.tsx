@@ -4,11 +4,11 @@ import { Alert, Card, Col, Row } from 'react-bootstrap';
 //Import Icons
 import FeatherIcon from "feather-icons-react";
 
-import { otherWidgets2 } from "../../../../common/data/index";
+import { otherWidgets2 } from "../../../common/data/index";
 
 // Import Images
-import illustarator1 from "../../../../../../images/user-illustarator-1.png";
-import illustarator2 from "../../../../../../images/user-illustarator-2.png";
+import illustarator1 from "../../../../images/user-illustarator-1.png";
+import illustarator2 from "../../../../images/user-illustarator-2.png";
 import { Link } from '@inertiajs/react';
 
 const OtherWidgets = () => {

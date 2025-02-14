@@ -8,10 +8,10 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import SimpleBar from "simplebar-react";
 
 //import images
-import image2 from "../../../../../../images/users/avatar-2.jpg";
-import image4 from "../../../../../../images/users/avatar-4.jpg";
-import image3 from "../../../../../../images/users/avatar-3.jpg";
-import image5 from "../../../../../../images/users/avatar-5.jpg";
+import image2 from "../../../../images/users/avatar-2.jpg";
+import image4 from "../../../../images/users/avatar-4.jpg";
+import image3 from "../../../../images/users/avatar-3.jpg";
+import image5 from "../../../../images/users/avatar-5.jpg";
 import { Link } from "@inertiajs/react";
 
 const EmailSidebar = () => {

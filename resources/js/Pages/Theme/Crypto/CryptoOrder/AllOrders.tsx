@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { Card, Col } from 'react-bootstrap';
-import TableContainer from '../../../../../../Components/Common/TableContainer';
+import TableContainer from '../../../../Components/Common/TableContainer';
 import {
     Type,
     Quantity,

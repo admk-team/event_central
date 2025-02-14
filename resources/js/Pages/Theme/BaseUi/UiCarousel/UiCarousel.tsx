@@ -2,10 +2,10 @@ import React from 'react';
 import { Card, Col, Container, Row, } from 'react-bootstrap';
 
 // Import Content
-import UiContent from '../../../../../../Components/Common/UiContent';
+import UiContent from '../../../../Components/Common/UiContent';
 //import Components
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
-import PreviewCardHeader from '../../../../../../Components/Common/PreviewCardHeader';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
+import PreviewCardHeader from '../../../../Components/Common/PreviewCardHeader';
 import Slide from './CarouselTypes/slide';
 import Slidewithcontrol from './CarouselTypes/slidewithcontrol';
 import Slidewithindicator from './CarouselTypes/slidewithindicator';
@@ -16,7 +16,7 @@ import DisableTouch from './CarouselTypes/disableTouch';
 import SlideDark from './CarouselTypes/slideDark';
 import { SlideOnlyExample, WithControlExample, WithIndicatorExample, WithCaptionExample, CrossFadeExample, InduvidualIntervalExample, DisableTouchExample, DarkVariantExample } from './UiCarouselCode';
 import { Head } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 
 const UiCarousel = () => {

@@ -3,7 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import { Autoplay, Mousewheel } from "swiper/modules";
-import { watchlist } from "../../../../../../common/data";
+import { watchlist } from "../../../../common/data";
 import { Card, Col, Row, Dropdown } from 'react-bootstrap';
 import WatchListChart from './watchListChart';
 

@@ -8,30 +8,30 @@ import {
 } from "react-bootstrap";
 import moment from "moment";
 import CountUp from "react-countup";
-import BreadCrumb from "../../../../Components/Common/BreadCrumb";
-import TableContainer from "../../../../Components/Common/TableContainer";
-import DeleteModal from "../../../../Components/Common/DeleteModal";
+import BreadCrumb from "../../../Components/Common/BreadCrumb";
+import TableContainer from "../../../Components/Common/TableContainer";
+import DeleteModal from "../../../Components/Common/DeleteModal";
 
 //Import Icons
 import FeatherIcon from "feather-icons-react";
-import { invoiceWidgets } from "../../../../common/data/invoiceList";
+import { invoiceWidgets } from "../../../common/data/invoiceList";
 
 //Import actions
 import {
   onGetInvoices,
   onDeleteInvoice,
-} from "../../../../slices/thunk";
+} from "../../../slices/thunk";
 
 //redux
 import { useSelector, useDispatch } from "react-redux";
 
-import Loader from "../../../../Components/Common/Loader";
+import Loader from "../../../Components/Common/Loader";
 
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { createSelector } from "reselect";
 import { Head, Link } from "@inertiajs/react";
-import Layout from "../../../../Layouts";
+import Layout from "../../../Layouts/Theme";
 
 const InvoiceList = () => {
   const dispatch: any = useDispatch();

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Col } from 'react-bootstrap';
-import { recentOrders } from '../../../../common/data';
+import { recentOrders } from '../../../common/data';
 import { Link } from '@inertiajs/react';
 
 const RecentOrders = () => {

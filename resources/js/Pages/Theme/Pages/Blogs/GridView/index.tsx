@@ -1,9 +1,9 @@
-import { gridData } from '../../../../../../../../common/data';
-import BreadCrumb from '../../../../../../../../Components/Common/BreadCrumb'
-import Pagination from '../../../../../../../../Components/Common/Pagination';
+import { gridData } from '../../../../../common/data';
+import BreadCrumb from '../../../../../Components/Common/BreadCrumb'
+import Pagination from '../../../../../Components/Common/Pagination';
 import React, { useMemo, useState } from 'react'
 import { Col, Container, Row } from 'react-bootstrap'
-import Layout from '../../../../../../../../Layouts';
+import Layout from '../../../../../Layouts/Theme';
 import { Link } from '@inertiajs/react';
 
 const BlogGridView = () => {

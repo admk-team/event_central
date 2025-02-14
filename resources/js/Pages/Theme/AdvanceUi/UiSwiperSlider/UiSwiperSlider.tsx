@@ -12,22 +12,22 @@ import "swiper/css/effect-flip";
 import { Pagination, Navigation, Scrollbar, EffectFade, EffectCreative, Mousewheel, EffectFlip, EffectCoverflow, Autoplay } from "swiper/modules";
 
 //import Components
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 
 // Import Images
-import img1 from "../../../../../../../../images/small/img-1.jpg";
-import img2 from "../../../../../../../../images/small/img-2.jpg";
-import img3 from "../../../../../../../../images/small/img-3.jpg";
-import img4 from "../../../../../../../../images/small/img-4.jpg";
-import img5 from "../../../../../../../../images/small/img-5.jpg";
-import img6 from "../../../../../../../../images/small/img-6.jpg";
-import img7 from "../../../../../../../../images/small/img-7.jpg";
-import img8 from "../../../../../../../../images/small/img-8.jpg";
-import img9 from "../../../../../../../../images/small/img-9.jpg";
-import img10 from "../../../../../../../../images/small/img-10.jpg";
-import img11 from "../../../../../../../../images/small/img-11.jpg";
-import img12 from "../../../../../../../../images/small/img-12.jpg";
-import Layout from '../../../../../../Layouts';
+import img1 from "../../../../../images/small/img-1.jpg";
+import img2 from "../../../../../images/small/img-2.jpg";
+import img3 from "../../../../../images/small/img-3.jpg";
+import img4 from "../../../../../images/small/img-4.jpg";
+import img5 from "../../../../../images/small/img-5.jpg";
+import img6 from "../../../../../images/small/img-6.jpg";
+import img7 from "../../../../../images/small/img-7.jpg";
+import img8 from "../../../../../images/small/img-8.jpg";
+import img9 from "../../../../../images/small/img-9.jpg";
+import img10 from "../../../../../images/small/img-10.jpg";
+import img11 from "../../../../../images/small/img-11.jpg";
+import img12 from "../../../../../images/small/img-12.jpg";
+import Layout from '../../../../Layouts/Theme';
 import { Head, Link } from '@inertiajs/react';
 
 const UiSwiperSlider = () => {

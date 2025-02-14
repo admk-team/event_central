@@ -1,4 +1,4 @@
-import { blogwidget, socialShares } from '../../../../common/data'
+import { blogwidget, socialShares } from '../../../common/data'
 import React from 'react'
 
 //Import Icons

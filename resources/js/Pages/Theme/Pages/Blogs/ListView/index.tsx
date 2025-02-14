@@ -1,9 +1,9 @@
-import BreadCrumb from '../../../../../../../../Components/Common/BreadCrumb'
+import BreadCrumb from '../../../../../Components/Common/BreadCrumb'
 import React from 'react'
 import { Container, Row } from 'react-bootstrap'
 import Sidepanel from './Sidepanel'
 import MainList from './MainList'
-import Layout from '../../../../../../../../Layouts'
+import Layout from '../../../../../Layouts/Theme'
 
 const BlogListView = () => {
 

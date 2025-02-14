@@ -3,7 +3,7 @@ import { Card, Col, Dropdown } from 'react-bootstrap';
 import { useSelector, useDispatch } from "react-redux";
 import { BalanceOverviewCharts } from "./DashboardCrmCharts";
 import { createSelector } from 'reselect';
-import { ongetBalanceChartsData } from '../../../../slices/thunk';
+import { ongetBalanceChartsData } from '../../../slices/thunk';
 
 const BalanceOverview = () => {
     const dispatch :any= useDispatch();

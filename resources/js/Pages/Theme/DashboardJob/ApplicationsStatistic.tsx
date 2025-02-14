@@ -2,7 +2,7 @@ import React from "react";
 import { Col, Card, Row } from "react-bootstrap";
 import ReactApexChart from "react-apexcharts";
 import CountUp from "react-countup";
-import getChartColorsArray from "../../../../Components/Common/ChartsDynamicColor";
+import getChartColorsArray from "../../../Components/Common/ChartsDynamicColor";
 
 const ApplicationsStatistic = ({ dataColors }:any) => {
   var applicationsStatisticColors = getChartColorsArray(dataColors);

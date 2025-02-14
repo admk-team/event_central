@@ -1,5 +1,5 @@
 import React from 'react';
-import { crmWidgets } from "../../../../common/data";
+import { crmWidgets } from "../../../common/data";
 import CountUp from "react-countup";
 
 const Widgets = () => {

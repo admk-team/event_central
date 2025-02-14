@@ -1,10 +1,10 @@
 import React from 'react';
 import { Container, Row } from 'react-bootstrap';
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 import Widgets from './Widgets';
 import ICO from './ICO';
 import { Head } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 const ICOList = () => {
     return (

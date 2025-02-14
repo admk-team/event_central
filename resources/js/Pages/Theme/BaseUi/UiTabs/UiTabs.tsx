@@ -3,28 +3,28 @@ import { Card, Col, Container, Nav, OverlayTrigger, Row, Tab, Tooltip, } from "r
 import classnames from "classnames";
 
 // Import Content
-import UiContent from '../../../../../../Components/Common/UiContent';
+import UiContent from '../../../../Components/Common/UiContent';
 //import Components
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 
 // Import Images
-import avatar1 from "../../../../../../../../images/users/avatar-1.jpg";
-import avatar2 from "../../../../../../../../images/users/avatar-2.jpg";
-import avatar3 from "../../../../../../../../images/users/avatar-3.jpg";
-import avatar4 from "../../../../../../../../images/users/avatar-4.jpg";
-import avatar5 from "../../../../../../../../images/users/avatar-5.jpg";
-import avatar6 from "../../../../../../../../images/users/avatar-6.jpg";
-import avatar7 from "../../../../../../../../images/users/avatar-7.jpg";
-import avatar8 from "../../../../../../../../images/users/avatar-8.jpg";
+import avatar1 from "../../../../../images/users/avatar-1.jpg";
+import avatar2 from "../../../../../images/users/avatar-2.jpg";
+import avatar3 from "../../../../../images/users/avatar-3.jpg";
+import avatar4 from "../../../../../images/users/avatar-4.jpg";
+import avatar5 from "../../../../../images/users/avatar-5.jpg";
+import avatar6 from "../../../../../images/users/avatar-6.jpg";
+import avatar7 from "../../../../../images/users/avatar-7.jpg";
+import avatar8 from "../../../../../images/users/avatar-8.jpg";
 
-import img3 from "../../../../../../../../images/small/img-3.jpg";
-import img4 from "../../../../../../../../images/small/img-4.jpg";
-import img5 from "../../../../../../../../images/small/img-5.jpg";
-import img6 from "../../../../../../../../images/small/img-6.jpg";
-import img7 from "../../../../../../../../images/small/img-7.jpg";
-import img8 from "../../../../../../../../images/small/img-8.jpg";
+import img3 from "../../../../../images/small/img-3.jpg";
+import img4 from "../../../../../images/small/img-4.jpg";
+import img5 from "../../../../../images/small/img-5.jpg";
+import img6 from "../../../../../images/small/img-6.jpg";
+import img7 from "../../../../../images/small/img-7.jpg";
+import img8 from "../../../../../images/small/img-8.jpg";
 import { Head, Link } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 
 const UiTabs = () => {

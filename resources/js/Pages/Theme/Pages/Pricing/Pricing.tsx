@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Card, Col, Container, Nav, Row, Tab } from 'react-bootstrap';
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 
-import { pricing1, pricing2, pricing3 } from '../../../../../../common/data';
+import { pricing1, pricing2, pricing3 } from '../../../../common/data';
 import { Head, Link } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 const Pricing = () => {
 

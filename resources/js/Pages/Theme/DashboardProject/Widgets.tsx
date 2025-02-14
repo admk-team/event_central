@@ -1,5 +1,5 @@
 import React from 'react';
-import { projectsWidgets } from '../../../../common/data';
+import { projectsWidgets } from '../../../common/data';
 import CountUp from "react-countup";
 
 //Import Icons

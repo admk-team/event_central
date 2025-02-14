@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Head } from '@inertiajs/react';
 import { Col, Container, Row } from 'react-bootstrap';
 
-import Layout from '../../../../Layouts';
+import Layout from '../../../Layouts/Theme';
 import Widgets from './Widgets';
 import Section from './Section';
 import Revenue from './Revenue';

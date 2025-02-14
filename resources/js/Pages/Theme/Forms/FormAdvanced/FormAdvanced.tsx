@@ -9,15 +9,15 @@ import {
   Image,
 } from "react-bootstrap";
 
-import BreadCrumb from "../../../../../../Components/Common/BreadCrumb";
+import BreadCrumb from "../../../../Components/Common/BreadCrumb";
 
 import DualListbox from './DualListbox';
 
-import usflag from '../../../../../../../../images/flags/us.svg'
+import usflag from '../../../../../images/flags/us.svg'
 import SimpleBar from "simplebar-react";
-import { country } from "../../../../../../common/data";
+import { country } from "../../../../common/data";
 import { Head } from "@inertiajs/react";
-import Layout from "../../../../../../Layouts";
+import Layout from "../../../../Layouts/Theme";
 
 const FormAdvanced = () => {
   const [defaultCounter, setdefaultCounter] = useState<number>(5);

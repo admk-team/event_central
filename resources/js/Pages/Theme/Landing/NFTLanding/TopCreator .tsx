@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Row, Col, Card, Dropdown} from 'react-bootstrap';
-import { topCreatorData } from '../../../../../../common/data';
+import { topCreatorData } from '../../../../common/data';
 import { Link } from '@inertiajs/react';
 
 const TopCreator = () => {

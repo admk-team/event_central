@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Col } from 'react-bootstrap';
-import { closingDeals } from "../../../../common/data";
+import { closingDeals } from "../../../common/data";
 import { Link } from '@inertiajs/react';
 
 

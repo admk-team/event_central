@@ -3,7 +3,7 @@ import { Card, Col, Dropdown } from 'react-bootstrap';
 import { SalesForecastCharts } from './DashboardCrmCharts';
 import { useSelector, useDispatch } from "react-redux";
 import { createSelector } from 'reselect';
-import { ongetSalesChartsData } from '../../../../slices/thunk';
+import { ongetSalesChartsData } from '../../../slices/thunk';
 
 const SalesForecast = () => {
     
