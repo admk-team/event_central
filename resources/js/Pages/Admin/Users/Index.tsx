@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Button, Col, Container, Row, Table } from 'react-bootstrap';
 import { Head, Link, useForm } from '@inertiajs/react';
-import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import Layout from '../../../Layouts/Admin';
 import CreateEditModal from './Components/CreateEditModal';
 import DeleteModal from '../../../Components/Common/DeleteModal';
 import DataTable, { ColumnDef } from '../../../Components/DataTable';
+import BreadCrumb2 from '../../../Components/Common/BreadCrumb2';
 
 function Index({ users }: any) {
     const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
@@ -75,7 +75,9 @@ function Index({ users }: any) {
             <Head title='Starter | Velzon - React Admin & Dashboard Template' />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Users" pageTitle="Dashboard" />
+                    <BreadCrumb2 
+                        title="Users"
+                    />
                     <Row>
                         <Col xs={12}>
                             <DataTable

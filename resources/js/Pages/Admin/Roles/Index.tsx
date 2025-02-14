@@ -2,10 +2,10 @@
 import React, { useState } from 'react';
 import { Button, Col, Container, Row, Table } from 'react-bootstrap';
 import { Head, useForm, Link } from '@inertiajs/react';
-import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import Layout from '../../../Layouts/Admin';
 import DeleteModal from '../../../Components/Common/DeleteModal';
 import DataTable, { ColumnDef } from '../../../Components/DataTable';
+import BreadCrumb2 from '../../../Components/Common/BreadCrumb2';
 
 function Index({ roles }: any) {
     const [deleteRole, setDeleteRole] = React.useState<any>(null);
@@ -62,7 +62,9 @@ function Index({ roles }: any) {
             <Head title='Starter | Velzon - React Admin & Dashboard Template' />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Roles" pageTitle="Dashboard" />
+                    <BreadCrumb2 
+                        title="Roles"
+                    />
                     <Row>
                         <Col xs={12}>
                             <DataTable
