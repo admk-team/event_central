@@ -4,37 +4,38 @@ import { Head, Link, useForm } from '@inertiajs/react';
 import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import Layout from '../../../Layouts';
 import Pagination2 from '../../../Components/Common/Pagination2';
+import DeleteModal from '../../../Components/Common/DeleteModal';
 
 
 function Index({ colorschemes }: any) {
-    const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
-    const [editUser, setEditUser] = React.useState<any>(null);
-    const [deleteUser, setDeleteUser] = React.useState<any>(null);
+    const [deleteTheme, setDeleteTheme] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
-    const setShowCreateEditModal = (state: boolean) => {
-        _setShowCreateEditModal(state);
-        if (state === false) {
-            setEditUser(null);
-        }
-    }
+    const { get} = useForm()
+
 
     const deleteForm = useForm({
         _method: 'DELETE'
     });
 
-    const editAction = (user: any) => {
-        setEditUser(user);
-        setShowCreateEditModal(true);
+    const editAction = (theme: any) => {
+        console.log(theme);
+        
+        get(route('admin.color-themes.edit',theme))
     }
 
+    // const deleteAction = (deleteTheme: any) => {
+    //     deleteForm.post(route('admin.users.destroy', deleteTheme.id));
+
+    // }
     const deleteAction = (user: any) => {
-        setDeleteUser(user);
+        setDeleteTheme(user);
         setShowDeleteConfirmation(true);
     }
-
     const handleDelete = () => {
-        deleteForm.post(route('admin.users.destroy', deleteUser.id));
+        console.log(typeof(deleteTheme.id));
+        
+        deleteForm.post(route('admin.color-themes.destroy', deleteTheme.id));
         setShowDeleteConfirmation(false);
     }
 
@@ -49,7 +50,7 @@ function Index({ colorschemes }: any) {
                             <div className="card">
                                 <div className="card-header d-flex justify-content-between align-items-center">
                                     <div className="card-title">Themes</div>
-                                    <Link href={route('admin.scheme.create')}><Button >Add New</Button></Link> 
+                                    <Link href={route('admin.color-themes.create')}><Button >Add New</Button></Link> 
                                 </div>
                                 <div className="card-body">
                                     <div className="table-responsive">
@@ -57,29 +58,15 @@ function Index({ colorschemes }: any) {
                                             <thead>
                                                 <tr>
                                                     <th scope="col">ID</th>
-                                                    <th scope="col">Title</th>
-                                                    <th scope="col">Background Color</th>
-                                                    <th scope="col">Header Background Color</th>
-                                                    <th scope="col">Navigation Background Color</th>
-                                                    <th scope="col">Card Background Color</th>
-                                                    <th scope="col">Primary Color</th>
-                                                    <th scope="col">Secondary Color</th>
-                                                    <th scope="col">Footer Color</th>
+                                                    <th scope="col">Title</th>                                         
                                                     <th scope="col">Actions</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {colorschemes.data.map((color: any) => (
-                                                    <tr key={color.event_id}>
-                                                        <td className="fw-medium">{color.event_id}</td>
+                                                    <tr key={color.id}>
+                                                        <td className="fw-medium">{color.id}</td>
                                                         <td>{color.title}</td>
-                                                        <td>{color.bg_color}</td>
-                                                        <td>{color.header_bg_color}</td>
-                                                        <td>{color.nav_bg_color}</td>
-                                                        <td>{color.card_bg_color}</td>
-                                                        <td>{color.primary_color}</td>
-                                                        <td>{color.secondary_color}</td>
-                                                        <td>{color.footer_color}</td>
                                                         <td>
                                                             <div className="hstack gap-3 fs-15">
                                                                 <span className="link-primary cursor-pointer" onClick={() => editAction(color)}>
@@ -110,6 +97,11 @@ function Index({ colorschemes }: any) {
                     </Row>
                 </Container>
             </div>
+            <DeleteModal
+                show={showDeleteConfirmation}
+                onDeleteClick={handleDelete}
+                onCloseClick={() => { setShowDeleteConfirmation(false) }}
+            />
         </React.Fragment>
     )
 }

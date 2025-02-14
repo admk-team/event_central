@@ -149,6 +149,12 @@ const Navdata = () => {
             },
             subItems: [
                 {
+                    id: "colorthemes",
+                    label: "Themes",
+                    link: "/admin/color-themes",
+                    parentId: "dashboard",
+                },
+                {
                     id: "analytics",
                     label: "Analytics",
                     link: "/dashboard-analytics",

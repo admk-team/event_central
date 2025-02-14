@@ -22,15 +22,15 @@ class ColorSchemeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'event_id' => 'required|integer',
+            'event_id' => 'required|exists:event_apps,id',
             'title' => 'required|string|max:255',
-            'bg_color' => 'required|string|max:7', // Hex Color
-            'header_bg_color' => 'required|string|max:7',
-            'nav_bg_color' => 'required|string|max:7',
-            'card_bg_color' => 'required|string|max:7',
-            'primary_color' => 'required|string|max:7',
-            'secondary_color' => 'required|string|max:7',
-            'footer_color' => 'required|string|max:7',
+            'bg_color' => 'required|string|max:255', // Hex Color
+            'header_bg_color' => 'required|string|max:255',
+            'nav_bg_color' => 'required|string|max:255',
+            'card_bg_color' => 'required|string|max:255',
+            'primary_color' => 'required|string|max:255',
+            'secondary_color' => 'required|string|max:255',
+            'footer_color' => 'required|string|max:255',
         ];
     }
 }

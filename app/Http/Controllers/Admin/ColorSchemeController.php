@@ -16,7 +16,7 @@ class ColorSchemeController extends Controller
     public function index(Request $request)
     {
         $colorschemes = ColorScheme::latest()->paginate($request->per_page ?? 10);
-        return Inertia::render("Admin/ColorScheme/Index", compact('colorschemes'));
+        return Inertia::render("Admin/Color_themes/Index", compact('colorschemes'));
     }
 
     /**
@@ -25,7 +25,7 @@ class ColorSchemeController extends Controller
     public function create()
     {
         // $colorschemes = ColorScheme::latest()->paginate($request->per_page ?? 10);
-        return Inertia::render("Admin/ColorScheme/CreateOrEdit");
+        return Inertia::render("Admin/Color_themes/CreateOrEdit");
     }
 
     /**
@@ -34,10 +34,10 @@ class ColorSchemeController extends Controller
     public function store(ColorSchemeRequest $request)
     {
         $input = $request->validated();
-
+        // dd('after validate');
         ColorScheme::create($input);
 
-        return back();
+        return redirect()->route('admin.color-themes.index')->with('success', 'Themes created successfully.');
     }
 
     /**
@@ -53,22 +53,25 @@ class ColorSchemeController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $colorTheme = ColorScheme::findOrFail($id);
+        return Inertia::render("Admin/Color_themes/CreateOrEdit", compact('colorTheme'));
     }
-
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ColorSchemeRequest $request, ColorScheme $color_theme)
     {
-        //
+        $data = $request->validated();
+        $color_theme->update($data);
+        return to_route('admin.color-themes.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(ColorScheme $color_theme)
     {
-        //
+        $color_theme->delete();
+        return back();
     }
 }

@@ -5,35 +5,41 @@ import React, { useState } from 'react';
 import { Button, Col, Container, Row, Form, Card } from 'react-bootstrap';
 
 
-function CreateOrEdit() {
-    const { data, setData, post, processing, errors, reset } = useForm({
-        "event_id": 1,
-        "title": "",
-        "bg_color": "",
-        "header_bg_color": "",
-        "nav_bg_color": "",
-        "card_bg_color": "",
-        "primary_color": "",
-        "secondary_color": "",
-        "footer_color": ""
+function CreateOrEdit({ colorTheme }: any) {
+    // Determine if the form is in edit mode
+    const isEdit = !!colorTheme;
+    const { data,put, setData, post, processing, errors, reset } = useForm({
+        event_id: colorTheme?.event_id || 1,
+        title: colorTheme?.title || "",
+        bg_color: colorTheme?.bg_color || "#364574",
+        header_bg_color: colorTheme?.header_bg_color || "#364574",
+        nav_bg_color: colorTheme?.nav_bg_color || "#364574",
+        card_bg_color: colorTheme?.card_bg_color || "#364574",
+        primary_color: colorTheme?.primary_color || "#364574",
+        secondary_color: colorTheme?.secondary_color || "#364574",
+        footer_color: colorTheme?.footer_color || "#364574",
+        _method: colorTheme?.id ? "PUT" : "POST", // Spoof method
     });
     const submit = (e: any) => {
         e.preventDefault();
         console.log(data);
-
-        // post(route('login'));
+        if (isEdit) {
+            post(route('admin.color-themes.update', colorTheme.id))
+        }
+        else{
+        post(route('admin.color-themes.store'));
+        }
     };
     return (
         <React.Fragment>
-            <Head title='Starter | Velzon - React Admin & Dashboard Template' />
+            <Head title={isEdit ? 'Edit Color Theme' : 'Create Color Theme'} />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Color Themes" pageTitle="Dashboard" />
+                    <BreadCrumb title={isEdit ? 'Edit Color Theme' : 'Create Color Theme'} pageTitle="Dashboard" />
                     <Row>
                         <Card className="mt-4">
                             <div className="card-header d-flex justify-content-between align-items-center">
-                                <div className="card-title">Themes</div>
-                                <Link href={route('admin.scheme.store')}><Button >Create</Button></Link>
+                                <div className="card-title">{isEdit ? 'Edit Theme' : 'Create Theme'}</div>
                             </div>
                             <Card.Body>
                                 <div className="card-body">
@@ -48,6 +54,7 @@ function CreateOrEdit() {
                                                         className="form-control"
                                                         id="title"
                                                         placeholder="Enter title"
+                                                        value={data.title}
                                                         onChange={(e) => setData('title', e.target.value)}
                                                     />
                                                 </div>
@@ -60,7 +67,7 @@ function CreateOrEdit() {
                                                         type="color"
                                                         className="form-control form-control-color w-100"
                                                         id="bg_color"
-                                                        defaultValue="#364574"
+                                                        value={data.bg_color}
                                                         onChange={(e) => setData('bg_color', e.target.value)}
                                                     />
                                                 </div>
@@ -73,7 +80,7 @@ function CreateOrEdit() {
                                                         type="color"
                                                         className="form-control form-control-color w-100"
                                                         id="header_bg_color"
-                                                        defaultValue="#364574"
+                                                        value={data.header_bg_color}
                                                         onChange={(e) => setData('header_bg_color', e.target.value)}
                                                     />
                                                 </div>
@@ -86,7 +93,7 @@ function CreateOrEdit() {
                                                         type="color"
                                                         className="form-control form-control-color w-100"
                                                         id="nav_bg_color"
-                                                        defaultValue="#364574"
+                                                        value={data.nav_bg_color}
                                                         onChange={(e) => setData('nav_bg_color', e.target.value)}
                                                     />
                                                 </div>
@@ -99,7 +106,7 @@ function CreateOrEdit() {
                                                         type="color"
                                                         className="form-control form-control-color w-100"
                                                         id="card_bg_color"
-                                                        defaultValue="#364574"
+                                                        value={data.card_bg_color}
                                                         onChange={(e) => setData('card_bg_color', e.target.value)}
                                                     />
                                                 </div>
@@ -112,7 +119,7 @@ function CreateOrEdit() {
                                                         type="color"
                                                         className="form-control form-control-color w-100"
                                                         id="primary_color"
-                                                        defaultValue="#364574"
+                                                        value={data.primary_color}
                                                         onChange={(e) => setData('primary_color', e.target.value)}
                                                     />
                                                 </div>
@@ -125,7 +132,7 @@ function CreateOrEdit() {
                                                         type="color"
                                                         className="form-control form-control-color w-100"
                                                         id="secondary_color"
-                                                        defaultValue="#364574"
+                                                        value={data.secondary_color}
                                                         onChange={(e) => setData('secondary_color', e.target.value)}
                                                     />
                                                 </div>
@@ -138,7 +145,7 @@ function CreateOrEdit() {
                                                         type="color"
                                                         className="form-control form-control-color w-100"
                                                         id="footer_color"
-                                                        defaultValue="#364574"
+                                                        value={data.footer_color}
                                                         onChange={(e) => setData('footer_color', e.target.value)}
                                                     />
                                                 </div>
@@ -150,7 +157,8 @@ function CreateOrEdit() {
                                                     className="form-select mb-3"
                                                     id="event_select"
                                                     aria-label="Select event"
-                                                // onChange={(e) => setData('event_select', e.target.value)}
+                                                    value={data.event_id}
+                                                    onChange={(e) => setData('event_id', e.target.value)}
                                                 >
                                                     <option>Select your Event</option>
                                                     <option value="1">Declined Payment</option>
@@ -159,15 +167,13 @@ function CreateOrEdit() {
                                                 </select>
                                             </Col>
                                         </Row>
-                                        <Row>
-                                            <Col xxl={3} md={6}>
-                                            <div className="mt-4">
-                                                <Button type="submit" className="btn btn-success w-100" disabled={processing}>
-                                                    Create
-                                                </Button>
-                                            </div>
-                                            </Col>
-                                        </Row>
+
+                                        <div className="mt-4 text-center ">
+                                            <Button type="submit" className="btn btn-success px-3" disabled={processing}>
+                                                {isEdit ? 'Update' : 'Create'}
+                                            </Button>
+                                        </div>
+
                                     </form>
 
                                 </div>
@@ -180,6 +186,9 @@ function CreateOrEdit() {
         </React.Fragment>
     )
 }
+// CreateOrEdit.layout = (page: any) => <Layout children={page} />;
+
+// export default CreateOrEdit;
 CreateOrEdit.layout = (page: any) => <Layout children={page} />;
 
 export default CreateOrEdit;
