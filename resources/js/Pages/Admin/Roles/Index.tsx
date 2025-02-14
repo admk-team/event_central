@@ -4,7 +4,7 @@ import { Button, Col, Container, Row, Table } from 'react-bootstrap';
 import { Head, useForm, Link } from '@inertiajs/react';
 import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import Layout from '../../../Layouts';
-import Pagination2 from '../../../Components/Common/Pagination2';
+import Pagination from '../../../Components/Common/Pagination';
 import DeleteModal from '../../../Components/Common/DeleteModal';
 
 function Index({ roles }: any) {
@@ -79,7 +79,7 @@ function Index({ roles }: any) {
                                 </div>
                                 <div className="card-footer">
                                     {roles.links.length > 3 && (
-                                        <Pagination2
+                                        <Pagination
                                             links={roles.links}
 
                                         />
