@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { isEmpty } from "lodash";
 
 // Import Images
-import avatar10 from "../../../../../../images/users/avatar-10.jpg"
+import avatar10 from "../../../../images/users/avatar-10.jpg"
 
 import {
   Col,
@@ -16,30 +16,30 @@ import {
   Button,
 } from "react-bootstrap";
 
-import BreadCrumb from "../../../../Components/Common/BreadCrumb";
-import DeleteModal from "../../../../Components/Common/DeleteModal";
+import BreadCrumb from "../../../Components/Common/BreadCrumb";
+import DeleteModal from "../../../Components/Common/DeleteModal";
 
 // Export Modal
-import ExportCSVModal from "../../../../Components/Common/ExportCSVModal";
+import ExportCSVModal from "../../../Components/Common/ExportCSVModal";
 
 //redux
 import { useSelector, useDispatch } from "react-redux";
-import TableContainer from "../../../../Components/Common/TableContainer";
+import TableContainer from "../../../Components/Common/TableContainer";
 
 // Formik
 import * as Yup from "yup";
 import { useFormik } from "formik";
 
-import Loader from "../../../../Components/Common/Loader";
+import Loader from "../../../Components/Common/Loader";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { createSelector } from "reselect";
 import moment from "moment";
 
-import dummyImg from "../../../../../../images/users/user-dummy-img.jpg"
+import dummyImg from "../../../../images/users/user-dummy-img.jpg"
 import { Head, Link } from "@inertiajs/react";
-import Layout from "../../../../Layouts";
-import { onAddNewContact, onDeleteContact, onGetContacts, onUpdateContact } from "../../../../slices/thunk";
+import Layout from "../../../Layouts/Theme";
+import { onAddNewContact, onDeleteContact, onGetContacts, onUpdateContact } from "../../../slices/thunk";
 import Select from "react-select";
 
 

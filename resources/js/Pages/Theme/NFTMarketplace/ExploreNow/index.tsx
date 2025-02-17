@@ -7,15 +7,15 @@ import {
     Collapse,
     Dropdown,
 } from "react-bootstrap";
-import BreadCrumb from "../../../../../../Components/Common/BreadCrumb";
+import BreadCrumb from "../../../../Components/Common/BreadCrumb";
 // RangeSlider
 
 import Nouislider from "nouislider-react";
 import "nouislider/distribute/nouislider.css";
 
-import { expolreNow } from "../../../../../../common/data/index";
+import { expolreNow } from "../../../../common/data/index";
 import { Head, Link } from "@inertiajs/react";
-import Layout from "../../../../../../Layouts";
+import Layout from "../../../../Layouts/Theme";
 
 const ExploreNow = () => {
     const [NFTList, setNFTList] = useState(expolreNow);

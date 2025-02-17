@@ -19,11 +19,11 @@ import SimpleBar from "simplebar-react"
 import { ToastContainer } from "react-toastify"
 import Flatpickr from "react-flatpickr";
 import moment from "moment";
-import DeleteModal from "../../../../../../Components/Common/DeleteModal";
-import { AddTeamMember, headData, } from "../../../../../../common/data";
+import DeleteModal from "../../../../Components/Common/DeleteModal";
+import { AddTeamMember, headData, } from "../../../../common/data";
 import { Link } from "@inertiajs/react";
-import Spinners from "../../../../../../Components/Common/Spinner";
-import { OnDeleteKanban, onAddCardData, onGetTasks, onUpdateCardData } from "../../../../../../slices/thunk";
+import Spinners from "../../../../Components/Common/Spinner";
+import { OnDeleteKanban, onAddCardData, onGetTasks, onUpdateCardData } from "../../../../slices/thunk";
 
 
 //Import Breadcrumb

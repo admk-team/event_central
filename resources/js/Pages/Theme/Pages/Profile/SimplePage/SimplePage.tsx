@@ -5,27 +5,27 @@ import { Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 //Images
-import profileBg from '../../../../../../../../../../images/profile-bg.jpg';
-import avatar1 from '../../../../../../../../../../images/users/avatar-1.jpg';
-import avatar2 from '../../../../../../../../../../images/users/avatar-2.jpg';
-import avatar3 from '../../../../../../../../../../images/users/avatar-3.jpg';
-import avatar4 from '../../../../../../../../../../images/users/avatar-4.jpg';
-import avatar5 from '../../../../../../../../../../images/users/avatar-5.jpg';
-import avatar6 from '../../../../../../../../../../images/users/avatar-6.jpg';
-import avatar7 from '../../../../../../../../../../images/users/avatar-7.jpg';
-import avatar8 from '../../../../../../../../../../images/users/avatar-8.jpg';
+import profileBg from '../../../../../../images/profile-bg.jpg';
+import avatar1 from '../../../../../../images/users/avatar-1.jpg';
+import avatar2 from '../../../../../../images/users/avatar-2.jpg';
+import avatar3 from '../../../../../../images/users/avatar-3.jpg';
+import avatar4 from '../../../../../../images/users/avatar-4.jpg';
+import avatar5 from '../../../../../../images/users/avatar-5.jpg';
+import avatar6 from '../../../../../../images/users/avatar-6.jpg';
+import avatar7 from '../../../../../../images/users/avatar-7.jpg';
+import avatar8 from '../../../../../../images/users/avatar-8.jpg';
 
-import smallImage2 from '../../../../../../../../../../images/small/img-2.jpg';
-import smallImage3 from '../../../../../../../../../../images/small/img-3.jpg';
-import smallImage4 from '../../../../../../../../../../images/small/img-4.jpg';
-import smallImage5 from '../../../../../../../../../../images/small/img-5.jpg';
-import smallImage6 from '../../../../../../../../../../images/small/img-6.jpg';
-import smallImage7 from '../../../../../../../../../../images/small/img-7.jpg';
-import smallImage9 from '../../../../../../../../../../images/small/img-9.jpg';
+import smallImage2 from '../../../../../../images/small/img-2.jpg';
+import smallImage3 from '../../../../../../images/small/img-3.jpg';
+import smallImage4 from '../../../../../../images/small/img-4.jpg';
+import smallImage5 from '../../../../../../images/small/img-5.jpg';
+import smallImage6 from '../../../../../../images/small/img-6.jpg';
+import smallImage7 from '../../../../../../images/small/img-7.jpg';
+import smallImage9 from '../../../../../../images/small/img-9.jpg';
 
-import { projects, documents } from '../../../../../../../../common/data';
+import { projects, documents } from '../../../../../common/data';
 import { Head, Link } from '@inertiajs/react';
-import Layout from '../../../../../../../../Layouts';
+import Layout from '../../../../../Layouts/Theme';
 
 const SimplePage = () => {
 

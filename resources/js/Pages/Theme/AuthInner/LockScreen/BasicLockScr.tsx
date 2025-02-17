@@ -2,9 +2,9 @@ import React from 'react';
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 
 //import images
-import logoLight from "../../../../../../../../images/logo-light.png";
-import avatar1 from "../../../../../../../../images/users/avatar-1.jpg";
-import GuestLayout from '../../../../../../Layouts/GuestLayout';
+import logoLight from "../../../../../images/logo-light.png";
+import avatar1 from "../../../../../images/users/avatar-1.jpg";
+import GuestLayout from '../../../../Layouts/Theme/GuestLayout';
 import { Head, Link } from '@inertiajs/react';
 
 

@@ -4,7 +4,7 @@ import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 // Import Images
-import logoLight from "../../../../../../images/logo-light.png";
+import logoLight from "../../../../images/logo-light.png";
 import { Link } from "@inertiajs/react";
 
 const AuthSlider = () => {

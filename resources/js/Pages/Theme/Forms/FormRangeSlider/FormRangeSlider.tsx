@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { Card, Col, Row, Container, Form, } from "react-bootstrap";
 //import Components
-import BreadCrumb from "../../../../../../Components/Common/BreadCrumb";
+import BreadCrumb from "../../../../Components/Common/BreadCrumb";
 import Nouislider from "nouislider-react";
 import 'nouislider/distribute/nouislider.css';
 import { Head } from "@inertiajs/react";
-import Layout from "../../../../../../Layouts";
+import Layout from "../../../../Layouts/Theme";
 
 const FormRangeSlider = () => {
 

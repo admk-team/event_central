@@ -4,7 +4,7 @@ import { RevenueCharts } from "./DashboardEcommerceCharts";
 import CountUp from "react-countup";
 import { useSelector, useDispatch } from "react-redux";
 import { createSelector } from "reselect";
-import { ongetRevenueChartsData } from "../../../../slices/thunk";
+import { ongetRevenueChartsData } from "../../../slices/thunk";
 
 const Revenue = () => {
   const dispatch : any= useDispatch();

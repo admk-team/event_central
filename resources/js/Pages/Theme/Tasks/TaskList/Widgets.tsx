@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Col } from 'react-bootstrap';
 import CountUp from "react-countup";
-import { taskWidgets } from '../../../../../../common/data';
+import { taskWidgets } from '../../../../common/data';
 
 const Widgets = () => {
     return (

@@ -1,8 +1,8 @@
 import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { Head } from '@inertiajs/react';
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
-import Layout from '../../../../../../Layouts';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
+import Layout from '../../../../Layouts/Theme';
 
 const Starter = () => {
 

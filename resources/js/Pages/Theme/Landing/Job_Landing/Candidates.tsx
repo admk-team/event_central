@@ -1,10 +1,10 @@
 import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import avatar2 from "../../../../../../../../images/users/avatar-2.jpg";
-import avatar3 from "../../../../../../../../images/users/avatar-3.jpg";
-import avatar10 from "../../../../../../../../images/users/avatar-10.jpg";
-import avatar8 from "../../../../../../../../images/users/avatar-8.jpg";
-import avatar5 from "../../../../../../../../images/users/avatar-5.jpg";
+import avatar2 from "../../../../../images/users/avatar-2.jpg";
+import avatar3 from "../../../../../images/users/avatar-3.jpg";
+import avatar10 from "../../../../../images/users/avatar-10.jpg";
+import avatar8 from "../../../../../images/users/avatar-8.jpg";
+import avatar5 from "../../../../../images/users/avatar-5.jpg";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 

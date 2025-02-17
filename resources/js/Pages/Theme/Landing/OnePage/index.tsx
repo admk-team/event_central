@@ -15,7 +15,7 @@ import Contact from './contact';
 import Cta from './cta';
 import Footer from './footer';
 import { Head } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 const Index = () => {
     

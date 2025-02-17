@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Col, Nav, Row, Tab, } from 'react-bootstrap';
 //import images
-import slack from '../../../../../../../../images/brands/slack.png';
+import slack from '../../../../../images/brands/slack.png';
 import OverviewTab from './OverviewTab';
 import DocumentsTab from './DocumentsTab';
 import ActivitiesTab from './ActivitiesTab';

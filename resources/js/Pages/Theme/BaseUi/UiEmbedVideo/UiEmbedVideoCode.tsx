@@ -1,4 +1,4 @@
-import PrismCode from "../../../../../../Components/Common/Prism";
+import PrismCode from "../../../../Components/Common/Prism";
 
 // Ratio Video 16:9
 

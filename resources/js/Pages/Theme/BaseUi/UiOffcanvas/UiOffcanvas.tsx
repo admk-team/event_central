@@ -2,31 +2,31 @@ import React, { useState } from 'react';
 import { Button, Card, Col, Container, Image, Offcanvas, OverlayTrigger, Row, Tooltip, } from 'react-bootstrap';
 
 // Import Content
-import UiContent from '../../../../../../Components/Common/UiContent';
+import UiContent from '../../../../Components/Common/UiContent';
 //import Components
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
-import PreviewCardHeader from '../../../../../../Components/Common/PreviewCardHeader';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
+import PreviewCardHeader from '../../../../Components/Common/PreviewCardHeader';
 import SimpleBar from 'simplebar-react';
 import { DefaultOffcanvasExample, PlacementOffcanvasExample, BackdropOffcanvasExample } from './UiOffcanvasCode';
 
 // Import Images
-import avatar1 from "../../../../../../../../images/users/avatar-1.jpg";
-import avatar2 from "../../../../../../../../images/users/avatar-2.jpg";
-import avatar3 from "../../../../../../../../images/users/avatar-3.jpg";
-import avatar4 from "../../../../../../../../images/users/avatar-4.jpg";
-import avatar6 from "../../../../../../../../images/users/avatar-6.jpg";
-import avatar7 from "../../../../../../../../images/users/avatar-7.jpg";
-import avatar8 from "../../../../../../../../images/users/avatar-8.jpg";
+import avatar1 from "../../../../../images/users/avatar-1.jpg";
+import avatar2 from "../../../../../images/users/avatar-2.jpg";
+import avatar3 from "../../../../../images/users/avatar-3.jpg";
+import avatar4 from "../../../../../images/users/avatar-4.jpg";
+import avatar6 from "../../../../../images/users/avatar-6.jpg";
+import avatar7 from "../../../../../images/users/avatar-7.jpg";
+import avatar8 from "../../../../../images/users/avatar-8.jpg";
 
-import img2 from "../../../../../../../../images/small/img-2.jpg";
-import img3 from "../../../../../../../../images/small/img-3.jpg";
-import img4 from "../../../../../../../../images/small/img-4.jpg";
-import img9 from "../../../../../../../../images/small/img-9.jpg";
-import img10 from "../../../../../../../../images/small/img-10.jpg";
-import img11 from "../../../../../../../../images/small/img-11.jpg";
-import img12 from "../../../../../../../../images/small/img-12.jpg";
+import img2 from "../../../../../images/small/img-2.jpg";
+import img3 from "../../../../../images/small/img-3.jpg";
+import img4 from "../../../../../images/small/img-4.jpg";
+import img9 from "../../../../../images/small/img-9.jpg";
+import img10 from "../../../../../images/small/img-10.jpg";
+import img11 from "../../../../../images/small/img-11.jpg";
+import img12 from "../../../../../images/small/img-12.jpg";
 import { Head, Link } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 const UiOffcanvas = () => {
     const [isTop, setIsTop] = useState<boolean>(false);

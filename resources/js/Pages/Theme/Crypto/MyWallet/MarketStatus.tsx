@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Card } from 'react-bootstrap';
-import TableContainer from '../../../../../../Components/Common/TableContainer';
-import { marketStatus } from "../../../../../../common/data";
+import TableContainer from '../../../../Components/Common/TableContainer';
+import { marketStatus } from "../../../../common/data";
 
 import { Quantity, AvgPrice, CurrentValue, Returns } from "./MarketStatusCol";
 import { Link } from '@inertiajs/react';

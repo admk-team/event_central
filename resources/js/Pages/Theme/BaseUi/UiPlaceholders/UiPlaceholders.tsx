@@ -2,18 +2,18 @@ import React from 'react';
 import { Card, Col, Container, Row, } from 'react-bootstrap';
 
 // Import Content
-import UiContent from '../../../../../../Components/Common/UiContent';
+import UiContent from '../../../../Components/Common/UiContent';
 //import Components
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
-import PreviewCardHeader from '../../../../../../Components/Common/PreviewCardHeader';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
+import PreviewCardHeader from '../../../../Components/Common/PreviewCardHeader';
 
 // Import Images
-import img1 from "../../../../../../../../images/small/img-1.jpg";
-import img2 from "../../../../../../../../images/small/img-2.jpg";
+import img1 from "../../../../../images/small/img-1.jpg";
+import img2 from "../../../../../images/small/img-2.jpg";
 
 import { DefaultPlaceholderExample, WidthExample, SizingExample, ColorExample } from './UiPlaceholdersCode';
 import { Head, Link } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 
 const UiPlaceholders = () => {

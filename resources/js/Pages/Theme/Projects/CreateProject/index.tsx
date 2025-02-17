@@ -1,6 +1,6 @@
 import React,{useState} from 'react';
 import { Card, Col, Container, Form, Row } from 'react-bootstrap';
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 //Import Flatepicker
 import Flatpickr from "react-flatpickr";
 import Select from "react-select";
@@ -10,10 +10,10 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import Dropzone from "react-dropzone";
 
 //Import Images
-import avatar3 from "../../../../../../../../images/users/avatar-3.jpg";
-import avatar4 from "../../../../../../../../images/users/avatar-4.jpg";
+import avatar3 from "../../../../../images/users/avatar-3.jpg";
+import avatar4 from "../../../../../images/users/avatar-4.jpg";
 import { Head, Link } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 const CreateProject = () => {
     const SingleOptions = [

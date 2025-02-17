@@ -9,12 +9,12 @@ import {
   Table,
 } from "react-bootstrap";
 import Flatpickr from "react-flatpickr";
-import BreadCrumb from "../../../../../../Components/Common/BreadCrumb";
-import img6 from "../../../../../../../../images/companies/img-6.png";
-import { jobCompanies } from "../../../../../../common/data/appsJobs";
-import Pagination from "../../../../../../Components/Common/Pagination";
+import BreadCrumb from "../../../../Components/Common/BreadCrumb";
+import img6 from "../../../../../images/companies/img-6.png";
+import { jobCompanies } from "../../../../common/data/appsJobs";
+import Pagination from "../../../../Components/Common/Pagination";
 import { Head, Link } from "@inertiajs/react";
-import Layout from "../../../../../../Layouts";
+import Layout from "../../../../Layouts/Theme";
 
 const CompaniesList = () => {
   const [companiesList, setCompaniesList] = useState<any>();

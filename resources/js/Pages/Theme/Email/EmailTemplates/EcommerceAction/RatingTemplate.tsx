@@ -1,10 +1,10 @@
 import React from 'react';
 import { Row, Col } from 'react-bootstrap';
 //import Images
-import logo_dark from "../../../../../../../../../../images/logo-dark.png";
-import img01 from "../../../../../../../../../../images/products/img-1.png"
-import img02 from "../../../../../../../../../../images/products/img-2.png"
-import img03 from "../../../../../../../../../../images/products/img-3.png"
+import logo_dark from "../../../../../../images/logo-dark.png";
+import img01 from "../../../../../../images/products/img-1.png"
+import img02 from "../../../../../../images/products/img-2.png"
+import img03 from "../../../../../../images/products/img-3.png"
 import { Link } from '@inertiajs/react';
 const RatingTemplate = () => {
     function changeBackground(e:any) {

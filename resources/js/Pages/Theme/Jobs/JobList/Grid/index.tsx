@@ -7,11 +7,11 @@ import {
   Dropdown,
 } from "react-bootstrap";
 import Flatpickr from "react-flatpickr";
-import { jobGrid } from "../../../../../../../../common/data/appsJobs";
-import BreadCrumb from "../../../../../../../../Components/Common/BreadCrumb";
+import { jobGrid } from "../../../../../common/data/appsJobs";
+import BreadCrumb from "../../../../../Components/Common/BreadCrumb";
 import { Head, Link } from "@inertiajs/react";
-import Layout from "../../../../../../../../Layouts";
-import Pagination from "../../../../../../../../Components/Common/Pagination";
+import Layout from "../../../../../Layouts/Theme";
+import Pagination from "../../../../../Components/Common/Pagination";
 
 const JobGrid = () => {
   const [jobGridData, setJobGridData] = useState<any>();

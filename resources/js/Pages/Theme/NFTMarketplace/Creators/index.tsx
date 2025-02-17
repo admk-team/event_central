@@ -1,10 +1,10 @@
 import React, { Children } from "react";
 import { Button, Card, Col, Container, Dropdown, Row,} from "react-bootstrap";
-import BreadCrumb from "../../../../../../Components/Common/BreadCrumb";
+import BreadCrumb from "../../../../Components/Common/BreadCrumb";
 
-import { creatorsData, creatorsListData } from "../../../../../../common/data/index";
+import { creatorsData, creatorsListData } from "../../../../common/data/index";
 import { Head, Link } from "@inertiajs/react";
-import Layout from "../../../../../../Layouts";
+import Layout from "../../../../Layouts/Theme";
 
 const Creators = () => {
     return (

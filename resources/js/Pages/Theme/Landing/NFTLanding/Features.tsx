@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
-import { featuresData } from '../../../../../../common/data';
+import { featuresData } from '../../../../common/data';
 import { Link } from '@inertiajs/react';
 
 const Features = () => {

@@ -6,7 +6,7 @@ import CountUp from "react-countup";
 //Import Icons
 import FeatherIcon from "feather-icons-react";
 
-import { tileBoxs1, tileBoxs2, tileBoxs3, tileBoxes4, tileBoxes5 } from "../../../../common/data/index";
+import { tileBoxs1, tileBoxs2, tileBoxs3, tileBoxes4, tileBoxes5 } from "../../../common/data/index";
 import { Link } from '@inertiajs/react';
 
 const TileBoxs = () => {

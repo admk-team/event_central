@@ -1,5 +1,5 @@
 import React from 'react';
-import Layout from '../../../../Layouts';
+import Layout from '../../../Layouts/Theme';
 import DeleteUserForm from './Partials/DeleteUserForm';
 import UpdatePasswordForm from './Partials/UpdatePasswordForm';
 import UpdateProfileInformationForm from './Partials/UpdateProfileInformationForm';

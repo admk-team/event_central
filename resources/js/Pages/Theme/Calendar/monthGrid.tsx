@@ -26,8 +26,8 @@ import Flatpickr from "react-flatpickr";
 //redux
 import { useSelector, useDispatch } from "react-redux";
 
-import BreadCrumb from "../../../../Components/Common/BreadCrumb";
-import DeleteModal from "../../../../Components/Common/DeleteModal";
+import BreadCrumb from "../../../Components/Common/BreadCrumb";
+import DeleteModal from "../../../Components/Common/DeleteModal";
 
 //Simple bar
 import SimpleBar from "simplebar-react";
@@ -35,9 +35,9 @@ import UpcommingEvents from './UpcommingEvents';
 import listPlugin from '@fullcalendar/list';
 
 import { createSelector } from "reselect";
-import { onAddNewEvent, onDeleteEvent, onGetCategories, onGetEvents, onGetUpCommingEvent, onUpdateEvent } from "../../../../slices/thunk";
+import { onAddNewEvent, onDeleteEvent, onGetCategories, onGetEvents, onGetUpCommingEvent, onUpdateEvent } from "../../../slices/thunk";
 import { Head, Link } from "@inertiajs/react";
-import Layout from "../../../../Layouts";
+import Layout from "../../../Layouts/Theme";
 
 const MonthGrid = () => {
   const dispatch: any = useDispatch();

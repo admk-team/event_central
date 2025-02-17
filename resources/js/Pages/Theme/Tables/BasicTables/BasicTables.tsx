@@ -1,8 +1,8 @@
 import React from 'react'
 import { Card, Col, Container, Form, Row, Table } from 'react-bootstrap';
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
-import PreviewCardHeader from '../../../../../../Components/Common/PreviewCardHeader';
-import UiContent from "../../../../../../Components/Common/UiContent";
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
+import PreviewCardHeader from '../../../../Components/Common/PreviewCardHeader';
+import UiContent from "../../../../Components/Common/UiContent";
 import {
     DefaultTables,
     StrippedRow,
@@ -25,13 +25,13 @@ import {
 } from './BasicTablesCode';
 
 //Import images
-import avtarImage1 from '../../../../../../../../images/users/avatar-1.jpg';
-import avtarImage3 from '../../../../../../../../images/users/avatar-3.jpg';
-import avtarImage4 from '../../../../../../../../images/users/avatar-4.jpg';
-import avtarImage5 from '../../../../../../../../images/users/avatar-5.jpg';
-import avtarImage6 from '../../../../../../../../images/users/avatar-6.jpg';
+import avtarImage1 from '../../../../../images/users/avatar-1.jpg';
+import avtarImage3 from '../../../../../images/users/avatar-3.jpg';
+import avtarImage4 from '../../../../../images/users/avatar-4.jpg';
+import avtarImage5 from '../../../../../images/users/avatar-5.jpg';
+import avtarImage6 from '../../../../../images/users/avatar-6.jpg';
 import { Head, Link } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 
 

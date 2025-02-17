@@ -2,8 +2,8 @@ import React from 'react';
 import { Row, Col } from 'react-bootstrap';
 
 //import Images
-import logo_dark from "../../../../../../../../../../images/logo-dark.png";
-import avatar03 from "../../../../../../../../../../images/users/avatar-3.jpg";
+import logo_dark from "../../../../../../images/logo-dark.png";
+import avatar03 from "../../../../../../images/users/avatar-3.jpg";
 import { Link } from '@inertiajs/react';
 const BasicAction = () => {
     function changeBackground(e:any) {

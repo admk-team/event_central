@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Card, Col, Container, Row, Form, Button } from 'react-bootstrap';
 //import images 
-import logoLight from "../../../../../../../../images/logo-light.png";
+import logoLight from "../../../../../images/logo-light.png";
 
 //formik
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Head, Link } from '@inertiajs/react';
-import GuestLayout from '../../../../../../Layouts/GuestLayout';
+import GuestLayout from '../../../../Layouts/Theme/GuestLayout';
 
 const BasicSignUp = () => {
 

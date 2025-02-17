@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Card, Col, Dropdown } from 'react-bootstrap';
-import { topSellers } from "../../../../common/data";
+import { topSellers } from "../../../common/data";
 import { Link } from '@inertiajs/react';
 
 

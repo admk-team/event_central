@@ -1,8 +1,8 @@
 import React from "react";
-import GuestLayout from "../../../../../../Layouts/GuestLayout";
+import GuestLayout from "../../../../Layouts/Theme/GuestLayout";
 import { Head, Link } from "@inertiajs/react";
 import { Col, Container, Row } from 'react-bootstrap';
-import error from '../../../../../../../../images/error.svg';
+import error from '../../../../../images/error.svg';
 
 export default function Basic404(){
     return(

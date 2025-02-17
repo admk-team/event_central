@@ -6,8 +6,8 @@ import {
   NavbarToggle,
   NavLink,
 } from "react-bootstrap";
-import LogoDark from "../../../../../../../../images/logo-dark.png";
-import LogoLight from "../../../../../../../../images/logo-light.png";
+import LogoDark from "../../../../../images/logo-dark.png";
+import LogoLight from "../../../../../images/logo-light.png";
 import { Link } from "@inertiajs/react";
 const Navbar = () => {
   const [isOpenMenu, setisOpenMenu] = useState<boolean>(false);

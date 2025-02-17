@@ -15,13 +15,13 @@ import {
 //Simple bar
 import SimpleBar from "simplebar-react";
 
-import BreadCrumb from "../../../../../../Components/Common/BreadCrumb";
+import BreadCrumb from "../../../../Components/Common/BreadCrumb";
 
-import product1 from "../../../../../../../../images/products/img-1.png";
-import product6 from "../../../../../../../../images/products/img-6.png";
-import product8 from "../../../../../../../../images/products/img-8.png";
+import product1 from "../../../../../images/products/img-1.png";
+import product6 from "../../../../../images/products/img-6.png";
+import product8 from "../../../../../images/products/img-8.png";
 
-import { productDetailsWidgets, reviews } from "../../../../../../common/data/ecommerce";
+import { productDetailsWidgets, reviews } from "../../../../common/data/ecommerce";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -33,7 +33,7 @@ import "swiper/css/thumbs";
 
 import { FreeMode, Navigation, Pagination, Thumbs } from "swiper/modules";
 import { Head, Link } from "@inertiajs/react";
-import Layout from "../../../../../../Layouts";
+import Layout from "../../../../Layouts/Theme";
 
 
 

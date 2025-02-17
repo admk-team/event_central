@@ -8,14 +8,14 @@ import {
   Dropdown,
   Form,
 } from "react-bootstrap";
-import BreadCrumb from "../../../../../../Components/Common/BreadCrumb";
+import BreadCrumb from "../../../../Components/Common/BreadCrumb";
 import { createSelector } from "reselect";
 import { useDispatch, useSelector } from "react-redux";
 import { useFormik } from "formik";
 import * as  Yup from "yup";
 import { Head, Link } from "@inertiajs/react";
-import { onAddCategoryList, onGetCategoryList } from "../../../../../../slices/jobs/thunk";
-import Layout from "../../../../../../Layouts";
+import { onAddCategoryList, onGetCategoryList } from "../../../../slices/jobs/thunk";
+import Layout from "../../../../Layouts/Theme";
 
 
 const JobCategories = () => {

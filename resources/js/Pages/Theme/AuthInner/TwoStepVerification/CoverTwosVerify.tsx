@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Card, Col, Container, Row } from 'react-bootstrap';
 
 //import images
-import AuthSlider from '../../authCarousel';
+import AuthSlider from '../authCarousel';
 import { Head, Link } from '@inertiajs/react';
 
 const CoverTwosVerify = () => {

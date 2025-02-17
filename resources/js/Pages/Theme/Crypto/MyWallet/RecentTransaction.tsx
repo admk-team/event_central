@@ -2,11 +2,11 @@ import React from 'react';
 import { Card} from 'react-bootstrap';
 
 //import images
-import btc from "../../../../../../../../images/svg/crypto-icons/btc.svg"; 
-import ltc from "../../../../../../../../images/svg/crypto-icons/ltc.svg"; 
-import xmr from "../../../../../../../../images/svg/crypto-icons/xmr.svg"; 
-import fil from "../../../../../../../../images/svg/crypto-icons/fil.svg"; 
-import dot from "../../../../../../../../images/svg/crypto-icons/dot.svg"; 
+import btc from "../../../../../images/svg/crypto-icons/btc.svg"; 
+import ltc from "../../../../../images/svg/crypto-icons/ltc.svg"; 
+import xmr from "../../../../../images/svg/crypto-icons/xmr.svg"; 
+import fil from "../../../../../images/svg/crypto-icons/fil.svg"; 
+import dot from "../../../../../images/svg/crypto-icons/dot.svg"; 
 import { Link } from '@inertiajs/react';
 
 const RecentTransaction = () => {

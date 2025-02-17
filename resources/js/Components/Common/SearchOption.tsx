@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Form} from 'react-bootstrap';
 import { Link } from '@inertiajs/react';
-import Navdata from '../../Layouts/LayoutMenuData';
+import Navdata from '../../Layouts/Theme/LayoutMenuData';
 
 //SimpleBar
 import SimpleBar from "simplebar-react";

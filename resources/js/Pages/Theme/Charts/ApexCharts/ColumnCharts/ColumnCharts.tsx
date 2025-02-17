@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactApexChart from "react-apexcharts";
 import ApexCharts from 'apexcharts';
-import getChartColorsArray from "../../../../../../../../Components/Common/ChartsDynamicColor";
+import getChartColorsArray from "../../../../../Components/Common/ChartsDynamicColor";
 
 const BasicColumn = ({ dataColors } : any) => {
     var chartColumnColors = getChartColorsArray(dataColors);

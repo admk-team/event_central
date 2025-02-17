@@ -10,26 +10,26 @@ import {
 } from "react-bootstrap";
 
 //Import Breadcrumb
-import BreadCrumb from "../../../../../../Components/Common/BreadCrumb";
+import BreadCrumb from "../../../../Components/Common/BreadCrumb";
 
-import Img2 from "../../../../../../../../images/companies/img-2.png";
-import ReviewSlider from "../../../../../../Components/Common/ReviewSlider";
-import TableContainer from "../../../../../../Components/Common/TableContainer";
+import Img2 from "../../../../../images/companies/img-2.png";
+import ReviewSlider from "../../../../Components/Common/ReviewSlider";
+import TableContainer from "../../../../Components/Common/TableContainer";
 
 import {
   Rating,
   Published,
   Price,
-} from "../../EcommerceProducts/EcommerceProductCol";
+} from "../EcommerceProducts/EcommerceProductCol";
 
-import Revenue from "../../../../DashboardEcommerce/Revenue";
+import Revenue from "../../DashboardEcommerce/Revenue";
 
 //redux
 import { useSelector, useDispatch } from "react-redux";
 import { createSelector } from "reselect";
 import { Head, Link } from "@inertiajs/react";
-import Layout from "../../../../../../Layouts";
-import { onGetProducts } from "../../../../../../slices/thunk";
+import Layout from "../../../../Layouts/Theme";
+import { onGetProducts } from "../../../../slices/thunk";
 
 const EcommerceSellerDetail = () => {
   const dispatch :any= useDispatch();

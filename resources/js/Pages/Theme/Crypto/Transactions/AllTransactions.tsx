@@ -3,7 +3,7 @@ import { Card, Col, Row } from 'react-bootstrap';
 
 //redux
 import { useSelector, useDispatch } from "react-redux";
-import TableContainer from '../../../../../../Components/Common/TableContainer';
+import TableContainer from '../../../../Components/Common/TableContainer';
 
 import {
     FromCol,
@@ -15,7 +15,7 @@ import {
 } from "./TransactionsCol";
 import { createSelector } from 'reselect';
 import { Link } from '@inertiajs/react';
-import { onGetTransationList } from '../../../../../../slices/thunk';
+import { onGetTransationList } from '../../../../slices/thunk';
 
 const AllTransactions = () => {
     const dispatch :any= useDispatch();

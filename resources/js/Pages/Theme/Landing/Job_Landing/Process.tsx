@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, Col, Container, Row } from "react-bootstrap";
-import { jobProcess } from "../../../../../../common/data/jobLanding";
+import { jobProcess } from "../../../../common/data/jobLanding";
 
 const Process = () => {
   return (

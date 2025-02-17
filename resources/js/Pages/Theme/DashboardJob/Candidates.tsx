@@ -4,12 +4,12 @@ import { Col, Card, Row } from "react-bootstrap";
 //SimpleBar
 import SimpleBar from "simplebar-react";
 
-import avtar10 from "../../../../../../images/users/avatar-10.jpg";
-import avtar1 from "../../../../../../images/users/avatar-1.jpg";
-import avtar9 from "../../../../../../images/users/avatar-9.jpg";
-import avtar2 from "../../../../../../images/users/avatar-2.jpg";
-import avtar5 from "../../../../../../images/users/avatar-5.jpg";
-import avtar8 from "../../../../../../images/users/avatar-8.jpg";
+import avtar10 from "../../../../images/users/avatar-10.jpg";
+import avtar1 from "../../../../images/users/avatar-1.jpg";
+import avtar9 from "../../../../images/users/avatar-9.jpg";
+import avtar2 from "../../../../images/users/avatar-2.jpg";
+import avtar5 from "../../../../images/users/avatar-5.jpg";
+import avtar8 from "../../../../images/users/avatar-8.jpg";
 import { Link } from "@inertiajs/react";
 
 const Candidates = () => {

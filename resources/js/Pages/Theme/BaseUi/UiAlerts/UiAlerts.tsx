@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
 import { Alert, Button, Card, Col, Container, Row } from 'react-bootstrap';
-import PreviewCardHeader from '../../../../../../Components/Common/PreviewCardHeader';
+import PreviewCardHeader from '../../../../Components/Common/PreviewCardHeader';
 
 // Import Content
-import UiContent from '../../../../../../Components/Common/UiContent';
+import UiContent from '../../../../Components/Common/UiContent';
 
 //import Components
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 
 // Import Code Components
 import { DefaultAlertsExample, BorderlessExample, DismissingExample, LinkColorExample, LiveExample, OutlineAlertsExample, LeftBorderAlertsExample, LabelIconAlertsExample, TopBarAlertsExample, LabelIconArrowAlertsExample, RoundedLabelIconAlertsExample, AdditionalContentAlertsExample, SolidAlertsExample } from './UiAlertsCode';
 import { Head, Link } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 interface AlertProps {
     variant: string,

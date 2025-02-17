@@ -11,12 +11,12 @@ import { Pagination, Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Images
-import amazon from "../../../../../../../../images/clients/amazon.svg";
-import walmart from "../../../../../../../../images/clients/walmart.svg";
-import lenovo from "../../../../../../../../images/clients/lenovo.svg";
-import paypal from "../../../../../../../../images/clients/paypal.svg";
-import shopify from "../../../../../../../../images/clients/shopify.svg";
-import verizon from "../../../../../../../../images/clients/verizon.svg";
+import amazon from "../../../../../images/clients/amazon.svg";
+import walmart from "../../../../../images/clients/walmart.svg";
+import lenovo from "../../../../../images/clients/lenovo.svg";
+import paypal from "../../../../../images/clients/paypal.svg";
+import shopify from "../../../../../images/clients/shopify.svg";
+import verizon from "../../../../../images/clients/verizon.svg";
 
 const Client = () => {
     return (

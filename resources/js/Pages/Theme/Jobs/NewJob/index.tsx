@@ -6,10 +6,10 @@ import {
   Form,
   Row,
 } from "react-bootstrap";
-import BreadCrumb from "../../../../../../Components/Common/BreadCrumb";
+import BreadCrumb from "../../../../Components/Common/BreadCrumb";
 import Flatpickr from "react-flatpickr";
 import { Head } from "@inertiajs/react";
-import Layout from "../../../../../../Layouts";
+import Layout from "../../../../Layouts/Theme";
 
 const NewJobs = () => {
 

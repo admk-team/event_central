@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { Card, Col, Dropdown, Form, Nav, Offcanvas, Pagination, Row, Tab } from 'react-bootstrap';
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 
 // import Images
-import smallImage1 from '../../../../../../../../images/small/img-1.jpg';
-import smallImage3 from '../../../../../../../../images/small/img-3.jpg';
-import smallImage4 from '../../../../../../../../images/small/img-4.jpg';
-import smallImage5 from '../../../../../../../../images/small/img-5.jpg';
+import smallImage1 from '../../../../../images/small/img-1.jpg';
+import smallImage3 from '../../../../../images/small/img-3.jpg';
+import smallImage4 from '../../../../../images/small/img-4.jpg';
+import smallImage5 from '../../../../../images/small/img-5.jpg';
 
-import { SearchGallery, news, video, swiper } from '../../../../../../common/data';
+import { SearchGallery, news, video, swiper } from '../../../../common/data';
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay } from "swiper/modules";
 import { Head, Link } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 const SearchResults = () => {
 

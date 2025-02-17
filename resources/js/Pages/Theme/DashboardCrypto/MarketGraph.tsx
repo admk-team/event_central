@@ -3,7 +3,7 @@ import { Card, Col, Row } from 'react-bootstrap';
 import { MarkerCharts } from './DashboardCryptoCharts';
 import { useSelector, useDispatch } from "react-redux";
 import { createSelector } from 'reselect';
-import { ongetMarketChartsData } from '../../../../slices/dashboardCrypto/thunk';
+import { ongetMarketChartsData } from '../../../slices/dashboardCrypto/thunk';
 
 const MarketGraph = () => {
     const dispatch : any= useDispatch();

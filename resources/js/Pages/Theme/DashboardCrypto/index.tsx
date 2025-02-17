@@ -1,6 +1,6 @@
 import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import BreadCrumb from '../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import MarketGraph from './MarketGraph';
 import MyCurrencies from './MyCurrencies';
 import MyPortfolio from './MyPortfolio';
@@ -11,7 +11,7 @@ import Trading from './Trading';
 import Widgets from './Widgets';
 import Widgets1 from './Widgets1';
 import { Head } from '@inertiajs/react';
-import Layout from '../../../../Layouts';
+import Layout from '../../../Layouts/Theme';
 
 
 const DashboardCrypto = () => {

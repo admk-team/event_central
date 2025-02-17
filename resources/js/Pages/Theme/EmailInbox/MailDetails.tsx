@@ -9,7 +9,7 @@ import SimpleBar from "simplebar-react";
 // Rating
 import Rating from "react-rating";
 import { createSelector } from 'reselect';
-import { ongetMailDetails } from '../../../../slices/thunk';
+import { ongetMailDetails } from '../../../slices/thunk';
 import { Button, Form } from 'react-bootstrap';
 
 

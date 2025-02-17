@@ -6,7 +6,7 @@ import {
     Button,
     Form,
 } from "react-bootstrap";
-import PreviewCardHeader from '../../../../../../Components/Common/PreviewCardHeader';
+import PreviewCardHeader from '../../../../Components/Common/PreviewCardHeader';
 import { BrowserDefaults } from './FormValidationCode';
 
 

@@ -1,4 +1,4 @@
-import InputError from '../../../../../../Components/InputError';
+import InputError from '../../../../Components/InputError';
 import { Link, useForm, usePage } from '@inertiajs/react';
 import { Transition } from '@headlessui/react';
 import { Button, Card, Col, Form, Row } from 'react-bootstrap';

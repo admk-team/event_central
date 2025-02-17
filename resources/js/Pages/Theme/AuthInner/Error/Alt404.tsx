@@ -1,5 +1,5 @@
 import { Head, Link } from '@inertiajs/react';
-import GuestLayout from '../../../../../../Layouts/GuestLayout';
+import GuestLayout from '../../../../Layouts/Theme/GuestLayout';
 import { Card, Col, Container, Row } from 'react-bootstrap';
 import React from 'react';
 

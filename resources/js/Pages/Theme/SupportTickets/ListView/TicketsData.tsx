@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { Card, Col, Form, Modal, Row, Dropdown } from 'react-bootstrap';
 //redux
 import { useSelector, useDispatch } from "react-redux";
-import TableContainer from '../../../../../../Components/Common/TableContainer';
+import TableContainer from '../../../../Components/Common/TableContainer';
 import { TicketsId, Title, Client, AssignedTo, CreateDate, DueDate, Status, Priority } from "./TicketCol";
 //Import Flatepicker
 import Flatpickr from "react-flatpickr";
@@ -13,13 +13,13 @@ import { isEmpty } from "lodash";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 
-import DeleteModal from "../../../../../../Components/Common/DeleteModal";
+import DeleteModal from "../../../../Components/Common/DeleteModal";
 
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Loader from "../../../../../../Components/Common/Loader";
+import Loader from "../../../../Components/Common/Loader";
 import { createSelector } from 'reselect';
-import { onAddNewTicket, ondeleteTicket, onGetTicketsList, onupdateTicket } from '../../../../../../slices/thunk';
+import { onAddNewTicket, ondeleteTicket, onGetTicketsList, onupdateTicket } from '../../../../slices/thunk';
 
 const TicketsData = () => {
     const dispatch: any = useDispatch();

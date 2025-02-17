@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { Badge, Button, Card, Col, Container, Row } from 'react-bootstrap';
 
 //import Components
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 
 // Rating
 import Rating from "react-rating";
 
 import { BasicRaterExample, RaterWithStepExample, CustomMsgExample, ReadOnlyRaterExample, OnHoverExample, ReasetRaterExample } from './UiRatingsCode';
 import { Head } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 const UiRatings = () => {
     const [customize, setcustomize] = useState<any>("");

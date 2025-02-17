@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Col, Dropdown } from 'react-bootstrap';
-import { teamMembers } from '../../../../common/data';
+import { teamMembers } from '../../../common/data';
 import { TeamMembersCharts } from './DashboardProjectCharts';
 
 const TeamMembers = () => {

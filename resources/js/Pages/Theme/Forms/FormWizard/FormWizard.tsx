@@ -11,13 +11,13 @@ import {
   Button,
 } from "react-bootstrap";
 //Import images
-import dummyUser from "../../../../../../../../images/users/user-dummy-img.jpg";
-import logoDark from "../../../../../../../../images/logo-dark.png";
-import logoLight from "../../../../../../../../images/logo-light.png";
+import dummyUser from "../../../../../images/users/user-dummy-img.jpg";
+import logoDark from "../../../../../images/logo-dark.png";
+import logoLight from "../../../../../images/logo-light.png";
 
-import BreadCrumb from "../../../../../../Components/Common/BreadCrumb";
+import BreadCrumb from "../../../../Components/Common/BreadCrumb";
 import { Head } from "@inertiajs/react";
-import Layout from "../../../../../../Layouts";
+import Layout from "../../../../Layouts/Theme";
 
 const FormWizard = () => {
   const [activeTab, setactiveTab] = useState<any>(1);

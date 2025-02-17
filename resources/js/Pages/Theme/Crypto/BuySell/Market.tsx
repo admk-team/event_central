@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
-import { market } from '../../../../../../common/data';
-import TableContainer from '../../../../../../Components/Common/TableContainer';
+import { market } from '../../../../common/data';
+import TableContainer from '../../../../Components/Common/TableContainer';
 import {
     Price,
     Pairs,

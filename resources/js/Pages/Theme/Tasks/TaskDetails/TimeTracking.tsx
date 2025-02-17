@@ -1,9 +1,9 @@
 import React from 'react';
 import { Card, Dropdown } from "react-bootstrap";
 
-import avatar10 from "../../../../../../../../images/users/avatar-10.jpg";
-import avatar8 from "../../../../../../../../images/users/avatar-8.jpg";
-import avatar2 from "../../../../../../../../images/users/avatar-2.jpg";
+import avatar10 from "../../../../../images/users/avatar-10.jpg";
+import avatar8 from "../../../../../images/users/avatar-8.jpg";
+import avatar2 from "../../../../../images/users/avatar-2.jpg";
 import { Link } from '@inertiajs/react';
 
 

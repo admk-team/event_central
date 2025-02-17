@@ -12,17 +12,17 @@ import SimpleBar from "simplebar-react";
 import { Autoplay, Mousewheel } from "swiper/modules";
 
 //import images
-import img3 from "../../../../../../images/products/img-3.png";
-import img4 from "../../../../../../images/products/img-4.png";
-import img5 from "../../../../../../images/products/img-5.png";
-import img6 from "../../../../../../images/products/img-6.png";
-import img8 from "../../../../../../images/products/img-8.png";
+import img3 from "../../../../images/products/img-3.png";
+import img4 from "../../../../images/products/img-4.png";
+import img5 from "../../../../images/products/img-5.png";
+import img6 from "../../../../images/products/img-6.png";
+import img8 from "../../../../images/products/img-8.png";
 
-import avatar1 from "../../../../../../images/users/avatar-1.jpg";
-import avatar2 from "../../../../../../images/users/avatar-2.jpg";
-import avatar3 from "../../../../../../images/users/avatar-3.jpg";
-import avatar4 from "../../../../../../images/users/avatar-4.jpg";
-import avatar5 from "../../../../../../images/users/avatar-5.jpg";
+import avatar1 from "../../../../images/users/avatar-1.jpg";
+import avatar2 from "../../../../images/users/avatar-2.jpg";
+import avatar3 from "../../../../images/users/avatar-3.jpg";
+import avatar4 from "../../../../images/users/avatar-4.jpg";
+import avatar5 from "../../../../images/users/avatar-5.jpg";
 import { Link } from '@inertiajs/react';
 
 const EcommerceWidgets = () => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Col } from 'react-bootstrap';
-import { topPerformers } from '../../../../common/data';
+import { topPerformers } from '../../../common/data';
 
 const TopPerformers = () => {
     return (

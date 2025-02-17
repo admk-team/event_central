@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Card, Col } from 'react-bootstrap';
-import { newsFeed } from '../../../../common/data';
+import { newsFeed } from '../../../common/data';
 import { Link } from '@inertiajs/react';
 
 

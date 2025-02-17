@@ -1,9 +1,9 @@
 import React from "react";
 import ReactApexChart from "react-apexcharts";
-import avatar1 from "../../../../../../../../../../images/users/avatar-1.jpg";
-import avatar2 from "../../../../../../../../../../images/users/avatar-2.jpg";
+import avatar1 from "../../../../../../images/users/avatar-1.jpg";
+import avatar2 from "../../../../../../images/users/avatar-2.jpg";
 
-import getChartColorsArray from "../../../../../../../../Components/Common/ChartsDynamicColor";
+import getChartColorsArray from "../../../../../Components/Common/ChartsDynamicColor";
 
 const Basic = ({ dataColors } :any) => {
     var chartScatterBasicColors = getChartColorsArray(dataColors);

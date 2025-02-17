@@ -2,7 +2,7 @@ import React from 'react';
 import CountUp from "react-countup";
 import { Card, Col } from 'react-bootstrap';
 import { Link } from '@inertiajs/react';
-import { ecomWidgets } from '../../../../common/data/dashboardEcommerce';
+import { ecomWidgets } from '../../../common/data/dashboardEcommerce';
 
 const Widgets = () => {
     return (

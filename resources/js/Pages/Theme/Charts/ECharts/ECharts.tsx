@@ -2,7 +2,7 @@ import React from "react";
 import ReactEcharts from "echarts-for-react";
 import * as echarts from 'echarts/core';
 
-import getChartColorsArray from "../../../../../../Components/Common/ChartsDynamicColor";
+import getChartColorsArray from "../../../../Components/Common/ChartsDynamicColor";
 
 //LineChart
 const LineChart = ({ dataColors } :any) => {

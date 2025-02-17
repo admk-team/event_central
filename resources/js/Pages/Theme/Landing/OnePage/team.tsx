@@ -2,14 +2,14 @@ import React from 'react';
 import { Card, Col, Container, Row } from 'react-bootstrap';
 
 // Import Images
-import avatar2 from "../../../../../../../../images/users/avatar-2.jpg";
-import avatar3 from "../../../../../../../../images/users/avatar-3.jpg";
-import avatar4 from "../../../../../../../../images/users/avatar-4.jpg";
-import avatar5 from "../../../../../../../../images/users/avatar-5.jpg";
-import avatar6 from "../../../../../../../../images/users/avatar-6.jpg";
-import avatar7 from "../../../../../../../../images/users/avatar-7.jpg";
-import avatar8 from "../../../../../../../../images/users/avatar-8.jpg";
-import avatar10 from "../../../../../../../../images/users/avatar-10.jpg";
+import avatar2 from "../../../../../images/users/avatar-2.jpg";
+import avatar3 from "../../../../../images/users/avatar-3.jpg";
+import avatar4 from "../../../../../images/users/avatar-4.jpg";
+import avatar5 from "../../../../../images/users/avatar-5.jpg";
+import avatar6 from "../../../../../images/users/avatar-6.jpg";
+import avatar7 from "../../../../../images/users/avatar-7.jpg";
+import avatar8 from "../../../../../images/users/avatar-8.jpg";
+import avatar10 from "../../../../../images/users/avatar-10.jpg";
 import { Link } from '@inertiajs/react';
 
 

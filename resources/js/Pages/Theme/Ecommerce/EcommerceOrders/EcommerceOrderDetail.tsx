@@ -8,11 +8,11 @@ import {
 } from "react-bootstrap";
 
 
-import BreadCrumb from "../../../../../../Components/Common/BreadCrumb";
-import { productDetails } from "../../../../../../common/data/ecommerce";
+import BreadCrumb from "../../../../Components/Common/BreadCrumb";
+import { productDetails } from "../../../../common/data/ecommerce";
 import EcommerceOrderProduct from "./EcommerceOrderProduct";
-import avatar3 from "../../../../../../../../images/users/avatar-3.jpg";
-import Layout from "../../../../../../Layouts";
+import avatar3 from "../../../../../images/users/avatar-3.jpg";
+import Layout from "../../../../Layouts/Theme";
 import { Head, Link } from "@inertiajs/react";
 const EcommerceOrderDetail = () => {
   return (

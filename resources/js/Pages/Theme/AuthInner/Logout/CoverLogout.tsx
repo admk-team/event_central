@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Col, Container, Row } from 'react-bootstrap';
-import AuthSlider from '../../authCarousel';
+import AuthSlider from '../authCarousel';
 import { Link } from '@inertiajs/react';
 
 const CoverLogout = () => {

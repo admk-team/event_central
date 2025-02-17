@@ -1,6 +1,6 @@
 import React from "react";
 import { Col, Container, Row } from "react-bootstrap";
-import LogoLight from "../../../../../../../../images/logo-light.png";
+import LogoLight from "../../../../../images/logo-light.png";
 import { Link } from "@inertiajs/react";
 
 const Footer = () => {

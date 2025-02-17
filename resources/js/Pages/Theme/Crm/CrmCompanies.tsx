@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 
 // Import Images
-import multiUser from '../../../../../../images/users/multi-user.jpg';
+import multiUser from '../../../../images/users/multi-user.jpg';
 
 import {
   Col,
@@ -13,29 +13,29 @@ import {
   Button,
   Dropdown,
 } from "react-bootstrap";
-import BreadCrumb from "../../../../Components/Common/BreadCrumb";
-import DeleteModal from "../../../../Components/Common/DeleteModal";
+import BreadCrumb from "../../../Components/Common/BreadCrumb";
+import DeleteModal from "../../../Components/Common/DeleteModal";
 import { isEmpty } from "lodash";
 
-import chimp from "../../../../../../images/brands/mail_chimp.png"
+import chimp from "../../../../images/brands/mail_chimp.png"
 //redux
 import { useSelector, useDispatch } from "react-redux";
-import TableContainer from "../../../../Components/Common/TableContainer";
+import TableContainer from "../../../Components/Common/TableContainer";
 
 // Formik
 import * as Yup from "yup";
 import { useFormik } from "formik";
 
 // Export Modal
-import ExportCSVModal from "../../../../Components/Common/ExportCSVModal";
+import ExportCSVModal from "../../../Components/Common/ExportCSVModal";
 
-import Loader from "../../../../Components/Common/Loader";
+import Loader from "../../../Components/Common/Loader";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { createSelector } from "reselect";
 import { Head, Link } from "@inertiajs/react";
-import { onAddNewCompanies, onDeleteCompanies, onGetCompanies, onUpdateCompanies } from "../../../../slices/thunk";
-import Layout from "../../../../Layouts";
+import { onAddNewCompanies, onDeleteCompanies, onGetCompanies, onUpdateCompanies } from "../../../slices/thunk";
+import Layout from "../../../Layouts/Theme";
 
 const CrmCompanies = () => {
   const dispatch: any = useDispatch();

@@ -1,12 +1,12 @@
 import React from "react";
 import { Card, Col, Row, Form, Container } from "react-bootstrap";
-import UiContent from "../../../../../../Components/Common/UiContent";
+import UiContent from "../../../../Components/Common/UiContent";
 
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import BreadCrumb from "../../../../../../Components/Common/BreadCrumb";
+import BreadCrumb from "../../../../Components/Common/BreadCrumb";
 import { Head } from "@inertiajs/react";
-import Layout from "../../../../../../Layouts";
+import Layout from "../../../../Layouts/Theme";
 
 const FormEditor = () => {
 

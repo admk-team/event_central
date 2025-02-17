@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, Col, Row } from "react-bootstrap";
 
-import Slack from "../../../../../../../../../../images/brands/slack.png";
+import Slack from "../../../../../../images/brands/slack.png";
 
 const Header = () => {
   return (

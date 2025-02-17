@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import TableContainer from '../../../../../../Components/Common/TableContainer';
-import DeleteModal from "../../../../../../Components/Common/DeleteModal";
+import TableContainer from '../../../../Components/Common/TableContainer';
+import DeleteModal from "../../../../Components/Common/DeleteModal";
 
 // Import Scroll Bar - SimpleBar
 import SimpleBar from 'simplebar-react';
@@ -30,19 +30,19 @@ import { isEmpty } from "lodash";
 
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Loader from "../../../../../../Components/Common/Loader";
+import Loader from "../../../../Components/Common/Loader";
 import { createSelector } from 'reselect';
 
-import avatar1 from "../../../../../../../../images/users/avatar-1.jpg";
-import avatar2 from "../../../../../../../../images/users/avatar-2.jpg";
-import avatar3 from "../../../../../../../../images/users/avatar-3.jpg";
-import avatar5 from "../../../../../../../../images/users/avatar-5.jpg";
-import avatar6 from "../../../../../../../../images/users/avatar-6.jpg";
-import avatar7 from "../../../../../../../../images/users/avatar-7.jpg";
-import avatar8 from "../../../../../../../../images/users/avatar-8.jpg";
-import avatar10 from "../../../../../../../../images/users/avatar-10.jpg";
+import avatar1 from "../../../../../images/users/avatar-1.jpg";
+import avatar2 from "../../../../../images/users/avatar-2.jpg";
+import avatar3 from "../../../../../images/users/avatar-3.jpg";
+import avatar5 from "../../../../../images/users/avatar-5.jpg";
+import avatar6 from "../../../../../images/users/avatar-6.jpg";
+import avatar7 from "../../../../../images/users/avatar-7.jpg";
+import avatar8 from "../../../../../images/users/avatar-8.jpg";
+import avatar10 from "../../../../../images/users/avatar-10.jpg";
 import { Link } from '@inertiajs/react';
-import { onaddNewTask, ondeleteTask, ongetTaskList, onupdateTask } from '../../../../../../slices/tasks/thunk';
+import { onaddNewTask, ondeleteTask, ongetTaskList, onupdateTask } from '../../../../slices/tasks/thunk';
 
 const Assigned = [
   { id: 1, imgId: "anna-adame", img: avatar1, name: "Anna Adame" },

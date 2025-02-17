@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Col } from 'react-bootstrap';
 import { VectorMap } from '@south-paw/react-vector-maps';
-import world from '../../../../common/world.svg.json';
+import world from '../../../common/world.svg.json';
 
 const SalesByLocations = () => {
     return (

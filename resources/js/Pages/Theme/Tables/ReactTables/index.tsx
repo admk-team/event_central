@@ -2,7 +2,7 @@ import React from 'react'
 import { Card, Col, Container, Row } from 'react-bootstrap'
 import { DefaultTable, PaginationTable, SearchTable, SortingTable, LoadingStateTable, HiddenColumns } from './ReactTable'
 import { Head } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 const ReactTable = () => {
   

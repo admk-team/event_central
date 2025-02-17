@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactApexChart from "react-apexcharts";
-import { dataSeries, githubdata, seriesData } from '../../series';
+import { dataSeries, githubdata, seriesData } from '../series';
 import moment from "moment";
 
-import getChartColorsArray from "../../../../../../../../Components/Common/ChartsDynamicColor";
+import getChartColorsArray from "../../../../../Components/Common/ChartsDynamicColor";
 
 const BasicAreaCharts = ({dataColors} : any) => {
     var BasicAreaChartsColors = getChartColorsArray(dataColors);

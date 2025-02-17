@@ -5,12 +5,12 @@ import { Card, Col, Nav, Row, Table, Dropdown, Tab, Button } from 'react-bootstr
 import SimpleBar from "simplebar-react";
 
 //import images
-import avatar7 from "../../../../../../../../images/users/avatar-7.jpg";
-import avatar10 from "../../../../../../../../images/users/avatar-10.jpg";
-import avatar8 from "../../../../../../../../images/users/avatar-8.jpg";
-import avatar6 from "../../../../../../../../images/users/avatar-6.jpg";
-import image4 from "../../../../../../../../images/small/img-4.jpg";
-import image5 from "../../../../../../../../images/small/img-5.jpg";
+import avatar7 from "../../../../../images/users/avatar-7.jpg";
+import avatar10 from "../../../../../images/users/avatar-10.jpg";
+import avatar8 from "../../../../../images/users/avatar-8.jpg";
+import avatar6 from "../../../../../images/users/avatar-6.jpg";
+import image4 from "../../../../../images/small/img-4.jpg";
+import image5 from "../../../../../images/small/img-5.jpg";
 import { Link } from '@inertiajs/react';
 
 const Comments = () => {
