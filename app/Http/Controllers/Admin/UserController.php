@@ -60,4 +60,17 @@ class UserController extends Controller
 
         return back();
     }
+
+    public function destroyMany(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array'
+        ]);
+
+        foreach ($request->ids as $id) {
+            User::find($id)?->delete();
+        }
+
+        return back();
+    }
 }

@@ -17,6 +17,7 @@ import FullScreenDropdown from "../../Components/Common/FullScreenDropdown";
 import ProfileDropdown from "../../Components/Common/ProfileDropdown";
 import LightDark from "../../Components/Common/LightDark";
 import NotificationDropdown from "../../Components/Common/NotificationDropdown";
+import OrganizerProfileDropdown from "../../Components/Common/OrganizerProfileDropdown";
 
 const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
     const dispatch: any = useDispatch();
@@ -154,7 +155,7 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
                             <NotificationDropdown />
 
                             {/* ProfileDropdown */}
-                            <ProfileDropdown />
+                            <OrganizerProfileDropdown />
                         </div>
                     </div>
                 </div>
