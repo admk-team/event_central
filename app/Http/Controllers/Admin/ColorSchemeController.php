@@ -74,4 +74,17 @@ class ColorSchemeController extends Controller
         $color_theme->delete();
         return back();
     }
+
+    public function destroyMany(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array'
+        ]);
+
+        foreach ($request->ids as $id) {
+            ColorScheme::find($id)?->delete();
+        }
+
+        return back();
+    }
 }

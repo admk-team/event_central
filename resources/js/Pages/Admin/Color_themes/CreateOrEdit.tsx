@@ -1,4 +1,4 @@
-import Layout from "../../../Layouts";
+import Layout from "../../../Layouts/Admin";
 import { Head, Link, useForm } from '@inertiajs/react';
 import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import React, { useState } from 'react';

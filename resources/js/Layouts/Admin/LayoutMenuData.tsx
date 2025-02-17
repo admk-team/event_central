@@ -141,6 +141,12 @@ const Navdata = () => {
                     link: route('admin.roles.index'),
                     parentId: "dashboard",
                 },
+                {
+                    id: "themes",
+                    label: "Event Themes",
+                    link: route('admin.color-themes.index'),
+                    parentId: "dashboard",
+                },
             ],
         },
     ];
