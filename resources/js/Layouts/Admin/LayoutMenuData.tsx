@@ -141,6 +141,12 @@ const Navdata = () => {
                     link: route('admin.roles.index'),
                     parentId: "dashboard",
                 },
+                {
+                    id: "organizer",
+                    label: "Organizer",
+                    link: route('admin.organizers.index'),
+                    parentId: "dashboard",
+                },
             ],
         },
     ];

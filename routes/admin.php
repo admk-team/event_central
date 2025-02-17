@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\OrganizerController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
@@ -12,4 +13,5 @@ Route::middleware(['auth', 'panel:admin'])->prefix('admin')->name('admin.')->gro
     Route::resource('users', UserController::class);
     Route::delete('users/delete/many', [UserController::class, 'destroyMany'])->name('users.destroy.many');
     Route::resource('roles', RoleController::class);
+    Route::resource('organizers', OrganizerController::class);
 });
