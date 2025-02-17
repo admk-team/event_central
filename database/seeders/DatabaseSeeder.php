@@ -16,26 +16,38 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call([
+            // Admin
+            AdminPermissionsSeeder::class,
+            AdminRolesSeeder::class,
+            AdminUsersSeeder::class,
+
+            // Organizer
+            OrganizerPermissionsSeeder::class,
+            OrganizerRolesSeeder::class,
+            OrganizerUsersSeeder::class,
+        ]);
+
         // \App\Models\User::factory(10)->create();
 
         // \App\Models\User::factory()->create([
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-        $sadmin = User::create(["name" => "Admin", "email" => "admin@themesbrand.com", "role" => "admin", "password" => Hash::make(12345678), "email_verified_at" => now()]);
+        // $sadmin = User::create(["name" => "Admin", "email" => "admin@themesbrand.com", "role" => "admin", "password" => Hash::make(12345678), "email_verified_at" => now()]);
 
-        $role = Role::create(['name' => 'Superadmin']);
-        $role1 = Role::create(['name' => 'Admin']);
+        // $role = Role::create(['name' => 'Superadmin']);
+        // $role1 = Role::create(['name' => 'Admin']);
 
-        $permission1 = Permission::create(['name' => 'Admin UserManagement']);
-        $permission2 = Permission::create(['name' => 'Role Management']);
+        // $permission1 = Permission::create(['name' => 'Admin UserManagement']);
+        // $permission2 = Permission::create(['name' => 'Role Management']);
 
-        $role->givePermissionTo($permission1);
-        $role->givePermissionTo($permission2);
+        // $role->givePermissionTo($permission1);
+        // $role->givePermissionTo($permission2);
 
-        $role1->givePermissionTo($permission1);
+        // $role1->givePermissionTo($permission1);
         // $role1->givePermissionTo($permission2);
 
-        $sadmin->assignRole([$role->id]);
+        // $sadmin->assignRole([$role->id]);
     }
 }
