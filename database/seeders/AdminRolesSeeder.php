@@ -13,7 +13,7 @@ class AdminRolesSeeder extends Seeder
      */
     public function run(): void
     {
-        $superadmin = Role::updateOrCreate(['name' => 'superadmin', 'guard_name' => 'web']);
+        $superadmin = Role::updateOrCreate(['name' => 'superadmin', 'panel' => 'admin']);
         $superadmin->syncPermissions(AdminPermissionsSeeder::$permissions);
     }
 }

@@ -13,7 +13,7 @@ class OrganizerRolesSeeder extends Seeder
      */
     public function run(): void
     {
-        $superadmin = Role::updateOrCreate(['name' => 'superadmin', 'guard_name' => 'organizer']);
+        $superadmin = Role::updateOrCreate(['name' => 'superadmin', 'panel' => 'organizer']);
         $superadmin->syncPermissions(OrganizerPermissionsSeeder::$permissions);
     }
 }

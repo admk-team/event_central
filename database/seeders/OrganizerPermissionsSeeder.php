@@ -23,7 +23,7 @@ class OrganizerPermissionsSeeder extends Seeder
     public function run(): void
     {
         foreach (self::$permissions as $permission) {
-            Permission::updateOrCreate(['name' => $permission, 'guard_name' => 'organizer']);
+            Permission::updateOrCreate(['name' => $permission, 'panel' => 'organizer']);
         }
     }
 }
