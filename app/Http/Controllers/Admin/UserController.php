@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -15,8 +16,9 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $users = User::latest()->paginate($request->per_page ?? 10);
-        return Inertia::render("Admin/Users/Index", compact('users'));
+        $users = User::with('roles:name')->latest()->paginate($request->per_page ?? 10);
+        $roles = $roles = Role::where('panel', 'admin')->get()->pluck('name');
+        return Inertia::render("Admin/Users/Index", compact('users', 'roles'));
     }
 
     /**
@@ -25,8 +27,13 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         $input = $request->validated();
+        $role = $input['role'];
 
-        User::create($input);
+        $input['role'] = 'admin'; // User type
+
+        $user = User::create($input);
+
+        $user->syncRoles([$role]);
 
         return back();
     }
@@ -45,8 +52,13 @@ class UserController extends Controller
     public function update(UserRequest $request, User $user)
     {
         $input = $request->validated();
+        $role = $input['role'];
+
+        $input['role'] = 'admin'; // User type
 
         $user->update($input);
+
+        $user->syncRoles([$role]);
 
         return back();
     }

@@ -1,15 +1,17 @@
-import { useForm } from '@inertiajs/react';
+import { useForm, usePage } from '@inertiajs/react';
 import { Form, FormGroup, Modal, Spinner } from "react-bootstrap";
 
 export default function CreateEditModal({ show, hide, onHide, user }: { show: boolean, hide: () => void, onHide: () => void, user: any|null }) {
     const isEdit = user != null ? true : false;
+
+    const roles = usePage().props.roles as string[] ?? [];
 
     const { data, setData, post, put, processing, errors, reset } = useForm({
         _method: isEdit ? "PUT" : "POST",
         name: user?.name ?? '',
         email: user?.email ?? '',
         password: '',
-        role: user?.role ?? '',
+        role: user?.roles[0]?.name ?? '',
     });
 
     const submit = (e: any) => {
@@ -84,13 +86,17 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                     </FormGroup>
                     <FormGroup className="mb-3">
                         <Form.Label className="form-label">Role</Form.Label>
-                        <Form.Control 
-                            type="text" 
+                        <Form.Select 
                             className="form-control" 
                             value={data.role}
                             onChange={(e) => setData({...data, role: e.target.value})}
                             isInvalid={!!errors.role}
-                        />
+                        >
+                            <option>Select</option>
+                            {roles.map((role, index) => (
+                                <option value={role} key={index}>{role}</option>
+                            ))}
+                        </Form.Select>
                         {errors.role && (
                             <Form.Control.Feedback type="invalid">{errors.role}</Form.Control.Feedback>
                         )}

@@ -1,7 +1,7 @@
 import { usePage } from "@inertiajs/react";
 import React from "react";
 
-export default function HasPermission({ 
+export default function HasAnyPermission({ 
     permission,
     children,
     elseRender
@@ -17,9 +17,10 @@ export default function HasPermission({
     if (typeof permission === 'string') {
         hasPermission = userPermissions.includes(permission);
     } else {
-        permission.map((p) => {
+        for (const p of permission) {
             hasPermission = userPermissions.includes(p);
-        })
+            if (hasPermission) break;
+        }
     }
 
     if (! hasPermission) return elseRender || null;
