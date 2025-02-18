@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 const Navdata = () => {
     //state data
     const [isDashboard, setIsDashboard] = useState<boolean>(false);
+    const [isContent, setIsContent] = useState<boolean>(false);
     const [isApps, setIsApps] = useState<boolean>(false);
     const [isAuth, setIsAuth] = useState<boolean>(false);
     const [isPages, setIsPages] = useState<boolean>(false);
@@ -81,6 +82,9 @@ const Navdata = () => {
         if (iscurrentState !== 'UserManagement') {
             setisUserManagement(false);
         }
+        if (iscurrentState !== 'content') {
+            setIsContent(false);
+        }
     }, [
         history,
         iscurrentState,
@@ -116,6 +120,52 @@ const Navdata = () => {
                 updateIconSidebar(e);
             }
         },
+        {
+            id: "content",
+            label: "content",
+            icon: "bx bxs-user",
+            link: "/#",
+            stateVariables: isContent,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsContent(!isContent);
+                setIscurrentState('content');
+                updateIconSidebar(e);
+            },
+            subItems: [
+                {
+                    id: "schedule",
+                    label: "Schedule",
+                    link: route('organizer.schedule.index'),
+                    parentId: "dashboard",
+                },
+                {
+                    id: "speakers",
+                    label: "Speakers",
+                    link: route('organizer.speaker.index'),
+                    parentId: "dashboard",
+                },
+                {
+                    id: "workShops",
+                    label: "WorkShops",
+                    link: route('organizer.workshop.index'),
+                    parentId: "dashboard",
+                },
+                {
+                    id: "custom_menu",
+                    label: "Custom menu",
+                    link: route('organizer.custom-menu.index'),
+                    parentId: "dashboard",
+                },
+                {
+                    id: "partners",
+                    label: "Partners",
+                    link: route('organizer.partner.index'),
+                    parentId: "dashboard",
+                },
+            ]
+
+        }
     ];
     return <React.Fragment>{menuItems}</React.Fragment>;
 };

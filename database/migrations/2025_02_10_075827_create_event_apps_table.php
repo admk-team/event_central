@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('organizer_id');
             $table->foreign('organizer_id')->references('id')->on('users')->cascadeOnDelete();
-            $table->unsignedBigInteger('regis_page_id');
-            $table->foreign('regis_page_id')->references('id')->on('registration_pages');
             // $table->string('information');
             $table->string('name');
             $table->longText('description');
