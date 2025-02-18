@@ -59,21 +59,29 @@ function Index({ users }: any) {
 
     const columns: ColumnDef<typeof users.data[0]> = [
         {
+            accessorKey: 'id',
             header: () => 'ID',
             cell: (user) => user.id,
-            cellClass: "fw-medium"
+            cellClass: "fw-medium",
+            enableSorting: true,
         },
         {
+            accessorKey: 'name',
             header: () => 'Name',
             cell: (user) => user.name,
+            enableSorting: true,
         },
         {
+            accessorKey: 'email',
             header: () => 'Email',
             cell: (user) => user.email,
+            enableSorting: true,
         },
         {
+            accessorKey: 'role',
             header: () => 'Role',
             cell: (user) => <span className="badge bg-success-subtle text-success">{user.role}</span>,
+            enableSorting: true,
         },
         {
             header: () => 'Action',

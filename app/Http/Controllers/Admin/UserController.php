@@ -21,7 +21,7 @@ class UserController extends Controller
             abort(403);
         }
 
-        $users = User::with('roles:name')->latest()->paginate($request->per_page ?? 10);
+        $users = $this->datatable(User::with('roles:name'));
         $roles = $roles = Role::where('panel', 'admin')->get()->pluck('name');
         return Inertia::render("Admin/Users/Index", compact('users', 'roles'));
     }
