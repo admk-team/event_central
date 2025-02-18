@@ -10,8 +10,10 @@ use App\Http\Controllers\Organizer\Schedule;
 use App\Http\Controllers\Organizer\ScheduleController;
 use App\Http\Controllers\Organizer\SpeakerController;
 use App\Http\Controllers\Organizer\WorkshopController;
+use App\Http\Controllers\Organizer\ProfileController;
 
-Route::prefix('organizer')->name('organizer.')->group(function () {
+Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organizer.')->group(function () {
+    Route::get('/profile-edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 
