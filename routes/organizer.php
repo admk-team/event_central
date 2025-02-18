@@ -14,8 +14,10 @@ Route::prefix('organizer')->name('organizer.')->group(function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('schedule', ScheduleController::class);
     Route::resource('speaker', EventSpeakerController::class);
+    Route::delete('speakers/delete/many',[EventSpeakerController::class,'destroyMany'])->name('speakers.destroy.many');
     Route::resource('workshop', WorkshopController::class);
     Route::resource('custom-menu', CustomMenuController::class);
     Route::resource('partner', PartnerController::class);
+
 
 });

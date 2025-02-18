@@ -34,7 +34,7 @@ function Index({ speakers }: any) {
     }
     const handleDelete = () => {
     
-        deleteForm.post(route('admin.color-themes.destroy', deleteTheme.id));
+        deleteForm.post(route('organizer.speaker.destroy', deleteTheme.id));
         setShowDeleteConfirmation(false);
     }
     const deleteManyAction = (ids: number[]) => {
@@ -42,7 +42,7 @@ function Index({ speakers }: any) {
         setShowDeleteManyConfirmation(true);
     }
     const handleDeleteMany = () => {
-        deleteManyForm.delete(route('admin.color-themes.destroy.many'));
+        deleteManyForm.delete(route('organizer.speakers.destroy.many'));
         setShowDeleteManyConfirmation(false);
     }
 
@@ -80,10 +80,22 @@ function Index({ speakers }: any) {
 
     return (
         <React.Fragment>
-            <Head title='Starter | Velzon - React Admin & Dashboard Template' />
+            <Head>
+                <title>Speakers Management | Organizer Dashboard</title>
+                <meta name="description" content="Manage event speakers, edit details, and delete records from the organizer's dashboard." />
+                <meta name="keywords" content="event speakers, speaker management, conference speakers, admin dashboard" />
+                <meta name="robots" content="index, follow" />
+
+                {/* Open Graph Meta Tags */}
+                <meta property="og:title" content="Speakers Management | Organizer Dashboard" />
+                <meta property="og:description" content="Manage event speakers, edit details, and delete records from the organizer's dashboard." />
+                <meta property="og:type" content="website" />
+                <meta property="og:url" content={route('organizer.speaker.index')} />
+            </Head>
+
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Thems" pageTitle="Dashboard" />
+                    <BreadCrumb title="Speakers" pageTitle="Dashboard" />
                     <Row>
                         <Col xs={12}>
                             <DataTable

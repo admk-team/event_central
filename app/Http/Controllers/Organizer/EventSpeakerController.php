@@ -46,4 +46,20 @@ class EventSpeakerController extends Controller
 
         return back();
     }
+
+    public function destroy(EventSpeaker $speaker)
+    {
+        $speaker->delete();
+        return back();
+    }
+
+    public function destroyMany(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|Array'
+        ]);
+        foreach ($request->ids as $id) {
+            EventSpeaker::find($id)->delete();
+        }
+    }
 }
