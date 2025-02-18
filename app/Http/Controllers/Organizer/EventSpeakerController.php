@@ -13,7 +13,7 @@ class EventSpeakerController extends Controller
 {
     public function index(Request $request)
     {
-        $speakers = EventSpeaker::latest()->paginate($request->per_page ?? 10);
+        $speakers = EventSpeaker::currentEvent()->latest()->paginate($request->per_page ?? 10);
         return Inertia::render('Organizer/Speekers/Index', compact('speakers'));
     }
 

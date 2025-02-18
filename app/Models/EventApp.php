@@ -22,6 +22,10 @@ class EventApp extends Model
         'schedual_type',
     ];
 
+    protected $appends = [
+        'created_at' => 'created_at_date'
+    ];
+
     // Relationship with Registration Page
     public function registrationPage()
     {
@@ -32,5 +36,12 @@ class EventApp extends Model
     public function colorSchemes()
     {
         return $this->hasMany(ColorScheme::class, 'event_id');
+    }
+
+    // getters
+
+    public function getCreatedAtDateAttribute()
+    {
+        return $this->created_at->format('d M, Y');
     }
 }

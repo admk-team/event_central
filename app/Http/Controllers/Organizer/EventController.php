@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Organizer;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Oranizer\Event\StoreRequest;
+use App\Models\EventApp;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class EventController extends Controller
@@ -13,31 +16,33 @@ class EventController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Organizer/Event/Preview');
+        $events = EventApp::all();
+        return Inertia::render('Organizer/Event/Preview', [
+            'events' => $events
+        ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-        //
-    }
+    public function create(Request $request) {}
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        //
+        $data = $request->validated();
+        $data['organizer_id'] = Auth::id();
+        $event = EventApp::create($data);
+        session()->put('event_id', $event->id);
+        return redirect()->route('organizer.dashboard')->with('success', 'Event created successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function selectEvent( $id)
     {
-        //
+        session()->put('event_id', $id);
+        return redirect()->route('organizer.dashboard');
     }
 
     /**

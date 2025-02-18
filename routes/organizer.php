@@ -17,7 +17,9 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
 
-    Route::get('preview', [EventController::class, 'index'])->name('preview');
+    Route::get('events', [EventController::class, 'index'])->name('event.preview');
+    Route::get('event/{id}', [EventController::class, 'selectEvent'])->name('event.select');
+    Route::post('event', [EventController::class, 'store'])->name('event.store');
 
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('schedule', ScheduleController::class);

@@ -26,4 +26,9 @@ class EventSpeaker extends Model
         'country',
         'language',
     ];
+
+    public function scopeCurrentEvent($query)
+    {
+        $query->where('event_app_id', session('event_id'));
+    }
 }
