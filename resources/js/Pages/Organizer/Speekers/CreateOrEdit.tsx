@@ -10,7 +10,7 @@ function CreateOrEdit({ speaker }: any) {
     const { data, setData, post, processing, errors, reset } = useForm({
         event_app_id: speaker?.event_app_id || "",
         name: speaker?.name || "",
-        avatar: speaker?.avatar || "",
+        avatar: null,
         company: speaker?.company || "",
         position: speaker?.position || "",
         bio: speaker?.bio || "",
@@ -25,6 +25,13 @@ function CreateOrEdit({ speaker }: any) {
         language: speaker?.language || "",
         _method: speaker?.id ? "PUT" : "POST", // Spoof method
     });
+
+    function handleAvatar(e:any){
+        console.log(e.target.files);
+        const file=e.target.files[0]
+        setData('avatar',file);
+        
+    }
 
     const submit = (e: any) => {
         e.preventDefault();
@@ -50,7 +57,7 @@ function CreateOrEdit({ speaker }: any) {
                             </div>
                             <Card.Body>
                                 <div className="card-body">
-                                    <form onSubmit={submit}>
+                                    <form onSubmit={submit} >
                                         <Row className="gy-4">
 
                                             <Col xxl={6} md={6}>
@@ -71,14 +78,15 @@ function CreateOrEdit({ speaker }: any) {
 
                                             <Col xxl={6} md={6}>
                                                 <div className="">
-                                                    <Form.Label htmlFor="avatar" className="form-label">Avatar URL</Form.Label>
+                                                    <Form.Label htmlFor="avatar" className="form-label">Avatar </Form.Label>
                                                     <Form.Control
-                                                        type="text"
+                                                        type="file"
                                                         className="form-control"
                                                         id="avatar"
                                                         placeholder="Enter avatar URL"
-                                                        value={data.avatar}
-                                                        onChange={(e) => setData('avatar', e.target.value)}
+                                                       
+                                                        onChange={handleAvatar}
+                                                        // onChange={(e) => setData('avatar', e.target.value)}
                                                     />
                                                     <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.avatar} </Form.Control.Feedback>
 
@@ -297,7 +305,7 @@ function CreateOrEdit({ speaker }: any) {
                                         </Row>
 
                                         <div className="mt-4 text-center ">
-                                            <Button type="submit" className="btn btn-success px-3" disabled={processing}>
+                                            <Button type="submit"  className="btn btn-success px-3" disabled={processing}>
                                                 {isEdit ? 'Update' : 'Create'}
                                             </Button>
                                         </div>

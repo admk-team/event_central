@@ -9,7 +9,7 @@ import DataTable, { ColumnDef } from '../../../Components/DataTable';
 import DeleteManyModal from '../../../Components/Common/DeleteManyModal';
 
 function Index({ speakers }: any) {
-    const [deleteTheme, setDeleteSpeaker] = React.useState<any>(null);
+    const [deletespeaker, setDeleteSpeaker] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
 
@@ -34,7 +34,7 @@ function Index({ speakers }: any) {
     }
     const handleDelete = () => {
     
-        deleteForm.post(route('organizer.speaker.destroy', deleteTheme.id));
+        deleteForm.post(route('organizer.speaker.destroy', deletespeaker.id));
         setShowDeleteConfirmation(false);
     }
     const deleteManyAction = (ids: number[]) => {
@@ -49,27 +49,33 @@ function Index({ speakers }: any) {
     const columns: ColumnDef<typeof speakers.data[0]> = [
         {
             header: () => 'ID',
-            cell: (theme) => theme.id,
+            cell: (speaker) => speaker.id,
             cellClass: "fw-medium"
         },
         {
+            header: () => 'Avatar',
+            cell: (speaker) => (
+                <img src={speaker.avatar} alt={speaker.name} width="50" height="50" className="rounded-circle" />
+            ),
+        },
+        {
             header: () => 'Name',
-            cell: (theme) => theme.name,
+            cell: (speaker) => speaker.name,
         },
         {
             header: () => 'Company',
-            cell: (theme) => theme.company,
+            cell: (speaker) => speaker.company,
         },
         {
             header: () => 'Position',
-            cell: (theme) => theme.position,
+            cell: (speaker) => speaker.position,
         },
         {
             header: () => 'Action',
-            cell: (theme) => (
+            cell: (speaker) => (
                 <div className="hstack gap-3 fs-15">
-                    <span className="link-primary cursor-pointer" onClick={() => editAction(theme)}><i className="ri-edit-fill"></i></span>
-                    <span className="link-danger cursor-pointer" onClick={() => deleteAction(theme)}>
+                    <span className="link-primary cursor-pointer" onClick={() => editAction(speaker)}><i className="ri-edit-fill"></i></span>
+                    <span className="link-danger cursor-pointer" onClick={() => deleteAction(speaker)}>
                         <i className="ri-delete-bin-5-line"></i>
                     </span>
                 </div>

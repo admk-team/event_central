@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class EventSpeaker extends Model
 {
@@ -26,4 +27,10 @@ class EventSpeaker extends Model
         'country',
         'language',
     ];
+
+    public function getAvatarAttribute($value)
+    {
+        return $value ? url(Storage::url($value)) : null;
+    }
+
 }

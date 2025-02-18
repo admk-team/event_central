@@ -24,7 +24,7 @@ class EventSpeakerRequest extends FormRequest
         return [
             'event_app_id' => 'required|',
             'name' => 'required|string|max:255',
-            'avatar' => 'nullable|string|max:255',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'company' => 'nullable|string|max:255',
             'position' => 'nullable|string|max:255',
             'bio' => 'nullable|string',

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\organizer\EventSpeakerRequest;
 use App\Models\EventSpeaker;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Psy\Readline\Hoa\EventSource;
 
@@ -26,7 +27,12 @@ class EventSpeakerController extends Controller
     public function store(EventSpeakerRequest $request)
     {
         $input = $request->validated();
-        // dd('after validate');
+        if ($input['avatar'] && Storage::disk('public')->exists($input['avatar'])) {
+            Storage::disk('public')->delete($input['avatar']);
+        }
+        $name = uniqid() . '.' . $input['avatar']->getClientOriginalExtension();
+        $input['avatar'] = $input['avatar']->storeAs('organizer/organizer-avatars', $name, 'public');
+
         EventSpeaker::create($input);
 
         return redirect()->route('organizer.speaker.index')->with('success', 'speaker created successfully.');
@@ -41,6 +47,12 @@ class EventSpeakerController extends Controller
     public function update(EventSpeakerRequest $request, EventSpeaker $speaker)
     {
         $input = $request->validated();
+        if ($input['avatar'] && Storage::disk('public')->exists($input['avatar'])) {
+            Storage::disk('public')->delete($input['avatar']);
+        }
+        $name = uniqid() . '.' . $input['avatar']->getClientOriginalExtension();
+        $input['avatar'] = $input['avatar']->storeAs('organizer/organizer-avatars', $name, 'public');
+
 
         $speaker->update($input);
 
