@@ -43,7 +43,7 @@ class RouteServiceProvider extends ServiceProvider
     {
         return match(Auth::user()->role) {
             'admin' => route('admin.dashboard'),
-            'organizer' => route('organizer.dashboard'),
+            'organizer' => route('organizer.event.preview'),
         };
     }
 }

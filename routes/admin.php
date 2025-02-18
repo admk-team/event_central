@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\ColorSchemeController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OrganizerController;
 use App\Http\Controllers\Admin\ProfileController;
@@ -13,5 +14,7 @@ Route::middleware(['auth', 'panel:admin'])->prefix('admin')->name('admin.')->gro
     Route::resource('users', UserController::class);
     Route::delete('users/delete/many', [UserController::class, 'destroyMany'])->name('users.destroy.many');
     Route::resource('roles', RoleController::class);
+    Route::resource('color-themes', ColorSchemeController::class);
+    Route::delete('color-themes/delete/many', [ColorSchemeController::class, 'destroyMany'])->name('color-themes.destroy.many');
     Route::resource('organizers', OrganizerController::class);
 });
