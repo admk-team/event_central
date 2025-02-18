@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import HasPermission from "../../Components/HasPermission";
 
 const Navdata = () => {
     //state data
@@ -134,12 +135,24 @@ const Navdata = () => {
                     label: "Users",
                     link: route('admin.users.index'),
                     parentId: "dashboard",
+                    hasAnyPermission: [
+                        'view_users',
+                        'create_users',
+                        'edit_users',
+                        'delete_users',
+                    ]
                 },
                 {
                     id: "roles",
                     label: "Roles",
                     link: route('admin.roles.index'),
                     parentId: "dashboard",
+                    hasAnyPermission: [
+                        'view_roles',
+                        'create_roles',
+                        'edit_roles',
+                        'delete_roles',
+                    ]
                 },
                 {
                     id: "organizer",
