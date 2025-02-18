@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\EventApp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Middleware;
@@ -36,10 +37,11 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
-            'ziggy' => fn () => [
+            'ziggy' => fn() => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
             ],
+            'currentEvent' => EventApp::find(session('event_id')) ?? null,
             'permissions' => Auth::user()?->getAllPermissions()->pluck('name') ?? [],
         ];
     }

@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Organizer;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\organizer\EventSpeakerRequest;
+use App\Models\EventApp;
 use App\Models\EventSpeaker;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Psy\Readline\Hoa\EventSource;
@@ -14,14 +16,17 @@ class EventSpeakerController extends Controller
 {
     public function index(Request $request)
     {
-        $speakers = EventSpeaker::latest()->paginate($request->per_page ?? 10);
+        $speakers = EventSpeaker::currentEvent()->latest()->paginate($request->per_page ?? 10);
         return Inertia::render('Organizer/Speekers/Index', compact('speakers'));
     }
 
     public function create()
     {
         // $colorschemes = ColorScheme::latest()->paginate($request->per_page ?? 10);
-        return Inertia::render("Organizer/Speekers/CreateOrEdit");
+        $events = EventApp::organizer()->get();
+        return Inertia::render("Organizer/Speekers/CreateOrEdit",[
+            'events' => $events
+        ]);
     }
 
     public function store(EventSpeakerRequest $request)
@@ -30,8 +35,10 @@ class EventSpeakerController extends Controller
         if ($input['avatar'] && Storage::disk('public')->exists($input['avatar'])) {
             Storage::disk('public')->delete($input['avatar']);
         }
-        $name = uniqid() . '.' . $input['avatar']->getClientOriginalExtension();
-        $input['avatar'] = $input['avatar']->storeAs('organizer/organizer-avatars', $name, 'public');
+        if ($input['avatar'] && $input['avatar'] != null) {
+            $name = uniqid() . '.' . $input['avatar']->getClientOriginalExtension();
+            $input['avatar'] = $input['avatar']->storeAs('organizer/organizer-avatars', $name, 'public');
+        }
 
         EventSpeaker::create($input);
 

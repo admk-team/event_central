@@ -29,7 +29,7 @@ const VerticalLayout = (props: any) => {
     // Inside your component
     const {
         leftsidbarSizeType, sidebarVisibilitytype, layoutType
-    }:any = useSelector(selecVerticaltLayoutProperties);
+    }: any = useSelector(selecVerticaltLayoutProperties);
 
     //vertical and semibox resize events
     const resizeSidebarMenu = useCallback(() => {
@@ -85,7 +85,7 @@ const VerticalLayout = (props: any) => {
             const pathName = path;
             // const pathName= window.location.pathname + path; 
             const ul = document.getElementById("navbar-nav") as HTMLElement;
-            const items : any = ul.getElementsByTagName("a");
+            const items: any = ul.getElementsByTagName("a");
             let itemsArray = [...items]; // converts NodeList to Array
             removeActivation(itemsArray);
             let matchingMenuItem = itemsArray.find((x) => {

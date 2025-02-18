@@ -18,6 +18,13 @@ class OrganizerPermissionsSeeder extends Seeder
         'create_roles',
         'edit_roles',
         'delete_roles',
+
+        // SCHEDULE
+        'view_schedule',
+        'create_schedule',
+        'edit_schedule',
+        'delete_schedule',
+        
     ];
 
     public function run(): void

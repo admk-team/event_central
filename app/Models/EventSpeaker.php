@@ -33,4 +33,8 @@ class EventSpeaker extends Model
         return $value ? url(Storage::url($value)) : null;
     }
 
+    public function scopeCurrentEvent($query)
+    {
+        $query->where('event_app_id', session('event_id'));
+    }
 }

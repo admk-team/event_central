@@ -4,9 +4,9 @@ import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import React, { useState } from 'react';
 import { Button, Col, Container, Row, Form, Card } from 'react-bootstrap';
 
-function CreateOrEdit({ speaker }: any) {
+function CreateOrEdit({ speaker, events }: any) {
     // Determine if the form is in edit mode
-    const isEdit = !!speaker;
+    const isEdit = !!speaker;    
     const { data, setData, post, processing, errors, reset } = useForm({
         event_app_id: speaker?.event_app_id || "",
         name: speaker?.name || "",
@@ -26,11 +26,11 @@ function CreateOrEdit({ speaker }: any) {
         _method: speaker?.id ? "PUT" : "POST", // Spoof method
     });
 
-    function handleAvatar(e:any){
+    function handleAvatar(e: any) {
         console.log(e.target.files);
-        const file=e.target.files[0]
-        setData('avatar',file);
-        
+        const file = e.target.files[0]
+        setData('avatar', file);
+
     }
 
     const submit = (e: any) => {
@@ -84,9 +84,9 @@ function CreateOrEdit({ speaker }: any) {
                                                         className="form-control"
                                                         id="avatar"
                                                         placeholder="Enter avatar URL"
-                                                       
+
                                                         onChange={handleAvatar}
-                                                        // onChange={(e) => setData('avatar', e.target.value)}
+                                                    // onChange={(e) => setData('avatar', e.target.value)}
                                                     />
                                                     <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.avatar} </Form.Control.Feedback>
 
@@ -294,10 +294,10 @@ function CreateOrEdit({ speaker }: any) {
                                                     value={data.event_app_id}
                                                     onChange={(e) => setData('event_app_id', e.target.value)}
                                                 >
-                                                    <option>Select your Event App</option>
-                                                    <option value="1">Event App 1</option>
-                                                    <option value="2">Event App 2</option>
-                                                    <option value="3">Event App 3</option>
+                                                    <option value="">Select Event</option>
+                                                    {events.map((event: any) => (
+                                                        <option key={event.id} value={event.id}>{event.name}</option>
+                                                    ))}
                                                 </select>
                                                 <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.event_app_id} </Form.Control.Feedback>
 
@@ -305,7 +305,7 @@ function CreateOrEdit({ speaker }: any) {
                                         </Row>
 
                                         <div className="mt-4 text-center ">
-                                            <Button type="submit"  className="btn btn-success px-3" disabled={processing}>
+                                            <Button type="submit" className="btn btn-success px-3" disabled={processing}>
                                                 {isEdit ? 'Update' : 'Create'}
                                             </Button>
                                         </div>
