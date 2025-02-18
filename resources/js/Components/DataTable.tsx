@@ -81,7 +81,7 @@ export default function DataTable<T>({
                             <tr>
                                 {!disableRowSelection && (
                                     <th>
-                                        <Form.Check.Input onChange={(e) => rowSelector.handleAllRowSelection(e.target.checked)} checked={rowSelector.isAllRowSelected()} />
+                                        <Form.Check.Input onChange={(e) => rowSelector.handleAllRowSelection(e.target.checked)} checked={data.data.length > 0 && rowSelector.isAllRowSelected()} />
                                     </th>
                                 )}
                                 {columns.map((col, colIndex) => (

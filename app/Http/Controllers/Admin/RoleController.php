@@ -15,7 +15,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::latest()->paginate($request->per_page ?? 10);
+        $roles = Role::where('panel', 'admin')->latest()->paginate($request->per_page ?? 10);
         return Inertia::render("Admin/Roles/Index", compact('roles'));
     }
 
@@ -24,7 +24,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $permissions = Permission::get();
+        $permissions = Permission::where('panel', 'admin')->get();
         return Inertia::render("Admin/Roles/CreateOrEdit", compact('permissions'));
     }
 
@@ -34,7 +34,7 @@ class RoleController extends Controller
     public function store(RoleRequest $request)
     {
         $input = $request->validated();
-        $role =  Role::create(['name' => $input['name']]);
+        $role =  Role::create(['name' => $input['name'], 'panel' => 'admin']);
         $role->givePermissionTo($input['permissions']);
 
         return to_route('admin.roles.index');
@@ -54,7 +54,7 @@ class RoleController extends Controller
     public function edit(Role $role)
     {
         $roleSpecific = $role->permissions()->get();
-        $permissions = Permission::get();
+        $permissions = Permission::where('panel', 'admin')->get();
         return Inertia::render("Admin/Roles/CreateOrEdit", compact('role', 'permissions', 'roleSpecific'));
     }
 

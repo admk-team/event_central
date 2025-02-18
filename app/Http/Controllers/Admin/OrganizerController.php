@@ -2,23 +2,29 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\User;
-use Inertia\Inertia;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
-use Spatie\Permission\Models\Role;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
-class UserController extends Controller
+class OrganizerController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index()
     {
-        $users = User::with('roles:name')->latest()->paginate($request->per_page ?? 10);
-        $roles = $roles = Role::where('panel', 'admin')->get()->pluck('name');
-        return Inertia::render("Admin/Users/Index", compact('users', 'roles'));
+        $users = User::where('role', 'Organizer')->latest()->paginate($request->per_page ?? 10);
+        return Inertia::render("Admin/Users/Index", compact('users'));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
     }
 
     /**
@@ -27,13 +33,8 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         $input = $request->validated();
-        $role = $input['role'];
 
-        $input['role'] = 'admin'; // User type
-
-        $user = User::create($input);
-
-        $user->syncRoles([$role]);
+        User::create($input);
 
         return back();
     }
@@ -47,18 +48,21 @@ class UserController extends Controller
     }
 
     /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
+    }
+
+    /**
      * Update the specified resource in storage.
      */
     public function update(UserRequest $request, User $user)
     {
         $input = $request->validated();
-        $role = $input['role'];
-
-        $input['role'] = 'admin'; // User type
 
         $user->update($input);
-
-        $user->syncRoles([$role]);
 
         return back();
     }
@@ -73,6 +77,9 @@ class UserController extends Controller
         return back();
     }
 
+    /**
+     * Remove the specified resource from storage.
+     */
     public function destroyMany(Request $request)
     {
         $request->validate([
