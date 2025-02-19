@@ -4,6 +4,7 @@ use App\Http\Controllers\Organizer\CustomMenuController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Organizer\DashboardController;
 use App\Http\Controllers\Organizer\EventController;
+use App\Http\Controllers\Organizer\EventSessionController;
 use App\Http\Controllers\Organizer\EventSpeakerController;
 use App\Http\Controllers\Organizer\PartnerController;
 use App\Http\Controllers\Organizer\Schedule;
@@ -22,7 +23,8 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
     Route::post('event', [EventController::class, 'store'])->name('event.store');
 
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::resource('schedule', ScheduleController::class);
+    Route::resource('schedule', EventSessionController::class);
+    Route::delete('schedule/delete/many', [EventSessionController::class, 'destroyMany'])->name('schedule.destroy.many');
     Route::resource('speaker', EventSpeakerController::class);
     Route::delete('speakers/delete/many',[EventSpeakerController::class,'destroyMany'])->name('speakers.destroy.many');
     Route::resource('workshop', WorkshopController::class);

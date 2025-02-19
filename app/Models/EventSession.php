@@ -8,6 +8,16 @@ use Illuminate\Database\Eloquent\Model;
 class EventSession extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'name',
+        'event_speaker_id',
+        'type',
+        'description',
+        'capacity',
+        'start_date',
+        'end_date',
+        'event_app_id',
+    ];
 
     public function scopeCurrentEvent($query)
     {
