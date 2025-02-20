@@ -4,7 +4,7 @@ const Navdata = () => {
     //state data
     const [isDashboard, setIsDashboard] = useState<boolean>(false);
     const [isContent, setIsContent] = useState<boolean>(false);
-    const [isApps, setIsApps] = useState<boolean>(false);
+    const [isUsers, setIsUsers] = useState<boolean>(false);
     const [isAuth, setIsAuth] = useState<boolean>(false);
     const [isPages, setIsPages] = useState<boolean>(false);
     const [isBaseUi, setIsBaseUi] = useState<boolean>(false);
@@ -85,11 +85,13 @@ const Navdata = () => {
         if (iscurrentState !== 'content') {
             setIsContent(false);
         }
+        if (iscurrentState !== 'users') {
+            setIsUsers(false);
+        }
     }, [
         history,
         iscurrentState,
         isDashboard,
-        isApps,
         isAuth,
         isPages,
         isBaseUi,
@@ -122,7 +124,7 @@ const Navdata = () => {
         },
         {
             id: "content",
-            label: "content",
+            label: "Content",
             icon: "bx bxs-user",
             link: "/#",
             stateVariables: isContent,
@@ -163,6 +165,34 @@ const Navdata = () => {
                     link: route('organizer.events.partner.index'),
                     parentId: "dashboard",
                 },
+            ]
+
+        },
+        {
+            id: "users",
+            label: "Users",
+            icon: "bx bxs-user",
+            link: "/#",
+            stateVariables: isUsers,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsUsers(!isUsers);
+                setIscurrentState('users');
+                updateIconSidebar(e);
+            },
+            subItems: [
+                {
+                    id: "attendees",
+                    label: "Attendees",
+                    link: route('organizer.events.attendees.index'),
+                    parentId: "dashboard",
+                },
+                {
+                    id: "team",
+                    label: "Team",
+                    link: '#',
+                    parentId: "dashboard",
+                }
             ]
 
         }
