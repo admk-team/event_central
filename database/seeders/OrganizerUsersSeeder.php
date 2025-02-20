@@ -25,6 +25,6 @@ class OrganizerUsersSeeder extends Seeder
             ]);
         }
 
-        $user->assignRole('superadmin');
+        $user->assignRole('owner');
     }
 }
