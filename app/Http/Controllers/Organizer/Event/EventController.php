@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Organizer\Event;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Organizer\Event\StoreRequest;
+use App\Http\Requests\Organizer\Event\EventStoreRequest;
 use App\Models\EventApp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,7 +30,7 @@ class EventController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreRequest $request)
+    public function store(EventStoreRequest $request)
     {
         $data = $request->validated();
         $data['organizer_id'] = Auth::id();
