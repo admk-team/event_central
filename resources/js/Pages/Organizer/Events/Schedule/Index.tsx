@@ -11,9 +11,11 @@ import HasPermission from '../../../../Components/HasPermission';
 import CreateEditModal from './CreateEditModal';
 
 
-function Index({ schedule }: any) {
+function Index({ schedules,speakers }: any) {
+    console.log('schedul', schedules);
+    
     const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
-    const [editUser, setEditSchedul] = React.useState<any>(null);
+    const [editSchedule, setEditSchedul] = React.useState<any>(null);
 
     const [deleteschedule, setDeleteSchedule] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
@@ -33,13 +35,13 @@ function Index({ schedule }: any) {
         _method: 'DELETE',
         ids: [],
     });
-    const editAction = (user: any) => {
-        setEditSchedul(user);
+    const editAction = (schedule: any) => {
+        setEditSchedul(schedule);
         setShowCreateEditModal(true);
     }
 
-    const deleteAction = (user: any) => {
-        setDeleteSchedule(user);
+    const deleteAction = (schedule: any) => {
+        setDeleteSchedule(schedule);
         setShowDeleteConfirmation(true);
     }
     const handleDelete = () => {
@@ -55,7 +57,7 @@ function Index({ schedule }: any) {
         deleteManyForm.delete(route('organizer.events.speakers.destroy.many'));
         setShowDeleteManyConfirmation(false);
     }
-    const columns: ColumnDef<typeof schedule.data[0]> = [
+    const columns: ColumnDef<typeof schedules.data[0]> = [
         {
             header: () => 'ID',
             cell: (schedule) => schedule.id,
@@ -67,7 +69,7 @@ function Index({ schedule }: any) {
         },
         {
             header: () => 'Type',
-            cell: (schedule) => schedule.company,
+            cell: (schedule) => schedule.type,
         },
 
         {
@@ -92,9 +94,9 @@ function Index({ schedule }: any) {
                     <Row>
                         <Col xs={12}>
                             <DataTable
-                                data={schedule}
+                                data={schedules}
                                 columns={columns}
-                                title="Schedule"
+                                title="Schedules"
                                 actions={[
                                     // Delete multiple
                                     {
@@ -128,7 +130,8 @@ function Index({ schedule }: any) {
                     show={showCreateEditModal}
                     hide={() => setShowCreateEditModal(false)}
                     onHide={() => setShowCreateEditModal(false)}
-                    user={editUser}
+                    schedule={editSchedule}
+                    speakers={speakers}
                 />
             )}
             <DeleteManyModal

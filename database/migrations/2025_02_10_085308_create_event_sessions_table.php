@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreign('event_speaker_id')->references('id')->on('event_speakers');
             $table->string('name');
             $table->enum('type', ['Lecture', 'Workshop', 'Break']);
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->integer('capacity');
             $table->dateTime('start_date');
             $table->dateTime('end_date');
