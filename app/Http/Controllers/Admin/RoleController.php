@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RoleRequest;
+use App\Http\Requests\Admin\RoleRequest;
 use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
