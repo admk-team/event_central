@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class EventPartnerCategory extends Model
 {
     use HasFactory;
+    protected $guarded = [];
+
+    public function partners()
+    {
+        return $this->hasMany(EventPartner::class, 'partner_category_id');
+    }
 }

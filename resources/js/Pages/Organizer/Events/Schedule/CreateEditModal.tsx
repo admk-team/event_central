@@ -22,14 +22,14 @@ export default function CreateEditModal({ show, hide, onHide, schedule, speakers
         e.preventDefault();
 
         if (isEdit) {
-            post(route('organizer.schedule.update', schedule.id),{
+            post(route('organizer.events.schedule.update', schedule.id),{
                 onSuccess: () => {
                     reset();
                     hide();
                 }
             })
         } else {
-            post(route('organizer.schedule.store', data),{
+            post(route('organizer.events.schedule.store', data),{
                 onSuccess: () => {
                     reset();
                     hide();
