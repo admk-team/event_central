@@ -4,7 +4,9 @@ const Navdata = () => {
     //state data
     const [isDashboard, setIsDashboard] = useState<boolean>(false);
     const [isContent, setIsContent] = useState<boolean>(false);
+    const [isUsers, setIsUsers] = useState<boolean>(false);
     const [isSettings, setIsSettings] = useState<boolean>(false);
+    // Add Here
 
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
 
@@ -34,11 +36,19 @@ const Navdata = () => {
         if (iscurrentState !== 'Settings') {
             setIsSettings(false);
         }
+        if (iscurrentState !== 'users') {
+            setIsUsers(false);
+        }
+
+        // Add Here
     }, [
         history,
         iscurrentState,
         isDashboard,
-        isSettings
+        isUsers,
+        isSettings,
+        
+        // Add Here
     ]);
 
     const menuItems: any = [
@@ -115,7 +125,6 @@ const Navdata = () => {
                 e.preventDefault();
                 setIsSettings(!isSettings);
                 setIscurrentState('Settings');
-                updateIconSidebar(e);
             },
             subItems: [
                 {
@@ -124,6 +133,33 @@ const Navdata = () => {
                     link: route('organizer.events.settings.event.index'),
                     parentId: "settings",
                 },
+            ]
+        },
+        {
+            id: "users",
+            label: "Users",
+            icon: "bx bxs-user",
+            link: "/#",
+            stateVariables: isUsers,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsUsers(!isUsers);
+                setIscurrentState('users');
+                updateIconSidebar(e);
+            },
+            subItems: [
+                {
+                    id: "attendees",
+                    label: "Attendees",
+                    link: route('organizer.events.attendees.index'),
+                    parentId: "dashboard",
+                },
+                {
+                    id: "team",
+                    label: "Team",
+                    link: '#',
+                    parentId: "dashboard",
+                }
             ]
 
         }
