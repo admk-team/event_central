@@ -26,6 +26,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
         Route::resource('workshop', WorkshopController::class);
         Route::resource('custom-menu', CustomMenuController::class);
         Route::resource('partner', EventPartnerController::class);
+        Route::delete('partner/delete/many', [EventPartnerController::class, 'destroyMany'])->name('partner.destroy.many');
         Route::resource('partner-category',EventPartnerCategoryController::class);
         Route::get('{id}', [EventController::class, 'selectEvent'])->name('select');
     });

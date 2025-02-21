@@ -34,10 +34,8 @@ function Index({ partners }: any) {
         setShowDeleteConfirmation(true);
     }
 
-    const handleDelete = (partner: any) => {
-        console.log('testing ', partner);
-        
-        deleteForm.post(route('organizer.events.partner.destroy', partner.id));
+    const handleDelete = () => {
+        deleteForm.post(route('organizer.events.partner.destroy', deletePartner.id));
         setShowDeleteConfirmation(false);
     }
 
@@ -46,7 +44,7 @@ function Index({ partners }: any) {
         setShowDeleteManyConfirmation(true);
     }
     const handleDeleteMany = () => {
-        deleteManyForm.delete(route('organizer.events.speakers.destroy.many'));
+        deleteManyForm.delete(route('organizer.events.partner.destroy.many'));
         setShowDeleteManyConfirmation(false);
     }
     const columns: ColumnDef<typeof partners.data[0]> = [

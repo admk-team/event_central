@@ -44,4 +44,20 @@ class EventPartnerController extends Controller
         $partner->update($data);
         return back();
     }
+
+    public function destroy(EventPartner $partner)
+    {
+        $partner->delete();
+        return back();
+    }
+
+    public function destroyMany(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array'
+        ]);
+        foreach ($request->ids as $id) {
+            EventPartner::find($id)?->delete();
+        }
+    }
 }
