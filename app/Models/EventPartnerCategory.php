@@ -14,4 +14,8 @@ class EventPartnerCategory extends Model
     {
         return $this->hasMany(EventPartner::class, 'partner_category_id');
     }
+    public function scopeCurrentEvent($query)
+    {
+        $query->where('event_app_id', session('event_id'));
+    }
 }

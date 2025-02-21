@@ -2,13 +2,17 @@ import Layout from "../../../../Layouts/Organizer/Event";
 import { Head, Link, useForm } from '@inertiajs/react';
 import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 import React, { useState } from 'react';
-import { Button, Col, Container, Row, Form, Card } from 'react-bootstrap';
+import { Button, Col, Container, Row, Form, Card, Tab, Nav } from 'react-bootstrap';
+import ManageCategories from "./Components/ManageCategories";
 
-function CreateOrEdit({ partner }: any) {
+function CreateOrEdit({ partner, partnerCategories }: any) {
+    console.log('category test',partner);
+    
     // Determine if the form is in edit mode
     const isEdit = !!partner;
     const { data, setData, post, processing, errors, reset } = useForm({
-        type: partner?.type || "exhibitor",
+        partner_category_id: partner?.partner_category_id || '',
+        type: partner?.type ||'',
         company_name: partner?.company_name || "",
         email: partner?.email || "",
         description: partner?.description || "",
@@ -20,7 +24,12 @@ function CreateOrEdit({ partner }: any) {
         _method: partner?.id ? "PUT" : "POST", // Spoof method
     });
 
+    function exhibitor_logo_handle(e: any) {
+        console.log(e.target.files);
+        const file = e.target.files[0]
+        setData('exhibitor_logo', file);
 
+    }
     const submit = (e: any) => {
         e.preventDefault();
         if (isEdit) {
@@ -32,6 +41,11 @@ function CreateOrEdit({ partner }: any) {
         }
     };
 
+    const [manageCategoriesModal, setManageCategoriesModal] = useState(false);
+    function showModal() {        
+        setManageCategoriesModal(!manageCategoriesModal);
+    }
+
     return (
         <React.Fragment>
             <Head title={isEdit ? 'Edit partner' : 'Create partner'} />
@@ -39,6 +53,7 @@ function CreateOrEdit({ partner }: any) {
                 <Container fluid>
                     <BreadCrumb title={isEdit ? 'Edit partner' : 'Create partner'} pageTitle="Dashboard" />
                     <Row>
+
                         <Card className="mt-4">
                             <div className="card-header d-flex justify-content-between align-items-center">
                                 <div className="card-title">{isEdit ? 'Edit partner' : 'Create partner'}</div>
@@ -46,10 +61,25 @@ function CreateOrEdit({ partner }: any) {
                             <Card.Body>
                                 <div className="card-body">
                                     <form onSubmit={submit} >
-                                        <Row className="gy-4">
-<col>
+                                        <Row className="gy-2">
 
-</col>
+                                            <Col xxl={12} md={12}>
+                                                <Form.Label htmlFor="name" className="form-label">Partner Type</Form.Label>
+                                                <div className="d-flex align-items-center">
+                                                    <div className="form-check  me-5">
+                                                        <Form.Check.Input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" onChange={(e) => setData('type', 'exhibitor')} />
+                                                        <Form.Check.Label className="form-check-label" htmlFor="flexRadioDefault1">
+                                                            Exhibitor
+                                                        </Form.Check.Label>
+                                                    </div>
+                                                    <div className="form-check">
+                                                        <Form.Check.Input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" onChange={(e) => setData('type', 'sponsor')} />
+                                                        <Form.Check.Label className="form-check-label" htmlFor="flexRadioDefault2">
+                                                            Sponsor
+                                                        </Form.Check.Label>
+                                                    </div>
+                                                </div>
+                                            </Col>
                                             <Col xxl={6} md={6}>
                                                 <div className="">
                                                     <Form.Label htmlFor="name" className="form-label">Company Name</Form.Label>
@@ -141,12 +171,77 @@ function CreateOrEdit({ partner }: any) {
                                                 </div>
                                             </Col>
 
+                                            {data.type === 'exhibitor' && (
+                                                <>
+                                                    <Col xxl={6} md={6}>
+                                                        <div className="">
+                                                            <Form.Label htmlFor="name" className="form-label">Exhibitor profile</Form.Label>
+                                                            <Form.Control
+                                                                type="file"
+                                                                className="form-control"
+                                                                id="exhibitor_logo"
+                                                                placeholder="exhibitor_logo"
+                                                                onChange={exhibitor_logo_handle}
+                                                            />
+                                                            <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.exhibitor_logo} </Form.Control.Feedback>
 
+                                                        </div>
+                                                    </Col>
+                                                    <Col xxl={6} md={6}>
+                                                        <div className="">
+                                                            <Form.Label htmlFor="name" className="form-label">Booth number</Form.Label>
+                                                            <Form.Control
+                                                                type="text"
+                                                                className="form-control"
+                                                                id="exhibitor_booth_no"
+                                                                placeholder="Enter Booth Number"
+                                                                value={data.exhibitor_booth_no}
+                                                                onChange={(e) => setData('exhibitor_booth_no', e.target.value)}
+                                                            />
+                                                            <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.exhibitor_booth_no} </Form.Control.Feedback>
+                                                        </div>
+                                                    </Col>
+                                                </>
+                                            )}
+                                            {data.type === 'sponsor' && (
+                                                <>
+                                                    <Col xxl={6} md={6}>
+                                                        <div className="">
+                                                            <Form.Label htmlFor="name" className="form-label">Sponsor profile</Form.Label>
+                                                            <Form.Control
+                                                                type="file"
+                                                                className="form-control"
+                                                                id="exhibitor_logo"
+                                                                placeholder="exhibitor_logo"
+                                                                onChange={exhibitor_logo_handle}
+                                                            />
+                                                            <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.exhibitor_logo} </Form.Control.Feedback>
+                                                        </div>
+                                                    </Col>
+                                                    <Col xxl={6} md={6}>
+                                                        <Form.Label htmlFor="event_app_id" className="form-label">Sponsor Category</Form.Label>
+                                                        <div className="d-flex align-items-center">
+                                                            <select
+                                                                className="form-select me-2"
+                                                                id="category"
+                                                                aria-label="Select Category"
+                                                                value={data.partner_category_id}
+                                                                onChange={(e) => setData('partner_category_id', e.target.value)}
+                                                            >
+                                                                <option value="">Select category</option>
+                                                                {partnerCategories?.map((category: any) => (
+                                                                    <option key={category.id} value={category.id}>{category.name}</option>
+                                                                ))}
+                                                            </select>
+                                                            <Button variant="secondary" className="w-25" onClick={() => showModal()}>Manage Categories</Button>
+                                                        </div>
+                                                        <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.partner_category_id} </Form.Control.Feedback>
 
+                                                    </Col>
 
-
+                                                </>
+                                            )}
                                         </Row>
-
                                         <div className="mt-4 text-center ">
                                             <Button type="submit" className="btn btn-success px-3" disabled={processing}>
                                                 {isEdit ? 'Update' : 'Create'}
@@ -162,6 +257,10 @@ function CreateOrEdit({ partner }: any) {
                     </Row>
                 </Container>
             </div>
+            <ManageCategories manageCategoriesModal={manageCategoriesModal} 
+            showModal={showModal}
+                partnerCategories={partnerCategories}/>
+
         </React.Fragment>
     )
 }

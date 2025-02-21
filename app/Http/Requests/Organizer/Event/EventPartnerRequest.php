@@ -22,7 +22,6 @@ class EventPartnerRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'event_app_id' => 'required|exists:event_apps,id',
             'type' => 'required|in:exhibitor,sponsor',
             'company_name' => 'required|string|max:255',
             'description' => 'nullable|string',

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Organizer\Event\CustomMenuController;
 use App\Http\Controllers\Organizer\Event\DashboardController;
 use App\Http\Controllers\Organizer\Event\EventController;
+use App\Http\Controllers\Organizer\Event\EventPartnerCategoryController;
 use App\Http\Controllers\Organizer\Event\EventPartnerController;
 use App\Http\Controllers\Organizer\Event\EventSessionController;
 use App\Http\Controllers\Organizer\Event\EventSpeakerController;
@@ -25,7 +26,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
         Route::resource('workshop', WorkshopController::class);
         Route::resource('custom-menu', CustomMenuController::class);
         Route::resource('partner', EventPartnerController::class);
-
+        Route::resource('partner-category',EventPartnerCategoryController::class);
         Route::get('{id}', [EventController::class, 'selectEvent'])->name('select');
     });
 });

@@ -5,7 +5,8 @@ import { Button, Col, Container, Row } from "react-bootstrap";
 import BreadCrumb from "../../../../Components/Common/BreadCrumb";
 import HasPermission from "../../../../Components/HasPermission";
 import DataTable, { ColumnDef } from '../../../../Components/DataTable';
-
+import DeleteModal from "../../../../Components/Common/DeleteModal";
+import DeleteManyModal from "../../../../Components/Common/DeleteManyModal";
 
 
 function Index({ partners }: any) {
@@ -27,8 +28,17 @@ function Index({ partners }: any) {
     }
 
     const deleteAction = (partner: any) => {
+        console.log('testing23423 ', partner);
+
         setDeletePartner(partner);
         setShowDeleteConfirmation(true);
+    }
+
+    const handleDelete = (partner: any) => {
+        console.log('testing ', partner);
+        
+        deleteForm.post(route('organizer.events.partner.destroy', partner.id));
+        setShowDeleteConfirmation(false);
     }
 
     const deleteManyAction = (ids: number[]) => {
@@ -46,8 +56,8 @@ function Index({ partners }: any) {
             cellClass: "fw-medium"
         },
         {
-            header: () => 'Name',
-            cell: (partner) => partner.name,
+            header: () => 'Company Name',
+            cell: (partner) => partner.company_name,
         },
         {
             header: () => 'Type',
@@ -58,15 +68,15 @@ function Index({ partners }: any) {
             header: () => 'Action',
             cell: (partner) => (
                 <div className="hstack gap-3 fs-15">
-                    <HasPermission permission="edit_partner">
-                        <span className="link-primary cursor-pointer" onClick={() => editAction(partner)}><i className="ri-edit-fill"></i></span>
-                    </HasPermission>
+                    {/* <HasPermission permission="edit_partner"> */}
+                    <span className="link-primary cursor-pointer" onClick={() => editAction(partner)}><i className="ri-edit-fill"></i></span>
+                    {/* </HasPermission> */}
 
-                    <HasPermission permission="delete_partner">
-                        <span className="link-danger cursor-pointer" onClick={() => deleteAction(partner)}>
-                            <i className="ri-delete-bin-5-line"></i>
-                        </span>
-                    </HasPermission>
+                    {/* <HasPermission permission="delete_partner"> */}
+                    <span className="link-danger cursor-pointer" onClick={() => deleteAction(partner)}>
+                        <i className="ri-delete-bin-5-line"></i>
+                    </span>
+                    {/* </HasPermission> */}
                 </div>
             ),
         },
@@ -94,8 +104,8 @@ function Index({ partners }: any) {
                                     {
                                         render: (
                                             // <HasPermission permission="add_partner">
-                                                <Link href={route('organizer.events.partner.create')}><Button><i className="ri-add-fill"></i> Add New</Button></Link>
-                                        //    </HasPermission> 
+                                            <Link href={route('organizer.events.partner.create')}><Button><i className="ri-add-fill"></i> Add New</Button></Link>
+                                            //    </HasPermission> 
                                         )
 
                                     },
@@ -105,6 +115,17 @@ function Index({ partners }: any) {
                         </Col>
                     </Row>
                 </Container>
+                <DeleteModal
+                    show={showDeleteConfirmation}
+                    onDeleteClick={handleDelete}
+                    onCloseClick={() => { setShowDeleteConfirmation(false) }}
+                />
+
+                <DeleteManyModal
+                    show={showDeleteManyConfirmation}
+                    onDeleteClick={handleDeleteMany}
+                    onCloseClick={() => { setShowDeleteManyConfirmation(false) }}
+                />
             </div>
         </React.Fragment>
 
