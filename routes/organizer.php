@@ -7,6 +7,7 @@ use App\Http\Controllers\Organizer\Event\EventSessionController;
 use App\Http\Controllers\Organizer\Event\EventSpeakerController;
 use App\Http\Controllers\Organizer\Event\PartnerController;
 use App\Http\Controllers\Organizer\Event\ScheduleController;
+use App\Http\Controllers\Organizer\Event\Settings\EventSettingsController;
 use App\Http\Controllers\Organizer\Event\WorkshopController;
 use App\Http\Controllers\Organizer\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -26,6 +27,16 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
         Route::resource('workshop', WorkshopController::class);
         Route::resource('custom-menu', CustomMenuController::class);
         Route::resource('partner', PartnerController::class);
+
+        // Settings
+        Route::prefix('settings')->name('settings.')->group(function () {
+            // Event
+            Route::prefix('event')->name('event.')->group(function () {
+                Route::get('/', [EventSettingsController::class, 'index'])->name('index');
+                Route::delete('/', [EventSettingsController::class, 'destroyEvent'])->name('destroy');
+                Route::put('info', [EventSettingsController::class, 'updateInfo'])->name('info');
+            });
+        });
 
         Route::get('{id}', [EventController::class, 'selectEvent'])->name('select');
     });

@@ -29,7 +29,7 @@ export default function CreateEditModal({ show, hide, onHide, schedule, speakers
                 }
             })
         } else {
-            post(route('organizer.schedule.store', data),{
+            post(route('organizer.events.schedule.store', data),{
                 onSuccess: () => {
                     reset();
                     hide();
