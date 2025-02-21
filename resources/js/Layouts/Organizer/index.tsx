@@ -8,7 +8,7 @@ export default function Index({children} : any) {
           <header className="page-topbar border-bottom d-flex justify-content-end">
             <OrganizerProfileDropdown></OrganizerProfileDropdown>
           </header>
-            <div className="main-content">
+            <div className="">
                 {children}
             </div>
         </div>

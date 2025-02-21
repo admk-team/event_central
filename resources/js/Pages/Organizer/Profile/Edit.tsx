@@ -1,6 +1,6 @@
 import React from 'react';
 import { Head } from '@inertiajs/react';
-import Layout from '../../../Layouts/Organizer/Event';
+import Layout from '../../../Layouts/Organizer';
 import EditProfile from '../../../Components/Profile/EditProfile';
 
 function Edit({ auth, mustVerifyEmail, status }: any) {
