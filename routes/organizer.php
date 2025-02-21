@@ -7,6 +7,7 @@ use App\Http\Controllers\Organizer\Event\EventSessionController;
 use App\Http\Controllers\Organizer\Event\EventSpeakerController;
 use App\Http\Controllers\Organizer\Event\PartnerController;
 use App\Http\Controllers\Organizer\Event\ScheduleController;
+use App\Http\Controllers\Organizer\Event\Settings\EventAppPaymentController;
 use App\Http\Controllers\Organizer\Event\Settings\EventSettingsController;
 use App\Http\Controllers\Organizer\Event\User\AttendeeController;
 use App\Http\Controllers\Organizer\Event\WorkshopController;
@@ -38,6 +39,10 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                 Route::get('/', [EventSettingsController::class, 'index'])->name('index');
                 Route::delete('/', [EventSettingsController::class, 'destroyEvent'])->name('destroy');
                 Route::put('info', [EventSettingsController::class, 'updateInfo'])->name('info');
+            });
+            Route::prefix('payment')->name('payment.')->group(function () {
+                Route::get('/', [EventAppPaymentController::class, 'index'])->name('index');
+                Route::put('update', [EventAppPaymentController::class, 'update'])->name('update');
             });
         });
 
