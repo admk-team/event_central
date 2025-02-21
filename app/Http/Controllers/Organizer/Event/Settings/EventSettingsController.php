@@ -32,16 +32,16 @@ class EventSettingsController extends Controller
 
     public function destroyEvent(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-        ]);
-
         $currentEvent = EventApp::find(session('event_id'));
 
-        if ($request->name !== $currentEvent->php_sapi_name) {
-            return response()->json([
-                'errors' => 'Incorrect event name',
-            ]);
-        }
+        $request->validate([
+            'name' => "required|in:{$currentEvent->name}",
+        ], [
+            'name.in' => 'Incorrect event name',
+        ]);
+
+        $currentEvent->delete();
+
+        return redirect()->route('organizer.events.index');
     }
 }

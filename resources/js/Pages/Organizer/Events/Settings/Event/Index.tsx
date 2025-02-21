@@ -21,13 +21,13 @@ function Event() {
                     />
                     <Container>
                         <Row>
-                            <Col md={6}>
+                            <Col md={8}>
                                 <Information />
                             </Col>
-                            <Col md={6}>
+                            <Col md={4}>
                                 <Row>
                                     <Col xs={12}>
-                                        <Contact />
+                                        {/* <Contact /> */}
                                     </Col>
                                     <Col xs={12}>
                                         <Other />

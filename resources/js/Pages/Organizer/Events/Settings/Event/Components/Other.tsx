@@ -1,6 +1,6 @@
 import { useForm } from '@inertiajs/react';
 import React from 'react';
-import { Button, Card, CardBody, CardHeader, CardTitle, Form, Modal, ModalBody, ModalDialog, ModalFooter } from 'react-bootstrap';
+import { Button, Card, CardBody, CardHeader, CardTitle, Form, Modal, ModalBody, ModalDialog, ModalFooter, Spinner } from 'react-bootstrap';
 
 export default function Other() {
   const [showDeleteConfirmation, setShowDeleteConfirmation] = React.useState(false);
@@ -63,8 +63,22 @@ export default function Other() {
               className="btn w-sm btn-danger "
               id="delete-record"
               onClick={handleDelete}
+              disabled={deleteForm.processing}
             >
-              Yes, Delete It!
+              {deleteForm.processing? (
+                  <span className="d-flex gap-1 align-items-center">
+                      <Spinner
+                          as="span"
+                          animation="border"
+                          size="sm"
+                          role="status"
+                          aria-hidden="true"
+                      />
+                      Deleting
+                  </span>
+              ) : (
+                  <span>Yes, Delete It!</span>
+              )}
             </button>
           </div>
         </Modal.Body>
