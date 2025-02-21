@@ -133,6 +133,12 @@ const Navdata = () => {
                     link: route('organizer.events.settings.event.index'),
                     parentId: "settings",
                 },
+                {
+                    id: "payemntSettings",
+                    label: "Payment Settings",
+                    link: route('organizer.events.settings.payment.index'),
+                    parentId: "settings",
+                },
             ]
         },
         {
