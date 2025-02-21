@@ -61,7 +61,7 @@ const Navdata = () => {
         },
         {
             id: "content",
-            label: "content",
+            label: "Content",
             icon: "bx bxs-user",
             link: "/#",
             stateVariables: isContent,
