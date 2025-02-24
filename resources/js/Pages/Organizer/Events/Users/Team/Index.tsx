@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Button, Col, Container, Row, Table } from 'react-bootstrap';
 import { Head, Link, useForm } from '@inertiajs/react';
-import BreadCrumb from '../../../../Components/Common/BreadCrumb';
-import Layout from '../../../../Layouts/Organizer/Event';
+import BreadCrumb from '../../../../../Components/Common/BreadCrumb';
+import Layout from '../../../../../Layouts/Organizer/Event';
 // import Pagination2 from '../../../Pages/Admin/';
-import DeleteModal from '../../../../Components/Common/DeleteModal';
-import DataTable, { ColumnDef } from '../../../../Components/DataTable';
-import DeleteManyModal from '../../../../Components/Common/DeleteManyModal';
+import DeleteModal from '../../../../../Components/Common/DeleteModal';
+import DataTable, { ColumnDef } from '../../../../../Components/DataTable';
+import DeleteManyModal from '../../../../../Components/Common/DeleteManyModal';
 
 function Index({ speakers }: any) {
     const [deletespeaker, setDeleteSpeaker] = React.useState<any>(null);
