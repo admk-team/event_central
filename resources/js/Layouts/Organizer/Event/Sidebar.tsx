@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import SimpleBar from "simplebar-react";
 //import logo
 import logoSm from "../../../../images/logo-sm.png";
 import logoDark from "../../../../images/logo-dark.png";
 import logoLight from "../../../../images/logo-light.png";
+import Select from "react-select";
 
 //Import Components
 import VerticalLayout from "./VerticalLayouts";
@@ -11,7 +12,7 @@ import { Button, Container, Dropdown } from "react-bootstrap";
 import { Link, router, usePage } from "@inertiajs/react";
 import HorizontalLayout from "../../Theme/HorizontalLayout";
 import TwoColumnLayout from "../../Theme/TwoColumnLayout";
-import { Label } from "@headlessui/react";
+import { Label, MenuSeparator } from "@headlessui/react";
 import { current } from "@reduxjs/toolkit";
 
 const Sidebar = ({ layoutType }: any) => {
@@ -52,17 +53,19 @@ const Sidebar = ({ layoutType }: any) => {
   };
 
   const { currentEvent } = usePage().props;
+  const [sortBy, setsortBy] = useState<any>(null);
+
   if (!currentEvent || currentEvent === null) {
     router.visit(route('organizer.events.index'));
   }
-
+  const { events, auth } = usePage<{ events: any[], auth: { user: any } }>().props;
   return (
     <React.Fragment>
       <div className="app-menu navbar-menu">
         <Dropdown className="navbar-brand-box my-3">
           <Dropdown.Toggle as="button" className="btn d-flex align-items-center p-1" id="dropdown.MenuButton">
             <div className="d-flex align-items-center ">
-              <img src="https://media.istockphoto.com/id/1408255024/photo/developers-discussing-programming-code.jpg?s=2048x2048&w=is&k=20&c=FX-R-szUMTh0dbG5yUVKgnijyNxa2KFFpbjUj-PaK4g=" alt="event" className="img-fluid rounded-circle avatar-sm" />
+              <img src={currentEvent.logo_img} alt="event" className="img-fluid rounded-circle avatar-sm" />
               <div className="fs-6 fw-semibold ms-2 text-start">
                 <span className="d-block">{currentEvent.name}</span>
                 <span className="d-block fw-normal text-muted">{currentEvent.created_at_date}</span>
@@ -70,12 +73,17 @@ const Sidebar = ({ layoutType }: any) => {
             </div>
           </Dropdown.Toggle>
           <Dropdown.Menu className="w-75">
-            <Dropdown.Item className="p-2 px-4">
-              <Link href={route('organizer.events.index')}>See all events</Link>
+            {events?.map((event: any, key: any) => (
+              <Dropdown.Item key={key} className="p-2 px-4 text-primary d-flex align-items-center gap-2"
+                onClick={() => router.visit(route('organizer.events.select', event.id))}>
+                <img src={event.logo_img} alt="event" className="img-fluid rounded-circle avatar-xxs" />
+                {event.name}
+              </Dropdown.Item>
+            ))}
+            <div className="border-top my-2"></div>
+            <Dropdown.Item className="p-2 px-4 text-primary " onClick={() => router.visit(route('organizer.events.index'))}>
+              See all events
             </Dropdown.Item>
-            {/* <Dropdown.Item className="p-2 px-4">
-              <Button className="btn btn-primary w-100">Add Event</Button>
-            </Dropdown.Item> */}
           </Dropdown.Menu>
         </Dropdown>
         {layoutType === "horizontal" ? (

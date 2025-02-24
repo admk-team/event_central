@@ -18,7 +18,7 @@ const OrganizerProfileDropdown = () => {
             <Dropdown
                 show={isProfileDropdown}
                 onClick={toggleProfileDropdown}
-                className="ms-sm-3 header-item topbar-user">
+                className="ms-sm-3 header-item ">
                 <Dropdown.Toggle as="button" type="button" className="arrow-none btn">
                     <span className="d-flex align-items-center">
                         <img className="rounded-circle header-profile-user" src={avatar1}

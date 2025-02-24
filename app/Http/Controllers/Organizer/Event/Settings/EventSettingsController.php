@@ -19,12 +19,17 @@ class EventSettingsController extends Controller
     public function updateInfo(Request $request)
     {
         $input = $request->validate([
+            'logo' => 'nullable',
             'name' => 'required',
             'description' => 'nullable',
             'location_base' => 'required',
         ]);
 
         $event = EventApp::find(session('event_id'));
+        if($request->hasFile('logo')) {
+            $name = uniqid() . '.' . $request->file('logo')->getClientOriginalExtension();
+            $input['logo'] = $request->file('logo')->storeAs('events-avatars', $name, 'public');
+        }
         $event->update($input);
 
         return back();

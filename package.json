@@ -30,7 +30,7 @@
         "@fullcalendar/react": "^6.1.15",
         "@hello-pangea/dnd": "^17.0.0",
         "@inertiajs/inertia": "^0.11.1",
-        "@react-google-maps/api": "^2.20.3",
+        "@react-google-maps/api": "^2.20.6",
         "@reduxjs/toolkit": "^2.3.0",
         "@south-paw/react-vector-maps": "^3.2.0",
         "@tanstack/match-sorter-utils": "^8.19.4",
