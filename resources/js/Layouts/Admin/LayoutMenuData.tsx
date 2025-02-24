@@ -166,6 +166,12 @@ const Navdata = () => {
                     link: route('admin.organizers.index'),
                     parentId: "dashboard",
                 },
+                {
+                    id: "plateform",
+                    label: "Plateform",
+                    link: route('admin.platforms.index'),
+                    parentId: "dashboard",
+                },
             ],
         },
     ];
