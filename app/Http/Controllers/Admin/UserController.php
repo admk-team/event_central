@@ -17,11 +17,11 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        if (! Auth::user()->canAny(['view_users', 'create_users', 'edit'])) {
+        if (! Auth::user()->canAny(['view_users', 'create_users', 'edit_users', 'delete_users'])) {
             abort(403);
         }
 
-        $users = $this->datatable(User::with('roles:name'));
+        $users = $this->datatable(User::where('role', 'admin')->with('roles:name'));
         $roles = $roles = Role::where('panel', 'admin')->get()->pluck('name');
         return Inertia::render("Admin/Users/Index", compact('users', 'roles'));
     }
@@ -52,7 +52,7 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        
     }
 
     /**

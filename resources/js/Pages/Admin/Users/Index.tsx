@@ -80,7 +80,7 @@ function Index({ users }: any) {
         {
             accessorKey: 'role',
             header: () => 'Role',
-            cell: (user) => <span className="badge bg-success-subtle text-success">{user.role}</span>,
+            cell: (user) => <span className="badge bg-success-subtle text-success">{user.roles[0]?.name}</span>,
             enableSorting: true,
         },
         {
@@ -117,7 +117,11 @@ function Index({ users }: any) {
                                 actions={[
                                     // Delete multiple
                                     {
-                                        render: (dataTable) => <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>,
+                                        render: (dataTable) => (
+                                            <HasPermission permission="delete_users">
+                                                <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>
+                                            </HasPermission>
+                                        ),
                                         showOnRowSelection: true,
                                     },
 

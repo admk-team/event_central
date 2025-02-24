@@ -1,29 +1,28 @@
 import { useForm } from '@inertiajs/react';
 import { Form, FormGroup, Modal, Spinner } from "react-bootstrap";
 
-export default function CreateEditModal({ show, hide, onHide, user }: { show: boolean, hide: () => void, onHide: () => void, user: any|null }) {
-    const isEdit = user != null ? true : false;
+export default function CreateEditModal({ show, hide, onHide, organizer }: { show: boolean, hide: () => void, onHide: () => void, organizer: any|null }) {
+    const isEdit = organizer != null ? true : false;
 
     const { data, setData, post, put, processing, errors, reset } = useForm({
         _method: isEdit ? "PUT" : "POST",
-        name: user?.name ?? '',
-        email: user?.email ?? '',
+        name: organizer?.name ?? '',
+        email: organizer?.email ?? '',
         password: '',
-        role: user?.role ?? '',
     });
 
     const submit = (e: any) => {
         e.preventDefault();
 
         if (isEdit) {
-            post(route('admin.users.update', user.id), {
+            post(route('admin.organizers.update', organizer.id), {
                 preserveScroll: true,
                 onSuccess: () => {
                     hide();
                 }
             });
         } else {
-            post(route('admin.users.store'), {
+            post(route('admin.organizers.store'), {
                 preserveScroll: true,
                 onSuccess: () => {
                     reset();
@@ -37,7 +36,7 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
         <Modal show={show} onHide={onHide} centered>
             <Modal.Header className="bg-light p-3" closeButton>
                 <h5 className="modal-title">
-                    {isEdit ? 'Edit User' : 'Add User'}
+                    {isEdit ? 'Edit Organizer' : 'Add Organizer'}
                 </h5>
             </Modal.Header>
 
@@ -80,19 +79,6 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                         />
                         {errors.password && (
                             <Form.Control.Feedback type="invalid">{errors.password}</Form.Control.Feedback>
-                        )}
-                    </FormGroup>
-                    <FormGroup className="mb-3">
-                        <Form.Label className="form-label">Role</Form.Label>
-                        <Form.Control 
-                            type="text" 
-                            className="form-control" 
-                            value={data.role}
-                            onChange={(e) => setData({...data, role: e.target.value})}
-                            isInvalid={!!errors.role}
-                        />
-                        {errors.role && (
-                            <Form.Control.Feedback type="invalid">{errors.role}</Form.Control.Feedback>
                         )}
                     </FormGroup>
                 </Modal.Body>

@@ -6,17 +6,18 @@ import CreateEditModal from './Components/CreateEditModal';
 import DeleteModal from '../../../Components/Common/DeleteModal';
 import DataTable, { ColumnDef } from '../../../Components/DataTable';
 import BreadCrumb2 from '../../../Components/Common/BreadCrumb2';
+import HasPermission from '../../../Components/HasPermission';
 
-function Index({ users }: any) {
+function Index({ organizers }: any) {
     const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
-    const [editUser, setEditUser] = React.useState<any>(null);
-    const [deleteUser, setDeleteUser] = React.useState<any>(null);
+    const [editOrganizer, setEditOrganizer] = React.useState<any>(null);
+    const [deleteOrganizer, setDeleteOrganizer] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
     const setShowCreateEditModal = (state: boolean) => {
         _setShowCreateEditModal(state);
         if (state === false) {
-            setEditUser(null);
+            setEditOrganizer(null);
         }
     }
 
@@ -24,48 +25,53 @@ function Index({ users }: any) {
         _method: 'DELETE'
     });
 
-    const editAction = (user: any) => {
-        setEditUser(user);
+    const editAction = (organizer: any) => {
+        setEditOrganizer(organizer);
         setShowCreateEditModal(true);
     }
 
-    const deleteAction = (user: any) => {
-        setDeleteUser(user);
+    const deleteAction = (organizer: any) => {
+        setDeleteOrganizer(organizer);
         setShowDeleteConfirmation(true);
     }
 
     const handleDelete = () => {
-        deleteForm.delete(route('admin.users.destroy', deleteUser.id));
+        deleteForm.delete(route('admin.organizers.destroy', deleteOrganizer.id));
         setShowDeleteConfirmation(false);
     }
 
-    const columns: ColumnDef<typeof users.data[0]> = [
+    const columns: ColumnDef<typeof organizers.data[0]> = [
         {
+            accessorKey: 'id',
             header: () => 'ID',
-            cell: (user) => user.id,
-            cellClass: "fw-medium"
+            cell: (organizer) => organizer.id,
+            cellClass: "fw-medium",
+            enableSorting: true,
         },
         {
+            accessorKey: 'name',
             header: () => 'Name',
-            cell: (user) => user.name,
+            cell: (organizer) => organizer.name,
+            enableSorting: true,
         },
         {
+            accessorKey: 'email',
             header: () => 'Email',
-            cell: (user) => user.email,
-        },
-        {
-            header: () => 'Role',
-            cell: (user) => <span className="badge bg-success-subtle text-success">{user.role}</span>,
+            cell: (organizer) => organizer.email,
+            enableSorting: true,
         },
         {
             header: () => 'Action',
-            cell: (user) => (
+            cell: (organizer) => (
                 <div className="hstack gap-3 fs-15">
-                    <span className="link-primary cursor-pointer"><i className="ri-eye-fill"></i>123</span>
-                    <span className="link-primary cursor-pointer" onClick={() => editAction(user)}><i className="ri-edit-fill"></i></span>
-                    <span className="link-danger cursor-pointer" onClick={() => deleteAction(user)}>
-                        <i className="ri-delete-bin-5-line"></i>
-                    </span>
+                    <HasPermission permission="edit_organizers">
+                        <span className="link-primary cursor-pointer" onClick={() => editAction(organizer)}><i className="ri-edit-fill"></i></span>
+                    </HasPermission>
+                    <HasPermission permission="delete_organizers">
+                        <span className="link-danger cursor-pointer" onClick={() => deleteAction(organizer)}>
+                            <i className="ri-delete-bin-5-line"></i>
+                        </span>
+                    </HasPermission>
                 </div>
             ),
         },
@@ -77,17 +83,21 @@ function Index({ users }: any) {
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb2
-                        title="Users"
+                        title="Organizers"
                     />
                     <Row>
                         <Col xs={12}>
                             <DataTable
-                                data={users}
+                                data={organizers}
                                 columns={columns}
-                                title="Users"
+                                title="Organizers"
                                 actions={[
                                     {
-                                        render: <Button onClick={() => setShowCreateEditModal(true)}>Add New</Button>
+                                        render: (
+                                            <HasPermission permission="create_organizers">
+                                                <Button onClick={() => setShowCreateEditModal(true)}>Add New</Button>
+                                            </HasPermission>
+                                        )
                                     }
                                 ]}
                             />
@@ -101,7 +111,7 @@ function Index({ users }: any) {
                     show={showCreateEditModal}
                     hide={() => setShowCreateEditModal(false)}
                     onHide={() => setShowCreateEditModal(false)}
-                    user={editUser}
+                    organizer={editOrganizer}
                 />
             )}
 

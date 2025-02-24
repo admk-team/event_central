@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\OrganizerRequest;
 use App\Http\Requests\Admin\UserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class OrganizerController extends Controller
@@ -15,8 +17,12 @@ class OrganizerController extends Controller
      */
     public function index()
     {
-        $users = User::where('role', 'Organizer')->latest()->paginate($request->per_page ?? 10);
-        return Inertia::render("Admin/Users/Index", compact('users'));
+        if (! Auth::user()->canAny(['view_organizers', 'create_organizers', 'edit_organizers', 'delete_organizers'])) {
+            abort(403);
+        }
+
+        $organizers = $this->datatable(User::where('role', 'organizer'));
+        return Inertia::render("Admin/Organizers/Index", compact('organizers'));
     }
 
     /**
@@ -30,9 +36,15 @@ class OrganizerController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UserRequest $request)
+    public function store(OrganizerRequest $request)
     {
+        if (! Auth::user()->can('create_organizers')) {
+            abort(403);
+        }
+
         $input = $request->validated();
+
+        $input['role'] = 'organizer';
 
         User::create($input);
 
@@ -58,11 +70,15 @@ class OrganizerController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserRequest $request, User $user)
+    public function update(OrganizerRequest $request, User $organizer)
     {
+        if (! Auth::user()->can('edit_organizers')) {
+            abort(403);
+        }
+
         $input = $request->validated();
 
-        $user->update($input);
+        $organizer->update($input);
 
         return back();
     }
@@ -72,6 +88,10 @@ class OrganizerController extends Controller
      */
     public function destroy(User $user)
     {
+        if (! Auth::user()->can('delete_organizers')) {
+            abort(403);
+        }
+
         $user->delete();
 
         return back();
@@ -82,6 +102,10 @@ class OrganizerController extends Controller
      */
     public function destroyMany(Request $request)
     {
+        if (! Auth::user()->can('delete_organizers')) {
+            abort(403);
+        }
+
         $request->validate([
             'ids' => 'required|array'
         ]);
