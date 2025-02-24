@@ -58,7 +58,7 @@ function CreateOrEdit({ speaker, events }: any) {
                             <Card.Body>
                                 <div className="card-body">
                                     <form onSubmit={submit} >
-                                        <Row className="gy-4">
+                                        <Row className="gy-2">
 
                                             <Col xxl={6} md={6}>
                                                 <div className="">

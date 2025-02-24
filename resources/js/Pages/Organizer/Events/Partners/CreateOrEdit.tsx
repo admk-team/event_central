@@ -67,18 +67,20 @@ function CreateOrEdit({ partner, partnerCategories }: any) {
                                                 <Form.Label htmlFor="name" className="form-label">Partner Type</Form.Label>
                                                 <div className="d-flex align-items-center">
                                                     <div className="form-check  me-5">
-                                                        <Form.Check.Input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" onChange={(e) => setData('type', 'exhibitor')} />
+                                                        <Form.Check.Input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked={data.type==='exhibitor'} onChange={(e) => setData('type', 'exhibitor')} />
                                                         <Form.Check.Label className="form-check-label" htmlFor="flexRadioDefault1">
                                                             Exhibitor
                                                         </Form.Check.Label>
                                                     </div>
                                                     <div className="form-check">
-                                                        <Form.Check.Input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" onChange={(e) => setData('type', 'sponsor')} />
+                                                        <Form.Check.Input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked={data.type ==='sponsor'} onChange={(e) => setData('type', 'sponsor')} />
                                                         <Form.Check.Label className="form-check-label" htmlFor="flexRadioDefault2">
                                                             Sponsor
                                                         </Form.Check.Label>
                                                     </div>
                                                 </div>
+                                                <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.type} </Form.Control.Feedback>
+
                                             </Col>
                                             <Col xxl={6} md={6}>
                                                 <div className="">
