@@ -3,10 +3,10 @@
 use App\Http\Controllers\Organizer\Event\CustomMenuController;
 use App\Http\Controllers\Organizer\Event\DashboardController;
 use App\Http\Controllers\Organizer\Event\EventController;
+use App\Http\Controllers\Organizer\Event\EventPartnerCategoryController;
+use App\Http\Controllers\Organizer\Event\EventPartnerController;
 use App\Http\Controllers\Organizer\Event\EventSessionController;
 use App\Http\Controllers\Organizer\Event\EventSpeakerController;
-use App\Http\Controllers\Organizer\Event\PartnerController;
-use App\Http\Controllers\Organizer\Event\ScheduleController;
 use App\Http\Controllers\Organizer\Event\Settings\EventAppPaymentController;
 use App\Http\Controllers\Organizer\Event\Settings\EventSettingsController;
 use App\Http\Controllers\Organizer\Event\User\AttendeeController;
@@ -30,7 +30,9 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
         Route::delete('attendees/delete/many',[AttendeeController::class,'destroyMany'])->name('attendees.destroy.many');
         Route::resource('workshop', WorkshopController::class);
         Route::resource('custom-menu', CustomMenuController::class);
-        Route::resource('partner', PartnerController::class);
+        Route::resource('partner', EventPartnerController::class);
+        Route::delete('partner/delete/many', [EventPartnerController::class, 'destroyMany'])->name('partner.destroy.many');
+        Route::resource('partner-category',EventPartnerCategoryController::class);
 
         // Settings
         Route::prefix('settings')->name('settings.')->group(function () {
