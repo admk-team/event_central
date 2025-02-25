@@ -33,7 +33,7 @@ function Index({ speakers }: any) {
         setShowDeleteConfirmation(true);
     }
     const handleDelete = () => {
-    
+
         deleteForm.post(route('organizer.events.speaker.destroy', deletespeaker.id));
         setShowDeleteConfirmation(false);
     }

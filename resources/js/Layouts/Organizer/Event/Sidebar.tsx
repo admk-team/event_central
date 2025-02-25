@@ -1,16 +1,16 @@
 import React, { useEffect } from "react";
 import SimpleBar from "simplebar-react";
 //import logo
-import logoSm from "../../../../images/logo-sm.png";
-import logoDark from "../../../../images/logo-dark.png";
-import logoLight from "../../../../images/logo-light.png";
+import logoSm from "../../../images/logo-sm.png";
+import logoDark from "../../../images/logo-dark.png";
+import logoLight from "../../../images/logo-light.png";
 
 //Import Components
 import VerticalLayout from "./VerticalLayouts";
 import { Button, Container, Dropdown } from "react-bootstrap";
 import { Link, router, usePage } from "@inertiajs/react";
-import HorizontalLayout from "../../Theme/HorizontalLayout";
-import TwoColumnLayout from "../../Theme/TwoColumnLayout";
+import HorizontalLayout from "./HorizontalLayout";
+import TwoColumnLayout from "./TwoColumnLayout";
 import { Label } from "@headlessui/react";
 import { current } from "@reduxjs/toolkit";
 

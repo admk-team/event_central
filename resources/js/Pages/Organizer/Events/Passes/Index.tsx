@@ -9,13 +9,12 @@ import DeleteModal from '../../../../Components/Common/DeleteModal';
 import DeleteManyModal from '../../../../Components/Common/DeleteManyModal';
 import HasPermission from '../../../../Components/HasPermission';
 import CreateEditModal from './CreateEditModal';
-import moment from 'moment';
 
-function Index({ schedules, speakers, event_app }: any) {
-    // console.log('schedule', schedules, event_app);
 
+function Index({ passes, event_sessions }: any) {
+    // console.log('passes', passes);
     const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
-    const [editSchedule, setEditSchedul] = React.useState<any>(null);
+    const [editPass, setEditPass] = React.useState<any>(null);
 
     const [deleteschedule, setDeleteSchedule] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
@@ -24,7 +23,7 @@ function Index({ schedules, speakers, event_app }: any) {
     const setShowCreateEditModal = (state: boolean) => {
         _setShowCreateEditModal(state);
         if (state === false) {
-            setEditSchedul(null);
+            setEditPass(null);
         }
     }
 
@@ -35,68 +34,79 @@ function Index({ schedules, speakers, event_app }: any) {
         _method: 'DELETE',
         ids: [],
     });
-    const editAction = (schedule: any) => {
-        setEditSchedul(schedule);
+    const editAction = (pass: any) => {
+        // console.log(pass);
+        setEditPass(pass);
         setShowCreateEditModal(true);
     }
 
-    const deleteAction = (schedule: any) => {
-        setDeleteSchedule(schedule);
+    const deleteAction = (pass: any) => {
+        // console.log(pass);
+        setDeleteSchedule(pass);
         setShowDeleteConfirmation(true);
     }
     const handleDelete = () => {
-
-        deleteForm.post(route('organizer.events.schedule.destroy', deleteschedule.id));
+        deleteForm.post(route('organizer.events.passes.destroy', deleteschedule.id));
         setShowDeleteConfirmation(false);
     }
     const deleteManyAction = (ids: number[]) => {
+        // console.log(ids);
         deleteManyForm.setData(data => ({ ...data, ids: ids }));
         setShowDeleteManyConfirmation(true);
     }
     const handleDeleteMany = () => {
-        deleteManyForm.delete(route('organizer.events.speakers.destroy.many'));
+        // console.log(deleteManyForm);
+        deleteManyForm.delete(route('organizer.events.passes.destroy.many'));
         setShowDeleteManyConfirmation(false);
     }
-    const columns: ColumnDef<typeof schedules.data[0]> = [
+    const columns: ColumnDef<typeof passes.data[0]> = [
         {
             header: () => 'ID',
-            cell: (schedule) => schedule.id,
+            cell: (pass) => pass.id,
             cellClass: "fw-medium"
         },
         {
+            header: () => 'Event Session',
+            cell: (pass) => pass.session.name,
+        },
+        {
             header: () => 'Name',
-            cell: (schedule) => schedule.name,
+            cell: (pass) => pass.name,
         },
         {
             header: () => 'Description',
-            cell: (schedule) => schedule.description,
-        },
-        {
-            header: () => 'Speaker',
-            cell: (schedule) => schedule.event_speaker?.name,
+            cell: (pass) => pass.description,
         },
         {
             header: () => 'Type',
-            cell: (schedule) => schedule.type,
+            cell: (pass) => pass.type,
         },
         {
-            header: () => 'Capacity',
-            cell: (schedule) => schedule.capacity,
+            header: () => 'Price',
+            cell: (pass) => pass.price,
         },
         {
-            header: () => 'Start Date',
-            cell: (schedule) => moment(schedule.start_date).format('DD-MMM-YYYY'),
+            header: () => 'Increament By',
+            cell: (pass) => pass.increament_by,
         },
         {
-            header: () => 'End Date',
-            cell: (schedule) => moment(schedule.end_datemoment).format('DD-MMM-YYYY'),
+            header: () => 'Increament Rate',
+            cell: (pass) => pass.increament_rate,
+        },
+        {
+            header: () => 'Start Increament',
+            cell: (pass) => pass.start_increament,
+        },
+        {
+            header: () => 'End Increament',
+            cell: (pass) => pass.end_increament,
         },
         {
             header: () => 'Action',
-            cell: (schedule) => (
+            cell: (pass) => (
                 <div className="hstack gap-3 fs-15">
-                    <span className="link-primary cursor-pointer" onClick={() => editAction(schedule)}><i className="ri-edit-fill"></i></span>
-                    <span className="link-danger cursor-pointer" onClick={() => deleteAction(schedule)}>
+                    <span className="link-primary cursor-pointer" onClick={() => editAction(pass)}><i className="ri-edit-fill"></i></span>
+                    <span className="link-danger cursor-pointer" onClick={() => deleteAction(pass)}>
                         <i className="ri-delete-bin-5-line"></i>
                     </span>
                 </div>
@@ -105,17 +115,16 @@ function Index({ schedules, speakers, event_app }: any) {
     ];
     return (
         <React.Fragment>
-            <Head title='Schedule' />
+            <Head title='Passes' />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Event Schedule" pageTitle="Dashboard" />
-
+                    <BreadCrumb title="Passes" pageTitle="Dashboard" />
                     <Row>
                         <Col xs={12}>
                             <DataTable
-                                data={schedules}
+                                data={passes}
                                 columns={columns}
-                                title={"Sechule for " + event_app.name.toUpperCase()}
+                                title="Passes"
                                 actions={[
                                     // Delete multiple
                                     {
@@ -135,7 +144,6 @@ function Index({ schedules, speakers, event_app }: any) {
                                     // {
                                     //     render: <Link href={route('admin.color-themes.create')}><Button><i className="ri-add-fill"></i> Add New</Button></Link>
                                     // },
-
                                 ]}
                             />
                         </Col>
@@ -149,8 +157,8 @@ function Index({ schedules, speakers, event_app }: any) {
                     show={showCreateEditModal}
                     hide={() => setShowCreateEditModal(false)}
                     onHide={() => setShowCreateEditModal(false)}
-                    schedule={editSchedule}
-                    speakers={speakers}
+                    pass={editPass}
+                    event_sessions={event_sessions}
                 />
             )}
             <DeleteManyModal

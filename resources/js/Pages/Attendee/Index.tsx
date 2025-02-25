@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Button, Col, Form, FormGroup, Modal, Row } from 'react-bootstrap';
 import { Input } from '@headlessui/react';
 import { Link, router, useForm } from '@inertiajs/react';
-import CreateModal from './Components/CreateModal';
-import Layout from '../../../Layouts/Organizer';
+// import CreateModal from './Components/CreateModal';
+import Layout from '../../Layouts/Attendee';
 import axios from 'axios';
 
 function Index(events: any) {
@@ -11,18 +11,17 @@ function Index(events: any) {
     function showModal() {
         setAddEventModal(!addEventModal);
     }
-
     return (
         <div className="page-content">
             <Row className='p-3 p-lg-5 gap-2 gap-lg-5'>
                 <Col md={4} xl={3} className='card rounded-4 d-flex flex-column align-items-center g-3 text-white px-0'>
 
-                    <Button className='w-100 p-4 rounded-4' variant='primary' onClick={() => showModal()}>
+                    {/* <Button className='w-100 p-4 rounded-4' variant='primary' onClick={() => showModal()}>
                         <i className='bx bx-plus fs-2'></i>
                         <p className='text-white fs-5 fw-semibold mt-3'>Add Event</p>
-                    </Button>
+                    </Button> */}
                 </Col>
-                {events.events.map((event: any) => (
+                {/* {events.events.map((event: any) => (
                     <Col md={4} xl={3}
                         key={event.id}
                         className='card rounded-4 d-flex flex-column justify-content-between align-items-center g-3 p-3 cursor-pointer'
@@ -43,10 +42,10 @@ function Index(events: any) {
                             </div>
                         </div>
                     </Col>
-                ))}
+                ))} */}
             </Row>
 
-            <CreateModal addEventModal={addEventModal} showModal={showModal} />
+            {/* <CreateModal addEventModal={addEventModal} showModal={showModal} /> */}
         </div >
     )
 }

@@ -3,7 +3,8 @@
 namespace App\Http\Controllers\Organizer\Event;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\organizer\EventSessionRequest;
+use App\Http\Requests\Organizer\Event\EventSessionRequest;
+use App\Models\EventApp;
 use App\Models\EventSession;
 use App\Models\EventSpeaker;
 use Illuminate\Http\Request;
@@ -13,9 +14,10 @@ class EventSessionController extends Controller
 {
     public function index(Request $request)
     {
-        $schedules = EventSession::currentEvent()->latest()->paginate($request->per_page ?? 10);
+        $event_app = EventApp::find(session('event_id'));
+        $schedules = EventSession::currentEvent()->with('event_speaker')->latest()->paginate($request->per_page ?? 10);
         $speakers = EventSpeaker::currentEvent()->get();
-        return Inertia::render('Organizer/Events/Schedule/Index', compact('schedules', 'speakers'));
+        return Inertia::render('Organizer/Events/Schedule/Index', compact('schedules', 'speakers', 'event_app'));
     }
 
     public function store(EventSessionRequest $request)

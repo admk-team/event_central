@@ -163,6 +163,12 @@ const Navdata = () => {
                     link: route('organizer.events.partner.index'),
                     parentId: "dashboard",
                 },
+                {
+                    id: "passes",
+                    label: "Passes",
+                    link: route('organizer.events.passes.index'),
+                    parentId: "dashboard",
+                },
             ]
 
         }

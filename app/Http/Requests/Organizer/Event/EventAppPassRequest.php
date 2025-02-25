@@ -4,7 +4,7 @@ namespace App\Http\Requests\Organizer\Event;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class EventSessionRequest extends FormRequest
+class EventAppPassRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,13 +22,15 @@ class EventSessionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'event_speaker_id' => 'nullable|exists:event_speakers,id',
-            'type' => 'required|in:Lecture,Workshop,Break',
-            'description' => 'nullable|string',
-            'capacity' => 'nullable|integer|min:1|',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
+            'event_session_id' => 'exists:event_sessions,id',
+            'name' => 'required',
+            'description' => 'required',
+            'type' => 'required',
+            'price' => 'required|numeric',
+            'increament_by' => 'required|numeric',
+            'increament_rate' => 'required|numeric',
+            'start_increament' => 'required|date',
+            'end_increament' => 'required|date',
         ];
     }
 }

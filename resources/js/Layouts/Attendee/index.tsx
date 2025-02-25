@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
-import RightSidebar from '../../../Components/Common/RightSidebar';
+import RightSidebar from '../../Components/Common/RightSidebar';
 
 //import actions
 import {
@@ -19,21 +19,21 @@ import {
     changeLeftsidebarViewType,
     changeSidebarImageType,
     changeSidebarVisibility
-} from "../../../slices/thunk";
+} from "../../slices/thunk";
 
 //redux
 import { useSelector, useDispatch } from "react-redux";
 import { createSelector } from 'reselect';
-import { LAYOUT_TYPES } from '../../../Components/constants/layout';
+import { LAYOUT_TYPES } from '../../Components/constants/layout';
 
-const Layout = ({children} : any) => {
+const Layout = ({ children }: any) => {
     const [headerClass, setHeaderClass] = useState<any>("");
-    const dispatch : any = useDispatch();
+    const dispatch: any = useDispatch();
 
-    const selectLayoutState = (state : any) => state.Layout;
+    const selectLayoutState = (state: any) => state.Layout;
     const selectLayoutProperties = createSelector(
         selectLayoutState,
-        (layout:any) => ({
+        (layout: any) => ({
             layoutType: LAYOUT_TYPES.HORIZONTAL,
             leftSidebarType: layout.leftSidebarType,
             layoutModeType: layout.layoutModeType,
@@ -59,7 +59,7 @@ const Layout = ({children} : any) => {
         leftSidebarViewType,
         leftSidebarImageType,
         sidebarVisibilitytype
-    }:any = useSelector(selectLayoutProperties);
+    }: any = useSelector(selectLayoutProperties);
 
     /*
     layout settings
@@ -103,7 +103,7 @@ const Layout = ({children} : any) => {
     /*
     call dark/light mode
     */
-    const onChangeLayoutMode = (value : any) => {
+    const onChangeLayoutMode = (value: any) => {
         if (changeLayoutMode) {
             dispatch(changeLayoutMode(value));
         }
