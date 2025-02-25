@@ -116,32 +116,6 @@ const Navdata = () => {
 
         },
         {
-            id: "settings",
-            label: "Settings",
-            icon: "bx bxs-cog",
-            link: "/#",
-            stateVariables: isSettings,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsSettings(!isSettings);
-                setIscurrentState('Settings');
-            },
-            subItems: [
-                {
-                    id: "eventSettings",
-                    label: "Event",
-                    link: route('organizer.events.settings.event.index'),
-                    parentId: "settings",
-                },
-                {
-                    id: "payemntSettings",
-                    label: "Payment Settings",
-                    link: route('organizer.events.settings.payment.index'),
-                    parentId: "settings",
-                },
-            ]
-        },
-        {
             id: "users",
             label: "Users",
             icon: "bx bxs-user",
@@ -168,7 +142,33 @@ const Navdata = () => {
                 }
             ]
 
-        }
+        },
+        {
+            id: "settings",
+            label: "Settings",
+            icon: "bx bxs-cog",
+            link: "/#",
+            stateVariables: isSettings,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsSettings(!isSettings);
+                setIscurrentState('Settings');
+            },
+            subItems: [
+                {
+                    id: "eventSettings",
+                    label: "Event",
+                    link: route('organizer.events.settings.event.index'),
+                    parentId: "settings",
+                },
+                {
+                    id: "payemntSettings",
+                    label: "Payment Settings",
+                    link: route('organizer.events.settings.payment.index'),
+                    parentId: "settings",
+                },
+            ]
+        },
     ];
     return <React.Fragment>{menuItems}</React.Fragment>;
 };
