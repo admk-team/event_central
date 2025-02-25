@@ -22,7 +22,7 @@ export default function CreateEditModal({ show, hide, onHide, schedule, speakers
         e.preventDefault();
 
         if (isEdit) {
-            post(route('organizer.schedule.update', schedule.id),{
+            post(route('organizer.events.schedule.update', schedule.id),{
                 onSuccess: () => {
                     reset();
                     hide();

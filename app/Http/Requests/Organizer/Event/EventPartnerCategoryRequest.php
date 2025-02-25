@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Organizer\Event\User;
+namespace App\Http\Requests\Organizer\Event;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class AttendeeStoreRequest extends FormRequest
+class EventPartnerCategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +22,8 @@ class AttendeeStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255'],
-            'phone' => ['required', 'string', 'max:255'],
+            'name' => 'required',
+            'order' => 'nullable',
         ];
     }
 }

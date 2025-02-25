@@ -7,6 +7,7 @@ import Layout from '../../../../../Layouts/Organizer/Event';
 import DeleteModal from '../../../../../Components/Common/DeleteModal';
 import DataTable, { ColumnDef } from '../../../../../Components/DataTable';
 import DeleteManyModal from '../../../../../Components/Common/DeleteManyModal';
+import ImportModal from '../../Components/ImportModal';
 
 function Index({ attendees }: any) {
     const [deleteAttendee, setDeleteAttendee] = React.useState<any>(null);
@@ -24,17 +25,21 @@ function Index({ attendees }: any) {
         ids: [],
     });
 
+    const [importAttendeesModal, setImportAttendeesModal] = useState(false);
+    function showModal() {
+        setImportAttendeesModal(!importAttendeesModal);
+    }
 
     const editAction = (attendee: any) => {
-        get(route('organizer.events.attendee.edit', attendee))
+        get(route('organizer.events.attendees.edit', attendee))
     }
     const deleteAction = (attendee: any) => {
         setDeleteAttendee(attendee);
         setShowDeleteConfirmation(true);
     }
     const handleDelete = () => {
-    
-        deleteForm.post(route('organizer.events.attendee.destroy', deleteAttendee.id));
+
+        deleteForm.post(route('organizer.events.attendees.destroy', deleteAttendee.id));
         setShowDeleteConfirmation(false);
     }
     const deleteManyAction = (ids: number[]) => {
@@ -49,19 +54,19 @@ function Index({ attendees }: any) {
     const columns: ColumnDef<typeof attendees.data[0]> = [
         {
             header: () => 'ID',
-            cell: (attendee) => attendees.id,
+            cell: (attendee) => attendee.id,
             cellClass: "fw-medium"
         },
         {
             header: () => 'Avatar',
             cell: (attendee) => (
-                <img src={attendee.avatar} alt={attendee.name} width="50" height="50" className="rounded-circle" />
+                <img src={attendee.avatar_img} alt={attendee.name} width="50" height="50" className="rounded-circle" />
             ),
         },
         {
             header: () => 'QR Code',
             cell: (attendee) => (
-                <img src={attendee.qr_code} alt="qr_code" width="50" height="50"/>
+                <img src={attendee.qr_code_img} alt="qr_code" width="50" height="50" />
             ),
         },
         {
@@ -125,6 +130,10 @@ function Index({ attendees }: any) {
                                         showOnRowSelection: true,
                                     },
 
+                                    // import events
+                                    {
+                                        render: <Button className='btn btn-outline-primary' onClick={() => showModal()}><i className="ri-login-box-line"></i> Import</Button>
+                                    },
                                     // Add new
                                     {
                                         render: <Link href="#"><Button><i className="ri-add-fill"></i> Add New</Button></Link>
@@ -147,6 +156,8 @@ function Index({ attendees }: any) {
                 onDeleteClick={handleDeleteMany}
                 onCloseClick={() => { setShowDeleteManyConfirmation(false) }}
             />
+            <ImportModal importAttendeesModal={importAttendeesModal} availableAttributes={['name','email','phone']} importType='attendees' showModal={showModal} />
+
         </React.Fragment>
     )
 }

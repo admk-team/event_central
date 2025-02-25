@@ -43,10 +43,12 @@ function Index({ schedules,speakers }: any) {
     const deleteAction = (schedule: any) => {
         setDeleteSchedule(schedule);
         setShowDeleteConfirmation(true);
+        console.log('delete ids', schedule);
     }
     const handleDelete = () => {
 
         deleteForm.post(route('organizer.events.schedule.destroy', deleteschedule.id));
+        
         setShowDeleteConfirmation(false);
     }
     const deleteManyAction = (ids: number[]) => {
@@ -54,7 +56,7 @@ function Index({ schedules,speakers }: any) {
         setShowDeleteManyConfirmation(true);
     }
     const handleDeleteMany = () => {
-        deleteManyForm.delete(route('organizer.events.speakers.destroy.many'));
+        deleteManyForm.delete(route('organizer.events.schedule.destroy.many'));
         setShowDeleteManyConfirmation(false);
     }
     const columns: ColumnDef<typeof schedules.data[0]> = [

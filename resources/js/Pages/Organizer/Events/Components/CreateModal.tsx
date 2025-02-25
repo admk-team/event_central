@@ -1,8 +1,19 @@
 import { Link, useForm } from '@inertiajs/react';
-import React, { useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import Flatpickr from "react-flatpickr";
 import { Button, Col, Form, FormGroup, Modal, Nav, Row, Tab } from 'react-bootstrap';
+import { GoogleMap, LoadScript, Marker, InfoWindow, Autocomplete } from '@react-google-maps/api';
 
+
+const containerStyle = {
+    width: '100%',
+    height: '200px',
+};
+
+const center = { lat: 37.778519, lng: -122.40564 };
+const second = { lat: 54.5260, lng: 15.2551 }
+const third = { lat: 8.7832, lng: 34.5085 }
+const fourth = { lat: 19.0760, lng: 72.8777 }
 
 interface CreateModalProps {
     addEventModal: boolean;
@@ -29,6 +40,46 @@ function CreateModal({ addEventModal, showModal }: CreateModalProps) {
         console.log('testing ', errors);
     }
 
+    const selectedPlace: any = {}
+    const [selected, setSelected] = useState<any>(null);
+
+    const onSelect = (marker: any) => {
+        setSelected(marker);
+    };
+    // Your form errors
+    const [mapCenter, setMapCenter] = useState({ lat: 37.7749, lng: -122.4194 }); // Default center (San Francisco)
+    const [selectedLocation, setSelectedLocation] = useState(null);
+
+    const googleMapsApiKey = 'AIzaSyAbvyBxmMbFhrzP9Z8moyYr6dCr-pzjhBE';//
+    const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
+
+    const onMapClick = useCallback((event: any) => {
+        const lat = event.latLng.lat();
+        const lng = event.latLng.lng();
+        const newLocation = { lat, lng };
+        setSelectedLocation(newLocation);
+        setMapCenter(newLocation);
+        setData({ ...data, location_base: `${lat}, ${lng}` }); // Update location with lat,lng
+    }, [data]);
+
+    const onPlaceChanged = () => {
+        if (autocompleteRef.current) {
+            const place = autocompleteRef.current.getPlace();
+            if (place.geometry && place.geometry.location) {
+                const lat = place.geometry.location.lat();
+                const lng = place.geometry.location.lng();
+                const newLocation = { lat, lng };
+                setSelectedLocation(newLocation);
+                setMapCenter(newLocation);
+                setData({ ...data, location_base: place.formatted_address || `${lat}, ${lng}` }); // Use formatted address or coordinates
+            }
+        }
+    };
+
+    // Handle manual location input
+    const handleLocationChange = (e: any) => {
+        setData({ ...data, location_base: e.target.value });
+    };
 
     return (
         <Modal className='modal-dialog-centered' centered show={addEventModal} onHide={() => showModal()} backdrop={'static'}>
@@ -104,8 +155,14 @@ function CreateModal({ addEventModal, showModal }: CreateModalProps) {
                                         </Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item
-                                        onClick={() => setData('type', 'in-person')}>
+                                        onClick={() => setData('type', 'hybrid')}>
                                         <Nav.Link eventKey="2">
+                                            Hybrid Event
+                                        </Nav.Link>
+                                    </Nav.Item>
+                                    <Nav.Item
+                                        onClick={() => setData('type', 'in-person')}>
+                                        <Nav.Link eventKey="3">
                                             In-Person Event
                                         </Nav.Link>
                                     </Nav.Item>
@@ -119,7 +176,7 @@ function CreateModal({ addEventModal, showModal }: CreateModalProps) {
                                                 type="text"
                                                 className="form-control"
                                                 id="virtual-location"
-                                                placeholder="Where does your event take place?"
+                                                placeholder="Country used for default timezone"
                                                 value={data.location_base}
                                                 onChange={(e) => setData('location_base', e.target.value)}
                                             />
@@ -135,10 +192,39 @@ function CreateModal({ addEventModal, showModal }: CreateModalProps) {
                                                 type="text"
                                                 className="form-control"
                                                 id="in-person-location"
-                                                placeholder="Country used for default timezone"
+                                                placeholder="Where does your event take place?"
                                                 value={data.location_base}
                                                 onChange={(e) => setData('location_base', e.target.value)}
                                             />
+                                            <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.location_base} </Form.Control.Feedback>
+                                        </div>
+                                    </Tab.Pane>
+                                    <Tab.Pane eventKey="3" id="in-person">
+                                        <div className="">
+                                            <Form.Label htmlFor="hybrid-location" className="form-label text-start w-100">Location</Form.Label>
+                                            {/* <Autocomplete
+                                                onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
+                                                onPlaceChanged={onPlaceChanged}
+                                            > */}
+                                                <Form.Control
+                                                    type="text"
+                                                    className="form-control mb-3"
+                                                    id="hybrid-location"
+                                                    placeholder="Where does your event take place?"
+                                                    value={data.location_base}
+                                                    // onChange={handleLocationChange}
+                                                />
+                                            {/* </Autocomplete> */}
+                                            {/* <LoadScript googleMapsApiKey={googleMapsApiKey} libraries={['places']}> 
+                                                <GoogleMap
+                                                    mapContainerStyle={containerStyle}
+                                                    center={mapCenter}
+                                                    zoom={13} // Adjust zoom level (e.g., 13 for city-level view)
+                                                    onClick={onMapClick}
+                                                >
+                                                    {selectedLocation && <Marker position={selectedLocation} />}
+                                                </GoogleMap>
+                                            </LoadScript> */}
                                             <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.location_base} </Form.Control.Feedback>
                                         </div>
                                     </Tab.Pane>
@@ -211,7 +297,7 @@ function CreateModal({ addEventModal, showModal }: CreateModalProps) {
                     </Row>
 
                     <div className="hstack gap-2 justify-content-center mt-4">
-                        <Link href="#" className="btn btn-link link-danger fw-medium" onClick={() => showModal()}><i className="ri-close-line me-1 align-middle"></i> Close</Link>
+                        <Button disabled={processing} className="btn btn-danger" onClick={() => showModal()}>Close</Button>
                         <Button type='submit' disabled={processing} className="btn btn-success">Create</Button>
 
                     </div>

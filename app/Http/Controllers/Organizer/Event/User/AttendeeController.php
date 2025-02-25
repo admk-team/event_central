@@ -13,7 +13,7 @@ class AttendeeController extends Controller
 {
     public function index(Request $request)
     {
-        if (! Auth::user()->canAny(['view_users', 'create_users', 'edit'])) {
+        if (! Auth::user()->canAny(['view_users', 'create_users', 'edit_users', 'delete_users'])) {
             abort(403);
         }
 

@@ -41,6 +41,7 @@ class HandleInertiaRequests extends Middleware
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
             ],
+            'events' => EventApp::organizer()->select('id', 'name', 'logo', 'created_at')->get(),
             'currentEvent' => EventApp::find(session('event_id')) ?? null,
             'permissions' => Auth::user()?->getAllPermissions()->pluck('name') ?? [],
             'messages' => fn () => session()->get('messages') ?? [],
