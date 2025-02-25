@@ -5,6 +5,7 @@ use App\Http\Controllers\Organizer\Event\DashboardController;
 use App\Http\Controllers\Organizer\Event\EventController;
 use App\Http\Controllers\Organizer\Event\EventPartnerCategoryController;
 use App\Http\Controllers\Organizer\Event\EventPartnerController;
+use App\Http\Controllers\Organizer\Event\EventPlatformController;
 use App\Http\Controllers\Organizer\Event\EventSessionController;
 use App\Http\Controllers\Organizer\Event\EventSpeakerController;
 use App\Http\Controllers\Organizer\Event\Settings\EventAppPaymentController;
@@ -33,6 +34,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
         Route::resource('partner', EventPartnerController::class);
         Route::delete('partner/delete/many', [EventPartnerController::class, 'destroyMany'])->name('partner.destroy.many');
         Route::resource('partner-category',EventPartnerCategoryController::class);
+        Route::resource('event-platforms',EventPlatformController::class);
 
         // Settings
         Route::prefix('settings')->name('settings.')->group(function () {
