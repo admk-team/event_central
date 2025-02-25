@@ -6,6 +6,7 @@ const Navdata = () => {
     const [isDashboard, setIsDashboard] = useState<boolean>(false);
     const [isUserManagement, setIsUserManagement] = useState<boolean>(false);
     const [isOrganizers, setIsOrganizers] = useState<boolean>(false);
+    const [isPlatforms, setIsPlatforms] = useState<boolean>(false);
 
 
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
@@ -36,12 +37,16 @@ const Navdata = () => {
         if (iscurrentState !== 'Organizers') {
             setIsOrganizers(false);
         }
+        if (iscurrentState !== 'Platforms') {
+            setIsPlatforms(false);
+        }
     }, [
         history,
         iscurrentState,
         isDashboard,
         isUserManagement,
         isOrganizers,
+        isPlatforms
     ]);
 
     const menuItems: any = [
@@ -111,6 +116,19 @@ const Navdata = () => {
                 e.preventDefault();
                 setIsOrganizers(!isOrganizers);
                 setIscurrentState('Organizers');
+                updateIconSidebar(e);
+            }
+        },
+        {
+            id: "plateforms",
+            label: "Plateforms",
+            icon: "ri-group-fill",
+            link: route('admin.platforms.index'),
+            stateVariables: isOrganizers,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsPlatforms(!isPlatforms);
+                setIscurrentState('Plateforms');
                 updateIconSidebar(e);
             }
         },

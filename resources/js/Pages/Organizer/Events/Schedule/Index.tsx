@@ -1,21 +1,22 @@
 
-import { Button, Col, Container, Row } from 'react-bootstrap';
+import { Button, Col, Container, Dropdown, Row } from 'react-bootstrap';
 import Layout from '../../../../Layouts/Organizer/Event';
 import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 import React, { useState } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
-import DataTable, { ColumnDef } from '../../../../Components/DataTable';
-import DeleteModal from '../../../../Components/Common/DeleteModal';
-import DeleteManyModal from '../../../../Components/Common/DeleteManyModal';
-import HasPermission from '../../../../Components/HasPermission';
 import CreateEditModal from './CreateEditModal';
+import Platform from './Components/Platform';
+import CreateEditPlatformModal from './Components/CreateOrEditPlatformModal';
+import Schedule from './Components/Schedul';
 
 
-function Index({ schedules,speakers }: any) {
-    console.log('schedul', schedules);
-    
+function Index({ schedules, speakers, platforms, event_platforms }: any) {
+    console.log('schedul', event_platforms);
+
     const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
+    const [showCreateEditPlatformModal, _setShowCreateEditPlatformModal] = React.useState(false);
     const [editSchedule, setEditSchedul] = React.useState<any>(null);
+    const [editStage, setEditStage] = React.useState<any>(null);
 
     const [deleteschedule, setDeleteSchedule] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
@@ -25,6 +26,12 @@ function Index({ schedules,speakers }: any) {
         _setShowCreateEditModal(state);
         if (state === false) {
             setEditSchedul(null);
+        }
+    }
+    const setShowCreateEditPlatformModal = (state: boolean) => {
+        _setShowCreateEditPlatformModal(state);
+        if (state === false) {
+            setEditStage(null);
         }
     }
 
@@ -48,7 +55,7 @@ function Index({ schedules,speakers }: any) {
     const handleDelete = () => {
 
         deleteForm.post(route('organizer.events.schedule.destroy', deleteschedule.id));
-        
+
         setShowDeleteConfirmation(false);
     }
     const deleteManyAction = (ids: number[]) => {
@@ -59,71 +66,40 @@ function Index({ schedules,speakers }: any) {
         deleteManyForm.delete(route('organizer.events.schedule.destroy.many'));
         setShowDeleteManyConfirmation(false);
     }
-    const columns: ColumnDef<typeof schedules.data[0]> = [
-        {
-            header: () => 'ID',
-            cell: (schedule) => schedule.id,
-            cellClass: "fw-medium"
-        },
-        {
-            header: () => 'Name',
-            cell: (schedule) => schedule.name,
-        },
-        {
-            header: () => 'Type',
-            cell: (schedule) => schedule.type,
-        },
 
-        {
-            header: () => 'Action',
-            cell: (schedule) => (
-                <div className="hstack gap-3 fs-15">
-                    <span className="link-primary cursor-pointer" onClick={() => editAction(schedule)}><i className="ri-edit-fill"></i></span>
-                    <span className="link-danger cursor-pointer" onClick={() => deleteAction(schedule)}>
-                        <i className="ri-delete-bin-5-line"></i>
-                    </span>
-                </div>
-            ),
-        },
-    ];
     return (
         <React.Fragment>
             <Head title='Starter | Velzon - React Admin & Dashboard Template' />
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb title="Schedule" pageTitle="Dashboard" />
-
                     <Row>
                         <Col xs={12}>
-                            <DataTable
-                                data={schedules}
-                                columns={columns}
-                                title="Schedules"
-                                actions={[
-                                    // Delete multiple
-                                    {
-                                        render: (dataTable) => <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>,
-                                        showOnRowSelection: true,
-                                    },
-
-                                    // Add new
-
-                                    {
-                                        render: (
-                                            <HasPermission permission="create_schedule">
-                                                <Button onClick={() => setShowCreateEditModal(true)}><i className="ri-add-fill"></i> Add New</Button>
-                                            </HasPermission>
-                                        )
-                                    },
-                                    // {
-                                    //     render: <Link href={route('admin.color-themes.create')}><Button><i className="ri-add-fill"></i> Add New</Button></Link>
-                                    // },
-
-                                ]}
-                            />
+                            <div className='mb-3'>
+                                <div className="d-flex justify-content-between">
+                                    <Button>Calendar</Button>
+                                    <div>
+                                        <Dropdown>
+                                            <Dropdown.Toggle as="button" className="btn btn-secondary" id="dropdown.MenuButton">
+                                                Stage
+                                            </Dropdown.Toggle>
+                                            <Dropdown.Menu>
+                                                <Dropdown.Item>
+                                                    <div onClick={() => setShowCreateEditPlatformModal(true)}>
+                                                        <i className="ri-add-fill"></i> Add Stage
+                                                    </div>
+                                                </Dropdown.Item>
+                                            </Dropdown.Menu>
+                                        </Dropdown>
+                                    </div>
+                                </div>
+                            </div>
                         </Col>
                     </Row>
-
+                    {/* <ScheduleHeader platforms={platforms} event_platforms={event_platforms} /> */}
+                    <Platform platforms={platforms} event_platforms={event_platforms} />
+                
+            <Schedule/>
                 </Container>
             </div>
 
@@ -136,17 +112,14 @@ function Index({ schedules,speakers }: any) {
                     speakers={speakers}
                 />
             )}
-            <DeleteManyModal
-                show={showDeleteConfirmation}
-                onDeleteClick={handleDelete}
-                onCloseClick={() => { setShowDeleteConfirmation(false) }}
-            />
-
-            <DeleteManyModal
-                show={showDeleteManyConfirmation}
-                onDeleteClick={handleDeleteMany}
-                onCloseClick={() => { setShowDeleteManyConfirmation(false) }}
-            />
+            {showCreateEditPlatformModal && (
+                <CreateEditPlatformModal
+                    show={showCreateEditPlatformModal}
+                    hide={() => setShowCreateEditPlatformModal(false)}
+                    onHide={() => setShowCreateEditPlatformModal(false)}
+                    platforms={platforms}
+                />
+            )}
         </React.Fragment>
     )
 }

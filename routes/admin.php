@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\ColorSchemeController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OrganizerController;
+use App\Http\Controllers\Admin\PlatFormController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
@@ -26,4 +27,8 @@ Route::middleware(['auth', 'panel:admin'])->prefix('admin')->name('admin.')->gro
     // Organizers
     Route::resource('organizers', OrganizerController::class);
     Route::delete('organizers/delete/many', [OrganizerController::class, 'destroyMany'])->name('organizers.destroy.many');
+
+    // platform route
+    Route::resource('platforms',PlatFormController::class);
+    Route::delete('platforms/delete/many', [PlatFormController::class, 'destroyMany'])->name('platforms.destroy.many');
 });
