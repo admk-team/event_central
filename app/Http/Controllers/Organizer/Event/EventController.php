@@ -42,7 +42,11 @@ class EventController extends Controller
     public function selectEvent( $id)
     {
         session()->put('event_id', $id);
-        return back();
+        if (route('organizer.events.index') !== back()->getTargetUrl()) {
+            return back();
+        }
+
+        return redirect()->route('organizer.events.dashboard');
     }
 
     /**
