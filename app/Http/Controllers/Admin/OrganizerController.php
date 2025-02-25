@@ -48,7 +48,7 @@ class OrganizerController extends Controller
 
         User::create($input);
 
-        return back();
+        return back()->withSuccess('Created');
     }
 
     /**
@@ -80,7 +80,7 @@ class OrganizerController extends Controller
 
         $organizer->update($input);
 
-        return back();
+        return back()->withSuccess('Updated');
     }
 
     /**
@@ -94,7 +94,7 @@ class OrganizerController extends Controller
 
         $user->delete();
 
-        return back();
+        return back()->withSuccess('Deleted');
     }
 
     /**
@@ -114,6 +114,6 @@ class OrganizerController extends Controller
             User::find($id)?->delete();
         }
 
-        return back();
+        return back()->withSuccess('Deleted');
     }
 }

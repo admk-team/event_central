@@ -25,6 +25,8 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { createSelector } from 'reselect';
 import { LAYOUT_TYPES } from '../../Components/constants/layout';
+import { Toaster } from 'react-hot-toast';
+import useToastMessages from '../../hooks/useToastMessages';
 
 const Layout = ({children} : any) => {
     const [headerClass, setHeaderClass] = useState<any>("");
@@ -132,6 +134,8 @@ const Layout = ({children} : any) => {
         }
     }, [sidebarVisibilitytype, layoutType]);
 
+    useToastMessages();
+
     return (
         <React.Fragment>
             <div id="layout-wrapper">
@@ -148,8 +152,8 @@ const Layout = ({children} : any) => {
                 </div>
             </div>
             <RightSidebar />
+            <Toaster />
         </React.Fragment>
-
     );
 };
 

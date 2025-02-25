@@ -44,7 +44,7 @@ class UserController extends Controller
 
         $user->syncRoles([$role]);
 
-        return back();
+        return back()->withSuccess("Created");
     }
 
     /**
@@ -73,7 +73,7 @@ class UserController extends Controller
 
         $user->syncRoles([$role]);
 
-        return back();
+        return back()->withSuccess('Updated');
     }
 
     /**
@@ -87,7 +87,7 @@ class UserController extends Controller
 
         $user->delete();
 
-        return back();
+        return back()->withSuccess('Deleted');
     }
 
     public function destroyMany(Request $request)
@@ -104,6 +104,6 @@ class UserController extends Controller
             User::find($id)?->delete();
         }
 
-        return back();
+        return back()->withSuccess('Deleted');
     }
 }

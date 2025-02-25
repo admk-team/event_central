@@ -43,6 +43,7 @@ class HandleInertiaRequests extends Middleware
             ],
             'currentEvent' => EventApp::find(session('event_id')) ?? null,
             'permissions' => Auth::user()?->getAllPermissions()->pluck('name') ?? [],
+            'messages' => fn () => session()->get('messages') ?? [],
         ];
     }
 }

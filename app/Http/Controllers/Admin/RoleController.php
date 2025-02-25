@@ -37,7 +37,7 @@ class RoleController extends Controller
         $role =  Role::create(['name' => $input['name'], 'panel' => 'admin']);
         $role->givePermissionTo($input['permissions']);
 
-        return to_route('admin.roles.index');
+        return to_route('admin.roles.index')->withSuccess('Created');
     }
 
     /**
@@ -65,7 +65,7 @@ class RoleController extends Controller
     {
         $input = $request->validated();
         $role->syncPermissions($input['permissions']);
-        return to_route('admin.roles.index');
+        return to_route('admin.roles.index')->withSuccess('Updated');
     }
 
     /**
@@ -75,6 +75,6 @@ class RoleController extends Controller
     {
         $role->delete();
 
-        return back();
+        return back()->withSuccess('Deleted');
     }
 }

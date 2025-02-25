@@ -27,7 +27,7 @@ class EventSettingsController extends Controller
         $event = EventApp::find(session('event_id'));
         $event->update($input);
 
-        return back();
+        return back()->withSuccess('Saved');
     }
 
     public function destroyEvent(Request $request)
@@ -42,6 +42,6 @@ class EventSettingsController extends Controller
 
         $currentEvent->delete();
 
-        return redirect()->route('organizer.events.index');
+        return redirect()->route('organizer.events.index')->withSuccess('Event deleted successfully');
     }
 }
