@@ -52,12 +52,10 @@ const Sidebar = ({ layoutType }: any) => {
     }
   };
 
-  const { currentEvent } = usePage().props;
   const [sortBy, setsortBy] = useState<any>(null);
 
-  if (!currentEvent || currentEvent === null) {
-    router.visit(route('organizer.events.index'));
-  }
+  const { currentEvent } = usePage().props;
+  
   const { events, auth } = usePage<{ events: any[], auth: { user: any } }>().props;
   return (
     <React.Fragment>
