@@ -149,7 +149,6 @@ const Layout = ({children} : any) => {
             </div>
             <RightSidebar />
         </React.Fragment>
-
     );
 };
 

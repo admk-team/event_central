@@ -23,7 +23,7 @@ const DashboardAnalytics = () => {
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb title="Analytics" pageTitle="Dashboards" />
-                    {/* <Row>
+                    <Row>
                         <Col xxl={5}>
                             <UpgradeAccountNotise />
                             <Widget />
@@ -38,7 +38,7 @@ const DashboardAnalytics = () => {
                         <UsersByDevice />
                         <TopReferrals />
                         <TopPages />
-                    </Row> */}
+                    </Row>
                 </Container>
             </div>
         </React.Fragment>

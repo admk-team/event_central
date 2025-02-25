@@ -4,16 +4,17 @@ import SimpleBar from "simplebar-react";
 import logoSm from "../../../images/logo-sm.png";
 import logoDark from "../../../images/logo-dark.png";
 import logoLight from "../../../images/logo-light.png";
-
+import defaultEventImage from '../../../images/default-event-image.png';
 //Import Components
 import VerticalLayout from "./VerticalLayouts";
 import { Container } from "react-bootstrap";
-import { Link } from "@inertiajs/react";
 import HorizontalLayout from "./HorizontalLayout";
 import TwoColumnLayout from "./TwoColumnLayout";
+import { Link, usePage } from '@inertiajs/react';
+
 
 const Sidebar = ({ layoutType }: any) => {
-
+    const eventApp = usePage().props.eventApp;
     useEffect(() => {
         var verticalOverlay = document.getElementsByClassName("vertical-overlay");
         if (verticalOverlay) {
@@ -38,15 +39,17 @@ const Sidebar = ({ layoutType }: any) => {
         <React.Fragment>
             <div className="app-menu navbar-menu">
                 <div className="navbar-brand-box">
-                    <Link href="/" className="logo logo-dark">
+                    <Link href={route('attendee.event.detail.dashboard', [eventApp.id])} className="logo logo-dark">
                         <span className="logo-sm">
                             <img src={logoSm} alt="" height="22" />
                         </span>
                         <span className="logo-lg">
-                            <img src={logoDark} alt="" height="17" />
+                            <div className="d-flex justify-content-start align-items-center">
+                                <img src={defaultEventImage} alt="default event image" style={{ height: '35px', borderRadius: '50%' }} />
+                                <span style={{ marginLeft: '15px' }}>{eventApp.name}</span>
+                            </div>
                         </span>
                     </Link>
-
                     <Link href="/" className="logo logo-light">
                         <span className="logo-sm">
                             <img src={logoSm} alt="" height="22" />

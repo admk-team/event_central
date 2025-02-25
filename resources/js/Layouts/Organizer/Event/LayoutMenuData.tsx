@@ -4,6 +4,10 @@ const Navdata = () => {
     //state data
     const [isDashboard, setIsDashboard] = useState<boolean>(false);
     const [isContent, setIsContent] = useState<boolean>(false);
+    const [isEngagement, setIsEngagement] = useState<boolean>(false);
+    const [isUsers, setIsUsers] = useState<boolean>(false);
+    const [isSettings, setIsSettings] = useState<boolean>(false);
+
     const [isApps, setIsApps] = useState<boolean>(false);
     const [isAuth, setIsAuth] = useState<boolean>(false);
     const [isPages, setIsPages] = useState<boolean>(false);
@@ -121,15 +125,15 @@ const Navdata = () => {
             }
         },
         {
-            id: "content",
-            label: "content",
-            icon: "bx bxs-user",
+            id: "Content",
+            label: "Content",
+            icon: "bx bx-book-content",
             link: "/#",
             stateVariables: isContent,
             click: function (e: any) {
                 e.preventDefault();
                 setIsContent(!isContent);
-                setIscurrentState('content');
+                setIscurrentState('Content');
                 updateIconSidebar(e);
             },
             subItems: [
@@ -170,8 +174,47 @@ const Navdata = () => {
                     parentId: "dashboard",
                 },
             ]
-
+        },
+        {
+            id: "engagement",
+            label: "Engagement",
+            icon: "bx bx-share-alt",
+            link: "/#",
+            stateVariables: isEngagement,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsEngagement(!isEngagement);
+                setIscurrentState('engagement');
+                updateIconSidebar(e);
+            },
+        },
+        {
+            id: "users",
+            label: "Users",
+            icon: "bx bxs-user-account",
+            link: "/#",
+            stateVariables: isUsers,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsUsers(!isUsers);
+                setIscurrentState('users');
+                updateIconSidebar(e);
+            },
+        },
+        {
+            id: "settings",
+            label: "Settings",
+            icon: "bx bx-cog",
+            link: "/#",
+            stateVariables: isSettings,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsSettings(!isSettings);
+                setIscurrentState('settings');
+                updateIconSidebar(e);
+            },
         }
+
     ];
     return <React.Fragment>{menuItems}</React.Fragment>;
 };

@@ -2,35 +2,30 @@ import { Link } from "@inertiajs/react";
 import React, { useState } from "react";
 
 //import images
-import logoSm from "../../../../images/logo-sm.png";
-import logoDark from "../../../../images/logo-dark.png";
-import logoLight from "../../../../images/logo-light.png";
+import logoSm from "../../../images/logo-sm.png";
+import logoDark from "../../../images/logo-dark.png";
+import logoLight from "../../../images/logo-light.png";
 import { useDispatch, useSelector } from "react-redux";
 import { createSelector } from "@reduxjs/toolkit";
 import { Dropdown, Form } from "react-bootstrap";
-import { changeSidebarVisibility } from "../../../slices/thunk";
-import SearchOption from "../../../Components/Common/SearchOption";
-import LanguageDropdown from "../../../Components/Common/LanguageDropdown";
-import WebAppsDropdown from "../../../Components/Common/WebAppsDropdown";
-import MyCartDropdown from "../../../Components/Common/MyCartDropdown";
-import FullScreenDropdown from "../../../Components/Common/FullScreenDropdown";
-import ProfileDropdown from "../../../Components/Common/ProfileDropdown";
-import LightDark from "../../../Components/Common/LightDark";
-import NotificationDropdown from "../../../Components/Common/NotificationDropdown";
-import OrganizerProfileDropdown from "../../../Components/Common/OrganizerProfileDropdown";
+import { changeSidebarVisibility } from "../../slices/thunk";
+import SearchOption from "../../Components/Common/SearchOption";
+import LanguageDropdown from "../../Components/Common/LanguageDropdown";
+import WebAppsDropdown from "../../Components/Common/WebAppsDropdown";
+import MyCartDropdown from "../../Components/Common/MyCartDropdown";
+import FullScreenDropdown from "../../Components/Common/FullScreenDropdown";
+import AttendeeProfileDropdown from "../../Components/Common/AttendeeProfileDropdown";
+import LightDark from "../../Components/Common/LightDark";
+import NotificationDropdown from "../../Components/Common/NotificationDropdown";
 
-const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
+const HeaderAttendee = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
     const dispatch: any = useDispatch();
-
-
     const selectDashboardData = createSelector(
         (state: any) => state.Layout,
         (sidebarVisibilitytype: any) => sidebarVisibilitytype.sidebarVisibilitytype
     );
     // Inside your component
     const sidebarVisibilitytype = useSelector(selectDashboardData);
-
-
     const [search, setSearch] = useState<boolean>(false);
     const toogleSearch = () => {
         setSearch(!search);
@@ -62,7 +57,6 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
                 document.documentElement.setAttribute('data-sidebar-size', 'lg');
             }
         }
-
 
         //Two column menu
         if (document.documentElement.getAttribute('data-layout') === "twocolumn") {
@@ -107,36 +101,10 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
                                     <span></span>
                                 </span>
                             </button>
-                            {/* <SearchOption /> */}
 
+
+                            {/* <SearchOption /> */}
                         </div>
-                        {/* <div style={{ width: '800px' }}>
-                            <div className="d-flex flex-row" >
-                                <ul className="navbar-nav">
-                                    <li className="nav-item">
-                                        <Link
-                                            className="nav-link menu-link"
-                                            href="/">
-                                            <i className="bx bxs-dashboard"></i> <span>Dashboard</span>
-                                        </Link>
-                                    </li>
-                                    <li className="nav-item">
-                                        <Link
-                                            className="nav-link menu-link"
-                                            href="/">
-                                            <i className="bx bxs-dashboard"></i> <span>Content</span>
-                                        </Link>
-                                    </li>
-                                    <li className="nav-item">
-                                        <Link
-                                            className="nav-link menu-link"
-                                            href="/">
-                                            <i className="bx bxs-dashboard"></i> <span>Engagement</span>
-                                        </Link>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div> */}
 
                         <div className="d-flex align-items-center">
                             <Dropdown show={search} onClick={toogleSearch} className="d-md-none topbar-head-dropdown header-item">
@@ -156,30 +124,8 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
                                     </Form>
                                 </Dropdown.Menu>
                             </Dropdown>
-
-                            {/* LanguageDropdown */}
-                            <LanguageDropdown />
-
-                            {/* WebAppsDropdown */}
-                            <WebAppsDropdown />
-
-                            {/* MyCartDropdwon */}
-                            <MyCartDropdown />
-
-                            {/* FullScreenDropdown */}
-                            <FullScreenDropdown />
-
-                            {/* Dark/Light Mode set */}
-                            <LightDark
-                                layoutMode={layoutModeType}
-                                onChangeLayoutMode={onChangeLayoutMode}
-                            />
-
-                            {/* NotificationDropdown */}
-                            <NotificationDropdown />
-
                             {/* ProfileDropdown */}
-                            <OrganizerProfileDropdown />
+                            <AttendeeProfileDropdown />
                         </div>
                     </div>
                 </div>
@@ -188,4 +134,4 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
     );
 };
 
-export default Header;
+export default HeaderAttendee;

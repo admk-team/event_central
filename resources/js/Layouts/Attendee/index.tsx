@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 //import Components
 import Header from './Header';
+import HeaderAttendee from './HeaderAttendee';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
 import RightSidebar from '../../Components/Common/RightSidebar';
@@ -26,6 +27,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { createSelector } from 'reselect';
 import { LAYOUT_TYPES } from '../../Components/constants/layout';
 
+
 const Layout = ({ children }: any) => {
     const [headerClass, setHeaderClass] = useState<any>("");
     const dispatch: any = useDispatch();
@@ -34,7 +36,7 @@ const Layout = ({ children }: any) => {
     const selectLayoutProperties = createSelector(
         selectLayoutState,
         (layout: any) => ({
-            layoutType: LAYOUT_TYPES.HORIZONTAL,
+            layoutType: LAYOUT_TYPES.VERTICAL,
             leftSidebarType: layout.leftSidebarType,
             layoutModeType: layout.layoutModeType,
             layoutWidthType: layout.layoutWidthType,
@@ -135,10 +137,10 @@ const Layout = ({ children }: any) => {
     return (
         <React.Fragment>
             <div id="layout-wrapper">
-                <Header
-                    headerClass={headerClass}
+                <HeaderAttendee headerClass={headerClass}
                     layoutModeType={layoutModeType}
-                    onChangeLayoutMode={onChangeLayoutMode} />
+                    onChangeLayoutMode={onChangeLayoutMode}
+                />
                 <Sidebar
                     layoutType={layoutType}
                 />
@@ -149,7 +151,6 @@ const Layout = ({ children }: any) => {
             </div>
             <RightSidebar />
         </React.Fragment>
-
     );
 };
 

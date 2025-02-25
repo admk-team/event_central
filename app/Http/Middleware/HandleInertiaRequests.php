@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Models\EventApp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Inertia\Middleware;
 use Tightenco\Ziggy\Ziggy;
 
@@ -32,6 +33,7 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        Log::info(Auth::user());
         return [
             ...parent::share($request),
             'auth' => [
@@ -42,7 +44,13 @@ class HandleInertiaRequests extends Middleware
                 'location' => $request->url(),
             ],
             'currentEvent' => EventApp::find(session('event_id')) ?? null,
-            'permissions' => Auth::user()?->getAllPermissions()->pluck('name') ?? [],
+            'permissions' => function () {
+                if (Auth::guard('web')->check()) {
+                    return Auth::user()?->getAllPermissions()->pluck('name') ?? [];
+                } else if (Auth::guard('attendee')->check()) {
+                    return [];
+                }
+            }
         ];
     }
 }
