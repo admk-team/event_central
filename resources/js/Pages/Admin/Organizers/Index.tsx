@@ -7,12 +7,14 @@ import DeleteModal from '../../../Components/Common/DeleteModal';
 import DataTable, { ColumnDef } from '../../../Components/DataTable';
 import BreadCrumb2 from '../../../Components/Common/BreadCrumb2';
 import HasPermission from '../../../Components/HasPermission';
+import DeleteManyModal from '../../../Components/Common/DeleteManyModal';
 
 function Index({ organizers }: any) {
     const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
     const [editOrganizer, setEditOrganizer] = React.useState<any>(null);
     const [deleteOrganizer, setDeleteOrganizer] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+    const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
 
     const setShowCreateEditModal = (state: boolean) => {
         _setShowCreateEditModal(state);
@@ -23,6 +25,11 @@ function Index({ organizers }: any) {
 
     const deleteForm = useForm({
         _method: 'DELETE'
+    });
+
+    const deleteManyForm = useForm<{ _method: string; ids: number[] }>({
+        _method: 'DELETE',
+        ids: [],
     });
 
     const editAction = (organizer: any) => {
@@ -38,6 +45,16 @@ function Index({ organizers }: any) {
     const handleDelete = () => {
         deleteForm.delete(route('admin.organizers.destroy', deleteOrganizer.id));
         setShowDeleteConfirmation(false);
+    }
+
+    const deleteManyAction = (ids: number[]) => {
+        deleteManyForm.setData(data => ({...data, ids: ids}));
+        setShowDeleteManyConfirmation(true);
+    }
+
+    const handleDeleteMany = () => {
+        deleteManyForm.delete(route('admin.organizers.destroy.many'));
+        setShowDeleteManyConfirmation(false);
     }
 
     const columns: ColumnDef<typeof organizers.data[0]> = [
@@ -92,6 +109,17 @@ function Index({ organizers }: any) {
                                 columns={columns}
                                 title="Organizers"
                                 actions={[
+                                    // Delete multiple
+                                    {
+                                        render: (dataTable) => (
+                                            <HasPermission permission="delete_organizers">
+                                                <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>
+                                            </HasPermission>
+                                        ),
+                                        showOnRowSelection: true,
+                                    },
+
+                                    // Add new
                                     {
                                         render: (
                                             <HasPermission permission="create_organizers">
@@ -119,6 +147,12 @@ function Index({ organizers }: any) {
                 show={showDeleteConfirmation}
                 onDeleteClick={handleDelete}
                 onCloseClick={() => { setShowDeleteConfirmation(false) }}
+            />
+
+            <DeleteManyModal
+                show={showDeleteManyConfirmation}
+                onDeleteClick={handleDeleteMany}
+                onCloseClick={() => { setShowDeleteManyConfirmation(false) }}
             />
         </React.Fragment>
     )
