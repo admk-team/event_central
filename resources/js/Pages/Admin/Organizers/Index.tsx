@@ -96,7 +96,7 @@ function Index({ organizers }: any) {
 
     return (
         <React.Fragment>
-            <Head title='Starter | Velzon - React Admin & Dashboard Template' />
+            <Head title='Organizers - Admin' />
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb2

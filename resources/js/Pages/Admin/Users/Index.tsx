@@ -102,7 +102,7 @@ function Index({ users }: any) {
 
     return (
         <React.Fragment>
-            <Head title='Starter | Velzon - React Admin & Dashboard Template' />
+            <Head title='Users - Admin' />
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb2 
