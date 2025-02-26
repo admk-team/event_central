@@ -2,6 +2,7 @@ import { Link, router, useForm } from '@inertiajs/react';
 import React, { useCallback, useRef, useState } from 'react'
 import Flatpickr from "react-flatpickr";
 import Papa from 'papaparse';
+import Select from 'react-select';
 import { Button, Col, Form, FormGroup, Modal, Nav, Row, Tab } from 'react-bootstrap';
 
 interface ImportModalProps {
@@ -44,34 +45,6 @@ function ImportModal({
         setDefaultActiveKey(step);
         setMethod(method);
     }
-
-    const handleFileUpload = (file: File) => {
-        setChooseFile(file);
-        // Papa.parse(file, {
-        //     complete: (result: any) => {
-        //         const data = result.data as string[][];
-        //         if (data.length > 0) {
-        //             setHeaders(data[0]);
-        //             setParsedData(data.slice(1));
-        //         }
-        //     },
-        //     header: false,
-        //     skipEmptyLines: true,
-        // });
-    };
-
-    const handleTextInput = (text: string) => {
-        setImportText(text);
-        // const result = Papa.parse(text, {
-        //     header: false,
-        //     skipEmptyLines: true,
-        // });
-        // const data = result.data as string[][];
-        // if (data.length > 0) {
-        //     setHeaders(data[0]);
-        //     setParsedData(data.slice(1));
-        // }
-    };
 
     const handleContinue = () => {
         if (method === "file" && chooseFile) {
@@ -129,6 +102,14 @@ function ImportModal({
                 {
                     onSuccess: (page: any) => {
                         if (onImportSuccess) onImportSuccess(page.props);
+                        showModal();
+                        setDefaultActiveKey("1");
+                        setMethod(null);
+                        setChooseFile(null);
+                        setImportText(null);
+                        setHeaders([]);
+                        setParsedData([]);
+                        setAttributeMapping({});
                     },
                     onError: (errors: any) => {
                         console.error(errors);
@@ -144,7 +125,7 @@ function ImportModal({
     return (
         <Modal className='modal-dialog-centered' size='lg' centered show={importAttendeesModal} onHide={() => showModal()} backdrop={'static'}>
             <Modal.Header>
-                <h5 className="modal-title" id="staticBackdropLabel">Import Attendees</h5>
+                <h5 className="modal-title text-capitalize" id="staticBackdropLabel">Import {importType}</h5>
                 <Button type="button" className="btn-close"
                     onClick={() => {
                         showModal();
@@ -162,19 +143,19 @@ function ImportModal({
                                     </Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item>
-                                    <Nav.Link eventKey="2">
+                                    <Nav.Link eventKey="2" disabled={!method}>
                                         <span className="border rounded-circle avatar-xs d-block mx-auto fs-5 mb-1 p-1">2</span>
                                         Upload Data
                                     </Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item>
-                                    <Nav.Link eventKey="3" >
+                                    <Nav.Link eventKey="3" disabled={!headers.length || !parsedData.length}>
                                         <span className="border rounded-circle avatar-xs d-block mx-auto fs-5 mb-1 p-1">3</span>
                                         Map Attributes
                                     </Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item>
-                                    <Nav.Link eventKey="4" >
+                                    <Nav.Link eventKey="4" disabled={Object.keys(attributeMapping).length === 0}>
                                         <span className="border rounded-circle avatar-xs d-block mx-auto fs-5 mb-1 p-1">4</span>
                                         Import Progress
                                     </Nav.Link>
@@ -236,7 +217,7 @@ function ImportModal({
                                             </div>
                                             <span className="text-muted fw-normal text-start">Please don't change the given attributes</span>
                                             <textarea className="border p-3 rounded-3 w-100 mt-3" cols={30} rows={8}
-                                                placeholder='e.g. first name, last name, email, phone number etc.'
+                                                placeholder='e.g. name, email, phone number etc.'
                                                 onChange={(e) => setImportText(e.target.value)}
                                                 value={importText || ""}
                                             >
@@ -249,23 +230,31 @@ function ImportModal({
                                 <Tab.Pane eventKey="3" id="custom-v-pills-messages">
                                     <h6>Map Attributes</h6>
                                     <div className="card p-4">
-                                        {headers?.map((header) => (
-                                            <div key={header} className="d-flex align-items-center mb-3">
-                                                <span className="w-50 text-start text-capitalize">{header}</span>
-                                                <select
-                                                    className="form-select w-50"
-                                                    value={attributeMapping[header] || ""}
-                                                    onChange={(e) => handleMappingChange(header, e.target.value)}
-                                                >
-                                                    <option value="">Select Attribute</option>
-                                                    {availableAttributes.map((attr) => (
-                                                        <option key={attr} value={attr} className='text-capitalize'>
-                                                            {attr}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                            </div>
-                                        ))}
+                                        {headers?.map((header) => {
+                                            // Get used attributes (excluding current header)
+                                            const usedAttributes = Object.entries(attributeMapping)
+                                                .filter(([key]) => key !== header)
+                                                .map(([, value]) => value)
+                                                .filter(Boolean);
+
+                                            // Convert filteredAttributes to react-select format
+                                            const filteredOptions = availableAttributes
+                                                .filter((attr) => !usedAttributes.includes(attr))
+                                                .map((attr) => ({ label: attr, value: attr }));
+
+                                            return (
+                                                <div key={header} className="d-flex align-items-center mb-3">
+                                                    <span className="w-50 text-start text-capitalize">{header}</span>
+                                                    <Select
+                                                        className="w-50 text-start text-capitalize"
+                                                        value={filteredOptions.find((opt) => opt.value === attributeMapping[header]) || null}
+                                                        onChange={(selected) => handleMappingChange(header, selected ? selected.value : "")}
+                                                        options={filteredOptions}
+                                                        isClearable // Optional: Allows clearing the selection
+                                                    />
+                                                </div>
+                                            );
+                                        })}
                                     </div>
                                     <Button
                                         className="btn btn-success mt-3"

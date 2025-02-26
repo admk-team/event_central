@@ -31,11 +31,6 @@ class AttendeeController extends Controller
         return redirect()->route('organizer.events.attendees.index')->with('success', 'attendee created successfully.');
     }
 
-    // public function edit(string $id)
-    // {
-    //     $attendee = Eventattendee::findOrFail($id);
-    //     return Inertia::render("Organizer/Events/Speekers/CreateOrEdit", compact('attendee'));
-    // }
 
     public function update(AttendeeStoreRequest $request, Attendee $attendee)
     {
@@ -49,9 +44,9 @@ class AttendeeController extends Controller
     public function destroy(Attendee $attendee)
     {
         $attendee->delete();
-        return back();
+        return back()->withSuccess('Attendee deleted successfully.');
     }
-
+    
     public function destroyMany(Request $request)
     {
         $request->validate([
@@ -60,5 +55,6 @@ class AttendeeController extends Controller
         foreach ($request->ids as $id) {
             Attendee::find($id)->delete();
         }
+        return back()->withSuccess('Attendees deleted successfully.');
     }
 }
