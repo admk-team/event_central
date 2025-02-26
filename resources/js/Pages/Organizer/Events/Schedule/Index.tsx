@@ -99,7 +99,6 @@ function Index({ schedules, speakers, platforms, event_platforms }: any) {
                     {/* <ScheduleHeader platforms={platforms} event_platforms={event_platforms} /> */}
                     <Platform platforms={platforms} event_platforms={event_platforms} />
                 
-            <Schedule/>
                 </Container>
             </div>
 
