@@ -70,6 +70,6 @@ class Kernel extends HttpKernel
         'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
         'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
         'panel' => \App\Http\Middleware\CheckPanelAccess::class,
-        'event_is_selected' => \App\Http\Middleware\EventIsSelected::class,
+        'event_is_selected' => \App\Http\Middleware\CurrentEventMiddleware::class,
     ];
 }

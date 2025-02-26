@@ -36,12 +36,16 @@ class EventController extends Controller
         $data['organizer_id'] = Auth::id();
         $event = EventApp::create($data);
         session()->put('event_id', $event->id);
-        return redirect()->route('organizer.events.dashboard')->with('success', 'Event created successfully.');
+        return redirect()->route('organizer.events.dashboard')->withSuccess('Event created successfully.');
     }
 
     public function selectEvent( $id)
     {
         session()->put('event_id', $id);
+        if (route('organizer.events.index') !== back()->getTargetUrl()) {
+            return back();
+        }
+
         return redirect()->route('organizer.events.dashboard');
     }
 

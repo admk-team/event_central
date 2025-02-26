@@ -25,6 +25,11 @@ class OrganizerPermissionsSeeder extends Seeder
         'edit_schedule',
         'delete_schedule',
         
+        // Partner
+        'view_partner',
+        'create_partner',
+        'edit_partner',
+        'delete_partner',
     ];
 
     public function run(): void

@@ -24,6 +24,12 @@ class AdminPermissionsSeeder extends Seeder
         'create_roles',
         'edit_roles',
         'delete_roles',
+
+        // Organizer Management
+        'view_organizers',
+        'create_organizers',
+        'edit_organizers',
+        'delete_organizers',
     ];
 
     public function run(): void

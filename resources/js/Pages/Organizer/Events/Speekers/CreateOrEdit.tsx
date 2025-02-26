@@ -58,7 +58,7 @@ function CreateOrEdit({ speaker, events }: any) {
                             <Card.Body>
                                 <div className="card-body">
                                     <form onSubmit={submit} >
-                                        <Row className="gy-4">
+                                        <Row className="gy-2">
 
                                             <Col xxl={6} md={6}>
                                                 <div className="">
@@ -295,7 +295,7 @@ function CreateOrEdit({ speaker, events }: any) {
                                                     onChange={(e) => setData('event_app_id', e.target.value)}
                                                 >
                                                     <option value="">Select Event</option>
-                                                    {events.map((event: any) => (
+                                                    {events?.map((event: any) => (
                                                         <option key={event.id} value={event.id}>{event.name}</option>
                                                     ))}
                                                 </select>

@@ -8,59 +8,6 @@ const Navdata = () => {
     const [isUsers, setIsUsers] = useState<boolean>(false);
     const [isSettings, setIsSettings] = useState<boolean>(false);
 
-    const [isApps, setIsApps] = useState<boolean>(false);
-    const [isAuth, setIsAuth] = useState<boolean>(false);
-    const [isPages, setIsPages] = useState<boolean>(false);
-    const [isBaseUi, setIsBaseUi] = useState<boolean>(false);
-    const [isAdvanceUi, setIsAdvanceUi] = useState<boolean>(false);
-    const [isForms, setIsForms] = useState<boolean>(false);
-    const [isTables, setIsTables] = useState<boolean>(false);
-    const [isCharts, setIsCharts] = useState<boolean>(false);
-    const [isIcons, setIsIcons] = useState<boolean>(false);
-    const [isMaps, setIsMaps] = useState<boolean>(false);
-    const [isMultiLevel, setIsMultiLevel] = useState<boolean>(false);
-
-    // Apps
-    const [isCalendar, setCalendar] = useState<boolean>(false);
-    const [isEmail, setEmail] = useState<boolean>(false);
-    const [isSubEmail, setSubEmail] = useState<boolean>(false);
-    const [isEcommerce, setIsEcommerce] = useState<boolean>(false);
-    const [isProjects, setIsProjects] = useState<boolean>(false);
-    const [isTasks, setIsTasks] = useState<boolean>(false);
-    const [isCRM, setIsCRM] = useState<boolean>(false);
-    const [isCrypto, setIsCrypto] = useState<boolean>(false);
-    const [isInvoices, setIsInvoices] = useState<boolean>(false);
-    const [isSupportTickets, setIsSupportTickets] = useState<boolean>(false);
-    const [isNFTMarketplace, setIsNFTMarketplace] = useState<boolean>(false);
-    const [isJobs, setIsJobs] = useState<boolean>(false);
-    const [isJobList, setIsJobList] = useState<boolean>(false);
-    const [isCandidateList, setIsCandidateList] = useState<boolean>(false);
-
-
-    // Authentication
-    const [isSignIn, setIsSignIn] = useState<boolean>(false);
-    const [isSignUp, setIsSignUp] = useState<boolean>(false);
-    const [isPasswordReset, setIsPasswordReset] = useState<boolean>(false);
-    const [isPasswordCreate, setIsPasswordCreate] = useState<boolean>(false);
-    const [isLockScreen, setIsLockScreen] = useState<boolean>(false);
-    const [isLogout, setIsLogout] = useState<boolean>(false);
-    const [isSuccessMessage, setIsSuccessMessage] = useState<boolean>(false);
-    const [isVerification, setIsVerification] = useState<boolean>(false);
-    const [isError, setIsError] = useState<boolean>(false);
-
-    // Pages
-    const [isProfile, setIsProfile] = useState<boolean>(false);
-    const [isLanding, setIsLanding] = useState<boolean>(false);
-    const [isBlog, setIsBlog] = useState<boolean>(false);
-
-    // Charts
-    const [isApex, setIsApex] = useState<boolean>(false);
-
-    // Multi Level
-    const [isLevel1, setIsLevel1] = useState<boolean>(false);
-    const [isLevel2, setIsLevel2] = useState<boolean>(false);
-    const [isUserManagement, setisUserManagement] = useState<boolean>(false);
-
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
 
     function updateIconSidebar(e: any) {
@@ -83,27 +30,25 @@ const Navdata = () => {
         if (iscurrentState !== 'Dashboard') {
             setIsDashboard(false);
         }
-        if (iscurrentState !== 'UserManagement') {
-            setisUserManagement(false);
-        }
-        if (iscurrentState !== 'content') {
+        if (iscurrentState !== 'Content') {
             setIsContent(false);
         }
+        if (iscurrentState !== 'Settings') {
+            setIsSettings(false);
+        }
+        if (iscurrentState !== 'users') {
+            setIsUsers(false);
+        }
+
+        // Add Here
     }, [
         history,
         iscurrentState,
         isDashboard,
-        isApps,
-        isAuth,
-        isPages,
-        isBaseUi,
-        isAdvanceUi,
-        isForms,
-        isTables,
-        isCharts,
-        isIcons,
-        isMaps,
-        isMultiLevel
+        isUsers,
+        isSettings,
+        
+        // Add Here
     ]);
 
     const menuItems: any = [
@@ -200,6 +145,21 @@ const Navdata = () => {
                 setIscurrentState('users');
                 updateIconSidebar(e);
             },
+            subItems: [
+                {
+                    id: "attendees",
+                    label: "Attendees",
+                    link: route('organizer.events.attendees.index'),
+                    parentId: "dashboard",
+                },
+                {
+                    id: "team",
+                    label: "Team",
+                    link: '#',
+                    parentId: "dashboard",
+                }
+            ]
+
         },
         {
             id: "settings",
@@ -210,11 +170,23 @@ const Navdata = () => {
             click: function (e: any) {
                 e.preventDefault();
                 setIsSettings(!isSettings);
-                setIscurrentState('settings');
-                updateIconSidebar(e);
+                setIscurrentState('Settings');
             },
-        }
-
+            subItems: [
+                {
+                    id: "eventSettings",
+                    label: "Event",
+                    link: route('organizer.events.settings.event.index'),
+                    parentId: "settings",
+                },
+                {
+                    id: "payemntSettings",
+                    label: "Payment Settings",
+                    link: route('organizer.events.settings.payment.index'),
+                    parentId: "settings",
+                },
+            ]
+        },
     ];
     return <React.Fragment>{menuItems}</React.Fragment>;
 };

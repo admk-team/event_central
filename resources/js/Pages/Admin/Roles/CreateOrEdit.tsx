@@ -45,10 +45,10 @@ function CreateOrEdit({ role, permissions, roleSpecific }: { role: any | null, p
             });
         }
     };
-    console.log('error', errors);
+    
     return (
         <React.Fragment>
-            <Head title='Starter | Velzon - React Admin & Dashboard Template' />
+            <Head title={`${isEdit ? 'Edit Role' : 'Create Role'} - Admin`} />
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb2 
