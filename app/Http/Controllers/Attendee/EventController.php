@@ -16,6 +16,10 @@ class EventController extends Controller
     }
     public function getEventDetailDashboard(EventApp $eventApp)
     {
-        return Inertia::render('Attendee/dashboard', compact('eventApp'));
+        return Inertia::render('Attendee/AttendeeDashboard', compact('eventApp'));
+    }
+    public function getEventDetailAgenda(EventApp $eventApp)
+    {
+        return Inertia::render('Attendee/AttendeeAgenda', compact('eventApp'));
     }
 }

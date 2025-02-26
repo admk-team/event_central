@@ -21,4 +21,5 @@ Route::get('/google-login/callback', [AuthenticatedSessionController::class, 'go
 Route::middleware(['auth:attendee'])->group(function () {
     Route::get('/eventee/profile-edit', [ProfileController::class, 'edit'])->name('attendee.profile.edit');
     Route::get('/eventee/{eventApp}/detail/dashboard', [EventController::class, 'getEventDetailDashboard'])->name('attendee.event.detail.dashboard');
+    Route::get('/eventee/{eventApp}/detail/agenda', [EventController::class, 'getEventDetailAgenda'])->name('attendee.event.detail.agenda');
 });

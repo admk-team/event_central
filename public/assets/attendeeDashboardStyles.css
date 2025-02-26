@@ -1,0 +1,9 @@
+.date-diff-value{
+    font-size: 2.5rem;
+    color: white;
+}
+.date-diff-label{
+    text-transform: uppercase;
+    font-weight: 600;
+    color: white;
+}
