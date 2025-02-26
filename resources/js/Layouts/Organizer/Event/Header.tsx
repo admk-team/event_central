@@ -76,7 +76,6 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
                 <div className="layout-width">
                     <div className="navbar-header">
                         <div className="d-flex">
-
                             <div className="navbar-brand-box horizontal-logo">
                                 <Link href="/" className="logo logo-dark">
                                     <span className="logo-sm">
@@ -108,13 +107,38 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
                                     <span></span>
                                 </span>
                             </button>
+                            {/* <SearchOption /> */}
 
-
-                            <SearchOption />
                         </div>
+                        {/* <div style={{ width: '800px' }}>
+                            <div className="d-flex flex-row" >
+                                <ul className="navbar-nav">
+                                    <li className="nav-item">
+                                        <Link
+                                            className="nav-link menu-link"
+                                            href="/">
+                                            <i className="bx bxs-dashboard"></i> <span>Dashboard</span>
+                                        </Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link
+                                            className="nav-link menu-link"
+                                            href="/">
+                                            <i className="bx bxs-dashboard"></i> <span>Content</span>
+                                        </Link>
+                                    </li>
+                                    <li className="nav-item">
+                                        <Link
+                                            className="nav-link menu-link"
+                                            href="/">
+                                            <i className="bx bxs-dashboard"></i> <span>Engagement</span>
+                                        </Link>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div> */}
 
                         <div className="d-flex align-items-center">
-
                             <Dropdown show={search} onClick={toogleSearch} className="d-md-none topbar-head-dropdown header-item">
                                 <Dropdown.Toggle type="button" as="button" className="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle">
                                     <i className="bx bx-search fs-22"></i>

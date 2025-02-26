@@ -10,8 +10,8 @@ import Select from "react-select";
 import VerticalLayout from "./VerticalLayouts";
 import { Button, Container, Dropdown } from "react-bootstrap";
 import { Link, router, usePage } from "@inertiajs/react";
-import HorizontalLayout from "../../Theme/HorizontalLayout";
-import TwoColumnLayout from "../../Theme/TwoColumnLayout";
+import HorizontalLayout from "../Event/HorizontalLayout";
+import TwoColumnLayout from "../Event/TwoColumnLayout";
 import { Label, MenuSeparator } from "@headlessui/react";
 import { current } from "@reduxjs/toolkit";
 
@@ -54,7 +54,7 @@ const Sidebar = ({ layoutType }: any) => {
 
   const [sortBy, setsortBy] = useState<any>(null);
 
-  const { currentEvent } = usePage().props;
+  const { currentEvent } = usePage().props as Record<string, any>;
   
   const { events, auth } = usePage<{ events: any[], auth: { user: any } }>().props;
   return (

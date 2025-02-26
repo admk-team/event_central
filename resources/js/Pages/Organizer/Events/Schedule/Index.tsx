@@ -8,8 +8,6 @@ import CreateEditModal from './CreateEditModal';
 import Platform from './Components/Platform';
 import CreateEditPlatformModal from './Components/CreateOrEditPlatformModal';
 import Schedule from './Components/Schedul';
-
-
 function Index({ schedules, speakers, platforms, event_platforms }: any) {
     console.log('schedul', event_platforms);
 
@@ -66,10 +64,9 @@ function Index({ schedules, speakers, platforms, event_platforms }: any) {
         deleteManyForm.delete(route('organizer.events.schedule.destroy.many'));
         setShowDeleteManyConfirmation(false);
     }
-
     return (
         <React.Fragment>
-            <Head title='Starter | Velzon - React Admin & Dashboard Template' />
+            <Head title='Schedule' />
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb title="Schedule" pageTitle="Dashboard" />
@@ -125,4 +122,3 @@ function Index({ schedules, speakers, platforms, event_platforms }: any) {
 }
 Index.layout = (page: any) => <Layout children={page} />;
 export default Index;
-

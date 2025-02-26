@@ -4,9 +4,9 @@ const Navdata = () => {
     //state data
     const [isDashboard, setIsDashboard] = useState<boolean>(false);
     const [isContent, setIsContent] = useState<boolean>(false);
+    const [isEngagement, setIsEngagement] = useState<boolean>(false);
     const [isUsers, setIsUsers] = useState<boolean>(false);
     const [isSettings, setIsSettings] = useState<boolean>(false);
-    // Add Here
 
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
 
@@ -70,9 +70,9 @@ const Navdata = () => {
             }
         },
         {
-            id: "content",
+            id: "Content",
             label: "Content",
-            icon: "bx bxs-user",
+            icon: "bx bx-book-content",
             link: "/#",
             stateVariables: isContent,
             click: function (e: any) {
@@ -112,13 +112,31 @@ const Navdata = () => {
                     link: route('organizer.events.partner.index'),
                     parentId: "dashboard",
                 },
+                {
+                    id: "passes",
+                    label: "Passes",
+                    link: route('organizer.events.passes.index'),
+                    parentId: "dashboard",
+                },
             ]
-
+        },
+        {
+            id: "engagement",
+            label: "Engagement",
+            icon: "bx bx-share-alt",
+            link: "/#",
+            stateVariables: isEngagement,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsEngagement(!isEngagement);
+                setIscurrentState('engagement');
+                updateIconSidebar(e);
+            },
         },
         {
             id: "users",
             label: "Users",
-            icon: "bx bxs-user",
+            icon: "bx bxs-user-account",
             link: "/#",
             stateVariables: isUsers,
             click: function (e: any) {
@@ -146,7 +164,7 @@ const Navdata = () => {
         {
             id: "settings",
             label: "Settings",
-            icon: "bx bxs-cog",
+            icon: "bx bx-cog",
             link: "/#",
             stateVariables: isSettings,
             click: function (e: any) {

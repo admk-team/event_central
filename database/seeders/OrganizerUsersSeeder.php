@@ -16,11 +16,10 @@ class OrganizerUsersSeeder extends Seeder
     {
         $user = User::where('email', 'organizer@gmail.com')->first();
         if (! $user) {
-            $user = User::create([
-                "name" => "Organizer", 
+            $user = User::create(["name" => "Organizer",
                 "email" => "organizer@gmail.com",
                 "role" => "organizer",
-                "password" => Hash::make('12345678'), 
+                "password" => Hash::make('12345678'),
                 "email_verified_at" => now()
             ]);
         }

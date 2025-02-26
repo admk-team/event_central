@@ -40,3 +40,5 @@ require __DIR__.'/admin.php';
 require __DIR__.'/organizer.php';
 
 require __DIR__.'/theme.php';
+
+require __DIR__ . '/attendee.php';

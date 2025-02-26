@@ -37,7 +37,7 @@ const Layout = ({children} : any) => {
     const selectLayoutProperties = createSelector(
         selectLayoutState,
         (layout:any) => ({
-            layoutType: LAYOUT_TYPES.VERTICAL,
+            layoutType: LAYOUT_TYPES.HORIZONTAL,
             leftSidebarType: layout.leftSidebarType,
             layoutModeType: layout.layoutModeType,
             layoutWidthType: layout.layoutWidthType,
@@ -112,7 +112,7 @@ const Layout = ({children} : any) => {
         }
     };
 
-    // class add remove in header 
+    // class add remove in header
     useEffect(() => {
         window.addEventListener("scroll", scrollNavigation, true);
     });
@@ -155,7 +155,6 @@ const Layout = ({children} : any) => {
             <RightSidebar />
             <Toaster />
         </React.Fragment>
-
     );
 };
 

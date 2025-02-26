@@ -2,15 +2,25 @@
 
 namespace App\Models;
 
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
-class Attendee extends Model
+class Attendee extends Authenticatable
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'event_app_id',
+        'event_pass',
+        'name',
+        'email',
+        'password',
+        'avatar',
+        'phone',
+        'qr_code'
+    ];
 
     protected $appends = [
         'avatar' => 'avatar_img',

@@ -18,18 +18,18 @@ export default function CreateEditModal({ show, hide, onHide, schedule, speakers
         event_app_id: schedule?.event_app_id ?? '',
     });
 
-    const submit = (e: any) => {       
+    const submit = (e: any) => {
         e.preventDefault();
 
         if (isEdit) {
-            post(route('organizer.events.schedule.update', schedule.id),{
+            post(route('organizer.events.schedule.update', schedule.id), {
                 onSuccess: () => {
                     reset();
                     hide();
                 }
             })
         } else {
-            post(route('organizer.events.schedule.store', data),{
+            post(route('organizer.events.schedule.store', data), {
                 onSuccess: () => {
                     reset();
                     hide();
