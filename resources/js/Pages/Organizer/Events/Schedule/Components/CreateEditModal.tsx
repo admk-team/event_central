@@ -1,44 +1,53 @@
 import { useForm, usePage } from '@inertiajs/react';
 import Flatpickr from "react-flatpickr";
 import { Spinner, Col, Form, FormGroup, Modal, Nav, Row, Tab } from 'react-bootstrap';
+import { useEffect } from 'react'; // Import useEffect
 
+export default function CreateEditModal({ show, hide, onHide, event_sessions, speakers, startTime, endTime }: { show: boolean, hide: () => void, onHide: () => void, event_sessions: any, speakers: any, startTime: string, endTime: string }) {
+    const isEdit = event_sessions != null ? true : false;
 
-export default function CreateEditModal({ show, hide, onHide, schedule, speakers }: { show: boolean, hide: () => void, onHide: () => void, schedule: any, speakers: any | null }) {
-    const isEdit = schedule != null ? true : false;
-
+    // Initialize the form data with the existing date and time
     const { data, setData, post, put, processing, errors, reset } = useForm({
         _method: isEdit ? "PUT" : "POST",
-        name: schedule?.name ?? '',
-        event_speaker_id: schedule?.event_speaker_id ?? '',
-        type: schedule?.type ?? 'Lecture',
-        description: schedule?.description ?? '',
-        capacity: schedule?.capacity ?? '',
-        start_date: schedule?.start_date ?? '',
-        end_date: schedule?.end_date ?? '',
-        event_app_id: schedule?.event_app_id ?? '',
+        name: event_sessions?.name ?? '',
+        event_speaker_id: event_sessions?.event_speaker_id ?? '',
+        type: event_sessions?.type ?? 'Lecture',
+        description: event_sessions?.description ?? '',
+        capacity: event_sessions?.capacity ?? '',
+        start_date: event_sessions?.start_date ?? `2025-02-24 ${startTime}`, // Default date with time
+        end_date: event_sessions?.end_date ?? `2025-02-24 ${endTime}`, // Default date with time
+        event_app_id: event_sessions?.event_app_id ?? '',
     });
 
-    const submit = (e: any) => {       
+    // Update the form data when startTime or endTime changes
+
+
+    const submit = (e: any) => {
         e.preventDefault();
 
         if (isEdit) {
-            post(route('organizer.events.schedule.update', schedule.id),{
+            post(route('organizer.events.schedule.update', event_sessions.id), {
                 onSuccess: () => {
                     reset();
                     hide();
                 }
-            })
+            });
         } else {
-            post(route('organizer.events.schedule.store', data),{
+            post(route('organizer.events.schedule.store', data), {
                 onSuccess: () => {
                     reset();
                     hide();
                 }
-            })
-            console.log('testing schedul', errors);
-
+            });
+            console.log('testing schedule', errors);
         }
-    }
+    };
+
+    // Function to update only the time part of the date-time string
+    const updateTime = (dateTime: string, newTime: string) => {
+        const [datePart] = dateTime.split(' '); // Extract the date part (e.g., "2025-02-24")
+        return `${datePart} ${newTime}`; // Combine the date with the new time
+    };
 
     return (
         <Modal show={show} onHide={onHide} centered>
@@ -84,30 +93,42 @@ export default function CreateEditModal({ show, hide, onHide, schedule, speakers
                     <FormGroup className="mb-3">
                         <Row>
                             <Col md={6}>
-                                <Form.Label>Start Date</Form.Label>
+                                <Form.Label>Start Time</Form.Label>
                                 <Flatpickr
                                     className="form-control"
-                                    // options={{ dateFormat: "Y M, d" }}
-                                    placeholder="Enter Start date"
-                                    value={data.start_date}
+                                    options={{
+                                        enableTime: true,
+                                        noCalendar: true, // Disable calendar (only time picker)
+                                        dateFormat: "H:i", // Format as "HH:mm"
+                                        time_24hr: true, // Use 24-hour format
+                                    }}
+                                    placeholder="Select Start Time"
+                                    value={data.start_date.split(' ')[1]} // Extract the time part (e.g., "01:04:50")
                                     onChange={([selectedDate]: Date[]) => {
-                                        setData('start_date', selectedDate.toISOString().split("T")[0]);
+                                        const newTime = selectedDate.toTimeString().split(' ')[0]; // Extract "HH:mm:ss"
+                                        setData('start_date', updateTime(data.start_date, newTime)); // Update only the time
                                     }}
                                 />
-                            </Col>
                                 {errors.start_date && <Form.Control.Feedback type="invalid">{errors.start_date}</Form.Control.Feedback>}
+                            </Col>
                             <Col md={6}>
-                                <Form.Label>End Date</Form.Label>
+                                <Form.Label>End Time</Form.Label>
                                 <Flatpickr
                                     className="form-control"
-                                    // options={{ dateFormat: "Y M, d" }}
-                                    placeholder="Enter End date"
-                                    value={data.end_date}
+                                    options={{
+                                        enableTime: true,
+                                        noCalendar: true, // Disable calendar (only time picker)
+                                        dateFormat: "H:i", // Format as "HH:mm"
+                                        time_24hr: true, // Use 24-hour format
+                                    }}
+                                    placeholder="Select End Time"
+                                    value={data.end_date.split(' ')[1]} // Extract the time part (e.g., "01:04:50")
                                     onChange={([selectedDate]: Date[]) => {
-                                        setData('end_date', selectedDate.toISOString().split("T")[0]);
+                                        const newTime = selectedDate.toTimeString().split(' ')[0]; // Extract "HH:mm:ss"
+                                        setData('end_date', updateTime(data.end_date, newTime)); // Update only the time
                                     }}
                                 />
-                                {errors.end_date && <Form.Control.Feedback type="invalid">{errors?.end_date}</Form.Control.Feedback>}
+                                {errors.end_date && <Form.Control.Feedback type="invalid">{errors.end_date}</Form.Control.Feedback>}
                             </Col>
                         </Row>
                     </FormGroup>
@@ -115,10 +136,9 @@ export default function CreateEditModal({ show, hide, onHide, schedule, speakers
                     {(data.type === 'Lecture' || data.type === 'Workshop') && (
                         <>
                             <FormGroup className="mb-3">
-
                                 <Form.Label htmlFor="event_app_id" className="form-label">Select Event Speaker</Form.Label>
                                 <select
-                                    className="form-select "
+                                    className="form-select"
                                     id="event_app_id"
                                     aria-label="Select event app"
                                     value={data.event_speaker_id}
@@ -130,9 +150,7 @@ export default function CreateEditModal({ show, hide, onHide, schedule, speakers
                                     ))}
                                 </select>
                                 <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.event_speaker_id} </Form.Control.Feedback>
-
                             </FormGroup>
-
                         </>
                     )}
 
@@ -178,5 +196,5 @@ export default function CreateEditModal({ show, hide, onHide, schedule, speakers
                 </div>
             </Form>
         </Modal>
-    )
+    );
 }
