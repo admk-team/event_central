@@ -10,8 +10,8 @@ import Layout from '../../Layouts/Attendee';
 import moment from 'moment';
 
 
-const AttendeeAgenda = ({ eventApp }: any) => {
-    // console.log(eventApp);
+const AttendeeSessionDetail = ({ eventApp, eventSession }: any) => {
+    // console.log(eventApp, eventSession);
     const sessionLists = eventApp.event_sessions.map(session =>
         <li key={session.id}>
             <a href={route('attendee.event.detail.session', { eventApp: eventApp.id, eventSession: session.id })}>
@@ -41,7 +41,7 @@ const AttendeeAgenda = ({ eventApp }: any) => {
                 <Container fluid>
                     <div className="d-flex justify-content-between align-items-center">
                         <div>
-                            <h5>Program</h5>
+                            <h5>Session Detail</h5>
                         </div>
                         <div className='d-flex justify-content-between align-items-center'>
                             <DropdownButton as={ButtonGroup} title="Dropdown" id="bg-nested-dropdown" variant="outline-success" className='mr-2'>
@@ -69,5 +69,5 @@ const AttendeeAgenda = ({ eventApp }: any) => {
         </React.Fragment>
     );
 };
-AttendeeAgenda.layout = (page: any) => <Layout children={page} />
-export default AttendeeAgenda;
+AttendeeSessionDetail.layout = (page: any) => <Layout children={page} />
+export default AttendeeSessionDetail;

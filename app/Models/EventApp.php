@@ -57,4 +57,8 @@ class EventApp extends Model
     {
         $query->where('organizer_id', Auth::id());
     }
+    public function event_sessions()
+    {
+        return $this->hasMany(EventSession::class);
+    }
 }

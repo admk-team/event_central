@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Col, Container, Row, Card, CardBody, ListGroup, Button } from 'react-bootstrap';
 
 //import Components
-import BreadCrumb from '../../Components/Common/BreadCrumb';
+// import BreadCrumb from '../../Components/Common/BreadCrumb';
 import { Head, Link, router } from '@inertiajs/react';
 import Layout from '../../Layouts/Attendee';
 import attendeeEventBg from '../../../images/attendee-bg.jpg';
@@ -16,7 +16,7 @@ const AttendeeDashboard = ({ eventApp }: any) => {
             <Head title="Attendee Dashboard" />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Attendee Dashboard" pageTitle="Dashboards" />
+                    {/* <BreadCrumb title="Attendee Dashboard" pageTitle="Dashboards" /> */}
                     <Row className="d-flex justify-content-center">
                         <Col lg={8} xl={8} sm={12}>
                             <Row>

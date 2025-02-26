@@ -5,9 +5,8 @@ import { Link, usePage } from '@inertiajs/react';
 import avatar1 from "../../../images/users/avatar-1.jpg";
 
 const AttendeeProfileDropdown = () => {
-
-    const user = usePage().props.auth.user;
-    const eventApp = usePage().props.eventApp;
+    const user: any = usePage().props.auth.user;
+    const eventApp: any = usePage().props.eventApp;
 
     //Dropdown Toggle
     const [isProfileDropdown, setIsProfileDropdown] = useState<boolean>(false);
@@ -27,7 +26,7 @@ const AttendeeProfileDropdown = () => {
                                 alt="Header Avatar" />
                             <span className="text-start ms-xl-2">
                                 <span className="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{user?.name}</span>
-                                <span className="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text">Founder</span>
+                                <span className="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text">Attendee</span>
                             </span>
                         </span>
                     </Dropdown.Toggle>
