@@ -24,6 +24,7 @@ class EventSessionRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'event_speaker_id' => 'nullable|exists:event_speakers,id',
+            'event_platform_id' => 'nullable|exists:event_platforms,id',
             'type' => 'required|in:Lecture,Workshop,Break',
             'description' => 'nullable|string',
             'capacity' => 'nullable|integer|min:1|',

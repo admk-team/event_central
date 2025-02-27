@@ -20,7 +20,7 @@ class EventSessionController extends Controller
         $event_sessions =$this->datatable(EventSession::query());
         $speakers = EventSpeaker::currentEvent()->get();
         $platforms = PlatForm::all();
-        $event_platforms=EventPlatform::all();
+        $event_platforms= EventPlatform::with('eventsessions')->get();
         return Inertia::render('Organizer/Events/Schedule/Index', compact('event_sessions', 'speakers', 'platforms', 'event_platforms'));
     }
 

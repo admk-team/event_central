@@ -10,7 +10,7 @@ import CreateEditPlatformModal from './Components/CreateOrEditPlatformModal';
 
 
 function Index({ event_sessions, speakers, platforms, event_platforms }: any) {
-    console.log('schedul', event_platforms);
+    console.log('EventSession', event_platforms);
 
     const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
     const [showCreateEditPlatformModal, _setShowCreateEditPlatformModal] = React.useState(false);
@@ -72,6 +72,7 @@ function Index({ event_sessions, speakers, platforms, event_platforms }: any) {
                     hide={() => setShowCreateEditPlatformModal(false)}
                     onHide={() => setShowCreateEditPlatformModal(false)}
                     platforms={platforms}
+                    event_platforms={null}
                 />
             )}
         </React.Fragment>

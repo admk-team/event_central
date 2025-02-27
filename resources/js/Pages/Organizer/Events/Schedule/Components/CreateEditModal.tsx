@@ -3,7 +3,7 @@ import Flatpickr from "react-flatpickr";
 import { Spinner, Col, Form, FormGroup, Modal, Nav, Row, Tab } from 'react-bootstrap';
 import { useEffect } from 'react'; // Import useEffect
 
-export default function CreateEditModal({ show, hide, onHide, event_sessions, speakers, startTime, endTime }: { show: boolean, hide: () => void, onHide: () => void, event_sessions: any, speakers: any, startTime: string, endTime: string }) {
+export default function CreateEditModal({ show, hide, onHide, event_sessions, speakers, event_platformId, startTime, endTime }: { show: boolean, hide: () => void, onHide: () => void, event_sessions: any, speakers: any, event_platformId: any, startTime: string, endTime: string }) {
     const isEdit = event_sessions != null ? true : false;
 
     // Initialize the form data with the existing date and time
@@ -11,6 +11,7 @@ export default function CreateEditModal({ show, hide, onHide, event_sessions, sp
         _method: isEdit ? "PUT" : "POST",
         name: event_sessions?.name ?? '',
         event_speaker_id: event_sessions?.event_speaker_id ?? '',
+        event_platform_id: event_sessions?.event_platform_id ?? event_platformId,
         type: event_sessions?.type ?? 'Lecture',
         description: event_sessions?.description ?? '',
         capacity: event_sessions?.capacity ?? '',
