@@ -23,4 +23,5 @@ Route::middleware(['auth:attendee'])->group(function () {
     Route::get('/eventee/{eventApp}/detail/dashboard', [EventController::class, 'getEventDetailDashboard'])->name('attendee.event.detail.dashboard');
     Route::get('/eventee/{eventApp}/detail/agenda', [EventController::class, 'getEventDetailAgenda'])->name('attendee.event.detail.agenda');
     Route::get('/eventee/{eventApp}/detail/session/{eventSession}', [EventController::class, 'getEventSessionDetail'])->name('attendee.event.detail.session');
+    Route::put('/attendee-profile-update/{attendee}', [ProfileController::class, 'update'])->name('attendee.profile.update');
 });

@@ -30,7 +30,7 @@ export default function Login({ status, canResetPassword }: any) {
                 <Head title="Attendee login" />
                 <div className="text-center mt-2">
                     <h5 className="text-primary">Login</h5>
-                    <p className="text-muted">Sign in to your account.</p>
+                    <p className="text-muted">Login and Join the Event</p>
                 </div>
                 {status && <div className="mb-4 font-medium text-sm text-green-600">{status}</div>}
                 <div className='p-2 mt-4'>

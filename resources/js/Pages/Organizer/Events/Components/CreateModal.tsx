@@ -215,7 +215,7 @@ function CreateModal({ addEventModal, showModal }: CreateModalProps) {
                                                     // onChange={handleLocationChange}
                                                 />
                                             {/* </Autocomplete> */}
-                                            {/* <LoadScript googleMapsApiKey={googleMapsApiKey} libraries={['places']}> 
+                                            {/* <LoadScript googleMapsApiKey={googleMapsApiKey} libraries={['places']}>
                                                 <GoogleMap
                                                     mapContainerStyle={containerStyle}
                                                     center={mapCenter}
