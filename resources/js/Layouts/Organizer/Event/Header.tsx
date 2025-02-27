@@ -1,4 +1,4 @@
-import { Link } from "@inertiajs/react";
+import { Link, router, usePage } from "@inertiajs/react";
 import React, { useState } from "react";
 
 //import images
@@ -69,6 +69,9 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
             document.body.classList.contains('twocolumn-panel') ? document.body.classList.remove('twocolumn-panel') : document.body.classList.add('twocolumn-panel');
         }
     };
+      const { currentEvent } = usePage().props as Record<string, any>;
+      
+      const { events, auth } = usePage<{ events: any[], auth: { user: any } }>().props;
 
     return (
         <React.Fragment>
@@ -77,7 +80,7 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
                     <div className="navbar-header">
                         <div className="d-flex">
                             <div className="navbar-brand-box horizontal-logo">
-                                <Link href="/" className="logo logo-dark">
+                                {/* <Link href="/" className="logo logo-dark">
                                     <span className="logo-sm">
                                         <img src={logoSm} alt="" height="22" />
                                     </span>
@@ -93,7 +96,31 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
                                     <span className="logo-lg">
                                         <img src={logoLight} alt="" height="17" />
                                     </span>
-                                </Link>
+                                </Link> */}
+                                <Dropdown className="navbar-brand-box my-3">
+                                    <Dropdown.Toggle as="button" className="btn d-flex align-items-center p-1 text-muted" id="dropdown.MenuButton">
+                                        <div className="d-flex align-items-center ">
+                                            <img src={currentEvent.logo_img} alt="event" className="img-fluid rounded-circle avatar-sm" />
+                                            <div className="fs-6 fw-semibold ms-2 text-start">
+                                                <span className="d-block text-light">{currentEvent.name}</span>
+                                                <span className="d-block fw-normal text-muted">{currentEvent.created_at_date}</span>
+                                            </div>
+                                        </div>
+                                    </Dropdown.Toggle>
+                                    <Dropdown.Menu className="w-100">
+                                        {events?.map((event: any, key: any) => (
+                                            <Dropdown.Item key={key} className="p-2 px-4 text-primary d-flex align-items-center gap-2"
+                                                onClick={() => router.visit(route('organizer.events.select', event.id))}>
+                                                <img src={event.logo_img} alt="event" className="img-fluid rounded-circle avatar-xs" />
+                                                {event.name}
+                                            </Dropdown.Item>
+                                        ))}
+                                        <div className="border-top my-2"></div>
+                                        <Dropdown.Item className="p-2 px-4 text-primary " onClick={() => router.visit(route('organizer.events.index'))}>
+                                            See all events
+                                        </Dropdown.Item>
+                                    </Dropdown.Menu>
+                                </Dropdown>
                             </div>
 
                             <button

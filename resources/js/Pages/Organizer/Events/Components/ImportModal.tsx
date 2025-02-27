@@ -3,7 +3,7 @@ import React, { useCallback, useRef, useState } from 'react'
 import Flatpickr from "react-flatpickr";
 import Papa from 'papaparse';
 import Select from 'react-select';
-import { Button, Col, Form, FormGroup, Modal, Nav, Row, Tab } from 'react-bootstrap';
+import { Button, Col, Form, FormGroup, Modal, Nav, Row, Spinner, Tab } from 'react-bootstrap';
 
 interface ImportModalProps {
     importAttendeesModal: boolean;
@@ -27,6 +27,7 @@ function ImportModal({
     const [parsedData, setParsedData] = useState<any[]>([]);
     const [attributeMapping, setAttributeMapping] = useState<Record<string, string>>({});
     const [hoveredCard, setHoveredCard] = useState<string | null>(null);
+    const [processing, setProcessing] = useState<boolean | undefined>(false);
 
     // styles for the import method cards
     const cardStyle = (isHovered: any) => ({
@@ -84,6 +85,7 @@ function ImportModal({
 
 
     const importData = async () => {
+        setProcessing(true);
         const transformedData = parsedData.map((row) => {
             const newRow: Record<string, string> = {};
             headers.forEach((header, index) => {
@@ -110,6 +112,7 @@ function ImportModal({
                         setHeaders([]);
                         setParsedData([]);
                         setAttributeMapping({});
+                        setProcessing(false);
                     },
                     onError: (errors: any) => {
                         console.error(errors);
@@ -268,9 +271,18 @@ function ImportModal({
                                     <h6>Import Progress</h6>
                                     <p className='my-5 py-5'>Ready to import <span className="display-6">{parsedData.length}</span> records.</p>
 
-                                    <Button className="btn btn-success" onClick={importData} disabled={parsedData.length === 0}>
-                                        Start Import
-                                    </Button>
+                                    {/* <Button className="btn btn-success"  disabled={parsedData.length === 0}>
+                                    </Button> */}
+                                    <button className="btn btn-success" disabled={processing} onClick={importData}>
+                                        {processing ? (
+                                            <span className="d-flex gap-1 align-items-center">
+                                                <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+                                                Start Import
+                                            </span>
+                                        ) : (
+                                            <span>Start Import</span>
+                                        )}
+                                    </button>
                                 </Tab.Pane>
                             </Tab.Content>
                         </Col>
