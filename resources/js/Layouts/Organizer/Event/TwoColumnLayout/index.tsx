@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from "prop-types";
 import { Collapse, Container } from 'react-bootstrap';
 
-import logoSm from "../../../../images/logo-sm.png";
+import logoSm from "../../../../../images/logo-sm.png";
 //i18n
 import { withTranslation } from "react-i18next";
 

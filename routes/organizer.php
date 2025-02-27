@@ -12,6 +12,9 @@ use App\Http\Controllers\Organizer\Event\ImportController;
 use App\Http\Controllers\Organizer\Event\Settings\EventAppPaymentController;
 use App\Http\Controllers\Organizer\Event\Settings\EventSettingsController;
 use App\Http\Controllers\Organizer\Event\User\AttendeeController;
+use App\Http\Controllers\Organizer\Event\PartnerController;
+use App\Http\Controllers\Organizer\Event\PassesController;
+use App\Http\Controllers\Organizer\Event\ScheduleController;
 use App\Http\Controllers\Organizer\Event\WorkshopController;
 use App\Http\Controllers\Organizer\ProfileController;
 use App\Http\Middleware\CurrentEventMiddleware;
@@ -25,7 +28,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
         Route::post('/', [EventController::class, 'store'])->name('store');
         Route::get('{id}/select', [EventController::class, 'selectEvent'])->name('select');
 
-        Route::middleware(CurrentEventMiddleware::class)->group(function () {
+        Route::middleware('event_is_selected')->group(function () {
             Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
             Route::resource('schedule', EventSessionController::class);
             Route::delete('schedule/delete/many', [EventSessionController::class, 'destroyMany'])->name('schedule.destroy.many');
@@ -39,6 +42,8 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::delete('partner/delete/many', [EventPartnerController::class, 'destroyMany'])->name('partner.destroy.many');
             Route::resource('partner-category', EventPartnerCategoryController::class);
             Route::resource('event-platforms',EventPlatformController::class);
+            Route::resource('passes', PassesController::class)->only(['index', 'store', 'update', 'destroy']);
+            Route::delete('passes/delete/many', [PassesController::class, 'destroyMany'])->name('passes.destroy.many');
 
             // Settings
             Route::prefix('settings')->name('settings.')->group(function () {
@@ -56,5 +61,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
 
             Route::post('import/{importType}', [ImportController::class, 'import'])->name('import');
         });
+        
+        Route::get('{id}', [EventController::class, 'selectEvent'])->name('select');
     });
 });
