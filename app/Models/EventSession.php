@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class EventSession extends Model
 {
@@ -22,5 +23,10 @@ class EventSession extends Model
     public function scopeCurrentEvent($query)
     {
         $query->where('event_app_id', session('event_id'));
+    }
+
+    public function event_speaker(): BelongsTo
+    {
+        return $this->belongsTo(EventSpeaker::class);
     }
 }

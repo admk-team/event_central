@@ -32,7 +32,7 @@ function Index({ event_sessions, speakers, platforms, event_platforms }: any) {
     }
     return (
         <React.Fragment>
-            <Head title='Starter | Velzon - React Admin & Dashboard Template' />
+            <Head title='Schedule' />
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb title="Schedule" pageTitle="Dashboard" />
@@ -79,4 +79,3 @@ function Index({ event_sessions, speakers, platforms, event_platforms }: any) {
 }
 Index.layout = (page: any) => <Layout children={page} />;
 export default Index;
-

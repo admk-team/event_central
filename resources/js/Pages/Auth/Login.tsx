@@ -97,7 +97,7 @@ export default function Login({ status, canResetPassword }: any) {
                                                             autoComplete="current-password"
                                                             onChange={(e: any) => setData('password', e.target.value)}
                                                         />
-                                                       
+
                                                         <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.password} </Form.Control.Feedback>
                                                         <button className="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted" type="button" id="password-addon" onClick={() => setPasswordShow(!passwordShow)}><i className="ri-eye-fill align-middle"></i></button>
                                                     </div>

@@ -83,7 +83,7 @@ const VerticalLayout = (props: any) => {
         window.scrollTo({ top: 0, behavior: 'smooth' });
         const initMenu = () => {
             const pathName = path;
-            // const pathName= window.location.pathname + path; 
+            // const pathName= window.location.pathname + path;
             const ul = document.getElementById("navbar-nav") as HTMLElement;
             const items: any = ul.getElementsByTagName("a");
             let itemsArray = [...items]; // converts NodeList to Array
