@@ -19,7 +19,7 @@ const DashboardAnalytics = () => {
 
     return (
         <React.Fragment>
-            <Head title="Analytics | Velzon - React Admin & Dashboard Template"/>
+            <Head title="Dashboard - Admin"/>
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb title="Analytics" pageTitle="Dashboards" />

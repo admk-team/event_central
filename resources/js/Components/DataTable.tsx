@@ -1,12 +1,16 @@
 import React, { useEffect } from 'react'
 import { Form, Table } from 'react-bootstrap'
 import Pagination from './Common/Pagination'
+import { router } from '@inertiajs/react'
+import { ArrowDown, ArrowUp, ChevronDown, ChevronsUpDown, ChevronUp } from 'lucide-react'
 
 type Column<T> = {
+    accessorKey?: string
     header: () => React.ReactNode
     headerClass?: string
     cell: (row: T) => React.ReactNode
     cellClass?: string
+    enableSorting?: boolean
 }
 
 export type ColumnDef<T> = Column<T>[]
@@ -42,6 +46,8 @@ export default function DataTable<T>({
     disableRowSelection
 }: DataTableProps<T>) {
     const rowSelector = useRowSelector(data.data);
+
+    const [sort, setSort] = useSort();
 
     const dataTable: DataTable<T> = {
         data: data.data,
@@ -85,7 +91,27 @@ export default function DataTable<T>({
                                     </th>
                                 )}
                                 {columns.map((col, colIndex) => (
-                                    <th scope="col" className={col.headerClass || ''} key={colIndex}>{col.header()}</th>
+                                    <th scope="col" className={col.headerClass || ''} key={colIndex}>
+                                        {col.enableSorting && col.accessorKey ? (
+                                            <div
+                                                onClick={() => setSort(col.accessorKey as string)} 
+                                                className="d-flex justify-content-between align-items-center cursor-pointer"
+                                            >
+                                                <div>{col.header()}</div>
+                                                <div>
+                                                    {col.accessorKey !== sort?.column ? (
+                                                        <ChevronsUpDown size={20} color='#666' />
+                                                    ) : (
+                                                        sort.desc ? (
+                                                            <ArrowDown size={17} color='#666' />
+                                                        ) : (
+                                                            <ArrowUp size={17} color='#666' />
+                                                        )
+                                                    )}
+                                                </div>
+                                            </div>
+                                        ) : col.header()}
+                                    </th>
                                 ))}
                             </tr>
                         </thead>
@@ -185,4 +211,25 @@ function useRowSelector<T>(data: T[]) {
         handleRowSelection,
         handleAllRowSelection,
     };
+}
+
+type Sort = { column: string, desc: boolean } | null
+type SetSort = (column: string) => void 
+
+function useSort(): [{ column: string, desc: boolean } | null, (column: string) => void] {
+    const url = new URL(window.location.href);
+    const sortParam = url.searchParams.get('sort');
+
+    const sort: Sort = sortParam ? JSON.parse(sortParam): null;
+
+    const setSort: SetSort = (column: string) => {
+        url.searchParams.set('sort', JSON.stringify({
+            column: column,
+            desc: sort?.column === column? !sort.desc : false,
+        }));
+
+        router.visit(url.toString());
+    }
+
+    return [sort, setSort]
 }

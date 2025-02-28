@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\RoleRequest;
+use App\Http\Requests\Admin\RoleRequest;
 use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
@@ -15,7 +15,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::latest()->paginate($request->per_page ?? 10);
+        $roles = Role::where('panel', 'admin')->latest()->paginate($request->per_page ?? 10);
         return Inertia::render("Admin/Roles/Index", compact('roles'));
     }
 
@@ -24,7 +24,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $permissions = Permission::get();
+        $permissions = Permission::where('panel', 'admin')->get();
         return Inertia::render("Admin/Roles/CreateOrEdit", compact('permissions'));
     }
 
@@ -34,10 +34,10 @@ class RoleController extends Controller
     public function store(RoleRequest $request)
     {
         $input = $request->validated();
-        $role =  Role::create(['name' => $input['name']]);
+        $role =  Role::create(['name' => $input['name'], 'panel' => 'admin']);
         $role->givePermissionTo($input['permissions']);
 
-        return to_route('admin.roles.index');
+        return to_route('admin.roles.index')->withSuccess('Created');
     }
 
     /**
@@ -54,7 +54,7 @@ class RoleController extends Controller
     public function edit(Role $role)
     {
         $roleSpecific = $role->permissions()->get();
-        $permissions = Permission::get();
+        $permissions = Permission::where('panel', 'admin')->get();
         return Inertia::render("Admin/Roles/CreateOrEdit", compact('role', 'permissions', 'roleSpecific'));
     }
 
@@ -65,7 +65,7 @@ class RoleController extends Controller
     {
         $input = $request->validated();
         $role->syncPermissions($input['permissions']);
-        return to_route('admin.roles.index');
+        return to_route('admin.roles.index')->withSuccess('Updated');
     }
 
     /**
@@ -75,6 +75,6 @@ class RoleController extends Controller
     {
         $role->delete();
 
-        return back();
+        return back()->withSuccess('Deleted');
     }
 }

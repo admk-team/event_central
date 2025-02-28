@@ -6,7 +6,9 @@ use App\Models\User;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\UserRequest;
+use App\Http\Requests\Admin\UserRequest;
+use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -15,8 +17,13 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $users = User::latest()->paginate($request->per_page ?? 10);
-        return Inertia::render("Admin/Users/Index", compact('users'));
+        if (! Auth::user()->canAny(['view_users', 'create_users', 'edit_users', 'delete_users'])) {
+            abort(403);
+        }
+
+        $users = $this->datatable(User::where('role', 'admin')->with('roles:name'));
+        $roles = $roles = Role::where('panel', 'admin')->get()->pluck('name');
+        return Inertia::render("Admin/Users/Index", compact('users', 'roles'));
     }
 
     /**
@@ -24,11 +31,20 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
+        if (! Auth::user()->can('create_users')) {
+            abort(403);
+        }
+
         $input = $request->validated();
+        $role = $input['role'];
 
-        User::create($input);
+        $input['role'] = 'admin'; // User type
 
-        return back();
+        $user = User::create($input);
+
+        $user->syncRoles([$role]);
+
+        return back()->withSuccess("Created");
     }
 
     /**
@@ -36,7 +52,7 @@ class UserController extends Controller
      */
     public function show(string $id)
     {
-        //
+        
     }
 
     /**
@@ -44,11 +60,20 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, User $user)
     {
+        if (! Auth::user()->can('edit_users')) {
+            abort(403);
+        }
+
         $input = $request->validated();
+        $role = $input['role'];
+
+        $input['role'] = 'admin'; // User type
 
         $user->update($input);
 
-        return back();
+        $user->syncRoles([$role]);
+
+        return back()->withSuccess('Updated');
     }
 
     /**
@@ -56,13 +81,21 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        if (! Auth::user()->can('delete_users')) {
+            abort(403);
+        }
+
         $user->delete();
 
-        return back();
+        return back()->withSuccess('Deleted');
     }
 
     public function destroyMany(Request $request)
     {
+        if (! Auth::user()->can('delete_users')) {
+            abort(403);
+        }
+        
         $request->validate([
             'ids' => 'required|array'
         ]);
@@ -71,6 +104,6 @@ class UserController extends Controller
             User::find($id)?->delete();
         }
 
-        return back();
+        return back()->withSuccess('Deleted');
     }
 }
