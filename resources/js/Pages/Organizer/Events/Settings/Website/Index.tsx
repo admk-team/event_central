@@ -3,43 +3,50 @@ import Layout from '../../../../../Layouts/Organizer/Event';
 import { Head, usePage } from '@inertiajs/react';
 import { Col, Container, Row } from 'react-bootstrap';
 import BreadCrumb2 from '../../../../../Components/Common/BreadCrumb2';
-import Information from './Components/Information';
-import Contact from './Components/Contact';
-import Other from './Components/Other';
+import "@measured/puck/puck.css";
+import WebsiteUrl from './Components/WebsiteUrl';
+import WebsiteStatus from './Components/WebsiteStatus';
+import WebsitePages from './Components/WebsitePages';
 
-function Event() {
+function Website() {
+
     return (
         <React.Fragment>
-            <Head title='Starter | Velzon - React Admin & Dashboard Template' />
+            <Head title='Website Settings' />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb2 
-                        title="Event" 
+                    <BreadCrumb2
+                        title="Website"
                         items={[
                             { title: "Settings", link: route('organizer.events.settings.event.index') }
                         ]}
                     />
                     <Row>
                         <Col md={8}>
-                            <Information />
+                            <Row>
+                                <Col xs={12}>
+                                    <WebsiteUrl />
+                                </Col>
+                                <Col xs={12}>
+                                    <WebsitePages />
+                                </Col>
+                            </Row>
                         </Col>
                         <Col md={4}>
                             <Row>
                                 <Col xs={12}>
-                                    {/* <Contact /> */}
-                                </Col>
-                                <Col xs={12}>
-                                    <Other />
+                                    <WebsiteStatus />
                                 </Col>
                             </Row>
                         </Col>
                     </Row>
+                    
                 </Container>
             </div>
         </React.Fragment>
     )
 }
 
-Event.layout = (page: any) => <Layout children={page} />;
+Website.layout = (page: any) => <Layout children={page} />;
 
-export default Event;
+export default Website;

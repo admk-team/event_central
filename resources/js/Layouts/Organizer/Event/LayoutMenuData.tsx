@@ -33,22 +33,18 @@ const Navdata = () => {
         if (iscurrentState !== 'Content') {
             setIsContent(false);
         }
-        if (iscurrentState !== 'Settings') {
-            setIsSettings(false);
-        }
         if (iscurrentState !== 'users') {
             setIsUsers(false);
         }
-
-        // Add Here
+        if (iscurrentState !== 'Settings') {
+            setIsSettings(false);
+        }
     }, [
         history,
         iscurrentState,
         isDashboard,
         isUsers,
         isSettings,
-        
-        // Add Here
     ]);
 
     const menuItems: any = [
@@ -155,11 +151,10 @@ const Navdata = () => {
                 {
                     id: "team",
                     label: "Team",
-                    link: '#',
+                    link: '/events/teams',
                     parentId: "dashboard",
                 }
             ]
-
         },
         {
             id: "settings",
@@ -183,6 +178,12 @@ const Navdata = () => {
                     id: "payemntSettings",
                     label: "Payment Settings",
                     link: route('organizer.events.settings.payment.index'),
+                    parentId: "settings",
+                },
+                {
+                    id: "website",
+                    label: "Website",
+                    link: route('organizer.events.settings.website.index'),
                     parentId: "settings",
                 },
             ]

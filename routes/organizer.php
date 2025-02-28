@@ -15,7 +15,9 @@ use App\Http\Controllers\Organizer\Event\User\AttendeeController;
 use App\Http\Controllers\Organizer\Event\PartnerController;
 use App\Http\Controllers\Organizer\Event\PassesController;
 use App\Http\Controllers\Organizer\Event\ScheduleController;
+use App\Http\Controllers\Organizer\Event\Settings\WebsiteSettingsController;
 use App\Http\Controllers\Organizer\Event\WorkshopController;
+use App\Http\Controllers\Organizer\PageController;
 use App\Http\Controllers\Organizer\ProfileController;
 use App\Http\Middleware\CurrentEventMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -45,6 +47,13 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::resource('passes', PassesController::class)->only(['index', 'store', 'update', 'destroy']);
             Route::delete('passes/delete/many', [PassesController::class, 'destroyMany'])->name('passes.destroy.many');
 
+            // Pages
+            Route::prefix('pages')->name('pages.')->group(function () {
+                Route::resource('/', PageController::class)->only(['store', 'update', 'destroy']);
+                Route::delete('delete/many', [PageController::class, 'destroyMany'])->name('destroy.many');
+                Route::post('{page}/toggle-publish', [PageController::class, 'togglePublish'])->name('toggle-publish');
+            });
+
             // Settings
             Route::prefix('settings')->name('settings.')->group(function () {
                 // Event
@@ -53,9 +62,15 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                     Route::delete('/', [EventSettingsController::class, 'destroyEvent'])->name('destroy');
                     Route::put('info', [EventSettingsController::class, 'updateInfo'])->name('info');
                 });
+                // Payment
                 Route::prefix('payment')->name('payment.')->group(function () {
                     Route::get('/', [EventAppPaymentController::class, 'index'])->name('index');
                     Route::put('update', [EventAppPaymentController::class, 'update'])->name('update');
+                });
+                // Website
+                Route::prefix('website')->name('website.')->group(function () {
+                    Route::get('/', [WebsiteSettingsController::class, 'index'])->name('index');
+                    Route::post('/toggle-status', [WebsiteSettingsController::class, 'toggleStatus'])->name('toggle-status');
                 });
             });
 
