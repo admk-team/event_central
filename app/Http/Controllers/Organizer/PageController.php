@@ -78,7 +78,8 @@ class PageController extends Controller
     }
 
     public function builderSave(Request $request, Page $page)
-    {
+    {  
+        $page->title = $request->page_title;
         $page->content = $request->page_data? $request->page_data: '';
         $page->save();
         return back()->withSuccess("Saved");

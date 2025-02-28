@@ -32,13 +32,20 @@ export default function PageBuilder({ page, backUrl }: any) {
         },
     };
 
-    const initialData = page.content ? JSON.parse(page.content) : {};
+    const initialData = page.content ? JSON.parse(page.content) : {
+        root: {
+            props: {
+                title: page.title,
+            }
+        }
+    };
 
 
     const [processing, setProcessing] = useState(false);
 
     const save = (pageData: Data) => {
         router.post(route('organizer.events.pages.builder.save', page.id), {
+            page_title: pageData.root.props?.title,
             page_data: JSON.stringify(pageData),
         }, { 
             preserveScroll: true, 
@@ -55,7 +62,7 @@ export default function PageBuilder({ page, backUrl }: any) {
                 config={config} 
                 data={initialData} 
                 onPublish={save} 
-                headerTitle={page.title}
+                // headerTitle={page.title}
                 overrides={{
                     header: ({children}) => {
                         return (
