@@ -19,7 +19,7 @@ function getDateDiff(date1: any, date2: any) {
     date2.add(minutes, 'minutes');
 
     let seconds = date1.diff(date2, 'seconds');
-    //console.log(years + ' years ' + months + ' months ' + days + ' days ' + hours + ' hours ' + minutes + ' minutes ' + seconds + ' seconds');
+    // console.log(years + ' years ' + months + ' months ' + days + ' days ' + hours + ' hours ' + minutes + ' minutes ' + seconds + ' seconds');
     return { years, months, days, hours, minutes, seconds };
 }
 export { getDateDiff };

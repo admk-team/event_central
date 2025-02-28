@@ -44,3 +44,7 @@ ul.timeline > li:before {
     height: 20px;
     z-index: 400;
 }
+
+.rating-wraper > span{
+    font-size: 35px;;
+}

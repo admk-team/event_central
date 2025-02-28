@@ -36,7 +36,10 @@ const AttendeeDashboard = ({ eventApp }: any) => {
                                 <Col md={6} xl={6}>
                                     <Card >
                                         <Card.Img variant="top" src={attendeeEventBg} style={{ height: '10rem' }} />
-                                        <DateDifferenceFromToday date1={eventApp.start_date}></DateDifferenceFromToday>
+                                        <div style={{ position: 'relative', top: '-130px' }}>
+                                            <DateDifferenceFromToday date1={eventApp.start_date} ></DateDifferenceFromToday>
+                                        </div>
+
                                         <CardBody>
                                             <div className="p-4">
                                                 <div className="d-flex align-items-center">

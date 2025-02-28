@@ -17,17 +17,17 @@ class EventController extends Controller
     }
     public function getEventDetailDashboard(EventApp $eventApp)
     {
-        $eventApp->load(['event_sessions.event_speaker']);
+        $eventApp->load(['event_sessions.eventSpeaker']);
         return Inertia::render('Attendee/AttendeeDashboard', compact('eventApp'));
     }
     public function getEventDetailAgenda(EventApp $eventApp)
     {
-        $eventApp->load(['event_sessions.event_speaker']);
+        $eventApp->load(['event_sessions.eventSpeaker']);
         return Inertia::render('Attendee/AttendeeAgenda', compact('eventApp'));
     }
-    public function getEventSessionDetail(EventApp $eventApp, EventSession $eventSession)
+    public function getEventSessionDetail(Request $request, EventApp $eventApp, EventSession $eventSession)
     {
-        $eventApp->load(['event_sessions.event_speaker']);
+        $eventSession->load(['eventSpeaker']);
         return Inertia::render('Attendee/AttendeeSessionDetail', compact(['eventApp', 'eventSession']));
     }
 }

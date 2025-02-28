@@ -3,7 +3,7 @@ import { Dropdown } from 'react-bootstrap';
 import { Link, usePage } from '@inertiajs/react';
 //import images
 import avatar1 from "../../../images/users/avatar-1.jpg";
-import UserProfileRightSidebar from '../../Pages/Attendee/UserProfileRightSidebar';
+import UserProfileRightSidebar from '../../Pages/Attendee/Profile/RightSidebar';
 
 
 const AttendeeProfileDropdown = () => {
@@ -34,7 +34,7 @@ const AttendeeProfileDropdown = () => {
                     </Dropdown.Toggle>
                     <Dropdown.Menu className="dropdown-menu-end">
                         <h6 className="dropdown-header">Attendee Options {user?.name}!</h6>
-                        <UserProfileRightSidebar></UserProfileRightSidebar>
+                        <UserProfileRightSidebar dropdown={isProfileDropdown}></UserProfileRightSidebar>
                         {/* <Dropdown.Item href={route('profile.edit')} className="dropdown-item">
                             <i className="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i>
                             <span className="align-middle">Edit Profile</span>

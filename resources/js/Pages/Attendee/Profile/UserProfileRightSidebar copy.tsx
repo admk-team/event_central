@@ -87,7 +87,8 @@ const UserProfileRightSidebar = (props: any) => {
         bio: user?.bio ?? '',
         email: user?.email ?? '',
         image: null,
-        avatar: user?.avatar ?? ''
+        avatar: user?.avatar ?? '',
+        imageChanged: false
     });
 
     const { data: dataPassword, setData: setDataPassword, post: postPassword, processing: processingPassword, errors: errorsPassword, reset: resetPassword } = useForm({
@@ -103,12 +104,12 @@ const UserProfileRightSidebar = (props: any) => {
 
     const submitProfileEdit = (e: any) => {
         e.preventDefault();
-        console.log('here')
+        // console.log('here')
         post(route('attendee.profile.update', user.id));
     };
     const submitPasswordChange = (e: any) => {
         e.preventDefault();
-        console.log('here')
+        // console.log('here')
         // post(route('attendee.register', [eventApp.id]));
     };
     const submitEmailChange = (e: any) => {
@@ -118,7 +119,6 @@ const UserProfileRightSidebar = (props: any) => {
     };
     const handleFileUpload = (v: any) => {
         setFiles(v);
-        // console.log(v[0].file);
         data.image = v[0] ? v[0].file : null;
     }
 
@@ -164,7 +164,7 @@ const UserProfileRightSidebar = (props: any) => {
                                     <Row>
                                         <Col md={6} lg={6}>
                                             {/* <Form.Label htmlFor="first_name" value="First Name" className='form-label'> First Name </Form.Label> */}
-                                            <span className="text-danger ms-1">*</span>
+                                            {/* <span className="text-danger ms-1">*</span> */}
                                             <Form.Control
                                                 id="first_name"
                                                 type="text"
@@ -180,7 +180,7 @@ const UserProfileRightSidebar = (props: any) => {
                                         </Col>
                                         <Col md={6} lg={6}>
                                             {/* <Form.Label htmlFor="last_name" value="Last Name" className='form-label'> Last Name </Form.Label> */}
-                                            <span className="text-danger ms-1">*</span>
+                                            {/* <span className="text-danger ms-1">*</span> */}
                                             <Form.Control
                                                 id="last_name"
                                                 type="text"
