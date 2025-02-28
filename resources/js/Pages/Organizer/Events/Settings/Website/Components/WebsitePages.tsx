@@ -1,4 +1,4 @@
-import { useForm, usePage } from '@inertiajs/react'
+import { Link, useForm, usePage } from '@inertiajs/react'
 import React, { useState } from 'react'
 import { Button, Card, CardBody, CardHeader, CardTitle } from 'react-bootstrap'
 import CreateEditPageModal from './CreateEditPageModal';
@@ -44,7 +44,7 @@ export default function WebsitePages() {
     }
 
     const handleDelete = () => {
-        deleteForm.delete(route('organizers.events.pages.destroy', deletePage.id));
+        deleteForm.delete(route('organizer.events.pages.destroy', deletePage.id));
         setShowDeleteConfirmation(false);
     }
 
@@ -54,7 +54,7 @@ export default function WebsitePages() {
     }
 
     const handleDeleteMany = () => {
-        deleteManyForm.delete(route('organizers.events.pages.destroy.many'));
+        deleteManyForm.delete(route('organizer.events.pages.destroy.many'));
         setShowDeleteManyConfirmation(false);
     }
 
@@ -75,6 +75,9 @@ export default function WebsitePages() {
             header: () => 'Action',
             cell: (page) => (
                 <div className="hstack gap-3 fs-15">
+                    <Link href={route('organizer.events.pages.builder', page.id)}>
+                        <Button size="sm">Page Builder</Button>
+                    </Link>
                     <span className="link-primary cursor-pointer" onClick={() => editAction(page)}><i className="ri-edit-fill"></i></span>
                     <span className="link-danger cursor-pointer" onClick={() => deleteAction(page)}>
                         <i className="ri-delete-bin-5-line"></i>

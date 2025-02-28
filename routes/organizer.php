@@ -48,11 +48,11 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::delete('passes/delete/many', [PassesController::class, 'destroyMany'])->name('passes.destroy.many');
 
             // Pages
-            Route::prefix('pages')->name('pages.')->group(function () {
-                Route::resource('/', PageController::class)->only(['store', 'update', 'destroy']);
-                Route::delete('delete/many', [PageController::class, 'destroyMany'])->name('destroy.many');
-                Route::post('{page}/toggle-publish', [PageController::class, 'togglePublish'])->name('toggle-publish');
-            });
+            Route::resource('pages', PageController::class)->only(['store', 'update', 'destroy']);
+            Route::delete('pages/delete/many', [PageController::class, 'destroyMany'])->name('pages.destroy.many');
+            Route::post('pages/{page}/toggle-publish', [PageController::class, 'togglePublish'])->name('pages.toggle-publish');
+            Route::get('pages/{page}/builder', [PageController::class, 'builder'])->name('pages.builder');
+            Route::post('pages/{page}/builder', [PageController::class, 'builderSave'])->name('pages.builder.save');
 
             // Settings
             Route::prefix('settings')->name('settings.')->group(function () {
