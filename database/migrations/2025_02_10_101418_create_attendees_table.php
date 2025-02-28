@@ -13,15 +13,23 @@ return new class extends Migration
     {
         Schema::create('attendees', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('event_app_id');
-            $table->foreign('event_app_id')->references('id')->on('event_apps');
-            $table->unsignedBigInteger('event_pass');
-            $table->foreign('event_pass')->references('id')->on('event_app_passes');
-            $table->string('name');
-            $table->string('avatar');
             $table->string('email');
-            $table->string('phone');
-            $table->string('qr_code');
+            $table->string('password');
+            $table->foreignId('event_app_id')->constrained();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('company')->nullable();
+            $table->string('position')->nullable();
+            $table->string('other_link')->nullable();
+            $table->string('facebook_link')->nullable();
+            $table->string('linkedin_link')->nullable();
+            $table->string('twitter_link')->nullable();
+            $table->string('country')->nullable();
+            $table->string('bio')->nullable();
+            $table->string('avatar')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('qr_code')->nullable();
+            $table->string('type')->default('anonymous');
             $table->timestamps();
         });
     }

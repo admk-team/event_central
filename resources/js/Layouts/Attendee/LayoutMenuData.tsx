@@ -1,13 +1,13 @@
+import { usePage } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
 
 const Navdata = () => {
+    const eventApp: any = usePage().props.eventApp;
     //state data
     const [isDashboard, setIsDashboard] = useState<boolean>(false);
     const [isProgram, setIsProgram] = useState<boolean>(false);
     const [isSpeaker, setIsSpeaker] = useState<boolean>(false);
     const [isMore, setIsMore] = useState<boolean>(false);
-
-
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
 
     function updateIconSidebar(e: any) {
@@ -57,7 +57,7 @@ const Navdata = () => {
             id: "dashboard",
             label: "Dashboards",
             icon: "bx bxs-dashboard",
-            link: "/#",
+            link: route('attendee.event.detail.dashboard', [eventApp.id]),
             stateVariables: isDashboard,
             click: function (e: any) {
                 e.preventDefault();
@@ -70,7 +70,7 @@ const Navdata = () => {
             id: "program",
             label: "Program",
             icon: "bx bx-heart",
-            link: "/#",
+            link: route('attendee.event.detail.agenda', [eventApp.id]),
             stateVariables: isProgram,
             click: function (e: any) {
                 e.preventDefault();
