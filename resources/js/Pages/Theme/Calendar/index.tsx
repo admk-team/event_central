@@ -25,17 +25,17 @@ import Flatpickr from "react-flatpickr";
 //redux
 import { useSelector, useDispatch } from "react-redux";
 
-import BreadCrumb from "../../../../Components/Common/BreadCrumb";
-import DeleteModal from "../../../../Components/Common/DeleteModal";
+import BreadCrumb from "../../../Components/Common/BreadCrumb";
+import DeleteModal from "../../../Components/Common/DeleteModal";
 
 //Simple bar
 import SimpleBar from "simplebar-react";
 import UpcommingEvents from './UpcommingEvents';
 import listPlugin from '@fullcalendar/list';
 
-import { onAddNewEvent, onDeleteEvent, onGetCategories, onGetEvents, onGetUpCommingEvent, onUpdateEvent } from "../../../../slices/thunk";
+import { onAddNewEvent, onDeleteEvent, onGetCategories, onGetEvents, onGetUpCommingEvent, onUpdateEvent } from "../../../slices/thunk";
 import { createSelector } from "reselect";
-import Layout from "../../../../Layouts";
+import Layout from "../../../Layouts/Theme";
 import { Head, Link } from "@inertiajs/react";
 
 const Calender = () => {

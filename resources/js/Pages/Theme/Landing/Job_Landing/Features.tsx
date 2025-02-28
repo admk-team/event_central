@@ -1,8 +1,8 @@
 import React from "react";
 import { Card, Col, Container, Row } from "react-bootstrap";
 
-import Avatar10 from "../../../../../../../../images/users/avatar-10.jpg";
-import About from "../../../../../../../../images/about.jpg";
+import Avatar10 from "../../../../../images/users/avatar-10.jpg";
+import About from "../../../../../images/about.jpg";
 import { Link } from "@inertiajs/react";
 
 const Features = () => {

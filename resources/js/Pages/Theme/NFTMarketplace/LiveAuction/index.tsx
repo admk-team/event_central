@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { Card, Col, Container, Row } from "react-bootstrap";
 import Countdown from "react-countdown";
-import BreadCrumb from "../../../../../../Components/Common/BreadCrumb";
+import BreadCrumb from "../../../../Components/Common/BreadCrumb";
 
-import { aution, topCreator, topDrop } from "../../../../../../common/data";
+import { aution, topCreator, topDrop } from "../../../../common/data";
 import { Head, Link } from "@inertiajs/react";
-import Layout from "../../../../../../Layouts";
+import Layout from "../../../../Layouts/Theme";
 
 const LiveAuction = () => {
     const [displayCategory, setCategory] = useState<string>("All");

@@ -1,8 +1,8 @@
-import BreadCrumb from '../../../../../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../../../Components/Common/BreadCrumb';
 import React from 'react'
 import { Card, CardBody, CardHeader, Col, Container, Row } from 'react-bootstrap';
 import { BasicSlop, MultiGroup } from './Slop';
-import Layout from '../../../../../../../../Layouts';
+import Layout from '../../../../../Layouts/Theme';
 import { Head } from '@inertiajs/react';
 
 const SlopeCharts = () => {

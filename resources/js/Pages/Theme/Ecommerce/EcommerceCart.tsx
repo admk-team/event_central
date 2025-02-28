@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { shoppingCart } from "../../../../common/data/ecommerce";
+import { shoppingCart } from "../../../common/data/ecommerce";
 
 //Import Breadcrumb
-import BreadCrumb from "../../../../Components/Common/BreadCrumb";
+import BreadCrumb from "../../../Components/Common/BreadCrumb";
 
 import {
   Card,
@@ -13,7 +13,7 @@ import {
   Form,
 } from "react-bootstrap";
 import { Head, Link } from "@inertiajs/react";
-import Layout from "../../../../Layouts";
+import Layout from "../../../Layouts/Theme";
 
 const EcommerceCart = () => {
   const [productList, setproductList] = useState<any>(shoppingCart);

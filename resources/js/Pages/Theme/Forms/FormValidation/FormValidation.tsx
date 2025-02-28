@@ -1,7 +1,7 @@
 import React from "react";
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
-import UiContent from "../../../../../../Components/Common/UiContent";
-import PreviewCardHeader from '../../../../../../Components/Common/PreviewCardHeader';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
+import UiContent from "../../../../Components/Common/UiContent";
+import PreviewCardHeader from '../../../../Components/Common/PreviewCardHeader';
 import { BrowserDefaults, CustomStyles, SupportedElements } from "./FormValidationCode";
 
 import {
@@ -19,7 +19,7 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 import ReactValidation from "./ReactValidation";
 import { Head } from "@inertiajs/react";
-import Layout from "../../../../../../Layouts";
+import Layout from "../../../../Layouts/Theme";
 
 const FormValidations = () => {
   // Form validation

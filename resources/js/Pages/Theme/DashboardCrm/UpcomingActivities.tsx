@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Col, Row, Dropdown, Button } from 'react-bootstrap';
-import { activities } from "../../../../common/data";
+import { activities } from "../../../common/data";
 import { Link } from '@inertiajs/react';
 
 

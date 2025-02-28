@@ -1,19 +1,19 @@
 // export default CandidateGrid;
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Card, Col, Container, Form, Modal, Row } from "react-bootstrap";
-import BreadCrumb from "../../../../../../../../Components/Common/BreadCrumb";
-import Pagination from "../../../../../../../../Components/Common/Pagination";
+import BreadCrumb from "../../../../../Components/Common/BreadCrumb";
+import Pagination from "../../../../../Components/Common/Pagination";
 import { ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { createSelector } from "reselect";
 
-import dummy from "../../../../../../../../../../images/users/user-dummy-img.jpg"
+import dummy from "../../../../../../images/users/user-dummy-img.jpg"
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Head } from "@inertiajs/react";
-import Layout from "../../../../../../../../Layouts";
-import { onAddCandidateGrid, onGetCandidateGrid } from "../../../../../../../../slices/thunk";
-import { jobCandidates } from "../../../../../../../../common/data/appsJobs";
+import Layout from "../../../../../Layouts/Theme";
+import { onAddCandidateGrid, onGetCandidateGrid } from "../../../../../slices/thunk";
+import { jobCandidates } from "../../../../../common/data/appsJobs";
 
 interface ImgData {
   id: number,

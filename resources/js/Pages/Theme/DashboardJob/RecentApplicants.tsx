@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, Col, Table } from "react-bootstrap";
-import { recentApplicants } from "../../../../common/data/dashboardJobs";
+import { recentApplicants } from "../../../common/data/dashboardJobs";
 import { Link } from "@inertiajs/react";
 
 const RecentApplicants = () => {

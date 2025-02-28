@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Col, Container, Row } from 'react-bootstrap';
-import BreadCrumb from '../../../../../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../../../Components/Common/BreadCrumb';
 
 import {
     Basic,
@@ -8,7 +8,7 @@ import {
     ImagesChart
 } from "./ScatterCharts";
 import { Head } from '@inertiajs/react';
-import Layout from '../../../../../../../../Layouts';
+import Layout from '../../../../../Layouts/Theme';
 
 
 const ScatterCharts = () => {

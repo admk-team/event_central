@@ -2,23 +2,23 @@ import React, { useState } from 'react';
 import { Button, ButtonGroup, Card, Col, Container, Dropdown, Form, Nav, Row, Tab, } from 'react-bootstrap';
 import SimpleBar from 'simplebar-react';
 // Import Content
-import UiContent from '../../../../../../Components/Common/UiContent';
+import UiContent from '../../../../Components/Common/UiContent';
 //import Components
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
-import PreviewCardHeader from '../../../../../../Components/Common/PreviewCardHeader';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
+import PreviewCardHeader from '../../../../Components/Common/PreviewCardHeader';
 
 // Import Images
-import avatar2 from "../../../../../../../../images/users/avatar-2.jpg";
-import avatar3 from "../../../../../../../../images/users/avatar-3.jpg";
-import avatar6 from "../../../../../../../../images/users/avatar-6.jpg";
-import avatar8 from "../../../../../../../../images/users/avatar-8.jpg";
+import avatar2 from "../../../../../images/users/avatar-2.jpg";
+import avatar3 from "../../../../../images/users/avatar-3.jpg";
+import avatar6 from "../../../../../images/users/avatar-6.jpg";
+import avatar8 from "../../../../../images/users/avatar-8.jpg";
 
-import bell from "../../../../../../../../images/svg/bell.svg";
+import bell from "../../../../../images/svg/bell.svg";
 
 
 import { SingleButtonDropdownExample, ColorDropdownExample, SplitButtonDropdownExample, SizingDropdownExample, DarkDropdownExample, AlignDropdownExample, OptionDropdownExample, AutoCloseDropdownExample, MenuItemDropdownExample, MenuContentDropdownExample, NotificationDropdownExample } from './UiDropdownsCode';
 import { Head, Link } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 const UiDropdowns = () => {
 

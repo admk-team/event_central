@@ -14,7 +14,7 @@ import {
   Accordion,
 } from "react-bootstrap";
 
-import BreadCrumb from "../../../../../../Components/Common/BreadCrumb";
+import BreadCrumb from "../../../../Components/Common/BreadCrumb";
 import Select from "react-select";
 import LeadDiscover from "./leadDiscover";
 
@@ -26,8 +26,8 @@ import { useFormik } from "formik";
 import { useSelector, useDispatch } from "react-redux";
 import { createSelector } from "reselect";
 import { Head } from "@inertiajs/react";
-import Layout from "../../../../../../Layouts";
-import { onGetDeals } from "../../../../../../slices/thunk";
+import Layout from "../../../../Layouts/Theme";
+import { onGetDeals } from "../../../../slices/thunk";
 
 const CrmDeals = () => {
   const dispatch: any = useDispatch();

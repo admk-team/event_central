@@ -1,9 +1,9 @@
 import React from 'react';
 import { Button, Col, Container, Row, Table } from 'react-bootstrap';
 import { Head, useForm, Link } from '@inertiajs/react';
-import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import { Form, FormGroup, Modal, Spinner } from "react-bootstrap";
-import Layout from '../../../Layouts';
+import Layout from '../../../Layouts/Admin';
+import BreadCrumb2 from '../../../Components/Common/BreadCrumb2';
 
 function CreateOrEdit({ role, permissions, roleSpecific }: { role: any | null, permissions: any[], roleSpecific: any[] }) {
     const isEdit = role != null;
@@ -51,7 +51,12 @@ function CreateOrEdit({ role, permissions, roleSpecific }: { role: any | null, p
             <Head title='Starter | Velzon - React Admin & Dashboard Template' />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Role Management" pageTitle="Dashboard" />
+                    <BreadCrumb2 
+                        title={isEdit ? 'Edit' : 'Create'} 
+                        items={[
+                            { title: "Roles", link: route('admin.roles.index') }
+                        ]}
+                    />
                     <Row>
                         <Col xs={12}>
                             <div className="card">

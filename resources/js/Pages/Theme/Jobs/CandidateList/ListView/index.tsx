@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
-import BreadCrumb from "../../../../../../../../Components/Common/BreadCrumb";
+import BreadCrumb from "../../../../../Components/Common/BreadCrumb";
 import { ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 import { createSelector } from "reselect";
 
-import AddEditJobCandidateList from "../../../../../../../../Components/Common/AddEditJobCandidateList";
-import Pagination from "../../../../../../../../Components/Common/Pagination";
+import AddEditJobCandidateList from "../../../../../Components/Common/AddEditJobCandidateList";
+import Pagination from "../../../../../Components/Common/Pagination";
 import { Head, Link} from "@inertiajs/react";
-import { ongetCandidateList } from "../../../../../../../../slices/thunk";
-import Layout from "../../../../../../../../Layouts";
-import { jobCandidates } from "../../../../../../../../common/data/appsJobs";
+import { ongetCandidateList } from "../../../../../slices/thunk";
+import Layout from "../../../../../Layouts/Theme";
+import { jobCandidates } from "../../../../../common/data/appsJobs";
 
 
 const CandidateList = () => {

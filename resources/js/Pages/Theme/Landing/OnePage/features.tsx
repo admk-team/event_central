@@ -2,9 +2,9 @@ import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 
 // Import Images
-import img1 from "../../../../../../../../images/landing/features/img-1.png";
-import img2 from "../../../../../../../../images/landing/features/img-2.png";
-import img3 from "../../../../../../../../images/landing/features/img-3.png";
+import img1 from "../../../../../images/landing/features/img-1.png";
+import img2 from "../../../../../images/landing/features/img-2.png";
+import img3 from "../../../../../images/landing/features/img-3.png";
 import { Link } from '@inertiajs/react';
 
 const Features = () => {

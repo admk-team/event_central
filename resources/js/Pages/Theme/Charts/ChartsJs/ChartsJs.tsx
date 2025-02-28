@@ -1,6 +1,6 @@
 import React from 'react';
 import { Line, Bar, Pie, Doughnut, Radar, PolarArea} from "react-chartjs-2";
-import getChartColorsArray from "../../../../../../Components/Common/ChartsDynamicColor";
+import getChartColorsArray from "../../../../Components/Common/ChartsDynamicColor";
 import 'chart.js/auto';
 import { Chart ,CategoryScale } from 'chart.js';
 

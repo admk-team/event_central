@@ -1,10 +1,10 @@
 import React from "react";
 import { Row, Col, Card, Table, Container } from "react-bootstrap";
-import BreadCrumb from "../../../../Components/Common/BreadCrumb";
-import logoDark from "../../../../../../images/logo-dark.png";
-import logoLight from "../../../../../../images/logo-light.png";
+import BreadCrumb from "../../../Components/Common/BreadCrumb";
+import logoDark from "../../../../images/logo-dark.png";
+import logoLight from "../../../../images/logo-light.png";
 import { Head, Link } from "@inertiajs/react";
-import Layout from "../../../../Layouts";
+import Layout from "../../../Layouts/Theme";
 
 const InvoiceDetails = () => {
   //Print the Invoice

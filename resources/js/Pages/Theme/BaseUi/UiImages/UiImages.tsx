@@ -1,29 +1,29 @@
 import React from 'react';
 import { Card, Col, Container, Image, OverlayTrigger, Row, Tooltip, } from 'react-bootstrap';
-import PreviewCardHeader from '../../../../../../Components/Common/PreviewCardHeader';
+import PreviewCardHeader from '../../../../Components/Common/PreviewCardHeader';
 
 // Import Content
-import UiContent from '../../../../../../Components/Common/UiContent';
+import UiContent from '../../../../Components/Common/UiContent';
 //import Components
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 
 // Import Images
-import avatar2 from "../../../../../../../../images/users/avatar-2.jpg";
-import avatar3 from "../../../../../../../../images/users/avatar-3.jpg";
-import avatar4 from "../../../../../../../../images/users/avatar-4.jpg";
-import avatar5 from "../../../../../../../../images/users/avatar-5.jpg";
-import avatar8 from "../../../../../../../../images/users/avatar-8.jpg";
-import avatar10 from "../../../../../../../../images/users/avatar-10.jpg";
+import avatar2 from "../../../../../images/users/avatar-2.jpg";
+import avatar3 from "../../../../../images/users/avatar-3.jpg";
+import avatar4 from "../../../../../images/users/avatar-4.jpg";
+import avatar5 from "../../../../../images/users/avatar-5.jpg";
+import avatar8 from "../../../../../images/users/avatar-8.jpg";
+import avatar10 from "../../../../../images/users/avatar-10.jpg";
 
 
-import img2 from "../../../../../../../../images/small/img-2.jpg";
-import img3 from "../../../../../../../../images/small/img-3.jpg";
-import img4 from "../../../../../../../../images/small/img-4.jpg";
-import img5 from "../../../../../../../../images/small/img-5.jpg";
+import img2 from "../../../../../images/small/img-2.jpg";
+import img3 from "../../../../../images/small/img-3.jpg";
+import img4 from "../../../../../images/small/img-4.jpg";
+import img5 from "../../../../../images/small/img-5.jpg";
 
 import { ImgRoundedCircleExample, ImgThumbnailsExample, ImgSizesExample, AvatarExample, AvatarGroupExample, FiguresExample, ResponsiveExample } from './UiImagesCode';
 import { Head, Link } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 
 const UiImages = () => {

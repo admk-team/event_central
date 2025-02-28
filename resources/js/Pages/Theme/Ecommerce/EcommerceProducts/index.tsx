@@ -12,13 +12,13 @@ import {
 // RangeSlider
 import Nouislider from "nouislider-react";
 import "nouislider/distribute/nouislider.css";
-import DeleteModal from "../../../../../../Components/Common/DeleteModal";
+import DeleteModal from "../../../../Components/Common/DeleteModal";
 
-import BreadCrumb from "../../../../../../Components/Common/BreadCrumb";
-import TableContainer from "../../../../../../Components/Common/TableContainer";
+import BreadCrumb from "../../../../Components/Common/BreadCrumb";
+import TableContainer from "../../../../Components/Common/TableContainer";
 import { Rating, Published, Price } from "./EcommerceProductCol";
 //Import data
-import { productsData } from "../../../../../../common/data";
+import { productsData } from "../../../../common/data";
 
 import { isEmpty } from "lodash";
 import Select from "react-select";
@@ -27,9 +27,9 @@ import Select from "react-select";
 import { useSelector, useDispatch } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import { createSelector } from "reselect";
-import { onGetProducts, ondeleteProducts } from "../../../../../../slices/thunk";
+import { onGetProducts, ondeleteProducts } from "../../../../slices/thunk";
 import { Head, Link } from "@inertiajs/react";
-import Layout from "../../../../../../Layouts";
+import Layout from "../../../../Layouts/Theme";
 
 const SingleOptions = [
   { value: 'Watches', label: 'Watches' },

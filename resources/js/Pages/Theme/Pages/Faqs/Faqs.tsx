@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { Accordion, Card, Col, Container, Row } from 'react-bootstrap';
 
 // Import Images
-import faqImg from "../../../../../../../../images/faq-img.png";
+import faqImg from "../../../../../images/faq-img.png";
 import { Head } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 const Faqs = () => {
     return (

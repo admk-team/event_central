@@ -11,15 +11,15 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 
 // Import Images
-import imgpattern from "../../../../../../../../images/landing/img-pattern.png";
+import imgpattern from "../../../../../images/landing/img-pattern.png";
 
-import defaultDemo from "../../../../../../../../images/demos/default.png";
-import saasDemo from "../../../../../../../../images/demos/saas.png";
-import materialDemo from "../../../../../../../../images/demos/material.png";
-import minimalDemo from "../../../../../../../../images/demos/minimal.png";
-import creativeDemo from "../../../../../../../../images/demos/creative.png";
-import modernDemo from "../../../../../../../../images/demos/modern.png";
-import interactiveDemo from "../../../../../../../../images/demos/interactive.png";
+import defaultDemo from "../../../../../images/demos/default.png";
+import saasDemo from "../../../../../images/demos/saas.png";
+import materialDemo from "../../../../../images/demos/material.png";
+import minimalDemo from "../../../../../images/demos/minimal.png";
+import creativeDemo from "../../../../../images/demos/creative.png";
+import modernDemo from "../../../../../images/demos/modern.png";
+import interactiveDemo from "../../../../../images/demos/interactive.png";
 import { Link } from '@inertiajs/react';
 
 

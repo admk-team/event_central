@@ -1,15 +1,15 @@
 import React from 'react';
-import UiContent from "../../../../../../Components/Common/UiContent";
-import PreviewCardHeader from '../../../../../../Components/Common/PreviewCardHeader';
+import UiContent from "../../../../Components/Common/UiContent";
+import PreviewCardHeader from '../../../../Components/Common/PreviewCardHeader';
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 
 import {
     Checkbox, CustomCheckbox, Radio, CustomRadio, Switches, SwitchColor, CustomSwitches, InlineCheckboxRadio, WithoutLabels,
     RadioToggleButtons, OutlinedStyles
-} from '../../CheckboxAndRadio/CheckboxAndRadioCode';
+} from '../CheckboxAndRadio/CheckboxAndRadioCode';
 import { Head } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 
 const CheckBoxAndRadio = () => {
@@ -821,7 +821,7 @@ const CheckBoxAndRadio = () => {
                             <Card>
                                 <PreviewCardHeader title="Radio Toggle Buttons" />
                                 <Card.Body>
-                                    <p className="text-muted">Create button-like checkboxes and radio buttons by using <code>btn</code> styles rather than form-check-label class on the &lt;label&gt; elements. These toggle buttons can further be grouped in a <a href="https://getbootstrap.com/docs/5.1/components/button-group/">button group</a> if needed.</p>
+                                    <p className="text-muted">Create button-like checkboxes and radio buttons by using <code>btn</code> styles rather than form-check-label class on the &lt;label&gt; elements. These toggle buttons can further be grouped in a <a href="https://getbootstrap.com/docs/5.1/../Components/button-group/">button group</a> if needed.</p>
                                     <div className="live-preview">
                                         <div className="hstack gap-2 flex-wrap">
                                             <Form.Control type="radio" className="btn-check" name="options" id="option1" defaultChecked />

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import TableContainer from "../../../../../../Components/Common/TableContainerReactTable";
+import TableContainer from "../../../../Components/Common/TableContainerReactTable";
 import { Spinner } from 'react-bootstrap';
 import { Link } from '@inertiajs/react';
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Card, Table } from "react-bootstrap";
-import img3 from "../../../../../../../../../../images/companies/img-3.png";
+import img3 from "../../../../../../images/companies/img-3.png";
 import { Link } from "@inertiajs/react";
 
 const RightSection = () => {

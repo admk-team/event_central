@@ -3,7 +3,7 @@ import { Card, Col, Row, Dropdown } from 'react-bootstrap';
 import CountUp from "react-countup";
 
 // Import Images
-import Bgd from "../../../../../../images/bg-d.png";
+import Bgd from "../../../../images/bg-d.png";
 import { Link } from '@inertiajs/react';
 const Widgets = () => {
     return (

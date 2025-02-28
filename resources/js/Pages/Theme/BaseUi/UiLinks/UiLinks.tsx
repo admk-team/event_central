@@ -1,11 +1,11 @@
     import React from 'react'
-    import UiContent from '../../../../../../Components/Common/UiContent';
+    import UiContent from '../../../../Components/Common/UiContent';
     import { Card, Col, Container, Row } from 'react-bootstrap';
-    import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
-    import PreviewCardHeader from '../../../../../../Components/Common/PreviewCardHeader';
+    import BreadCrumb from '../../../../Components/Common/BreadCrumb';
+    import PreviewCardHeader from '../../../../Components/Common/PreviewCardHeader';
     import { ColorExample, DefaultLinkExample, OffsetExample, OpacityExample, OpacityHoverExample, UtilitiesExample, UtilityOpacityExample } from './UiLinkCode';
 import { Head, Link } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 const UiLink = () => {
     return (

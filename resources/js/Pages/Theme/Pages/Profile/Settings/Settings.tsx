@@ -3,10 +3,10 @@ import { Card, Col, Container, Form, Nav, Row, Tab, } from 'react-bootstrap';
 import Flatpickr from "react-flatpickr";
 
 //import images
-import progileBg from '../../../../../../../../../../images/profile-bg.jpg';
-import avatar1 from '../../../../../../../../../../images/users/avatar-1.jpg';
+import progileBg from '../../../../../../images/profile-bg.jpg';
+import avatar1 from '../../../../../../images/users/avatar-1.jpg';
 import { Head, Link } from '@inertiajs/react';
-import Layout from '../../../../../../../../Layouts';
+import Layout from '../../../../../Layouts/Theme';
 
 const Settings = () => {
     return (

@@ -3,9 +3,9 @@ import { Card, Col, Container, Row, Button, Form } from 'react-bootstrap';
 
 
 //import images
-import logoLight from "../../../../../../../../images/logo-light.png";
+import logoLight from "../../../../../images/logo-light.png";
 import { Head, Link } from '@inertiajs/react';
-import GuestLayout from '../../../../../../Layouts/GuestLayout';
+import GuestLayout from '../../../../Layouts/Theme/GuestLayout';
 
 
 const BasicSignIn = () => {

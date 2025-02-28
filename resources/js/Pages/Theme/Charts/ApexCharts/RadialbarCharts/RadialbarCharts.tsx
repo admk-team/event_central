@@ -2,10 +2,10 @@ import React from 'react';
 import ReactApexChart from "react-apexcharts";
 
 // Import Images
-import comingSoon from "../../../../../../../../../../images/comingsoon.png";
-import Img4 from "../../../../../../../../../../images/small/img-4.jpg";
+import comingSoon from "../../../../../../images/comingsoon.png";
+import Img4 from "../../../../../../images/small/img-4.jpg";
 
-import getChartColorsArray from "../../../../../../../../Components/Common/ChartsDynamicColor";
+import getChartColorsArray from "../../../../../Components/Common/ChartsDynamicColor";
 
 const SimpleRadialbar = ({ dataColors } : any) => {
     var chartRadialbarBasicColors = getChartColorsArray(dataColors);

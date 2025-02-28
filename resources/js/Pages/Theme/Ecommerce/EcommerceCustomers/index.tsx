@@ -18,23 +18,23 @@ import { useFormik } from "formik";
 
 
 //Import Breadcrumb
-import BreadCrumb from "../../../../../../Components/Common/BreadCrumb";
-import DeleteModal from "../../../../../../Components/Common/DeleteModal";
+import BreadCrumb from "../../../../Components/Common/BreadCrumb";
+import DeleteModal from "../../../../Components/Common/DeleteModal";
 
 //redux
 import { useSelector, useDispatch } from "react-redux";
-import TableContainer from "../../../../../../Components/Common/TableContainer";
+import TableContainer from "../../../../Components/Common/TableContainer";
 
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Loader from "../../../../../../Components/Common/Loader";
+import Loader from "../../../../Components/Common/Loader";
 
 // Export Modal
-import ExportCSVModal from "../../../../../../Components/Common/ExportCSVModal";
+import ExportCSVModal from "../../../../Components/Common/ExportCSVModal";
 import { createSelector } from "reselect";
 import { Head, Link } from "@inertiajs/react";
-import Layout from "../../../../../../Layouts";
-import { onAddNewCustomer, onDeleteCustomer, onGetCustomers, onUpdateCustomer } from "../../../../../../slices/thunk";
+import Layout from "../../../../Layouts/Theme";
+import { onAddNewCustomer, onDeleteCustomer, onGetCustomers, onUpdateCustomer } from "../../../../slices/thunk";
 
 const EcommerceCustomers = () => {
   const dispatch: any = useDispatch();

@@ -2,10 +2,10 @@ import React from 'react';
 import { Card, Col, Container, Row } from 'react-bootstrap';
 
 //import Components
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 
 import { HtmlHighlightExample, CssHighlightExample, JavaScriptExample } from './UiHighlightCode';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 import { Head } from '@inertiajs/react';
 
 

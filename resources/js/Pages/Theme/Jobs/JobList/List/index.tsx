@@ -1,13 +1,13 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Card, Col, Row } from "react-bootstrap";
-import { jobList } from "../../../../../../../../common/data/appsJobs";
-import BreadCrumb from "../../../../../../../../Components/Common/BreadCrumb";
-import img10 from "../../../../../../../../../../images/small/img-10.jpg";
-import img7 from "../../../../../../../../../../images/companies/img-7.png";
+import { jobList } from "../../../../../common/data/appsJobs";
+import BreadCrumb from "../../../../../Components/Common/BreadCrumb";
+import img10 from "../../../../../../images/small/img-10.jpg";
+import img7 from "../../../../../../images/companies/img-7.png";
 import AppSummaryChart from "./AppSummary";
 import { Head, Link } from "@inertiajs/react";
-import Layout from "../../../../../../../../Layouts";
-import Pagination from "../../../../../../../../Components/Common/Pagination";
+import Layout from "../../../../../Layouts/Theme";
+import Pagination from "../../../../../Components/Common/Pagination";
 
 
 const JobList = () => {

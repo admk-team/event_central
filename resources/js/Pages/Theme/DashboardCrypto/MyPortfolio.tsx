@@ -3,14 +3,14 @@ import { Card, Dropdown } from 'react-bootstrap';
 import { useSelector, useDispatch } from "react-redux";
 
 //import Images
-import btc from "../../../../../../images/svg/crypto-icons/btc.svg";
-import eth from "../../../../../../images/svg/crypto-icons/eth.svg";
-import ltc from "../../../../../../images/svg/crypto-icons/ltc.svg";
-import dash from "../../../../../../images/svg/crypto-icons/dash.svg";
+import btc from "../../../../images/svg/crypto-icons/btc.svg";
+import eth from "../../../../images/svg/crypto-icons/eth.svg";
+import ltc from "../../../../images/svg/crypto-icons/ltc.svg";
+import dash from "../../../../images/svg/crypto-icons/dash.svg";
 
 import { PortfolioCharts } from './DashboardCryptoCharts';
 import { createSelector } from 'reselect';
-import { ongetPortfolioChartsData } from '../../../../slices/dashboardCrypto/thunk';
+import { ongetPortfolioChartsData } from '../../../slices/dashboardCrypto/thunk';
 
 const MyPortfolio = () => {
     const dispatch: any = useDispatch();

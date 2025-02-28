@@ -5,7 +5,7 @@ import Section from './Section';
 import TicketDescription from './TicketDescription';
 import TicketDetails from './TicketDetails';
 import { Head } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 
 const TicketsDetails = () => {

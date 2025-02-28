@@ -13,13 +13,13 @@ import {
 } from "react-bootstrap";
 import Select from "react-select";
 import Flatpickr from "react-flatpickr";
-import DeleteModal from "../../../../../../Components/Common/DeleteModal";
+import DeleteModal from "../../../../Components/Common/DeleteModal";
 import classnames from "classnames";
 import moment from 'moment';
 
-import BreadCrumb from "../../../../../../Components/Common/BreadCrumb";
+import BreadCrumb from "../../../../Components/Common/BreadCrumb";
 import { useSelector, useDispatch } from "react-redux";
-import TableContainer from "../../../../../../Components/Common/TableContainer";
+import TableContainer from "../../../../Components/Common/TableContainer";
 import {
   AppId,
   Designation,
@@ -32,10 +32,10 @@ import { createSelector } from "reselect";
 // Formik
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import ExportCSVModal from "../../../../../../Components/Common/ExportCSVModal";
+import ExportCSVModal from "../../../../Components/Common/ExportCSVModal";
 import { Head } from "@inertiajs/react";
-import { onaddNewJobApplicationList, ondeleteJobApplicationList, ongetApplicationList, onupdateJobApplicationList } from "../../../../../../slices/jobs/thunk";
-import Layout from "../../../../../../Layouts";
+import { onaddNewJobApplicationList, ondeleteJobApplicationList, ongetApplicationList, onupdateJobApplicationList } from "../../../../slices/jobs/thunk";
+import Layout from "../../../../Layouts/Theme";
 import { ToastContainer } from "react-toastify";
 
 const Application = () => {

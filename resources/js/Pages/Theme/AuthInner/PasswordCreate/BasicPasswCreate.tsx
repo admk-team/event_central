@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Button, Card, Col, Container, Row, Form,} from 'react-bootstrap';
-import logoLight from "../../../../../../../../images/logo-light.png";
+import logoLight from "../../../../../images/logo-light.png";
 
 //formik
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import GuestLayout from '../../../../../../Layouts/GuestLayout';
+import GuestLayout from '../../../../Layouts/Theme/GuestLayout';
 import { Head, Link } from '@inertiajs/react';
 
 const BasicPasswCreate = () => {

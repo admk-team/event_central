@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
 import ReactApexChart from "react-apexcharts";
 
-import getChartColorsArray from "../../../../../../Components/Common/ChartsDynamicColor";
+import getChartColorsArray from "../../../../Components/Common/ChartsDynamicColor";
 
 const MarketGraph = ({ dataColors }:any) => {
     var MarketchartColors = getChartColorsArray(dataColors);

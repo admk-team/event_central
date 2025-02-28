@@ -3,7 +3,7 @@ import { Card, Col, Container, Modal, Row, Dropdown, Form, Button } from 'react-
 import SimpleBar from 'simplebar-react';
 import { ToastContainer } from 'react-toastify';
 import SimpleDonutCharts from './FileManagerCharts';
-import DeleteModal from '../../../../Components/Common/DeleteModal';
+import DeleteModal from '../../../Components/Common/DeleteModal';
 //redux
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -14,8 +14,8 @@ import * as  Yup from "yup";
 import { useFormik } from "formik";
 import { createSelector } from 'reselect';
 import { Head, Link } from '@inertiajs/react';
-import { onAddNewFile, onAddNewFolder, onDeleteFile, onDeleteFolder, onGetFiles, onGetFolders, onupdateFile, onupdateFolder } from '../../../../slices/thunk';
-import Layout from '../../../../Layouts';
+import { onAddNewFile, onAddNewFolder, onDeleteFile, onDeleteFolder, onGetFiles, onGetFolders, onupdateFile, onupdateFolder } from '../../../slices/thunk';
+import Layout from '../../../Layouts/Theme';
 
 
 const FileManager = () => {

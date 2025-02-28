@@ -1,6 +1,6 @@
 import React from 'react'
 
-import avatar1 from "../../../../../../images/users/avatar-1.jpg"
+import avatar1 from "../../../../images/users/avatar-1.jpg"
 import { DropdownItem, DropdownMenu, DropdownToggle, Dropdown } from 'react-bootstrap'
 import { DeviceCharts } from './DashboardBlogCharts'
 

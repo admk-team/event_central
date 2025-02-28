@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react';
 import { Container, Row } from 'react-bootstrap';
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 import AllOrders from './AllOrders';
 
 import { useSelector, useDispatch } from "react-redux";
 import { createSelector } from 'reselect';
 import { Head } from '@inertiajs/react';
-import { ongetOrderList } from '../../../../../../slices/thunk';
-import Layout from '../../../../../../Layouts';
+import { ongetOrderList } from '../../../../slices/thunk';
+import Layout from '../../../../Layouts/Theme';
 
 
 const CryproOrder = () => {

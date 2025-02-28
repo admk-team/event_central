@@ -2,15 +2,15 @@ import React from 'react';
 import { Card, Col, Row, Dropdown, Button } from 'react-bootstrap';
 
 //import images
-import avatar8 from "../../../../../../../../images/users/avatar-8.jpg";
-import avatar10 from "../../../../../../../../images/users/avatar-10.jpg";
-import avatar6 from "../../../../../../../../images/users/avatar-6.jpg";
-import avatar2 from "../../../../../../../../images/users/avatar-2.jpg";
-import avatar3 from "../../../../../../../../images/users/avatar-3.jpg";
-import avatar4 from "../../../../../../../../images/users/avatar-4.jpg";
-import avatar7 from "../../../../../../../../images/users/avatar-7.jpg";
-import image4 from "../../../../../../../../images/small/img-4.jpg";
-import image5 from "../../../../../../../../images/small/img-5.jpg";
+import avatar8 from "../../../../../images/users/avatar-8.jpg";
+import avatar10 from "../../../../../images/users/avatar-10.jpg";
+import avatar6 from "../../../../../images/users/avatar-6.jpg";
+import avatar2 from "../../../../../images/users/avatar-2.jpg";
+import avatar3 from "../../../../../images/users/avatar-3.jpg";
+import avatar4 from "../../../../../images/users/avatar-4.jpg";
+import avatar7 from "../../../../../images/users/avatar-7.jpg";
+import image4 from "../../../../../images/small/img-4.jpg";
+import image5 from "../../../../../images/small/img-5.jpg";
 
 //SimpleBar
 import SimpleBar from "simplebar-react";

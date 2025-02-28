@@ -2,9 +2,9 @@ import React from 'react';
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 
 //import images
-import avatar1 from "../../../../../../../../images/users/avatar-1.jpg";
+import avatar1 from "../../../../../images/users/avatar-1.jpg";
 
-import AuthSlider from '../../authCarousel';
+import AuthSlider from '../authCarousel';
 import { Head, Link } from '@inertiajs/react';
 
 const CoverLockScreen = () => {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Col, Dropdown } from 'react-bootstrap';
-import { dealsStatus } from "../../../../common/data";
+import { dealsStatus } from "../../../common/data";
 import { Link } from '@inertiajs/react';
 
 const DealsStatus = () => {

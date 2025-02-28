@@ -3,7 +3,7 @@ import { Card, Col, Dropdown } from 'react-bootstrap';
 import { useSelector, useDispatch } from "react-redux";
 import { DealTypeCharts } from "./DashboardCrmCharts";
 import { createSelector } from 'reselect';
-import { ongetDialChartsData } from '../../../../slices/thunk';
+import { ongetDialChartsData } from '../../../slices/thunk';
 
 
 const DealType = () => {

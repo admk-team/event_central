@@ -1,13 +1,13 @@
 import React from 'react';
 import { Card, Col, Container, Row } from 'react-bootstrap';
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 import {
     LineChart, StackedLineChart, AreaChart, StackedAreaChart, StepLineChart, LineYChart, BasicBarChart,
     BarLabelChart, HorizontalBarChart, StackedHorizontalBarChart, PieChart, DoughnutChart, BasicScatterChart,
     CandleStickChart, GraphChart, TreemapChart, SunburstChart, ParallelChart, SankeyChart, FunnelChart, GaugeChart, HeatmapChart
 } from './ECharts'
 import { Head } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 const Echarts = () => {
     return (

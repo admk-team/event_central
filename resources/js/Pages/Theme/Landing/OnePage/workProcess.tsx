@@ -2,7 +2,7 @@ import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 
 // Import Images
-import processArrow from "../../../../../../../../images/landing/process-arrow-img.png";
+import processArrow from "../../../../../images/landing/process-arrow-img.png";
 
 const WorkProcess = () => {
     return (

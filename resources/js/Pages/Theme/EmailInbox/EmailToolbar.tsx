@@ -7,7 +7,7 @@ import classnames from "classnames";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import FeatherIcon from 'feather-icons-react';
-import DeleteModal from '../../../../Components/Common/DeleteModal';
+import DeleteModal from '../../../Components/Common/DeleteModal';
 //SimpleBar
 import SimpleBar from "simplebar-react";
 
@@ -16,21 +16,21 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 import "react-perfect-scrollbar/dist/css/styles.css";
 
 // Import Images
-import avatar1 from "../../../../../../images/users/avatar-1.jpg";
+import avatar1 from "../../../../images/users/avatar-1.jpg";
 
-import img2 from "../../../../../../images/small/img-2.jpg";
-import img6 from "../../../../../../images/small/img-6.jpg";
+import img2 from "../../../../images/small/img-2.jpg";
+import img6 from "../../../../images/small/img-6.jpg";
 
-import image2 from "../../../../../../images/users/avatar-2.jpg";
-import image4 from "../../../../../../images/users/avatar-4.jpg";
-import image3 from "../../../../../../images/users/avatar-3.jpg";
-import image5 from "../../../../../../images/users/avatar-5.jpg";
+import image2 from "../../../../images/users/avatar-2.jpg";
+import image4 from "../../../../images/users/avatar-4.jpg";
+import image3 from "../../../../images/users/avatar-3.jpg";
+import image5 from "../../../../images/users/avatar-5.jpg";
 
 import { createSelector } from "reselect";
 
 //redux
 import { useSelector, useDispatch } from "react-redux";
-import { ondeleteMail, ongetMailDetails, onlabelMail, onstaredMail, ontrashMail, onunreadMail } from '../../../../slices/thunk';
+import { ondeleteMail, ongetMailDetails, onlabelMail, onstaredMail, ontrashMail, onunreadMail } from '../../../slices/thunk';
 import { Link } from '@inertiajs/react';
 import { ToastContainer, toast } from 'react-toastify';
 

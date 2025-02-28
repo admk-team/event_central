@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { Card, Col, Form, Row } from 'react-bootstrap';
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
-import PreviewCardHeader from '../../../../../../Components/Common/PreviewCardHeader';
-import UiContent from "../../../../../../Components/Common/UiContent";
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
+import PreviewCardHeader from '../../../../Components/Common/PreviewCardHeader';
+import UiContent from "../../../../Components/Common/UiContent";
 
-import { DefaultSelect, MenuSize, SelectSize } from '../../FormSelect/FormSelectCode';
+import { DefaultSelect, MenuSize, SelectSize } from '../FormSelect/FormSelectCode';
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
 import { Head } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 const animatedComponents = makeAnimated();
 
 const SingleOptions = [

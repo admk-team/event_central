@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, Col, Dropdown } from "react-bootstrap";
 import ReactApexChart from "react-apexcharts";
-import getChartColorsArray from "../../../../../../Components/Common/ChartsDynamicColor";
+import getChartColorsArray from "../../../../Components/Common/ChartsDynamicColor";
 
 const NatworkSummary = ({ dataColors }:any) => {
   var dealTypeChartsColors = getChartColorsArray(dataColors);

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 //Import Breadcrumb
-import BreadCrumb from "../../../../Components/Common/BreadCrumb";
+import BreadCrumb from "../../../Components/Common/BreadCrumb";
 
 import {
   Container,
@@ -15,9 +15,9 @@ import {
 } from "react-bootstrap";
 
 import Select from "react-select";
-import { orderSummary } from "../../../../common/data/ecommerce";
+import { orderSummary } from "../../../common/data/ecommerce";
 import { Head, Link } from "@inertiajs/react";
-import Layout from "../../../../Layouts";
+import Layout from "../../../Layouts/Theme";
 
 const EcommerceCheckout = () => {
   const [selectedCountry, setselectedCountry] = useState<any>(null);

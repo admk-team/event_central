@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import GuestLayout from '../../Layouts/GuestLayout';
+import GuestLayout from '../../Layouts/Theme/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { Alert, Button, Card, Col, Container, Form, Row} from 'react-bootstrap';
 import logoLight from '../../../images/logo-light.png'

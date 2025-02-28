@@ -1,10 +1,10 @@
 import React from 'react';
 import { Card, Col, Container, Row } from 'react-bootstrap';
 import { Head, Link } from '@inertiajs/react';
-import GuestLayout from '../../../../../../Layouts/GuestLayout';
+import GuestLayout from '../../../../Layouts/Theme/GuestLayout';
 
 //import images
-import logoLight from "../../../../../../../../images/logo-light.png";
+import logoLight from "../../../../../images/logo-light.png";
 
 const BasicLogout = () => {
     return (

@@ -12,30 +12,30 @@ import {
 import Select from "react-select";
 import Flatpickr from "react-flatpickr";
 import moment from 'moment';
-import BreadCrumb from "../../../../../../Components/Common/BreadCrumb";
+import BreadCrumb from "../../../../Components/Common/BreadCrumb";
 import { isEmpty } from "lodash";
 
 // Import Images
-import dummyImg from "../../../../../../../../images/users/user-dummy-img.jpg";
+import dummyImg from "../../../../../images/users/user-dummy-img.jpg";
 
 
 //redux
 import { useSelector, useDispatch } from "react-redux";
-import TableContainer from "../../../../../../Components/Common/TableContainer";
-import DeleteModal from "../../../../../../Components/Common/DeleteModal";
+import TableContainer from "../../../../Components/Common/TableContainer";
+import DeleteModal from "../../../../Components/Common/DeleteModal";
 import CrmFilter from "./CrmFilter";
 
 // Formik
 import * as Yup from "yup";
 import { useFormik } from "formik";
 
-import Loader from "../../../../../../Components/Common/Loader";
+import Loader from "../../../../Components/Common/Loader";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { createSelector } from "reselect";
-import Layout from "../../../../../../Layouts";
+import Layout from "../../../../Layouts/Theme";
 import { Head } from "@inertiajs/react";
-import { onAddNewLead, onDeleteLead, onGetLeads, onUpdateLead } from "../../../../../../slices/thunk";
+import { onAddNewLead, onDeleteLead, onGetLeads, onUpdateLead } from "../../../../slices/thunk";
 
 const CrmLeads = () => {
   const dispatch: any = useDispatch();

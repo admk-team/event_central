@@ -1,5 +1,5 @@
 import React from 'react';
-import { tasks } from "../../../../common/data";
+import { tasks } from "../../../common/data";
 import { Button, Card, Col, Dropdown } from 'react-bootstrap';
 
 //SimpleBar

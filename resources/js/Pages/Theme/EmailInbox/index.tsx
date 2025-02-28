@@ -2,7 +2,7 @@ import React from 'react';
 import { Container } from 'react-bootstrap';
 import EmailToolbar from './EmailToolbar';
 import { Head } from '@inertiajs/react';
-import Layout from '../../../../Layouts';
+import Layout from '../../../Layouts/Theme';
 
 const MailInbox = () => {
     return (

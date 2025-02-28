@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
-import { topartWork } from "../../../../common/data/index";
-import { featuredNFTData } from "../../../../common/data/dashboardNFT";
+import { topartWork } from "../../../common/data/index";
+import { featuredNFTData } from "../../../common/data/dashboardNFT";
 // Swiper
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";

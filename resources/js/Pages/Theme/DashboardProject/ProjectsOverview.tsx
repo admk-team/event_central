@@ -4,7 +4,7 @@ import CountUp from "react-countup";
 import { useSelector, useDispatch } from "react-redux";
 import { ProjectsOverviewCharts } from './DashboardProjectCharts';
 import { createSelector } from 'reselect';
-import { ongetProjectChartsData } from '../../../../slices/dashboardProject/thunk';
+import { ongetProjectChartsData } from '../../../slices/dashboardProject/thunk';
 
 const ProjectsOverview = () => {
     const dispatch : any= useDispatch();

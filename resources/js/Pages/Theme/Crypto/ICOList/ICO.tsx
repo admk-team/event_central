@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
-import { icoWidgetsList } from '../../../../../../common/data';
+import { icoWidgetsList } from '../../../../common/data';
 //Import Flatepicker
 import Flatpickr from "react-flatpickr";
 import { Link } from '@inertiajs/react';

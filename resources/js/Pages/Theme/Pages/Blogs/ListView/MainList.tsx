@@ -1,6 +1,6 @@
 import { Link } from '@inertiajs/react'
-import { listData } from '../../../../../../../../common/data'
-import Pagination from '../../../../../../../../Components/Common/Pagination'
+import { listData } from '../../../../../common/data'
+import Pagination from '../../../../../Components/Common/Pagination'
 import React, { useMemo, useState } from 'react'
 import { Card, CardBody, Col, Row } from 'react-bootstrap'
 

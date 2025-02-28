@@ -2,9 +2,9 @@ import React from "react";
 import { Carousel, Image } from "react-bootstrap";
 
 // Carousel images
-import img7 from "../../../../../../../../../../images/small/img-7.jpg";
-import img2 from "../../../../../../../../../../images/small/img-2.jpg";
-import img9 from "../../../../../../../../../../images/small/img-9.jpg";
+import img7 from "../../../../../../images/small/img-7.jpg";
+import img2 from "../../../../../../images/small/img-2.jpg";
+import img9 from "../../../../../../images/small/img-9.jpg";
 
 const Slidewithcaption = () => {
   return (

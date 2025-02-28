@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Col, Dropdown } from 'react-bootstrap';
-import { currencies } from '../../../../common/data';
+import { currencies } from '../../../common/data';
 import { Link } from '@inertiajs/react';
 
 const MyCurrencies = () => {

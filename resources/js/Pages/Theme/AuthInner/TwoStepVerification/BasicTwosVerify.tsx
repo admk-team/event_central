@@ -2,9 +2,9 @@ import React from 'react';
 import { Button, Card, Col, Container, Row, } from 'react-bootstrap';
 
 //import images
-import logoLight from "../../../../../../../../images/logo-light.png";
+import logoLight from "../../../../../images/logo-light.png";
 import { Head, Link } from '@inertiajs/react';
-import GuestLayout from '../../../../../../Layouts/GuestLayout';
+import GuestLayout from '../../../../Layouts/Theme/GuestLayout';
 
 const BasicTwosVerify = () => {
 

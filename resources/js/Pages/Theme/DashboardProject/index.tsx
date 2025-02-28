@@ -1,6 +1,6 @@
 import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
-import BreadCrumb from '../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import ActiveProjects from './ActiveProjects';
 import Chat from './Chat';
 import MyTasks from './MyTasks';
@@ -10,7 +10,7 @@ import TeamMembers from './TeamMembers';
 import UpcomingSchedules from './UpcomingSchedules';
 import Widgets from './Widgets';
 import { Head } from '@inertiajs/react';
-import Layout from '../../../../Layouts';
+import Layout from '../../../Layouts/Theme';
 
 
 const DashboardProject = () => {

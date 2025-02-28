@@ -1,11 +1,11 @@
-import BreadCrumb from '../../../../Components/Common/BreadCrumb'
+import BreadCrumb from '../../../Components/Common/BreadCrumb'
 import React from 'react'
 import { Container, Row } from 'react-bootstrap'
 import Widget from './Widget'
 import RecentComment from './RecentComment'
 import Device from './Device'
 import RecentArticleTable from './RecentArticleTable'
-import Layout from '../../../../Layouts'
+import Layout from '../../../Layouts/Theme'
 
 const DashboardBlog = () => {
 

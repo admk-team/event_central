@@ -2,20 +2,20 @@ import React, { useState } from 'react';
 import { Alert, Button, Card, Col, Container, Modal, Row, Popover, Tooltip, Form, OverlayTrigger } from 'react-bootstrap';
 
 // Import Content
-import UiContent from '../../../../../../Components/Common/UiContent';
+import UiContent from '../../../../Components/Common/UiContent';
 //import Components
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
-import PreviewCardHeader from '../../../../../../Components/Common/PreviewCardHeader';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
+import PreviewCardHeader from '../../../../Components/Common/PreviewCardHeader';
 import { DefaultModalExample, CenteredModalExample, GridsModalExample, StaticBackdropModalExample, TooltipModalExample, ScrollableModalExample, VaryingModalExample, OptionalModalExample, FullscreenResponsiveExample, AnimationModalExample, PositionModalExample, TogglebetweenExample } from './UiModalCode';
 
 // Import Images
-import loginImg from "../../../../../../../../images/modals/login.png";
-import signupImg from "../../../../../../../../images/modals/signup.png";
-import subscribeImg from "../../../../../../../../images/modals/subscribe.png";
-import paymentImg from "../../../../../../../../images/modals/success-payment.png";
-import authbg from "../../../../../../../../images/auth-one-bg.jpg";
+import loginImg from "../../../../../images/modals/login.png";
+import signupImg from "../../../../../images/modals/signup.png";
+import subscribeImg from "../../../../../images/modals/subscribe.png";
+import paymentImg from "../../../../../images/modals/success-payment.png";
+import authbg from "../../../../../images/auth-one-bg.jpg";
 import { Head, Link } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 
 

@@ -5,7 +5,7 @@ import { Button, Row } from "react-bootstrap";
 const Pagination = ({ links }: any) => {
     return (
         <React.Fragment>
-            <Row className="g-0 justify-content-end mb-4">
+            <Row className="g-0 justify-content-end">
                 <div className="col-sm-auto">
                     <ul className="pagination-block pagination pagination-separated justify-content-center justify-content-sm-end mb-sm-0">
                         {links.map((item: any, index: number) => (
@@ -21,17 +21,21 @@ const Pagination = ({ links }: any) => {
                                 </React.Fragment>
                             ) : (
                                 index === 0 ? (
-                                    <Link href={item.url} key={index}>
-                                        <Button variant="link" className="page-item pagination-prev">
-                                            Previous
-                                        </Button>
-                                    </Link>
+                                    <li key={index} className="page-item">
+                                        <Link href={item.url}>
+                                            <Button variant="link" className="page-link pagination-prev">
+                                                Previous
+                                            </Button>
+                                        </Link>
+                                    </li>
                                 ) : (
-                                    <Link href={item.url} key={index}>
-                                        <Button variant="link" className="page-item pagination-next">
-                                            Next
-                                        </Button>
-                                    </Link>
+                                    <li key={index} className="page-item">
+                                        <Link href={item.url}>
+                                            <Button variant="link" className="page-link pagination-next">
+                                                Next
+                                            </Button>
+                                        </Link>
+                                    </li>
                                 )
                             )
                         ))}

@@ -9,10 +9,10 @@ import {
   OverlayTrigger,
 } from "react-bootstrap";
 
-import Avatar3 from "../../../../../../../../images/users/avatar-3.jpg";
-import Avatar9 from "../../../../../../../../images/users/avatar-9.jpg";
-import Avatar10 from "../../../../../../../../images/users/avatar-10.jpg";
-import JobProfile2 from "../../../../../../../../images/job-profile2.png";
+import Avatar3 from "../../../../../images/users/avatar-3.jpg";
+import Avatar9 from "../../../../../images/users/avatar-9.jpg";
+import Avatar10 from "../../../../../images/users/avatar-10.jpg";
+import JobProfile2 from "../../../../../images/job-profile2.png";
 import { Link } from "@inertiajs/react";
 
 const Home = () => {

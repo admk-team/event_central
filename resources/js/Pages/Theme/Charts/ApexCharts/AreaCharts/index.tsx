@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Col, Container, Row } from 'react-bootstrap';
-import BreadCrumb from '../../../../../../../../Components/Common/BreadCrumb';
-import user from "../../../../../../../../../../images/users/avatar-2.jpg";
+import BreadCrumb from '../../../../../Components/Common/BreadCrumb';
+import user from "../../../../../../images/users/avatar-2.jpg";
 
 import {
     BasicAreaCharts,
@@ -15,7 +15,7 @@ import {
     AreaNullValueChart
 } from "./AreaCharts";
 import { Head, Link } from '@inertiajs/react';
-import Layout from '../../../../../../../../Layouts';
+import Layout from '../../../../../Layouts/Theme';
 
 
 const AreaCharts = () => {

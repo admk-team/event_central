@@ -1,4 +1,4 @@
-import { comments } from '../../../../common/data'
+import { comments } from '../../../common/data'
 import React from 'react'
 import SimpleBar from 'simplebar-react'
 

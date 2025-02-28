@@ -4,8 +4,8 @@ import SimpleBar from 'simplebar-react';
 import Flatpickr from "react-flatpickr";
 // import Dragula from 'react-dragula';
 import { ToastContainer } from 'react-toastify';
-import taskImg from "../../../../../../images/task.png";
-import DeleteModal from '../../../../Components/Common/DeleteModal';
+import taskImg from "../../../../images/task.png";
+import DeleteModal from '../../../Components/Common/DeleteModal';
 
 //redux
 import { useSelector, useDispatch } from 'react-redux';
@@ -15,22 +15,22 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 
 // Import Images
-import avatar1 from "../../../../../../images/users/avatar-1.jpg";
-import avatar2 from "../../../../../../images/users/avatar-2.jpg";
-import avatar3 from "../../../../../../images/users/avatar-3.jpg";
-import avatar4 from "../../../../../../images/users/avatar-4.jpg";
-import avatar5 from "../../../../../../images/users/avatar-5.jpg";
-import avatar6 from "../../../../../../images/users/avatar-6.jpg";
-import avatar7 from "../../../../../../images/users/avatar-7.jpg";
-import avatar8 from "../../../../../../images/users/avatar-8.jpg";
-import avatar9 from "../../../../../../images/users/avatar-9.jpg";
-import avatar10 from "../../../../../../images/users/avatar-10.jpg";
+import avatar1 from "../../../../images/users/avatar-1.jpg";
+import avatar2 from "../../../../images/users/avatar-2.jpg";
+import avatar3 from "../../../../images/users/avatar-3.jpg";
+import avatar4 from "../../../../images/users/avatar-4.jpg";
+import avatar5 from "../../../../images/users/avatar-5.jpg";
+import avatar6 from "../../../../images/users/avatar-6.jpg";
+import avatar7 from "../../../../images/users/avatar-7.jpg";
+import avatar8 from "../../../../images/users/avatar-8.jpg";
+import avatar9 from "../../../../images/users/avatar-9.jpg";
+import avatar10 from "../../../../images/users/avatar-10.jpg";
 
 //import action
 
 import { Head, Link } from '@inertiajs/react';
-import { GetData, onAddNewProject, onAddNewTodo, onDeleteTodo, onGetProjects, onupdateTodo } from '../../../../slices/thunk';
-import Layout from '../../../../Layouts';
+import { GetData, onAddNewProject, onAddNewTodo, onDeleteTodo, onGetProjects, onupdateTodo } from '../../../slices/thunk';
+import Layout from '../../../Layouts/Theme';
 
 import { createSelector } from 'reselect';
 

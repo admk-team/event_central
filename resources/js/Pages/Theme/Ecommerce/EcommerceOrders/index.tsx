@@ -10,21 +10,21 @@ import {
   Tab,
   Button,
 } from "react-bootstrap";
-import BreadCrumb from "../../../../../../Components/Common/BreadCrumb";
-import TableContainer from "../../../../../../Components/Common/TableContainer";
-import DeleteModal from "../../../../../../Components/Common/DeleteModal";
+import BreadCrumb from "../../../../Components/Common/BreadCrumb";
+import TableContainer from "../../../../Components/Common/TableContainer";
+import DeleteModal from "../../../../Components/Common/DeleteModal";
 import { isEmpty } from "lodash";
 // Export Modal
-import ExportCSVModal from "../../../../../../Components/Common/ExportCSVModal";
+import ExportCSVModal from "../../../../Components/Common/ExportCSVModal";
 import classnames from "classnames";
 import 'react-toastify/dist/ReactToastify.css';
 //redux
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Head, Link, usePage } from "@inertiajs/react";
-import Layout from "../../../../../../Layouts";
+import Layout from "../../../../Layouts/Theme";
 import { useForm } from '@inertiajs/react'
-import { orders } from "../../../../../../common/data";
+import { orders } from "../../../../common/data";
 
 const EcommerceOrders = (props: any) => {
   const [modal, setModal] = useState<boolean>(false);

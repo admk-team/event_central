@@ -1,10 +1,10 @@
 import React from 'react'
 import { Col, Container, Form, InputGroup, Row } from 'react-bootstrap'
 import Countdown from "react-countdown"
-import GuestLayout from '../../../../../../Layouts/GuestLayout';
+import GuestLayout from '../../../../Layouts/Theme/GuestLayout';
 
 //import images
-import comingsoon from '../../../../../../../../images/comingsoon.png';
+import comingsoon from '../../../../../images/comingsoon.png';
 import { Head } from '@inertiajs/react';
 
 const ComingSoon = () => {

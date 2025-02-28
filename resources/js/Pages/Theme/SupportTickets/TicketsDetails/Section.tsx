@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Col, Row, Dropdown } from 'react-bootstrap';
-import img from "../../../../../../../../images/companies/img-4.png";
+import img from "../../../../../images/companies/img-4.png";
 
 const Section = () => {
     return (

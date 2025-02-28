@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import BreadCrumb from "../../../../../../Components/Common/BreadCrumb";
+import BreadCrumb from "../../../../Components/Common/BreadCrumb";
 import {
   Card,
   Col,
@@ -32,8 +32,8 @@ import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orien
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import { Head, Link } from "@inertiajs/react";
-import { onAddNewProduct } from "../../../../../../slices/thunk";
-import Layout from "../../../../../../Layouts";
+import { onAddNewProduct } from "../../../../slices/thunk";
+import Layout from "../../../../Layouts/Theme";
 
 // Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);

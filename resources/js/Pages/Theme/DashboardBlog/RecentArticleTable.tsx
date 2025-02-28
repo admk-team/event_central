@@ -1,6 +1,6 @@
 import { Link } from '@inertiajs/react';
-import { recentTable } from '../../../../common/data';
-import TableContainer from '../../../../Components/Common/TableContainer'
+import { recentTable } from '../../../common/data';
+import TableContainer from '../../../Components/Common/TableContainer'
 import React, { useMemo } from 'react'
 import { DropdownItem, DropdownMenu, DropdownToggle, Dropdown } from 'react-bootstrap'
 

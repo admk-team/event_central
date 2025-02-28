@@ -1,6 +1,6 @@
 import { Head, Link } from "@inertiajs/react";
 import { Card, Col, Container, Row } from "react-bootstrap";
-import AuthSlider from "../../authCarousel";
+import AuthSlider from "../authCarousel";
 import React from "react";
 
 export default function CoverSuccessMsg() {

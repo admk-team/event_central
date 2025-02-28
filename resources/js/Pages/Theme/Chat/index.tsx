@@ -20,21 +20,21 @@ import EmojiPicker from 'emoji-picker-react';
 import FeatherIcon from "feather-icons-react";
 import PersonalInfo from "./PersonalInfo";
 
-import { chatContactData } from "../../../../common/data";
+import { chatContactData } from "../../../common/data";
 
 //redux
 import { useSelector, useDispatch } from "react-redux";
 
-import avatar2 from "../../../../../../images/users/avatar-2.jpg";
-import userDummayImage from "../../../../../../images/users/user-dummy-img.jpg";
+import avatar2 from "../../../../images/users/avatar-2.jpg";
+import userDummayImage from "../../../../images/users/user-dummy-img.jpg";
 
 //Import Scrollbar
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { createSelector } from "reselect";
-import Spinners from "../../../../Components/Common/Spinner";
+import Spinners from "../../../Components/Common/Spinner";
 import { Head, Link } from "@inertiajs/react";
-import Layout from "../../../../Layouts";
-import { onAddMessage, onDeleteMessage, onGetDirectContact, onGetMessages } from "../../../../slices/thunk";
+import Layout from "../../../Layouts/Theme";
+import { onAddMessage, onDeleteMessage, onGetDirectContact, onGetMessages } from "../../../slices/thunk";
 interface DirectContact {
   id: number,
   roomId: number,

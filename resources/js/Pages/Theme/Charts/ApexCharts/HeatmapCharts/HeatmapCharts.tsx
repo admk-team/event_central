@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactApexChart from "react-apexcharts";
 
-import getChartColorsArray from "../../../../../../../../Components/Common/ChartsDynamicColor";
+import getChartColorsArray from "../../../../../Components/Common/ChartsDynamicColor";
 
 function generateData(count : any, yrange : any) {
     var i = 0;

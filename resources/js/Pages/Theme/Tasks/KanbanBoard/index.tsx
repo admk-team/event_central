@@ -1,9 +1,9 @@
 import React from 'react'
 import { Container } from 'react-bootstrap'
 import TasksKanban from './MainPage'
-import BreadCrumb from '../../../../../../Components/Common/BreadCrumb';
+import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 import { Head } from '@inertiajs/react';
-import Layout from '../../../../../../Layouts';
+import Layout from '../../../../Layouts/Theme';
 
 
 

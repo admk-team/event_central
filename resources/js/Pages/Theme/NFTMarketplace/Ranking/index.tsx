@@ -1,11 +1,11 @@
 import React, { useMemo } from "react";
 import { Container } from "react-bootstrap";
-import BreadCrumb from "../../../../../../Components/Common/BreadCrumb";
-import TableContainer from "../../../../../../Components/Common/TableContainer";
+import BreadCrumb from "../../../../Components/Common/BreadCrumb";
+import TableContainer from "../../../../Components/Common/TableContainer";
 
-import { NFTRanking } from "../../../../../../common/data";
+import { NFTRanking } from "../../../../common/data";
 import { Head, Link } from "@inertiajs/react";
-import Layout from "../../../../../../Layouts";
+import Layout from "../../../../Layouts/Theme";
 
 const Ranking = () => {
 

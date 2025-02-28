@@ -1,6 +1,6 @@
 import { Head, Link } from '@inertiajs/react';
-import GuestLayout from '../../../../../../Layouts/GuestLayout';
-import error400cover from '../../../../../../../../images/error400-cover.png'
+import GuestLayout from '../../../../Layouts/Theme/GuestLayout';
+import error400cover from '../../../../../images/error400-cover.png'
 import { Col, Container, Row } from 'react-bootstrap';
 import React from 'react';
 

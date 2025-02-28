@@ -2,16 +2,16 @@ import React from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
 
 //import images
-import avatar1 from "../../../../../../../../images/users/avatar-1.jpg";
-import avatar4 from "../../../../../../../../images/users/avatar-4.jpg";
-import avatar3 from "../../../../../../../../images/users/avatar-3.jpg";
-import avatar2 from "../../../../../../../../images/users/avatar-2.jpg";
-import avatar6 from "../../../../../../../../images/users/avatar-6.jpg";
-import avatar7 from "../../../../../../../../images/users/avatar-7.jpg";
-import avatar8 from "../../../../../../../../images/users/avatar-8.jpg";
-import image2 from "../../../../../../../../images/small/img-2.jpg";
-import image3 from "../../../../../../../../images/small/img-3.jpg";
-import image4 from "../../../../../../../../images/small/img-4.jpg";
+import avatar1 from "../../../../../images/users/avatar-1.jpg";
+import avatar4 from "../../../../../images/users/avatar-4.jpg";
+import avatar3 from "../../../../../images/users/avatar-3.jpg";
+import avatar2 from "../../../../../images/users/avatar-2.jpg";
+import avatar6 from "../../../../../images/users/avatar-6.jpg";
+import avatar7 from "../../../../../images/users/avatar-7.jpg";
+import avatar8 from "../../../../../images/users/avatar-8.jpg";
+import image2 from "../../../../../images/small/img-2.jpg";
+import image3 from "../../../../../images/small/img-3.jpg";
+import image4 from "../../../../../images/small/img-4.jpg";
 import { Link } from '@inertiajs/react';
 
 const ActivitiesTab = () => {

@@ -2,7 +2,7 @@ import React from 'react';
 import { Card } from 'react-bootstrap';
 import ReactApexChart from "react-apexcharts";
 
-import getChartColorsArray from "../../../../../../Components/Common/ChartsDynamicColor";
+import getChartColorsArray from "../../../../Components/Common/ChartsDynamicColor";
 
 const PortfolioStatistics = ({ dataColors }:any) => {
   var portfolioStatisticsColors = getChartColorsArray(dataColors);

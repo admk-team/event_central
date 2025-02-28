@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Row } from "react-bootstrap";
-import BreadCrumb from "../../../../Components/Common/BreadCrumb";
-import SalesByLocations from "../../DashboardEcommerce/SalesByLocations";
+import BreadCrumb from "../../../Components/Common/BreadCrumb";
+import SalesByLocations from "../DashboardEcommerce/SalesByLocations";
 import ApplicationsStatistic from "./ApplicationsStatistic";
 import Candidates from "./Candidates";
 import FeaturedCompanies from "./FeaturedCompanies";
@@ -9,7 +9,7 @@ import RecentApplicants from "./RecentApplicants";
 import RecomendedJobs from "./RecomendedJobs";
 import Widgets from "./Widgets";
 import { Head } from "@inertiajs/react";
-import Layout from "../../../../Layouts";
+import Layout from "../../../Layouts/Theme";
 
 const DashboardJobs = () => {
 
