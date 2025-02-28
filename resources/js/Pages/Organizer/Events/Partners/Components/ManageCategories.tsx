@@ -12,7 +12,11 @@ function ManageCategories({ manageCategoriesModal, showModal, partnerCategories 
     const [isEditing, setIsEditing] = useState(false);
     const [selectedCategory, setSelectedCategory]: any = useState(null);
 
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm<{
+        name:string;
+        _method:string;
+        order?:string
+    }>({
         name: "",
         order: "",
         _method: "POST", // Default to POST for create

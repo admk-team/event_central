@@ -4,21 +4,19 @@ import Layout from '../../../../Layouts/Organizer/Event';
 import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 import React, { useState } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
-import CreateEditModal from './CreateEditModal';
+import CreateEditModal from './Components/CreateEditModal';
 import Platform from './Components/Platform';
 import CreateEditPlatformModal from './Components/CreateOrEditPlatformModal';
-import Schedule from './Components/Schedul';
-function Index({ schedules, speakers, platforms, event_platforms }: any) {
-    console.log('schedul', event_platforms);
+
+
+function Index({ event_sessions, speakers, platforms, event_platforms }: any) {
+    console.log('EventSession', event_platforms);
 
     const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
     const [showCreateEditPlatformModal, _setShowCreateEditPlatformModal] = React.useState(false);
     const [editSchedule, setEditSchedul] = React.useState<any>(null);
     const [editStage, setEditStage] = React.useState<any>(null);
 
-    const [deleteschedule, setDeleteSchedule] = React.useState<any>(null);
-    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-    const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
 
     const setShowCreateEditModal = (state: boolean) => {
         _setShowCreateEditModal(state);
@@ -31,38 +29,6 @@ function Index({ schedules, speakers, platforms, event_platforms }: any) {
         if (state === false) {
             setEditStage(null);
         }
-    }
-
-    const deleteForm = useForm({
-        _method: 'DELETE'
-    });
-    const deleteManyForm = useForm<{ _method: string; ids: number[] }>({
-        _method: 'DELETE',
-        ids: [],
-    });
-    const editAction = (schedule: any) => {
-        setEditSchedul(schedule);
-        setShowCreateEditModal(true);
-    }
-
-    const deleteAction = (schedule: any) => {
-        setDeleteSchedule(schedule);
-        setShowDeleteConfirmation(true);
-        console.log('delete ids', schedule);
-    }
-    const handleDelete = () => {
-
-        deleteForm.post(route('organizer.events.schedule.destroy', deleteschedule.id));
-
-        setShowDeleteConfirmation(false);
-    }
-    const deleteManyAction = (ids: number[]) => {
-        deleteManyForm.setData(data => ({ ...data, ids: ids }));
-        setShowDeleteManyConfirmation(true);
-    }
-    const handleDeleteMany = () => {
-        deleteManyForm.delete(route('organizer.events.schedule.destroy.many'));
-        setShowDeleteManyConfirmation(false);
     }
     return (
         <React.Fragment>
@@ -94,27 +60,19 @@ function Index({ schedules, speakers, platforms, event_platforms }: any) {
                         </Col>
                     </Row>
                     {/* <ScheduleHeader platforms={platforms} event_platforms={event_platforms} /> */}
-                    <Platform platforms={platforms} event_platforms={event_platforms} />
-                
-            <Schedule/>
+                    <Platform platforms={platforms} event_platforms={event_platforms} speakers={speakers} event_sessions={event_sessions} />
+
                 </Container>
             </div>
 
-            {showCreateEditModal && (
-                <CreateEditModal
-                    show={showCreateEditModal}
-                    hide={() => setShowCreateEditModal(false)}
-                    onHide={() => setShowCreateEditModal(false)}
-                    schedule={editSchedule}
-                    speakers={speakers}
-                />
-            )}
+         
             {showCreateEditPlatformModal && (
                 <CreateEditPlatformModal
                     show={showCreateEditPlatformModal}
                     hide={() => setShowCreateEditPlatformModal(false)}
                     onHide={() => setShowCreateEditPlatformModal(false)}
                     platforms={platforms}
+                    event_platforms={null}
                 />
             )}
         </React.Fragment>
