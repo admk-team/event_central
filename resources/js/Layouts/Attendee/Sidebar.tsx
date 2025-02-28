@@ -14,7 +14,7 @@ import { Link, usePage } from '@inertiajs/react';
 
 
 const Sidebar = ({ layoutType }: any) => {
-    const eventApp = usePage().props.eventApp;
+    const eventApp: any = usePage().props.eventApp;
     useEffect(() => {
         var verticalOverlay = document.getElementsByClassName("vertical-overlay");
         if (verticalOverlay) {

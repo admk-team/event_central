@@ -33,20 +33,18 @@ class RegisteredUserController extends Controller
     public function store(Request $request, EventApp $eventApp): RedirectResponse
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:' . Attendee::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $user = Attendee::create([
             'event_app_id' => $eventApp->id,
-            'event_pass' => 6,     // Todo : Required to be changed after discussion with team
-            'name' => $request->name,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'avatar' => 'test',      // Need to be nullable ->Required to be changed after discussion with team
-            'phone' => 'test',      // Need to be nullable ->Required to be changed after discussion with team
-            'qr_code' => 'test',      // Need to be nullable ->Required to be changed after discussion with team
         ]);
 
         event(new Registered($user));

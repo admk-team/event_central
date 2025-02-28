@@ -9,14 +9,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { createSelector } from "@reduxjs/toolkit";
 import { Dropdown, Form } from "react-bootstrap";
 import { changeSidebarVisibility } from "../../slices/thunk";
-import SearchOption from "../../Components/Common/SearchOption";
-import LanguageDropdown from "../../Components/Common/LanguageDropdown";
-import WebAppsDropdown from "../../Components/Common/WebAppsDropdown";
-import MyCartDropdown from "../../Components/Common/MyCartDropdown";
-import FullScreenDropdown from "../../Components/Common/FullScreenDropdown";
+// import SearchOption from "../../Components/Common/SearchOption";
+// import LanguageDropdown from "../../Components/Common/LanguageDropdown";
+// import WebAppsDropdown from "../../Components/Common/WebAppsDropdown";
+// import MyCartDropdown from "../../Components/Common/MyCartDropdown";
+// import FullScreenDropdown from "../../Components/Common/FullScreenDropdown";
 import AttendeeProfileDropdown from "../../Components/Common/AttendeeProfileDropdown";
-import LightDark from "../../Components/Common/LightDark";
-import NotificationDropdown from "../../Components/Common/NotificationDropdown";
+// import LightDark from "../../Components/Common/LightDark";
+// import NotificationDropdown from "../../Components/Common/NotificationDropdown";
 
 const HeaderAttendee = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
     const dispatch: any = useDispatch();
@@ -107,7 +107,7 @@ const HeaderAttendee = ({ onChangeLayoutMode, layoutModeType, headerClass }: any
                         </div>
 
                         <div className="d-flex align-items-center">
-                            <Dropdown show={search} onClick={toogleSearch} className="d-md-none topbar-head-dropdown header-item">
+                            {/* <Dropdown show={search} onClick={toogleSearch} className="d-md-none topbar-head-dropdown header-item">
                                 <Dropdown.Toggle type="button" as="button" className="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle">
                                     <i className="bx bx-search fs-22"></i>
                                 </Dropdown.Toggle>
@@ -123,7 +123,7 @@ const HeaderAttendee = ({ onChangeLayoutMode, layoutModeType, headerClass }: any
                                         </div>
                                     </Form>
                                 </Dropdown.Menu>
-                            </Dropdown>
+                            </Dropdown> */}
                             {/* ProfileDropdown */}
                             <AttendeeProfileDropdown />
                         </div>
