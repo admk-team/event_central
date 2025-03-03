@@ -6,10 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class EventApp extends Model
 {
-    use HasFactory;
+    use HasFactory, HasUuids;
 
     protected $fillable = [
         'organizer_id',
@@ -29,6 +30,11 @@ class EventApp extends Model
         'created_at' => 'created_at_date',
         'logo' => 'logo_img'
     ];
+
+    public function uniqueIds(): array
+    {
+        return ['uuid'];
+    }
 
     // Relationship with Registration Page
     public function registrationPage()

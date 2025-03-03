@@ -13,8 +13,11 @@ class WebsiteSettingsController extends Controller
 {
     public function index(): Response
     {
+        $currentEvent = EventApp::find(session('event_id'));
+
         return Inertia::render("Organizer/Events/Settings/Website/Index", [
             'websiteStatus' => eventSettings()->getValue('website_status', false),
+            'url' => route('organizer.events.website', $currentEvent->uuid),
             'pages' => $this->datatable(Page::where('event_app_id', session('event_id'))),
         ]);
     }

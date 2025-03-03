@@ -1,4 +1,4 @@
-import Layout from "../../../../Layouts/Organizer/Event";
+import Layout from "../../../../Layouts/Event";
 
 function Index() {
     return (

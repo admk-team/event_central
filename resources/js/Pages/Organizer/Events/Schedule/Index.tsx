@@ -1,6 +1,6 @@
 
 import { Button, Col, Container, Dropdown, Row } from 'react-bootstrap';
-import Layout from '../../../../Layouts/Organizer/Event';
+import Layout from '../../../../Layouts/Event';
 import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 import React, { useState } from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';

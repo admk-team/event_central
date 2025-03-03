@@ -1,20 +1,18 @@
 import React from 'react';
 import { Col, Container, Row, Card, CardBody, ListGroup, Dropdown, DropdownButton, ButtonGroup } from 'react-bootstrap';
 
-//import Components
-// import BreadCrumb from '../../Components/Common/BreadCrumb';
-import { Head } from '@inertiajs/react';
+
+import { Head, Link } from '@inertiajs/react';
 import Layout from '../../Layouts/Attendee';
-// import attendeeEventBg from '../../../images/attendee-bg.jpg';
-// import defaultEventImage from '../../../images/default-event-image.png';
+
 import moment from 'moment';
 
 
 const AttendeeAgenda = ({ eventApp }: any) => {
-    // console.log(eventApp);
+
     const sessionLists = eventApp.event_sessions.map(session =>
         <li key={session.id}>
-            <a href={route('attendee.event.detail.session', { eventApp: eventApp.id, eventSession: session.id })}>
+            <Link href={route('attendee.event.detail.session', { eventApp: eventApp.id, eventSession: session.id })}>
                 <div className='d-flex justify-content-between'>
                     <span>{moment(session.start_date).format('DD MMM YYYY')}   ({moment(session.start_date).format('mm:ss')}-{moment(session.end_date).format('mm:ss')})</span>
                     <span>
@@ -30,10 +28,10 @@ const AttendeeAgenda = ({ eventApp }: any) => {
                         </div>
                     </CardBody>
                 </Card>
-            </a>
+            </Link>
         </li >
     );
-    // console.log(sessionLists);
+
     return (
         <React.Fragment>
             <Head title="Event Program" />

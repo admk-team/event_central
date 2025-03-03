@@ -1,13 +1,20 @@
-import { Link } from '@inertiajs/react'
+import { Link, usePage } from '@inertiajs/react'
 import { Copy, CopyCheck } from 'lucide-react'
 import React from 'react'
 import { Button, Card, CardBody, CardFooter, CardHeader, CardText, CardTitle } from 'react-bootstrap'
+import toast from 'react-hot-toast';
 
 export default function WebsiteUrl() {
-    const [copied, setCopeid] = React.useState(false);
+    const url = usePage().props.url as string;
+
     const copyLink = () => {
-        setCopeid(true);
-        setTimeout(() => setCopeid(false), 3000);
+        navigator.clipboard.writeText(url)
+        .then(() => {
+            toast.success("Copied!");
+        })
+        .catch(() => {
+          toast.error("Failed to copy");
+        });
     }
 
     return (
@@ -15,24 +22,13 @@ export default function WebsiteUrl() {
             <CardBody>
                 <CardTitle>URL</CardTitle>
                 <CardText>
-                    <Link href='#'>
-                        https://eventee.com/e/VZ5hOg9rsTvnCujMU3kQ7oFE7wXQy92JvNl7WSkHRak4HW3HIEJAsBZjEQJeOBGDCdAZvpWP6PfASy3xSBU8SqMafBFIfSppUlG5KHiANc1VOMYCRvtcrb4ElMiuNm0N
-                    </Link>
+                    <a href={url} target="blank">{url}</a>
                 </CardText>
             </CardBody>
             <CardFooter>
-                <Button className="d-flex gap-1" onClick={copyLink} disabled={copied}>
-                    {copied ? (
-                        <>
-                        <CopyCheck size={20} />
-                        <span>Copied!</span>
-                        </>
-                    ) : (
-                        <>
-                        <Copy size={20} />
-                        <span>Copy</span>
-                        </>
-                    )}
+                <Button className="d-flex gap-1" onClick={copyLink}>
+                    <Copy size={20} />
+                    <span>Copy</span>
                 </Button>
             </CardFooter>
         </Card>

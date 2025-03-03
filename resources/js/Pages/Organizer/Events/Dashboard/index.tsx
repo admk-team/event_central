@@ -12,7 +12,7 @@ import LiveUsers from './LiveUsers';
 import TopReferrals from './TopReferrals';
 import TopPages from './TopPages';
 import { Head } from '@inertiajs/react';
-import Layout from '../../../../Layouts/Organizer/Event';
+import Layout from '../../../../Layouts/Event';
 
 
 const DashboardAnalytics = () => {

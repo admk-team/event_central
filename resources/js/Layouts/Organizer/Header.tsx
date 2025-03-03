@@ -1,23 +1,23 @@
-import { Link, router, usePage } from "@inertiajs/react";
+import { Link } from "@inertiajs/react";
 import React, { useState } from "react";
 
 //import images
-import logoSm from "../../../../images/logo-sm.png";
-import logoDark from "../../../../images/logo-dark.png";
-import logoLight from "../../../../images/logo-light.png";
+import logoSm from "../../../images/logo-sm.png";
+import logoDark from "../../../images/logo-dark.png";
+import logoLight from "../../../images/logo-light.png";
 import { useDispatch, useSelector } from "react-redux";
 import { createSelector } from "@reduxjs/toolkit";
 import { Dropdown, Form } from "react-bootstrap";
-import { changeSidebarVisibility } from "../../../slices/thunk";
-import SearchOption from "../../../Components/Common/SearchOption";
-import LanguageDropdown from "../../../Components/Common/LanguageDropdown";
-import WebAppsDropdown from "../../../Components/Common/WebAppsDropdown";
-import MyCartDropdown from "../../../Components/Common/MyCartDropdown";
-import FullScreenDropdown from "../../../Components/Common/FullScreenDropdown";
-import ProfileDropdown from "../../../Components/Common/ProfileDropdown";
-import LightDark from "../../../Components/Common/LightDark";
-import NotificationDropdown from "../../../Components/Common/NotificationDropdown";
-import OrganizerProfileDropdown from "../../../Components/Common/OrganizerProfileDropdown";
+import { changeSidebarVisibility } from "../../slices/thunk";
+import SearchOption from "../../Components/Common/SearchOption";
+import LanguageDropdown from "../../Components/Common/LanguageDropdown";
+import WebAppsDropdown from "../../Components/Common/WebAppsDropdown";
+import MyCartDropdown from "../../Components/Common/MyCartDropdown";
+import FullScreenDropdown from "../../Components/Common/FullScreenDropdown";
+import ProfileDropdown from "../../Components/Common/ProfileDropdown";
+import LightDark from "../../Components/Common/LightDark";
+import NotificationDropdown from "../../Components/Common/NotificationDropdown";
+import AdminProfileDropdown from "../../Components/Common/AdminProfileDropdown";
 
 const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
     const dispatch: any = useDispatch();
@@ -69,9 +69,6 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
             document.body.classList.contains('twocolumn-panel') ? document.body.classList.remove('twocolumn-panel') : document.body.classList.add('twocolumn-panel');
         }
     };
-      const { currentEvent } = usePage().props as Record<string, any>;
-      
-      const { events, auth } = usePage<{ events: any[], auth: { user: any } }>().props;
 
     return (
         <React.Fragment>
@@ -79,8 +76,9 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
                 <div className="layout-width">
                     <div className="navbar-header">
                         <div className="d-flex">
+
                             <div className="navbar-brand-box horizontal-logo">
-                                {/* <Link href="/" className="logo logo-dark">
+                                <Link href="/" className="logo logo-dark">
                                     <span className="logo-sm">
                                         <img src={logoSm} alt="" height="22" />
                                     </span>
@@ -96,31 +94,7 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
                                     <span className="logo-lg">
                                         <img src={logoLight} alt="" height="17" />
                                     </span>
-                                </Link> */}
-                                <Dropdown className="navbar-brand-box my-3">
-                                    <Dropdown.Toggle as="button" className="btn d-flex align-items-center p-1 text-muted" id="dropdown.MenuButton">
-                                        <div className="d-flex align-items-center ">
-                                            <img src={currentEvent.logo_img} alt="event" className="img-fluid rounded-circle avatar-sm" />
-                                            <div className="fs-6 fw-semibold ms-2 text-start">
-                                                <span className="d-block text-light">{currentEvent.name}</span>
-                                                <span className="d-block fw-normal text-muted">{currentEvent.created_at_date}</span>
-                                            </div>
-                                        </div>
-                                    </Dropdown.Toggle>
-                                    <Dropdown.Menu className="w-100">
-                                        {events?.map((event: any, key: any) => (
-                                            <Dropdown.Item key={key} className="p-2 px-4 text-primary d-flex align-items-center gap-2"
-                                                onClick={() => router.visit(route('organizer.events.select', event.id))}>
-                                                <img src={event.logo_img} alt="event" className="img-fluid rounded-circle avatar-xs" />
-                                                {event.name}
-                                            </Dropdown.Item>
-                                        ))}
-                                        <div className="border-top my-2"></div>
-                                        <Dropdown.Item className="p-2 px-4 text-primary " onClick={() => router.visit(route('organizer.events.index'))}>
-                                            See all events
-                                        </Dropdown.Item>
-                                    </Dropdown.Menu>
-                                </Dropdown>
+                                </Link>
                             </div>
 
                             <button
@@ -134,38 +108,13 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
                                     <span></span>
                                 </span>
                             </button>
-                            {/* <SearchOption /> */}
 
+
+                            <SearchOption />
                         </div>
-                        {/* <div style={{ width: '800px' }}>
-                            <div className="d-flex flex-row" >
-                                <ul className="navbar-nav">
-                                    <li className="nav-item">
-                                        <Link
-                                            className="nav-link menu-link"
-                                            href="/">
-                                            <i className="bx bxs-dashboard"></i> <span>Dashboard</span>
-                                        </Link>
-                                    </li>
-                                    <li className="nav-item">
-                                        <Link
-                                            className="nav-link menu-link"
-                                            href="/">
-                                            <i className="bx bxs-dashboard"></i> <span>Content</span>
-                                        </Link>
-                                    </li>
-                                    <li className="nav-item">
-                                        <Link
-                                            className="nav-link menu-link"
-                                            href="/">
-                                            <i className="bx bxs-dashboard"></i> <span>Engagement</span>
-                                        </Link>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div> */}
 
                         <div className="d-flex align-items-center">
+
                             <Dropdown show={search} onClick={toogleSearch} className="d-md-none topbar-head-dropdown header-item">
                                 <Dropdown.Toggle type="button" as="button" className="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle">
                                     <i className="bx bx-search fs-22"></i>
@@ -206,7 +155,7 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
                             <NotificationDropdown />
 
                             {/* ProfileDropdown */}
-                            <OrganizerProfileDropdown />
+                            <AdminProfileDropdown />
                         </div>
                     </div>
                 </div>

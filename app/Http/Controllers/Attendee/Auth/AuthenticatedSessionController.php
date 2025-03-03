@@ -61,9 +61,7 @@ class AuthenticatedSessionController extends Controller
     {
         $event_id = $request->input('state');
         $googleUser = Socialite::driver('google')->stateless()->user();
-        Log::info($googleUser->name);
-        Log::info($googleUser->email);
-        Log::info('event_id ' . $event_id);
+
         $user = Attendee::where('email', $googleUser->email)->first();
         // if (!$user) {
         //     $user = Attendee::create(['name' => $googleUser->name, 'email' => $googleUser->email, 'password' => Hash::make(rand(100000, 999999))]);
