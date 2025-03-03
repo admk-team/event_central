@@ -5,9 +5,10 @@ import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 import logoLight from '../../../../images/logo-light.png';
 
 export default function Register() {
-    const eventApp = usePage().props.eventApp;
+    const eventApp: any = usePage().props.eventApp;
     const { data, setData, post, processing, errors, reset } = useForm({
-        name: '',
+        first_name: '',
+        last_name: '',
         email: '',
         password: '',
         password_confirmation: '',
@@ -35,6 +36,42 @@ export default function Register() {
                 </div>
                 <div className="p-2 mt-4">
                     <form onSubmit={submit}>
+                        <Row>
+                            <Col md={6} lg={6}>
+                                <Form.Label htmlFor="first_name" value="First Name" className='form-label'> First Name </Form.Label>
+                                <span className="text-danger ms-1">*</span>
+                                <Form.Control
+                                    id="first_name"
+                                    type="text"
+                                    name="first_name"
+                                    placeholder="Enter First Name"
+                                    value={data.first_name}
+                                    className={'mt-1 form-control' + (errors.first_name ? 'is-invalid' : '')}
+                                    autoComplete="first_name"
+                                    onChange={(e: any) => setData('first_name', e.target.value)}
+                                    required
+                                />
+                                <Form.Control.Feedback type="invalid" className='mt-2 d-block'>{errors.first_name}</Form.Control.Feedback>
+                            </Col>
+                            <Col md={6} lg={6}>
+                                <Form.Label htmlFor="last_name" value="Last Name" className='form-label'> Last Name </Form.Label>
+                                <span className="text-danger ms-1">*</span>
+                                <Form.Control
+                                    id="last_name"
+                                    type="text"
+                                    name="last_name"
+                                    placeholder="Enter Last Name"
+                                    value={data.last_name}
+                                    className={'mt-1 form-control' + (errors.last_name ? 'is-invalid' : '')}
+                                    autoComplete="last_name"
+                                    onChange={(e: any) => setData('last_name', e.target.value)}
+                                    required
+                                />
+
+                                <Form.Control.Feedback type="invalid" className='mt-2 d-block'>{errors.email}</Form.Control.Feedback>
+
+                            </Col>
+                        </Row>
                         <div>
                             <Form.Label htmlFor="email" value="Email" className='form-label'> Email </Form.Label>
                             <span className="text-danger ms-1">*</span>
@@ -49,28 +86,7 @@ export default function Register() {
                                 onChange={(e: any) => setData('email', e.target.value)}
                                 required
                             />
-
                             <Form.Control.Feedback type="invalid" className='mt-2 d-block'>{errors.email}</Form.Control.Feedback>
-
-                        </div>
-
-                        <div className="mt-4">
-                            <Form.Label htmlFor="name" value="Name" > Name </Form.Label>
-                            <span className="text-danger ms-1">*</span>
-
-                            <Form.Control
-                                id="name"
-                                name="name"
-                                placeholder="Enter Your Name"
-                                value={data.name}
-                                className={"mt-1 form-control" + (errors.name ? 'is-invalid' : '')}
-                                autoComplete="name"
-                                autoFocus
-                                onChange={(e: any) => setData('name', e.target.value)}
-                                required
-                            />
-
-                            <Form.Control.Feedback type="invalid" className='mt-2 d-block'>{errors.name}</Form.Control.Feedback>
                         </div>
 
                         <div className="mt-4">
@@ -109,11 +125,6 @@ export default function Register() {
 
                             <Form.Control.Feedback type="invalid" className='mt-2 d-block'>{errors.password_confirmation}</Form.Control.Feedback>
                         </div>
-
-                        {/* <div className="mb-4 mt-4">
-                            <p className="mb-0 fs-12 text-muted fst-italic">By registering you agree to the Velzon
-                                <Link href="#" className="text-primary text-decoration-underline fst-normal fw-medium ms-2"> Terms of Use</Link></p>
-                        </div> */}
 
                         <Button type="submit" className="btn btn-success w-100 mt-4" disabled={processing}>
                             Sign Up

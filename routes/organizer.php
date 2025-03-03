@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Organizer\Event\CustomMenuController;
 use App\Http\Controllers\Organizer\Event\DashboardController;
+use App\Http\Controllers\Organizer\Event\Engagement\NewsfeedController;
 use App\Http\Controllers\Organizer\Event\EventController;
 use App\Http\Controllers\Organizer\Event\EventPartnerCategoryController;
 use App\Http\Controllers\Organizer\Event\EventPartnerController;
@@ -74,9 +75,20 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                 });
             });
 
+            // engagement
+            Route::prefix('engagement')->name('engagement.')->group(function () {
+                // Event
+                Route::prefix('newsfeed')->name('newsfeed.')->group(function () {
+                    Route::get('/', [NewsfeedController::class, 'index'])->name('index');
+                    Route::post('/', [NewsfeedController::class, 'store'])->name('store');
+                    Route::Put('/{post}/update', [NewsfeedController::class, 'update'])->name('update');
+                    Route::delete('/{post}', [NewsfeedController::class, 'destroy'])->name('destroy');
+                    Route::delete('/delete/many', [NewsfeedController::class, 'destroyMany'])->name('destroy.many');
+
+                });
+            });
+
             Route::post('import/{importType}', [ImportController::class, 'import'])->name('import');
         });
-        
-        Route::get('{id}', [EventController::class, 'selectEvent'])->name('select');
     });
 });

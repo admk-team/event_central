@@ -23,7 +23,7 @@ class ImportController extends Controller
                         'qr_code' => 'EMPTY',
                     ]);
                 }
-                return redirect()->route('organizer.events.attendees.index')->with('success', 'Attendees imported successfully.');
+                return redirect()->route('organizer.events.attendees.index')->withSuccess('Attendees imported successfully.');
             }
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Invalid data format.');

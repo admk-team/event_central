@@ -27,7 +27,6 @@ function CreateOrEdit({ speaker, events }: any) {
     });
 
     function handleAvatar(e: any) {
-        console.log(e.target.files);
         const file = e.target.files[0]
         setData('avatar', file);
 
