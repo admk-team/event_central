@@ -45,11 +45,12 @@ class EventSessionController extends Controller
         return back();
     }
 
-    public function destroyMany(Request $request){
+    public function destroyMany(Request $request)
+    {
         $request->validate([
-            'ids'=> 'required|array'
+            'ids' => 'required|array'
         ]);
-        foreach($request->ids as $id){
+        foreach ($request->ids as $id) {
             EventSession::find($id)?->delete();
         }
     }

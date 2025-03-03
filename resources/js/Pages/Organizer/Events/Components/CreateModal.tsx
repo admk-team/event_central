@@ -297,9 +297,8 @@ function CreateModal({ addEventModal, showModal }: CreateModalProps) {
                     </Row>
 
                     <div className="hstack gap-2 justify-content-center mt-4">
-                        <Button disabled={processing} className="btn btn-danger" onClick={() => showModal()}>Close</Button>
+                        <Button disabled={processing} className="btn btn-light" onClick={() => showModal()}>Close</Button>
                         <Button type='submit' disabled={processing} className="btn btn-success">Create</Button>
-
                     </div>
                 </form>
             </Modal.Body>

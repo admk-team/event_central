@@ -39,10 +39,13 @@ class EventController extends Controller
         return redirect()->route('organizer.events.dashboard')->withSuccess('Event created successfully.');
     }
 
-    public function selectEvent( $id)
+    public function selectEvent(Request $request, $id)
     {
+        $back = (bool) ($request->back ?? true);
+
         session()->put('event_id', $id);
-        if (route('organizer.events.index') !== back()->getTargetUrl()) {
+
+        if ($back) {
             return back();
         }
 
