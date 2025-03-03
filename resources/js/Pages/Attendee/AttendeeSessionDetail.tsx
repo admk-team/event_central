@@ -5,31 +5,29 @@ import Rating from "react-rating";
 //https://codesandbox.io/p/sandbox/react-drag-and-drop-sortablelist-g205n
 //import Components
 
-import { Head, useForm } from '@inertiajs/react';
+import { Head, useForm, Link } from '@inertiajs/react';
 import Layout from '../../Layouts/Attendee';
 import DateDifferenceFromToday from './common/DateDifferenceFromToday';
-// import attendeeEventBg from '../../../images/attendee-bg.jpg';
-// import defaultEventImage from '../../../images/default-event-image.png';
+
 import moment from 'moment';
 import attendeeEventBg from '../../../images/attendee-bg.jpg';
-import defaultEventImage from '../../../images/default-event-image.png';
 
 
 
-const AttendeeSessionDetail = ({ eventApp, eventSession }: any) => {
+const AttendeeSessionDetail = ({ eventApp, eventSession, selectedSessionDetails }: any) => {
 
-    console.log('sessions', eventSession);
     const { data, setData, post, processing, errors, reset } = useForm({
         _method: "POST",
-        rating: '',
-        rating_description: ''
+        rating: selectedSessionDetails?.rating ?? '',
+        rating_description: selectedSessionDetails?.rating_description ?? ''
     });
 
-    const ratingEnabled = moment(eventSession.start_date) > moment();
-
+    const ratingEnabled = moment(eventSession.start_date) < moment();
+    // console.log(moment(eventSession.start_date));
+    // console.log(moment());
     const submitRatingChange = (e: any) => {
         e.preventDefault();
-        post(route('attendee.change.email'));
+        post(route('attendee.save.rating', eventSession.id));
         console.log('Rating form submitted');
     };
 
@@ -37,27 +35,24 @@ const AttendeeSessionDetail = ({ eventApp, eventSession }: any) => {
         eventId: eventApp.id,
         eventSessionId: eventSession.id,
     });
-    let sessionSelected = eventSession.session_selected;
-    const toggleSessionSelection = (() => {
-        sessionSelected = !sessionSelected
-        if (sessionSelected) {
-            form.transform((data) => ({
-                ...data,
-                selected: true
-            }));
-            form.post(route('attendee.save.session', eventSession.id));
-        } else {
-            form.transform((data) => ({
-                ...data,
-                selected: false
-            }));
-            form.post(route('attendee.save.session', eventSession.id));
-        }
+
+    const [sessionSelected, SetSessionSelected] = useState<boolean>(selectedSessionDetails ? true : false);
+
+    const selectSession = (() => {
+        console.log('selecting');
+        form.post(route('attendee.save.session', [eventSession.id, 'select']));
+        SetSessionSelected(true);
     });
 
-    const handleratingChanged = (v: any) => {
-        console.log(v);
-    }
+    const unSelectSession = (() => {
+        console.log('un selecting');
+        form.post(route('attendee.save.session', [eventSession.id, 'un-select']));
+        SetSessionSelected(false);
+    });
+
+    const handleRatingChange = ((v: any) => {
+        setData('rating', v);
+    });
 
     return (
         <React.Fragment>
@@ -70,19 +65,22 @@ const AttendeeSessionDetail = ({ eventApp, eventSession }: any) => {
                                 <Col md={8} lg={8}>
                                     <div className='d-flex justify-content-between align-items-center mb-4'>
                                         <div className='d-flex flex-row align-items-center'>
-                                            <a style={{ marginRight: '15px' }} href="#">
+                                            <Link href={route('attendee.event.detail.agenda', eventApp.id)}><i className='bx bx-arrow-back fs-3 fw-bolder text-muted'></i></Link>
+                                            {/* <a style={{ marginRight: '15px' }} href={route('attendee.event.detail.agenda', eventApp.id)} className='pe-auto' onClick={() => { window.history.back() }}>
                                                 <i className='bx bx-arrow-back fs-3 fw-bolder text-muted'></i>
-                                            </a>
+                                            </a> */}
                                             <h5 className="m-0 fw-bolder">{eventSession.name}</h5>
                                         </div>
                                         <div className='d-flex flex-row align-items-center'>
                                             <a style={{ marginRight: '15px' }} href="#">
                                                 <i className='bx bx-link fs-3 fw-bolder text-muted'></i>
                                             </a>
-                                            <a style={{ marginRight: '15px' }} onClick={toggleSessionSelection}>
-                                                {sessionSelected && <i className='bx bxs-heart fs-3 fw-bolder text-muted'></i>}
-                                                {!sessionSelected && <i className='bx bx-heart fs-3 fw-bolder text-muted'></i>}
-                                            </a>
+
+                                            {sessionSelected && <a style={{ marginRight: '15px' }} href="#" className='pe-auto' onClick={unSelectSession} title={'Click to un-select session'}>
+                                                <i className='bx bxs-heart fs-3 fw-bolder text-muted'></i> </a>}
+
+                                            {!sessionSelected && <a style={{ marginRight: '15px' }} href="#" className='pe-auto' onClick={selectSession} title={'Click to select session'}> <i className='bx bx-heart fs-3 fw-bolder text-muted'></i> </a>}
+
                                         </div>
                                     </div>
                                     <div>
@@ -134,40 +132,44 @@ const AttendeeSessionDetail = ({ eventApp, eventSession }: any) => {
                                                 <h6>Add Ratings</h6>
                                             </Accordion.Header>
                                             <Accordion.Body>
-                                                <form onSubmit={submitRatingChange}>
-                                                    <div className='rating-wraper d-flex justify-content-center w-100'>
-                                                        <Rating
-                                                            onChange={handleratingChanged}
-                                                            emptySymbol="bx bx-star"
-                                                            fullSymbol={['bx bxs-star']}
-                                                        />
-                                                    </div>
-                                                    <div className="mt-4">
-                                                        <Form.Control
-                                                            as="textarea"
-                                                            id="bio"
-                                                            type="text"
-                                                            rows={4}
-                                                            name="bio"
-                                                            placeholder="Enter Rating Comments"
-                                                            value={data.rating_description}
-                                                            className={"mt-1 form-control" + (errors.rating_description ? 'is-invalid' : '')}
-                                                            autoComplete="rating_comments"
-                                                            onChange={(e: any) => setData('rating_description', e.target.value)}
-                                                        />
-
-                                                        <Form.Control.Feedback type="invalid" className='mt-2 d-block'>{errors.rating_description}</Form.Control.Feedback>
-                                                    </div>
-                                                    {!ratingEnabled && <p>* Ratings can be added only after the session has started</p>}
-
-                                                    {ratingEnabled &&
-                                                        <div className='d-flex justify-content-between'>
-                                                            <Button type="submit" className="btn btn-success w-100 mt-4" disabled={processing}>
-                                                                Save Rating
-                                                            </Button>
+                                                {!sessionSelected && <p>Rating can be save for selected sessions only</p>}
+                                                {
+                                                    sessionSelected && <form onSubmit={submitRatingChange}>
+                                                        <div className='rating-wraper d-flex justify-content-center w-100'>
+                                                            <Rating
+                                                                initialRating={data.rating}
+                                                                onChange={handleRatingChange}
+                                                                emptySymbol="bx bx-star"
+                                                                fullSymbol={['bx bxs-star']}
+                                                            />
                                                         </div>
-                                                    }
-                                                </form>
+                                                        <div className="mt-4">
+                                                            <Form.Control
+                                                                as="textarea"
+                                                                id="rating_description"
+                                                                type="text"
+                                                                rows={4}
+                                                                name="rating_description"
+                                                                placeholder="Enter Rating Comments"
+                                                                value={data.rating_description}
+                                                                className={"mt-1 form-control" + (errors.rating_description ? 'is-invalid' : '')}
+                                                                autoComplete="ratinrating_descriptiong_comments"
+                                                                onChange={(e: any) => setData('rating_description', e.target.value)}
+                                                            />
+
+                                                            <Form.Control.Feedback type="invalid" className='mt-2 d-block'>{errors.rating_description}</Form.Control.Feedback>
+                                                        </div>
+                                                        {!ratingEnabled && <p>* Ratings can be added only after the session has started</p>}
+
+                                                        {ratingEnabled &&
+                                                            <div className='d-flex justify-content-between'>
+                                                                <Button type="submit" className="btn btn-success w-100 mt-4" disabled={processing}>
+                                                                    Save Rating
+                                                                </Button>
+                                                            </div>
+                                                        }
+                                                    </form>
+                                                }
                                             </Accordion.Body>
                                         </Accordion.Item>
                                     </Accordion>

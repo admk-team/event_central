@@ -17,6 +17,7 @@ Route::post('/eventee/{eventApp}/logout', [AuthenticatedSessionController::class
 
 Route::get('/eventee/{eventApp}/auth/register', [RegisteredUserController::class, 'create'])->name('attendee.register');
 Route::post('/eventee/{eventApp}/auth/register', [RegisteredUserController::class, 'store'])->name('attendee.register.store');
+
 // http://127.0.0.1:8000/google-login/callback
 Route::get('/google-login/redirect', [AuthenticatedSessionController::class, 'googleRedirect'])->name('attendee.google.redirect');
 Route::get('/google-login/callback', [AuthenticatedSessionController::class, 'googleCallback'])->name('attendee.google.callback');
@@ -31,8 +32,7 @@ Route::middleware(['auth:attendee'])->group(function () {
     Route::post('/attendee-change-password', [PasswordController::class, 'update'])->name('attendee.change.password');
     Route::post('/attendee-change-email', [EmailChangeController::class, 'update'])->name('attendee.change.email');
 
-    Route::post('/attendee-save-session/{eventSession}', [EventSessionController::class, 'saveSession'])->name('attendee.save.session');
-    Route::post('/attendee-remove-session/{eventSession}', [EventSessionController::class, 'removeSession'])->name('attendee.remove.session');
+    Route::post('/attendee-save-session/{eventSession}/{type}', [EventSessionController::class, 'saveSession'])->name('attendee.save.session');
 
     Route::post('/attendee-save-rating/{eventSession}', [EventSessionController::class, 'saveRating'])->name('attendee.save.rating');
 });

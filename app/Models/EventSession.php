@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class EventSession extends Model
 {
     use HasFactory;
-    protected $appends = ['session_selected'];
 
     protected $fillable = [
         'name',
@@ -36,15 +35,5 @@ class EventSession extends Model
     public function attendees(): BelongsToMany
     {
         return $this->belongsToMany(Attendee::class, 'attendee_event_session')->withPivot('rating', 'rating_description')->withTimestamps();
-    }
-
-    // checking if logged in user has selected the session or not
-    public function getSessionSelectedAttribute()
-    {
-        if (auth('attendee')->check()) {
-            $session = auth('attendee')->user()->eventSessions()->where('event_session_id', $this->id)->first();
-            return $session ? true : false;
-        }
-        return false;
     }
 }
