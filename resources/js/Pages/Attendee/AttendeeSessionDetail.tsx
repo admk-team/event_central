@@ -24,7 +24,7 @@ const AttendeeSessionDetail = ({ eventApp, eventSession }: any) => {
         rating: '',
         rating_description: ''
     });
-    const [sessionSelected, setSessionSelected] = useState<Boolean>(eventSession.session_selected);
+
     const ratingEnabled = moment(eventSession.start_date) > moment();
 
     const submitRatingChange = (e: any) => {
@@ -33,16 +33,26 @@ const AttendeeSessionDetail = ({ eventApp, eventSession }: any) => {
         console.log('Rating form submitted');
     };
 
-    const sessionSelectionForm = useForm({
+    const form = useForm({
         eventId: eventApp.id,
         eventSessionId: eventSession.id,
-        selected: sessionSelected
     });
-
+    let sessionSelected = eventSession.session_selected;
     const toggleSessionSelection = (() => {
-        setSessionSelected(!sessionSelected);
-        console.log(sessionSelectionForm);
-        sessionSelectionForm.post(route('attendee.save.session', eventSession.id));
+        sessionSelected = !sessionSelected
+        if (sessionSelected) {
+            form.transform((data) => ({
+                ...data,
+                selected: true
+            }));
+            form.post(route('attendee.save.session', eventSession.id));
+        } else {
+            form.transform((data) => ({
+                ...data,
+                selected: false
+            }));
+            form.post(route('attendee.save.session', eventSession.id));
+        }
     });
 
     const handleratingChanged = (v: any) => {

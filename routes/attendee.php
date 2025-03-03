@@ -32,6 +32,7 @@ Route::middleware(['auth:attendee'])->group(function () {
     Route::post('/attendee-change-email', [EmailChangeController::class, 'update'])->name('attendee.change.email');
 
     Route::post('/attendee-save-session/{eventSession}', [EventSessionController::class, 'saveSession'])->name('attendee.save.session');
+    Route::post('/attendee-remove-session/{eventSession}', [EventSessionController::class, 'removeSession'])->name('attendee.remove.session');
 
     Route::post('/attendee-save-rating/{eventSession}', [EventSessionController::class, 'saveRating'])->name('attendee.save.rating');
 });

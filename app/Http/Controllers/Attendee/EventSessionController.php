@@ -11,13 +11,13 @@ class EventSessionController extends Controller
 {
     public function saveSession(Request $request, EventSession $eventSession)
     {
-        Log::info($request->selected);
-        if ($request->selected) {
-            $request->user()->eventSessions()->attach([$eventSession->id]);
-            return back()->withSuccess("Event Session added to Attendee's List");
-        } else {
-            $request->user()->eventSessions()->detach([$eventSession->id]);
-            return back()->withSuccess("Event Session removed from Attendee's List");
-        }
+        $request->user()->eventSessions()->attach([$eventSession->id]);
+        return back()->withSuccess("Event Session added to Attendee's List");
+    }
+
+    public function removeSession(Request $request, EventSession $eventSession)
+    {
+        $request->user()->eventSessions()->detach([$eventSession->id]);
+        return back()->withSuccess("Event Session removed from Attendee's List");
     }
 }
