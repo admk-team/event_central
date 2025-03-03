@@ -27,7 +27,7 @@ function Index(events: any) {
                         <Col md={4} xl={3}
                             key={event.id}
                             className='card rounded-4 d-flex flex-column justify-content-between align-items-center g-3 p-3 cursor-pointer'
-                            onClick={() => router.visit(route('organizer.events.select', event.id))}
+                            onClick={() => router.visit(route('organizer.events.select', {id: event.id, back: false}))}
                         >
                             <div className="d-flex w-100 align-items-center">
                                 <img src="https://media.istockphoto.com/id/1408255024/photo/developers-discussing-programming-code.jpg?s=2048x2048&w=is&k=20&c=FX-R-szUMTh0dbG5yUVKgnijyNxa2KFFpbjUj-PaK4g=" alt="event" className="img-fluid rounded-circle avatar-sm" />

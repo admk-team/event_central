@@ -90,7 +90,5 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
 
             Route::post('import/{importType}', [ImportController::class, 'import'])->name('import');
         });
-        
-        Route::get('{id}', [EventController::class, 'selectEvent'])->name('select');
     });
 });
