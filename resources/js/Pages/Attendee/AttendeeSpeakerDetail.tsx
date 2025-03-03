@@ -15,47 +15,8 @@ import SpeakerModal from './SpeakersModal';
 
 
 
-const AttendeeSessionDetail = ({ eventApp, eventSession, selectedSessionDetails, prev_session_id, next_session_id }: any) => {
+const AttendeeSessionDetail = ({ eventApp, eventSpeaker }: any) => {
 
-    // console.log(prev_session_id, next_session_id);
-    const { data, setData, post, processing, errors, reset } = useForm({
-        _method: "POST",
-        rating: selectedSessionDetails?.rating ?? '',
-        rating_description: selectedSessionDetails?.rating_description ?? ''
-    });
-
-    const ratingEnabled = moment(eventSession.start_date) < moment();
-    // console.log(moment(eventSession.start_date));
-    // console.log(moment());
-    const submitRatingChange = (e: any) => {
-        e.preventDefault();
-        post(route('attendee.save.rating', eventSession.id));
-        console.log('Rating form submitted');
-    };
-
-    const form = useForm({
-        eventId: eventApp.id,
-        eventSessionId: eventSession.id,
-    });
-
-    const [sessionSelected, SetSessionSelected] = useState<boolean>(selectedSessionDetails ? true : false);
-    const [showModal, SetShowModal] = useState<boolean>(false);
-
-    const selectSession = (() => {
-        console.log('selecting');
-        form.post(route('attendee.save.session', [eventSession.id, 'select']));
-        SetSessionSelected(true);
-    });
-
-    const unSelectSession = (() => {
-        console.log('un selecting');
-        form.post(route('attendee.save.session', [eventSession.id, 'un-select']));
-        SetSessionSelected(false);
-    });
-
-    const handleRatingChange = ((v: any) => {
-        setData('rating', v);
-    });
 
     return (
         <React.Fragment>
@@ -119,7 +80,6 @@ const AttendeeSessionDetail = ({ eventApp, eventSession, selectedSessionDetails,
                                     <SpeakerModal show={showModal}
                                         hide={() => SetShowModal(false)}
                                         onHide={() => SetShowModal(false)}
-                                        event={eventApp}
                                         speaker={eventSession.event_speaker}
                                     ></SpeakerModal>
 

@@ -53,8 +53,8 @@ class Attendee extends Authenticatable
         return $this->qr_code != 'EMPTY' ? url(Storage::url($this->qr_code)) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s';
     }
 
-    public function eventSessions()
+    public function eventSelectedSessions()
     {
-        return $this->belongsToMany(EventSession::class, 'attendee_event_sessions')->withPivot('rating', 'rating_description')->withTimestamps();
+        return $this->belongsToMany(EventSession::class, 'attendee_event_session')->withPivot('rating', 'rating_description')->withTimestamps();
     }
 }
