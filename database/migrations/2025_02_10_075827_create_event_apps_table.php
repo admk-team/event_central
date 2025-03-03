@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('event_apps', function (Blueprint $table) {
             $table->id();
+            $table->uuid()->unique();
             $table->unsignedBigInteger('organizer_id');
             $table->foreign('organizer_id')->references('id')->on('users')->cascadeOnDelete();
             // $table->string('information');
@@ -25,9 +26,6 @@ return new class extends Migration
             $table->string('type');
             $table->enum('schedual_type', ['singleday', 'multiday', 'recurring']);
             $table->timestamps();
-        });
-        Schema::table('color_schemes', function (Blueprint $table) {
-            $table->foreign('event_id')->references('id')->on('event_apps');
         });
     }
 

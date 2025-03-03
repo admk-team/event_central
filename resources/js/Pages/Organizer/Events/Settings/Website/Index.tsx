@@ -1,5 +1,5 @@
 import React from 'react';
-import Layout from '../../../../../Layouts/Organizer/Event';
+import Layout from '../../../../../Layouts/Event';
 import { Head, usePage } from '@inertiajs/react';
 import { Col, Container, Row } from 'react-bootstrap';
 import BreadCrumb2 from '../../../../../Components/Common/BreadCrumb2';

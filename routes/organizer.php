@@ -17,14 +17,27 @@ use App\Http\Controllers\Organizer\Event\PartnerController;
 use App\Http\Controllers\Organizer\Event\PassesController;
 use App\Http\Controllers\Organizer\Event\ScheduleController;
 use App\Http\Controllers\Organizer\Event\Settings\WebsiteSettingsController;
+use App\Http\Controllers\Organizer\Event\WebsiteController;
 use App\Http\Controllers\Organizer\Event\WorkshopController;
 use App\Http\Controllers\Organizer\PageController;
 use App\Http\Controllers\Organizer\ProfileController;
+use App\Http\Controllers\Organizer\RoleController;
+use App\Http\Controllers\Organizer\UserController;
 use App\Http\Middleware\CurrentEventMiddleware;
 use Illuminate\Support\Facades\Route;
 
+// Event Website
+Route::get('e/{uuid}', [WebsiteController::class, 'index'])->name('organizer.events.website');
+
 Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organizer.')->group(function () {
     Route::get('/profile-edit', [ProfileController::class, 'edit'])->name('profile.edit');
+
+    // Users
+    Route::resource('users', UserController::class);
+    Route::delete('users/delete/many', [UserController::class, 'destroyMany'])->name('users.destroy.many');
+
+    // Roles
+    Route::resource('roles', RoleController::class);
 
     Route::prefix('events')->name('events.')->group(function () {
         Route::get('/', [EventController::class, 'index'])->name('index');
@@ -92,3 +105,4 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
         });
     });
 });
+

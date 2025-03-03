@@ -1,6 +1,6 @@
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
-import ApplicationLogo from '../../../Components/ApplicationLogo';
+import ApplicationLogo from '../../Components/ApplicationLogo';
 import Header from './Header';
 export default function PreviewLayout({ children }: any) {
     

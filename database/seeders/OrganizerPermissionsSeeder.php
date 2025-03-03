@@ -13,6 +13,12 @@ class OrganizerPermissionsSeeder extends Seeder
      */
 
     public static $permissions = [
+        // User Management
+        'view_users',
+        'create_users',
+        'edit_users',
+        'delete_users',
+
         // Role Management
         'view_roles',
         'create_roles',
