@@ -38,7 +38,7 @@ class EventSession extends Model
     {
         return $this->belongsTo(EventPlatform::class, 'event_platform_id', 'id');
     }
-    
+
     public function attendees(): BelongsToMany
     {
         return $this->belongsToMany(Attendee::class, 'attendee_event_sessions')->withPivot('rating', 'rating_description')->withTimestamps();
