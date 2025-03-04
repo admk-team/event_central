@@ -6,7 +6,7 @@ const Navdata = () => {
     //state data
     const [isDashboard, setIsDashboard] = useState<boolean>(false);
     const [isProgram, setIsProgram] = useState<boolean>(false);
-    const [isSpeaker, setIsSpeaker] = useState<boolean>(false);
+    const [isSpeakers, setIsSpeakers] = useState<boolean>(false);
     const [isMore, setIsMore] = useState<boolean>(false);
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
 
@@ -34,7 +34,7 @@ const Navdata = () => {
             setIsProgram(false);
         }
         if (iscurrentState !== 'Speaker') {
-            setIsSpeaker(false);
+            setIsSpeakers(false);
         }
         if (iscurrentState !== 'More') {
             setIsMore(false);
@@ -44,7 +44,7 @@ const Navdata = () => {
         iscurrentState,
         isDashboard,
         isProgram,
-        isSpeaker,
+        isSpeakers,
         isMore
     ]);
 
@@ -57,7 +57,7 @@ const Navdata = () => {
             id: "dashboard",
             label: "Dashboards",
             icon: "bx bxs-dashboard",
-            link: route('attendee.event.detail.dashboard', [eventApp.id]),
+            link: route('attendee.event.detail.dashboard', eventApp.id),
             stateVariables: isDashboard,
             click: function (e: any) {
                 e.preventDefault();
@@ -70,7 +70,7 @@ const Navdata = () => {
             id: "program",
             label: "Program",
             icon: "bx bx-heart",
-            link: route('attendee.event.detail.agenda', [eventApp.id]),
+            link: route('attendee.event.detail.agenda', eventApp.id),
             stateVariables: isProgram,
             click: function (e: any) {
                 e.preventDefault();
@@ -83,12 +83,12 @@ const Navdata = () => {
             id: "speaker",
             label: "Speaker",
             icon: "bx bx-group",
-            link: "/#",
-            stateVariables: isSpeaker,
+            link: route('attendee.event.detail.speakers', eventApp.id),
+            stateVariables: isSpeakers,
             click: function (e: any) {
                 e.preventDefault();
-                setIsSpeaker(!isSpeaker);
-                setIscurrentState('Speaker');
+                setIsSpeakers(!isSpeakers);
+                setIscurrentState('Speakers');
                 updateIconSidebar(e);
             },
         },
@@ -96,7 +96,7 @@ const Navdata = () => {
             id: "more",
             label: "More",
             icon: "bx bx-info-circle",
-            link: "/#",
+            link: route('attendee.event.detail.more', eventApp.id),
             stateVariables: isMore,
             click: function (e: any) {
                 e.preventDefault();

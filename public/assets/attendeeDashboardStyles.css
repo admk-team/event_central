@@ -20,7 +20,8 @@
 }
 ul.timeline:before {
     content: ' ';
-    background: #d4d9df;
+    /* background: #d4d9df; */
+    background: var(--vz-success);
     display: inline-block;
     position: absolute;
     left: 29px;
@@ -38,7 +39,8 @@ ul.timeline > li:before {
     display: inline-block;
     position: absolute;
     border-radius: 50%;
-    border: 2px solid #22c0e8;
+    /* border: 2px solid #22c0e8; */
+    border: 2px solid var(--vz-success);
     left: 20px;
     width: 20px;
     height: 20px;
@@ -46,5 +48,17 @@ ul.timeline > li:before {
 }
 
 .rating-wraper > span{
-    font-size: 35px;;
+    font-size: 35px;
+}
+
+.navbar-menu .navbar-nav .nav-link.active{
+    color: var(--vz-success) !important;
+}
+
+.navbar-menu .navbar-nav .nav-link:hover{
+    color: var(--vz-success) !important;
+}
+
+.active-list-item{
+    border-left: 6px solid var(--vz-success) !important;
 }

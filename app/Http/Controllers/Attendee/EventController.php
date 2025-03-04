@@ -8,6 +8,7 @@ use App\Models\EventSession;
 use App\Models\EventSpeaker;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class EventController extends Controller
@@ -50,6 +51,17 @@ class EventController extends Controller
 
     public function getEventSpeakerDetail(Request $request, EventApp $eventApp, EventSpeaker $eventSpeaker)
     {
+        // Log::info($eventSpeaker);
+        $eventApp->load('event_speakers.eventSessions');
+
+        // if (!$eventSpeaker) {
+        //     $eventSpeaker = count($eventApp->event_speakers) > 0 ? $eventApp->event_speakers->first() : null;
+        // }
         return Inertia::render('Attendee/AttendeeSpeakerDetail', compact(['eventApp', 'eventSpeaker']));
+    }
+
+    public function getEventDetailMore(Request $request, EventApp $eventApp)
+    {
+        return 'hello';
     }
 }
