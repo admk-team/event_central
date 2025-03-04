@@ -30,9 +30,10 @@ const AttendeeSpeakerDetail = ({ eventApp, eventSpeaker }: any) => {
 
     const speakerslist = eventApp.event_speakers.map((speaker: any) =>
         <a href="#" key={speaker.id} onClick={(event) => handleSpeakerChange(event, speaker)}>
-            <ListGroup.Item className='mb-1'>{speaker.name}</ListGroup.Item>
+            <ListGroup.Item className={"mb-1 " + (speaker.id === eventSpeaker.id ? 'active-list-item' : '')} >{speaker.name}</ListGroup.Item>
         </a>
     );
+
 
     useEffect(() => {
         setSessions(currentSpeaker.event_sessions);

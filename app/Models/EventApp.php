@@ -63,8 +63,14 @@ class EventApp extends Model
     {
         return $this->hasMany(EventSession::class);
     }
+
     public function event_speakers()
     {
         return $this->hasMany(EventSpeaker::class);
+    }
+
+    public function organiser()
+    {
+        return $this->belongsTo(User::class, 'organizer_id');
     }
 }

@@ -1,11 +1,14 @@
 .date-diff-value{
-    font-size: 2.5rem;
-    color: white;
+    font-size: 3.5rem;
+    font-weight: bolder;
+    /* color: white; */
+    color: var(--vz-success);
 }
 .date-diff-label{
     text-transform: uppercase;
     font-weight: 600;
-    color: white;
+    /* color: white; */
+    color: var(--vz-success);
 }
 .dropdown-menu-item-style{
     align-items: center;

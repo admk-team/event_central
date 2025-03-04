@@ -28,7 +28,7 @@ class EventController extends Controller
         $eventApp->load(['event_sessions.eventSpeaker']);
         return Inertia::render('Attendee/AttendeeAgenda', compact('eventApp'));
     }
-    public function getEventSessionDetail(Request $request, EventApp $eventApp, EventSession $eventSession)
+    public function getEventSessionDetail(EventApp $eventApp, EventSession $eventSession)
     {
         // Finding previous and next session ids with reference to current session
         $next_session_id = null;
@@ -49,19 +49,19 @@ class EventController extends Controller
         return Inertia::render('Attendee/AttendeeSessionDetail', compact(['eventApp', 'eventSession', 'selectedSessionDetails', 'prev_session_id', 'next_session_id']));
     }
 
-    public function getEventSpeakerDetail(Request $request, EventApp $eventApp, EventSpeaker $eventSpeaker)
+    public function getEventSpeakerDetail(EventApp $eventApp, EventSpeaker $eventSpeaker)
     {
-        // Log::info($eventSpeaker);
         $eventApp->load('event_speakers.eventSessions');
 
-        // if (!$eventSpeaker) {
-        //     $eventSpeaker = count($eventApp->event_speakers) > 0 ? $eventApp->event_speakers->first() : null;
-        // }
+        if ($eventSpeaker) {
+            $eventSpeaker->load('eventSessions');
+        }
         return Inertia::render('Attendee/AttendeeSpeakerDetail', compact(['eventApp', 'eventSpeaker']));
     }
 
-    public function getEventDetailMore(Request $request, EventApp $eventApp)
+    public function getEventDetailMore(EventApp $eventApp)
     {
-        return 'hello';
+        $eventApp->load('organiser');
+        return Inertia::render('Attendee/AttendeeMore', compact(['eventApp']));
     }
 }

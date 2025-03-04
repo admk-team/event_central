@@ -9,7 +9,7 @@ function DateDifferenceFromToday({ date1, top = '-130px' }: any) {
     const [hours, setHours] = useState(0);
     const [minutes, setMinutes] = useState(0);
     const [seconds, setSeconds] = useState(0);
-
+    // const
     useEffect(() => {
         const interval = setInterval(() => {
             let diff = getDateDiff(date1, moment());
@@ -19,12 +19,13 @@ function DateDifferenceFromToday({ date1, top = '-130px' }: any) {
             setHours(diff.hours);
             setMinutes(diff.minutes);
             setSeconds(diff.seconds);
+            // console.log(diff);
         }, 1000);
         return () => clearInterval(interval);
     }, []);
     return (
-        <div className='d-flex justify-content-center w-100'>
-            <div className='d-flex flex-row justify-content-between' style={{ width: '80%' }}>
+        <div className='d-flex justify-content-center'>
+            {moment(date1).diff(moment()) > 0 && <div className='d-flex flex-row justify-content-between w-75' style={{ width: '80%' }}>
                 {years > 0 && < span className="d-flex flex-column align-items-center" >
                     <span className='date-diff-value'>{years}</span>
                     <span className='date-diff-label'>YEARS</span>
@@ -33,7 +34,7 @@ function DateDifferenceFromToday({ date1, top = '-130px' }: any) {
                     <span className='date-diff-value'>{months}</span>
                     <span className='date-diff-label'>MONTHS</span>
                 </span>}
-                {days >= 0 && <span className="d-flex flex-column align-items-center" >
+                {days > 0 && <span className="d-flex flex-column align-items-center" >
                     <span className='date-diff-value'>{days}</span>
                     <span className='date-diff-label'>DAYS</span>
                 </span>}
@@ -49,7 +50,8 @@ function DateDifferenceFromToday({ date1, top = '-130px' }: any) {
                     <span className='date-diff-value'>{seconds}</span>
                     <span className='date-diff-label'>SECONDS</span>
                 </span>}
-            </div>
+            </div>}
+
         </div>
     )
 }
