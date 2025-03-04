@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\RoleRequest;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
@@ -15,7 +16,11 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::where('panel', 'admin')->latest()->paginate($request->per_page ?? 10);
+        if (! Auth::user()->canAny(['view_roles', 'create_roles', 'edit_roles', 'delete_roles'])) {
+            abort(403);
+        }
+        
+        $roles = $this->datatable(Role::where('panel', 'admin'));
         return Inertia::render("Admin/Roles/Index", compact('roles'));
     }
 
@@ -24,6 +29,10 @@ class RoleController extends Controller
      */
     public function create()
     {
+        if (! Auth::user()->can('create_roles')) {
+            abort(403);
+        }
+
         $permissions = Permission::where('panel', 'admin')->get();
         return Inertia::render("Admin/Roles/CreateOrEdit", compact('permissions'));
     }
@@ -33,11 +42,15 @@ class RoleController extends Controller
      */
     public function store(RoleRequest $request)
     {
+        if (! Auth::user()->can('create_roles')) {
+            abort(403);
+        }
+
         $input = $request->validated();
         $role =  Role::create(['name' => $input['name'], 'panel' => 'admin']);
         $role->givePermissionTo($input['permissions']);
 
-        return to_route('admin.roles.index')->withSuccess('Created');
+        return back()->withSuccess('Created');
     }
 
     /**
@@ -53,6 +66,10 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
+        if (! Auth::user()->can('edit_roles')) {
+            abort(403);
+        }
+
         $roleSpecific = $role->permissions()->get();
         $permissions = Permission::where('panel', 'admin')->get();
         return Inertia::render("Admin/Roles/CreateOrEdit", compact('role', 'permissions', 'roleSpecific'));
@@ -63,9 +80,14 @@ class RoleController extends Controller
      */
     public function update(RoleRequest $request, Role $role)
     {
+        if (! Auth::user()->can('edit_roles')) {
+            abort(403);
+        }
+
         $input = $request->validated();
+        $role->update(['name' => $input['name']]);
         $role->syncPermissions($input['permissions']);
-        return to_route('admin.roles.index')->withSuccess('Updated');
+        return back()->withSuccess('Updated');
     }
 
     /**
@@ -73,6 +95,10 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
+        if (! Auth::user()->can('delete_roles')) {
+            abort(403);
+        }
+
         $role->delete();
 
         return back()->withSuccess('Deleted');

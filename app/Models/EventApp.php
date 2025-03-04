@@ -59,9 +59,9 @@ class EventApp extends Model
         return $this->logo ? url(Storage::url($this->logo)) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s';
     }
     // scopes
-    public function scopeOrganizer($query)
+    public function scopeOfOwner($query)
     {
-        $query->where('organizer_id', Auth::id());
+        $query->where('organizer_id', Auth::user()->owner_id);
     }
     public function event_sessions()
     {

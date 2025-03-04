@@ -23,7 +23,7 @@ class EventSpeakerController extends Controller
     public function create()
     {
         // $colorschemes = ColorScheme::latest()->paginate($request->per_page ?? 10);
-        $events = EventApp::organizer()->get();
+        $events = EventApp::ofOwner()->get();
         return Inertia::render("Organizer/Events/Speekers/CreateOrEdit",[
             'events' => $events
         ]);

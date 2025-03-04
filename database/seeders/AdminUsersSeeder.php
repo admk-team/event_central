@@ -24,7 +24,9 @@ class AdminUsersSeeder extends Seeder
                 "email_verified_at" => now()
             ]);
         }
+
+        setPermissionsTeamId(null);
         
-        $user->assignRole('superadmin');
+        $user->syncRoles(['superadmin']);
     }
 }

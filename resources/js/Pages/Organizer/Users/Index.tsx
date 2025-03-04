@@ -43,7 +43,7 @@ function Index({ users }: any) {
     }
 
     const handleDelete = () => {
-        deleteForm.delete(route('admin.users.destroy', deleteUser.id));
+        deleteForm.delete(route('organizer.users.destroy', deleteUser.id));
         setShowDeleteConfirmation(false);
     }
 
@@ -53,7 +53,7 @@ function Index({ users }: any) {
     }
 
     const handleDeleteMany = () => {
-        deleteManyForm.delete(route('admin.users.destroy.many'));
+        deleteManyForm.delete(route('organizer.users.destroy.many'));
         setShowDeleteManyConfirmation(false);
     }
 
@@ -102,7 +102,7 @@ function Index({ users }: any) {
 
     return (
         <React.Fragment>
-            <Head title='Users - Admin' />
+            <Head title='Users' />
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb2 

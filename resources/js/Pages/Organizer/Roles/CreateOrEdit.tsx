@@ -8,7 +8,7 @@ import BreadCrumb2 from '../../../Components/Common/BreadCrumb2';
 function CreateOrEdit({ role, permissions, roleSpecific }: { role: any | null, permissions: any[], roleSpecific: any[] }) {
     const isEdit = role != null;
 
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm({
         _method: isEdit ? "PUT" : "POST",
         name: role?.name ?? '',
         permissions: isEdit ? roleSpecific.map((p) => p.id) : [],
@@ -36,25 +36,26 @@ function CreateOrEdit({ role, permissions, roleSpecific }: { role: any | null, p
         e.preventDefault();
 
         if (isEdit) {
-            post(route('admin.roles.update', role.id), {
+            post(route('organizer.roles.update', role.id), {
                 preserveScroll: true,
             });
         } else {
-            post(route('admin.roles.store'), {
+            post(route('organizer.roles.store'), {
                 preserveScroll: true,
+                onSuccess: () => reset(),
             });
         }
     };
     
     return (
         <React.Fragment>
-            <Head title={`${isEdit ? 'Edit Role' : 'Create Role'} - Admin`} />
+            <Head title={`${isEdit ? 'Edit Role' : 'Create Role'}`} />
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb2 
                         title={isEdit ? 'Edit' : 'Create'} 
                         items={[
-                            { title: "Roles", link: route('admin.roles.index') }
+                            { title: "Roles", link: route('organizer.roles.index') }
                         ]}
                     />
                     <Row>
@@ -95,7 +96,7 @@ function CreateOrEdit({ role, permissions, roleSpecific }: { role: any | null, p
                                                     <Form.Check
                                                         type="checkbox"
                                                         id={`permission-${permission.id}`}
-                                                        label={permission.name}
+                                                        label={permission.name.replace('_', ' ')}
                                                         checked={data.permissions.includes(permission.id)}
                                                         onChange={() => handleCheckboxChange(permission.id)}
                                                     />
