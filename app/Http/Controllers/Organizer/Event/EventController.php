@@ -33,7 +33,7 @@ class EventController extends Controller
     public function store(EventStoreRequest $request)
     {
         $data = $request->validated();
-        $data['organizer_id'] = Auth::id();
+        $data['organizer_id'] = Auth::user()->owner_id;
         $event = EventApp::create($data);
         session()->put('event_id', $event->id);
         return redirect()->route('organizer.events.dashboard')->withSuccess('Event created successfully.');

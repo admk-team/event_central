@@ -66,6 +66,10 @@ class UserController extends Controller
             abort(403);
         }
 
+        if (in_array($user->id, [1])) {
+            return back()->withError('This user cannot be edited');
+        }
+
         $input = $request->validated();
         $role_id = $input['role_id'];
         unset($input['role_id']);
@@ -88,6 +92,10 @@ class UserController extends Controller
             abort(403);
         }
 
+        if (in_array($user->id, [Auth::id(), 1])) {
+            return back()->withError('This user cannot be deleted');
+        }
+
         $user->delete();
 
         return back()->withSuccess('Deleted');
@@ -104,6 +112,10 @@ class UserController extends Controller
         ]);
 
         foreach ($request->ids as $id) {
+            if (in_array($user->id, [Auth::id(), 1])) {
+                return back()->withError('This user cannot be deleted');
+            }
+
             User::find($id)?->delete();
         }
 

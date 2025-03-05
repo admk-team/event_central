@@ -38,4 +38,9 @@ class AdminPermissionsSeeder extends Seeder
             Permission::updateOrCreate(['name' => $permission, 'panel' => 'admin']);
         }
     }
+
+    public static function getPermissions()
+    {
+        return Permission::whereIn('name', static::$permissions)->where('panel', 'admin')->get();
+    }
 }

@@ -44,4 +44,9 @@ class OrganizerPermissionsSeeder extends Seeder
             Permission::updateOrCreate(['name' => $permission, 'panel' => 'organizer']);
         }
     }
+
+    public static function getPermissions()
+    {
+        return Permission::whereIn('name', static::$permissions)->where('panel', 'organizer')->get();
+    }
 }

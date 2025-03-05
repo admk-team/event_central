@@ -78,6 +78,10 @@ class RoleController extends Controller
             abort(403);
         }
 
+        if (in_array($role->name, ['superadmin', 'owner'])) {
+            return back()->withError("System defined roles cannot be edited");
+        }
+
         $roleSpecific = $role->permissions()->get();
         $permissions = Permission::where('panel', 'organizer')->get();
         return Inertia::render("Organizer/Roles/CreateOrEdit", compact('role', 'permissions', 'roleSpecific'));
@@ -90,6 +94,10 @@ class RoleController extends Controller
     {
         if (! Auth::user()->can('edit_roles')) {
             abort(403);
+        }
+
+        if (in_array($role->name, ['superadmin', 'owner'])) {
+            return back()->withError("System defined roles cannot be edited");
         }
 
         $input = $request->validated();
@@ -105,6 +113,10 @@ class RoleController extends Controller
     {
         if (! Auth::user()->can('delete_roles')) {
             abort(403);
+        }
+
+        if (in_array($role->name, ['superadmin', 'owner'])) {
+            return back()->withError("System defined roles cannot be deleted");
         }
         
         $role->delete();
