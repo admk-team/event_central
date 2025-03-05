@@ -21,11 +21,14 @@ class DatabaseSeeder extends Seeder
             AdminPermissionsSeeder::class,
             AdminRolesSeeder::class,
             AdminUsersSeeder::class,
+            AdminRecurringTypeSeeder::class,
+            AdminEventAppCategorySeeder::class,
 
             // Organizer
             OrganizerPermissionsSeeder::class,
             OrganizerRolesSeeder::class,
             OrganizerUsersSeeder::class,
+
         ]);
 
         // \App\Models\User::factory(10)->create();
