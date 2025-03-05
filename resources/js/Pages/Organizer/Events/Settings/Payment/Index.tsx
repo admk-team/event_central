@@ -1,5 +1,5 @@
 import React from 'react';
-import Layout from '../../../../../Layouts/Organizer/Event';
+import Layout from '../../../../../Layouts/Event';
 import { Head, usePage } from '@inertiajs/react';
 import { Col, Container, Row } from 'react-bootstrap';
 import BreadCrumb2 from '../../../../../Components/Common/BreadCrumb2';
@@ -19,17 +19,15 @@ function Index() {
                             { title: "Settings", link: route('organizer.events.settings.payment.index') }
                         ]}
                     />
-                    <Container>
-                        <Row>
-                            <Col md={6}>
-                                <PaypalSetting />
-                            </Col>
-                            <Col md={6}>
-                                <StripeSetting />
-                            </Col>
-                          
-                        </Row>
-                    </Container>
+                    <Row>
+                        <Col md={6}>
+                            <PaypalSetting />
+                        </Col>
+                        <Col md={6}>
+                            <StripeSetting />
+                        </Col>
+                        
+                    </Row>
                 </Container>
             </div>
         </React.Fragment>

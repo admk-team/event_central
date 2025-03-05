@@ -16,7 +16,7 @@ class EventController extends Controller
      */
     public function index()
     {
-        $events = EventApp::organizer()->get();
+        $events = EventApp::ofOwner()->get();
         return Inertia::render('Organizer/Events/Index', [
             'events' => $events
         ]);
@@ -39,10 +39,19 @@ class EventController extends Controller
         return redirect()->route('organizer.events.dashboard')->withSuccess('Event created successfully.');
     }
 
-    public function selectEvent( $id)
+    public function selectEvent(Request $request, $id)
     {
+        $event = EventApp::ofOwner()->find($id);
+        
+        if (! $event) {
+            abort(403);
+        }
+        
         session()->put('event_id', $id);
-        if (route('organizer.events.index') !== back()->getTargetUrl()) {
+
+        $back = (bool) ($request->back ?? true);
+        
+        if ($back) {
             return back();
         }
 

@@ -17,17 +17,16 @@ class EventSessionController extends Controller
     public function index(Request $request)
     {
         // $schedules = EventSession::currentEvent()->latest()->paginate($request->per_page ?? 10);
-        $schedules =$this->datatable(EventSession::query());
+        $event_sessions =$this->datatable(EventSession::query());
         $speakers = EventSpeaker::currentEvent()->get();
         $platforms = PlatForm::all();
-        $event_platforms=EventPlatform::all();
-        return Inertia::render('Organizer/Events/Schedule/Index', compact('schedules', 'speakers', 'platforms', 'event_platforms'));
+        $event_platforms= EventPlatform::with('eventsessions')->get();
+        return Inertia::render('Organizer/Events/Schedule/Index', compact('event_sessions', 'speakers', 'platforms', 'event_platforms'));
     }
 
     public function store(EventSessionRequest $request)
     {
         $data = $request->validated();
-
         $data['event_app_id'] = session('event_id');
         EventSession::create($data);
         return back();
@@ -46,11 +45,12 @@ class EventSessionController extends Controller
         return back();
     }
 
-    public function destroyMany(Request $request){
+    public function destroyMany(Request $request)
+    {
         $request->validate([
-            'ids'=> 'required|array'
+            'ids' => 'required|array'
         ]);
-        foreach($request->ids as $id){
+        foreach ($request->ids as $id) {
             EventSession::find($id)?->delete();
         }
     }

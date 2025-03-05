@@ -1,5 +1,5 @@
 .date-diff-value{
-    font-size: 3.5rem;
+    font-size: 2.5rem;
     font-weight: bolder;
     /* color: white; */
     color: var(--vz-success);
@@ -64,4 +64,33 @@ ul.timeline > li:before {
 
 .active-list-item{
     border-left: 6px solid var(--vz-success) !important;
+}
+
+.event-image img {
+    width: 100%;
+    height: 100%;
+}
+
+.card-full-image{
+    border-radius: var(--vz-card-inner-border-radius);
+}
+
+.card-top-image{
+    border-top-left-radius: var(--vz-card-inner-border-radius);
+    border-top-right-radius: var(--vz-card-inner-border-radius);
+}
+
+.event-image {
+    position: relative;
+    margin: 0  !important;
+}
+
+.event-image figcaption {
+    position: absolute;
+    top: 50%;
+    bottom: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }

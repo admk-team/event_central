@@ -86,7 +86,11 @@ const AttendeeSessionDetail = ({ eventApp, eventSession, selectedSessionDetails,
                                     </div>
                                     <div>
                                         <Card >
-                                            <Card.Img src={defaultEventImage} style={{ height: '30rem' }} />
+                                            {/* <Card.Img src={defaultEventImage} style={{ height: '30rem' }} /> */}
+                                            <figure className="event-image">
+                                                <img className='card-full-image' src={defaultEventImage} alt="event default image" />
+                                                <figcaption><DateDifferenceFromToday date1={eventApp.start_date} ></DateDifferenceFromToday></figcaption>
+                                            </figure>
                                         </Card>
                                         <div style={{ position: 'relative', top: '-18rem' }}>
                                             <DateDifferenceFromToday date1={eventSession.start_date} top={'-18rem'}></DateDifferenceFromToday>

@@ -1,4 +1,4 @@
-import Layout from "../../../../Layouts/Organizer/Event";
+import Layout from "../../../../Layouts/Event";
 import { Head, Link, useForm } from '@inertiajs/react';
 import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 import React, { useState } from 'react';
@@ -27,7 +27,6 @@ function CreateOrEdit({ speaker, events }: any) {
     });
 
     function handleAvatar(e: any) {
-        console.log(e.target.files);
         const file = e.target.files[0]
         setData('avatar', file);
 

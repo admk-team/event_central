@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import moment from 'moment';
 
 const AttendeeEventInfoBox = () => {
-    const eventInfo = usePage().props.eventApp;
+    const eventInfo: any = usePage().props.eventApp;
     return (
         <React.Fragment>
             <div className="d-flex flex-column justify-content-center align-items-center mx-2 mt-2" >

@@ -23,7 +23,7 @@ class UserRequest extends FormRequest
     {
         $rules = [
             'name' => 'required|string',
-            'role' => 'required|string',
+            'role_id' => 'required',
         ];
 
         if ($this->route()->getName() === 'admin.users.store') {

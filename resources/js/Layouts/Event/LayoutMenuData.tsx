@@ -6,19 +6,19 @@ const Navdata = () => {
     const [isContent, setIsContent] = useState<boolean>(false);
     const [isEngagement, setIsEngagement] = useState<boolean>(false);
     const [isUsers, setIsUsers] = useState<boolean>(false);
-    const [isSettings, setIsSettings] = useState<boolean>(false);
+    const [isSettingsMenu, setIsSettingsMenu] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
 
     function updateIconSidebar(e: any) {
         if (e && e.target && e.target.getAttribute("sub-items")) {
-            const ul : any = document.getElementById("two-column-menu");
-            const iconItems : any = ul.querySelectorAll(".nav-icon.active");
+            const ul: any = document.getElementById("two-column-menu");
+            const iconItems: any = ul.querySelectorAll(".nav-icon.active");
             let activeIconItems = [...iconItems];
             activeIconItems.forEach((item) => {
                 item.classList.remove("active");
                 var id = item.getAttribute("sub-items");
-                const getID : any = document.getElementById(id) as HTMLElement;
+                const getID: any = document.getElementById(id) as HTMLElement;
                 if (getID)
                     getID?.parentElement.classList.remove("show");
             });
@@ -33,21 +33,18 @@ const Navdata = () => {
         if (iscurrentState !== 'Content') {
             setIsContent(false);
         }
-        if (iscurrentState !== 'Settings') {
-            setIsSettings(false);
-        }
         if (iscurrentState !== 'users') {
             setIsUsers(false);
         }
-
+        if (iscurrentState !== 'Settings') {
+            setIsSettingsMenu(false);
+        }
         // Add Here
     }, [
-        history,
         iscurrentState,
         isDashboard,
         isUsers,
-        isSettings,
-        
+        isSettingsMenu,
         // Add Here
     ]);
 
@@ -58,7 +55,7 @@ const Navdata = () => {
         },
         {
             id: "dashboard",
-            label: "Dashboards",
+            label: "Dashboard",
             icon: "bx bxs-dashboard",
             link: route('organizer.events.dashboard'),
             stateVariables: isDashboard,
@@ -132,6 +129,14 @@ const Navdata = () => {
                 setIscurrentState('engagement');
                 updateIconSidebar(e);
             },
+            subItems: [
+                {
+                    id: "newsfeed",
+                    label: "Newsfeed",
+                    link: route('organizer.events.engagement.newsfeed.index'),
+                    parentId: "dashboard",
+                }
+            ]
         },
         {
             id: "users",
@@ -155,34 +160,40 @@ const Navdata = () => {
                 {
                     id: "team",
                     label: "Team",
-                    link: '#',
+                    link: '/events/teams',
                     parentId: "dashboard",
                 }
             ]
-
         },
         {
             id: "settings",
             label: "Settings",
             icon: "bx bx-cog",
             link: "/#",
-            stateVariables: isSettings,
+            stateVariables: isSettingsMenu,
             click: function (e: any) {
                 e.preventDefault();
-                setIsSettings(!isSettings);
+                setIsSettingsMenu(!isSettingsMenu);
                 setIscurrentState('Settings');
+                updateIconSidebar(e);
             },
             subItems: [
                 {
                     id: "eventSettings",
                     label: "Event",
                     link: route('organizer.events.settings.event.index'),
-                    parentId: "settings",
+                    parentId: "dashboard",
                 },
                 {
                     id: "payemntSettings",
                     label: "Payment Settings",
                     link: route('organizer.events.settings.payment.index'),
+                    parentId: "dashboard",
+                },
+                {
+                    id: "website",
+                    label: "Website",
+                    link: route('organizer.events.settings.website.index'),
                     parentId: "settings",
                 },
             ]

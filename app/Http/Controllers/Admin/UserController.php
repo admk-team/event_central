@@ -22,7 +22,7 @@ class UserController extends Controller
         }
 
         $users = $this->datatable(User::where('role', 'admin')->with('roles:name'));
-        $roles = $roles = Role::where('panel', 'admin')->get()->pluck('name');
+        $roles = $roles = Role::where('panel', 'admin')->get();
         return Inertia::render("Admin/Users/Index", compact('users', 'roles'));
     }
 
@@ -36,13 +36,14 @@ class UserController extends Controller
         }
 
         $input = $request->validated();
-        $role = $input['role'];
+        $role_id = $input['role_id'];
+        unset($input['role_id']);
 
         $input['role'] = 'admin'; // User type
 
         $user = User::create($input);
 
-        $user->syncRoles([$role]);
+        $user->syncRoles([$role_id]);
 
         return back()->withSuccess("Created");
     }
@@ -65,13 +66,14 @@ class UserController extends Controller
         }
 
         $input = $request->validated();
-        $role = $input['role'];
+        $role_id = $input['role_id'];
+        unset($input['role_id']);
 
         $input['role'] = 'admin'; // User type
 
         $user->update($input);
 
-        $user->syncRoles([$role]);
+        $user->syncRoles([$role_id]);
 
         return back()->withSuccess('Updated');
     }

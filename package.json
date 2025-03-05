@@ -31,6 +31,7 @@
         "@fullcalendar/react": "^6.1.15",
         "@hello-pangea/dnd": "^17.0.0",
         "@inertiajs/inertia": "^0.11.1",
+        "@measured/puck": "^0.18.2",
         "@react-google-maps/api": "^2.20.6",
         "@reduxjs/toolkit": "^2.3.0",
         "@south-paw/react-vector-maps": "^3.2.0",

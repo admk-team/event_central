@@ -124,7 +124,6 @@ function Index({ users }: any) {
                                         ),
                                         showOnRowSelection: true,
                                     },
-
                                     // Add new
                                     {
                                         render: (

@@ -24,8 +24,8 @@ function DateDifferenceFromToday({ date1, top = '-130px' }: any) {
         return () => clearInterval(interval);
     }, []);
     return (
-        <div className='d-flex justify-content-center'>
-            {moment(date1).diff(moment()) > 0 && <div className='d-flex flex-row justify-content-between w-75' style={{ width: '80%' }}>
+        <div className='d-flex justify-content-center w-100'>
+            {moment(date1).diff(moment()) > 0 && <div className='d-flex flex-row justify-content-between w-50'>
                 {years > 0 && < span className="d-flex flex-column align-items-center" >
                     <span className='date-diff-value'>{years}</span>
                     <span className='date-diff-label'>YEARS</span>

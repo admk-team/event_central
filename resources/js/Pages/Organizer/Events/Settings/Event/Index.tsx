@@ -1,5 +1,5 @@
 import React from 'react';
-import Layout from '../../../../../Layouts/Organizer/Event';
+import Layout from '../../../../../Layouts/Event';
 import { Head, usePage } from '@inertiajs/react';
 import { Col, Container, Row } from 'react-bootstrap';
 import BreadCrumb2 from '../../../../../Components/Common/BreadCrumb2';
@@ -19,23 +19,21 @@ function Event() {
                             { title: "Settings", link: route('organizer.events.settings.event.index') }
                         ]}
                     />
-                    <Container>
-                        <Row>
-                            <Col md={8}>
-                                <Information />
-                            </Col>
-                            <Col md={4}>
-                                <Row>
-                                    <Col xs={12}>
-                                        {/* <Contact /> */}
-                                    </Col>
-                                    <Col xs={12}>
-                                        <Other />
-                                    </Col>
-                                </Row>
-                            </Col>
-                        </Row>
-                    </Container>
+                    <Row>
+                        <Col md={8}>
+                            <Information />
+                        </Col>
+                        <Col md={4}>
+                            <Row>
+                                <Col xs={12}>
+                                    {/* <Contact /> */}
+                                </Col>
+                                <Col xs={12}>
+                                    <Other />
+                                </Col>
+                            </Row>
+                        </Col>
+                    </Row>
                 </Container>
             </div>
         </React.Fragment>

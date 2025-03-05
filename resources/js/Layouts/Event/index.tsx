@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import Header from './Header';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
-import RightSidebar from '../../../Components/Common/RightSidebar';
+import RightSidebar from '../../Components/Common/RightSidebar';
 
 //import actions
 import {
@@ -19,15 +19,15 @@ import {
     changeLeftsidebarViewType,
     changeSidebarImageType,
     changeSidebarVisibility
-} from "../../../slices/thunk";
+} from "../../slices/thunk";
 
 //redux
 import { useSelector, useDispatch } from "react-redux";
 import { createSelector } from 'reselect';
-import { LAYOUT_TYPES } from '../../../Components/constants/layout';
+import { LAYOUT_TYPES } from '../../Components/constants/layout';
 
 import { Toaster } from 'react-hot-toast';
-import useToastMessages from '../../../hooks/useToastMessages';
+import useToastMessages from '../../hooks/useToastMessages';
 
 const Layout = ({children} : any) => {
     const [headerClass, setHeaderClass] = useState<any>("");
@@ -37,7 +37,7 @@ const Layout = ({children} : any) => {
     const selectLayoutProperties = createSelector(
         selectLayoutState,
         (layout:any) => ({
-            layoutType: LAYOUT_TYPES.HORIZONTAL,
+            layoutType: LAYOUT_TYPES.VERTICAL,
             leftSidebarType: layout.leftSidebarType,
             layoutModeType: layout.layoutModeType,
             layoutWidthType: layout.layoutWidthType,
