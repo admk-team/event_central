@@ -10,6 +10,7 @@ import DataTable, { ColumnDef } from '../../../Components/DataTable';
 import BreadCrumb2 from '../../../Components/Common/BreadCrumb2';
 import DeleteManyModal from '../../../Components/Common/DeleteManyModal';
 import HasPermission from '../../../Components/HasPermission';
+import moment from 'moment';
 
 function Index({ events, recurring_types, event_category_types }: any) {
 
@@ -19,7 +20,7 @@ function Index({ events, recurring_types, event_category_types }: any) {
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
 
-
+    console.log(events);
     const deleteForm = useForm({
         _method: 'DELETE'
     });
@@ -40,7 +41,7 @@ function Index({ events, recurring_types, event_category_types }: any) {
     }
 
     const handleDelete = () => {
-        deleteForm.delete(route('organizer.users.destroy', deleteUser.id));
+        deleteForm.post(route('organizer.events.destroy', deleteUser.id));
         setShowDeleteConfirmation(false);
     }
 
@@ -50,7 +51,7 @@ function Index({ events, recurring_types, event_category_types }: any) {
     }
 
     const handleDeleteMany = () => {
-        deleteManyForm.delete(route('organizer.users.destroy.many'));
+        deleteManyForm.delete(route('organizer.events.destroy.many'));
         setShowDeleteManyConfirmation(false);
     }
 
@@ -60,36 +61,49 @@ function Index({ events, recurring_types, event_category_types }: any) {
             header: () => 'ID',
             cell: (event) => event.id,
             cellClass: "fw-medium",
-            enableSorting: true,
+            enableSorting: false
         },
         {
             accessorKey: 'logo',
             header: () => 'Logo',
             cell: (event) => event.logo,
-            enableSorting: false,
+            enableSorting: false
+        },
+        {
+            accessorKey: 'category',
+            header: () => 'Category',
+            cell: (event) => event.category?.name ?? '',
+            enableSorting: false
         },
         {
             accessorKey: 'name',
             header: () => 'Name',
             cell: (event) => event.name,
-            enableSorting: true,
+            enableSorting: false
         },
         {
             accessorKey: 'description',
             header: () => 'Description',
             cell: (event) => event.description,
-            enableSorting: false,
+            enableSorting: false
+        },
+        {
+            accessorKey: 'start_date',
+            header: () => 'Start Date',
+            cell: (event) => moment(event.start_date).format('DD MMM, YYYY'),
+            enableSorting: false
         },
         {
             accessorKey: 'is_recurring',
             header: () => 'Is Recurring',
-            cell: (event) => <span className="badge bg-success-subtle text-success">{event.is_recurring}</span>,
-            enableSorting: true,
+            cell: (event) => <span className="badge bg-success-subtle text-success">Yes</span>,
+            enableSorting: false
         },
         {
             header: () => 'Action',
             cell: (event) => (
                 <div className="hstack gap-3 fs-15">
+                    <Link href={route('organizer.events.select', { 'id': event.id, 'back': false })}>Open</Link>
                     <HasPermission permission="edit_users">
                         <span className="link-primary cursor-pointer" onClick={() => editAction(event)}><i className="ri-edit-fill"></i></span>
                     </HasPermission>

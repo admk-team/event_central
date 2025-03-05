@@ -47,9 +47,9 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                 <Modal.Body>
                     <FormGroup className="mb-3">
                         <Form.Label className="form-label">Name</Form.Label>
-                        <Form.Control 
-                            type="text" 
-                            className="form-control" 
+                        <Form.Control
+                            type="text"
+                            className="form-control"
                             value={data.name}
                             onChange={(e) => setData({...data, name: e.target.value})}
                             isInvalid={!!errors.name}
@@ -60,8 +60,8 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                     </FormGroup>
                     <FormGroup className="mb-3">
                         <Form.Label className="form-label">Email</Form.Label>
-                        <Form.Control 
-                            type="email" 
+                        <Form.Control
+                            type="email"
                             className="form-control"
                             value={data.email}
                             onChange={(e) => setData({...data, email: e.target.value})}
@@ -73,8 +73,8 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                     </FormGroup>
                     <FormGroup className="mb-3">
                         <Form.Label className="form-label">Pasword</Form.Label>
-                        <Form.Control 
-                            type="password" 
+                        <Form.Control
+                            type="password"
                             className="form-control"
                             value={data.password}
                             onChange={(e) => setData({...data, password: e.target.value})}
@@ -86,8 +86,8 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                     </FormGroup>
                     <FormGroup className="mb-3">
                         <Form.Label className="form-label">Role</Form.Label>
-                        <Form.Select 
-                            className="form-control" 
+                        <Form.Select
+                            className="form-control"
                             value={data.role_id}
                             onChange={(e) => setData({...data, role_id: e.target.value})}
                             isInvalid={!!errors.role_id}

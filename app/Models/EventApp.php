@@ -18,24 +18,26 @@ class EventApp extends Model
         'name',
         'logo',
         'description',
-        // 'start_date',        // Columns removed and being managed
-        // 'end_date',          // through New table EventAppDate
         'location_type',
         'location_base',
         'type',
         'schedual_type',
-        'even_app_category_id',
+        'event_app_category_id',
         'is_recurring',
         'recurring_type_id'
     ];
 
     protected $casts = [
-        'is_curring' => 'boolean'
+        'is_recurring' => 'boolean'
     ];
     protected $appends = [
         'start_date',   //Picks first date from dates table
         'created_at' => 'created_at_date',
         'logo' => 'logo_img'
+    ];
+    protected $with = [
+        'category',
+        'recurring_type'
     ];
 
     public function uniqueIds(): array
@@ -89,7 +91,7 @@ class EventApp extends Model
 
     public function category()
     {
-        return $this->belongsTo(EventAppCategory::class);
+        return $this->belongsTo(EventAppCategory::class, 'event_app_category_id');
     }
 
     public function recurring_type()
@@ -104,6 +106,7 @@ class EventApp extends Model
 
     public function getStartDateAttribute()
     {
-        return $this->dates()->first() ? $this->dates()->first()->date_time : null;
+        $temp = $this->dates()->first();
+        return $temp ? $temp->date_time : null;
     }
 }
