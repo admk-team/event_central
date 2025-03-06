@@ -101,6 +101,8 @@ class EventController extends Controller
      */
     public function update(EventStoreRequest $request, EventApp $event_app)
     {
+        // Log::info($request->all());
+
         $data = $request->validated();
         $data['organizer_id'] = Auth::id();
 

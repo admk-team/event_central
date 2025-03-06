@@ -113,8 +113,11 @@ class EventApp extends Model
     }
 
 
-
-
+    // //Mutator
+    // public function setIsRecurringAttribute($value)
+    // {
+    //     $this->attributes['is_recurring'] = (int) $value;
+    // }
 
     //     Registering Model Life Cycle Events
     protected static function booted()

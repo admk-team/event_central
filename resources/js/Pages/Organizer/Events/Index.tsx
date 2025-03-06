@@ -21,7 +21,7 @@ function Index({ events, recurring_types, event_category_types }: any) {
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
     const [imageHash, setImageHash] = useState(Date.now());
 
-    // console.log(events);
+    console.log(events);
 
     const deleteForm = useForm({
         _method: 'DELETE'
