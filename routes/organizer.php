@@ -44,6 +44,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
         Route::post('/', [EventController::class, 'store'])->name('store');
         Route::put('/{event_app}', [EventController::class, 'update'])->name('update');
         Route::delete('/{event_app}', [EventController::class, 'destroy'])->name('destroy');
+        Route::delete('/delete/many', [EventController::class, 'destroyMany'])->name('destroy.many');
         Route::get('{id}/select', [EventController::class, 'selectEvent'])->name('select');
 
         Route::middleware('event_is_selected')->group(function () {

@@ -23,6 +23,9 @@ const fourth = { lat: 19.0760, lng: 72.8777 }
 
 function CreateEditModal({ show, hide, onHide, event, recurring_types, event_category_types }: { show: boolean, hide: () => void, onHide: () => void, event: any | null, recurring_types: any, event_category_types: any }) {
 
+    const [imageHash, setImageHash] = useState(Date.now());   //Causing image to be reloaded
+    const [showRecurringOptions, setShowRecurringOptions] = useState(event?.is_recurring ?? false);
+
     const { data, setData, post, processing, errors, reset } = useForm({
         _method: event ? "PUT" : "POST",
         id: event?.id ?? null,
@@ -39,11 +42,13 @@ function CreateEditModal({ show, hide, onHide, event, recurring_types, event_cat
         logo_file: '',      //To be use for new file
     });
 
+
     const btnTitle = event ? 'UPDATE' : 'CREATE';
     const afterSumbitAction = {
         preserveScroll: true,
         onSuccess: () => {
             hide();
+            setImageHash(Date.now());
         }
     };
     const submit = (e: any) => {
@@ -58,9 +63,16 @@ function CreateEditModal({ show, hide, onHide, event, recurring_types, event_cat
         // hide();
     }
 
+    const handleLogoFileChange = (event: any) => {
+        setData('logo_file', event.target.files[0]);
+        setImageHash(Date.now());
+    }
+
     const handleCheckChange = (e: any) => {
-        console.log(e);
-        console.log(e.target.value);
+        // console.log(e);
+        // console.log(e.target.checked);
+        setData('is_recurring', e.target.checked);
+        setShowRecurringOptions(e.target.checked);
     }
 
     const selectedPlace: any = {}
@@ -69,6 +81,7 @@ function CreateEditModal({ show, hide, onHide, event, recurring_types, event_cat
     const onSelect = (marker: any) => {
         setSelected(marker);
     };
+
     // Your form errors
     const [mapCenter, setMapCenter] = useState({ lat: 37.7749, lng: -122.4194 }); // Default center (San Francisco)
     const [selectedLocation, setSelectedLocation] = useState(null);
@@ -104,6 +117,7 @@ function CreateEditModal({ show, hide, onHide, event, recurring_types, event_cat
         setData({ ...data, location_base: e.target.value });
     };
 
+
     return (
         <Modal className='modal-dialog-centered' centered show={show} onHide={() => { }} backdrop={'static'}>
             <Modal.Header>
@@ -115,14 +129,19 @@ function CreateEditModal({ show, hide, onHide, event, recurring_types, event_cat
             </Modal.Header>
             <Modal.Body className="p-4">
 
-                {/* <div className='d-flex justify-content-center'>
-                    <img src={event.logo_img} alt="Event Logo" style={{ borderRadius: '50%', height: '150px' }} />
-                </div> */}
+                <div className='d-flex justify-content-center'>
+                    <img src={(event?.logo_img ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s' + "?" + imageHash)} alt="Event Model Logo" style={{ borderRadius: '50%', height: '150px' }} />
+                </div>
 
                 <form onSubmit={submit}>
                     <Form.Group controlId="formFileMultiple" className="mb-3">
                         <Form.Label>Event Logo</Form.Label>
-                        <Form.Control type="file" />
+                        <Form.Control
+                            type="file"
+                            name='logo_file'
+                            placeholder="Choose File For Event Logo"
+                            onChange={handleLogoFileChange}
+                        />
                     </Form.Group>
                     <FormGroup className="mb-3">
                         <Form.Label htmlFor="event_app_category_id" className="form-label text-start w-100">Event Category</Form.Label>
@@ -201,22 +220,27 @@ function CreateEditModal({ show, hide, onHide, event, recurring_types, event_cat
                                     type='switch'
                                     isInvalid={!!errors.is_recurring}
                                     id='is_recurring'
-                                    label="Is Event Recurring"
+                                    label="Recurring"
                                     checked={data.is_recurring}
                                     value={data.is_recurring}
-                                    onChange={(e) => setData('is_recurring', e.target.value)}
+                                    onClick={handleCheckChange}
+                                    onChange={handleCheckChange}
                                 />
-                                <div className="">
-                                    <Form.Select aria-label="Default select example" className="form-control" id="name"
-                                        value={data.recurring_type_id} onChange={(e) => setData('recurring_type_id', e.target.value)}>
-                                        <option>Select Recurring Type</option>
+                                {showRecurringOptions && <div className="">
+                                    <Form.Select
+                                        aria-label="Select Recurring Frequency"
+                                        className="form-control" id="name"
+                                        value={data.recurring_type_id}
+                                        isInvalid={!!errors.recurring_type_id}
+                                        onChange={(e) => setData('recurring_type_id', e.target.value)}>
+                                        <option>Select Recurring Frequency</option>
 
                                         {recurring_types && recurring_types.map((type: any) =>
                                             <option value={type.id} key={type.id}>{type.name}</option>
                                         )}
                                     </Form.Select>
                                     <Form.Control.Feedback type="invalid"> {errors.recurring_type_id} </Form.Control.Feedback>
-                                </div>
+                                </div>}
                             </Col>
                         </Row>
                     </FormGroup>
