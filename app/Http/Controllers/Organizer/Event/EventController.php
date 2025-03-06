@@ -50,7 +50,7 @@ class EventController extends Controller
         $event = EventApp::create($data);
 
         // Save event start date in separate table
-        EventAppDate::create(['event_app_id' => $event->id, 'date_time' => $data['start_date']]);
+        EventAppDate::create(['event_app_id' => $event->id, 'date' => $data['start_date']]);
 
         // Save Event Log File
         $this->SaveLogoImage($event, $request);
@@ -109,7 +109,7 @@ class EventController extends Controller
 
         //Update Event Date Date Time
         $event_date = $event_app->dates()->first();
-        $event_date->update(['date_time' => $data['start_date']]);
+        $event_date->update(['date' => $data['start_date']]);
 
         // Save Event Log File If changed
         $this->SaveLogoImage($event_app, $request);

@@ -26,6 +26,8 @@ function CreateEditModal({ show, hide, onHide, event, recurring_types, event_cat
     const [imageHash, setImageHash] = useState(Date.now());   //Causing image to be reloaded
     const [showRecurringOptions, setShowRecurringOptions] = useState(event?.is_recurring ?? false);
 
+    // console.log(event);
+
     const { data, setData, post, processing, errors, reset } = useForm({
         _method: event ? "PUT" : "POST",
         id: event?.id ?? null,
@@ -173,7 +175,9 @@ function CreateEditModal({ show, hide, onHide, event, recurring_types, event_cat
                             id="start_date"
                             className={'form-control ' + (!!errors.start_date ? 'is-invalid' : '')}
                             options={{
-                                dateFormat: "d M, Y"
+                                altInput: true,
+                                altFormat: "d M, Y",
+                                dateFormat: "Y-m-d"
                             }}
                             value={data.start_date}
                             onChange={([selectedDate]: Date[]) => {

@@ -109,7 +109,7 @@ class EventApp extends Model
     public function getStartDateAttribute()
     {
         $temp = $this->dates()->first();
-        return $temp ? $temp->date_time : null;
+        return $temp ? $temp->date : null;
     }
 
 
