@@ -18,17 +18,26 @@ class EventApp extends Model
         'name',
         'logo',
         'description',
-        'start_date',
-        'end_date',
         'location_type',
         'location_base',
         'type',
         'schedual_type',
+        'event_app_category_id',
+        'is_recurring',
+        'recurring_type_id'
     ];
 
+    protected $casts = [
+        'is_recurring' => 'boolean'
+    ];
     protected $appends = [
+        'start_date',   //Picks first date from dates table
         'created_at' => 'created_at_date',
         'logo' => 'logo_img'
+    ];
+    protected $with = [
+        'category',
+        'recurring_type'
     ];
 
     public function uniqueIds(): array
@@ -78,5 +87,26 @@ class EventApp extends Model
     public function organiser()
     {
         return $this->belongsTo(User::class, 'organizer_id');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(EventAppCategory::class, 'event_app_category_id');
+    }
+
+    public function recurring_type()
+    {
+        return $this->belongsTo(RecurringType::class);
+    }
+
+    public function dates()
+    {
+        return $this->hasMany(EventAppDate::class);
+    }
+
+    public function getStartDateAttribute()
+    {
+        $temp = $this->dates()->first();
+        return $temp ? $temp->date_time : null;
     }
 }
