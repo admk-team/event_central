@@ -4,28 +4,28 @@ import { Form, FormGroup, Modal, Spinner } from "react-bootstrap";
 export default function CreateEditModal({ show, hide, onHide, user }: { show: boolean, hide: () => void, onHide: () => void, user: any|null }) {
     const isEdit = user != null ? true : false;
 
-    const roles = usePage().props.roles as string[] ?? [];
+    const roles = (usePage().props.roles ?? []) as any[];
 
     const { data, setData, post, put, processing, errors, reset } = useForm({
         _method: isEdit ? "PUT" : "POST",
         name: user?.name ?? '',
         email: user?.email ?? '',
         password: '',
-        role: user?.roles[0]?.name ?? '',
+        role_id: user?.roles[0]?.id ?? '',
     });
 
     const submit = (e: any) => {
         e.preventDefault();
 
         if (isEdit) {
-            post(route('admin.users.update', user.id), {
+            post(route('organizer.users.update', user.id), {
                 preserveScroll: true,
                 onSuccess: () => {
                     hide();
                 }
             });
         } else {
-            post(route('admin.users.store'), {
+            post(route('organizer.users.store'), {
                 preserveScroll: true,
                 onSuccess: () => {
                     reset();
@@ -88,17 +88,17 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                         <Form.Label className="form-label">Role</Form.Label>
                         <Form.Select 
                             className="form-control" 
-                            value={data.role}
-                            onChange={(e) => setData({...data, role: e.target.value})}
-                            isInvalid={!!errors.role}
+                            value={data.role_id}
+                            onChange={(e) => setData({...data, role_id: e.target.value})}
+                            isInvalid={!!errors.role_id}
                         >
                             <option>Select</option>
-                            {roles.map((role, index) => (
-                                <option value={role} key={index}>{role}</option>
+                            {roles.map((role) => (
+                                <option value={role.id} key={role.id}>{role.name}</option>
                             ))}
                         </Form.Select>
-                        {errors.role && (
-                            <Form.Control.Feedback type="invalid">{errors.role}</Form.Control.Feedback>
+                        {errors.role_id && (
+                            <Form.Control.Feedback type="invalid">{errors.role_id}</Form.Control.Feedback>
                         )}
                     </FormGroup>
                 </Modal.Body>

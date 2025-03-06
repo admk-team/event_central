@@ -14,8 +14,8 @@ const AttendeeAgenda = ({ eventApp }: any) => {
         <li key={session.id}>
             <Link href={route('attendee.event.detail.session', { eventApp: eventApp.id, eventSession: session.id })}>
                 <div className='d-flex justify-content-between'>
-                    <span>{moment(session.start_date).format('DD MMM YYYY')}   ({moment(session.start_date).format('mm:ss')}-{moment(session.end_date).format('mm:ss')})</span>
-                    <span>
+                    <span style={{ color: 'var(--vz-success)' }}>{moment(session.start_date).format('DD MMM YYYY')}   ({moment(session.start_date).format('hh:mm:ss')}-{moment(session.end_date).format('hh:mm:ss')})</span>
+                    <span style={{ color: 'var(--vz-success)' }}>
                         <i className="mr-2 bx bx-time" ></i>
                         {moment(session.end_date).diff(moment(session.start_date), 'minutes')} minutes</span>
                 </div>

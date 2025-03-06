@@ -23,10 +23,10 @@ class UserRequest extends FormRequest
     {
         $rules = [
             'name' => 'required|string',
-            'role' => 'required|string',
+            'role_id' => 'required',
         ];
 
-        if ($this->route()->getName() === 'admin.users.store') {
+        if ($this->route()->getName() === 'organizer.users.store') {
             $rules['email'] = 'required|email|unique:users,email,NULL,deleted_at';
             $rules['password'] = 'required|min:8';
         } else {

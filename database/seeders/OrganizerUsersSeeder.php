@@ -24,6 +24,8 @@ class OrganizerUsersSeeder extends Seeder
             ]);
         }
 
-        $user->assignRole('owner');
+        setPermissionsTeamId($user->owner_id);
+
+        $user->syncRoles(['owner']);
     }
 }

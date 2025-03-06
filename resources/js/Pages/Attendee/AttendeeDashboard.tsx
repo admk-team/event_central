@@ -5,8 +5,8 @@ import { Col, Container, Row, Card, CardBody, ListGroup, Button } from 'react-bo
 // import BreadCrumb from '../../Components/Common/BreadCrumb';
 import { Head, Link, router } from '@inertiajs/react';
 import Layout from '../../Layouts/Attendee';
-import attendeeEventBg from '../../../images/attendee-bg.jpg';
-import defaultEventImage from '../../../images/default-event-image.png';
+import defaultEventImage from '../../../images/defaultEventImage.png';
+import defaultEventIcon from '../../../images/default-event-image.png';
 import DateDifferenceFromToday from './common/DateDifferenceFromToday';
 import moment from 'moment';
 
@@ -35,15 +35,14 @@ const AttendeeDashboard = ({ eventApp }: any) => {
                                 </Col>
                                 <Col md={6} xl={6}>
                                     <Card >
-                                        <Card.Img variant="top" src={attendeeEventBg} style={{ height: '10rem' }} />
-                                        <div style={{ position: 'relative', top: '-130px' }}>
-                                            <DateDifferenceFromToday date1={eventApp.start_date} ></DateDifferenceFromToday>
-                                        </div>
-
+                                        <figure className="event-image">
+                                            <img className='card-top-image' src={defaultEventImage} alt="event default image" />
+                                            <figcaption><DateDifferenceFromToday date1={eventApp.start_date} ></DateDifferenceFromToday></figcaption>
+                                        </figure>
                                         <CardBody>
                                             <div className="p-4">
                                                 <div className="d-flex align-items-center">
-                                                    <img width="50" height="50" className="img-thumbnail rounded-circle" src={defaultEventImage} style={{ marginRight: '4px' }} />
+                                                    <img width="50" height="50" className="img-thumbnail rounded-circle" src={defaultEventIcon} style={{ marginRight: '4px' }} />
                                                     <div className="d-flex flex-column">
                                                         <h6 className="mb-0">{eventApp.name}</h6>
                                                         <p className="text-dark-gray"> {moment(eventApp.start_date).format('DD MMM YYYY')} </p>

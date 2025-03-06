@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Organizer;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organizer\RoleRequest;
+use App\Models\Role;
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
 
 class RoleController extends Controller
 {
@@ -16,7 +18,13 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::where('panel', 'organizer')->latest()->paginate($request->per_page ?? 10);
+        if (! Auth::user()->canAny(['view_roles', 'create_roles', 'edit_roles', 'delete_roles'])) {
+            abort(403);
+        }
+
+        $roles = $this->datatable(
+            Role::ofOwner()
+        );
         return Inertia::render("Organizer/Roles/Index", compact('roles'));
     }
 
@@ -25,6 +33,10 @@ class RoleController extends Controller
      */
     public function create()
     {
+        if (! Auth::user()->can('create_roles')) {
+            abort(403);
+        }
+
         $permissions = Permission::where('panel', 'organizer')->get();
         return Inertia::render("Organizer/Roles/CreateOrEdit", compact('permissions'));
     }
@@ -34,11 +46,19 @@ class RoleController extends Controller
      */
     public function store(RoleRequest $request)
     {
+        if (! Auth::user()->can('create_roles')) {
+            abort(403);
+        }
+
         $input = $request->validated();
-        $role =  Role::create(['name' => $input['name'], 'panel' => 'organizer']);
+        $role =  Role::create([
+            'name' => $input['name'], 
+            'panel' => 'organizer',
+            'organizer_id' => Auth::user()->owner_id
+        ]);
         $role->givePermissionTo($input['permissions']);
 
-        return to_route('admin.roles.index')->withSuccess('Created');
+        return back()->withSuccess('Created');
     }
 
     /**
@@ -54,6 +74,14 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
+        if (! Auth::user()->can('edit_roles')) {
+            abort(403);
+        }
+
+        if (in_array($role->name, ['superadmin', 'owner'])) {
+            return back()->withError("System defined roles cannot be edited");
+        }
+
         $roleSpecific = $role->permissions()->get();
         $permissions = Permission::where('panel', 'organizer')->get();
         return Inertia::render("Organizer/Roles/CreateOrEdit", compact('role', 'permissions', 'roleSpecific'));
@@ -64,9 +92,18 @@ class RoleController extends Controller
      */
     public function update(RoleRequest $request, Role $role)
     {
+        if (! Auth::user()->can('edit_roles')) {
+            abort(403);
+        }
+
+        if (in_array($role->name, ['superadmin', 'owner'])) {
+            return back()->withError("System defined roles cannot be edited");
+        }
+
         $input = $request->validated();
+        $role->update(['name' => $input['name']]);
         $role->syncPermissions($input['permissions']);
-        return to_route('admin.roles.index')->withSuccess('Updated');
+        return back()->withSuccess('Updated');
     }
 
     /**
@@ -74,6 +111,14 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
+        if (! Auth::user()->can('delete_roles')) {
+            abort(403);
+        }
+
+        if (in_array($role->name, ['superadmin', 'owner'])) {
+            return back()->withError("System defined roles cannot be deleted");
+        }
+        
         $role->delete();
 
         return back()->withSuccess('Deleted');

@@ -7,7 +7,7 @@ import speakerAvatar from '../../../images/speaker_avatar.svg';
 export default function SpeakerModal({ show, hide, onHide, event, speaker }: { show: boolean, hide: () => void, onHide: () => void, event: any, speaker: any }) {
 
     const gotoEventSpeaker = () => {
-        router.visit(route('attendee.event.detail.speaker', [event.id, speaker.id]));
+        router.visit(route('attendee.event.detail.speakers', [event.id, speaker.id]));
     }
 
     return (

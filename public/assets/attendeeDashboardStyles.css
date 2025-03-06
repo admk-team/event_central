@@ -1,11 +1,14 @@
 .date-diff-value{
     font-size: 2.5rem;
-    color: white;
+    font-weight: bolder;
+    /* color: white; */
+    color: var(--vz-success);
 }
 .date-diff-label{
     text-transform: uppercase;
     font-weight: 600;
-    color: white;
+    /* color: white; */
+    color: var(--vz-success);
 }
 .dropdown-menu-item-style{
     align-items: center;
@@ -20,7 +23,8 @@
 }
 ul.timeline:before {
     content: ' ';
-    background: #d4d9df;
+    /* background: #d4d9df; */
+    background: var(--vz-success);
     display: inline-block;
     position: absolute;
     left: 29px;
@@ -38,7 +42,8 @@ ul.timeline > li:before {
     display: inline-block;
     position: absolute;
     border-radius: 50%;
-    border: 2px solid #22c0e8;
+    /* border: 2px solid #22c0e8; */
+    border: 2px solid var(--vz-success);
     left: 20px;
     width: 20px;
     height: 20px;
@@ -46,5 +51,46 @@ ul.timeline > li:before {
 }
 
 .rating-wraper > span{
-    font-size: 35px;;
+    font-size: 35px;
+}
+
+.navbar-menu .navbar-nav .nav-link.active{
+    color: var(--vz-success) !important;
+}
+
+.navbar-menu .navbar-nav .nav-link:hover{
+    color: var(--vz-success) !important;
+}
+
+.active-list-item{
+    border-left: 6px solid var(--vz-success) !important;
+}
+
+.event-image img {
+    width: 100%;
+    height: 100%;
+}
+
+.card-full-image{
+    border-radius: var(--vz-card-inner-border-radius);
+}
+
+.card-top-image{
+    border-top-left-radius: var(--vz-card-inner-border-radius);
+    border-top-right-radius: var(--vz-card-inner-border-radius);
+}
+
+.event-image {
+    position: relative;
+    margin: 0  !important;
+}
+
+.event-image figcaption {
+    position: absolute;
+    top: 50%;
+    bottom: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 }

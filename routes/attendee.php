@@ -28,7 +28,8 @@ Route::middleware(['auth:attendee'])->group(function () {
     Route::get('/eventee/{eventApp}/detail/dashboard', [EventController::class, 'getEventDetailDashboard'])->name('attendee.event.detail.dashboard');
     Route::get('/eventee/{eventApp}/detail/agenda', [EventController::class, 'getEventDetailAgenda'])->name('attendee.event.detail.agenda');
     Route::get('/eventee/{eventApp}/detail/session/{eventSession}', [EventController::class, 'getEventSessionDetail'])->name('attendee.event.detail.session');
-    Route::get('/eventee/{eventApp}/detail/speaker/{eventSpeaker}', [EventController::class, 'getEventSpeakerDetail'])->name('attendee.event.detail.speaker');
+    Route::get('/eventee/{eventApp}/detail/speakers/{eventSpeaker?}', [EventController::class, 'getEventSpeakerDetail'])->name('attendee.event.detail.speakers');
+    Route::get('/eventee/{eventApp}/detail/more', [EventController::class, 'getEventDetailMore'])->name('attendee.event.detail.more');
 
     Route::put('/attendee-profile-update/{attendee}', [ProfileController::class, 'update'])->name('attendee.profile.update');
     Route::post('/attendee-change-password', [PasswordController::class, 'update'])->name('attendee.change.password');

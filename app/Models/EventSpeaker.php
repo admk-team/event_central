@@ -37,4 +37,9 @@ class EventSpeaker extends Model
     {
         $query->where('event_app_id', session('event_id'));
     }
+
+    public function eventSessions()
+    {
+        return $this->hasMany(EventSession::class);
+    }
 }

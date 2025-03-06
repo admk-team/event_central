@@ -14,6 +14,6 @@ class OrganizerRolesSeeder extends Seeder
     public function run(): void
     {
         $superadmin = Role::updateOrCreate(['name' => 'owner', 'panel' => 'organizer']);
-        $superadmin->syncPermissions(OrganizerPermissionsSeeder::$permissions);
+        $superadmin->syncPermissions(OrganizerPermissionsSeeder::getPermissions());
     }
 }

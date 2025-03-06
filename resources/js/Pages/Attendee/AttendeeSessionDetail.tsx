@@ -2,15 +2,13 @@ import React, { useState } from 'react';
 import { Button, Col, Container, Row, Card, CardBody, Badge, Accordion, Form } from 'react-bootstrap';
 import Rating from "react-rating";
 
-//https://codesandbox.io/p/sandbox/react-drag-and-drop-sortablelist-g205n
-//import Components
-
 import { Head, useForm, Link } from '@inertiajs/react';
 import Layout from '../../Layouts/Attendee';
 import DateDifferenceFromToday from './common/DateDifferenceFromToday';
 
 import moment from 'moment';
 import attendeeEventBg from '../../../images/attendee-bg.jpg';
+import defaultEventImage from '../../../images/defaultEventImage.png';
 import SpeakerModal from './SpeakersModal';
 
 
@@ -88,7 +86,11 @@ const AttendeeSessionDetail = ({ eventApp, eventSession, selectedSessionDetails,
                                     </div>
                                     <div>
                                         <Card >
-                                            <Card.Img src={attendeeEventBg} style={{ height: '30rem' }} />
+                                            {/* <Card.Img src={defaultEventImage} style={{ height: '30rem' }} /> */}
+                                            <figure className="event-image">
+                                                <img className='card-full-image' src={defaultEventImage} alt="event default image" />
+                                                <figcaption><DateDifferenceFromToday date1={eventApp.start_date} ></DateDifferenceFromToday></figcaption>
+                                            </figure>
                                         </Card>
                                         <div style={{ position: 'relative', top: '-18rem' }}>
                                             <DateDifferenceFromToday date1={eventSession.start_date} top={'-18rem'}></DateDifferenceFromToday>

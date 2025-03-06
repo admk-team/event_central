@@ -6,6 +6,7 @@ import Layout from '../../../Layouts/Organizer';
 import DeleteModal from '../../../Components/Common/DeleteModal';
 import DataTable, { ColumnDef } from '../../../Components/DataTable';
 import BreadCrumb2 from '../../../Components/Common/BreadCrumb2';
+import HasPermission from '../../../Components/HasPermission';
 
 function Index({ roles }: any) {
     const [deleteRole, setDeleteRole] = React.useState<any>(null);
@@ -30,28 +31,36 @@ function Index({ roles }: any) {
     }
 
     const handleDelete = () => {
-        deleteForm.post(route('admin.roles.destroy', deleteRole.id));
+        deleteForm.post(route('organizer.roles.destroy', deleteRole.id));
         setShowDeleteConfirmation(false);
     }
 
     const columns: ColumnDef<typeof roles.data[0]> = [
         {
+            accessorKey: 'id',
             header: () => 'ID',
             cell: (role) => role.id,
             cellClass: "fw-medium",
+            enableSorting: true,
         },
         {
+            accessorKey: 'name',
             header: () => 'Name',
             cell: (role) => role.name,
+            enableSorting: true,
         },
         {
             header: () => 'Action',
             cell: (role) => (
                 <div className="hstack gap-3 fs-15">
-                    <Link href={route('admin.roles.edit', role.id)}><span className="link-primary cursor-pointer"><i className="ri-edit-fill"></i></span></Link>
-                    <span className="link-danger cursor-pointer" onClick={() => deleteAction(role)}>
-                        <i className="ri-delete-bin-5-line"></i>
-                    </span>
+                    <HasPermission permission="edit_roles">
+                        <Link href={route('organizer.roles.edit', role.id)}><span className="link-primary cursor-pointer"><i className="ri-edit-fill"></i></span></Link>
+                    </HasPermission>
+                    <HasPermission permission="delete_roles">
+                        <span className="link-danger cursor-pointer" onClick={() => deleteAction(role)}>
+                            <i className="ri-delete-bin-5-line"></i>
+                        </span>
+                    </HasPermission>
                 </div>
             ),
         },
@@ -59,7 +68,7 @@ function Index({ roles }: any) {
 
     return (
         <React.Fragment>
-            <Head title='Roles - Admin' />
+            <Head title='Roles' />
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb2 
@@ -73,7 +82,11 @@ function Index({ roles }: any) {
                                 title="Roles"
                                 actions={[
                                     {
-                                        render: <Link href="/admin/roles/create"><Button>Add New</Button></Link> 
+                                        render: (
+                                            <HasPermission permission="create_roles">
+                                                <Link href={route('organizer.roles.create')}><Button>Add New</Button></Link>
+                                            </HasPermission>
+                                        )
                                     }
                                 ]}
                             />

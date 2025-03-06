@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Organizer;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organizer\UserRequest;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -16,8 +17,12 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $users = $this->datatable(User::where('role', 'organizer')->with('roles:name'));
-        $roles = $roles = Role::where('panel', 'organizer')->get()->pluck('name');
+        if (! Auth::user()->canAny(['view_users', 'create_users', 'edit_users', 'delete_users'])) {
+            abort(403);
+        }
+
+        $users = $this->datatable(User::ofOwner()->with('roles:name'));
+        $roles = Role::ofOwner()->get();
         return Inertia::render("Organizer/Users/Index", compact('users', 'roles'));
     }
 
@@ -26,14 +31,20 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
-        $input = $request->validated();
-        $role = $input['role'];
+        if (! Auth::user()->can('create_users')) {
+            abort(403);
+        }
 
+        $input = $request->validated();
+        $role_id = (int) $input['role_id'];
+        unset($input['role_id']);
+
+        $input['parent_id'] = Auth::user()->owner_id;
         $input['role'] = 'organizer'; // User type
 
         $user = User::create($input);
 
-        $user->syncRoles([$role]);
+        $user->syncRoles([$role_id]);
 
         return back()->withSuccess("Created");
     }
@@ -51,14 +62,23 @@ class UserController extends Controller
      */
     public function update(UserRequest $request, User $user)
     {
+        if (! Auth::user()->can('edit_users')) {
+            abort(403);
+        }
+
+        if (in_array($user->id, [1])) {
+            return back()->withError('This user cannot be edited');
+        }
+
         $input = $request->validated();
-        $role = $input['role'];
+        $role_id = $input['role_id'];
+        unset($input['role_id']);
 
         $input['role'] = 'organizer'; // User type
 
         $user->update($input);
 
-        $user->syncRoles([$role]);
+        $user->syncRoles([$role_id]);
 
         return back()->withSuccess('Updated');
     }
@@ -68,6 +88,14 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        if (! Auth::user()->can('delete_users')) {
+            abort(403);
+        }
+
+        if (in_array($user->id, [Auth::id(), 1])) {
+            return back()->withError('This user cannot be deleted');
+        }
+
         $user->delete();
 
         return back()->withSuccess('Deleted');
@@ -75,11 +103,19 @@ class UserController extends Controller
 
     public function destroyMany(Request $request)
     {   
+        if (! Auth::user()->can('delete_users')) {
+            abort(403);
+        }
+        
         $request->validate([
             'ids' => 'required|array'
         ]);
 
         foreach ($request->ids as $id) {
+            if (in_array($user->id, [Auth::id(), 1])) {
+                return back()->withError('This user cannot be deleted');
+            }
+
             User::find($id)?->delete();
         }
 

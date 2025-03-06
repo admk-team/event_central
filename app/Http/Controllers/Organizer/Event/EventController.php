@@ -16,7 +16,7 @@ class EventController extends Controller
      */
     public function index()
     {
-        $events = EventApp::organizer()->get();
+        $events = EventApp::ofOwner()->get();
         return Inertia::render('Organizer/Events/Index', [
             'events' => $events
         ]);
@@ -33,7 +33,7 @@ class EventController extends Controller
     public function store(EventStoreRequest $request)
     {
         $data = $request->validated();
-        $data['organizer_id'] = Auth::id();
+        $data['organizer_id'] = Auth::user()->owner_id;
         $event = EventApp::create($data);
         session()->put('event_id', $event->id);
         return redirect()->route('organizer.events.dashboard')->withSuccess('Event created successfully.');
@@ -41,10 +41,16 @@ class EventController extends Controller
 
     public function selectEvent(Request $request, $id)
     {
-        $back = (bool) ($request->back ?? true);
-
+        $event = EventApp::ofOwner()->find($id);
+        
+        if (! $event) {
+            abort(403);
+        }
+        
         session()->put('event_id', $id);
 
+        $back = (bool) ($request->back ?? true);
+        
         if ($back) {
             return back();
         }

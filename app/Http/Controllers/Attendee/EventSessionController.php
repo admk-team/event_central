@@ -12,7 +12,8 @@ class EventSessionController extends Controller
     public function saveSession(Request $request, EventSession $eventSession, $type)
     {
         if ($type === 'select') {
-            $request->user()->eventSelectedSessions()->attach($eventSession->id, ['rating' => 5, 'rating_description' => 'rating comments']);
+            // ['rating' => 5, 'rating_description' => 'rating comments']
+            $request->user()->eventSelectedSessions()->attach($eventSession->id);
             return back()->withSuccess("Event Session added to Attendee's List");
         } else {    //un-select
             $request->user()->eventSelectedSessions()->detach($eventSession->id);
