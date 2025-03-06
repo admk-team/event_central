@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -22,6 +23,11 @@ class Page extends Model
         'is_home_page',
         'is_published',
     ];
+
+    public function scopePublished(Builder $query)
+    {
+        $query->where('is_published', true);
+    }
 
     public function event(): BelongsTo
     {

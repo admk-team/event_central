@@ -104,6 +104,11 @@ class EventApp extends Model
         return $this->hasMany(EventAppDate::class);
     }
 
+    public function pages()
+    {
+        return $this->hasMany(Page::class);
+    }
+
     public function getStartDateAttribute()
     {
         $temp = $this->dates()->first();

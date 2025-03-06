@@ -1,37 +1,14 @@
 import React, { useState } from 'react'
-import { Config, Data, Puck, usePuck } from "@measured/puck";
+import { Data, Puck, usePuck } from "@measured/puck";
 import "@measured/puck/puck.css";
 import { ArrowLeft, Save } from 'lucide-react';
 import { Link, router, useForm } from '@inertiajs/react';
 import useToastMessages from '../../../../../hooks/useToastMessages';
 import toast, { Toaster } from 'react-hot-toast';
 import { Spinner } from 'react-bootstrap';
+import { config } from '../../../../../PageBuilder/Config';
 
 export default function PageBuilder({ page, backUrl }: any) {
-    type Components = {
-        HeadingBlock: {
-            title: string;
-        };
-    };
-
-    const config: Config<Components> = {
-        components: {
-            HeadingBlock: {
-                fields: {
-                    title: {
-                        type: "text",
-                    },
-                },
-                defaultProps: {
-                    title: "Hello World",
-                },
-                render: ({ title }) => {
-                    return <h1>{title}</h1>;
-                },
-            },
-        },
-    };
-
     const initialData = page.content ? JSON.parse(page.content) : {
         root: {
             props: {
@@ -39,7 +16,6 @@ export default function PageBuilder({ page, backUrl }: any) {
             }
         }
     };
-
 
     const [processing, setProcessing] = useState(false);
 
@@ -59,7 +35,7 @@ export default function PageBuilder({ page, backUrl }: any) {
     return (
         <>
             <Puck 
-                config={config} 
+                config={config}
                 data={initialData} 
                 onPublish={save} 
                 // headerTitle={page.title}

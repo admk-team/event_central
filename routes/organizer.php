@@ -27,7 +27,10 @@ use App\Http\Middleware\CurrentEventMiddleware;
 use Illuminate\Support\Facades\Route;
 
 // Event Website
-Route::get('e/{uuid}', [WebsiteController::class, 'index'])->name('organizer.events.website');
+Route::prefix('e/{uuid}')->name('organizer.events.website')->group(function () {
+    Route::get('/', [WebsiteController::class, 'index']);
+    Route::get('{slug}', [WebsiteController::class, 'page'])->name('.page');
+});
 
 Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organizer.')->group(function () {
     Route::get('/profile-edit', [ProfileController::class, 'edit'])->name('profile.edit');
