@@ -11,16 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('event_sessions', function (Blueprint $table) {
+        Schema::create('event_app_tickets', function (Blueprint $table) {
             $table->id();
             $table->foreignId('event_app_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('event_speaker_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('name');
-            $table->enum('type', ['Lecture', 'Workshop', 'Break']);
-            $table->string('description')->nullable();
-            $table->integer('capacity');
-            $table->dateTime('start_date');
-            $table->dateTime('end_date');
+            $table->mediumText('description');
+            $table->string('type')->default('Normal');
+            $table->decimal('price')->default(0);
+            $table->json('addon_features')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('event_sessions');
+        Schema::dropIfExists('event_app_tickets');
     }
 };

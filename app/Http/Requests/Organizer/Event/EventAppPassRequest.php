@@ -22,15 +22,16 @@ class EventAppPassRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'event_session_id' => 'exists:event_sessions,id',
+            // 'event_session_id' => 'exists:event_sessions,id',
             'name' => 'required',
             'description' => 'required',
             'type' => 'required',
             'price' => 'required|numeric',
-            'increament_by' => 'required|numeric',
-            'increament_rate' => 'required|numeric',
-            'start_increament' => 'required|date',
-            'end_increament' => 'required|date',
+            'session_ids' => 'required'
+            // 'increament_by' => 'required|numeric',
+            // 'increament_rate' => 'required|numeric',
+            // 'start_increament' => 'required|date',
+            // 'end_increament' => 'required|date',
         ];
     }
 }

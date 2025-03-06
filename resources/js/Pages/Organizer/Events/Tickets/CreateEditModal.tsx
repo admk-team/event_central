@@ -1,71 +1,111 @@
+import React, { useState } from 'react';
 import { useForm, usePage } from '@inertiajs/react';
 import Flatpickr from "react-flatpickr";
 import { Spinner, Col, Form, FormGroup, Modal, Nav, Row, Tab } from 'react-bootstrap';
+import Collections from '../../../Theme/NFTMarketplace/Collections';
+import { elements } from 'chart.js';
+import { identity } from '@fullcalendar/core/internal';
 
 
-export default function CreateEditModal({ show, hide, onHide, pass, event_sessions }: { show: boolean, hide: () => void, onHide: () => void, pass: any, event_sessions: any | null }) {
-    const isEdit = pass != null ? true : false;
+export default function CreateEditModal({ show, hide, onHide, ticket, sessions }: { show: boolean, hide: () => void, onHide: () => void, ticket: any, sessions: any | null }) {
+    const isEdit = ticket != null ? true : false;
+    const [sessionIds, setSessionIds] = useState([]);
 
+    console.log(ticket, sessions);
     const { data, setData, post, put, processing, errors, reset } = useForm({
         _method: isEdit ? "PUT" : "POST",
-        event_session_id: pass?.event_session_id ?? '',
-        name: pass?.name ?? '',
-        description: pass?.description ?? '',
-        type: pass?.type ?? '',
-        price: pass?.price ?? '',
-        increament_by: pass?.increament_by ?? '',
-        increament_rate: pass?.increament_rate ?? '',
-        start_increament: pass?.start_increament ?? '',
-        end_increament: pass?.end_increament ?? '',
+        event_session_id: ticket?.event_session_id ?? '',
+        session_ids: ticket?.session_ids ?? [],
+        name: ticket?.name ?? '',
+        description: ticket?.description ?? '',
+        type: ticket?.type ?? '',
+        price: ticket?.price ?? '',
+        increament_by: ticket?.increament_by ?? '',
+        increament_rate: ticket?.increament_rate ?? '',
+        start_increament: ticket?.start_increament ?? '',
+        end_increament: ticket?.end_increament ?? '',
     });
 
     const submit = (e: any) => {
         e.preventDefault();
 
         if (isEdit) {
-            post(route('organizer.events.passes.update', pass.id), {
+            post(route('organizer.events.tickets.update', ticket.id), {
                 onSuccess: () => {
                     reset();
                     hide();
                 }
             })
         } else {
-            post(route('organizer.events.passes.store', data), {
+            post(route('organizer.events.tickets.store', data), {
                 onSuccess: () => {
                     reset();
                     hide();
                 }
             })
-            console.log('testing pass', errors);
+            console.log('testing ticket', errors);
         }
     }
+
+    const handleCheckBoxChange = (event) => {
+        let id = event.target.dataset.sessionId;
+
+        if (event.target.checked) {
+            setSessionIds(old => [
+                ...old,
+                id
+            ]);
+        } else {
+            var array: any = [...sessionIds]; // make a separate copy of the array
+            var index = array.indexOf(id)
+            if (index !== -1) {
+                array.splice(index, 1);
+                setSessionIds(...array);
+            }
+        }
+        // setData('session_ids', sessionIds);
+        console.log(sessionIds);
+    }
+
+    const sessionsList = sessions.map((session: any) =>
+        <Col md={4} lg={4} key={session.id}>
+            <Form.Check // prettier-ignore
+                className="mb-3 sessionIds"
+                type='checkbox'
+                id={'session-id-' + session.id}
+                label={session.name}
+                data-session-id={session.id}
+                onChange={handleCheckBoxChange}
+            />
+        </Col>);
 
     return (
         <Modal show={show} onHide={onHide} centered>
             <Modal.Header className="bg-light p-3" closeButton>
                 <h5 className="modal-title">
-                    {isEdit ? 'Edit Session Pass' : 'New Session Pass'}
+                    {isEdit ? 'Edit Ticket' : 'New Ticket'}
                 </h5>
             </Modal.Header>
             <Form onSubmit={submit} className="tablelist-form">
                 <Modal.Body>
-                    <FormGroup className="mb-3">
+                    {/* <FormGroup className="mb-3">
 
                         <Form.Label htmlFor="event_app_id" className="form-label">Select Event Session</Form.Label>
                         <select
+                            multiple
                             className="form-select "
                             id="event_app_id"
                             aria-label="Select event app"
-                            value={data.event_session_id}
-                            onChange={(e) => setData('event_session_id', e.target.value)}
+                            value={field}
+                            onChange={handleSelectChange}
                         >
                             <option value="">Select Event Session</option>
-                            {event_sessions.map((session: any) => (
+                            {sessions.map((session: any) => (
                                 <option value={session.id} key={session.id}>{session.name}</option>
                             ))}
                         </select>
                         <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.event_session_id} </Form.Control.Feedback>
-                    </FormGroup>
+                    </FormGroup> */}
                     <FormGroup className="mb-3">
                         <Form.Label>Name</Form.Label>
                         <Form.Control
@@ -112,7 +152,13 @@ export default function CreateEditModal({ show, hide, onHide, pass, event_sessio
                             </FormGroup>
                         </Col>
                     </Row>
-                    <Row>
+                    <Row><Col className='mb-3' l>Session</Col></Row>
+                    <Row className='d-flex flex-row'>
+                        <Col>
+                            {sessionsList}
+                        </Col>
+                    </Row>
+                    {/* <Row>
                         <Col md={6}>
                             <FormGroup className="mb-3">
                                 <Form.Label>Increment By</Form.Label>
@@ -173,7 +219,7 @@ export default function CreateEditModal({ show, hide, onHide, pass, event_sessio
                                 {errors.end_increament && <Form.Control.Feedback type="invalid">{errors?.end_increament}</Form.Control.Feedback>}
                             </FormGroup>
                         </Col>
-                    </Row>
+                    </Row> */}
                 </Modal.Body>
 
                 <div className="modal-footer">
