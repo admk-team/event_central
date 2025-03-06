@@ -115,9 +115,9 @@ function CreateEditModal({ show, hide, onHide, event, recurring_types, event_cat
             </Modal.Header>
             <Modal.Body className="p-4">
 
-                <div className='d-flex justify-content-center'>
+                {/* <div className='d-flex justify-content-center'>
                     <img src={event.logo_img} alt="Event Logo" style={{ borderRadius: '50%', height: '150px' }} />
-                </div>
+                </div> */}
 
                 <form onSubmit={submit}>
                     <Form.Group controlId="formFileMultiple" className="mb-3">
