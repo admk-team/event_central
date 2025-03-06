@@ -93,12 +93,24 @@ const Navdata = () => {
                     label: "Users",
                     link: route('organizer.users.index'),
                     parentId: "UserManagement",
+                    hasAnyPermission: [
+                        'view_users',
+                        'create_users',
+                        'edit_users',
+                        'delete_users',
+                    ],
                 },
                 {
                     id: "roles",
                     label: "Roles",
                     link: route('organizer.roles.index'),
                     parentId: "UserManagement",
+                    hasAnyPermission: [
+                        'view_roles',
+                        'create_roles',
+                        'edit_roles',
+                        'delete_roles',
+                    ]
                 },
             ],
         },

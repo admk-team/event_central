@@ -11,6 +11,9 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Spatie\Permission\Contracts\Permission;
+use Spatie\Permission\Exceptions\PermissionDoesNotExist;
+use Spatie\Permission\PermissionRegistrar;
 
 class User extends Authenticatable
 {
@@ -62,5 +65,48 @@ class User extends Authenticatable
         }
 
         return $this->id;
+    }
+
+    /**
+     * Find a permission.
+     *
+     * @param  string|int|Permission|\BackedEnum  $permission
+     * @return Permission
+     *
+     * @throws PermissionDoesNotExist
+     */
+    public function filterPermission($permission, $guardName = null)
+    {
+        if ($permission instanceof \BackedEnum) {
+            $permission = $permission->value;
+        }
+
+        if (is_int($permission) || PermissionRegistrar::isUid($permission)) {
+            // $permission = $this->getPermissionClass()::findById(
+            //     $permission,
+            //     $guardName ?? $this->getDefaultGuardName()
+            // );
+            $permission = $this->getPermissionClass()::where('id', $permission)
+                ->where('guard_name', $guardName ?? $this->getDefaultGuardName())
+                ->where('panel', Auth::user()?->role)
+                ->first();
+        }
+
+        if (is_string($permission)) {
+            // $permission = $this->getPermissionClass()::findByName(
+            //     $permission,
+            //     $guardName ?? $this->getDefaultGuardName()
+            // );
+            $permission = $this->getPermissionClass()::where('name', $permission)
+                ->where('guard_name', $guardName ?? $this->getDefaultGuardName())
+                ->where('panel', Auth::user()?->role)
+                ->first();
+        }
+
+        if (! $permission instanceof Permission) {
+            throw new PermissionDoesNotExist;
+        }
+
+        return $permission;
     }
 }
