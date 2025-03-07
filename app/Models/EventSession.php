@@ -18,8 +18,8 @@ class EventSession extends Model
         'type',
         'description',
         'capacity',
-        'start_date',
-        'end_date',
+        'start_time',
+        'end_time',
         'event_app_id',
     ];
 
@@ -41,6 +41,9 @@ class EventSession extends Model
     public function attendees(): BelongsToMany
     {
         return $this->belongsToMany(Attendee::class, 'attendee_event_session')->withPivot('rating', 'rating_description')->withTimestamps();
+    }
+    public function eventDate(){
+        return $this->belongsTo(EventAppDate::class,'event_date_id');
     }
 
     public function getSelectedByAttendeeAttribute()

@@ -28,8 +28,8 @@ class EventSessionRequest extends FormRequest
             'type' => 'required|in:Lecture,Workshop,Break',
             'description' => 'nullable|string',
             'capacity' => 'nullable|integer|min:1|',
-            'start_date' => 'required',
-            'end_date' => 'required|date|after_or_equal:start_date',
+            'start_time' => 'required',
+            'end_time' => 'required',
         ];
     }
 }

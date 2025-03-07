@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { Button, Container, Row } from "react-bootstrap";
+import { Button, Col, Container, Row } from "react-bootstrap";
 import CreateEditPlatformModal from "./CreateOrEditPlatformModal";
 import CreateEditModal from "./CreateEditModal";
+import { Link } from "lucide-react";
 
 const hours = Array.from({ length: 16 }, (_, i) => 8 + i); // Generates [8, 9, 10, ..., 23]
 const slots = Array.from({ length: 6 }); // Creates 6 slots per hour (10-minute gaps)
@@ -14,6 +15,7 @@ function Platform({ platforms, event_platforms, speakers }: any) {
     const [event_session, setEditEvent_session] = React.useState<any>(null);
     const [event_platformId, setEditEvent_platformId] = React.useState<any>(null);
     const [selectedTime, setSelectedTime] = useState<{ startTime: string; endTime: string } | null>(null);
+    const [activeEventPlatform, setActiveEventPlatform] = React.useState(null)
 
     const setShowCreateEditPlatformModal = (state: boolean) => {
         _setShowCreateEditPlatformModal(state);
@@ -24,6 +26,12 @@ function Platform({ platforms, event_platforms, speakers }: any) {
         setEditPlatform(platform);
         setShowCreateEditPlatformModal(true);
     };
+    const editSessionAction = (eventSession: any) => {
+        setEditEvent_session(eventSession);
+        console.log('testing session on edit function ', eventSession);
+
+        setShowCreateEditModal(true);
+    };
 
     const setShowCreateEditModal = (state: boolean) => {
         _setShowCreateEditModal(state);
@@ -32,165 +40,74 @@ function Platform({ platforms, event_platforms, speakers }: any) {
             setSelectedTime(null);
         }
     };
-
-    // Function to calculate session time based on hour and slot index
-    const getSessionTime = (hour: number, slotIndex: number) => {
-        const startMinutes = slotIndex * 10;
-        const endMinutes = startMinutes + 10;
-        const startTime = `${hour}:${String(startMinutes).padStart(2, "0")}:00`;
-        const endTime = `${hour}:${String(endMinutes).padStart(2, "0")}:00`;
-        return { startTime, endTime };
-    };
-
-    // Handle slot click
-    const handleSlotClick = (hour: number, slotIndex: number) => {
-        const { startTime, endTime } = getSessionTime(hour, slotIndex);
-        setSelectedTime({ startTime, endTime });
-        setShowCreateEditModal(true);
-    };
-
-    const handlePlatformId = (id: any) => {
-        setEditEvent_platformId(id);
-    };
-
-    // Function to calculate the number of slots a session spans
-    const getSlotSpanCount = (startTime: string, endTime: string) => {
-        const [startHour, startMinute] = startTime.split(':').map(Number);
-        const [endHour, endMinute] = endTime.split(':').map(Number);
-        const startTotalMinutes = startHour * 60 + startMinute;
-        const endTotalMinutes = endHour * 60 + endMinute;
-        const durationMinutes = endTotalMinutes - startTotalMinutes;
-        return Math.ceil(durationMinutes / 10); // Number of 10-minute slots
-    };
-
-    // Function to check if a session exists in a specific time slot and return session details
-    const getSessionForSlot = (platformId: string, hour: number, slotIndex: number) => {
-        const { startTime } = getSessionTime(hour, slotIndex);
-        const platform = event_platforms.find((platform: any) => platform.id === platformId);
-        if (!platform || !platform.eventsessions) return null;
-
-        const session = platform.eventsessions.find((session: any) =>
-            session.start_date.includes(startTime)
-        );
-        if (session) {
-            const spanCount = getSlotSpanCount(
-                session.start_date.split(' ')[1],
-                session.end_date.split(' ')[1]
-            );
-            return { ...session, spanCount };
-        }
-        return null;
-    };
-
-    // Check if a slot is part of an existing session's span
-    const isSlotOccupiedBySession = (platformId: string, hour: number, slotIndex: number) => {
-        const { startTime } = getSessionTime(hour, slotIndex);
-        const platform = event_platforms.find((platform: any) => platform.id === platformId);
-        if (!platform || !platform.eventsessions) return false;
-
-        return platform.eventsessions.some((session: any) => {
-            const sessionStart = session.start_date.split(' ')[1];
-            const sessionEnd = session.end_date.split(' ')[1];
-            const spanCount = getSlotSpanCount(sessionStart, sessionEnd);
-            const [startHour, startMinute] = sessionStart.split(':').map(Number);
-            const startSlotIndex = Math.floor(startMinute / 10);
-            const sessionStartHour = startHour;
-
-            return (
-                hour === sessionStartHour &&
-                slotIndex >= startSlotIndex &&
-                slotIndex < startSlotIndex + spanCount
-            );
-        });
-    };
-
     return (
         <React.Fragment>
             <div className="overflow-auto">
                 <Container fluid>
                     <Row className="d-flex justify-content-center">
-                        <div className="d-flex justify-content-center gap-4 rounded">
-                            {event_platforms.map((eventPlatform: any, index: any) => (
-                                <div key={index} className="bg-white p-3 d-inline-block" style={{ maxWidth: '450px', width: '400px', borderRadius: '10px' }}>
-                                    <div className="d-flex justify-content-between align-items-center py-4 cursor-pointer">
-                                        <h5>{eventPlatform.name}</h5>
+                        <div className="d-flex  gap-4 rounded">
+                            <div className="bg-white rounded p-2" style={{ width: '210px' }}>
+                                <div className="d-flex justify-content-between align-items-center pt-3">
+                                    <p className="mb-0" style={{ fontSize: '0.895rem', fontWeight: '500' }}>Event Platforms</p>
+                                    <i className="ri-add-fill  cursor-pointer fs-4 text-white bg-primary rounded" onClick={() => editAction()}></i>
+
+                                </div>
+                                <hr />
+                                {event_platforms.map((eventPlatform: any, index: any) => (
+                                    <div onClick={() =>{
+                                         setActiveEventPlatform(eventPlatform)
+                                        setEditEvent_platformId(eventPlatform)
+                                    }} className="d-flex justify-content-between align-items-center cursor-pointer">
+                                        <p style={{ fontSize: '0.875rem', marginBottom: '0' }}>{eventPlatform.name}</p>
                                         <div onClick={() => editAction(eventPlatform)}>
-                                            <i className="ri-pencil-fill fs-3"></i>
+                                            <i className="ri-pencil-fill text-success cursor-pointer"></i>
                                         </div>
                                     </div>
-
-                                    <div>
-                                        <div className="border-top">
-                                            {hours.map((hour, hourIndex) => (
-                                                <div key={hourIndex} className="border-bottom position-relative">
-                                                    <strong className="text-muted">{hour}:00</strong>
-                                                    <div className="d-flex flex-wrap flex-column">
-                                                        {slots.map((_, slotIndex) => {
-                                                            const session = getSessionForSlot(eventPlatform.id, hour, slotIndex);
-                                                            const isOccupied = isSlotOccupiedBySession(eventPlatform.id, hour, slotIndex);
-
-                                                            // Skip rendering this slot if it's part of a multi-slot session but not the starting slot
-                                                            if (isOccupied && !session) return null;
-
-                                                            return (
-                                                                <div
-                                                                    key={slotIndex}
-                                                                    className="position-relative"
-                                                                    style={session ? { height: `${session.spanCount * 38}px` } : {}}
-                                                                >
-                                                                    <Button
-                                                                        className="w-100 position-relative"
-                                                                        variant=""
-                                                                        size="md"
-                                                                        onMouseEnter={() =>
-                                                                            setHoveredSlots(prev => ({
-                                                                                ...prev,
-                                                                                [index]: { hour, slot: slotIndex },
-                                                                            }))
-                                                                        }
-                                                                        onMouseLeave={() =>
-                                                                            setHoveredSlots(prev => ({
-                                                                                ...prev,
-                                                                                [index]: null,
-                                                                            }))
-                                                                        }
-                                                                        onClick={() => {
-                                                                            handleSlotClick(hour, slotIndex);
-                                                                            handlePlatformId(eventPlatform.id);
-                                                                        }}
-                                                                        style={session ? { height: '100%' } : {}}
-                                                                    >
-                                                                        {session ? (
-                                                                            <div
-                                                                                className="card text-muted border-1 rounded position-absolute w-75 z-75"
-                                                                                style={{ borderRadius: '9px', top: '-20px', left: '30px',height:'100%' }}
-                                                                            >
-                                                                                {session.name} <br />
-                                                                                {session.start_date.split(' ')[1]} - {session.end_date.split(' ')[1]}
-                                                                            </div>
-                                                                        ) : (
-                                                                            hoveredSlots[index]?.hour === hour &&
-                                                                            hoveredSlots[index]?.slot === slotIndex && (
-                                                                                <div
-                                                                                    className="card text-muted border-1 rounded position-absolute w-100 z-100"
-                                                                                    style={{ borderRadius: '9px', top: '-25px' }}
-                                                                                >
-                                                                                    New Session <br />
-                                                                                    {getSessionTime(hour, slotIndex).startTime} - {getSessionTime(hour, slotIndex).endTime}
+                                ))}
+                            </div>
+                            {/* Render Sessions for the Active Event Platform */}
+                            {activeEventPlatform && (
+                                <div className="w-100 max-w-100">
+                                    <Row className="mt-4">
+                                        <Col lg={12}>
+                                            <div>
+                                                <div className="timeline-2">
+                                                    <div className="timeline-year">
+                                                        <p>12 Dec 2021</p>
+                                                    </div>
+                                                    <div className="timeline-continue">
+                                                        {activeEventPlatform.eventsessions.map((eventSession: any) => (
+                                                            <Row key={eventSession.id} className="timeline-right">
+                                                                <Col xs={12}>
+                                                                    <p className="timeline-date">
+                                                                        {eventSession.start_time}
+                                                                    </p>
+                                                                </Col>
+                                                                <Col xs={12}>
+                                                                    <div onClick={() => editSessionAction(eventSession)} className="timeline-box w-100" style={{ maxWidth: '90%' }}>
+                                                                        <div className="timeline-text">
+                                                                            <div className="d-flex">
+                                                                                <div className="flex-grow-1 ms-3 cursor-pointer">
+                                                                                    <h5 className="mb-1 fs-15">{eventSession.name}</h5>
+                                                                                    <p className="mb-0">{eventSession.start_time} - {eventSession.end_time}</p>
+                                                                                    <div className="time my-2">
+                                                                                        <span className="badge bg-success rounded">Upcoming</span>
+                                                                                    </div>
+                                                                                    <p className="text-muted mb-0">{eventSession.description}</p>
                                                                                 </div>
-                                                                            )
-                                                                        )}
-                                                                    </Button>
-                                                                </div>
-                                                            );
-                                                        })}
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </Col>
+                                                            </Row>
+                                                        ))}
                                                     </div>
                                                 </div>
-                                            ))}
-                                        </div>
-                                    </div>
+                                            </div>
+                                        </Col>
+                                    </Row>
                                 </div>
-                            ))}
+                            )}
                         </div>
                     </Row>
                 </Container>
@@ -213,10 +130,10 @@ function Platform({ platforms, event_platforms, speakers }: any) {
                     onHide={() => setShowCreateEditModal(false)}
                     event_sessions={event_session}
                     speakers={speakers}
-                    event_platformId={event_platformId}
-                    startTime={selectedTime?.startTime || ''}
-                    endTime={selectedTime?.endTime || ''}
+                    event_platformId={3}
+
                 />
+                
             )}
         </React.Fragment>
     );

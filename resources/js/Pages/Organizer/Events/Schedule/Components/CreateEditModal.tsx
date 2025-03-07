@@ -2,21 +2,24 @@ import { useForm, usePage } from '@inertiajs/react';
 import Flatpickr from "react-flatpickr";
 import { Spinner, Col, Form, FormGroup, Modal, Nav, Row, Tab } from 'react-bootstrap';
 import { useEffect } from 'react'; // Import useEffect
+import { Target } from 'lucide-react';
 
-export default function CreateEditModal({ show, hide, onHide, event_sessions, speakers, event_platformId, startTime, endTime }: { show: boolean, hide: () => void, onHide: () => void, event_sessions: any, speakers: any, event_platformId: any, startTime: string, endTime: string }) {
+export default function CreateEditModal({ show, hide, onHide, event_sessions, speakers, event_platformId }: { show: boolean, hide: () => void, onHide: () => void, event_sessions: any, speakers: any, event_platformId: any }) {
     const isEdit = event_sessions != null ? true : false;
+    console.log('create or edit session modal', event_platformId);
 
     // Initialize the form data with the existing date and time
     const { data, setData, post, put, processing, errors, reset } = useForm({
         _method: isEdit ? "PUT" : "POST",
         name: event_sessions?.name ?? '',
         event_speaker_id: event_sessions?.event_speaker_id ?? '',
-        event_platform_id: event_sessions?.event_platform_id ?? event_platformId,
+        event_platform_id: event_sessions?.event_platform_id ?? '2',
+        event_date_id: event_sessions?.event_date_id ?? 1,
         type: event_sessions?.type ?? 'Lecture',
         description: event_sessions?.description ?? '',
         capacity: event_sessions?.capacity ?? '',
-        start_date: event_sessions?.start_date ?? `2025-02-24 ${startTime}`, // Default date with time
-        end_date: event_sessions?.end_date ?? `2025-02-24 ${endTime}`, // Default date with time
+        start_time: event_sessions?.start_time ?? '00:00' , // Default time with time
+        end_time: event_sessions?.end_time ?? '00:00', // Default date with time
         event_app_id: event_sessions?.event_app_id ?? '',
     });
 
@@ -40,15 +43,10 @@ export default function CreateEditModal({ show, hide, onHide, event_sessions, sp
                     hide();
                 }
             });
-            console.log('testing schedule', errors);
         }
     };
 
-    // Function to update only the time part of the date-time string
-    const updateTime = (dateTime: string, newTime: string) => {
-        const [datePart] = dateTime.split(' '); // Extract the date part (e.g., "2025-02-24")
-        return `${datePart} ${newTime}`; // Combine the date with the new time
-    };
+ 
 
     return (
         <Modal show={show} onHide={onHide} centered>
@@ -94,43 +92,46 @@ export default function CreateEditModal({ show, hide, onHide, event_sessions, sp
                     <FormGroup className="mb-3">
                         <Row>
                             <Col md={6}>
-                                <Form.Label>Start Time</Form.Label>
+                                <Form.Label className="form-label mb-0">Start Time</Form.Label>
                                 <Flatpickr
                                     className="form-control"
                                     options={{
                                         enableTime: true,
-                                        noCalendar: true, // Disable calendar (only time picker)
-                                        dateFormat: "H:i", // Format as "HH:mm"
-                                        time_24hr: true, // Use 24-hour format
+                                        noCalendar: true,
+                                        dateFormat: "H:i",
                                     }}
-                                    placeholder="Select Start Time"
-                                    value={data.start_date.split(' ')[1]} // Extract the time part (e.g., "01:04:50")
+                                    value={data.start_time}
                                     onChange={([selectedDate]: Date[]) => {
-                                        const newTime = selectedDate.toTimeString().split(' ')[0]; // Extract "HH:mm:ss"
-                                        setData('start_date', updateTime(data.start_date, newTime)); // Update only the time
+                                        if (selectedDate) {
+                                            setData('start_time', selectedDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }));
+                                        }
                                     }}
+                                    
+
                                 />
-                                {errors.start_date && <Form.Control.Feedback type="invalid">{errors.start_date}</Form.Control.Feedback>}
+                                {errors.start_time && <Form.Control.Feedback type="invalid">{errors.start_time}</Form.Control.Feedback>}
                             </Col>
                             <Col md={6}>
-                                <Form.Label>End Time</Form.Label>
+                                <Form.Label className="form-label mb-0">End Time</Form.Label>
                                 <Flatpickr
                                     className="form-control"
                                     options={{
                                         enableTime: true,
-                                        noCalendar: true, // Disable calendar (only time picker)
-                                        dateFormat: "H:i", // Format as "HH:mm"
-                                        time_24hr: true, // Use 24-hour format
+                                        noCalendar: true,
+                                        dateFormat: "H:i",
                                     }}
-                                    placeholder="Select End Time"
-                                    value={data.end_date.split(' ')[1]} // Extract the time part (e.g., "01:04:50")
+                                    value={data.end_time}
+                                    // onChange={(e: any) => setData('end_time', e.target.value)}
                                     onChange={([selectedDate]: Date[]) => {
-                                        const newTime = selectedDate.toTimeString().split(' ')[0]; // Extract "HH:mm:ss"
-                                        setData('end_date', updateTime(data.end_date, newTime)); // Update only the time
+                                        if (selectedDate) {
+                                            setData('end_time', selectedDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }));
+                                        }
                                     }}
+
                                 />
-                                {errors.end_date && <Form.Control.Feedback type="invalid">{errors.end_date}</Form.Control.Feedback>}
+                                {errors.end_time && <Form.Control.Feedback type="invalid">{errors.end_time}</Form.Control.Feedback>}
                             </Col>
+
                         </Row>
                     </FormGroup>
 

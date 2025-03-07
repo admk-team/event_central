@@ -17,6 +17,9 @@ return new class extends Migration
             $table->dateTime('date_time');
             $table->timestamps();
         });
+        Schema::table('event_sessions', function (Blueprint $table) {
+            $table->foreign('event_date_id')->references('id')->on('event_app_dates');
+        });
     }
 
     /**
@@ -25,5 +28,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('event_app_dates');
+        Schema::table('event_sessions', function (Blueprint $table) {
+            // Drop foreign key constraint
+            $table->dropForeign(['event_date_id']);
+        });
     }
 };

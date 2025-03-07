@@ -17,12 +17,13 @@ return new class extends Migration
             $table->foreign('event_app_id')->references('id')->on('event_apps');
             $table->unsignedBigInteger('event_speaker_id')->nullable();
             $table->foreign('event_speaker_id')->references('id')->on('event_speakers');
+            $table->unsignedBigInteger('event_date_id')->nullable();
             $table->string('name');
             $table->enum('type', ['Lecture', 'Workshop', 'Break']);
             $table->string('description')->nullable();
-            $table->integer('capacity');
-            $table->dateTime('start_date');
-            $table->dateTime('end_date');
+            $table->integer('capacity')->nullable();
+            $table->time('start_time')->default('00:00:00');
+            $table->time('end_time')->default('00:00:00');
             $table->timestamps();
         });
     }

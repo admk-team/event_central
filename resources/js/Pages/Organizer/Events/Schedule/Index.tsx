@@ -44,12 +44,12 @@ function Index({ event_sessions, speakers, platforms, event_platforms }: any) {
                                     <div>
                                         <Dropdown>
                                             <Dropdown.Toggle as="button" className="btn btn-secondary" id="dropdown.MenuButton">
-                                                Stage
+                                                Add Schedule
                                             </Dropdown.Toggle>
                                             <Dropdown.Menu>
                                                 <Dropdown.Item>
-                                                    <div onClick={() => setShowCreateEditPlatformModal(true)}>
-                                                        <i className="ri-add-fill"></i> Add Stage
+                                                    <div onClick={() => _setShowCreateEditModal(true)}>
+                                                        <i className="ri-add-fill"></i> Add Schedule
                                                     </div>
                                                 </Dropdown.Item>
                                             </Dropdown.Menu>
@@ -75,6 +75,17 @@ function Index({ event_sessions, speakers, platforms, event_platforms }: any) {
                     event_platforms={null}
                 />
             )}
+                   {showCreateEditModal && (
+                            <CreateEditModal
+                                show={showCreateEditModal}
+                                hide={() => setShowCreateEditModal(false)}
+                                onHide={() => setShowCreateEditModal(false)}
+                                event_sessions={null}
+                                speakers={speakers}
+                             
+                       
+                            />
+                        )}
         </React.Fragment>
     )
 }
