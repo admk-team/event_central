@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('attendee_payments', function (Blueprint $table) {
-            $table->id();
+        Schema::create('session_ticket', function (Blueprint $table) {
             $table->foreignId('event_app_ticket_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('attendee_id')->constrained()->cascadeOnDelete();
-            $table->enum('payment_method', ['stripe', 'paypal']);
+            $table->foreignId('event_session_id')->constrained()->cascadeOnDelete();
+            $table->primary(['event_app_ticket_id', 'event_session_id']);
             $table->timestamps();
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('attendee_payments');
+        Schema::dropIfExists('session_ticket');
     }
 };

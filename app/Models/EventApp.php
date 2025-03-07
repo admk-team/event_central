@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Support\Facades\Log;
 
 class EventApp extends Model
 {
@@ -122,6 +124,30 @@ class EventApp extends Model
     public function getStartDateAttribute()
     {
         $temp = $this->dates()->first();
-        return $temp ? $temp->date_time : null;
+        return $temp ? $temp->date : null;
+    }
+
+
+    // //Mutator
+    // public function setIsRecurringAttribute($value)
+    // {
+    //     $this->attributes['is_recurring'] = (int) $value;
+    // }
+
+    //     Registering Model Life Cycle Events
+    protected static function booted()
+    {
+        static::deleting(function (EventApp $event) { // before delete() method call this
+            if ($event->logo) {
+                try {
+                    $file = storage_path('app/public' . $event->logo);
+                    if (file_exists($file)) {
+                        unlink($file);
+                    }
+                } catch (Exception $ex) {
+                    Log::info($ex->getMessage());
+                }
+            }
+        });
     }
 }

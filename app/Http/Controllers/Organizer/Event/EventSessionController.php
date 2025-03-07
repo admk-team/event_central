@@ -17,7 +17,7 @@ class EventSessionController extends Controller
     public function index(Request $request)
     {
         // $schedules = EventSession::currentEvent()->latest()->paginate($request->per_page ?? 10);
-        $event_sessions =$this->datatable(EventSession::query());
+        $event_sessions = $this->datatable(EventSession::currentEvent());
         $speakers = EventSpeaker::currentEvent()->get();
         $platforms = PlatForm::all();
         $event_platforms= EventPlatform::with('eventsessions')->get();

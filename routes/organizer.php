@@ -17,7 +17,7 @@ use App\Http\Controllers\Organizer\Event\Settings\EventAppPaymentController;
 use App\Http\Controllers\Organizer\Event\Settings\EventSettingsController;
 use App\Http\Controllers\Organizer\Event\User\AttendeeController;
 use App\Http\Controllers\Organizer\Event\PartnerController;
-use App\Http\Controllers\Organizer\Event\PassesController;
+use App\Http\Controllers\Organizer\Event\EventAppTicketController;
 use App\Http\Controllers\Organizer\Event\ScheduleController;
 use App\Http\Controllers\Organizer\Event\Settings\WebsiteSettingsController;
 use App\Http\Controllers\Organizer\Event\WebsiteController;
@@ -49,6 +49,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
         Route::post('/', [EventController::class, 'store'])->name('store');
         Route::put('/{event_app}', [EventController::class, 'update'])->name('update');
         Route::delete('/{event_app}', [EventController::class, 'destroy'])->name('destroy');
+        Route::delete('/delete/many', [EventController::class, 'destroyMany'])->name('destroy.many');
         Route::get('{id}/select', [EventController::class, 'selectEvent'])->name('select');
 
         Route::middleware('event_is_selected')->group(function () {
@@ -65,8 +66,8 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::delete('partner/delete/many', [EventPartnerController::class, 'destroyMany'])->name('partner.destroy.many');
             Route::resource('partner-category', EventPartnerCategoryController::class);
             Route::resource('event-platforms',EventPlatformController::class);
-            Route::resource('passes', PassesController::class)->only(['index', 'store', 'update', 'destroy']);
-            Route::delete('passes/delete/many', [PassesController::class, 'destroyMany'])->name('passes.destroy.many');
+            Route::resource('tickets', EventAppTicketController::class)->only(['index', 'store', 'update', 'destroy']);
+            Route::delete('tickets/delete/many', [EventAppTicketController::class, 'destroyMany'])->name('tickets.destroy.many');
 
             // Pages
             Route::resource('pages', PageController::class)->only(['store', 'update', 'destroy']);

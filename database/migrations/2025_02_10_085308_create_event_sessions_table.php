@@ -13,10 +13,8 @@ return new class extends Migration
     {
         Schema::create('event_sessions', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('event_app_id');
-            $table->foreign('event_app_id')->references('id')->on('event_apps');
-            $table->unsignedBigInteger('event_speaker_id')->nullable();
-            $table->foreign('event_speaker_id')->references('id')->on('event_speakers');
+            $table->foreignId('event_app_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('event_speaker_id')->nullable()->constrained()->cascadeOnDelete();
             $table->string('name');
             $table->enum('type', ['Lecture', 'Workshop', 'Break']);
             $table->string('description')->nullable();

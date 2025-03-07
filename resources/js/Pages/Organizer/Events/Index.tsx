@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, Container, Row, Table } from 'react-bootstrap';
 import { Head, Link, useForm } from '@inertiajs/react';
 import Layout from '../../../Layouts/Organizer';
@@ -15,12 +15,14 @@ import moment from 'moment';
 function Index({ events, recurring_types, event_category_types }: any) {
 
     const [showCreateEditModal, setShowCreateEditModal] = React.useState(false);
-    const [editEvent, setEditEvent] = React.useState<any>(null);
+    const [currentEvent, setCurrentEvent] = React.useState<any>(null);
     const [deleteUser, setDeleteEvent] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
+    const [imageHash, setImageHash] = useState(Date.now());
 
-    console.log(events);
+    // console.log(events);
+
     const deleteForm = useForm({
         _method: 'DELETE'
     });
@@ -30,8 +32,8 @@ function Index({ events, recurring_types, event_category_types }: any) {
         ids: [],
     });
 
-    const editAction = (event: any) => {
-        setEditEvent(event);
+    const showModal = function (event: any) {
+        setCurrentEvent(event);
         setShowCreateEditModal(true);
     }
 
@@ -66,7 +68,9 @@ function Index({ events, recurring_types, event_category_types }: any) {
         {
             accessorKey: 'logo',
             header: () => 'Logo',
-            cell: (event) => event.logo,
+            cell: (event) => (
+                < img className='rounded-circle' src={(event.logo ? event.logo : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s') + "?" + imageHash} alt="event logo" height={'35px'} />
+            ),
             enableSorting: false
         },
         {
@@ -95,19 +99,31 @@ function Index({ events, recurring_types, event_category_types }: any) {
         },
         {
             accessorKey: 'is_recurring',
-            header: () => 'Is Recurring',
-            cell: (event) => <span className="badge bg-success-subtle text-success">Yes</span>,
+            header: () => 'Recurring',
+            cell: (event) => <div className='d-flex justify-content-center w-50'>
+                {event.is_recurring && <span className="badge bg-success-subtle text-success fs-6">Yes</span>}
+                {!event.is_recurring && <span className="badge bg-secondary-subtle text-secondary fs-6">No</span>}
+            </div>,
+            enableSorting: false
+        },
+        {
+            accessorKey: 'recurring_frequency',
+            header: () => 'R.Frequency',
+            cell: (event) => event.recurring_type ? event.recurring_type.name : '',
             enableSorting: false
         },
         {
             header: () => 'Action',
             cell: (event) => (
-                <div className="hstack gap-3 fs-15">
-                    <Link href={route('organizer.events.select', { 'id': event.id, 'back': false })}>Open</Link>
+                <div className="hstack gap-3 fs-15 ">
                     <HasPermission permission="edit_users">
-                        <span className="link-primary cursor-pointer" onClick={() => editAction(event)}><i className="ri-edit-fill"></i></span>
+                        <Link title='Click to select this Event' href={route('organizer.events.select', { 'id': event.id, 'back': false })}><i className='bx bxs-hand-up'></i></Link>
                     </HasPermission>
-                    <HasPermission permission="delete_users">
+                    {/* <Link href={route('organizer.events.select', { 'id': event.id, 'back': false })}>Open</Link> */}
+                    <HasPermission permission="edit_users">
+                        <span title='Click to Edit this Event' className="link-primary cursor-pointer" onClick={() => showModal(event)}><i className="ri-edit-fill"></i></span>
+                    </HasPermission>
+                    <HasPermission permission="edit_users">
                         <span className="link-danger cursor-pointer" onClick={() => deleteAction(event)}>
                             <i className="ri-delete-bin-5-line"></i>
                         </span>
@@ -116,6 +132,11 @@ function Index({ events, recurring_types, event_category_types }: any) {
             ),
         },
     ];
+
+    useEffect(() => {
+        setImageHash(Date.now());
+        console.log('changing hash');
+    }, [showCreateEditModal]);
 
     return (
         <React.Fragment>
@@ -145,7 +166,7 @@ function Index({ events, recurring_types, event_category_types }: any) {
                                     {
                                         render: (
                                             <HasPermission permission="create_users">
-                                                <Button onClick={() => setShowCreateEditModal(true)}><i className="ri-add-fill"></i> Add New</Button>
+                                                <Button onClick={() => showModal(null)}><i className="ri-add-fill"></i> Add New Event</Button>
                                             </HasPermission>
                                         )
                                     },
@@ -161,7 +182,7 @@ function Index({ events, recurring_types, event_category_types }: any) {
                     show={showCreateEditModal}
                     hide={() => setShowCreateEditModal(false)}
                     onHide={() => setShowCreateEditModal(false)}
-                    event={editEvent}
+                    event={currentEvent}
                     event_category_types={event_category_types}
                     recurring_types={recurring_types}
                 />

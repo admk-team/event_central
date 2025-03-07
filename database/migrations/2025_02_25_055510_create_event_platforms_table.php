@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('event_platforms', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('event_app_id');
-            $table->foreign('event_app_id')->references('id')->on('event_apps');
+            $table->foreignId('event_app_id')->constrained()->cascadeOnDelete();
             $table->string('type')->nullable();
             $table->string('name')->nullable();
             $table->timestamps();

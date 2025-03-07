@@ -12,6 +12,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class EventController extends Controller
@@ -44,10 +45,35 @@ class EventController extends Controller
     {
         $data = $request->validated();
         $data['organizer_id'] = Auth::user()->owner_id;
+
+        // Create Event
         $event = EventApp::create($data);
-        EventAppDate::create(['event_app_id' => $event->id, 'date_time' => $data['start_date']]);
+
+        // Save event start date in separate table
+        EventAppDate::create(['event_app_id' => $event->id, 'date' => $data['start_date']]);
+
+        // Save Event Log File
+        $this->SaveLogoImage($event, $request);
+
+        // Set newly created event in session for making it currently selected event
         session()->put('event_id', $event->id);
-        return back()->withMessage('Event created successfully.');
+
+        return back()->withSuccess('Event created successfully.');
+    }
+
+    private function SaveLogoImage(EventApp $event, Request $request)
+    {
+        if ($request->hasFile('logo_file')) {
+            // Log::info('has file changed');
+            $imageFileName = 'event-logo-' . $event->id . '.' . $request->logo_file->extension();
+            $path = storage_path('app/public/events-avatars');
+            if (file_exists($path . '/' . $imageFileName)) {
+                unlink($path . '/' . $imageFileName);  //Delete previous file
+            }
+            $request->logo_file->move(storage_path('app/public/events-avatars'), $imageFileName);
+            $event->logo = '/storage/events-avatars/' . $imageFileName;
+            $event->save();
+        }
     }
 
     public function selectEvent(Request $request, $id)
@@ -75,15 +101,23 @@ class EventController extends Controller
      */
     public function update(EventStoreRequest $request, EventApp $event_app)
     {
+        // Log::info($request->all());
+
         $data = $request->validated();
         $data['organizer_id'] = Auth::id();
+
         //Update Event fields
         $event_app->update($data);
+
         //Update Event Date Date Time
         $event_date = $event_app->dates()->first();
-        $event_date->update(['date_time' => $data['start_date']]);
+        $event_date->update(['date' => $data['start_date']]);
+
+        // Save Event Log File If changed
+        $this->SaveLogoImage($event_app, $request);
         session()->put('event_id', $event_app->id);
-        return back()->withMessage('Event Updated successfully.');
+
+        return back()->withSuccess('Event Updated successfully.');
     }
 
     /** organizer.events.destroy
@@ -96,6 +130,20 @@ class EventController extends Controller
             return back()->withMessage('Event Removed Successfully');
         } catch (Exception $ex) {
             return back()->withError($ex->getMessage());
+        }
+    }
+
+    /** organizer.events.destroyMany
+     * Remove the specified resource from database.
+     */
+    public function destroyMany(Request $request)
+    {
+        $ids = $request->get('ids');
+        $request->validate([
+            'ids' => 'required|array'
+        ]);
+        foreach ($ids as $id) {
+            EventApp::find($id)?->delete();
         }
     }
 }

@@ -10,6 +10,6 @@ class EventAppDate extends Model
     use HasFactory;
     protected $fillable = [
         'event_app_id',
-        'date_time'
+        'date'
     ];
 }
