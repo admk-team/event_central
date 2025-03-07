@@ -69,7 +69,7 @@ function Index({ events, recurring_types, event_category_types }: any) {
             accessorKey: 'logo',
             header: () => 'Logo',
             cell: (event) => (
-                < img className='rounded-circle' src={(event.logo ? event.logo : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s') + "?" + imageHash} alt="event logo" height={'35px'} />
+                < img className='rounded-circle' src={(event.logo ? '/storage/' + event.logo : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s') + "?" + imageHash} alt="event logo" height={'35px'} />
             ),
             enableSorting: false
         },
