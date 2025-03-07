@@ -13,6 +13,9 @@ import CreateEditModal from './CreateEditModal';
 
 function Index({ tickets, sessions }: any) {
     // console.log('tickets', tickets);
+    // console.log('sessions', sessions);
+
+
     const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
     const [editTicket, setEditTicket] = React.useState<any>(null);
 
@@ -67,7 +70,7 @@ function Index({ tickets, sessions }: any) {
         },
         {
             header: () => 'Event Name',
-            cell: (ticket) => ticket.event?.name ?? '',
+            cell: (ticket) => (<span key={ticket.event.id} className="badge bg-secondary-subtle text-secondary fs-6" style={{ marginRight: '3px' }}>{ticket.event.name}</span>),
         },
         {
             header: () => 'Name',
@@ -87,7 +90,11 @@ function Index({ tickets, sessions }: any) {
         },
         {
             header: () => 'Sessions',
-            cell: (ticket) => ticket.session.name,
+            cell: (ticket) => (
+                ticket.sessions.map((session: any) =>
+                    <span key={session.id} className="badge bg-secondary-subtle text-secondary fs-6" style={{ marginRight: '3px' }}>{session.name}</span>
+                )
+            ),
         },
         // {
         //     header: () => 'Increament By',

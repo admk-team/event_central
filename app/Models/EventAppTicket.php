@@ -17,7 +17,7 @@ class EventAppTicket extends Model
         'event_app_id'
     ];
 
-    protected $eventAppTicket = ['session_ids'];
+    protected $appends = ['selected_sessions'];
 
     public function scopeCurrentEvent($query)
     {
@@ -26,15 +26,15 @@ class EventAppTicket extends Model
 
     public function event()
     {
-        return $this->belongsTo(EventApp::class);
+        return $this->belongsTo(EventApp::class, 'event_app_id');
     }
 
     public function sessions()
     {
         return $this->belongsToMany(EventSession::class, 'session_ticket');
     }
-    public function getSessionIdsAttribute()
+    public function getSelectedSessionsAttribute()
     {
-        return $this->sessions()->pluck('event_session_id');
+        return $this->sessions()->select(['id as value', 'name as label'])->get();
     }
 }

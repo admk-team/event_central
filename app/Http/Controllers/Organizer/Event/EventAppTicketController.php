@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Organizer\Event;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Organizer\Event\EventAppPassRequest;
+use App\Http\Requests\Organizer\Event\EventAppTicketRequest;
 use App\Models\EventAppTicket;
 use App\Models\EventSession;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
+
+use function PHPSTORM_META\map;
 
 class EventAppTicketController extends Controller
 {
@@ -18,40 +20,47 @@ class EventAppTicketController extends Controller
     public function index()
     {
         // Passes are related to Event Session, Modifications will be required to link Passes with selected sessions
-        $tickets
-            = $this->datatable(EventAppTicket::with(['event']));
+        $tickets = $this->datatable(EventAppTicket::currentEvent()->with(['event', 'sessions']));
         $speakers = null;
-        $sessions = EventSession::currentEvent()->get();
+        $sessions = EventSession::currentEvent()->select(['id as value', 'name as label'])->get();
         // return $event_sessions;
         return Inertia::render('Organizer/Events/Tickets/Index', compact('tickets', 'sessions'));
     }
     /**
      * Store a newly created resource in storage.
      */
-    public function store(EventAppPassRequest $request)
+    public function store(EventAppTicketRequest $request)
     {
         $data = $request->validated();
-        Log::info($data);
-        EventAppTicket::create($data);
-        return back();
+        $data['event_app_id'] = session('event_id');
+        $data['sessions'] = $this->transformSessions($data);
+
+        // Log::info($data['sessions']);
+        $ticket = EventAppTicket::create($data);
+        $ticket->sessions()->sync($data['sessions']);
+        return back()->withSuccess('Ticket created successfully');
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(EventAppPassRequest $request, EventAppTicket $eventAppTicket)
+    public function update(EventAppTicketRequest $request, EventAppTicket $ticket)
     {
         $data = $request->validated();
-        $eventAppTicket->update($data);
-        return back();
+        $data['sessions'] = $this->transformSessions($data);
+        $ticket->update($data);
+
+        $ticket->sessions()->sync($data['sessions']);
+
+        return back()->withSuccess('Ticket Updated successfully');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(EventAppTicket $eventAppTicket)
+    public function destroy(EventAppTicket $ticket)
     {
-        $eventAppTicket->delete();
+        $ticket->delete();
         return back();
     }
 
@@ -65,5 +74,15 @@ class EventAppTicketController extends Controller
         foreach ($ids as $id) {
             EventAppTicket::find($id)?->delete();
         }
+    }
+
+    private function transformSessions($data)
+    {
+        $sessions = array_values($data['sessions']);
+        $temp = [];
+        foreach ($sessions as $session) {
+            array_push($temp, $session['value']);
+        }
+        return $temp;
     }
 }
