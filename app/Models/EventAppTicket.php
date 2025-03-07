@@ -14,7 +14,13 @@ class EventAppTicket extends Model
         'type',
         'price',
         'addon_features',
-        'event_app_id'
+        'event_app_id',
+
+        'increment_by',
+        'increment_rate',
+        'increment_type',
+        'start_increment',
+        'end_increment',
     ];
 
     protected $appends = ['selected_sessions'];

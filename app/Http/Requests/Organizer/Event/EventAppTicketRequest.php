@@ -29,11 +29,12 @@ class EventAppTicketRequest extends FormRequest
             'type' => 'required',
             'price' => 'required|numeric',
             'sessions' => 'required|array',
-            'sessions.*' => 'required|array|min:1'
-            // 'increament_by' => 'required|numeric',
-            // 'increament_rate' => 'required|numeric',
-            // 'start_increament' => 'required|date',
-            // 'end_increament' => 'required|date',
+            'sessions.*' => 'required|array|min:1',
+            'increment_by' => '',
+            'increment_rate' => '',
+            'increment_type' => '',
+            'start_increment' => '',
+            'end_increment' => '',
         ];
     }
 
@@ -45,19 +46,18 @@ class EventAppTicketRequest extends FormRequest
     public function messages(): array
     {
         return [
-            // 'event_app_id' => 'exists:event_sessions,id',
-            // 'event_app_id.required' => '',
             'name.required' => 'Ticket Name is required',
             'description' => 'Ticket description is required',
             'type.required' => 'Ticket type is required',
             'price.required' => 'Price is required',
             'price.numeric' => 'Price must be numeric',
             'sessions.required' => 'Event Session is required',
-            'sessions.*.required' => 'At least one session is required'
-            // 'increament_by' => 'required|numeric',
-            // 'increament_rate' => 'required|numeric',
-            // 'start_increament' => 'required|date',
-            // 'end_increament' => 'required|date',
+            'sessions.*.required' => 'At least one session is required',
+            // 'increment_by.numeric' => 'Increment by must be numeric',
+            // 'increment_rate.numeric' => 'Increment rate must be numeric',
+            // 'increment_type.string' => 'Increment Type must be Fixed or Percentage',
+            // 'start_increment.datetime' => 'Start Increment must be date/time',
+            // 'end_increment.datetime' => 'End Increment must be date/time',
         ];
     }
 }

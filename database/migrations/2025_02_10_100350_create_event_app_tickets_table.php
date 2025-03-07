@@ -19,6 +19,13 @@ return new class extends Migration
             $table->string('type')->default('Normal');
             $table->decimal('price')->default(0);
             $table->json('addon_features')->nullable();
+
+            $table->decimal('increment_by')->nullable();
+            $table->decimal('increment_rate')->nullable();;
+            $table->enum('increment_type', ['Fixed', 'Percentage']);
+            $table->date('start_increment')->nullable();
+            $table->date('end_increment')->nullable();
+
             $table->timestamps();
         });
     }

@@ -96,22 +96,22 @@ function Index({ tickets, sessions }: any) {
                 )
             ),
         },
-        // {
-        //     header: () => 'Increament By',
-        //     cell: (ticket) => ticket.increament_by,
-        // },
-        // {
-        //     header: () => 'Increament Rate',
-        //     cell: (ticket) => ticket.increament_rate,
-        // },
-        // {
-        //     header: () => 'Start Increament',
-        //     cell: (ticket) => ticket.start_increament,
-        // },
-        // {
-        //     header: () => 'End Increament',
-        //     cell: (ticket) => ticket.end_increament,
-        // },
+        {
+            header: () => 'Increment By',
+            cell: (ticket) => ticket.increment_by,
+        },
+        {
+            header: () => 'Increment Rate',
+            cell: (ticket) => ticket.increment_rate,
+        },
+        {
+            header: () => 'Start Increment',
+            cell: (ticket) => ticket.start_increment,
+        },
+        {
+            header: () => 'End Increment',
+            cell: (ticket) => ticket.end_increment,
+        },
         {
             header: () => 'Action',
             cell: (ticket) => (
@@ -126,7 +126,7 @@ function Index({ tickets, sessions }: any) {
     ];
     return (
         <React.Fragment>
-            <Head title='tickets' />
+            <Head title='Tickets' />
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb title="Tickets" pageTitle="Dashboard" />

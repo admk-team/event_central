@@ -17,19 +17,21 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
         sessions: ticket?.selected_sessions ?? [],
         name: ticket?.name ?? '',
         description: ticket?.description ?? '',
-        type: ticket?.type ?? '',
+        type: 'NORMAL',         //This fields is enlisted in App documents, there for leaving to be used in future
         price: ticket?.price ?? '',
-        // increament_by: ticket?.increament_by ?? '',
-        // increament_rate: ticket?.increament_rate ?? '',
-        // start_increament: ticket?.start_increament ?? '',
-        // end_increament: ticket?.end_increament ?? '',
+        increment_by: ticket?.increment_by ?? '',
+        increment_rate: ticket?.increment_rate ?? '',
+        increment_type: ticket?.increment_type ?? 'Percentage',     //To store increment types e.g. Fixed or Percentage
+        start_increment: ticket?.start_increment ?? '',
+        end_increment: ticket?.end_increment ?? '',
     });
     const [selectMulti, setselectMulti] = useState<any>(ticket?.selected_sessions ?? null);
+    const [selectAllSession, setSelectAllSession] = useState<any>(false);
 
     const submit = (e: any) => {
         e.preventDefault();
 
-        // console.log(data);
+        console.log(data);
         if (isEdit) {
             post(route('organizer.events.tickets.update', ticket.id), {
                 onSuccess: () => {
@@ -48,7 +50,16 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
         console.log('testing ticket', errors);
     }
 
-
+    const handleCheckChange = (event: any) => {
+        if (event.target.checked) {
+            setselectMulti(sessions);
+            setData('sessions', sessions);
+            setSelectAllSession(true);
+        } else {
+            setselectMulti([]);
+            setSelectAllSession(false);
+        }
+    }
 
     const customStyles = {
         multiValue: (styles: any, { data }: any) => {
@@ -82,47 +93,17 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
             </Modal.Header>
             <Form onSubmit={submit} className="tablelist-form">
                 <Modal.Body>
-                    <FormGroup className="mb-3">
-                        <Form.Label>Name</Form.Label>
-                        <Form.Control
-                            type="text"
-                            value={data.name}
-                            onChange={(e) => setData('name', e.target.value)}
-                            isInvalid={!!errors.name}
-                        />
-                        {errors.name && <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>}
-                    </FormGroup>
-                    <FormGroup className="mb-3">
-                        <Form.Label>Description</Form.Label>
-                        <Form.Control
-                            type="text"
-                            value={data.description}
-                            onChange={(e) => setData('description', e.target.value)}
-                            isInvalid={!!errors.description}
-                        />
-                        {errors.description && <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>}
-                    </FormGroup>
                     <Row>
                         <Col md={6}>
                             <FormGroup className="mb-3">
-                                <Form.Label>Type</Form.Label>
-                                <Form.Select
-                                    value={data.type}
-                                    aria-label="ticket type"
-                                    isInvalid={!!errors.type}
-                                    onChange={(e) => setData('type', e.target.value)}
-                                >
-                                    <option>Choose Ticket Type</option>
-                                    <option value="VIP">VIP</option>
-                                    <option value="NORMAL">NORMAL</option>
-                                </Form.Select>
-                                {/* <Form.Control
+                                <Form.Label>Name</Form.Label>
+                                <Form.Control
                                     type="text"
-                                    value={data.type}
-                                    onChange={(e) => setData('type', e.target.value)}
-                                    isInvalid={!!errors.type}
-                                /> */}
-                                {errors.type && <Form.Control.Feedback type="invalid">{errors.type}</Form.Control.Feedback>}
+                                    value={data.name}
+                                    onChange={(e) => setData('name', e.target.value)}
+                                    isInvalid={!!errors.name}
+                                />
+                                {errors.name && <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>}
                             </FormGroup>
                         </Col>
                         <Col md={6}>
@@ -138,10 +119,33 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
                             </FormGroup>
                         </Col>
                     </Row>
+                    <FormGroup className="mb-3">
+                        <Form.Label>Description</Form.Label>
+                        <Form.Control
+                            type="text"
+                            value={data.description}
+                            onChange={(e) => setData('description', e.target.value)}
+                            isInvalid={!!errors.description}
+                        />
+                        {errors.description && <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>}
+                    </FormGroup>
+
+                    <Col lg={12}>
+                        <FormGroup className="mb-3">
+                            {/* <Form.Label>Sessions</Form.Label> */}
+                            <Form.Check
+                                type='checkbox'
+                                label="Select All Sessions"
+                                id="select-all-sessions"
+                                onChange={handleCheckChange}
+                            />
+                        </FormGroup>
+                    </Col>
                     <Col lg={12}>
                         <FormGroup className="mb-3">
                             <Form.Label>Sessions</Form.Label>
                             <Select
+                                isDisabled={selectAllSession}
                                 className={errors.sessions && 'is-invalid'}
                                 value={selectMulti}
                                 isMulti={true}
@@ -156,6 +160,87 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
                             {errors.sessions && <Form.Control.Feedback type="invalid">{errors.sessions}</Form.Control.Feedback>}
                         </FormGroup>
                     </Col>
+
+                    <Row>
+                        <Col md={6}>
+                            <FormGroup className="mb-3">
+                                <Form.Label>Increment By</Form.Label>
+                                <Form.Control
+                                    id="increment_by"
+                                    type="number"
+                                    value={data.increment_by}
+                                    onChange={(e) => setData('increment_by', e.target.value)}
+                                    isInvalid={!!errors.increment_by}
+                                />
+                                {errors.increment_by && <Form.Control.Feedback type="invalid">{errors.increment_by}</Form.Control.Feedback>}
+                            </FormGroup>
+                        </Col>
+                        <Col md={6}>
+                            <FormGroup className="mb-3">
+                                <Form.Label>Increment Rate</Form.Label>
+                                <Form.Control
+                                    id="increment_rate"
+                                    type="number"
+                                    value={data.increment_rate}
+                                    onChange={(e) => setData('increment_rate', e.target.value)}
+                                    isInvalid={!!errors.increment_rate}
+                                />
+                                {errors.increment_rate && <Form.Control.Feedback type="invalid">{errors.increment_rate}</Form.Control.Feedback>}
+                            </FormGroup>
+                        </Col>
+                    </Row>
+
+                    <Row>
+                        <Col md={6}>
+                            <FormGroup className="mb-3">
+                                <Form.Label>Increment Start Date</Form.Label>
+                                <Flatpickr
+                                    id="start_increment"
+                                    options={{
+                                        altInput: true,
+                                        enableTime: true,
+                                        altFormat: "d M, Y",
+                                        dateFormat: "Y-m-d"
+                                    }}
+                                    value={data.start_increment}
+                                    onChange={([selectedDate]: Date[]) => {
+                                        setData((prevData) => ({
+                                            ...prevData,
+                                            start_increment: selectedDate.toLocaleDateString("en-CA").split("T")[0]
+                                            // start_increment: selectedDate
+                                        }))
+                                    }
+                                    }
+                                />
+                                {errors.start_increment && <Form.Control.Feedback type="invalid">{errors.start_increment}</Form.Control.Feedback>}
+                            </FormGroup>
+                        </Col>
+                        <Col md={6}>
+                            <FormGroup className="mb-3">
+                                <Form.Label>Increment End Date</Form.Label>
+                                <Flatpickr
+                                    id="end_increment"
+                                    options={{
+                                        altInput: true,
+                                        altFormat: "d M, Y",
+                                        dateFormat: "Y-m-d",
+                                        enableTime: true,
+                                        minDate: data.start_increment
+                                    }}
+                                    value={data.end_increment}
+                                    onChange={([selectedDate]: Date[]) => {
+                                        setData((prevData) => ({
+                                            ...prevData,
+                                            end_increment: selectedDate.toLocaleDateString("en-CA").split("T")[0]
+                                            // end_increment: selectedDate
+                                        }))
+                                    }
+                                    }
+                                />
+                                {errors.end_increment && <Form.Control.Feedback type="invalid">{errors.end_increment}</Form.Control.Feedback>}
+                            </FormGroup>
+                        </Col>
+                    </Row>
                 </Modal.Body>
 
                 <div className="modal-footer">
