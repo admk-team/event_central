@@ -5,6 +5,7 @@
 /public/storage/
 /public/storage/events-avatars
 /public/storage/organizer
+/public/storage/attendee-avatar
 /storage/*.key
 /vendor
 .env
