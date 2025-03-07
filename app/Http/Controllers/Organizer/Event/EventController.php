@@ -71,7 +71,7 @@ class EventController extends Controller
                 unlink($path . '/' . $imageFileName);  //Delete previous file
             }
             $request->logo_file->move(storage_path('app/public/events-avatars'), $imageFileName);
-            $event->logo = '/events-avatars/' . $imageFileName;
+            $event->logo = 'events-avatars/' . $imageFileName;
             $event->save();
         }
     }
