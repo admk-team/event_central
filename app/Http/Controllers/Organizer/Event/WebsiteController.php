@@ -18,7 +18,17 @@ class WebsiteController extends Controller
             abort(404);
         }
 
-        $page = $event->pages()->published()->first();
+        $page = $event->pages()->homePage()->with(['header', 'footer'])->first();
+
+        $header = $page->header;
+        if ($page->default_header) {
+            $header = $event->headers()->default()->first();
+        }
+
+        $footer = $page->footer;
+        if ($page->default_footer) {
+            $footer = $event->footers()->default()->first();
+        }
 
         if (! $page) {
             abort(404);
@@ -26,6 +36,8 @@ class WebsiteController extends Controller
 
         return Inertia::render('Organizer/Events/Website/Page', [
             'page' => $page,
+            'header' => $header,
+            'footer' => $footer,
         ]);
     }
 
@@ -42,12 +54,24 @@ class WebsiteController extends Controller
             ->published()
             ->first();
 
+        $header = $page->header;
+        if ($page->default_header) {
+            $header = $event->headers()->default()->first();
+        }
+
+        $footer = $page->footer;
+        if ($page->default_footer) {
+            $footer = $event->footers()->default()->first();
+        }
+
         if (! $page) {
             abort(404);
         }
 
         return Inertia::render('Organizer/Events/Website/Page', [
             'page' => $page,
+            'header' => $header,
+            'footer' => $footer,
         ]);
     }
 }

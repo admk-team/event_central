@@ -9,7 +9,10 @@ use App\Http\Controllers\Organizer\Event\EventPartnerController;
 use App\Http\Controllers\Organizer\Event\EventPlatformController;
 use App\Http\Controllers\Organizer\Event\EventSessionController;
 use App\Http\Controllers\Organizer\Event\EventSpeakerController;
+use App\Http\Controllers\Organizer\Event\FooterController;
+use App\Http\Controllers\Organizer\Event\HeaderController;
 use App\Http\Controllers\Organizer\Event\ImportController;
+use App\Http\Controllers\Organizer\Event\PageController;
 use App\Http\Controllers\Organizer\Event\Settings\EventAppPaymentController;
 use App\Http\Controllers\Organizer\Event\Settings\EventSettingsController;
 use App\Http\Controllers\Organizer\Event\User\AttendeeController;
@@ -19,7 +22,6 @@ use App\Http\Controllers\Organizer\Event\ScheduleController;
 use App\Http\Controllers\Organizer\Event\Settings\WebsiteSettingsController;
 use App\Http\Controllers\Organizer\Event\WebsiteController;
 use App\Http\Controllers\Organizer\Event\WorkshopController;
-use App\Http\Controllers\Organizer\PageController;
 use App\Http\Controllers\Organizer\ProfileController;
 use App\Http\Controllers\Organizer\RoleController;
 use App\Http\Controllers\Organizer\UserController;
@@ -70,8 +72,23 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::resource('pages', PageController::class)->only(['store', 'update', 'destroy']);
             Route::delete('pages/delete/many', [PageController::class, 'destroyMany'])->name('pages.destroy.many');
             Route::post('pages/{page}/toggle-publish', [PageController::class, 'togglePublish'])->name('pages.toggle-publish');
+            Route::post('pages/{page}/toggle-home-page', [PageController::class, 'toggleHomePage'])->name('pages.toggle-home-page');
             Route::get('pages/{page}/builder', [PageController::class, 'builder'])->name('pages.builder');
             Route::post('pages/{page}/builder', [PageController::class, 'builderSave'])->name('pages.builder.save');
+
+            // Headers
+            Route::resource('headers', HeaderController::class)->only(['store', 'update', 'destroy']);
+            Route::delete('headers/delete/many', [HeaderController::class, 'destroyMany'])->name('headers.destroy.many');
+            Route::post('headers/{header}/toggle-default', [HeaderController::class, 'toggleDefault'])->name('headers.toggle-default');
+            Route::get('headers/{header}/builder', [HeaderController::class, 'builder'])->name('headers.builder');
+            Route::post('headers/{header}/builder', [HeaderController::class, 'builderSave'])->name('headers.builder.save');
+
+            // Footers
+            Route::resource('footers', FooterController::class)->only(['store', 'update', 'destroy']);
+            Route::delete('footers/delete/many', [FooterController::class, 'destroyMany'])->name('footers.destroy.many');
+            Route::post('footers/{footer}/toggle-default', [FooterController::class, 'toggleDefault'])->name('footers.toggle-default');
+            Route::get('footers/{footer}/builder', [FooterController::class, 'builder'])->name('footers.builder');
+            Route::post('footers/{footer}/builder', [FooterController::class, 'builderSave'])->name('footers.builder.save');
 
             // Settings
             Route::prefix('settings')->name('settings.')->group(function () {

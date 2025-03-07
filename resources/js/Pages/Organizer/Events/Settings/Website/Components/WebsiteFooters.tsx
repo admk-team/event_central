@@ -1,5 +1,5 @@
 import { Link, useForm, usePage } from '@inertiajs/react'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Alert, AlertHeading, Button, Card, CardBody, CardHeader, CardTitle } from 'react-bootstrap'
 import CreateEditPageModal from './CreateEditPageModal';
 import DeleteModal from '../../../../../../Components/Common/DeleteModal';
@@ -9,21 +9,23 @@ import PageStatus from './PageStatus';
 import DeleteManyModal from '../../../../../../Components/Common/DeleteManyModal';
 import HomePageSelector from './HomePageSelector';
 import { AlertCircle, AlertCircleIcon } from 'lucide-react';
+import CreateEditHeaderModal from './CreateEditHeaderModal';
+import CreateEditFooterModal from './CreateEditFooterModal';
+import FooterDefaultSelector from './FooterDefaultSelector';
 
-export default function WebsitePages() {
-    const pages: any = usePage().props.pages;
-    const homePageSelected: boolean = usePage().props.homePageSelected;
+export default function WebsiteFooters() {
+    const footers: any = usePage().props.footers;
     
     const [showCreateEditModal, _setShowCreateEditModal] = useState(false);
-    const [editPage, setEditPage] = useState<any>(null);
-    const [deletePage, setDeletePage] = useState<any>(null);
+    const [editFooter, setEditFooter] = useState<any>(null);
+    const [deleteFooter, setDeleteFooter] = useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
 
     const setShowCreateEditModal = (state: boolean) => {
         _setShowCreateEditModal(state);
         if (state === false) {
-            setEditPage(null);
+            setEditFooter(null);
         }
     }
 
@@ -37,17 +39,17 @@ export default function WebsitePages() {
     });
 
     const editAction = (user: any) => {
-        setEditPage(user);
+        setEditFooter(user);
         setShowCreateEditModal(true);
     }
 
     const deleteAction = (user: any) => {
-        setDeletePage(user);
+        setDeleteFooter(user);
         setShowDeleteConfirmation(true);
     }
 
     const handleDelete = () => {
-        deleteForm.delete(route('organizer.events.pages.destroy', deletePage.id));
+        deleteForm.delete(route('organizer.events.footers.destroy', deleteFooter.id));
         setShowDeleteConfirmation(false);
     }
 
@@ -57,38 +59,32 @@ export default function WebsitePages() {
     }
 
     const handleDeleteMany = () => {
-        deleteManyForm.delete(route('organizer.events.pages.destroy.many'));
+        deleteManyForm.delete(route('organizer.events.footers.destroy.many'));
         setShowDeleteManyConfirmation(false);
     }
 
-    const columns: ColumnDef<typeof pages.data[0]> = [
+    const columns: ColumnDef<typeof footers.data[0]> = [
         {
             accessorKey: 'title',
             header: () => 'Title',
-            cell: (page) => page.title,
+            cell: (footer) => footer.title,
             enableSorting: true,
         },
         {
-            accessorKey: 'is_home_page',
-            header: () => 'Home Page',
-            cell: (page) => <HomePageSelector page={page} />,
-            enableSorting: true,
-        },
-        {
-            accessorKey: 'is_published',
-            header: () => 'Published',
-            cell: (page) => <PageStatus page={page} />,
+            accessorKey: 'is_default',
+            header: () => 'Default',
+            cell: (footer) => <FooterDefaultSelector footer={footer} />,
             enableSorting: true,
         },
         {
             header: () => 'Action',
-            cell: (page) => (
+            cell: (footer) => (
                 <div className="hstack gap-3 fs-15">
-                    <Link href={route('organizer.events.pages.builder', page.id)}>
+                    <Link href={route('organizer.events.footers.builder', footer.id)}>
                         <Button size="sm">Page Builder</Button>
                     </Link>
-                    <span className="link-primary cursor-pointer" onClick={() => editAction(page)}><i className="ri-edit-fill"></i></span>
-                    <span className="link-danger cursor-pointer" onClick={() => deleteAction(page)}>
+                    <span className="link-primary cursor-pointer" onClick={() => editAction(footer)}><i className="ri-edit-fill"></i></span>
+                    <span className="link-danger cursor-pointer" onClick={() => deleteAction(footer)}>
                         <i className="ri-delete-bin-5-line"></i>
                     </span>
                 </div>
@@ -98,16 +94,10 @@ export default function WebsitePages() {
 
     return (
         <>
-            {homePageSelected || (
-                <Alert variant="warning" className="d-flex gap-2 align-items-center">
-                    <AlertCircleIcon />
-                    <div>Select <b>Home Page</b> to avoid <b>404</b> error</div>
-                </Alert>
-            )}
             <DataTable
-                data={pages}
+                data={footers}
                 columns={columns}
-                title="Pages"
+                title="Footers"
                 actions={[
                     // Delete multiple
                     {
@@ -126,11 +116,11 @@ export default function WebsitePages() {
             />
 
             {showCreateEditModal && (
-                <CreateEditPageModal
+                <CreateEditFooterModal
                     show={showCreateEditModal}
                     hide={() => setShowCreateEditModal(false)}
                     onHide={() => setShowCreateEditModal(false)}
-                    page={editPage}
+                    page={editFooter}
                 />
             )}
 

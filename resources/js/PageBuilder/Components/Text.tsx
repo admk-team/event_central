@@ -1,10 +1,4 @@
-import React from 'react'
-
-export type TextType = {
-    text: string
-}
-
-export const TextBlock = {
+export const Text = {
     fields: {
         text: {
             type: "text",

@@ -7,6 +7,8 @@ import "@measured/puck/puck.css";
 import WebsiteUrl from './Components/WebsiteUrl';
 import WebsiteStatus from './Components/WebsiteStatus';
 import WebsitePages from './Components/WebsitePages';
+import WebsiteHeaders from './Components/WebsiteHeaders';
+import WebsiteFooters from './Components/WebsiteFooters';
 
 function Website() {
 
@@ -29,6 +31,12 @@ function Website() {
                                 </Col>
                                 <Col xs={12}>
                                     <WebsitePages />
+                                </Col>
+                                <Col xs={12}>
+                                    <WebsiteHeaders />
+                                </Col>
+                                <Col xs={12}>
+                                    <WebsiteFooters />
                                 </Col>
                             </Row>
                         </Col>

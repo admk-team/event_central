@@ -3,9 +3,8 @@
 namespace App\Http\Requests\Organizer\Event;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class UpdatePageRequest extends FormRequest
+class UpdateFooterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,14 +23,6 @@ class UpdatePageRequest extends FormRequest
     {
         return [
             'title' => 'required',
-            'slug' => [
-                'required',
-                Rule::unique('pages')->ignore($this->page->id),
-            ],
-            'default_header' => 'boolean',
-            'header_id' => 'nullable',
-            'default_footer' => 'boolean',
-            'footer_id' => 'nullable',
         ];
     }
 }

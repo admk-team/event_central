@@ -9,21 +9,22 @@ import PageStatus from './PageStatus';
 import DeleteManyModal from '../../../../../../Components/Common/DeleteManyModal';
 import HomePageSelector from './HomePageSelector';
 import { AlertCircle, AlertCircleIcon } from 'lucide-react';
+import CreateEditHeaderModal from './CreateEditHeaderModal';
+import HeaderDefaultSelector from './HeaderDefaultSelector';
 
-export default function WebsitePages() {
-    const pages: any = usePage().props.pages;
-    const homePageSelected: boolean = usePage().props.homePageSelected;
+export default function WebsiteHeaders() {
+    const headers: any = usePage().props.headers;
     
     const [showCreateEditModal, _setShowCreateEditModal] = useState(false);
-    const [editPage, setEditPage] = useState<any>(null);
-    const [deletePage, setDeletePage] = useState<any>(null);
+    const [editHeader, setEditHeader] = useState<any>(null);
+    const [deleteHeader, setDeleteHeader] = useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
 
     const setShowCreateEditModal = (state: boolean) => {
         _setShowCreateEditModal(state);
         if (state === false) {
-            setEditPage(null);
+            setEditHeader(null);
         }
     }
 
@@ -37,17 +38,17 @@ export default function WebsitePages() {
     });
 
     const editAction = (user: any) => {
-        setEditPage(user);
+        setEditHeader(user);
         setShowCreateEditModal(true);
     }
 
     const deleteAction = (user: any) => {
-        setDeletePage(user);
+        setDeleteHeader(user);
         setShowDeleteConfirmation(true);
     }
 
     const handleDelete = () => {
-        deleteForm.delete(route('organizer.events.pages.destroy', deletePage.id));
+        deleteForm.delete(route('organizer.events.headers.destroy', deleteHeader.id));
         setShowDeleteConfirmation(false);
     }
 
@@ -57,38 +58,32 @@ export default function WebsitePages() {
     }
 
     const handleDeleteMany = () => {
-        deleteManyForm.delete(route('organizer.events.pages.destroy.many'));
+        deleteManyForm.delete(route('organizer.events.headers.destroy.many'));
         setShowDeleteManyConfirmation(false);
     }
 
-    const columns: ColumnDef<typeof pages.data[0]> = [
+    const columns: ColumnDef<typeof headers.data[0]> = [
         {
             accessorKey: 'title',
             header: () => 'Title',
-            cell: (page) => page.title,
+            cell: (header) => header.title,
             enableSorting: true,
         },
         {
-            accessorKey: 'is_home_page',
-            header: () => 'Home Page',
-            cell: (page) => <HomePageSelector page={page} />,
-            enableSorting: true,
-        },
-        {
-            accessorKey: 'is_published',
-            header: () => 'Published',
-            cell: (page) => <PageStatus page={page} />,
+            accessorKey: 'is_default',
+            header: () => 'Default',
+            cell: (header) => <HeaderDefaultSelector header={header} />,
             enableSorting: true,
         },
         {
             header: () => 'Action',
-            cell: (page) => (
+            cell: (header) => (
                 <div className="hstack gap-3 fs-15">
-                    <Link href={route('organizer.events.pages.builder', page.id)}>
+                    <Link href={route('organizer.events.headers.builder', header.id)}>
                         <Button size="sm">Page Builder</Button>
                     </Link>
-                    <span className="link-primary cursor-pointer" onClick={() => editAction(page)}><i className="ri-edit-fill"></i></span>
-                    <span className="link-danger cursor-pointer" onClick={() => deleteAction(page)}>
+                    <span className="link-primary cursor-pointer" onClick={() => editAction(header)}><i className="ri-edit-fill"></i></span>
+                    <span className="link-danger cursor-pointer" onClick={() => deleteAction(header)}>
                         <i className="ri-delete-bin-5-line"></i>
                     </span>
                 </div>
@@ -98,16 +93,10 @@ export default function WebsitePages() {
 
     return (
         <>
-            {homePageSelected || (
-                <Alert variant="warning" className="d-flex gap-2 align-items-center">
-                    <AlertCircleIcon />
-                    <div>Select <b>Home Page</b> to avoid <b>404</b> error</div>
-                </Alert>
-            )}
             <DataTable
-                data={pages}
+                data={headers}
                 columns={columns}
-                title="Pages"
+                title="Headers"
                 actions={[
                     // Delete multiple
                     {
@@ -126,11 +115,11 @@ export default function WebsitePages() {
             />
 
             {showCreateEditModal && (
-                <CreateEditPageModal
+                <CreateEditHeaderModal
                     show={showCreateEditModal}
                     hide={() => setShowCreateEditModal(false)}
                     onHide={() => setShowCreateEditModal(false)}
-                    page={editPage}
+                    page={editHeader}
                 />
             )}
 

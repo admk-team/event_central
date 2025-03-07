@@ -11,18 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('pages', function (Blueprint $table) {
+        Schema::create('footers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('event_app_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->nullable()->default(null)->constrained()->onDelete('set null');
             $table->string('title');
-            $table->string('slug')->unique();
             $table->longText('content');
-            $table->string('meta_title')->nullable();
-            $table->text('meta_description')->nullable();
-            $table->string('meta_keywords')->nullable();
-            $table->boolean('is_home_page')->default(false);
-            $table->boolean('is_published')->default(false);
+            $table->boolean('is_default')->default(false);
             $table->timestamps();
         });
     }
@@ -32,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('pages');
+        Schema::dropIfExists('footers');
     }
 };

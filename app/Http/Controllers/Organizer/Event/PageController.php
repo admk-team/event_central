@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Organizer;
+namespace App\Http\Controllers\Organizer\Event;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organizer\Event\StorePageRequest;
@@ -24,6 +24,12 @@ class PageController extends Controller
         $input['user_id'] = Auth::id();
         $input['content'] = '';
 
+        // Select as home page if this is first page
+        $pagesExist = Page::where('event_app_id', session('event_id'))->count() !== 0;
+        if (! $pagesExist) {
+            $input['is_home_page'] = true;
+        }
+
         Page::create($input);
 
         return back()->withSuccess("Created");
@@ -46,6 +52,18 @@ class PageController extends Controller
         $page->is_published = !$page->is_published;
         $page->save();
         return back()->withSuccess($page->is_published ? "Published" : "Unpublished");
+    }
+
+    public function toggleHomePage(Page $page)
+    {
+        if (! $page->is_home_page) {
+            Page::query()->update(['is_home_page' => false]);
+        }
+
+        $page->is_home_page = !$page->is_home_page;
+        $page->save();
+
+        return back()->withSuccess($page->is_home_page ? "Page selected as home page" : "Page unselected as home page");
     }
 
     /**

@@ -2,27 +2,27 @@ import React, { useState } from 'react'
 import { Data, Puck, usePuck } from "@measured/puck";
 import "@measured/puck/puck.css";
 import { ArrowLeft, Save } from 'lucide-react';
-import { Link, router, useForm } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import useToastMessages from '../../../../../hooks/useToastMessages';
-import toast, { Toaster } from 'react-hot-toast';
+import  { Toaster } from 'react-hot-toast';
 import { Spinner } from 'react-bootstrap';
 import { config } from '../../../../../PageBuilder/Config';
 
-export default function PageBuilder({ page }: any) {
-    const initialData = page.content ? JSON.parse(page.content) : {
+export default function FooterBuilder({ footer }: any) {
+    const initialData = footer.content ? JSON.parse(footer.content) : {
         root: {
             props: {
-                title: page.title,
+                title: footer.title,
             }
         }
     };
 
     const [processing, setProcessing] = useState(false);
 
-    const save = (pageData: Data) => {
-        router.post(route('organizer.events.pages.builder.save', page.id), {
-            page_title: pageData.root.props?.title,
-            page_data: JSON.stringify(pageData),
+    const save = (footerData: Data) => {
+        router.post(route('organizer.events.footers.builder.save', footer.id), {
+            footer_title: footerData.root.props?.title,
+            footer_data: JSON.stringify(footerData),
         }, { 
             preserveScroll: true, 
             onBefore: () => setProcessing(true),
