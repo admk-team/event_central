@@ -59,17 +59,17 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
         },
         multiValueLabel: (styles: any, { data }: any) => ({
             ...styles,
-            // backgroundColor: "#405189",
-            color: "white",
+            backgroundColor: "var(--vz-secondary-bg-subtle)",
+            color: "black",
         }),
         multiValueRemove: (styles: any, { data }: any) => ({
             ...styles,
-            // color: "white",
-            // backgroundColor: "#405189",
-            // ':hover': {
-            //     backgroundColor: "#405189",
-            //     color: 'white',
-            // },
+            color: "black",
+            backgroundColor: "var(--vz-secondary-bg-subtle)",
+            ':hover': {
+                backgroundColor: "var(--vz-secondary-bg-subtle)",
+                color: 'dark',
+            },
         }),
     }
 
@@ -147,12 +147,11 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
                                 isMulti={true}
                                 onChange={(list: any) => {
                                     setselectMulti(list);
-                                    // console.log(list);
                                     setData('sessions', list);
                                 }}
                                 options={sessions}
                                 classNamePrefix={errors.sessions && 'multi-select is-invalid '}
-                            // styles={customStyles}
+                                styles={customStyles}
                             />
                             {errors.sessions && <Form.Control.Feedback type="invalid">{errors.sessions}</Form.Control.Feedback>}
                         </FormGroup>
