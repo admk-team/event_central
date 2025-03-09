@@ -54,18 +54,32 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
 
         Route::middleware('event_is_selected')->group(function () {
             Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+            // Schedule (Event Sessions)
             Route::resource('schedule', EventSessionController::class);
             Route::delete('schedule/delete/many', [EventSessionController::class, 'destroyMany'])->name('schedule.destroy.many');
+
+            // Speakers
             Route::resource('speaker', EventSpeakerController::class);
             Route::delete('speakers/delete/many', [EventSpeakerController::class, 'destroyMany'])->name('speakers.destroy.many');
+
+            // Attendies
             Route::resource('attendees', AttendeeController::class);
             Route::delete('attendees/delete/many', [AttendeeController::class, 'destroyMany'])->name('attendees.destroy.many');
+
+            // Wordshop
             Route::resource('workshop', WorkshopController::class);
             Route::resource('custom-menu', CustomMenuController::class);
+
+            // Partner
             Route::resource('partner', EventPartnerController::class);
             Route::delete('partner/delete/many', [EventPartnerController::class, 'destroyMany'])->name('partner.destroy.many');
             Route::resource('partner-category', EventPartnerCategoryController::class);
+
+            // Event Platforms
             Route::resource('event-platforms',EventPlatformController::class);
+
+            // Tickets
             Route::resource('tickets', EventAppTicketController::class)->only(['index', 'store', 'update', 'destroy']);
             Route::delete('tickets/delete/many', [EventAppTicketController::class, 'destroyMany'])->name('tickets.destroy.many');
 
