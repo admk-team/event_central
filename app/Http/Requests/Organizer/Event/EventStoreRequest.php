@@ -31,7 +31,8 @@ class EventStoreRequest extends FormRequest
             'type'          => ['required', 'string', 'max:255'],
             'schedual_type' => ['required', 'in:singleday,multiday'],
             'event_app_category_id' => 'required|numeric',
-            'recurring_type_id' => 'required_with:is_recurring|numeric',
+            'recurring_type_id' => 'required_if_accepted:is_recurring',
+            'is_recurring' => ['boolean']
         ];
     }
 
@@ -50,7 +51,8 @@ class EventStoreRequest extends FormRequest
             'schedual_type.required' => 'Schedule type is required.',
             'schedual_type.in'       => 'Schedule type must be one of: singleday, multiday, or recurring.',
             'event_app_category_id.required' => 'Choose Event Category Type',
-            'recurring_type_id.required' => 'Choose Recurring Type',
+            'recurring_type_id.required_if_accepted' => 'Choose Recurring Frequency',
+            'is_recurring.boolean' => 'Is Recurring must be True/False'
         ];
     }
 }

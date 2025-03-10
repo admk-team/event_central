@@ -13,10 +13,8 @@ return new class extends Migration
     {
         Schema::create('attendee_payments', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('event_pass_id');
-            $table->foreign('event_pass_id')->references('id')->on('event_app_passes');
-            $table->unsignedBigInteger('attendee_id');
-            $table->foreign('attendee_id')->references('id')->on('attendees')->cascadeOnDelete();
+            $table->foreignId('event_app_ticket_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('attendee_id')->constrained()->cascadeOnDelete();
             $table->enum('payment_method', ['stripe', 'paypal']);
             $table->timestamps();
         });

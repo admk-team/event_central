@@ -17,3 +17,31 @@ File: Custom Css File
 }
 
 
+.schedule .sidebar {
+    width: 200px;
+    height: 100%;
+    border-right: 1px solid var(--vz-border-color);
+}
+
+.schedule .platforms {
+    height: 100%;
+    position: relative;
+    padding-bottom: 60px;
+}
+
+.schedule .platforms-inner {
+    max-height: 100%;
+    overflow-y: auto;
+}
+
+.schedule .add-platform:hover {
+    background-color: #eff2f7;
+}
+
+.schedule .platform:hover {
+    background-color: #eff2f7;
+}
+
+.schedule .platform .dropdown-toggle::after {
+    display: none;
+}

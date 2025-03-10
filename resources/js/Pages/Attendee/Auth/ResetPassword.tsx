@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import GuestLayout from '../../Layouts/Theme/GuestLayout';
+import GuestLayout from '../../../Layouts/Attendee/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { Alert, Button, Card, Col, Container, Form, Row} from 'react-bootstrap';
-import logoLight from '../../../images/logo-light.png'
-
+// import logoLight from '../../../images/logo-light.png'
+import logoLight from '../../../../images/logo-light.png';
 export default function ResetPassword({ token, email }: any) {
     const { data, setData, post, processing, errors, reset } = useForm({
         token: token,

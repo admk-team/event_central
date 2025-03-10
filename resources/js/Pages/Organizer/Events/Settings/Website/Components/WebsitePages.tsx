@@ -1,15 +1,18 @@
 import { Link, useForm, usePage } from '@inertiajs/react'
 import React, { useState } from 'react'
-import { Button, Card, CardBody, CardHeader, CardTitle } from 'react-bootstrap'
+import { Alert, AlertHeading, Button, Card, CardBody, CardHeader, CardTitle } from 'react-bootstrap'
 import CreateEditPageModal from './CreateEditPageModal';
 import DeleteModal from '../../../../../../Components/Common/DeleteModal';
 import DataTable, { ColumnDef } from '../../../../../../Components/DataTable';
 import FormCheckInput from 'react-bootstrap/esm/FormCheckInput';
 import PageStatus from './PageStatus';
 import DeleteManyModal from '../../../../../../Components/Common/DeleteManyModal';
+import HomePageSelector from './HomePageSelector';
+import { AlertCircle, AlertCircleIcon } from 'lucide-react';
 
 export default function WebsitePages() {
     const pages: any = usePage().props.pages;
+    const homePageSelected: boolean = usePage().props.homePageSelected;
     
     const [showCreateEditModal, _setShowCreateEditModal] = useState(false);
     const [editPage, setEditPage] = useState<any>(null);
@@ -66,6 +69,12 @@ export default function WebsitePages() {
             enableSorting: true,
         },
         {
+            accessorKey: 'is_home_page',
+            header: () => 'Home Page',
+            cell: (page) => <HomePageSelector page={page} />,
+            enableSorting: true,
+        },
+        {
             accessorKey: 'is_published',
             header: () => 'Published',
             cell: (page) => <PageStatus page={page} />,
@@ -89,6 +98,12 @@ export default function WebsitePages() {
 
     return (
         <>
+            {homePageSelected || (
+                <Alert variant="warning" className="d-flex gap-2 align-items-center">
+                    <AlertCircleIcon />
+                    <div>Select <b>Home Page</b> to avoid <b>404</b> error</div>
+                </Alert>
+            )}
             <DataTable
                 data={pages}
                 columns={columns}

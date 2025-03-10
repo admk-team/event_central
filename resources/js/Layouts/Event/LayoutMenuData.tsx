@@ -110,9 +110,9 @@ const Navdata = () => {
                     parentId: "dashboard",
                 },
                 {
-                    id: "passes",
-                    label: "Passes",
-                    link: route('organizer.events.passes.index'),
+                    id: "tickets",
+                    label: "Tickets",
+                    link: route('organizer.events.tickets.index'),
                     parentId: "dashboard",
                 },
             ]

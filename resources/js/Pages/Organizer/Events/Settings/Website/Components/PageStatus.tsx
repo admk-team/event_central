@@ -9,7 +9,7 @@ export default function PageStatus({ page }: any) {
         if (switchRef.current) {
             switchRef.current.checked = page.is_published;
         }
-    }, []);
+    }, [page]);
 
     const { post } = useForm();
 

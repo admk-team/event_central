@@ -65,7 +65,7 @@ function Index({ event_sessions, speakers, platforms, event_platforms }: any) {
                 </Container>
             </div>
 
-         
+
             {showCreateEditPlatformModal && (
                 <CreateEditPlatformModal
                     show={showCreateEditPlatformModal}
