@@ -2,7 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\v1\Organizer\AuthController;
+use App\Http\Controllers\Api\v1\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,10 +15,25 @@ use App\Http\Controllers\Api\v1\Organizer\AuthController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+
+
+Route::prefix('user')->group(function () {
+
+    Route::post('/login', [AuthController::class, 'login'])->defaults('type', 'user');
+
+    Route::middleware(['auth:sanctum', 'ability:role:user'])->group(function () {
+
+        Route::get('/me', function (Request $request) {
+            return $request->user();
+        });
+        Route::post('/logout', [AuthController::class, 'logout']);
+    });
 });
 
+Route::prefix('attendee')->group(function () {
+    Route::post('/login', [AuthController::class, 'login'])->defaults('type', 'attendee');
+    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+});
 
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+// Route::post('/login', [AuthController::class, 'login']);
+// Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
