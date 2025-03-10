@@ -3,7 +3,6 @@ import React, { useCallback, useRef, useState } from 'react'
 import Flatpickr from "react-flatpickr";
 import { Button, Col, Form, FormGroup, Modal, Nav, Row, Tab } from 'react-bootstrap';
 import { GoogleMap, LoadScript, Marker, InfoWindow, Autocomplete } from '@react-google-maps/api';
-import { boolean } from 'yup';
 
 
 const containerStyle = {
@@ -25,7 +24,7 @@ function CreateEditModal({ show, hide, onHide, event, recurring_types, event_cat
 
     const [imageHash, setImageHash] = useState(Date.now());   //Causing image to be reloaded (overriding cache)
     const [showRecurringOptions, setShowRecurringOptions] = useState(event?.is_recurring ?? false);
-    const [imagePreview, setImagePreview] = useState(event.logo_img ? (event.logo_img + '?' + imageHash) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s');
+    const [imagePreview, setImagePreview] = useState(event ? (event.logo_img + '?' + imageHash) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s');
 
     // console.log(event);
 
@@ -61,7 +60,7 @@ function CreateEditModal({ show, hide, onHide, event, recurring_types, event_cat
         } else {
             post(route('organizer.events.update', event.id), afterSumbitAction);
         }
-        console.log('form data ', data);
+        // console.log('form data ', data);
         console.log('error data ', errors);
         // hide();
     }
@@ -225,19 +224,6 @@ function CreateEditModal({ show, hide, onHide, event, recurring_types, event_cat
                         <Form.Control.Feedback type="invalid"> {errors.description} </Form.Control.Feedback>
                     </FormGroup>
                     <FormGroup className="mb-3">
-                        <Form.Label htmlFor="location-type" className="form-label text-start w-100">Location Type</Form.Label>
-                        <Form.Control
-                            type="text"
-                            className="form-control"
-                            id="location-type"
-                            isInvalid={!!errors.location_type}
-                            placeholder="Enter location type"
-                            value={data.location_type}
-                            onChange={(e) => setData('location_type', e.target.value)}
-                        />
-                        <Form.Control.Feedback type="invalid"> {errors.location_type} </Form.Control.Feedback>
-                    </FormGroup>
-                    <FormGroup className="mb-3">
                         <Row className='mt-3'>
                             <Col md={12} lg={12} className='d-flex justify-content-between align-items-center'>
                                 <Form.Check // prettier-ignore
@@ -268,7 +254,36 @@ function CreateEditModal({ show, hide, onHide, event, recurring_types, event_cat
                             </Col>
                         </Row>
                     </FormGroup>
-
+                    <FormGroup className="mb-3">
+                        <Form.Label htmlFor="location-type" className="form-label text-start w-100">Location Type</Form.Label>
+                        <Form.Control
+                            type="text"
+                            className="form-control"
+                            id="location-type"
+                            isInvalid={!!errors.location_type}
+                            placeholder="Enter location type"
+                            value={data.location_type}
+                            onChange={(e) => setData('location_type', e.target.value)}
+                        />
+                        <Form.Control.Feedback type="invalid"> {errors.location_type} </Form.Control.Feedback>
+                    </FormGroup>
+                    <FormGroup className='mb-3'>
+                        <LoadScript googleMapsApiKey="AIzaSyAbvyBxmMbFhrzP9Z8moyYr6dCr-pzjhBE">
+                            <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={14}>
+                                <Marker position={center} onClick={() => onSelect(center)} />
+                                {selected && (
+                                    <InfoWindow
+                                        position={selected}
+                                        onCloseClick={() => setSelected(null)}
+                                    >
+                                        <div>
+                                            <h1>{selectedPlace.name}</h1>
+                                        </div>
+                                    </InfoWindow>
+                                )}
+                            </GoogleMap>
+                        </LoadScript>
+                    </FormGroup>
                     <div className="hstack gap-2 justify-content-between mt-4">
                         <Button disabled={processing} className="btn btn-light" onClick={hide}>Close</Button>
                         <Button type='submit' disabled={processing} className="btn btn-success">{btnTitle}</Button>
