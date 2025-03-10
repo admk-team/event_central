@@ -23,8 +23,9 @@ const fourth = { lat: 19.0760, lng: 72.8777 }
 
 function CreateEditModal({ show, hide, onHide, event, recurring_types, event_category_types }: { show: boolean, hide: () => void, onHide: () => void, event: any | null, recurring_types: any, event_category_types: any }) {
 
-    const [imageHash, setImageHash] = useState(Date.now());   //Causing image to be reloaded
+    const [imageHash, setImageHash] = useState(Date.now());   //Causing image to be reloaded (overriding cache)
     const [showRecurringOptions, setShowRecurringOptions] = useState(event?.is_recurring ?? false);
+    const [imagePreview, setImagePreview] = useState(event.logo_img ? (event.logo_img + '?' + imageHash) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s');
 
     // console.log(event);
 
@@ -66,13 +67,29 @@ function CreateEditModal({ show, hide, onHide, event, recurring_types, event_cat
     }
 
     const handleLogoFileChange = (event: any) => {
-        setData('logo_file', event.target.files[0]);
+        let file = event.target.files[0];
+        setData('logo_file', file);
+        updateImagePreview(file);
         setImageHash(Date.now());
     }
 
+    const updateImagePreview = (file: any) => {
+        const reader = new FileReader();
+
+        reader.addEventListener(
+            "load",
+            () => {
+                setImagePreview(reader.result);
+            },
+            false,
+        );
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
+
     const handleCheckChange = (e: any) => {
-        // console.log(e);
-        // console.log(e.target.checked);
         setData('is_recurring', e.target.checked);
         setShowRecurringOptions(e.target.checked);
     }
@@ -132,7 +149,7 @@ function CreateEditModal({ show, hide, onHide, event, recurring_types, event_cat
             <Modal.Body className="p-4">
 
                 <div className='d-flex justify-content-center'>
-                    <img src={(event?.logo_img ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s' + "?" + imageHash)} alt="Event Model Logo" style={{ borderRadius: '50%', height: '150px' }} />
+                    <img src={imagePreview} alt="Event Model Logo" style={{ borderRadius: '50%', height: '150px' }} />
                 </div>
 
                 <form onSubmit={submit}>
