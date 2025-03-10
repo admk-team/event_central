@@ -18,6 +18,7 @@ use App\Http\Controllers\Organizer\Event\Settings\EventSettingsController;
 use App\Http\Controllers\Organizer\Event\User\AttendeeController;
 use App\Http\Controllers\Organizer\Event\PartnerController;
 use App\Http\Controllers\Organizer\Event\EventAppTicketController;
+use App\Http\Controllers\Organizer\Event\EventPromoCodeController;
 use App\Http\Controllers\Organizer\Event\ScheduleController;
 use App\Http\Controllers\Organizer\Event\Settings\WebsiteSettingsController;
 use App\Http\Controllers\Organizer\Event\WebsiteController;
@@ -82,6 +83,10 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             // Tickets
             Route::resource('tickets', EventAppTicketController::class)->only(['index', 'store', 'update', 'destroy']);
             Route::delete('tickets/delete/many', [EventAppTicketController::class, 'destroyMany'])->name('tickets.destroy.many');
+
+            // Promo Codes
+            Route::resource('promo-codes', EventPromoCodeController::class)->only(['index', 'store', 'update', 'destroy']);
+            Route::delete('promo-codes/delete/many', [EventPromoCodeController::class, 'destroyMany'])->name('promo-codes.destroy.many');
 
             // Pages
             Route::resource('pages', PageController::class)->only(['store', 'update', 'destroy']);

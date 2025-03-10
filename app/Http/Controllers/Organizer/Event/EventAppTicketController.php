@@ -19,11 +19,10 @@ class EventAppTicketController extends Controller
      */
     public function index()
     {
-        // Passes are related to Event Session, Modifications will be required to link Passes with selected sessions
         $tickets = $this->datatable(EventAppTicket::currentEvent()->with(['event', 'sessions']));
         $speakers = null;
         $sessions = EventSession::currentEvent()->select(['id as value', 'name as label'])->get();
-        // return $event_sessions;
+
         return Inertia::render('Organizer/Events/Tickets/Index', compact('tickets', 'sessions'));
     }
     /**
@@ -61,7 +60,7 @@ class EventAppTicketController extends Controller
     public function destroy(EventAppTicket $ticket)
     {
         $ticket->delete();
-        return back();
+        return back()->withSuccess('Ticket Removed Successfully');
     }
 
     public function destroyMany(Request $request)

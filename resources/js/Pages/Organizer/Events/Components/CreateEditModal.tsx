@@ -93,6 +93,10 @@ function CreateEditModal({ show, hide, onHide, event, recurring_types, event_cat
         setShowRecurringOptions(e.target.checked);
     }
 
+
+
+    // ----------- Google Maps ------------------------
+
     const selectedPlace: any = {}
     const [selected, setSelected] = useState<any>(null);
 
@@ -100,7 +104,6 @@ function CreateEditModal({ show, hide, onHide, event, recurring_types, event_cat
         setSelected(marker);
     };
 
-    // Your form errors
     const [mapCenter, setMapCenter] = useState({ lat: 37.7749, lng: -122.4194 }); // Default center (San Francisco)
     const [selectedLocation, setSelectedLocation] = useState(null);
 
