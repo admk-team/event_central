@@ -68,7 +68,7 @@ export default function Register() {
                                     required
                                 />
 
-                                <Form.Control.Feedback type="invalid" className='mt-2 d-block'>{errors.email}</Form.Control.Feedback>
+                                <Form.Control.Feedback type="invalid" className='mt-2 d-block'>{errors.last_name}</Form.Control.Feedback>
 
                             </Col>
                         </Row>

@@ -116,15 +116,18 @@ const AttendeeSessionDetail = ({ eventApp, eventSession, selectedSessionDetails,
                                     <h4 className='mt-2'>
                                         Speakers
                                     </h4>
-                                    <Button variant='outline-secondary' onClick={() => SetShowModal(true)}>{eventSession.event_speaker.name}</Button>
+                                    {eventSession.event_speaker &&
+                                        <>
+                                            < Button variant='outline-secondary' onClick={() => SetShowModal(true)}>{eventSession.event_speaker.name}</Button>
 
-                                    <SpeakerModal show={showModal}
-                                        hide={() => SetShowModal(false)}
-                                        onHide={() => SetShowModal(false)}
-                                        event={eventApp}
-                                        speaker={eventSession.event_speaker}
-                                    ></SpeakerModal>
-
+                                        <SpeakerModal show={showModal}
+                                            hide={() => SetShowModal(false)}
+                                            onHide={() => SetShowModal(false)}
+                                            event={eventApp}
+                                            speaker={eventSession.event_speaker}
+                                        ></SpeakerModal>
+                                        </>
+                                    }
                                     <h4 className='mb-1 mt-4'>
                                         Description
                                     </h4>
