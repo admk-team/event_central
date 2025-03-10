@@ -11,11 +11,6 @@ use Illuminate\Http\Request;
 
 class EventPlatformController extends Controller
 {
-    // public function index(){
-    //     $platforms=PlatForm::all();
-    //     return inertia::render('Organizer/Events/')
-    // }
-
     public function store(EventPlatformRequest $request)
     {
         $data = $request->validated();     
@@ -23,6 +18,7 @@ class EventPlatformController extends Controller
         EventPlatform::create($data);
         return back();
     }
+    
     public function update(EventPlatformRequest $request,EventPlatform $event_platform)
     {
         $data = $request->validated();     

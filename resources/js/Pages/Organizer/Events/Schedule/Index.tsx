@@ -1,82 +1,42 @@
-
-import { Button, Col, Container, Dropdown, Row } from 'react-bootstrap';
+import { Head } from '@inertiajs/react';
+import React from 'react';
 import Layout from '../../../../Layouts/Event';
-import BreadCrumb from '../../../../Components/Common/BreadCrumb';
-import React, { useState } from 'react';
-import { Head, Link, useForm } from '@inertiajs/react';
-import CreateEditModal from './Components/CreateEditModal';
-import Platform from './Components/Platform';
-import CreateEditPlatformModal from './Components/CreateOrEditPlatformModal';
+import { Button, Card, CardBody, CardHeader, Container } from 'react-bootstrap';
+import BreadCrumb2 from '../../../../Components/Common/BreadCrumb2';
+import Platforms from './Components/Platforms';
 
 
-function Index({ event_sessions, speakers, platforms, event_platforms }: any) {
-    console.log('EventSession', event_platforms);
+function Index() {
+    const [selectedPlatform, setSelectedPlatform] = React.useState<any>(null);
 
-    const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
-    const [showCreateEditPlatformModal, _setShowCreateEditPlatformModal] = React.useState(false);
-    const [editSchedule, setEditSchedul] = React.useState<any>(null);
-    const [editStage, setEditStage] = React.useState<any>(null);
-
-
-    const setShowCreateEditModal = (state: boolean) => {
-        _setShowCreateEditModal(state);
-        if (state === false) {
-            setEditSchedul(null);
-        }
-    }
-    const setShowCreateEditPlatformModal = (state: boolean) => {
-        _setShowCreateEditPlatformModal(state);
-        if (state === false) {
-            setEditStage(null);
-        }
-    }
     return (
         <React.Fragment>
             <Head title='Schedule' />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Schedule" pageTitle="Dashboard" />
-                    <Row>
-                        <Col xs={12}>
-                            <div className='mb-3'>
-                                <div className="d-flex justify-content-between">
-                                    <Button>Calendar</Button>
-                                    <div>
-                                        <Dropdown>
-                                            <Dropdown.Toggle as="button" className="btn btn-secondary" id="dropdown.MenuButton">
-                                                Stage
-                                            </Dropdown.Toggle>
-                                            <Dropdown.Menu>
-                                                <Dropdown.Item>
-                                                    <div onClick={() => setShowCreateEditPlatformModal(true)}>
-                                                        <i className="ri-add-fill"></i> Add Stage
-                                                    </div>
-                                                </Dropdown.Item>
-                                            </Dropdown.Menu>
-                                        </Dropdown>
-                                    </div>
-                                </div>
+                    <BreadCrumb2 
+                        title="Schedule"
+                    />
+                    <Card className="schedule">
+                        <CardHeader className="d-flex justify-content-between align-items-center">
+                            <div className="fw-bold fs-5">March 15, 2024</div>
+                            <Button><i className="ri-add-fill"></i> New Session</Button>
+                        </CardHeader>
+                        <CardBody className="p-0 d-flex" style={{height: '400px'}}>
+                            <div className="sidebar">
+                                <Platforms onPlatformChange={(platform: any) => setSelectedPlatform(platform)} />
                             </div>
-                        </Col>
-                    </Row>
-                    {/* <ScheduleHeader platforms={platforms} event_platforms={event_platforms} /> */}
-                    <Platform platforms={platforms} event_platforms={event_platforms} speakers={speakers} event_sessions={event_sessions} />
-
+                            <div className="flex-grow-1">
+                                {selectedPlatform?.name}
+                            </div>
+                        </CardBody>
+                    </Card>
                 </Container>
             </div>
-
-
-            {showCreateEditPlatformModal && (
-                <CreateEditPlatformModal
-                    show={showCreateEditPlatformModal}
-                    hide={() => setShowCreateEditPlatformModal(false)}
-                    onHide={() => setShowCreateEditPlatformModal(false)}
-                    platforms={platforms}
-                    event_platforms={null}
-                />
-            )}
         </React.Fragment>
     )
 }
+
 Index.layout = (page: any) => <Layout children={page} />;
+
 export default Index;
