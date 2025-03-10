@@ -160,7 +160,10 @@ function CreateEditModal({ show, hide, onHide, event, recurring_types, event_cat
                             name='logo_file'
                             placeholder="Choose File For Event Logo"
                             onChange={handleLogoFileChange}
+                            isInvalid={!!errors.logo_file}
+                            accept="image/*"
                         />
+                        <Form.Control.Feedback type="invalid"> {errors.logo_file} </Form.Control.Feedback>
                     </Form.Group>
                     <FormGroup className="mb-3">
                         <Form.Label htmlFor="event_app_category_id" className="form-label text-start w-100">Event Category</Form.Label>

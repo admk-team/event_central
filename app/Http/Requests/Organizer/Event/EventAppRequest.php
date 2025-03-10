@@ -32,6 +32,7 @@ class EventAppRequest extends FormRequest
             'location_base' => 'required|string|max:255',
             'type' => 'required|string|max:255',
             'schedual_type' => 'required|in:singleday,multiday,recurring',
+
         ];
     }
 }
