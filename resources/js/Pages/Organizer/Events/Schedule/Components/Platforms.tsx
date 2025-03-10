@@ -54,6 +54,8 @@ export default function Platforms({ onPlatformChange }: { onPlatformChange: (pla
             } else {
                 setSelectedPlatform(eventPlatforms[0]);
             }
+        } else {
+            setSelectedPlatform(null);
         }
     }, [eventPlatforms]);
 
