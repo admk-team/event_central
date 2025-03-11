@@ -8,6 +8,8 @@ const Navdata = () => {
     const [isProgram, setIsProgram] = useState<boolean>(false);
     const [isSpeakers, setIsSpeakers] = useState<boolean>(false);
     const [isMore, setIsMore] = useState<boolean>(false);
+    const [isQr, setIsQr] = useState<boolean>(false);
+
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
 
     function updateIconSidebar(e: any) {
@@ -39,13 +41,17 @@ const Navdata = () => {
         if (iscurrentState !== 'More') {
             setIsMore(false);
         }
+        if (iscurrentState !== 'Qr') {
+            setIsQr(false);
+        }
     }, [
         history,
         iscurrentState,
         isDashboard,
         isProgram,
         isSpeakers,
-        isMore
+        isMore,
+        isQr
     ]);
 
     const menuItems: any = [
@@ -97,6 +103,19 @@ const Navdata = () => {
             label: "More",
             icon: "bx bx-info-circle",
             link: route('attendee.event.detail.more', eventApp.id),
+            stateVariables: isMore,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsMore(!isMore);
+                setIscurrentState('More');
+                updateIconSidebar(e);
+            },
+        },
+        {
+            id: "qr-code",
+            label: "QR Code",
+            icon: "bx bx-qr",
+            link: route('attendee.qr-code.get', eventApp.id),
             stateVariables: isMore,
             click: function (e: any) {
                 e.preventDefault();

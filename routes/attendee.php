@@ -7,6 +7,7 @@ use App\Http\Controllers\Attendee\Auth\RegisteredUserController;
 use App\Http\Controllers\Attendee\EventController;
 use App\Http\Controllers\Attendee\EventSessionController;
 use App\Http\Controllers\Attendee\ProfileController;
+use App\Http\Controllers\Attendee\QrCodeController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('attendee')->group(function () {
@@ -34,6 +35,10 @@ Route::middleware(['auth:attendee'])->group(function () {
         Route::get('{eventApp}/detail/session/{eventSession}', [EventController::class, 'getEventSessionDetail'])->name('attendee.event.detail.session');
         Route::get('{eventApp}/detail/speakers/{eventSpeaker?}', [EventController::class, 'getEventSpeakerDetail'])->name('attendee.event.detail.speakers');
         Route::get('{eventApp}/detail/more', [EventController::class, 'getEventDetailMore'])->name('attendee.event.detail.more');
+
+        //QR Routes
+        Route::get('/qr-code/{eventApp}', [QrCodeController::class, 'getQrCode'])->name('attendee.qr-code.get');
+        Route::post('/qr-code/{eventApp}', [QrCodeController::class, 'postQrCode'])->name('attendee.qr-code.post');
     });
 
     Route::put('/attendee-profile-update/{attendee}', [ProfileController::class, 'update'])->name('attendee.profile.update');
