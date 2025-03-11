@@ -33,7 +33,7 @@ class EventStoreRequest extends FormRequest
             'event_app_category_id' => 'required|numeric',
             'recurring_type_id' => 'required_if_accepted:is_recurring',
             'is_recurring' => ['boolean'],
-            'logo_file' => 'image'
+            'logo_file' => ['nullable', 'image']
         ];
     }
 
@@ -44,8 +44,6 @@ class EventStoreRequest extends FormRequest
             'description.required'   => 'Description is required.',
             'start_date.required'    => 'Start date is required.',
             'start_date.after_or_equal' => 'Start date must be today or later.',
-            // 'end_date.required'      => 'End date is required.',
-            // 'end_date.after'         => 'End date must be after the start date.',
             'location_type.required' => 'Location type is required.',
             'location_base.required' => 'Location base is required.',
             'type.required'          => 'Event type is required.',
