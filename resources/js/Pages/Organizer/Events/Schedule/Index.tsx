@@ -7,6 +7,8 @@ import Platforms from './Components/Platforms';
 import CreateEditSessionModal from './Components/CreateEditSessionModal';
 import toast from 'react-hot-toast';
 import DatePickerModal from './Components/DatePickerModal';
+import moment from 'moment';
+import { ChevronDown } from 'lucide-react';
 
 
 function Index() {
@@ -17,6 +19,11 @@ function Index() {
     const [showDatePickerModal, setShowDatePickerModal] = React.useState(false);
 
     const setShowSessionCreateEditModal = (state: boolean) => {
+        if (selectedDate === null) {
+            toast.error("Please add date first");
+            return;
+        }
+
         if (selectedPlatform === null) {
             toast.error("Please create platform first");
             return;
@@ -39,11 +46,16 @@ function Index() {
                     <Card className="schedule">
                         <CardHeader className="d-flex justify-content-between align-items-center">
                             <div className="fw-bold fs-5">
-                                <Button variant="light" onClick={() => setShowDatePickerModal(true)}>Date</Button>
+                                <Button variant="light" onClick={() => setShowDatePickerModal(true)} className="d-flex align-items-centers gap-2">
+                                    <span>
+                                        {selectedDate ? moment(selectedDate.date).format('MMMM D, YYYY') : moment(new Date()).format('MMMM D, YYYY')}
+                                    </span>
+                                    <ChevronDown size={18} />
+                                </Button>
                                 <DatePickerModal
                                     show={showDatePickerModal}
-                                    hide={() => setShowDatePickerModal(false)}
                                     onHide={() => setShowDatePickerModal(false)}
+                                    onDateSelect={(date) => setSelectedDate(date)}
                                 />
                             </div>
                             <Button onClick={() => setShowSessionCreateEditModal(true)}><i className="ri-add-fill"></i> New Session</Button>
@@ -54,6 +66,7 @@ function Index() {
                             </div>
                             <div className="flex-grow-1">
                                 {selectedPlatform?.name}
+                                {selectedDate?.date}
                             </div>
                         </CardBody>
                     </Card>

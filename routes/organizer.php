@@ -18,6 +18,7 @@ use App\Http\Controllers\Organizer\Event\Settings\EventSettingsController;
 use App\Http\Controllers\Organizer\Event\User\AttendeeController;
 use App\Http\Controllers\Organizer\Event\PartnerController;
 use App\Http\Controllers\Organizer\Event\EventAppTicketController;
+use App\Http\Controllers\Organizer\Event\EventDateController;
 use App\Http\Controllers\Organizer\Event\ScheduleController;
 use App\Http\Controllers\Organizer\Event\Settings\WebsiteSettingsController;
 use App\Http\Controllers\Organizer\Event\WebsiteController;
@@ -77,7 +78,10 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::resource('partner-category', EventPartnerCategoryController::class);
 
             // Event Platforms
-            Route::resource('event-platforms',EventPlatformController::class);
+            Route::resource('event-platforms', EventPlatformController::class);
+
+            // Event Date
+            Route::resource('event-dates', EventDateController::class)->only(['store', 'update', 'destroy']);
 
             // Tickets
             Route::resource('tickets', EventAppTicketController::class)->only(['index', 'store', 'update', 'destroy']);

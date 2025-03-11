@@ -50,3 +50,40 @@ File: Custom Css File
 .schedule .platform .dropdown-toggle::after {
     display: none;
 }
+
+.edit-day-button {
+    border: 2px solid var(--vz-primary) !important;
+}
+
+.edit-day-button.selected, .edit-day-button:hover {
+    background-color: var(--vz-primary) !important;
+    color: white !important;
+}
+
+.rdp-chevron {
+    fill: var(--vz-primary) !important;
+}
+
+.rdp-selected .rdp-day_button {
+    border-color: var(--vz-primary) !important;
+}
+
+.rdp-today:not(.rdp-outside) {
+    color: var(--vz-primary) !important;
+}
+
+.backdrop-modal {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.rdp-disabled button {
+    cursor: unset !important;
+}
+
+.rdp-months {
+    margin: auto;
+}
+
+.event-date-picker .modal-content {
+    width: auto;
+}
