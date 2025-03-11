@@ -1,24 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { Col, Container, Row, Card, CardBody, ListGroup, Button } from 'react-bootstrap';
 
-//import Components
-// import BreadCrumb from '../../Components/Common/BreadCrumb';
+
 import { Head, Link, router } from '@inertiajs/react';
 import Layout from '../../Layouts/Attendee';
 import defaultEventImage from '../../../images/defaultEventImage.png';
 import defaultEventIcon from '../../../images/default-event-image.png';
 import DateDifferenceFromToday from './common/DateDifferenceFromToday';
+import EventSessionsTimeLine from './common/EventSessionsTimeLine';
 import moment from 'moment';
 
 const AttendeeDashboard = ({ eventApp }: any) => {
+    // console.log(eventApp.event_sessions);
+
+    const selectedSessions = eventApp.event_sessions.filter((session) => session.selected_by_attendee);
+
+    // console.log(selectedSessions);
+
     return (
         <React.Fragment>
             <Head title="Attendee Dashboard" />
             <div className="page-content">
                 <Container fluid>
-                    {/* <BreadCrumb title="Attendee Dashboard" pageTitle="Dashboards" /> */}
+
                     <Row className="d-flex justify-content-center">
-                        <Col lg={8} xl={8} sm={12}>
+                        <Col lg={10} xl={10} sm={12}>
                             <Row>
                                 <Col md={6} xl={6}>
                                     <Card >
@@ -29,9 +35,14 @@ const AttendeeDashboard = ({ eventApp }: any) => {
                                             </div>
                                         </CardBody>
                                     </Card>
-                                    <Button onClick={() => {
-                                        router.visit(route('attendee.event.detail.agenda', [eventApp.id]))
-                                    }} variant="success">Program</Button>
+
+                                    <EventSessionsTimeLine eventApp={eventApp} sessions={selectedSessions}></EventSessionsTimeLine>
+
+                                    <div className='p-4 d-flex justify-content-center'>
+                                        <Button className='w-50' onClick={() => {
+                                            router.visit(route('attendee.event.detail.agenda', [eventApp.id]))
+                                        }} variant="success">Program</Button>
+                                    </div>
                                 </Col>
                                 <Col md={6} xl={6}>
                                     <Card >

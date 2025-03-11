@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Col, Container, Row, Card, CardBody, Badge, Accordion, Form } from 'react-bootstrap';
 import Rating from "react-rating";
 
-import { Head, useForm, Link } from '@inertiajs/react';
+import { Head, useForm, Link, router } from '@inertiajs/react';
 import Layout from '../../Layouts/Attendee';
 import DateDifferenceFromToday from './common/DateDifferenceFromToday';
 
@@ -15,7 +15,7 @@ import SpeakerModal from './SpeakersModal';
 
 const AttendeeSessionDetail = ({ eventApp, eventSession, selectedSessionDetails, prev_session_id, next_session_id }: any) => {
 
-    // console.log(prev_session_id, next_session_id);
+
     const { data, setData, post, processing, errors, reset } = useForm({
         _method: "POST",
         rating: selectedSessionDetails?.rating ?? '',
@@ -23,8 +23,7 @@ const AttendeeSessionDetail = ({ eventApp, eventSession, selectedSessionDetails,
     });
 
     const ratingEnabled = moment(eventSession.start_date) < moment();
-    // console.log(moment(eventSession.start_date));
-    // console.log(moment());
+
     const submitRatingChange = (e: any) => {
         e.preventDefault();
         post(route('attendee.save.rating', eventSession.id));
@@ -37,16 +36,18 @@ const AttendeeSessionDetail = ({ eventApp, eventSession, selectedSessionDetails,
     });
 
     const [sessionSelected, SetSessionSelected] = useState<boolean>(selectedSessionDetails ? true : false);
+    // const [previousUrl, SetPreviousUrl] = useState(prev_url);
+
     const [showModal, SetShowModal] = useState<boolean>(false);
 
     const selectSession = (() => {
-        console.log('selecting');
+
         form.post(route('attendee.save.session', [eventSession.id, 'select']));
         SetSessionSelected(true);
     });
 
     const unSelectSession = (() => {
-        console.log('un selecting');
+
         form.post(route('attendee.save.session', [eventSession.id, 'un-select']));
         SetSessionSelected(false);
     });
@@ -54,6 +55,7 @@ const AttendeeSessionDetail = ({ eventApp, eventSession, selectedSessionDetails,
     const handleRatingChange = ((v: any) => {
         setData('rating', v);
     });
+
 
     return (
         <React.Fragment>
@@ -66,6 +68,8 @@ const AttendeeSessionDetail = ({ eventApp, eventSession, selectedSessionDetails,
                                 <Col md={8} lg={8}>
                                     <div className='d-flex justify-content-between align-items-center mb-4'>
                                         <div className='d-flex flex-row align-items-center'>
+                                            {/* href = { route('attendee.event.detail.agenda', eventApp.id) */}
+
                                             <Link href={route('attendee.event.detail.agenda', eventApp.id)} style={{ marginRight: '3px' }}>
                                                 <i className='bx bx-arrow-back fs-3 fw-bolder text-muted'></i>
                                             </Link>
@@ -78,7 +82,7 @@ const AttendeeSessionDetail = ({ eventApp, eventSession, selectedSessionDetails,
                                             </a>
 
                                             {sessionSelected && <a style={{ marginRight: '15px' }} href="#" className='pe-auto' onClick={unSelectSession} title={'Click to un-select session'}>
-                                                <i className='bx bxs-heart fs-3 fw-bolder text-muted'></i> </a>}
+                                                <i className='bx bxs-heart fs-3 fw-bolder text-danger'></i> </a>}
 
                                             {!sessionSelected && <a style={{ marginRight: '15px' }} href="#" className='pe-auto' onClick={selectSession} title={'Click to select session'}> <i className='bx bx-heart fs-3 fw-bolder text-muted'></i> </a>}
 

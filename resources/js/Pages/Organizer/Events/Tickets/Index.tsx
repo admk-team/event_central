@@ -9,6 +9,7 @@ import DeleteModal from '../../../../Components/Common/DeleteModal';
 import DeleteManyModal from '../../../../Components/Common/DeleteManyModal';
 import HasPermission from '../../../../Components/HasPermission';
 import CreateEditModal from './CreateEditModal';
+import moment from 'moment';
 
 
 function Index({ tickets, sessions }: any) {
@@ -70,7 +71,7 @@ function Index({ tickets, sessions }: any) {
         },
         {
             header: () => 'Event Name',
-            cell: (ticket) => (<span key={ticket.event.id} className="badge bg-secondary-subtle text-secondary fs-6" style={{ marginRight: '3px' }}>{ticket.event.name}</span>),
+            cell: (ticket) => (<span key={ticket.event.id} className="badge rounded-pill border border-success text-success text-uppercase fs-6" style={{ marginRight: '3px' }}>{ticket.event.name}</span>),
         },
         {
             header: () => 'Name',
@@ -91,8 +92,9 @@ function Index({ tickets, sessions }: any) {
         {
             header: () => 'Sessions',
             cell: (ticket) => (
+
                 ticket.sessions.map((session: any) =>
-                    <span key={session.id} className="badge bg-secondary-subtle text-secondary fs-6" style={{ marginRight: '3px' }}>{session.name}</span>
+                    <span key={session.id} className="badge rounded-pill border border-secondary text-secondary text-uppercase fs-6" style={{ marginRight: '3px' }}>{session.name}</span>
                 )
             ),
         },
@@ -106,11 +108,11 @@ function Index({ tickets, sessions }: any) {
         },
         {
             header: () => 'Start Increment',
-            cell: (ticket) => ticket.start_increment,
+            cell: (ticket) => moment(ticket.start_increment).format('DD, MMM, YYYY'),
         },
         {
             header: () => 'End Increment',
-            cell: (ticket) => ticket.end_increment,
+            cell: (ticket) => moment(ticket.end_increment).format('DD MMM, YYYY'),
         },
         {
             header: () => 'Action',
