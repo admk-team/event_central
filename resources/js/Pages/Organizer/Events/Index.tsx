@@ -135,7 +135,7 @@ function Index({ events, recurring_types, event_category_types }: any) {
 
     useEffect(() => {
         setImageHash(Date.now());
-        console.log('changing hash');
+        // console.log('changing hash');
     }, [showCreateEditModal]);
 
     return (

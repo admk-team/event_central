@@ -32,7 +32,7 @@ class ProfileController extends Controller
                 unlink($path . '/' . $imageName);  //Delete previous file
             }
             $request->image->move(storage_path('app/public/attendee/avatars'), $imageName);
-            $attendee->avatar = '/attendee-avatar/' . $imageName;
+            $attendee->avatar = '/storage/attendee/avatars/' . $imageName;
             $attendee->save();
         } else {
             $attendee->avatar = null;

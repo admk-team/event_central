@@ -120,15 +120,15 @@ const Navdata = () => {
             }
         },
         {
-            id: "plateforms",
-            label: "Plateforms",
+            id: "platforms",
+            label: "Platforms",
             icon: "ri-group-fill",
             link: route('admin.platforms.index'),
             stateVariables: isOrganizers,
             click: function (e: any) {
                 e.preventDefault();
                 setIsPlatforms(!isPlatforms);
-                setIscurrentState('Plateforms');
+                setIscurrentState('Platforms');
                 updateIconSidebar(e);
             }
         },

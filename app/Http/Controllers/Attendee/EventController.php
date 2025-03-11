@@ -6,29 +6,29 @@ use App\Http\Controllers\Controller;
 use App\Models\EventApp;
 use App\Models\EventSession;
 use App\Models\EventSpeaker;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class EventController extends Controller
 {
-    public function getEventDetail()
-    {
-        $events = [];
-        return Inertia::render('Attendee/Index', compact('events'));
-    }
+
     public function getEventDetailDashboard(EventApp $eventApp)
     {
-        $eventApp->load(['event_sessions.eventSpeaker']);
-        return Inertia::render('Attendee/AttendeeDashboard', compact('eventApp'));
+        $eventApp->load(['event_sessions.eventSpeaker', 'event_sessions.event_platform']);
+
+        return Inertia::render('Attendee/AttendeeDashboard', compact([
+            'eventApp',
+        ]));
     }
+
     public function getEventDetailAgenda(EventApp $eventApp)
     {
-        $eventApp->load(['event_sessions.eventSpeaker']);
+        $eventApp->load(['event_sessions.eventSpeaker', 'event_sessions.event_platform']);
         return Inertia::render('Attendee/AttendeeAgenda', compact('eventApp'));
     }
-    public function getEventSessionDetail(EventApp $eventApp, EventSession $eventSession)
+
+    public function getEventSessionDetail(Request $request, EventApp $eventApp, EventSession $eventSession)
     {
         // Finding previous and next session ids with reference to current session
         $next_session_id = null;
@@ -40,13 +40,21 @@ class EventController extends Controller
                 $next_session_id = $index < (count($sessions) - 1)  ? $sessions[$index + 1] : null;
             }
         }
-        //---------
+        //------------------------------------------------------------------------
         $eventSession->load(['eventSpeaker']);
         $selectedSessionDetails = DB::table('attendee_event_session')->where(function ($query) use ($eventSession) {
             $query->where('attendee_id', auth()->user()->id);
             $query->where('event_session_id', $eventSession->id);
         })->first();
-        return Inertia::render('Attendee/AttendeeSessionDetail', compact(['eventApp', 'eventSession', 'selectedSessionDetails', 'prev_session_id', 'next_session_id']));
+
+        return Inertia::render('Attendee/AttendeeSessionDetail', compact([
+            'eventApp',
+            'eventSession',
+            'selectedSessionDetails',
+            'prev_session_id',
+            'next_session_id',
+            'prev_url'
+        ]));
     }
 
     public function getEventSpeakerDetail(EventApp $eventApp, EventSpeaker $eventSpeaker)
