@@ -12,4 +12,8 @@ class EventAppDate extends Model
         'event_app_id',
         'date'
     ];
+
+    public function eventSessions(){
+        return $this->hasMany(eventSession::class,'event_date_id');
+    }
 }
