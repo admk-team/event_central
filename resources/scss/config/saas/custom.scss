@@ -88,3 +88,20 @@ File: Custom Css File
     width: auto;
     margin: auto;
 }
+
+.sessions-timeline .timeline-box::before, .sessions-timeline .timeline-box::after {
+    display: none;
+}
+
+.sessions-timeline .timeline-date::after {
+    border: 3px solid #eff2f7 !important;
+}
+
+.sessions-timeline .timeline-2::after {
+    background: #eff2f7 !important;
+    top: 39px !important;
+}
+
+.sessions-timeline .timeline-box {
+    background-color: #f9fafb !important;
+}

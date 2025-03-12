@@ -48,7 +48,7 @@ export default function Platforms({ onPlatformChange }: { onPlatformChange: (pla
 
     React.useEffect(() => {
         if (eventPlatforms.length > 0) {
-            if (eventPlatforms.length >= eventPlatformsCount.current) {
+            if (eventPlatforms.length > eventPlatformsCount.current) {
                 setSelectedPlatform(eventPlatforms[eventPlatforms.length - 1]);
                 eventPlatformsCount.current = eventPlatforms.length;
             } else {
