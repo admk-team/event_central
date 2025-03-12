@@ -9,6 +9,7 @@ import toast from 'react-hot-toast';
 import DatePickerModal from './Components/DatePickerModal';
 import moment from 'moment';
 import { ChevronDown } from 'lucide-react';
+import Sessions from './Components/Sessions';
 
 
 function Index() {
@@ -64,9 +65,11 @@ function Index() {
                             <div className="sidebar">
                                 <Platforms onPlatformChange={(platform: any) => setSelectedPlatform(platform)} />
                             </div>
-                            <div className="flex-grow-1">
-                                {selectedPlatform?.name}
-                                {selectedDate?.date}
+                            <div className="flex-grow-1 overflow-x-hidden overflow-y-auto">
+                                <Sessions 
+                                    selectedDate={selectedDate}
+                                    selectedPlatform={selectedPlatform}
+                                />
                             </div>
                         </CardBody>
                     </Card>
@@ -79,7 +82,8 @@ function Index() {
                     hide={() => setShowSessionCreateEditModal(false)}
                     onHide={() => setShowSessionCreateEditModal(false)}
                     eventSession={editSession}
-                    eventPlatformId={selectedPlatform.id}
+                    selectedDate={selectedDate}
+                    selectedPlatform={selectedPlatform}
                 />
             )}
         </React.Fragment>

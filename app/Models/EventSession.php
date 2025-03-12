@@ -14,6 +14,7 @@ class EventSession extends Model
     protected $fillable = [
         'name',
         'event_speaker_id',
+        'event_date_id',
         'event_platform_id',
         'type',
         'description',
@@ -33,7 +34,7 @@ class EventSession extends Model
         return $this->belongsTo(EventSpeaker::class);
     }
 
-    public function event_platform()
+    public function eventPlatform()
     {
         return $this->belongsTo(EventPlatform::class, 'event_platform_id', 'id');
     }
