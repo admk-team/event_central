@@ -7,6 +7,7 @@ const Navdata = () => {
     const [isUserManagement, setIsUserManagement] = useState<boolean>(false);
     const [isOrganizers, setIsOrganizers] = useState<boolean>(false);
     const [isPlatforms, setIsPlatforms] = useState<boolean>(false);
+    const [isEventCategory, setIsEventCategory] = useState<boolean>(false);
 
 
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
@@ -40,13 +41,17 @@ const Navdata = () => {
         if (iscurrentState !== 'Platforms') {
             setIsPlatforms(false);
         }
+        if (iscurrentState !== 'Event Category') {
+            setIsEventCategory(false);
+        }
     }, [
         history,
         iscurrentState,
         isDashboard,
         isUserManagement,
         isOrganizers,
-        isPlatforms
+        isPlatforms,
+        isEventCategory
     ]);
 
     const menuItems: any = [
@@ -129,6 +134,19 @@ const Navdata = () => {
                 e.preventDefault();
                 setIsPlatforms(!isPlatforms);
                 setIscurrentState('Platforms');
+                updateIconSidebar(e);
+            }
+        },
+        {
+            id: "eventcategory",
+            label: "Event Category",
+            icon: "bx bx-category",
+            link: route('admin.event-category.index'),
+            stateVariables: isOrganizers,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsEventCategory(!isEventCategory);
+                setIscurrentState('Event Category');
                 updateIconSidebar(e);
             }
         },
