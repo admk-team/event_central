@@ -27,7 +27,7 @@ export default function SessionCard({ session, onEdit, onDelete }: { session: an
     return (
         <Row className={`timeline-right ${sessionStatus !== 'passed' ? 'scroll-to' : ''}`}>
             <Col xs={12}>
-                <p className="timeline-date">
+                <p className={`timeline-date ${({upcomming: 'primary', passed: 'light'})[sessionStatus]}`}>
                     {startDate.format('HH:mm')}
                 </p>
             </Col>

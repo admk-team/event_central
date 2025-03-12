@@ -105,3 +105,11 @@ File: Custom Css File
 .sessions-timeline .timeline-box {
     background-color: #f9fafb !important;
 }
+
+.sessions-timeline .timeline-date.light::after {
+    background-color: var(--vz-dark) !important;
+}
+
+.sessions-timeline .timeline-date.primary::after {
+    background-color: var(--vz-primary) !important;
+}

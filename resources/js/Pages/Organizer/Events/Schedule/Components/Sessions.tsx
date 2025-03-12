@@ -28,7 +28,7 @@ export default function Sessions({ selectedDate, selectedPlatform, onEdit, onDel
 
     useEffect(() => {
         document.querySelector('.scroll-to')?.scrollIntoView();
-    });
+    }, [selectedPlatform]);
 
     return (
         <Row>
