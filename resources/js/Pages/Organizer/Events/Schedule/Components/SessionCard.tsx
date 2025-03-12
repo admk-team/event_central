@@ -28,7 +28,7 @@ export default function SessionCard({ session, onEdit, onDelete }: { session: an
         <Row className={`timeline-right ${sessionStatus !== 'passed' ? 'scroll-to' : ''}`}>
             <Col xs={12}>
                 <p className={`timeline-date ${({upcomming: 'primary', passed: 'light'})[sessionStatus]}`}>
-                    {startDate.format('HH:mm')}
+                    {startDate.format('hh:mm A')}
                 </p>
             </Col>
             <Col xs={12}>
@@ -43,7 +43,7 @@ export default function SessionCard({ session, onEdit, onDelete }: { session: an
                                         <Button onClick={onDelete} variant="danger" size="sm" className="btn-icon"><i className="ri-delete-bin-5-line" /></Button>
                                     </div>
                                 </div>
-                                <p className="text-muted mb-2">{startDate.format('HH:mm')} - {endDate.format('HH:mm')}</p>
+                                <p className="text-muted mb-2">{startDate.format('hh:mm A')} - {endDate.format('hh:mm A')}</p>
                                 {badge}
                             </div>
                         </div>
