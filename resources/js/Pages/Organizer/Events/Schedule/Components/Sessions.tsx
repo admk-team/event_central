@@ -5,13 +5,9 @@ import moment from 'moment';
 import { useEffect } from 'react';
 
 export default function Sessions({ selectedDate, selectedPlatform, onEdit, onDelete }: { selectedDate: any; selectedPlatform: any; onEdit: (session: any) => void; onDelete: (session: any) => void}) {
-    if (selectedDate === null || selectedPlatform === null) {
-        return null;
-    }
-
     const eventSessions = (usePage().props.eventSessions as any)
         .filter((session: any) => {
-            return (session.event_date_id === selectedDate.id) && (session.event_platform_id === selectedPlatform.id);
+            return (session.event_date_id === selectedDate?.id) && (session.event_platform_id === selectedPlatform?.id);
         })
         .sort((a: any, b: any) => {
             const aStartDate = moment(`${a.event_date.date} ${a.start_time}`, "YYYY-MM-DD HH:mm:ss");
@@ -29,6 +25,10 @@ export default function Sessions({ selectedDate, selectedPlatform, onEdit, onDel
     useEffect(() => {
         document.querySelector('.scroll-to')?.scrollIntoView();
     }, [selectedPlatform]);
+
+    if (selectedDate === null || selectedPlatform === null) {
+        return null;
+    }
 
     return (
         <Row>
