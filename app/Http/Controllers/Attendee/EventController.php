@@ -15,7 +15,7 @@ class EventController extends Controller
 
     public function getEventDetailDashboard(EventApp $eventApp)
     {
-        $eventApp->load(['event_sessions.eventSpeaker', 'event_sessions.event_platform']);
+        $eventApp->load(['event_sessions.eventSpeaker', 'event_sessions.eventPlatform']);
 
         return Inertia::render('Attendee/AttendeeDashboard', compact([
             'eventApp',
@@ -24,7 +24,7 @@ class EventController extends Controller
 
     public function getEventDetailAgenda(EventApp $eventApp)
     {
-        $eventApp->load(['event_sessions.eventSpeaker', 'event_sessions.event_platform']);
+        $eventApp->load(['event_sessions.eventSpeaker', 'event_sessions.eventPlatform']);
         return Inertia::render('Attendee/AttendeeAgenda', compact('eventApp'));
     }
 

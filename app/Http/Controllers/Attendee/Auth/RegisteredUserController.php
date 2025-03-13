@@ -60,6 +60,6 @@ class RegisteredUserController extends Controller
 
         Auth::guard('attendee')->login($user);
 
-        return redirect(route('attendee.event.detail.dashboard', [$eventApp]));
+        return redirect(route('attendee.event.detail.dashboard', [$eventApp->id]));
     }
 }

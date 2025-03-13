@@ -36,9 +36,10 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(AttendeeLoginRequest $request, EventApp $eventApp): RedirectResponse
     {
+        Log::info($eventApp);
         $request->authenticate();    //Attendee Login Request
         $request->session()->regenerate();
-        return redirect()->intended(route('attendee.event.detail.dashboard', [$eventApp]));
+        return redirect()->intended(route('attendee.event.detail.dashboard', [$eventApp->id]));
     }
 
     /**
