@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Organizer\Event\EventAppTicketRequest;
 use App\Models\EventAppTicket;
 use App\Models\EventSession;
+use App\Models\TicketFeature;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
@@ -23,7 +24,7 @@ class EventAppTicketController extends Controller
         $speakers = null;
         $sessions = EventSession::currentEvent()->select(['id as value', 'name as label'])->get();
 
-        return Inertia::render('Organizer/Events/Tickets/Index', compact('tickets', 'sessions'));
+        return Inertia::render('Organizer/Events/Tickets/Index', compact(['tickets', 'sessions']));
     }
     /**
      * Store a newly created resource in storage.

@@ -15,7 +15,7 @@ import moment from 'moment';
 function Index({ tickets, sessions }: any) {
     // console.log('tickets', tickets);
     // console.log('sessions', sessions);
-
+    // console.log('features', ticket_features);
 
     const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
     const [editTicket, setEditTicket] = React.useState<any>(null);
