@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Attendee\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Attendee\Auth\AttendeeLoginRequest;
+use App\Http\Requests\Attendee\AttendeeLoginRequest;
 use App\Models\Attendee;
 use App\Models\EventApp;
 use Laravel\Socialite\Facades\Socialite;
