@@ -2,7 +2,7 @@ import { useForm, usePage } from '@inertiajs/react';
 import Flatpickr from "react-flatpickr";
 import { Spinner, Col, Form, FormGroup, Modal, Nav, Row, Tab } from 'react-bootstrap';
 
-export default function CreateEditSessionModal({ show, hide, onHide, eventSession, selectedDate, eventPlatformId }: { show: boolean, hide: () => void, onHide: () => void, eventSession: any, selectedDate?: any, eventPlatformId: any }) {
+export default function CreateEditSessionModal({ show, hide, onHide, eventSession, selectedDate, selectedPlatform }: { show: boolean, hide: () => void, onHide: () => void, eventSession: any, selectedDate: any, selectedPlatform: any }) {
     const isEdit = eventSession != null ? true : false;
 
     const speakers = usePage().props.speakers as any;
@@ -10,16 +10,15 @@ export default function CreateEditSessionModal({ show, hide, onHide, eventSessio
     // Initialize the form data with the existing date and time
     const { data, setData, post, put, processing, errors, reset } = useForm({
         _method: isEdit ? "PUT" : "POST",
-        name: eventPlatformId?.name ?? '',
-        event_speaker_id: eventPlatformId?.event_speaker_id ?? '',
-        event_platform_id: eventPlatformId?.event_platform_id ?? '2',
-        event_date_id: selectedDate?.id ?? 1,
-        type: eventPlatformId?.type ?? 'Lecture',
-        description: eventPlatformId?.description ?? '',
-        capacity: eventPlatformId?.capacity ?? '',
-        start_time: eventPlatformId?.start_time ?? '00:00' , // Default time with time
-        end_time: eventPlatformId?.end_time ?? '00:00', // Default date with time
-        event_app_id: eventPlatformId?.event_app_id ?? '',
+        name: eventSession?.name ?? '',
+        event_speaker_id: eventSession?.event_speaker_id ?? '',
+        event_platform_id: selectedPlatform.id,
+        event_date_id: selectedDate?.id,
+        type: eventSession?.type ?? 'Lecture',
+        description: eventSession?.description ?? '',
+        capacity: eventSession?.capacity ?? '',
+        start_time: eventSession?.start_time ?? '00:00' , // Default time with time
+        end_time: eventSession?.end_time ?? '00:00', // Default date with time
     });
 
     const submit = (e: any) => {

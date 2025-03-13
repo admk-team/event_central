@@ -83,7 +83,7 @@ export default function DataTable<T>({
             <div className="card-body p-0">
                 <div className="table-responsive">
                     <Table className="table-borderless align-middle table-nowrap mb-0">
-                        <thead>
+                        <thead className="table-light">
                             <tr>
                                 {!disableRowSelection && (
                                     <th>
