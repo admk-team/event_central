@@ -21,11 +21,11 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
         sessions: ticket?.selected_sessions ?? [],
         name: ticket?.name ?? '',
         description: ticket?.description ?? '',
-        type: 'NORMAL',         //This fields is enlisted in App documents, therefore leaving to be used in future
+        type: 'NORMAL',
         price: ticket?.price ?? '',
         increment_by: ticket?.increment_by ?? '',
         increment_rate: ticket?.increment_rate ?? '',
-        increment_type: ticket?.increment_type ?? 'Percentage',     //To store increment types e.g. Fixed or Percentage
+        increment_type: ticket?.increment_type ?? 'Percentage',
         start_increment: ticket?.start_increment ?? '',
         end_increment: ticket?.end_increment ?? '',
         features: [],
@@ -69,7 +69,7 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
     const fetchFeatures = () => {
         setEventLoading(true);
         let url = route('organizer.events.tickets-feature.index', [ticket?.id ?? null]);
-        console.log(url);
+        // console.log(url);
         axios.get(url).then((response) => {
         // console.log('res', response);
             setTicketFeatures(response.data.features);
@@ -80,8 +80,7 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
 
     const submit = (e: any) => {
         e.preventDefault();
-
-        console.log(data);
+        // console.log(data);
         if (isEdit) {
             post(route('organizer.events.tickets.update', ticket.id), {
                 onSuccess: () => {
@@ -405,7 +404,7 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
                 </Row>
                 <Row>
                     <Col md={12} lg={12}>
-                        {eventLoading && <Spinner animation="border" role="status">
+                        {eventLoading && <Spinner animation="border" role="status" size='sm'>
                             <span className="visually-hidden">Loading...</span>
                         </Spinner>}
                         {!eventLoading && <Table striped hover className='table-sm' style={{ maxHeight: '150px', overflowY: 'auto' }}>
@@ -461,6 +460,8 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
                                     <Col md={9} lg={9}>
                                         <FormGroup className="mb-3">
                                             <Form.Control
+                                                rows={1}
+                                                as='textarea'
                                                 type="text"
                                                 value={dataFeature.name}
                                                 onChange={(e) => setDataFeature('name', e.target.value)}

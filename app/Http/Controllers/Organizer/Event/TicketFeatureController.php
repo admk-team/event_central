@@ -42,7 +42,7 @@ class TicketFeatureController extends Controller
         $request->validate([
             'organizer_id' => 'required',
             'event_app_id' => 'nullable|numeric',
-            'name' => 'required:max:250'
+            'name' => 'required|max:250'
         ]);
 
         $tickets_feature->update($request->all());
