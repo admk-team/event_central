@@ -3,9 +3,12 @@ import Layout from '../../../../../Layouts/Event';
 import { Head, usePage } from '@inertiajs/react';
 import { Col, Container, Row } from 'react-bootstrap';
 import BreadCrumb2 from '../../../../../Components/Common/BreadCrumb2';
+import FormStatus from './Components/FormStatus';
+import FormFields from './Components/FormFields';
 
 
 function Index({ form }: any) {
+  console.log(form);
 
   return (
     <React.Fragment>
@@ -19,17 +22,19 @@ function Index({ form }: any) {
             ]}
           />
           <Row>
-            <Col md={8}>
+            <Col xl={3}>
               <Row>
                 <Col xs={12}>
-                  sdfdsafdsfdsf
+                  <FormStatus />
+                </Col>
+                <Col xs={12}>
+                  <FormFields />
                 </Col>
               </Row>
             </Col>
-            <Col md={4}>
+            <Col xl={9}>
               <Row>
                 <Col xs={12}>
-                  dsfadsfdsfdsf
                 </Col>
               </Row>
             </Col>

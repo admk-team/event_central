@@ -26,4 +26,12 @@ class RegistrationFormSettingsController extends Controller
             'form' => $currentEvent->form,
         ]);
     }
+
+    public function toggleStatus()
+    {
+        $currentEvent = EventApp::with('form')->find(session('event_id'));
+        $currentEvent->form->status = !$currentEvent->form->status;
+        $currentEvent->form->save();
+        return back()->withSuccess(!$currentEvent->form->status ? "Activated" : "Deactivated");
+    }
 }
