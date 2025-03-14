@@ -46,7 +46,7 @@ class HandleInertiaRequests extends Middleware
             'currentEvent' => EventApp::find(session('event_id')) ?? null,
             'messages' => fn() => session()->get('messages') ?? [],
             'permissions' => function () {
-                if (Auth::guard('web')->check()) {
+                if (Auth::guard('web')->check('attendee')) {
                     return Auth::user()?->getAllPermissions()->pluck('name') ?? [];
                 } else if (Auth::guard('attendee')->check()) {
                     return [];

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\v1\Attendee\EventController as AttendeeEventController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\v1\AuthController;
@@ -32,7 +33,15 @@ Route::prefix('user')->group(function () {
 
 Route::prefix('attendee')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->defaults('type', 'attendee');
-    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+    Route::middleware(['auth:sanctum', 'ability:role:attendee'])->group(function () {
+
+        Route::get('/me', function (Request $request) {
+            return $request->user();
+        });
+        Route::post('/logout', [AuthController::class, 'logout']);
+
+        Route::get('{eventApp}', [AttendeeEventController::class, 'getEventDetailDashboard'])->name('api.attendee.event');
+    });
 });
 
 // Route::post('/login', [AuthController::class, 'login']);
