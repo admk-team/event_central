@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Api\v1;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Attendee;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -17,14 +18,20 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        // Determine user model based on type
-        $userModel = $type === 'attendee' ? Attendee::class : User::class;
-
-        if (!Auth::attempt($credentials)) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+        // Determine the model based on type
+        if ($type === 'attendee') {
+            $userModel = Attendee::class;
+        } else {
+            $userModel = User::class;
         }
 
-        $user = $userModel::where('email', $request->email)->first();
+        // Retrieve the user by email
+        $user = $userModel::where('email', $credentials['email'])->first();
+
+        // Validate password manually because Sanctum does not support attempt()
+        if (!$user || !Hash::check($credentials['password'], $user->password)) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
 
         // Assign role-based ability
         $role = $type === 'attendee' ? 'attendee' : 'user';

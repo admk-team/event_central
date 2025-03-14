@@ -6,7 +6,7 @@ import { useForm, usePage } from "@inertiajs/react";
 import DeleteModal from "../../../../../Components/Common/DeleteModal";
 
 export default function Platforms({ onPlatformChange }: { onPlatformChange: (platform: any) => void }) {
-    const eventPlatforms = usePage().props.event_platforms as any;
+    const eventPlatforms = usePage().props.eventPlatforms as any;
     const eventPlatformsCount = React.useRef(eventPlatforms.length);
 
     const [selectedPlatform, _setSelectedPlatform] = React.useState<any>(null);
