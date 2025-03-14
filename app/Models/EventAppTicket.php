@@ -39,6 +39,12 @@ class EventAppTicket extends Model
     {
         return $this->belongsToMany(EventSession::class, 'session_ticket');
     }
+
+    public function features()
+    {
+        return $this->belongsToMany(TicketFeature::class, 'feature_ticket');
+    }
+
     public function getSelectedSessionsAttribute()
     {
         return $this->sessions()->select(['id as value', 'name as label'])->get();

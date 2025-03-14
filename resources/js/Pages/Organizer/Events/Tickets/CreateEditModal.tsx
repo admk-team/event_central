@@ -4,6 +4,7 @@ import Flatpickr from "react-flatpickr";
 import { Spinner, Col, Form, FormGroup, Modal, Nav, Row, Tab, Table, Button } from 'react-bootstrap';
 import Select, { StylesConfig } from 'react-select';
 import axios from 'axios';
+import DeleteModal from '../../../../Components/Common/DeleteModal';
 
 export default function CreateEditModal({ show, hide, onHide, ticket, sessions }:
     { show: boolean, hide: () => void, onHide: () => void, ticket: any, sessions: any | null }) {
@@ -20,21 +21,26 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
         sessions: ticket?.selected_sessions ?? [],
         name: ticket?.name ?? '',
         description: ticket?.description ?? '',
-        type: 'NORMAL',         //This fields is enlisted in App documents, there for leaving to be used in future
+        type: 'NORMAL',         //This fields is enlisted in App documents, therefore leaving to be used in future
         price: ticket?.price ?? '',
         increment_by: ticket?.increment_by ?? '',
         increment_rate: ticket?.increment_rate ?? '',
         increment_type: ticket?.increment_type ?? 'Percentage',     //To store increment types e.g. Fixed or Percentage
         start_increment: ticket?.start_increment ?? '',
         end_increment: ticket?.end_increment ?? '',
+        features: [],
     });
+
     const [selectMulti, setselectMulti] = useState<any>(ticket?.selected_sessions ?? null);
     const [selectAllSession, setSelectAllSession] = useState<any>(false);
 
     const [ticketFeatures, setTicketFeatures] = useState<any>([]);
+    const [eventLoading, setEventLoading] = useState<any>(false);
     const [currentFeature, setCurrentFeature] = useState<any>(null);
     const [addFeature, setAddFeature] = useState<any>(false);
-    const [eventLoading, setEventLoading] = useState<any>(false);
+
+    const [deleteFeature, setDeleteFeature] = useState<any>(null);
+    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState<any>(false);
 
     const { data: dataFeature,
         setData: setDataFeature,
@@ -56,17 +62,22 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
         fetchFeatures();
     }, []);
 
+    useEffect(() => {
+        updateTicketFeatures();
+    }, [ticketFeatures]);
 
-    // console.log(userId, eventId);
     const fetchFeatures = () => {
         setEventLoading(true);
-        axios.get(route('organizer.events.tickets-feature.index')).then((response) => {
-            console.log('res', response);
+        let url = route('organizer.events.tickets-feature.index', [ticket?.id ?? null]);
+        console.log(url);
+        axios.get(url).then((response) => {
+        // console.log('res', response);
             setTicketFeatures(response.data.features);
         }).finally(() => {
             setEventLoading(false);
         });
     }
+
     const submit = (e: any) => {
         e.preventDefault();
 
@@ -89,6 +100,33 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
         // console.log('testing ticket', errors);
     }
 
+    const toggleFeatureSelection = (feature: any) => {
+        const newList = ticketFeatures.map((item: any) => {
+            if (item.id === feature.id) {
+                const updatedFeature = {
+                    ...item,
+                    selected: (feature.selected > 0 ? null : 1)
+                }
+                return updatedFeature;
+            }
+            return item;
+        });
+        setTicketFeatures(newList);
+        updateTicketFeatures();
+    }
+
+    const updateTicketFeatures = () => {
+        const selected_features: any = [];
+        // console.log('Total items', ticketFeatures.length);
+        ticketFeatures.forEach((item: any) => {
+            // console.log('item', item.selected);
+            if (item.selected > 0) {
+                selected_features.push(item.id);
+            }
+        });
+        setData('features', selected_features);
+        // console.log(selected_features);
+    }
 
     const submitFeatureForm = (e: any) => {
         e.preventDefault();
@@ -109,7 +147,7 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
         }
     }
 
-    const handleCheckChange = (event: any) => {
+    const handleCheckChangeSession = (event: any) => {
         if (event.target.checked) {
             setselectMulti(sessions);
             setData('sessions', sessions);
@@ -118,6 +156,43 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
             setselectMulti([]);
             setSelectAllSession(false);
         }
+    }
+
+
+
+    const handleCheckChangeFeature = (event: any) => {
+        if (event.target.checked) {
+            const newList = ticketFeatures.map((item: any) => {
+                const updatedFeature = {
+                    ...item,
+                    selected: 1
+                }
+                return updatedFeature;
+            });
+            setTicketFeatures(newList);
+            setData('features', newList);
+        } else {
+            const newList = ticketFeatures.map((item: any) => {
+                const updatedFeature = {
+                    ...item,
+                    selected: null
+                }
+                return updatedFeature;
+            });
+            setTicketFeatures(newList);
+            setData('features', newList);
+        }
+    }
+
+    const deleteForm = useForm({
+        _method: 'DELETE'
+    });
+
+    const handleDelete = (feature: any) => {
+        deleteForm.post(route('organizer.events.tickets-feature.destroy', feature.id));
+        setDeleteFeature(null);
+        fetchFeatures();
+        setShowDeleteConfirmation(false);
     }
 
     const customStyles = {
@@ -288,7 +363,7 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
                                     type='checkbox'
                                     label="Select All Sessions"
                                     id="select-all-sessions"
-                                    onChange={handleCheckChange}
+                                    onChange={handleCheckChangeSession}
                                 />
                             </FormGroup>
                         </Col>
@@ -316,59 +391,76 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
                 </Form>
                 <hr />
                 <Row>
-                    <Col md={3} lg={3} className='d-flex align-items-center'>
+                    <Col md={3} lg={3} className='d-flex '>
                         <FormGroup className="mb-3">
                             {/* <Form.Label>Sessions</Form.Label> */}
                             <Form.Check
                                 type='checkbox'
                                 label="Select All Features"
                                 id="select-all-features"
-                                onChange={handleCheckChange}
+                                onChange={handleCheckChangeFeature}
                             />
                         </FormGroup>
                     </Col>
-                    <Col md={9} lg={9}>
+                </Row>
+                <Row>
+                    <Col md={12} lg={12}>
                         {eventLoading && <Spinner animation="border" role="status">
                             <span className="visually-hidden">Loading...</span>
                         </Spinner>}
                         {!eventLoading && <Table striped hover className='table-sm' style={{ maxHeight: '150px', overflowY: 'auto' }}>
                             <thead>
                                 <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
+                                    {/* <th>ID</th> */}
+                                    <th>Description</th>
+                                    <th>Include in Ticket</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody >
                                 {ticketFeatures && ticketFeatures.map((feature: any) =>
                                     <tr key={feature.id}>
-                                        <td>{feature.id}</td>
-                                        <td className='w-75'>{feature.name}</td>
+                                        {/* <td>{feature.id}</td> */}
+                                        <td style={{ width: '70%' }}>{feature.name}</td>
+                                        <td style={{ textAlign: 'center' }}>
+                                            <Button title='Click to add in Ticket' variant='link' className='btn-sm' onClick={() => toggleFeatureSelection(feature)}>
+                                                <i className={'bx bx-check-square fs-5 ' + (feature.selected > 0 ? 'text-success' : 'text-muted')}></i>
+                                            </Button>
+                                        </td>
                                         <td>
-                                            {feature.selected && <Button variant='link' className='btn-sm'><i className='bx bx-check text-success fs-3'></i></Button>}
-                                            {/* {!feature.selected && <Button variant='link'><i className='bx bx-x text-danger fs-5'></i></Button>} */}
-                                            {!feature.selected && <Button variant='link' className='btn-sm'><i className='bx bx-check text-muted fs-5'></i></Button>}
-                                            {feature.id > 0 && <Button variant='link' className='btn-sm' onClick={() => {
-                                                setCurrentFeature(feature);
-                                                setDataFeature(feature);
-                                                setAddFeature(true);
-                                            }}><i className='bx bx-pencil text-success fs-5'></i></Button>}
+                                            {feature.id > 0 &&
+                                                <div>
+                                                    <Button title='Click to Edit Ticket' variant='link' className='btn-sm' onClick={() => {
+                                                        setCurrentFeature(feature);
+                                                        setDataFeature(feature);
+                                                        setAddFeature(true);
+                                                    }}><i className='bx bx-pencil text-primary fs-5'></i></Button>
+                                                    <Button title='Click to Delete Ticket' variant='link' className='btn-sm' onClick={() => {
+                                                        setDeleteFeature(feature);
+                                                        setShowDeleteConfirmation(true);
+                                                    }}><i className='bx bx-trash text-danger fs-5'></i>
+                                                    </Button>
+                                                </div>}
                                         </td>
                                     </tr>)}
                             </tbody>
+                            <DeleteModal
+                                show={showDeleteConfirmation}
+                                onDeleteClick={() => handleDelete(deleteFeature)}
+                                onCloseClick={() => { setShowDeleteConfirmation(false) }}
+                            />
                         </Table>}
                         {!addFeature &&
-                            <button type="button" className="btn btn-sm btn-primary" onClick={() => setAddFeature(true)}>
+                            <button type="button" className="btn btn-primary" onClick={() => setAddFeature(true)}>
                                 New Feature</button>
                         }
 
                         {addFeature &&
                             <Form onSubmit={submitFeatureForm} className="tablelist-form">
                                 <Row>
-                                    <Col md={8} lg={8}>
+                                    <Col md={9} lg={9}>
                                         <FormGroup className="mb-3">
                                             <Form.Control
-                                                size='sm'
                                                 type="text"
                                                 value={dataFeature.name}
                                                 onChange={(e) => setDataFeature('name', e.target.value)}
@@ -377,15 +469,15 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
                                             {errorsFeature.name && <Form.Control.Feedback type="invalid">{errorsFeature.name}</Form.Control.Feedback>}
                                         </FormGroup>
                                     </Col>
-                                    <Col md={4} lg={4}>
+                                    <Col md={3} lg={3}>
                                         {addFeature &&
                                             <Row>
                                                 <Col>
-                                                    <button type="submit" className="btn btn-primary btn-sm" disabled={processingFeature}>Save
+                                                    <button type="submit" className="btn btn-primary" disabled={processingFeature}>Save
                                                     </button>
                                                 </Col>
                                                 <Col>
-                                                    <button type="button" className="btn btn-light btn-sm" onClick={() => {
+                                                    <button type="button" className="btn btn-light" onClick={() => {
                                                         setAddFeature(false);
                                                         resetFeature();
                                                         setCurrentFeature(null)

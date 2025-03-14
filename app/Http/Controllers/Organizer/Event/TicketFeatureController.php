@@ -4,17 +4,25 @@ namespace App\Http\Controllers\Organizer\Event;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\EventApp;
+use App\Models\EventAppTicket;
 use App\Models\TicketFeature;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class TicketFeatureController extends Controller
 {
-    public function index()
+    public function index(EventAppTicket $event_app_ticket)
     {
-        $features = DB::select("select f.id, f.organizer_id, f.event_app_id, f.name,
+        // Log::info($event_app_ticket);
+        if ($event_app_ticket->id > 0) { // $event_app_ticket is always not null perhaps due to appended attribute in model.
+            $features = DB::select("select f.id, f.organizer_id, f.event_app_id, f.name,
             selected.event_app_ticket_id as selected from ticket_features As f left join
-            feature_ticket As selected on f.id = selected.ticket_feature_id");
+            feature_ticket As selected on f.id = selected.ticket_feature_id and selected.event_app_ticket_id = " . $event_app_ticket->id);
+        } else {
+            $features = DB::select("select f.id, f.organizer_id, f.event_app_id, f.name,
+            null as selected from ticket_features as f");
+        }
 
         return response()->json(['features' => $features]);
     }
@@ -36,7 +44,7 @@ class TicketFeatureController extends Controller
             'event_app_id' => 'nullable|numeric',
             'name' => 'required:max:250'
         ]);
-        Log::info($request->all());
+
         $tickets_feature->update($request->all());
         return back()->withSuccess('Ticket Feature Updated Successfully');
     }

@@ -37,7 +37,10 @@ class EventAppTicketController extends Controller
 
         // Log::info($data['sessions']);
         $ticket = EventAppTicket::create($data);
+
         $ticket->sessions()->sync($data['sessions']);
+        $ticket->features()->sync($data['features']);
+
         return back()->withSuccess('Ticket created successfully');
     }
 
@@ -51,6 +54,7 @@ class EventAppTicketController extends Controller
         $ticket->update($data);
 
         $ticket->sessions()->sync($data['sessions']);
+        $ticket->features()->sync($data['features']);
 
         return back()->withSuccess('Ticket Updated successfully');
     }

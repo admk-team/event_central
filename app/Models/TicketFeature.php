@@ -30,4 +30,10 @@ class TicketFeature extends Model
     {
         $query->where('organizer_id', auth()->user()->id);
     }
+
+
+    public function tickets()
+    {
+        return $this->belongsToMany(EventAppTicket::class, 'feature_ticket');
+    }
 }

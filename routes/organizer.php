@@ -89,13 +89,13 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::resource('tickets', EventAppTicketController::class)->only(['index', 'store', 'update', 'destroy']);
             Route::delete('tickets/delete/many', [EventAppTicketController::class, 'destroyMany'])->name('tickets.destroy.many');
 
+            // Ticket-Features
+            Route::resource('tickets-feature', TicketFeatureController::class)->only(['store', 'update', 'destroy']);
+            Route::get('tickets-feature/{event_app_ticket?}', [TicketFeatureController::class, 'index'])->name('tickets-feature.index');
+
             // Promo Codes
             Route::resource('promo-codes', EventPromoCodeController::class)->only(['index', 'store', 'update', 'destroy']);
             Route::delete('promo-codes/delete/many', [EventPromoCodeController::class, 'destroyMany'])->name('promo-codes.destroy.many');
-
-            // Tickets
-            Route::resource('tickets-feature', TicketFeatureController::class)->only(['index', 'store', 'update', 'destroy']);
-            // Route::delete('tickets/delete/many', [EventAppTicketController::class, 'destroyMany'])->name('tickets.destroy.many');
 
             // Pages
             Route::resource('pages', PageController::class)->only(['store', 'update', 'destroy']);
