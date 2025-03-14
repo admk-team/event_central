@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Http\Resources\Api;
+
+use App\Http\Resources\UserResource;
+use App\Models\EventSession;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class EventResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(Request $request): array
+    {
+        return [
+            'id' => $this->id,
+            'organizer_id' => $this->organizer_id,
+            'name' => $this->name,
+            'description' => $this->description,
+            'start_date' => $this->start_date,
+            'end_date' => $this->end_date,
+            'location_type' => $this->location_type,
+            'location_base' => $this->location_base,
+            'type' => $this->type,
+            'schedual_type' => $this->schedual_type,
+            'event_sessions' => EventSessionResource::collection($this->whenLoaded('event_sessions')),
+            // 'applicant_answer' => AnswerResource::collection($this->whenLoaded('applicantAnswer')),
+        ];
+    }
+}
