@@ -8,7 +8,7 @@ import CreateEditSessionModal from './Components/CreateEditSessionModal';
 import toast from 'react-hot-toast';
 import DatePickerModal from './Components/DatePickerModal';
 import moment from 'moment';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Menu, X } from 'lucide-react';
 import Sessions from './Components/Sessions';
 import DeleteModal from '../../../../Components/Common/DeleteModal';
 
@@ -21,6 +21,7 @@ function Index() {
     const [deleteSession, setDeleteSession] = React.useState<any>(null);
     const [showDeleteSessionConfirmation, setShowDeleteSessionConfirmation] = React.useState(false);
     const [showDatePickerModal, setShowDatePickerModal] = React.useState(false);
+    const [showPlatformsSidebar, setShowPlatformsSidebar] = React.useState(false);
 
     const deleteForm = useForm({
         _method: 'DELETE'
@@ -68,7 +69,10 @@ function Index() {
                     />
                     <Card className="schedule">
                         <CardHeader className="d-flex justify-content-between align-items-center">
-                            <div className="fw-bold fs-5">
+                            <Button variant="light" className="btn-icon d-sm-none" onClick={() => setShowPlatformsSidebar(!showPlatformsSidebar)}>
+                                {showPlatformsSidebar ? <X size={18} /> : <Menu size={18} />}
+                            </Button>
+                            <div className="">
                                 <Button variant="light" onClick={() => setShowDatePickerModal(true)} className="d-flex align-items-centers gap-2">
                                     <span>
                                         {selectedDate ? moment(selectedDate.date).format('MMMM D, YYYY') : moment(new Date()).format('MMMM D, YYYY')}
@@ -83,12 +87,15 @@ function Index() {
                             </div>
                             <Button onClick={() => setShowSessionCreateEditModal(true)}><i className="ri-add-fill"></i> New Session</Button>
                         </CardHeader>
-                        <CardBody className="p-0 d-flex" style={{ height: '600px' }}>
+                        <CardBody className={`p-0 d-flex ${showPlatformsSidebar ? 'show-platform-sidebar' : ''}`}>
                             <div className="sidebar">
-                                <Platforms onPlatformChange={(platform: any) => setSelectedPlatform(platform)} />
+                                <Platforms onPlatformChange={(platform: any) => {
+                                    setSelectedPlatform(platform);
+                                    setTimeout(() => setShowPlatformsSidebar(false), 300);
+                                }} />
                             </div>
-                            <div className="flex-grow-1 overflow-x-hidden overflow-y-auto">
-                                <Sessions 
+                            <div className="sessions flex-grow-1 overflow-x-hidden overflow-y-auto">
+                                <Sessions
                                     selectedDate={selectedDate}
                                     selectedPlatform={selectedPlatform}
                                     onEdit={editSessionAction}

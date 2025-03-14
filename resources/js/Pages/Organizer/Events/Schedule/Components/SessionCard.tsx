@@ -32,7 +32,7 @@ export default function SessionCard({ session, onEdit, onDelete }: { session: an
                 </p>
             </Col>
             <Col xs={12}>
-                <div className="timeline-box w-100">
+                <div className="timeline-box">
                     <div className="timeline-text w-100">
                         <div className="d-flex">
                             <div className="flex-grow-1">

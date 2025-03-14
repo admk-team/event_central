@@ -44,6 +44,7 @@ export default function Sessions({ selectedDate, selectedPlatform, onEdit, onDel
                                     onDelete={() => onDelete(session)}
                                 />
                             ))}
+                            <div className="scroll-to"></div>
                         </div>
                     </div>
                 </div>

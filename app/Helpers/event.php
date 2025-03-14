@@ -6,9 +6,11 @@ use App\Services\EventSettingsService;
  * Get and set event settings based on current selected event
  */
 if (! function_exists('eventSettings')) {
-    function eventSettings()
+    function eventSettings(?int $eventId = null)
     {
-        $eventId = session('event_id');
+        if (is_null($eventId)) {
+            $eventId = session('event_id');
+        }
         
         return new class($eventId) {
             protected $service;
