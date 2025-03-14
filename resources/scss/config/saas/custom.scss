@@ -17,16 +17,53 @@ File: Custom Css File
 }
 
 
-.schedule .sidebar {
-    width: 200px;
-    height: 100%;
-    border-right: 1px solid var(--vz-border-color);
+.schedule .card-body {
+    height: calc(100vh - 317px);
+    position: relative;
 }
+
+@media (min-width: 1025px) {
+    .schedule .card-body {
+        height: calc(100vh - 291px);
+    }
+}
+
+.schedule .sidebar {
+    display: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.schedule .show-platform-sidebar .sidebar {
+    display: block;
+}
+
+@media (min-width: 576px) {
+    .schedule .sidebar {
+        display: block;
+        position: static;
+        width: 30%;
+        max-width: 200px;
+        border-right: 1px solid var(--vz-border-color);
+    }
+}
+
+@media (max-width: 575px) {
+    .schedule .show-platform-sidebar .sidebar {
+        display: block;
+    }
+    
+    .schedule .show-platform-sidebar .sessions {
+        display: none;
+    }
+}
+
 
 .schedule .platforms {
     height: 100%;
     position: relative;
-    padding-bottom: 60px;
+    padding-bottom: 69px;
 }
 
 .schedule .platforms-inner {
@@ -103,6 +140,7 @@ File: Custom Css File
 }
 
 .sessions-timeline .timeline-box {
+    width: calc(100% - 90px);
     background-color: #f9fafb !important;
 }
 

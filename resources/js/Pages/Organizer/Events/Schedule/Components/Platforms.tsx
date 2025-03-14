@@ -70,7 +70,7 @@ export default function Platforms({ onPlatformChange }: { onPlatformChange: (pla
                             onClick={() => setSelectedPlatform(platform)}
                         >
                             <div className="fw-semibold">{platform.name}</div>
-                            <Dropdown>
+                            <Dropdown onClick={e => e.stopPropagation()}>
                                 <Dropdown.Toggle
                                     variant="light"
                                     size="sm"
@@ -92,7 +92,7 @@ export default function Platforms({ onPlatformChange }: { onPlatformChange: (pla
                     ))}
                 </div>
                 <div className="text-center py-3">
-                    <Button size="sm" onClick={() => setShowCreateEditPlatformModal(true)}>
+                    <Button onClick={() => setShowCreateEditPlatformModal(true)}>
                         <i className="ri-add-fill"></i>
                         New Platform
                     </Button>

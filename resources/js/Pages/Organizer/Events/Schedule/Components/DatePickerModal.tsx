@@ -17,7 +17,7 @@ export default function DatePickerModal({ show, onHide, onDateSelect }: { show: 
     const eventDates = usePage().props.eventDates as any;
 
     const [mode, setMode] = React.useState<"view" | "edit">("view");
-    const [selectedDate, setSelectedDate] = React.useState<any>(eventDates[0] ?? null);
+    const [selectedDate, _setSelectedDate] = React.useState<any>(eventDates[0] ?? null);
     const [showDayDeleteConfirmation, _setShowDayDeleteConfirmation] = React.useState(false);
     const [deleteDateId, setDeleteDateId] = React.useState<number | null>(null);
     
@@ -31,6 +31,11 @@ export default function DatePickerModal({ show, onHide, onDateSelect }: { show: 
     const _onHide = () => {
         setMode('view');
         onHide();
+    }
+
+    const setSelectedDate = (state: any) => {
+        _setSelectedDate(state);
+        _onHide();
     }
 
     const addDate = (date: string) => {
@@ -124,20 +129,13 @@ export default function DatePickerModal({ show, onHide, onDateSelect }: { show: 
                     />
                 </Modal.Body>
                 <div className="modal-footer">
-                    <div className="d-flex w-100 gap-2 justify-content-between">
+                    <div className="d-flex w-100 gap-2 justify-content-end">
                         <button
                             type="button"
                             className={`btn btn-${mode === 'view' ? 'light' : 'success'}`}
                             onClick={() => setMode(mode === 'view' ? 'edit' : 'view')}
                         >
                             Edit Days
-                        </button>
-                        <button
-                            type="button"
-                            className="btn btn-primary"
-                            onClick={_onHide}
-                        >
-                            Done
                         </button>
                     </div>
                 </div>
@@ -199,11 +197,11 @@ function CustomDayButton(props: { day: CalendarDay; modifiers: Modifiers; } & Bu
 
     switch (eventDates.mode) {
         case 'edit':
-            const disabled = props.day.date < today && !eventDate;
+            const disabled = props.day.date < today;
             return (
                 <button
                     aria-label={dateMoment.format('dddd, MMMM Do, YYYY')}
-                    className={`rdp-day_button ${!disabled ? 'edit-day-button' : ''} ${eventDate ? 'selected' : ''}`}
+                    className={`rdp-day_button ${!disabled || eventDate ? 'edit-day-button' : ''} ${eventDate ? 'selected' : ''}`}
                     tabIndex={props.modifiers.today ? 0 : -1}
                     type="button"
                     onClick={() => {
