@@ -40,6 +40,11 @@ class EventController extends Controller
                 $next_session_id = $index < (count($sessions) - 1)  ? $sessions[$index + 1] : null;
             }
         }
+
+        //Note : after upgrading to Laravel 11, above code can be
+        // replaced by following two lines.
+        // $next_session_id = $sessions->after($eventSession->id);
+        // $prev_session_id = $sessions->before($eventSession->id);
         //------------------------------------------------------------------------
         $eventSession->load(['eventSpeaker']);
         $selectedSessionDetails = DB::table('attendee_event_session')->where(function ($query) use ($eventSession) {
@@ -53,7 +58,6 @@ class EventController extends Controller
             'selectedSessionDetails',
             'prev_session_id',
             'next_session_id',
-            'prev_url'
         ]));
     }
 
