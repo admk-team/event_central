@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Organizer\Event\Settings;
 use App\Http\Controllers\Controller;
 use App\Models\EventApp;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -23,9 +24,20 @@ class EventSettingsController extends Controller
             'name' => 'required',
             'description' => 'nullable',
             'location_base' => 'required',
+            'registration_private' => 'required',
+            'registration_link' => $request->get('registration_private') == 1 ? 'required' : '',
         ]);
 
         $event = EventApp::find(session('event_id'));
+        Log::info($input);
+
+        eventSettings()->set('registration_private', $input['registration_private']);
+        if ($input['registration_private'] == 1) {
+            eventSettings()->set('registration_link', $input['registration_link']);
+        } else {
+            eventSettings()->set('registration_link', '');
+        }
+
         if($request->hasFile('logo')) {
             $name = uniqid() . '.' . $request->file('logo')->getClientOriginalExtension();
             $input['logo'] = $request->file('logo')->storeAs('events-avatars', $name, 'public');
@@ -34,6 +46,9 @@ class EventSettingsController extends Controller
 
         return back()->withSuccess('Saved');
     }
+
+
+
 
     public function destroyEvent(Request $request)
     {
@@ -48,5 +63,11 @@ class EventSettingsController extends Controller
         $currentEvent->delete();
 
         return redirect()->route('organizer.events.index')->withSuccess('Event deleted successfully');
+    }
+
+    public function generateLink()
+    {
+        $url = route('attendee.register', session('event_id')) . '/' . str()->random();
+        return response()->json(['link' => $url]);
     }
 }

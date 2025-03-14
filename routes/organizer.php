@@ -126,6 +126,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                     Route::get('/', [EventSettingsController::class, 'index'])->name('index');
                     Route::delete('/', [EventSettingsController::class, 'destroyEvent'])->name('destroy');
                     Route::put('info', [EventSettingsController::class, 'updateInfo'])->name('info');
+                    Route::get('generate-link', [EventSettingsController::class, 'generateLink'])->name('link');
                 });
                 // Payment
                 Route::prefix('payment')->name('payment.')->group(function () {
