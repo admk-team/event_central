@@ -1,5 +1,5 @@
 import { Link, useForm } from "@inertiajs/react";
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useRef, useState, useEffect } from "react";
 import Flatpickr from "react-flatpickr";
 import {
     Button,
@@ -7,68 +7,31 @@ import {
     Form,
     FormGroup,
     Modal,
-    Nav,
     Row,
-    Spinner,
-    Tab,
 } from "react-bootstrap";
-
-interface CreateModalProps {
-    addNewsfeedModal: boolean;
-    editPost: any;
-    showModal: () => void;
-}
 
 function CreateModal({
     addNewsfeedModal,
     showModal,
     editPost,
-}: CreateModalProps) {
+    formData,
+    updateFormData,
+    errors
+}: any) {
+    const [preview, setPreview] = useState<any>(editPost?.img || null);
+    const [schedulePost, setSchedulePost] = useState<any>(false);
 
     const isEdit = editPost != null ? true : false;
-    const { data, setData, post, put, processing, errors, reset } = useForm({
-        title: editPost?.title || "",
-        content: editPost?.content || "",
-        image: editPost?.img || null,
-        send_notification: editPost?.send_notitication || false,
-        sending_date: editPost?.sending_date || null,
-        sending_time: editPost?.sending_time || null,
-    });
 
     const submit = (e: any) => {
         e.preventDefault();
-
-        if (isEdit) {
-            put(
-                route(
-                    "organizer.events.engagement.newsfeed.update",
-                    editPost.id
-                ),
-                {
-                    onSuccess: () => {
-                        reset();
-                        showModal();
-                        setPreview(null);
-                    },
-                }
-            );
-        } else {
-            post(route("organizer.events.engagement.newsfeed.store", data), {
-                onSuccess: () => {
-                    reset();
-                    showModal();
-                },
-            });
-        }
+        showModal();
     };
-
-    const [preview, setPreview] = useState<any>(editPost?.img || null);
-    const [schedulePost, setSchedulePost] = useState<any>(false);
 
     const handleImageChange = (e: any) => {
         const file = e.target.files[0];
         if (file) {
-            setData({ ...data, image: file });
+            updateFormData("image", file);
             const reader = new FileReader();
             reader.onloadend = () => {
                 setPreview(reader.result);
@@ -114,9 +77,9 @@ function CreateModal({
                                     className="form-control"
                                     id="title"
                                     placeholder="Enter Title"
-                                    value={data.title }
+                                    value={formData.title}
                                     onChange={(e) =>
-                                        setData("title", e.target.value)
+                                        updateFormData("title", e.target.value)
                                     }
                                 />
                                 <Form.Control.Feedback
@@ -140,9 +103,12 @@ function CreateModal({
                                     className="form-control"
                                     id="content"
                                     placeholder="Enter content"
-                                    value={data.content}
+                                    value={formData.content}
                                     onChange={(e) =>
-                                        setData("content", e.target.value)
+                                        updateFormData(
+                                            "content",
+                                            e.target.value
+                                        )
                                     }
                                 />
                                 <Form.Control.Feedback
@@ -210,12 +176,12 @@ function CreateModal({
                                         dateFormat: "d M, Y",
                                     }}
                                     onChange={([selectedDate]: Date[]) => {
-                                        setData((prevData: any) => ({
-                                            ...prevData,
-                                            sending_date: selectedDate
+                                        updateFormData(
+                                            "sending_date",
+                                            selectedDate
                                                 .toLocaleDateString("en-CA")
-                                                .split("T")[0],
-                                        }));
+                                                .split("T")[0]
+                                        );
                                     }}
                                 />
                             </div>
@@ -247,11 +213,10 @@ function CreateModal({
                                                 .toString()
                                                 .padStart(2, "0");
                                             const time = `${hours}:${minutes}`;
-
-                                            setData((prevData: any) => ({
-                                                ...prevData,
-                                                sending_time: time,
-                                            }));
+                                            updateFormData(
+                                                "sending_time",
+                                                time
+                                            );
                                         }
                                     }}
                                 />
@@ -285,7 +250,7 @@ function CreateModal({
                                     className="form-check-label"
                                     htmlFor="sendNotification"
                                     onChange={(e: any) =>
-                                        setData(
+                                        updateFormData(
                                             "send_notification",
                                             e.target.value
                                         )
@@ -313,27 +278,13 @@ function CreateModal({
 
                     <div className="hstack gap-2 justify-content-center mt-4">
                         <Button
-                            disabled={processing}
                             className="btn btn-light"
                             onClick={() => showModal()}
                         >
                             Close
                         </Button>
-                        <Button type="submit" disabled={processing}>
-                            {processing ? (
-                                <span className="d-flex gap-1 align-items-center">
-                                    <Spinner
-                                        as="span"
-                                        animation="border"
-                                        size="sm"
-                                        role="status"
-                                        aria-hidden="true"
-                                    />
-                                    {isEdit ? "Updateing" : "Posting"}
-                                </span>
-                            ) : (
-                                <span>{isEdit ? "Update" : "Post Now"}</span>
-                            )}
+                        <Button type="submit">
+                            <span>{isEdit ? "Update" : "Add Now"}</span>
                         </Button>
                     </div>
                 </form>

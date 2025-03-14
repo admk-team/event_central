@@ -1,15 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 
-const PollModal = ({ show, handleClose, postTitle }: any) => {
+interface Poll {
+    question: string;
+    options: { text: string; like: number }[];
+}
+
+const PollModal = ({
+    show,
+    handleClose,
+    postTitle,
+    updateFormData,
+}: any) => {
     const [question, setQuestion] = useState(postTitle);
     const [options, setOptions] = useState([{ text: "", like: 0 }]);
+    const [pollData, setPollData] = useState<Poll[]>([]);
 
-    useEffect(() => {
-        setQuestion(postTitle);
-    }, [postTitle]);
-
-    // Add a new option (max 4)
+    // Add a new option
     const addOption = () => {
         setOptions([...options, { text: "", like: 0 }]);
     };
@@ -24,11 +31,11 @@ const PollModal = ({ show, handleClose, postTitle }: any) => {
 
     // Handle form submission
     const handleSubmit = () => {
-        const pollData = {
+        const Data = {
             question,
             options,
         };
-        console.log("Poll Created:", pollData);
+        updateFormData("post_poll", JSON.stringify(Data));
         handleClose();
     };
 
@@ -55,7 +62,9 @@ const PollModal = ({ show, handleClose, postTitle }: any) => {
                                 type="text"
                                 placeholder={`Option ${index + 1}`}
                                 value={option.text}
-                                onChange={(e) => handleOptionChange(index, e.target.value)}
+                                onChange={(e) =>
+                                    handleOptionChange(index, e.target.value)
+                                }
                             />
                         </Form.Group>
                     ))}
@@ -74,7 +83,7 @@ const PollModal = ({ show, handleClose, postTitle }: any) => {
                     Cancel
                 </Button>
                 <Button variant="primary" onClick={handleSubmit}>
-                    Create Poll
+                    Add Poll
                 </Button>
             </Modal.Footer>
         </Modal>

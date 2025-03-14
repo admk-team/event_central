@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Link, useForm } from "@inertiajs/react";
 import { Button, Container, Form, Image, Row, Col } from "react-bootstrap";
 import useeImage from "../../../../../../../images/users/avatar-1.jpg";
 import CreateEditModal from "./CreateEditModal";
@@ -7,8 +8,7 @@ import PollModal from "./PollModal";
 function AddPost() {
     const [addNewsfeedModal, setAddNewsfeedModal] = useState(false);
     const [editPost, setEditPost] = React.useState<any>(null);
-    const [postTitle, setPostTitle] = useState({ title: "" });
-
+    const isEdit = editPost != null ? true : false;
     const [pollModalShow, setPollModalShow] = useState(false);
 
     function showModal() {
@@ -17,11 +17,45 @@ function AddPost() {
 
     const handleOpenModal = () => setAddNewsfeedModal(true);
 
-    const handleChange = (e: any) => {
-        setPostTitle({
-            ...postTitle,
-            title: e.target.value,
-        });
+    const { data, setData, post, put, processing, errors, reset } = useForm({
+        title: editPost?.title || "",
+        content: editPost?.content || "",
+        image: editPost?.img || null,
+        send_notification: editPost?.send_notitication || false,
+        sending_date: editPost?.sending_date || null,
+        sending_time: editPost?.sending_time || null,
+        post_poll: "", 
+    });
+
+    const updateFormData = (key: string, value: string) => {
+        setData((prevData) => ({
+            ...prevData,
+            [key]: value,
+        }));
+    };
+
+    const submit = (e: any) => {
+        e.preventDefault();
+        if (isEdit) {
+            put(
+                route(
+                    "organizer.events.engagement.newsfeed.update",
+                    editPost.id
+                ),
+                {
+                    onSuccess: () => {
+                        reset();
+                        showModal();
+                    },
+                }
+            );
+        } else {
+            post(route("organizer.events.engagement.newsfeed.store", data), {
+                onSuccess: () => {
+                    reset();
+                },
+            });
+        }
     };
 
     return (
@@ -42,8 +76,10 @@ function AddPost() {
                     <Col>
                         <Form.Control
                             type="text"
-                            value={postTitle.title}
-                            onChange={handleChange}
+                            value={data.title}
+                            onChange={(e) =>
+                                updateFormData("title", e.target.value)
+                            }
                             placeholder="Write Title ...."
                             height={50}
                             className="border-0 fs-4"
@@ -52,9 +88,7 @@ function AddPost() {
                 </Row>
                 <Row className="mt-2 align-items-center">
                     <Col>
-                        <div 
-                        style={{ marginLeft: "60px" }}
-                        >
+                        <div style={{ marginLeft: "60px" }}>
                             <i
                                 className="bx bxs-image-add"
                                 style={{ fontSize: "27px" }}
@@ -68,7 +102,8 @@ function AddPost() {
                             <PollModal
                                 show={pollModalShow}
                                 handleClose={() => setPollModalShow(false)}
-                                postTitle={postTitle.title}
+                                formData={data}
+                                updateFormData={updateFormData}
                             />
                         </div>
                     </Col>
@@ -76,7 +111,7 @@ function AddPost() {
                         <Button
                             variant="primary"
                             className="rounded-pill"
-                            onClick={handleOpenModal}
+                            onClick={submit}
                         >
                             Add Post
                         </Button>
@@ -87,7 +122,9 @@ function AddPost() {
             <CreateEditModal
                 addNewsfeedModal={addNewsfeedModal}
                 showModal={showModal}
-                editPost={editPost}
+                formData={data}
+                updateFormData={updateFormData}
+                errors = {errors}
             />
         </React.Fragment>
     );
