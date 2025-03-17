@@ -1,19 +1,9 @@
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
+import { FieldType, fieldTypes } from "../../../../../../common/data/formBuilderFieldTypes";
 
-const fieldTypes = [
-    {
-        name: 'text',
-        label: 'Short Text',
-    },
-    {
-        name: 'long_text',
-        label: 'Long Text',
-    },
-]
-
-export default function FieldTypesModal({ show, onHide, onSelect }: { show: boolean, onHide: () => void, onSelect: (type: string) => void }) {
-    const _onSelect = (type: string) => {
-        onSelect(type);
+export default function FieldTypesModal({ show, onHide, onSelect }: { show: boolean, onHide: () => void, onSelect: (type: FieldType) => void }) {
+    const _onSelect = (fieldType: FieldType) => {
+        onSelect(fieldType);
         onHide();
     }
     return (
@@ -29,7 +19,7 @@ export default function FieldTypesModal({ show, onHide, onSelect }: { show: bool
                             key={fieldType.name}
                             variant="light" 
                             className="field fw-semibold"
-                            onClick={() => _onSelect(fieldType.name)}
+                            onClick={() => _onSelect(fieldType)}
                         >{fieldType.label}</Button>
                     ))}
                 </Modal.Body>

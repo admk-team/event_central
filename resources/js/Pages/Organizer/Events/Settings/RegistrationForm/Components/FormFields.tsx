@@ -1,12 +1,13 @@
 import { Ellipsis, Plus, Text } from 'lucide-react'
 import { useState } from 'react'
 import { Button, Card, CardBody, CardFooter, CardHeader, CardTitle, Dropdown, DropdownToggle, ListGroup, ListGroupItem } from 'react-bootstrap'
-import FieldTypesModal from './FieldTypeSModal';
 import CreateEditFieldModal from './CreateEditFieldModal';
+import FieldTypesModal from './FieldTypesModal';
+import { FieldType, fieldTypes } from '../../../../../../common/data/formBuilderFieldTypes';
 
 export default function FormFields() {
     const [showFieldsModal, setShowFieldsModal] = useState(false);
-    const [selectedFieldType, setSelectedFieldType] = useState<string | null>(null);
+    const [selectedFieldType, setSelectedFieldType] = useState<FieldType | null>(null);
     const [showCreateEditFieldModal, _setShowCreateEditFieldModal] = useState(false);
 
     const setShowCreateEditFieldModal = (state: boolean) => {
@@ -16,8 +17,8 @@ export default function FormFields() {
         }
     }
 
-    const onFieldTypeSelect = (type: string) => {
-        setSelectedFieldType(type);
+    const onFieldTypeSelect = (fieldType: FieldType) => {
+        setSelectedFieldType(fieldType);
         setShowCreateEditFieldModal(true);
     }
 
