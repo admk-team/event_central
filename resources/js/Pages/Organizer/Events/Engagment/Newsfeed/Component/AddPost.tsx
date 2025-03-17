@@ -5,9 +5,10 @@ import useeImage from "../../../../../../../images/users/avatar-1.jpg";
 import CreateEditModal from "./CreateEditModal";
 import PollModal from "./PollModal";
 
-function AddPost() {
+function AddPost({ events }: any) {
     const [addNewsfeedModal, setAddNewsfeedModal] = useState(false);
     const [editPost, setEditPost] = React.useState<any>(null);
+    const [restPoll, setRestPoll] = useState(false);
     const isEdit = editPost != null ? true : false;
     const [pollModalShow, setPollModalShow] = useState(false);
 
@@ -24,7 +25,7 @@ function AddPost() {
         send_notification: editPost?.send_notitication || false,
         sending_date: editPost?.sending_date || null,
         sending_time: editPost?.sending_time || null,
-        post_poll: "", 
+        post_poll: "",
     });
 
     const updateFormData = (key: string, value: string) => {
@@ -52,6 +53,7 @@ function AddPost() {
         } else {
             post(route("organizer.events.engagement.newsfeed.store", data), {
                 onSuccess: () => {
+                    setRestPoll(true);
                     reset();
                 },
             });
@@ -67,10 +69,11 @@ function AddPost() {
                 <Row className="align-items-start">
                     <Col xs="auto">
                         <Image
-                            src={useeImage}
-                            height={50}
-                            width={50}
+                            src={`/storage/${events.logo}`}
                             roundedCircle
+                            width="40"
+                            height="40"
+                            className="me-2 thumbnail"
                         />
                     </Col>
                     <Col>
@@ -104,6 +107,8 @@ function AddPost() {
                                 handleClose={() => setPollModalShow(false)}
                                 formData={data}
                                 updateFormData={updateFormData}
+                                restPoll = {restPoll}
+                                setRestPoll = {setRestPoll}
                             />
                         </div>
                     </Col>
@@ -124,7 +129,7 @@ function AddPost() {
                 showModal={showModal}
                 formData={data}
                 updateFormData={updateFormData}
-                errors = {errors}
+                errors={errors}
             />
         </React.Fragment>
     );

@@ -1,17 +1,46 @@
 import React, { useState } from "react";
-import { Button, Card, Col, Container, Row, Table, Image } from "react-bootstrap";
+import {
+    Button,
+    Card,
+    Col,
+    Container,
+    Row,
+    Table,
+    Image,
+    ProgressBar,
+} from "react-bootstrap";
+import DeleteManyModal from "../../../../../Components/Common/DeleteManyModal";
 import { Head, Link, useForm } from "@inertiajs/react";
 import BreadCrumb from "../../../../../Components/Common/BreadCrumb";
 import Layout from "../../../../../Layouts/Event";
 import AddPost from "./Component/AddPost";
 import { usePage } from "@inertiajs/react";
+import DeleteModal from "../../../../../Components/Common/DeleteModal";
 
-function Index({ newsfeeds }: any) {
+function Index({ newsfeeds, events, editfeeds }: any) {
+    console.log(editfeeds);
     const [deleteNewsfeed, setDeleteNewsfeed] = React.useState<any>(null);
-    const [editPost, setEditPost] = React.useState<any>(null);
+    const [deletePost, setDeletePost] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] =
         useState(false);
+
+    const deleteForm = useForm({
+        _method: "DELETE",
+    });
+
+
+    const deleteAction = (event: any) => {
+        setDeletePost(event);
+        setShowDeleteConfirmation(true);
+    };
+
+    const handleDelete = () => {
+        deleteForm.post(
+            route("organizer.events.engagement.newsfeed.destroy", deletePost)
+        );
+        setShowDeleteConfirmation(false);
+    };
 
     return (
         <React.Fragment>
@@ -49,40 +78,62 @@ function Index({ newsfeeds }: any) {
                 <Container fluid>
                     <BreadCrumb title="Newsfeed" pageTitle="Dashboard" />
                     <Row>
-                        <Col lg={7} className="mx-auto">
-                            <AddPost />
+                        <Col lg={6} className="mx-auto">
+                            <AddPost events={events[0]} />
                         </Col>
                     </Row>
                 </Container>
                 <Container fluid>
                     <Row className="justify-content-center">
-                        <Col lg={7} className="mt-3">
+                        <Col lg={6} className="mt-3">
                             {newsfeeds.length > 0 ? (
                                 newsfeeds.map((post: any) => (
                                     <Card
                                         key={post.id}
                                         className="mb-4 shadow-sm"
                                     >
+                                        <Card.Header>
+                                            {/*  */}
+                                            <div className="d-flex gap-2 justify-content-end">
+                                                <span
+                                                    className="link-danger cursor-pointer"
+                                                    onClick={() =>
+                                                        deleteAction(post.id)
+                                                    }
+                                                >
+                                                    <i className="ri-delete-bin-5-line"></i>
+                                                </span>
+                                            </div>
+                                        </Card.Header>
                                         <Card.Body>
                                             {/* Post Header */}
                                             <div className="d-flex align-items-center mb-2">
                                                 <Image
-                                                    src="/default-avatar.png"
+                                                    src={`/storage/${events[0].logo}`}
                                                     roundedCircle
                                                     width="40"
                                                     height="40"
-                                                    className="me-2"
+                                                    className="me-2 thumbnail"
                                                 />
                                                 <div>
-                                                    <strong>Organizer</strong>
+                                                    <strong>
+                                                        {events[0].name}
+                                                    </strong>
                                                     <div
                                                         className="text-muted"
                                                         style={{
                                                             fontSize: "12px",
                                                         }}
                                                     >
-                                                        {post.sending_date} at{" "}
-                                                        {post.sending_time}
+                                                        {
+                                                            newsfeeds[0]
+                                                                .sending_date
+                                                        }{" "}
+                                                        at{" "}
+                                                        {
+                                                            newsfeeds[0]
+                                                                .sending_time
+                                                        }
                                                     </div>
                                                 </div>
                                             </div>
@@ -98,9 +149,12 @@ function Index({ newsfeeds }: any) {
                                             {post.image && (
                                                 <div className="mb-2">
                                                     <Image
-                                                        src={`${window.location.origin}/storage/${post.image}`}
+                                                        src={`/storage/${post.image}`}
                                                         alt="Post Image"
-                                                        className="w-100 rounded"
+                                                        height="400"
+                                                        style={{
+                                                            width: "100%",
+                                                        }}
                                                     />
                                                 </div>
                                             )}
@@ -113,41 +167,106 @@ function Index({ newsfeeds }: any) {
                                             {/* Post Poll (if available) */}
                                             {post.post_poll && (
                                                 <div className="border rounded p-3 bg-light">
-                                                    <strong>
+                                                    <label className="h4">
                                                         {
                                                             JSON.parse(
                                                                 post.post_poll
                                                             ).question
                                                         }
-                                                    </strong>
-                                                    {JSON.parse(
-                                                        post.post_poll
-                                                    ).options.map(
-                                                        (
-                                                            option: any,
-                                                            index: number
-                                                        ) => (
-                                                            <div
-                                                                key={index}
-                                                                className="d-flex align-items-center my-2"
-                                                            >
-                                                                <Button
-                                                                    variant="outline-primary"
-                                                                    className="me-2"
-                                                                >
-                                                                    {
-                                                                        option.text
-                                                                    }
-                                                                </Button>
-                                                                <span>
-                                                                    {
-                                                                        option.like
-                                                                    }{" "}
-                                                                    votes
-                                                                </span>
-                                                            </div>
-                                                        )
-                                                    )}
+                                                    </label>
+
+                                                    {(() => {
+                                                        const pollData =
+                                                            JSON.parse(
+                                                                post.post_poll
+                                                            );
+                                                        const totalVotes =
+                                                            pollData.options.reduce(
+                                                                (
+                                                                    sum: number,
+                                                                    option: any
+                                                                ) =>
+                                                                    sum +
+                                                                    option.like +
+                                                                    (option.dislike ||
+                                                                        0),
+                                                                0
+                                                            );
+
+                                                        return pollData.options.map(
+                                                            (
+                                                                option: any,
+                                                                index: number
+                                                            ) => {
+                                                                const likePercentage =
+                                                                    totalVotes
+                                                                        ? (option.like /
+                                                                              totalVotes) *
+                                                                          100
+                                                                        : 0;
+
+                                                                const dislikePercentage =
+                                                                    totalVotes
+                                                                        ? ((option.dislike ||
+                                                                              0) /
+                                                                              totalVotes) *
+                                                                          100
+                                                                        : 0;
+
+                                                                return (
+                                                                    <div
+                                                                        key={
+                                                                            index
+                                                                        }
+                                                                        className="my-3"
+                                                                    >
+                                                                        <div className="d-flex justify-content-between align-items-center">
+                                                                            {
+                                                                                option.text
+                                                                            }
+                                                                            <span>
+                                                                                {
+                                                                                    option.like
+                                                                                }{" "}
+                                                                                Likes
+                                                                                |{" "}
+                                                                                {option.dislike ||
+                                                                                    0}{" "}
+                                                                                Dislikes
+                                                                            </span>
+                                                                        </div>
+                                                                        <ProgressBar>
+                                                                            <ProgressBar
+                                                                                className="text-dark fw-bold"
+                                                                                now={
+                                                                                    likePercentage
+                                                                                }
+                                                                                label={`${likePercentage.toFixed(
+                                                                                    1
+                                                                                )}%`}
+                                                                                variant="success"
+                                                                                key={
+                                                                                    1
+                                                                                }
+                                                                            />
+                                                                            {/* <ProgressBar
+                                                                                now={
+                                                                                    dislikePercentage
+                                                                                }
+                                                                                label={`${dislikePercentage.toFixed(
+                                                                                    1
+                                                                                )}%`}
+                                                                                variant="danger"
+                                                                                key={
+                                                                                    2
+                                                                                }
+                                                                            /> */}
+                                                                        </ProgressBar>
+                                                                    </div>
+                                                                );
+                                                            }
+                                                        );
+                                                    })()}
                                                 </div>
                                             )}
 
@@ -175,6 +294,14 @@ function Index({ newsfeeds }: any) {
                         </Col>
                     </Row>
                 </Container>
+
+                <DeleteModal
+                    show={showDeleteConfirmation}
+                    onDeleteClick={handleDelete}
+                    onCloseClick={() => {
+                        setShowDeleteConfirmation(false);
+                    }}
+                />
             </div>
         </React.Fragment>
     );

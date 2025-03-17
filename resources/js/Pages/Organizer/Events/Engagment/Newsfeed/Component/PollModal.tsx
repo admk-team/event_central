@@ -11,14 +11,19 @@ const PollModal = ({
     handleClose,
     postTitle,
     updateFormData,
+    restPoll,
+    setRestPoll,
 }: any) => {
     const [question, setQuestion] = useState(postTitle);
-    const [options, setOptions] = useState([{ text: "", like: 0 }]);
-    const [pollData, setPollData] = useState<Poll[]>([]);
+    const [options, setOptions] = useState([{ text: "", like: 0, dislike: 0 }]);
+
+    useEffect(() => {
+        resetPoll(restPoll)
+    }, [restPoll]);
 
     // Add a new option
     const addOption = () => {
-        setOptions([...options, { text: "", like: 0 }]);
+        setOptions([...options, { text: "", like: 0, dislike: 0 }]);
     };
 
     // Handle option change
@@ -27,6 +32,14 @@ const PollModal = ({
             i === index ? { ...option, text: value } : option
         );
         setOptions(newOptions);
+    };
+
+    const resetPoll = (restPoll: any) => {
+        if (restPoll === true) {
+            setQuestion("");
+            setOptions([{ text: "", like: 0, dislike: 0 }]);
+        }
+        setRestPoll(false);
     };
 
     // Handle form submission

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Organizer\Event\Engagement;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organizer\Event\Engagement\EventPostRequest;
+use App\Models\EventApp;
 use App\Models\EventPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -13,8 +14,9 @@ class NewsfeedController extends Controller
 {
     public function index(Request $request)
     {
+        $events = EventApp::ofOwner()->get();
         $newsfeeds = EventPost::where('event_app_id', session('event_id'))->get();
-        return Inertia::render('Organizer/Events/Engagment/Newsfeed/Index', compact('newsfeeds'));
+        return Inertia::render('Organizer/Events/Engagment/Newsfeed/Index', compact('newsfeeds', 'events'));
     }
 
     public function store(EventPostRequest $request)
