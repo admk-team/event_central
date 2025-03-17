@@ -3,6 +3,8 @@ import FeaturedCard from "../Components/FeaturedCard"
 import TestimonialCard from "../Components/TestimonialCard"
 import MainLayout from "../Layouts/MainLayout"
 import '../css/home.css'
+import heroimage from '../../images/heroimage.svg'
+
 export default function Home() {
     return (
         <MainLayout>
@@ -10,12 +12,21 @@ export default function Home() {
 
             <main>
                 {/* Hero Section */}
-                <section className="hero-section">
-                    <div className="container hero-content">
+                <section
+                    className="hero-section"
+                    style={{
+                        backgroundImage: `url(${heroimage})`,
+                        backgroundRepeat: "no-repeat",
+                        backgroundSize: "cover",
+                        // backgroundPosition: "center",
+                        paddingBottom: '200px'
+                    }}
+                >
+                    <div className="container hero-content" >
                         <div className="row justify-content-center">
                             <div className="col-md-8 text-center">
                                 <h1 className="mb-4 display-4 fw-bold">Connect with like-minded individuals</h1>
-                                <p className="mb-5 lead text-muted-light">
+                                <p className="mb-5 lead text-muted-dark">
                                     Join our community of focused individuals who are dedicated to personal growth, productivity, and
                                     achieving their goals.
                                 </p>
@@ -23,7 +34,7 @@ export default function Home() {
                                     <a href="#" className="btn btn-primary btn-lg">
                                         Join Now <i className="bi bi-arrow-right ms-2"></i>
                                     </a>
-                                    <a href="#" className="btn btn-outline-light btn-lg">
+                                    <a href="#" className="btn btn-outline-dark btn-lg">
                                         Learn More
                                     </a>
                                 </div>
@@ -37,7 +48,7 @@ export default function Home() {
                     <div className="container">
                         <div className="text-center mb-5">
                             <h2 className="mb-3 display-5 fw-bold">Why Choose Fokus Network?</h2>
-                            <p className="mx-auto text-muted-light" style={{ maxWidth: "700px" }}>
+                            <p className="mx-auto text-muted-dark" style={{ maxWidth: "700px" }}>
                                 Our platform offers unique features designed to help you stay focused, connect with others, and achieve
                                 your goals.
                             </p>
@@ -69,11 +80,11 @@ export default function Home() {
                 </section>
 
                 {/* Testimonials Section */}
-                <section id="testimonials" className="py-5 bg-darker">
+                <section id="testimonials" className="py-5 bg-lighter">
                     <div className="container">
                         <div className="text-center mb-5">
                             <h2 className="mb-3 display-5 fw-bold">What Our Members Say</h2>
-                            <p className="mx-auto text-muted-light" style={{ maxWidth: "700px" }}>
+                            <p className="mx-auto text-muted-dark" style={{ maxWidth: "700px" }}>
                                 Hear from our community members about how Fokus Network has helped them achieve their goals.
                             </p>
                         </div>
@@ -113,7 +124,7 @@ export default function Home() {
                                     <p className="mb-4 lead">
                                         Start your journey towards improved focus, productivity, and connection today.
                                     </p>
-                                    <a href="#" className="btn btn-dark btn-lg">
+                                    <a href="#" className="btn btn-light btn-lg">
                                         Get Started Now <i className="bi bi-arrow-right ms-2"></i>
                                     </a>
                                 </div>

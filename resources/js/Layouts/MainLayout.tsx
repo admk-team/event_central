@@ -3,23 +3,17 @@
 import { useState } from "react"
 import { Link } from "@inertiajs/react"
 import Footer from "../Components/Footer"
-
+import logo from '../../images/logo.png'
 export default function MainLayout({ children }) {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
     return (
         <div className="d-flex flex-column min-vh-100">
             {/* Navigation */}
-            <nav className="navbar navbar-expand-lg navbar-dark fixed-top">
+            <nav className="navbar navbar-expand-lg navbar-light fixed-top">
                 <div className="container">
                     <Link href="/" className="navbar-brand d-flex align-items-center">
-                        <div
-                            className="rounded-circle bg-primary d-flex align-items-center justify-content-center me-2"
-                            style={{ width: "32px", height: "32px" }}
-                        >
-                            <span className="visually-hidden">Fokus Network</span>
-                        </div>
-                        <span className="fw-bold">Fokus Network</span>
+                        <img src={logo} style={{ maxWidth: '100px' }} />
                     </Link>
 
                     <button className="navbar-toggler" type="button" onClick={() => setMobileMenuOpen(true)}>
@@ -74,7 +68,7 @@ export default function MainLayout({ children }) {
                             </div>
                             <span className="fw-bold">Fokus Network</span>
                         </Link>
-                        <button className="btn-close btn-close-white" onClick={() => setMobileMenuOpen(false)}></button>
+                        <button className="btn-close" onClick={() => setMobileMenuOpen(false)}></button>
                     </div>
                     <div className="mt-4">
                         <a href="#features" className="mobile-menu-link" onClick={() => setMobileMenuOpen(false)}>
