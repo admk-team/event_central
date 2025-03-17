@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Organizer\Event;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\organizer\Event\EventSessionRequest;
+use App\Http\Requests\Organizer\Event\EventSessionRequest;
 use App\Models\EventPlatform;
 use App\Models\EventApp;
 use App\Models\EventAppDate;

@@ -7,8 +7,8 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UserRequest;
+use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
-use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
@@ -43,7 +43,7 @@ class UserController extends Controller
 
         $user = User::create($input);
 
-        $user->syncRoles([$role_id]);
+        $user->syncRoles(Role::whereIn('id', [$role_id])->get());
 
         return back()->withSuccess("Created");
     }
@@ -77,7 +77,7 @@ class UserController extends Controller
 
         $user->update($input);
 
-        $user->syncRoles([$role_id]);
+        $user->syncRoles(Role::whereIn('id', [$role_id])->get());
 
         return back()->withSuccess('Updated');
     }
