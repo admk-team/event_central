@@ -123,6 +123,11 @@ class EventApp extends Model
     {
         return $this->hasMany(Footer::class);
     }
+    public function tickets()
+    {
+        return $this->hasMany(EventAppTicket::class);
+    }
+
 
     public function getStartDateAttribute()
     {
@@ -145,12 +150,6 @@ class EventApp extends Model
         }
         return null;
     }
-
-    // //Mutator
-    // public function setIsRecurringAttribute($value)
-    // {
-    //     $this->attributes['is_recurring'] = (int) $value;
-    // }
 
     //     Registering Model Life Cycle Events
     protected static function booted()

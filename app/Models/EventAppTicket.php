@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class EventAppTicket extends Model
 {
@@ -23,7 +24,7 @@ class EventAppTicket extends Model
         'end_increment',
     ];
 
-    protected $appends = ['selected_sessions'];
+    protected $appends = ['selected_sessions', 'all_features'];
 
     public function scopeCurrentEvent($query)
     {
@@ -43,6 +44,13 @@ class EventAppTicket extends Model
     public function features()
     {
         return $this->belongsToMany(TicketFeature::class, 'feature_ticket');
+    }
+
+    public function getAllFeaturesAttribute()
+    {
+        return DB::select("select f.id, f.organizer_id, f.event_app_id, f.name,
+            selected.event_app_ticket_id as selected from ticket_features As f left join
+            feature_ticket As selected on f.id = selected.ticket_feature_id and selected.event_app_ticket_id = " . $this->id . " order by selected desc");
     }
 
     public function getSelectedSessionsAttribute()

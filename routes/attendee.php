@@ -43,6 +43,10 @@ Route::middleware(['auth:attendee'])->group(function () {
         //QR Routes
         Route::get('/qr-code/{eventApp}', [QrCodeController::class, 'getQrCode'])->name('attendee.qr-code.get');
         Route::post('/qr-code/{eventApp}', [QrCodeController::class, 'postQrCode'])->name('attendee.qr-code.post');
+
+
+        Route::get('{eventApp}/tickets', [EventController::class, 'tickets'])->name('attendee.tickets.get');
+        Route::get('{eventApp}/checkout', [EventController::class, 'checkout'])->name('attendee.checkout.get');
     });
 
     Route::put('/attendee-profile-update/{attendee}', [ProfileController::class, 'update'])->name('attendee.profile.update');

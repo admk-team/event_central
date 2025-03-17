@@ -9,6 +9,7 @@ use App\Models\EventSpeaker;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use PHPUnit\Framework\Attributes\Ticket;
 
 class EventController extends Controller
 {
@@ -75,5 +76,16 @@ class EventController extends Controller
     {
         $eventApp->load('organiser');
         return Inertia::render('Attendee/AttendeeMore', compact(['eventApp']));
+    }
+
+    public function tickets(EventApp $eventApp)
+    {
+        $eventApp->load(['tickets.sessions']);
+        return Inertia::render('Attendee/Tickets', compact(['eventApp']));
+    }
+
+    public function checkout(EventApp $eventApp)
+    {
+        return Inertia::render('Attendee/Checkout', compact(['eventApp']));
     }
 }

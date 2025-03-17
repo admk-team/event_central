@@ -112,10 +112,10 @@ const Navdata = () => {
             },
         },
         {
-            id: "qr-code",
-            label: "QR Code",
+            id: "tickets",
+            label: "Tickets",
             icon: "bx bx-qr",
-            link: route('attendee.qr-code.get', eventApp.id),
+            link: route('attendee.tickets.get', eventApp.id),
             stateVariables: isMore,
             click: function (e: any) {
                 e.preventDefault();
@@ -124,6 +124,32 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
+        {
+            id: "checkout",
+            label: "Checkout",
+            icon: "bx bx-qr",
+            link: route('attendee.checkout.get', eventApp.id),
+            stateVariables: isMore,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsMore(!isMore);
+                setIscurrentState('More');
+                updateIconSidebar(e);
+            },
+        },
+        // {
+        //     id: "qr-code",
+        //     label: "QR Code",
+        //     icon: "bx bx-qr",
+        //     link: route('attendee.qr-code.get', eventApp.id),
+        //     stateVariables: isMore,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIsMore(!isMore);
+        //         setIscurrentState('More');
+        //         updateIconSidebar(e);
+        //     },
+        // },
     ];
     return <React.Fragment>{menuItems}</React.Fragment>;
 };
