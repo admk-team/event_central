@@ -1,10 +1,25 @@
 import { Ellipsis, Plus, Text } from 'lucide-react'
 import { useState } from 'react'
 import { Button, Card, CardBody, CardFooter, CardHeader, CardTitle, Dropdown, DropdownToggle, ListGroup, ListGroupItem } from 'react-bootstrap'
-import FieldsModal from './FieldsModal';
+import FieldTypesModal from './FieldTypeSModal';
+import CreateEditFieldModal from './CreateEditFieldModal';
 
 export default function FormFields() {
     const [showFieldsModal, setShowFieldsModal] = useState(false);
+    const [selectedFieldType, setSelectedFieldType] = useState<string | null>(null);
+    const [showCreateEditFieldModal, _setShowCreateEditFieldModal] = useState(false);
+
+    const setShowCreateEditFieldModal = (state: boolean) => {
+        _setShowCreateEditFieldModal(state);
+        if (state === false) {
+            setSelectedFieldType(null);
+        }
+    }
+
+    const onFieldTypeSelect = (type: string) => {
+        setSelectedFieldType(type);
+        setShowCreateEditFieldModal(true);
+    }
 
     return (
         <>
@@ -14,7 +29,7 @@ export default function FormFields() {
                 </CardHeader>
                 <CardBody style={{maxHeight: '400px', overflowY: 'auto'}}>
                     <ListGroup className="mb-1">
-                        <ListGroupItem as="button" className="list-group-item-action d-flex align-items-center justify-content-between">
+                        <ListGroupItem className="list-group-item-action d-flex align-items-center justify-content-between cursor-pointer">
                             <div className="d-flex align-items-center gap-2">
                                 <Text size={18} />First Name
                             </div>
@@ -49,9 +64,16 @@ export default function FormFields() {
                 </CardFooter>
             </Card>
 
-            <FieldsModal
+            <FieldTypesModal
                 show={showFieldsModal}
                 onHide={() => setShowFieldsModal(false)}
+                onSelect={onFieldTypeSelect}
+            />
+
+            <CreateEditFieldModal
+                show={showCreateEditFieldModal}
+                onHide={() => setShowCreateEditFieldModal(false)}
+                fieldType={selectedFieldType}
             />
         </>
     )

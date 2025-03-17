@@ -1,6 +1,21 @@
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 
-export default function FieldsModal({ show, onHide }: { show: boolean, onHide: () => void }) {
+const fieldTypes = [
+    {
+        name: 'text',
+        label: 'Short Text',
+    },
+    {
+        name: 'long_text',
+        label: 'Long Text',
+    },
+]
+
+export default function FieldTypesModal({ show, onHide, onSelect }: { show: boolean, onHide: () => void, onSelect: (type: string) => void }) {
+    const _onSelect = (type: string) => {
+        onSelect(type);
+        onHide();
+    }
     return (
         <Modal show={show} onHide={onHide} centered>
             <Modal.Header className="bg-light p-3" closeButton>
@@ -9,11 +24,14 @@ export default function FieldsModal({ show, onHide }: { show: boolean, onHide: (
                 </h5>
             </Modal.Header>
                 <Modal.Body className="field-catalog">
-                    <Form.Select>
-                        <option value="">Select</option>
-                        <option value="text">Short Text</option>
-                        <option value="short_text">Long Text</option>
-                    </Form.Select>
+                    {fieldTypes.map(fieldType => (
+                        <Button
+                            key={fieldType.name}
+                            variant="light" 
+                            className="field fw-semibold"
+                            onClick={() => _onSelect(fieldType.name)}
+                        >{fieldType.label}</Button>
+                    ))}
                 </Modal.Body>
                 <div className="modal-footer">
                     <div className="hstack gap-2 justify-content-end">

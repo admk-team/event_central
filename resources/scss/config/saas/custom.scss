@@ -155,3 +155,14 @@ File: Custom Css File
 .form-fields .dropdown-toggle::after {
     display: none;
 }
+
+.field-catalog {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    grid-auto-rows: minmax(80px, auto);
+    gap: 10px;
+}
+
+.field-catalog .field {
+    
+}
