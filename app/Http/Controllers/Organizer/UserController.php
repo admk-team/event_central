@@ -44,7 +44,7 @@ class UserController extends Controller
 
         $user = User::create($input);
 
-        $user->syncRoles([$role_id]);
+        $user->syncRoles(Role::whereIn('id', [$role_id])->get());
 
         return back()->withSuccess("Created");
     }
@@ -78,7 +78,7 @@ class UserController extends Controller
 
         $user->update($input);
 
-        $user->syncRoles([$role_id]);
+        $user->syncRoles(Role::whereIn('id', [$role_id])->get());
 
         return back()->withSuccess('Updated');
     }
