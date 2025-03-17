@@ -138,7 +138,7 @@ const Navdata = () => {
             subItems: [
                 {
                     id: "newsfeed",
-                    label: "Newsfeed",
+                    label: "Posts",
                     link: route('organizer.events.engagement.newsfeed.index'),
                     parentId: "dashboard",
                 }

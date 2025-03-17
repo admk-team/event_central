@@ -5,13 +5,12 @@ import useeImage from "../../../../../../../images/users/avatar-1.jpg";
 import CreateEditModal from "./CreateEditModal";
 import PollModal from "./PollModal";
 
-function AddPost({ events }: any) {
+function AddPost({ events, editPostData }: any) {
     const [addNewsfeedModal, setAddNewsfeedModal] = useState(false);
     const [editPost, setEditPost] = React.useState<any>(null);
     const [restPoll, setRestPoll] = useState(false);
-    const isEdit = editPost != null ? true : false;
+    const isEdit = editPostData != null ? true : false;
     const [pollModalShow, setPollModalShow] = useState(false);
-
     function showModal() {
         setAddNewsfeedModal(!addNewsfeedModal);
     }
@@ -19,12 +18,12 @@ function AddPost({ events }: any) {
     const handleOpenModal = () => setAddNewsfeedModal(true);
 
     const { data, setData, post, put, processing, errors, reset } = useForm({
-        title: editPost?.title || "",
-        content: editPost?.content || "",
-        image: editPost?.img || null,
-        send_notification: editPost?.send_notitication || false,
-        sending_date: editPost?.sending_date || null,
-        sending_time: editPost?.sending_time || null,
+        title: editPostData?.title || "",
+        content: editPostData?.content || "",
+        image: editPostData?.img || null,
+        send_notification: editPostData?.send_notitication || false,
+        sending_date: editPostData?.sending_date || null,
+        sending_time: editPostData?.sending_time || null,
         post_poll: "",
     });
 
@@ -87,6 +86,13 @@ function AddPost({ events }: any) {
                             height={50}
                             className="border-0 fs-4"
                         />
+                        <Form.Control.Feedback
+                            type="invalid"
+                            className="d-block mt-2"
+                        >
+                            {" "}
+                            {errors.title}{" "}
+                        </Form.Control.Feedback>
                     </Col>
                 </Row>
                 <Row className="mt-2 align-items-center">
@@ -107,8 +113,8 @@ function AddPost({ events }: any) {
                                 handleClose={() => setPollModalShow(false)}
                                 formData={data}
                                 updateFormData={updateFormData}
-                                restPoll = {restPoll}
-                                setRestPoll = {setRestPoll}
+                                restPoll={restPoll}
+                                setRestPoll={setRestPoll}
                             />
                         </div>
                     </Col>

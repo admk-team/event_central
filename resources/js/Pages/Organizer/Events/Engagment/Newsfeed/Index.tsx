@@ -22,17 +22,20 @@ function Index({ newsfeeds, events, editfeeds }: any) {
     const [deleteNewsfeed, setDeleteNewsfeed] = React.useState<any>(null);
     const [deletePost, setDeletePost] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-    const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] =
-        useState(false);
+    const [showEditPost, setshowEditPost] =
+        useState([]);
 
     const deleteForm = useForm({
         _method: "DELETE",
     });
 
-
     const deleteAction = (event: any) => {
         setDeletePost(event);
         setShowDeleteConfirmation(true);
+    };
+
+    const editAction = (data: any) => {
+        setshowEditPost(data)
     };
 
     const handleDelete = () => {
@@ -76,10 +79,11 @@ function Index({ newsfeeds, events, editfeeds }: any) {
 
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Newsfeed" pageTitle="Dashboard" />
+                    <BreadCrumb title="Posts" pageTitle="Dashboard" />
                     <Row>
                         <Col lg={6} className="mx-auto">
-                            <AddPost events={events[0]} />
+                            <AddPost events={events[0]}
+                            editPostData={showEditPost} />
                         </Col>
                     </Row>
                 </Container>
@@ -93,8 +97,15 @@ function Index({ newsfeeds, events, editfeeds }: any) {
                                         className="mb-4 shadow-sm"
                                     >
                                         <Card.Header>
-                                            {/*  */}
                                             <div className="d-flex gap-2 justify-content-end">
+                                                {/* <span
+                                                    className="link-primary cursor-pointer"
+                                                    onClick={() =>
+                                                        editAction(post)
+                                                    }
+                                                >
+                                                    <i className="ri-edit-fill"></i>
+                                                </span> */}
                                                 <span
                                                     className="link-danger cursor-pointer"
                                                     onClick={() =>
@@ -125,22 +136,19 @@ function Index({ newsfeeds, events, editfeeds }: any) {
                                                             fontSize: "12px",
                                                         }}
                                                     >
-                                                        {
-                                                            newsfeeds[0]
-                                                                .sending_date
-                                                        }{" "}
-                                                        at{" "}
-                                                        {
-                                                            newsfeeds[0]
-                                                                .sending_time
-                                                        }
+                                                        {newsfeeds[0]
+                                                            ?.sending_date &&
+                                                        newsfeeds[0]
+                                                            ?.sending_time
+                                                            ? `${newsfeeds[0].sending_date} at ${newsfeeds[0].sending_time}`
+                                                            : ""}
                                                     </div>
                                                 </div>
                                             </div>
 
                                             {/* Post Title */}
                                             {post.title && (
-                                                <h5 className="fw-bold">
+                                                <h5 className="h5">
                                                     {post.title}
                                                 </h5>
                                             )}
@@ -167,7 +175,7 @@ function Index({ newsfeeds, events, editfeeds }: any) {
                                             {/* Post Poll (if available) */}
                                             {post.post_poll && (
                                                 <div className="border rounded p-3 bg-light">
-                                                    <label className="h4">
+                                                    <label className="h5">
                                                         {
                                                             JSON.parse(
                                                                 post.post_poll
