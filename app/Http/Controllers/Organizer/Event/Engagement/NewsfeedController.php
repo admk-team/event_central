@@ -48,6 +48,9 @@ class NewsfeedController extends Controller
 
     public function destroy(EventPost $post)
     {
+        if ($post->image) {
+            Storage::disk('public')->delete($post->image);
+        }
         $post->delete();
         return back()->withSuccess('Newsfeed deleted successfully');
     }
