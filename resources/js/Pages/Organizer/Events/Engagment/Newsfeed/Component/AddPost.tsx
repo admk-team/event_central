@@ -9,10 +9,14 @@ function AddPost({ events, editPostData }: any) {
     const [addNewsfeedModal, setAddNewsfeedModal] = useState(false);
     const [editPost, setEditPost] = React.useState<any>(null);
     const [restPoll, setRestPoll] = useState(false);
-    const isEdit = editPostData != null ? true : false;
+    let isEdit = false;
     const [pollModalShow, setPollModalShow] = useState(false);
     function showModal() {
         setAddNewsfeedModal(!addNewsfeedModal);
+    }
+
+    if (editPostData) {
+        isEdit = true;
     }
 
     const handleOpenModal = () => setAddNewsfeedModal(true);
@@ -26,7 +30,6 @@ function AddPost({ events, editPostData }: any) {
         sending_time: editPostData?.sending_time || null,
         post_poll: "",
     });
-
     const updateFormData = (key: string, value: string) => {
         setData((prevData) => ({
             ...prevData,
@@ -40,7 +43,7 @@ function AddPost({ events, editPostData }: any) {
             put(
                 route(
                     "organizer.events.engagement.newsfeed.update",
-                    editPost.id
+                    editPostData.id
                 ),
                 {
                     onSuccess: () => {
@@ -124,7 +127,7 @@ function AddPost({ events, editPostData }: any) {
                             className="rounded-pill"
                             onClick={submit}
                         >
-                            Add Post
+                            <span>{isEdit ? "Update Post" : "Add Post"}</span>
                         </Button>
                     </Col>
                 </Row>

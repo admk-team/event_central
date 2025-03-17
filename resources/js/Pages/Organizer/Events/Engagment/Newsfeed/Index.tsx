@@ -17,13 +17,12 @@ import AddPost from "./Component/AddPost";
 import { usePage } from "@inertiajs/react";
 import DeleteModal from "../../../../../Components/Common/DeleteModal";
 
-function Index({ newsfeeds, events, editfeeds }: any) {
-    console.log(editfeeds);
+function Index({ newsfeeds, events }: any) {
     const [deleteNewsfeed, setDeleteNewsfeed] = React.useState<any>(null);
     const [deletePost, setDeletePost] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showEditPost, setshowEditPost] =
-        useState([]);
+        useState(null);
 
     const deleteForm = useForm({
         _method: "DELETE",
@@ -83,7 +82,8 @@ function Index({ newsfeeds, events, editfeeds }: any) {
                     <Row>
                         <Col lg={6} className="mx-auto">
                             <AddPost events={events[0]}
-                            editPostData={showEditPost} />
+                            editPostData={showEditPost}
+                             />
                         </Col>
                     </Row>
                 </Container>
@@ -159,7 +159,7 @@ function Index({ newsfeeds, events, editfeeds }: any) {
                                                     <Image
                                                         src={`/storage/${post.image}`}
                                                         alt="Post Image"
-                                                        height="400"
+                                                        height="300"
                                                         style={{
                                                             width: "100%",
                                                         }}

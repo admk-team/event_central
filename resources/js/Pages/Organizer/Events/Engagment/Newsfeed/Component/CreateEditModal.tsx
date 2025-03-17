@@ -64,7 +64,7 @@ function CreateModal({
             <Modal.Body className="text-center p-4">
                 <form onSubmit={submit}>
                     <Row className="gy-3">
-                        <Col md={12}>
+                        {/* <Col md={12}>
                             <div className="">
                                 <Form.Label
                                     htmlFor="title"
@@ -90,7 +90,7 @@ function CreateModal({
                                     {errors.title}{" "}
                                 </Form.Control.Feedback>
                             </div>
-                        </Col>
+                        </Col> */}
                         <Col md={12}>
                             <div className="">
                                 <Form.Label
@@ -283,9 +283,9 @@ function CreateModal({
                         >
                             Close
                         </Button>
-                        <Button type="submit">
+                        {/* <Button type="submit">
                             <span>{isEdit ? "Update" : "Add Now"}</span>
-                        </Button>
+                        </Button> */}
                     </div>
                 </form>
             </Modal.Body>

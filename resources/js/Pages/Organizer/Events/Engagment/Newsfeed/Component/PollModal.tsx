@@ -18,7 +18,7 @@ const PollModal = ({
     const [options, setOptions] = useState([{ text: "", like: 0, dislike: 0 }]);
 
     useEffect(() => {
-        resetPoll(restPoll)
+        resetPoll(restPoll);
     }, [restPoll]);
 
     // Add a new option
@@ -32,6 +32,7 @@ const PollModal = ({
             i === index ? { ...option, text: value } : option
         );
         setOptions(newOptions);
+        handleSubmit();
     };
 
     const resetPoll = (restPoll: any) => {
@@ -49,7 +50,6 @@ const PollModal = ({
             options,
         };
         updateFormData("post_poll", JSON.stringify(Data));
-        handleClose();
     };
 
     return (
@@ -95,9 +95,9 @@ const PollModal = ({
                 <Button className="btn btn-light" onClick={handleClose}>
                     Cancel
                 </Button>
-                <Button variant="primary" onClick={handleSubmit}>
+                {/* <Button variant="primary" onClick={handleSubmit}>
                     Add Poll
-                </Button>
+                </Button> */}
             </Modal.Footer>
         </Modal>
     );
