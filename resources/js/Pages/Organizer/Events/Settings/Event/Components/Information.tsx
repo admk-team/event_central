@@ -1,7 +1,7 @@
 import { useForm, usePage } from '@inertiajs/react';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Button, Card, CardBody, CardHeader, CardText, CardTitle, Form, FormGroup, Spinner, Row, Col } from 'react-bootstrap';
+import { Button, Card, CardBody, CardHeader, CardText, CardTitle, Form, FormGroup, Spinner, Row, Col, InputGroup } from 'react-bootstrap';
 
 export default function Information() {
     const event = usePage().props.event as Record<string, string>;
@@ -58,9 +58,10 @@ export default function Information() {
 
         });
     }
-    // useEffect(() => {
 
-    // }, []);
+    const CopyLink = (link: string) => {
+        navigator.clipboard.writeText(link);
+    }
 
     return (
         <Form onSubmit={submit} className="tablelist-form">
@@ -171,7 +172,7 @@ export default function Information() {
                                 <Form.Check
                                     type='checkbox'
                                     checked={data.registration_private == 1}
-                                    label="Attendee will Registre privately"
+                                    label="Attendee will Register privately"
                                     id="select-all-features"
                                     onChange={handleCheckChangeRegistration}
                                 />
@@ -179,15 +180,20 @@ export default function Information() {
                         </Col>
                         {registrationPrivate && <>
                             <Col md={7} lg={7}>
-                                <Form.Control
-                                    type="text"
-                                    disabled
-                                    className="form-control"
-                                    value={data.registration_link}
-                                    onChange={(e) => setData('registration_link', e.target.value)}
-                                    isInvalid={!!errors.registration_link}
-                                />
-                                <Form.Control.Feedback type="invalid">{errors.registration_link}</Form.Control.Feedback>
+                                <InputGroup className="mb-3">
+                                    <Form.Control
+                                        type="text"
+                                        disabled
+                                        className="form-control"
+                                        value={data.registration_link}
+                                        onChange={(e) => setData('registration_link', e.target.value)}
+                                        isInvalid={!!errors.registration_link}
+                                    />
+                                    <Button variant="outline-secondary" id="button-copyLink" onClick={() => CopyLink(data.registration_link)}>
+                                        <i className='bx bx-copy'></i>
+                                    </Button>
+                                    <Form.Control.Feedback type="invalid">{errors.registration_link}</Form.Control.Feedback>
+                                </InputGroup>
                             </Col>
                             <Col md={2} lg={2}>
                                 <Button type="button" onClick={generateLink}>

@@ -17,8 +17,12 @@ Route::middleware('guest')->prefix('attendee')->group(function () {
     Route::post('{eventApp}/login', [AuthenticatedSessionController::class, 'store'])->name('attendee.login.store');
     Route::post('{eventApp}/logout', [AuthenticatedSessionController::class, 'destroy'])->name('attendee.logout');
 
-    Route::get('{eventApp}/register', [RegisteredUserController::class, 'create'])->name('attendee.register');
-    Route::post('{eventApp}/register', [RegisteredUserController::class, 'store'])->name('attendee.register.store');
+    Route::middleware('check_event_registration_method')->group(
+        function () {
+            Route::get('{eventApp}/register', [RegisteredUserController::class, 'create'])->name('attendee.register');
+            Route::post('{eventApp}/register', [RegisteredUserController::class, 'store'])->name('attendee.register.store');
+        }
+    );
 });
 
 // http://127.0.0.1:8000/google-login/callback

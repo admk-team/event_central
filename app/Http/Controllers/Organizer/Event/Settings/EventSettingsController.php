@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\EventApp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -29,7 +30,7 @@ class EventSettingsController extends Controller
         ]);
 
         $event = EventApp::find(session('event_id'));
-        Log::info($input);
+        // Log::info($input);
 
         eventSettings()->set('registration_private', $input['registration_private']);
         if ($input['registration_private'] == 1) {
@@ -67,7 +68,9 @@ class EventSettingsController extends Controller
 
     public function generateLink()
     {
-        $url = route('attendee.register', session('event_id')) . '/' . str()->random();
-        return response()->json(['link' => $url]);
+        // $url = route('attendee.register', session('event_id')) . '/' . str()->random();
+        // $url = URL::signedRoute('attendee.register', session('event_id'), absolute: false); Regisration URL without domain name
+
+        return response()->json(['link' => URL::signedRoute('attendee.register', session('event_id'))]);
     }
 }
