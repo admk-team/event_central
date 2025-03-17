@@ -10,8 +10,8 @@ use App\Http\Controllers\Attendee\ProfileController;
 use App\Http\Controllers\Attendee\QrCodeController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('attendee')->group(function () {
-    Route::get('{id}', [EventController::class, 'getEventDetail'])->name('attendee.event');
+Route::middleware('guest')->prefix('attendee')->group(function () {
+    // Route::get('{id}', [EventController::class, 'getEventDetail'])->name('attendee.event');
 
     Route::get('{eventApp}/login', [AuthenticatedSessionController::class, 'create'])->name('attendee.login');
     Route::post('{eventApp}/login', [AuthenticatedSessionController::class, 'store'])->name('attendee.login.store');
