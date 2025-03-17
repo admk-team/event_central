@@ -29,6 +29,8 @@ class DatabaseSeeder extends Seeder
             OrganizerRolesSeeder::class,
             OrganizerUsersSeeder::class,
 
+            // Platforms
+            PlatformSeeder::class,
         ]);
 
         // \App\Models\User::factory(10)->create();

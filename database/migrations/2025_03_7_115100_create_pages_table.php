@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('event_app_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->nullable()->default(null)->constrained()->onDelete('set null');
             $table->string('title');
-            $table->string('slug')->unique();
+            $table->string('slug');
             $table->longText('content');
             $table->string('meta_title')->nullable();
             $table->text('meta_description')->nullable();
@@ -28,6 +28,8 @@ return new class extends Migration
             $table->boolean('is_home_page')->default(false);
             $table->boolean('is_published')->default(false);
             $table->timestamps();
+
+            $table->unique(['event_app_id', 'slug']);
         });
     }
 

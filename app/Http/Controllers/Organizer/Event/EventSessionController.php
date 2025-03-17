@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Organizer\Event;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\organizer\Event\EventSessionRequest;
+use App\Http\Requests\Organizer\Event\EventSessionRequest;
 use App\Models\EventPlatform;
 use App\Models\EventApp;
 use App\Models\EventAppDate;
@@ -20,10 +20,10 @@ class EventSessionController extends Controller
         $eventSessions = EventSession::with(['eventDate', 'eventPlatform'])->currentEvent()->get();
         $speakers = EventSpeaker::currentEvent()->get();
         $platforms = PlatForm::all();
-        $event_platforms = EventPlatform::with('eventsessions.eventDate')->get();
+        $eventPlatforms = EventPlatform::where('event_app_id', session('event_id'))->get();
         $eventDates = EventAppDate::where('event_app_id', session('event_id'))->orderBy('date')->get();
 
-        return Inertia::render('Organizer/Events/Schedule/Index', compact('eventSessions', 'speakers', 'platforms', 'event_platforms', 'eventDates'));
+        return Inertia::render('Organizer/Events/Schedule/Index', compact('eventSessions', 'speakers', 'platforms', 'eventPlatforms', 'eventDates'));
     }
 
     public function store(EventSessionRequest $request)
