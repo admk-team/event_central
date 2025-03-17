@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-
+use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,7 +25,9 @@ use Illuminate\Support\Facades\Route;
 // });
 
 // Route::get("/apps-ecommerce-orders", [ProfileController::class, 'index'])->name('order-list');
-Route::redirect('/', 'login');
+Route::get('/', function () {
+    return Inertia::render('Home');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile-edit', [ProfileController::class, 'edit'])->name('profile.edit'); // To be removed in future
@@ -33,12 +35,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile-destroy', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
-require __DIR__.'/admin.php';
+require __DIR__ . '/admin.php';
 
-require __DIR__.'/organizer.php';
+require __DIR__ . '/organizer.php';
 
-require __DIR__.'/theme.php';
+require __DIR__ . '/theme.php';
 
 require __DIR__ . '/attendee.php';
