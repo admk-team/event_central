@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Organizer;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organizer\UserRequest;
+use App\Models\EventApp;
+use App\Models\EventPlatform;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -23,7 +25,9 @@ class UserController extends Controller
 
         $users = $this->datatable(User::ofOwner()->with('roles:name'));
         $roles = Role::ofOwner()->get();
-        return Inertia::render("Organizer/Users/Index", compact('users', 'roles'));
+        $eventPlatforms = EventPlatform::all();
+        $eventApps = EventApp::all();
+        return Inertia::render("Organizer/Users/Index", compact('users', 'roles', 'eventPlatforms', 'eventApps'));
     }
 
     /**
@@ -52,10 +56,7 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        
-    }
+    public function show(string $id) {}
 
     /**
      * Update the specified resource in storage.
@@ -102,11 +103,11 @@ class UserController extends Controller
     }
 
     public function destroyMany(Request $request)
-    {   
+    {
         if (! Auth::user()->can('delete_users')) {
             abort(403);
         }
-        
+
         $request->validate([
             'ids' => 'required|array'
         ]);

@@ -1,7 +1,7 @@
 import { useForm, usePage } from '@inertiajs/react';
 import { Form, FormGroup, Modal, Spinner } from "react-bootstrap";
 
-export default function CreateEditModal({ show, hide, onHide, user }: { show: boolean, hide: () => void, onHide: () => void, user: any|null }) {
+export default function CreateEditModal({ show, hide, onHide, user, eventPlatforms, eventApps }: { show: boolean, hide: () => void, onHide: () => void, user: any | null, eventPlatforms: any, eventApps: any }) {
     const isEdit = user != null ? true : false;
 
     const roles = (usePage().props.roles ?? []) as any[];
@@ -12,7 +12,11 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
         email: user?.email ?? '',
         password: '',
         role_id: user?.roles[0]?.id ?? '',
+        event_platform_id: user?.event_platform_id,
+        event_app_id: user?.event_app_id,
     });
+    console.log(user);
+
 
     const submit = (e: any) => {
         e.preventDefault();
@@ -51,7 +55,7 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                             type="text"
                             className="form-control"
                             value={data.name}
-                            onChange={(e) => setData({...data, name: e.target.value})}
+                            onChange={(e) => setData({ ...data, name: e.target.value })}
                             isInvalid={!!errors.name}
                         />
                         {errors.name && (
@@ -64,7 +68,7 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                             type="email"
                             className="form-control"
                             value={data.email}
-                            onChange={(e) => setData({...data, email: e.target.value})}
+                            onChange={(e) => setData({ ...data, email: e.target.value })}
                             isInvalid={!!errors.email}
                         />
                         {errors.email && (
@@ -77,7 +81,7 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                             type="password"
                             className="form-control"
                             value={data.password}
-                            onChange={(e) => setData({...data, password: e.target.value})}
+                            onChange={(e) => setData({ ...data, password: e.target.value })}
                             isInvalid={!!errors.password}
                         />
                         {errors.password && (
@@ -89,7 +93,7 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                         <Form.Select
                             className="form-control"
                             value={data.role_id}
-                            onChange={(e) => setData({...data, role_id: e.target.value})}
+                            onChange={(e) => setData({ ...data, role_id: e.target.value })}
                             isInvalid={!!errors.role_id}
                         >
                             <option>Select</option>
@@ -99,6 +103,40 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                         </Form.Select>
                         {errors.role_id && (
                             <Form.Control.Feedback type="invalid">{errors.role_id}</Form.Control.Feedback>
+                        )}
+                    </FormGroup>
+                    <FormGroup className="mb-3">
+                        <Form.Label className="form-label">Evnet Platform</Form.Label>
+                        <Form.Select
+                            className="form-control"
+                            value={data.event_platform_id}
+                            onChange={(e) => setData({ ...data, event_platform_id: e.target.value })}
+                            isInvalid={!!errors.event_platform_id}
+                        >
+                            <option>Select</option>
+                            {eventPlatforms?.map((platform: any) => (
+                                <option value={platform.id} key={platform.id}>{platform.name}</option>
+                            ))}
+                        </Form.Select>
+                        {errors.event_platform_id && (
+                            <Form.Control.Feedback type="invalid">{errors.event_platform_id}</Form.Control.Feedback>
+                        )}
+                    </FormGroup>
+                    <FormGroup className="mb-3">
+                        <Form.Label className="form-label">Evnet</Form.Label>
+                        <Form.Select
+                            className="form-control"
+                            value={data.event_app_id}
+                            onChange={(e) => setData({ ...data, event_app_id: e.target.value })}
+                            isInvalid={!!errors.event_app_id}
+                        >
+                            <option>Select</option>
+                            {eventApps?.map((platform: any) => (
+                                <option value={platform.id} key={platform.id}>{platform.name}</option>
+                            ))}
+                        </Form.Select>
+                        {errors.event_app_id && (
+                            <Form.Control.Feedback type="invalid">{errors.event_app_id}</Form.Control.Feedback>
                         )}
                     </FormGroup>
                 </Modal.Body>
@@ -113,7 +151,7 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                         </button>
 
                         <button type="submit" className="btn btn-success" disabled={processing}>
-                            {processing? (
+                            {processing ? (
                                 <span className="d-flex gap-1 align-items-center">
                                     <Spinner
                                         as="span"
@@ -122,10 +160,10 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                                         role="status"
                                         aria-hidden="true"
                                     />
-                                    {isEdit ? 'Updating': 'Creating'}
+                                    {isEdit ? 'Updating' : 'Creating'}
                                 </span>
                             ) : (
-                                <span>{isEdit ? 'Update': 'Create'}</span>
+                                <span>{isEdit ? 'Update' : 'Create'}</span>
                             )}
                         </button>
                     </div>

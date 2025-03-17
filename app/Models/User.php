@@ -30,6 +30,8 @@ class User extends Authenticatable
         'email',
         'password',
         "role",
+        'event_platform_id',
+        'event_app_id'
     ];
 
     /**
@@ -65,6 +67,16 @@ class User extends Authenticatable
         }
 
         return $this->id;
+    }
+
+    public function eventPlatform()
+    {
+        return $this->belongsTo(EventPlatform::class, 'event_platform_id');
+    }
+
+    public function eventApp()
+    {
+        return $this->belongsTo(EventApp::class, 'event_app_id');
     }
 
     /**

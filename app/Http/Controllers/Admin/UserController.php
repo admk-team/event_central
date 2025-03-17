@@ -7,6 +7,8 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UserRequest;
+use App\Models\EventApp;
+use App\Models\EventPlatform;
 use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 
@@ -23,7 +25,9 @@ class UserController extends Controller
 
         $users = $this->datatable(User::where('role', 'admin')->with('roles:name'));
         $roles = $roles = Role::where('panel', 'admin')->get();
-        return Inertia::render("Admin/Users/Index", compact('users', 'roles'));
+        $eventPlatforms = EventPlatform::all();
+        $eventApps = EventApp::all();
+        return Inertia::render("Admin/Users/Index", compact('users', 'roles', 'eventPlatforms', 'eventApps'));
     }
 
     /**
@@ -40,21 +44,16 @@ class UserController extends Controller
         unset($input['role_id']);
 
         $input['role'] = 'admin'; // User type
-
         $user = User::create($input);
 
         $user->syncRoles(Role::whereIn('id', [$role_id])->get());
-
         return back()->withSuccess("Created");
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        
-    }
+    public function show(string $id) {}
 
     /**
      * Update the specified resource in storage.
@@ -78,7 +77,6 @@ class UserController extends Controller
         $user->update($input);
 
         $user->syncRoles(Role::whereIn('id', [$role_id])->get());
-
         return back()->withSuccess('Updated');
     }
 
@@ -105,7 +103,7 @@ class UserController extends Controller
         if (! Auth::user()->can('delete_users')) {
             abort(403);
         }
-        
+
         $request->validate([
             'ids' => 'required|array'
         ]);

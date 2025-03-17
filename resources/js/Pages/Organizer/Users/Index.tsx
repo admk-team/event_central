@@ -9,12 +9,13 @@ import BreadCrumb2 from '../../../Components/Common/BreadCrumb2';
 import DeleteManyModal from '../../../Components/Common/DeleteManyModal';
 import HasPermission from '../../../Components/HasPermission';
 
-function Index({ users }: any) {
+function Index({ users, eventPlatforms, eventApps }: any) {
     const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
     const [editUser, setEditUser] = React.useState<any>(null);
     const [deleteUser, setDeleteUser] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
+    console.log(users);
 
     const setShowCreateEditModal = (state: boolean) => {
         _setShowCreateEditModal(state);
@@ -48,7 +49,7 @@ function Index({ users }: any) {
     }
 
     const deleteManyAction = (ids: number[]) => {
-        deleteManyForm.setData(data => ({...data, ids: ids}));
+        deleteManyForm.setData(data => ({ ...data, ids: ids }));
         setShowDeleteManyConfirmation(true);
     }
 
@@ -105,7 +106,7 @@ function Index({ users }: any) {
             <Head title='Users' />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb2 
+                    <BreadCrumb2
                         title="Users"
                     />
                     <Row>
@@ -145,6 +146,9 @@ function Index({ users }: any) {
                     hide={() => setShowCreateEditModal(false)}
                     onHide={() => setShowCreateEditModal(false)}
                     user={editUser}
+                    eventPlatforms={eventPlatforms}
+                    eventApps={eventApps}
+
                 />
             )}
 

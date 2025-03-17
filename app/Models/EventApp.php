@@ -120,6 +120,10 @@ class EventApp extends Model
     {
         return $this->hasMany(Footer::class);
     }
+    public function users()
+    {
+        return $this->hasMany(User::class, 'event_app_id');
+    }
 
     public function getStartDateAttribute()
     {

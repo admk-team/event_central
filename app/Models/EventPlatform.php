@@ -16,7 +16,12 @@ class EventPlatform extends Model
         $query->where('event_app_id', session('event_id'));
     }
 
-    public function eventsessions(){
-       return $this->hasMany(EventSession::class, 'event_platform_id','id');
+    public function eventsessions()
+    {
+        return $this->hasMany(EventSession::class, 'event_platform_id', 'id');
+    }
+    public function users()
+    {
+        return $this->hasMany(User::class, 'event_platform_id');
     }
 }
