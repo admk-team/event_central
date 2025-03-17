@@ -37,6 +37,10 @@ class Attendee extends Authenticatable
         'qr_code' => 'qr_code_img'
     ];
 
+    protected $hidden = [
+        'password'
+    ];
+
     public function scopeCurrentEvent($query)
     {
         $query->where('event_app_id', session('event_id'));
