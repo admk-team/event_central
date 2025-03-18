@@ -34,16 +34,20 @@ class NewsfeedController extends Controller
         return back()->withSuccess('Post created successfully');
     }
 
-    public function update(EventPostRequest $request, EventPost $post)
+    public function update(Request $request, EventPost $post)
     {
-        $data = $request->validated();
-        if ($data['image'] && $post->image) {
-            Storage::disk('public')->delete($post->image);
-            $name = uniqid() . '.' . $data['image']->getClientOriginalName();
-            $data['image'] = $data['image']->storeAs('posts/images', $name, 'public');
+        $data = $request->all();
+        if ($request->hasFile('image')) {
+            if ($post->image) {
+                Storage::disk('public')->delete($post->image);
+            }
+            $name = uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
+            $data['image'] = $request->file('image')->storeAs('posts/images', $name, 'public');
+        } else {
+            $data['image'] = $post->image;
         }
         $post->update($data);
-        return back();
+        return back()->with('success', 'Post updated successfully!');
     }
 
     public function destroy(EventPost $post)

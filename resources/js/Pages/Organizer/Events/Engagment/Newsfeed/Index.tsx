@@ -15,11 +15,13 @@ import Layout from "../../../../../Layouts/Event";
 import AddPost from "./Component/AddPost";
 import { usePage } from "@inertiajs/react";
 import DeleteModal from "../../../../../Components/Common/DeleteModal";
+import EditModal from "./Component/EditModal";
 
 function Index({ newsfeeds, events }: any) {
     const [deletePost, setDeletePost] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-    const [showEditPost, setshowEditPost] = useState(null);
+    const [showEditPost, setshowEditPost] = React.useState<any>(null);
+    const [showEditModal, setshowEditModal] = React.useState<any>(false);
 
     const deleteForm = useForm({
         _method: "DELETE",
@@ -32,6 +34,7 @@ function Index({ newsfeeds, events }: any) {
 
     const editAction = (data: any) => {
         setshowEditPost(data);
+        setshowEditModal(true);
     };
 
     const handleDelete = () => {
@@ -104,6 +107,14 @@ function Index({ newsfeeds, events }: any) {
                                                 >
                                                     <i className="ri-edit-fill"></i>
                                                 </span>
+                                                <EditModal
+                                                    show={showEditModal}
+                                                    onHide={() =>
+                                                        setshowEditModal(false)
+                                                    }
+                                                    editPost={showEditPost}
+                                                />
+
                                                 <span
                                                     className="link-danger cursor-pointer"
                                                     onClick={() =>
@@ -201,7 +212,7 @@ function Index({ newsfeeds, events }: any) {
 
                                                             return pollData.map(
                                                                 (
-                                                                    pollData:any,
+                                                                    pollData: any,
                                                                     index: number
                                                                 ) => {
                                                                     const likePercentage =

@@ -7,32 +7,23 @@ import {
     Form,
     FormGroup,
     Image,
-    Modal,
     Row,
 } from "react-bootstrap";
 import Flatpickr from "react-flatpickr";
 
-function AddPost({ events, editPostData }: any) {
+function AddPost({ events, editPost }: any) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [preview, setPreview] = useState<any>();
     const [schedulePost, setSchedulePost] = useState<any>(false);
     const [options, setOptions] = useState([{ text: "", like: 0, dislike: 0 }]);
     const [pollData, setPollData] = useState(false);
-    let isEdit = false;
-
-    if (editPostData) {
-        console.log(editPostData);
-        setOptions(JSON.parse(editPostData.post_poll));
-        isEdit = true;
-    }
-
     const { data, setData, post, put, processing, errors, reset } = useForm({
-        title: editPostData?.title || "",
-        content: editPostData?.content || "",
-        image: editPostData?.img || null,
-        send_notification: editPostData?.send_notitication || false,
-        sending_date: editPostData?.sending_date || null,
-        sending_time: editPostData?.sending_time || null,
+        title: "",
+        content: "",
+        image: editPost?.image || null,
+        send_notification: false,
+        sending_date: null,
+        sending_time: null,
         post_poll: "",
     });
 
@@ -45,26 +36,13 @@ function AddPost({ events, editPostData }: any) {
 
     const submit = (e: any) => {
         e.preventDefault();
-        if (isEdit) {
-            put(
-                route(
-                    "organizer.events.engagement.newsfeed.update",
-                    editPostData.id
-                ),
-                {
-                    onSuccess: () => {
-                        reset();
-                    },
-                }
-            );
-        } else {
-            post(route("organizer.events.engagement.newsfeed.store", data), {
-                onSuccess: () => {
-                    reset();
-                    Clearfields();
-                },
-            });
-        }
+        console.log(data);
+        post(route("organizer.events.engagement.newsfeed.store", data), {
+            onSuccess: () => {
+                reset();
+                Clearfields();
+            },
+        });
     };
 
     const Clearfields = () => {
@@ -398,15 +376,11 @@ function AddPost({ events, editPostData }: any) {
                                 </Col>
                                 <Col xs="auto">
                                     <Button
+                                        type="submit"
                                         variant="primary"
                                         className="rounded-pill"
-                                        onClick={submit}
                                     >
-                                        <span>
-                                            {isEdit
-                                                ? "Update Post"
-                                                : "Add Post"}
-                                        </span>
+                                        <span>Add Post</span>
                                     </Button>
                                 </Col>
                             </Row>
