@@ -21,6 +21,7 @@ use App\Http\Controllers\Organizer\Event\EventAppTicketController;
 use App\Http\Controllers\Organizer\Event\EventDateController;
 use App\Http\Controllers\Organizer\Event\EventPromoCodeController;
 use App\Http\Controllers\Organizer\Event\ScheduleController;
+use App\Http\Controllers\Organizer\Event\Settings\RegistrationFormSettingsController;
 use App\Http\Controllers\Organizer\Event\Settings\WebsiteSettingsController;
 use App\Http\Controllers\Organizer\Event\WebsiteController;
 use App\Http\Controllers\Organizer\Event\WorkshopController;
@@ -122,11 +123,19 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                     Route::delete('/', [EventSettingsController::class, 'destroyEvent'])->name('destroy');
                     Route::put('info', [EventSettingsController::class, 'updateInfo'])->name('info');
                 });
+
                 // Payment
                 Route::prefix('payment')->name('payment.')->group(function () {
                     Route::get('/', [EventAppPaymentController::class, 'index'])->name('index');
                     Route::put('update', [EventAppPaymentController::class, 'update'])->name('update');
                 });
+
+                // Registration Form
+                Route::prefix('registration-form')->name('registration-form.')->group(function () {
+                    Route::get('/', [RegistrationFormSettingsController::class, 'index'])->name('index');
+                    Route::post('/toggle-status', [RegistrationFormSettingsController::class, 'toggleStatus'])->name('toggle-status');
+                });
+                
                 // Website
                 Route::prefix('website')->name('website.')->group(function () {
                     Route::get('/', [WebsiteSettingsController::class, 'index'])->name('index');
