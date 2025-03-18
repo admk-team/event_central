@@ -6,6 +6,7 @@ use App\Http\Controllers\Attendee\Auth\PasswordController;
 use App\Http\Controllers\Attendee\Auth\RegisteredUserController;
 use App\Http\Controllers\Attendee\EventController;
 use App\Http\Controllers\Attendee\EventSessionController;
+use App\Http\Controllers\Attendee\PaymentController;
 use App\Http\Controllers\Attendee\ProfileController;
 use App\Http\Controllers\Attendee\QrCodeController;
 use Illuminate\Support\Facades\Route;
@@ -44,9 +45,15 @@ Route::middleware(['auth:attendee'])->group(function () {
         Route::get('/qr-code/{eventApp}', [QrCodeController::class, 'getQrCode'])->name('attendee.qr-code.get');
         Route::post('/qr-code/{eventApp}', [QrCodeController::class, 'postQrCode'])->name('attendee.qr-code.post');
 
+        //Payment Processing
+        Route::get('{eventApp}/tickets', [PaymentController::class, 'ticketsPage'])->name('attendee.tickets.get');
+        Route::post('{eventApp}/tickets', [PaymentController::class, 'postTickets'])->name('attendee.tickets.post');
 
-        Route::get('{eventApp}/tickets', [EventController::class, 'tickets'])->name('attendee.tickets.get');
-        Route::get('{eventApp}/checkout', [EventController::class, 'checkout'])->name('attendee.checkout.get');
+        Route::post('{eventApp}/checkout', [PaymentController::class, 'checkoutPage'])->name('attendee.checkout.post');
+
+        Route::post('validate-discount-code/{ticketId}/{code}', [PaymentController::class, 'validateDiscCode'])->name('attendee.validateCode.post');
+
+        Route::post('/create-checkout-session', [PaymentController::class, 'createCheckoutSession'])->name('attendee.payment.session');
     });
 
     Route::put('/attendee-profile-update/{attendee}', [ProfileController::class, 'update'])->name('attendee.profile.update');

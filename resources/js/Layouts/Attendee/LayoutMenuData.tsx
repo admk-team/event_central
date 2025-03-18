@@ -124,19 +124,19 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
-        {
-            id: "checkout",
-            label: "Checkout",
-            icon: "bx bx-qr",
-            link: route('attendee.checkout.get', eventApp.id),
-            stateVariables: isMore,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsMore(!isMore);
-                setIscurrentState('More');
-                updateIconSidebar(e);
-            },
-        },
+        // {
+        //     id: "checkout",
+        //     label: "Checkout",
+        //     icon: "bx bx-qr",
+        //     link: route('attendee.checkout.get', eventApp.id),
+        //     stateVariables: isMore,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIsMore(!isMore);
+        //         setIscurrentState('More');
+        //         updateIconSidebar(e);
+        //     },
+        // },
         // {
         //     id: "qr-code",
         //     label: "QR Code",
