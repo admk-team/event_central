@@ -23,7 +23,7 @@ class RegistrationFormSettingsController extends Controller
         }
 
         return Inertia::render("Organizer/Events/Settings/RegistrationForm/Index", [
-            'form' => $currentEvent->form,
+            'form' => $currentEvent->form()->with('fields')->first(),
         ]);
     }
 

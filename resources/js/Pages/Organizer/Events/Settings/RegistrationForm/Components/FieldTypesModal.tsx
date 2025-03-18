@@ -20,7 +20,9 @@ export default function FieldTypesModal({ show, onHide, onSelect }: { show: bool
                             variant="light" 
                             className="field fw-semibold"
                             onClick={() => _onSelect(fieldType)}
-                        >{fieldType.label}</Button>
+                        >
+                            {<fieldType.icon />} {fieldType.label}
+                        </Button>
                     ))}
                 </Modal.Body>
                 <div className="modal-footer">

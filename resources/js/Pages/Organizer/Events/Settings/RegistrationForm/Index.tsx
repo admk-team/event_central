@@ -8,8 +8,6 @@ import FormFields from './Components/FormFields';
 
 
 function Index({ form }: any) {
-  console.log(form);
-
   return (
     <React.Fragment>
       <Head title='Registration Form Settings' />

@@ -20,6 +20,7 @@ use App\Http\Controllers\Organizer\Event\PartnerController;
 use App\Http\Controllers\Organizer\Event\EventAppTicketController;
 use App\Http\Controllers\Organizer\Event\EventDateController;
 use App\Http\Controllers\Organizer\Event\EventPromoCodeController;
+use App\Http\Controllers\Organizer\Event\FormFieldController;
 use App\Http\Controllers\Organizer\Event\ScheduleController;
 use App\Http\Controllers\Organizer\Event\Settings\RegistrationFormSettingsController;
 use App\Http\Controllers\Organizer\Event\Settings\WebsiteSettingsController;
@@ -115,6 +116,9 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::get('footers/{footer}/builder', [FooterController::class, 'builder'])->name('footers.builder');
             Route::post('footers/{footer}/builder', [FooterController::class, 'builderSave'])->name('footers.builder.save');
 
+            // Form Fields
+            Route::resource('form-fields', FormFieldController::class)->only(['store', 'update', 'destroy']);
+
             // Settings
             Route::prefix('settings')->name('settings.')->group(function () {
                 // Event
@@ -134,6 +138,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                 Route::prefix('registration-form')->name('registration-form.')->group(function () {
                     Route::get('/', [RegistrationFormSettingsController::class, 'index'])->name('index');
                     Route::post('/toggle-status', [RegistrationFormSettingsController::class, 'toggleStatus'])->name('toggle-status');
+                    Route::post('/website', [RegistrationFormSettingsController::class, 'toggleStatus'])->name('toggle-status');
                 });
                 
                 // Website
