@@ -96,14 +96,14 @@ function Index({ eventcategory }: any) {
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb2
-                        title="event-category"
+                        title="Event Categories"
                     />
                     <Row>
                         <Col xs={12}>
                             <DataTable
                                 data={eventcategory}
                                 columns={columns}
-                                title="Event Category"
+                                title="Event Categories"
                                 actions={[
                                     // Delete multiple
                                     {
