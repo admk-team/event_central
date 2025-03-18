@@ -7,6 +7,7 @@ const Navdata = () => {
     const [isUserManagement, setIsUserManagement] = useState<boolean>(false);
     const [isOrganizers, setIsOrganizers] = useState<boolean>(false);
     const [isPlatforms, setIsPlatforms] = useState<boolean>(false);
+    const [isEventCategory, setIsEventCategory] = useState<boolean>(false);
 
 
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
@@ -40,13 +41,17 @@ const Navdata = () => {
         if (iscurrentState !== 'Platforms') {
             setIsPlatforms(false);
         }
+        if (iscurrentState !== 'Event Category') {
+            setIsEventCategory(false);
+        }
     }, [
         history,
         iscurrentState,
         isDashboard,
         isUserManagement,
         isOrganizers,
-        isPlatforms
+        isPlatforms,
+        isEventCategory
     ]);
 
     const menuItems: any = [
@@ -122,13 +127,26 @@ const Navdata = () => {
         {
             id: "plateforms",
             label: "Plateforms",
-            icon: "ri-group-fill",
+            icon: "bx bx-devices",
             link: route('admin.platforms.index'),
             stateVariables: isOrganizers,
             click: function (e: any) {
                 e.preventDefault();
                 setIsPlatforms(!isPlatforms);
-                setIscurrentState('Plateforms');
+                setIscurrentState('Platforms');
+                updateIconSidebar(e);
+            }
+        },
+        {
+            id: "eventcategory",
+            label: "Event Categories",
+            icon: "bx bx-category-alt",
+            link: route('admin.event-category.index'),
+            stateVariables: isOrganizers,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsEventCategory(!isEventCategory);
+                setIscurrentState('Event Category');
                 updateIconSidebar(e);
             }
         },

@@ -88,7 +88,9 @@ function Index({ events, recurring_types, event_category_types }: any) {
         {
             accessorKey: 'description',
             header: () => 'Description',
-            cell: (event) => event.description,
+            cell: (event) => <div style={{ maxWidth: '250px', overflow: 'auto' }}>
+                <p style={{ textWrap: 'pretty', textAlign: 'justify' }}>{event.description}</p>
+            </div >,
             enableSorting: false
         },
         {
@@ -135,7 +137,7 @@ function Index({ events, recurring_types, event_category_types }: any) {
 
     useEffect(() => {
         setImageHash(Date.now());
-        console.log('changing hash');
+        // console.log('changing hash');
     }, [showCreateEditModal]);
 
     return (
@@ -147,8 +149,9 @@ function Index({ events, recurring_types, event_category_types }: any) {
                         title="Events"
                     />
                     <Row>
-                        <Col xs={12}>
+                        <Col xs={12} id="eventsTableWrapper">
                             <DataTable
+
                                 data={events}
                                 columns={columns}
                                 title="Events"

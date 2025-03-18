@@ -6,12 +6,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
-
-
+use Laravel\Sanctum\HasApiTokens;
 
 class Attendee extends Authenticatable
 {
-    use HasFactory;
+    use HasFactory, HasApiTokens;
 
     protected $fillable = [
         'email',
@@ -36,6 +35,10 @@ class Attendee extends Authenticatable
     protected $appends = [
         'avatar' => 'avatar_img',
         'qr_code' => 'qr_code_img'
+    ];
+
+    protected $hidden = [
+        'password'
     ];
 
     public function scopeCurrentEvent($query)

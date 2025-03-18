@@ -28,6 +28,10 @@ class UpdatePageRequest extends FormRequest
                 'required',
                 Rule::unique('pages')->ignore($this->page->id),
             ],
+            'default_header' => 'boolean',
+            'header_id' => 'nullable',
+            'default_footer' => 'boolean',
+            'footer_id' => 'nullable',
         ];
     }
 }

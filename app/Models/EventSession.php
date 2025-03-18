@@ -14,12 +14,13 @@ class EventSession extends Model
     protected $fillable = [
         'name',
         'event_speaker_id',
+        'event_date_id',
         'event_platform_id',
         'type',
         'description',
         'capacity',
-        'start_date',
-        'end_date',
+        'start_time',
+        'end_time',
         'event_app_id',
     ];
 
@@ -33,7 +34,7 @@ class EventSession extends Model
         return $this->belongsTo(EventSpeaker::class);
     }
 
-    public function event_platform()
+    public function eventPlatform()
     {
         return $this->belongsTo(EventPlatform::class, 'event_platform_id', 'id');
     }
@@ -41,6 +42,9 @@ class EventSession extends Model
     public function attendees(): BelongsToMany
     {
         return $this->belongsToMany(Attendee::class, 'attendee_event_session')->withPivot('rating', 'rating_description')->withTimestamps();
+    }
+    public function eventDate(){
+        return $this->belongsTo(EventAppDate::class,'event_date_id');
     }
 
     public function getSelectedByAttendeeAttribute()

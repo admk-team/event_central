@@ -24,6 +24,10 @@ class StorePageRequest extends FormRequest
         return [
             'title' => 'required',
             'slug' => 'required|unique:pages',
+            'default_header' => 'boolean',
+            'header_id' => 'nullable',
+            'default_footer' => 'boolean',
+            'footer_id' => 'nullable',
         ];
     }
 }

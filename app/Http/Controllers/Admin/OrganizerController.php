@@ -46,7 +46,11 @@ class OrganizerController extends Controller
 
         $input['role'] = 'organizer';
 
-        User::create($input);
+        $organizer = User::create($input);
+        if ($organizer) {
+            setPermissionsTeamId($organizer->owner_id);
+            $organizer->syncRoles(['owner']);
+        }
 
         return back()->withSuccess('Created');
     }
@@ -75,25 +79,37 @@ class OrganizerController extends Controller
         if (! Auth::user()->can('edit_organizers')) {
             abort(403);
         }
-
+    
         $input = $request->validated();
-
+    
+        // Handle password update logic correctly
+        if ($request->filled('password')) { // Check if password field is provided
+            $input['password'] = $request->password; // Hash new password
+        } else {
+            unset($input['password']); // Remove password field if not updated
+        }
+    
         $organizer->update($input);
-
+    
+        // Assign role logic
+        if ($organizer && !$organizer->hasRole('owner')) {
+            setPermissionsTeamId($organizer->owner_id);
+            $organizer->syncRoles(['owner']);
+        }
+    
         return back()->withSuccess('Updated');
     }
+    
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy($id)
     {
         if (! Auth::user()->can('delete_organizers')) {
             abort(403);
         }
-
-        $user->delete();
-
+        User::find($id)?->delete();
         return back()->withSuccess('Deleted');
     }
 

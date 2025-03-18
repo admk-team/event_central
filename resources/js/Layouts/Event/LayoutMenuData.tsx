@@ -83,37 +83,43 @@ const Navdata = () => {
                     id: "schedule",
                     label: "Schedule",
                     link: route('organizer.events.schedule.index'),
-                    parentId: "dashboard",
+                    parentId: "Content",
                 },
                 {
                     id: "speakers",
                     label: "Speakers",
                     link: route('organizer.events.speaker.index'),
-                    parentId: "dashboard",
+                    parentId: "Content",
                 },
                 {
                     id: "workShops",
                     label: "WorkShops",
                     link: route('organizer.events.workshop.index'),
-                    parentId: "dashboard",
+                    parentId: "Content",
                 },
                 {
                     id: "custom_menu",
                     label: "Custom menu",
                     link: route('organizer.events.custom-menu.index'),
-                    parentId: "dashboard",
+                    parentId: "Content",
                 },
                 {
                     id: "partners",
                     label: "Partners",
                     link: route('organizer.events.partner.index'),
-                    parentId: "dashboard",
+                    parentId: "Content",
                 },
                 {
                     id: "tickets",
                     label: "Tickets",
                     link: route('organizer.events.tickets.index'),
-                    parentId: "dashboard",
+                    parentId: "Content",
+                },
+                {
+                    id: "promo-codes",
+                    label: "Promo Codes",
+                    link: route('organizer.events.promo-codes.index'),
+                    parentId: "Content",
                 },
             ]
         },
@@ -132,7 +138,7 @@ const Navdata = () => {
             subItems: [
                 {
                     id: "newsfeed",
-                    label: "Newsfeed",
+                    label: "Posts",
                     link: route('organizer.events.engagement.newsfeed.index'),
                     parentId: "dashboard",
                 }

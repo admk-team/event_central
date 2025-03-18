@@ -6,6 +6,9 @@ import logoLight from '../../../../images/logo-light.png';
 
 export default function Register() {
     const eventApp: any = usePage().props.eventApp;
+
+    // console.log(eventApp);
+
     const { data, setData, post, processing, errors, reset } = useForm({
         first_name: '',
         last_name: '',
@@ -68,7 +71,7 @@ export default function Register() {
                                     required
                                 />
 
-                                <Form.Control.Feedback type="invalid" className='mt-2 d-block'>{errors.email}</Form.Control.Feedback>
+                                <Form.Control.Feedback type="invalid" className='mt-2 d-block'>{errors.last_name}</Form.Control.Feedback>
 
                             </Col>
                         </Row>

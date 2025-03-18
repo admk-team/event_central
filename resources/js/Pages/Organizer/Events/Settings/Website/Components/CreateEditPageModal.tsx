@@ -4,10 +4,18 @@ import { Form, FormGroup, Modal, Spinner } from "react-bootstrap";
 export default function CreateEditPageModal({ show, hide, onHide, page }: { show: boolean, hide: () => void, onHide: () => void, page: any | null }) {
   const isEdit = page != null ? true : false;
 
+  const headers = usePage()?.props?.headers as any;
+  const footers = usePage()?.props?.footers as any;
+
+
   const { data, setData, post, processing, errors, reset } = useForm({
     _method: isEdit ? "PUT" : "POST",
     title: page?.title ?? '',
     slug: page?.slug ?? '',
+    default_header: page?.default_header ?? true,
+    header_id: page?.header_id ?? '',
+    default_footer: page?.default_footer ?? true,
+    footer_id: page?.footer_id ?? '',
   });
 
   const submit = (e: any) => {
@@ -66,6 +74,58 @@ export default function CreateEditPageModal({ show, hide, onHide, page }: { show
             {errors.slug && (
               <Form.Control.Feedback type="invalid">{errors.slug}</Form.Control.Feedback>
             )}
+          </FormGroup>
+          <FormGroup className="mb-3">
+            <Form.Label className="form-label d-flex justify-content-between align-items-center">
+              <div>Header</div>
+              <div className="form-check form-switch mb-0">
+                <Form.Check.Input
+                  className="form-check-input" 
+                  type="checkbox" 
+                  role="switch" 
+                  id="defaultHeaderSwitch" 
+                  checked={data.default_header}
+                  onChange={(e) => setData((prev) => ({...prev, default_header: e.target.checked}))}
+                />
+                <Form.Check.Label className="form-check-label" htmlFor="defaultHeaderSwitch">Use default</Form.Check.Label>
+              </div>
+            </Form.Label>
+            <Form.Select 
+              value={data.header_id}
+              onChange={(e) => setData((prev) => ({...prev, header_id: e.target.value}))}
+              disabled={data.default_header}
+            >
+              <option value="">Select</option>
+              {headers.data.map((header: any) => (
+                <option value={header.id}>{header.title}</option>
+              ))}
+            </Form.Select>
+          </FormGroup>
+          <FormGroup className="mb-3">
+            <Form.Label className="form-label d-flex justify-content-between align-items-center">
+              <div>Footer</div>
+              <div className="form-check form-switch mb-0">
+                <Form.Check.Input
+                  className="form-check-input" 
+                  type="checkbox" 
+                  role="switch" 
+                  id="defaultFooterSwitch" 
+                  checked={data.default_footer}
+                  onChange={(e) => setData((prev) => ({...prev, default_footer: e.target.checked}))}
+                />
+                <Form.Check.Label className="form-check-label" htmlFor="defaultFooterSwitch">Use default</Form.Check.Label>
+              </div>
+            </Form.Label>
+            <Form.Select 
+              value={data.footer_id}
+              onChange={(e) => setData((prev) => ({...prev, footer_id: e.target.value}))}
+              disabled={data.default_footer}
+            >
+              <option value="">Select</option>
+              {footers.data.map((footer: any) => (
+                <option key={footer.id} value={footer.id}>{footer.title}</option>
+              ))}
+            </Form.Select>
           </FormGroup>
         </Modal.Body>
         <div className="modal-footer">

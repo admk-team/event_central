@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Organizer\Event\EventAppTicketRequest;
 use App\Models\EventAppTicket;
 use App\Models\EventSession;
+use App\Models\TicketFeature;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
@@ -19,12 +20,11 @@ class EventAppTicketController extends Controller
      */
     public function index()
     {
-        // Passes are related to Event Session, Modifications will be required to link Passes with selected sessions
         $tickets = $this->datatable(EventAppTicket::currentEvent()->with(['event', 'sessions']));
         $speakers = null;
         $sessions = EventSession::currentEvent()->select(['id as value', 'name as label'])->get();
-        // return $event_sessions;
-        return Inertia::render('Organizer/Events/Tickets/Index', compact('tickets', 'sessions'));
+
+        return Inertia::render('Organizer/Events/Tickets/Index', compact(['tickets', 'sessions']));
     }
     /**
      * Store a newly created resource in storage.
@@ -37,7 +37,10 @@ class EventAppTicketController extends Controller
 
         // Log::info($data['sessions']);
         $ticket = EventAppTicket::create($data);
+
         $ticket->sessions()->sync($data['sessions']);
+        $ticket->features()->sync($data['features']);
+
         return back()->withSuccess('Ticket created successfully');
     }
 
@@ -51,6 +54,7 @@ class EventAppTicketController extends Controller
         $ticket->update($data);
 
         $ticket->sessions()->sync($data['sessions']);
+        $ticket->features()->sync($data['features']);
 
         return back()->withSuccess('Ticket Updated successfully');
     }
@@ -61,7 +65,7 @@ class EventAppTicketController extends Controller
     public function destroy(EventAppTicket $ticket)
     {
         $ticket->delete();
-        return back();
+        return back()->withSuccess('Ticket Removed Successfully');
     }
 
     public function destroyMany(Request $request)

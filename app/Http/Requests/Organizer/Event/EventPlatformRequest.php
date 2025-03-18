@@ -23,8 +23,16 @@ class EventPlatformRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name'=>'required|string',
-            'type'=>'nullable|string',
+            'name' => 'required|string',
+            'type' => 'required|string',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'name' => 'required|string',
+            'type.required' => 'Platform is required',
         ];
     }
 }

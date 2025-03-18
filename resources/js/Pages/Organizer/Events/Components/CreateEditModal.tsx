@@ -3,7 +3,6 @@ import React, { useCallback, useRef, useState } from 'react'
 import Flatpickr from "react-flatpickr";
 import { Button, Col, Form, FormGroup, Modal, Nav, Row, Tab } from 'react-bootstrap';
 import { GoogleMap, LoadScript, Marker, InfoWindow, Autocomplete } from '@react-google-maps/api';
-import { boolean } from 'yup';
 
 
 const containerStyle = {
@@ -23,8 +22,9 @@ const fourth = { lat: 19.0760, lng: 72.8777 }
 
 function CreateEditModal({ show, hide, onHide, event, recurring_types, event_category_types }: { show: boolean, hide: () => void, onHide: () => void, event: any | null, recurring_types: any, event_category_types: any }) {
 
-    const [imageHash, setImageHash] = useState(Date.now());   //Causing image to be reloaded
+    const [imageHash, setImageHash] = useState(Date.now());   //Causing image to be reloaded (overriding cache)
     const [showRecurringOptions, setShowRecurringOptions] = useState(event?.is_recurring ?? false);
+    const [imagePreview, setImagePreview] = useState(event ? (event.logo_img + '?' + imageHash) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s');
 
     // console.log(event);
 
@@ -41,7 +41,7 @@ function CreateEditModal({ show, hide, onHide, event, recurring_types, event_cat
         type: 'in-person',
         is_recurring: event?.is_recurring ?? false,
         schedual_type: event?.schedual_type ?? 'singleday',
-        logo_file: '',      //To be use for new file
+        logo_file: null,      //To be use for new file
     });
 
 
@@ -60,22 +60,42 @@ function CreateEditModal({ show, hide, onHide, event, recurring_types, event_cat
         } else {
             post(route('organizer.events.update', event.id), afterSumbitAction);
         }
-        console.log('form data ', data);
+        // console.log('form data ', data);
         console.log('error data ', errors);
         // hide();
     }
 
     const handleLogoFileChange = (event: any) => {
-        setData('logo_file', event.target.files[0]);
+        let file = event.target.files[0];
+        setData('logo_file', file);
+        updateImagePreview(file);
         setImageHash(Date.now());
     }
 
+    const updateImagePreview = (file: any) => {
+        const reader = new FileReader();
+
+        reader.addEventListener(
+            "load",
+            () => {
+                setImagePreview(reader.result);
+            },
+            false,
+        );
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
+
     const handleCheckChange = (e: any) => {
-        // console.log(e);
-        // console.log(e.target.checked);
         setData('is_recurring', e.target.checked);
         setShowRecurringOptions(e.target.checked);
     }
+
+
+
+    // ----------- Google Maps ------------------------
 
     const selectedPlace: any = {}
     const [selected, setSelected] = useState<any>(null);
@@ -84,7 +104,6 @@ function CreateEditModal({ show, hide, onHide, event, recurring_types, event_cat
         setSelected(marker);
     };
 
-    // Your form errors
     const [mapCenter, setMapCenter] = useState({ lat: 37.7749, lng: -122.4194 }); // Default center (San Francisco)
     const [selectedLocation, setSelectedLocation] = useState(null);
 
@@ -132,7 +151,7 @@ function CreateEditModal({ show, hide, onHide, event, recurring_types, event_cat
             <Modal.Body className="p-4">
 
                 <div className='d-flex justify-content-center'>
-                    <img src={(event?.logo_img ?? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s' + "?" + imageHash)} alt="Event Model Logo" style={{ borderRadius: '50%', height: '150px' }} />
+                    <img src={imagePreview} alt="Event Model Logo" style={{ borderRadius: '50%', height: '150px' }} />
                 </div>
 
                 <form onSubmit={submit}>
@@ -143,7 +162,10 @@ function CreateEditModal({ show, hide, onHide, event, recurring_types, event_cat
                             name='logo_file'
                             placeholder="Choose File For Event Logo"
                             onChange={handleLogoFileChange}
+                            isInvalid={!!errors.logo_file}
+                            accept="image/*"
                         />
+                        <Form.Control.Feedback type="invalid"> {errors.logo_file} </Form.Control.Feedback>
                     </Form.Group>
                     <FormGroup className="mb-3">
                         <Form.Label htmlFor="event_app_category_id" className="form-label text-start w-100">Event Category</Form.Label>
@@ -205,19 +227,6 @@ function CreateEditModal({ show, hide, onHide, event, recurring_types, event_cat
                         <Form.Control.Feedback type="invalid"> {errors.description} </Form.Control.Feedback>
                     </FormGroup>
                     <FormGroup className="mb-3">
-                        <Form.Label htmlFor="location-type" className="form-label text-start w-100">Location Type</Form.Label>
-                        <Form.Control
-                            type="text"
-                            className="form-control"
-                            id="location-type"
-                            isInvalid={!!errors.location_type}
-                            placeholder="Enter location type"
-                            value={data.location_type}
-                            onChange={(e) => setData('location_type', e.target.value)}
-                        />
-                        <Form.Control.Feedback type="invalid"> {errors.location_type} </Form.Control.Feedback>
-                    </FormGroup>
-                    <FormGroup className="mb-3">
                         <Row className='mt-3'>
                             <Col md={12} lg={12} className='d-flex justify-content-between align-items-center'>
                                 <Form.Check // prettier-ignore
@@ -248,7 +257,36 @@ function CreateEditModal({ show, hide, onHide, event, recurring_types, event_cat
                             </Col>
                         </Row>
                     </FormGroup>
-
+                    <FormGroup className="mb-3">
+                        <Form.Label htmlFor="location-type" className="form-label text-start w-100">Location Type</Form.Label>
+                        <Form.Control
+                            type="text"
+                            className="form-control"
+                            id="location-type"
+                            isInvalid={!!errors.location_type}
+                            placeholder="Enter location type"
+                            value={data.location_type}
+                            onChange={(e) => setData('location_type', e.target.value)}
+                        />
+                        <Form.Control.Feedback type="invalid"> {errors.location_type} </Form.Control.Feedback>
+                    </FormGroup>
+                    <FormGroup className='mb-3'>
+                        <LoadScript googleMapsApiKey="AIzaSyAbvyBxmMbFhrzP9Z8moyYr6dCr-pzjhBE">
+                            <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={14}>
+                                <Marker position={center} onClick={() => onSelect(center)} />
+                                {selected && (
+                                    <InfoWindow
+                                        position={selected}
+                                        onCloseClick={() => setSelected(null)}
+                                    >
+                                        <div>
+                                            <h1>{selectedPlace.name}</h1>
+                                        </div>
+                                    </InfoWindow>
+                                )}
+                            </GoogleMap>
+                        </LoadScript>
+                    </FormGroup>
                     <div className="hstack gap-2 justify-content-between mt-4">
                         <Button disabled={processing} className="btn btn-light" onClick={hide}>Close</Button>
                         <Button type='submit' disabled={processing} className="btn btn-success">{btnTitle}</Button>

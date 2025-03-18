@@ -32,7 +32,8 @@ class EventStoreRequest extends FormRequest
             'schedual_type' => ['required', 'in:singleday,multiday'],
             'event_app_category_id' => 'required|numeric',
             'recurring_type_id' => 'required_if_accepted:is_recurring',
-            'is_recurring' => ['boolean']
+            'is_recurring' => ['boolean'],
+            'logo_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp'],
         ];
     }
 
@@ -43,8 +44,6 @@ class EventStoreRequest extends FormRequest
             'description.required'   => 'Description is required.',
             'start_date.required'    => 'Start date is required.',
             'start_date.after_or_equal' => 'Start date must be today or later.',
-            // 'end_date.required'      => 'End date is required.',
-            // 'end_date.after'         => 'End date must be after the start date.',
             'location_type.required' => 'Location type is required.',
             'location_base.required' => 'Location base is required.',
             'type.required'          => 'Event type is required.',
@@ -52,7 +51,8 @@ class EventStoreRequest extends FormRequest
             'schedual_type.in'       => 'Schedule type must be one of: singleday, multiday, or recurring.',
             'event_app_category_id.required' => 'Choose Event Category Type',
             'recurring_type_id.required_if_accepted' => 'Choose Recurring Frequency',
-            'is_recurring.boolean' => 'Is Recurring must be True/False'
+            'is_recurring.boolean' => 'Is Recurring must be True/False',
+            'logo_file.image' => 'File must be an image'
         ];
     }
 }

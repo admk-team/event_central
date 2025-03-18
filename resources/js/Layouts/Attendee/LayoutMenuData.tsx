@@ -8,6 +8,8 @@ const Navdata = () => {
     const [isProgram, setIsProgram] = useState<boolean>(false);
     const [isSpeakers, setIsSpeakers] = useState<boolean>(false);
     const [isMore, setIsMore] = useState<boolean>(false);
+    const [isQr, setIsQr] = useState<boolean>(false);
+
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
 
     function updateIconSidebar(e: any) {
@@ -39,13 +41,17 @@ const Navdata = () => {
         if (iscurrentState !== 'More') {
             setIsMore(false);
         }
+        if (iscurrentState !== 'Qr') {
+            setIsQr(false);
+        }
     }, [
         history,
         iscurrentState,
         isDashboard,
         isProgram,
         isSpeakers,
-        isMore
+        isMore,
+        isQr
     ]);
 
     const menuItems: any = [
@@ -105,6 +111,45 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
+        {
+            id: "tickets",
+            label: "Tickets",
+            icon: "bx bx-qr",
+            link: route('attendee.tickets.get', eventApp.id),
+            stateVariables: isMore,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsMore(!isMore);
+                setIscurrentState('More');
+                updateIconSidebar(e);
+            },
+        },
+        // {
+        //     id: "checkout",
+        //     label: "Checkout",
+        //     icon: "bx bx-qr",
+        //     link: route('attendee.checkout.get', eventApp.id),
+        //     stateVariables: isMore,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIsMore(!isMore);
+        //         setIscurrentState('More');
+        //         updateIconSidebar(e);
+        //     },
+        // },
+        // {
+        //     id: "qr-code",
+        //     label: "QR Code",
+        //     icon: "bx bx-qr",
+        //     link: route('attendee.qr-code.get', eventApp.id),
+        //     stateVariables: isMore,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIsMore(!isMore);
+        //         setIscurrentState('More');
+        //         updateIconSidebar(e);
+        //     },
+        // },
     ];
     return <React.Fragment>{menuItems}</React.Fragment>;
 };

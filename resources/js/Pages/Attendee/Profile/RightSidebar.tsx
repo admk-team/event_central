@@ -71,9 +71,9 @@ const RightSidebar = (props: any) => {
                                 <Tab eventKey="passowrd" title="Password">
                                     <ChangePassword></ChangePassword>
                                 </Tab>
-                                <Tab eventKey="Email" title="Email">
+                                {/* <Tab eventKey="Email" title="Email">
                                     <ChangeEmail></ChangeEmail>
-                                </Tab>
+                                </Tab> */}
                             </Tabs>
 
                         </SimpleBar>
