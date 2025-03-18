@@ -36,31 +36,34 @@ class PaymentController extends Controller
     }
 
 
-    public function createCheckoutSession(Request $request)
+    public function createPaymentIntent(Request $request)
     {
+        //Ansar
+        // public  pk_test_51R3iHCPNcWTtCzebbzvUsG7XMmMnTqUxbs4NE9v8CH5IJxtaMXDgz5FMA96HnS93ZQw9DN6wHLlxgtFW90XW0Q4z004QlcW5Z8
+        // secret sk_test_51R3iHCPNcWTtCzebYEqRS1ZyIUkRPiNYrnhm0kpMrqv5kfZKeELsElbWAl5Pvy19ZbmpKUZUZ7HjpIdiLmarvFEp001S8D1Jhe
+
+        //Haseeb
         // public  pk_test_51Py6kWHInNTlTUGPM5l30Odo4AOb48C48enPnOsKrw9xhueHWeYlC0lpnRRvtbwMNosFC3UWEZY4c48MsuohS5F700Lyxn0hSm
-
         // secret sk_test_51Py6kWHInNTlTUGPSnnyUIva83aHRr6ZMpApIGHZKtkgQcVIN1jsgcTQ5Ubp4oW96UdyDeeJROudsNDKFUjpdGrl00ItMh1P7P
-        Stripe::setApiKey('sk_test_51Py6kWHInNTlTUGPSnnyUIva83aHRr6ZMpApIGHZKtkgQcVIN1jsgcTQ5Ubp4oW96UdyDeeJROudsNDKFUjpdGrl00ItMh1P7P');
 
-        $session = Session::create([
-            'payment_method_types' => ['card'],
-            'line_items' => [[
-                'price_data' => [
-                    'currency' => 'usd',
-                    'product_data' => [
-                        'name' => 'Sample Product',
-                    ],
-                    'unit_amount' => 1000, // Amount in cents (e.g., $10.00)
-                ],
-                'quantity' => 1,
-            ]],
-            'mode' => 'payment',
-            'success_url' => url('/success'),
-            'cancel_url' => url('/cancel'),
+        Stripe::setApiKey('sk_test_51R3iHCPNcWTtCzebYEqRS1ZyIUkRPiNYrnhm0kpMrqv5kfZKeELsElbWAl5Pvy19ZbmpKUZUZ7HjpIdiLmarvFEp001S8D1Jhe');
+
+        $stripe = new \Stripe\StripeClient('sk_test_51R3iHCPNcWTtCzebYEqRS1ZyIUkRPiNYrnhm0kpMrqv5kfZKeELsElbWAl5Pvy19ZbmpKUZUZ7HjpIdiLmarvFEp001S8D1Jhe');
+        $paymentIntent = $stripe->paymentIntents->create([
+            'amount' => 2000,
+            'currency' => 'usd',
+            'automatic_payment_methods' => ['enabled' => true],
         ]);
 
-        return response()->json(['id' => $session->id]);
+        return response()->json(['client_secret' => $paymentIntent->client_secret]);
+    }
+
+    public function paymentSuccess(EventApp $eventApp)
+    {
+        return Inertia::render(
+            'Attendee/PaymentSuccess',
+            compact(['eventApp'])
+        );
     }
 
     public function  validateDiscCode($ticketId, $code)

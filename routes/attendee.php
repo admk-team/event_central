@@ -53,7 +53,8 @@ Route::middleware(['auth:attendee'])->group(function () {
 
         Route::post('validate-discount-code/{ticketId}/{code}', [PaymentController::class, 'validateDiscCode'])->name('attendee.validateCode.post');
 
-        Route::post('/create-checkout-session', [PaymentController::class, 'createCheckoutSession'])->name('attendee.payment.session');
+        Route::post('create-payment-intent', [PaymentController::class, 'createPaymentIntent'])->name('attendee.payment.intent');
+        Route::get('{eventApp}/payment-success', [PaymentController::class, 'paymentSuccess'])->name('attendee.payment.success');
     });
 
     Route::put('/attendee-profile-update/{attendee}', [ProfileController::class, 'update'])->name('attendee.profile.update');
