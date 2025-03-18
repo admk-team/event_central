@@ -104,6 +104,7 @@ body {
 .footer {
     background-color: var(--bs-light);
     border-top: 1px solid var(--bs-border-color);
+    position: static !important;
 }
 
 /* Hero section with gradient */
@@ -131,7 +132,7 @@ body {
 
 /* CTA section with gradient */
 .cta-section {
-    background: linear-gradient(to right, #f59e0b, #d97706);
+    background: linear-gradient(to right, #023054, #e63409);
     color: #fff;
     border-radius: var(--bs-border-radius-xl);
     padding: 3rem;

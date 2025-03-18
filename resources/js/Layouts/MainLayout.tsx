@@ -47,7 +47,7 @@ export default function MainLayout({ children }) {
                             <Link href="/login" className="nav-link me-3">
                                 Login
                             </Link>
-                            <a href="#" className="btn btn-primary">
+                            <a href="/register" className="btn btn-primary">
                                 Get Started <i className="bi bi-arrow-right ms-2"></i>
                             </a>
                         </div>
@@ -87,7 +87,7 @@ export default function MainLayout({ children }) {
                             Login
                         </a>
                         <div className="mt-4">
-                            <a href="#" className="btn btn-primary w-100" onClick={() => setMobileMenuOpen(false)}>
+                            <a href="/register" className="btn btn-primary w-100" onClick={() => setMobileMenuOpen(false)}>
                                 Get Started
                             </a>
                         </div>

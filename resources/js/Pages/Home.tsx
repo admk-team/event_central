@@ -2,8 +2,12 @@ import { Head } from "@inertiajs/react"
 import FeaturedCard from "../Components/FeaturedCard"
 import TestimonialCard from "../Components/TestimonialCard"
 import MainLayout from "../Layouts/MainLayout"
+import HowItWorks from "../Components/HowItWorks"
 import '../css/home.css'
-import heroimage from '../../images/heroimage.svg'
+import communityIcon from '../../images/community-icon.svg'
+import partnersIcon from '../../images/partners.svg'
+import productivityIcon from '../../images/productivity.svg'
+import heroimage2 from '../../images/heorsection.png'
 
 export default function Home() {
     return (
@@ -15,7 +19,7 @@ export default function Home() {
                 <section
                     className="hero-section"
                     style={{
-                        backgroundImage: `url(${heroimage})`,
+                        backgroundImage: `url(${heroimage2})`,
                         backgroundRepeat: "no-repeat",
                         backgroundSize: "cover",
                         // backgroundPosition: "center",
@@ -24,9 +28,9 @@ export default function Home() {
                 >
                     <div className="container hero-content" >
                         <div className="row justify-content-center">
-                            <div className="col-md-8 text-center">
-                                <h1 className="mb-4 display-4 fw-bold">Connect with like-minded individuals</h1>
-                                <p className="mb-5 lead text-muted-dark">
+                            <div className="col-md-8 text-center" style={{ top: '130px' }}>
+                                <h1 className="mb-4 display-4 fw-bold text-white">Connect with like-minded individuals</h1>
+                                <p className="mb-5 lead text-white">
                                     Join our community of focused individuals who are dedicated to personal growth, productivity, and
                                     achieving their goals.
                                 </p>
@@ -34,7 +38,7 @@ export default function Home() {
                                     <a href="#" className="btn btn-primary btn-lg">
                                         Join Now <i className="bi bi-arrow-right ms-2"></i>
                                     </a>
-                                    <a href="#" className="btn btn-outline-dark btn-lg">
+                                    <a href="#" className="btn btn-outline-dark btn-lg text-white">
                                         Learn More
                                     </a>
                                 </div>
@@ -47,7 +51,7 @@ export default function Home() {
                 <section id="features" className="py-5">
                     <div className="container">
                         <div className="text-center mb-5">
-                            <h2 className="mb-3 display-5 fw-bold">Why Choose Fokus Network?</h2>
+                            <h2 className="mb-3 display-5 fw-bold">Why Choose Event Central?</h2>
                             <p className="mx-auto text-muted-dark" style={{ maxWidth: "700px" }}>
                                 Our platform offers unique features designed to help you stay focused, connect with others, and achieve
                                 your goals.
@@ -56,21 +60,21 @@ export default function Home() {
                         <div className="row g-4">
                             <div className="col-md-4">
                                 <FeaturedCard
-                                    icon={<i className="bi bi-check-circle-fill fs-1 text-primary"></i>}
+                                    icon={<img src={communityIcon} width={'50%'} />}
                                     title="Community Focus"
                                     description="Connect with like-minded individuals who share your passion for productivity and personal growth."
                                 />
                             </div>
                             <div className="col-md-4">
                                 <FeaturedCard
-                                    icon={<i className="bi bi-check-circle-fill fs-1 text-primary"></i>}
+                                    icon={<img src={partnersIcon} width={'60%'} />}
                                     title="Accountability Partners"
                                     description="Find accountability partners to help you stay on track and achieve your goals faster."
                                 />
                             </div>
                             <div className="col-md-4">
                                 <FeaturedCard
-                                    icon={<i className="bi bi-check-circle-fill fs-1 text-primary"></i>}
+                                    icon={<img src={productivityIcon} width={'50%'} />}
                                     title="Productivity Tools"
                                     description="Access a suite of productivity tools designed to help you maximize your efficiency and focus."
                                 />
@@ -79,13 +83,16 @@ export default function Home() {
                     </div>
                 </section>
 
+                {/* How It Works Section */}
+                <HowItWorks />
+
                 {/* Testimonials Section */}
                 <section id="testimonials" className="py-5 bg-lighter">
                     <div className="container">
                         <div className="text-center mb-5">
                             <h2 className="mb-3 display-5 fw-bold">What Our Members Say</h2>
                             <p className="mx-auto text-muted-dark" style={{ maxWidth: "700px" }}>
-                                Hear from our community members about how Fokus Network has helped them achieve their goals.
+                                Hear from our community members about how Event Central has helped them achieve their goals.
                             </p>
                         </div>
                         <div className="row g-4">
@@ -120,9 +127,9 @@ export default function Home() {
                         <div className="cta-section">
                             <div className="row justify-content-center">
                                 <div className="col-md-8 text-center">
-                                    <h2 className="mb-3 display-5 fw-bold">Ready to join our community?</h2>
+                                    <h2 className="mb-3 display-5 fw-bold text-white">Ready to join our community?</h2>
                                     <p className="mb-4 lead">
-                                        Start your journey towards improved focus, productivity, and connection today.
+                                        Start your journey towards improved Events, productivity, and connection today.
                                     </p>
                                     <a href="#" className="btn btn-light btn-lg">
                                         Get Started Now <i className="bi bi-arrow-right ms-2"></i>

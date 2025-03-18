@@ -1,5 +1,5 @@
 import { Link } from "@inertiajs/react"
-
+import logo from '../../images/logo.png'
 export default function Footer() {
     return (
         <footer className="footer py-5 mt-auto">
@@ -7,16 +7,10 @@ export default function Footer() {
                 <div className="row g-4">
                     <div className="col-lg-3 col-md-6">
                         <Link href="/" className="d-flex align-items-center mb-3">
-                            <div
-                                className="rounded-circle bg-primary d-flex align-items-center justify-content-center me-2"
-                                style={{ width: "32px", height: "32px" }}
-                            >
-                                <span className="visually-hidden">Fokus Network</span>
-                            </div>
-                            <span className="fw-bold">Fokus Network</span>
+                            <img src={logo} style={{ maxWidth: '100px' }} />
                         </Link>
                         <p className="text-muted-dark small">
-                            Connecting focused individuals for better productivity and personal growth.
+                            Your hub for discovering and managing unforgettable events effortlessly.
                         </p>
                     </div>
                     <div className="col-lg-3 col-md-6">
@@ -49,7 +43,7 @@ export default function Footer() {
                             </li>
                             <li className="mb-2">
                                 <a href="#" className="text-decoration-none text-muted-dark">
-                                    Community Guidelines
+                                    Event Guidelines
                                 </a>
                             </li>
                             <li className="mb-2">
@@ -81,10 +75,9 @@ export default function Footer() {
                     </div>
                 </div>
                 <div className="border-top border-light mt-4 pt-4 text-center text-muted-dark small">
-                    <p>© {new Date().getFullYear()} Fokus Network. All rights reserved.</p>
+                    <p>© {new Date().getFullYear()} Event Central. All rights reserved.</p>
                 </div>
             </div>
         </footer>
     )
 }
-
