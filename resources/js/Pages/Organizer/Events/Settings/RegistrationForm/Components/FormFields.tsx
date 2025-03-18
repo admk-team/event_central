@@ -5,16 +5,17 @@ import CreateEditFieldModal from './CreateEditFieldModal';
 import FieldTypesModal from './FieldTypesModal';
 import { FieldType, fieldTypes } from '../../../../../../common/data/formBuilderFieldTypes';
 import { usePage } from '@inertiajs/react';
+import FormField from './FormField';
 
 export default function FormFields() {
     const form = usePage().props.form as any;
 
     const [showFieldsModal, setShowFieldsModal] = useState(false);
     const [selectedFieldType, setSelectedFieldType] = useState<FieldType | null>(null);
-    const [showCreateEditFieldModal, _setShowCreateEditFieldModal] = useState(false);
+    const [showCreateFieldModal, _setShowCreateFieldModal] = useState(false);
 
-    const setShowCreateEditFieldModal = (state: boolean) => {
-        _setShowCreateEditFieldModal(state);
+    const setShowCreateFieldModal = (state: boolean) => {
+        _setShowCreateFieldModal(state);
         if (state === false) {
             setSelectedFieldType(null);
         }
@@ -22,7 +23,7 @@ export default function FormFields() {
 
     const onFieldTypeSelect = (fieldType: FieldType) => {
         setSelectedFieldType(fieldType);
-        setShowCreateEditFieldModal(true);
+        setShowCreateFieldModal(true);
     }
 
     return (
@@ -31,37 +32,14 @@ export default function FormFields() {
                 <CardHeader>
                     <CardTitle className="mb-0">Fields</CardTitle>
                 </CardHeader>
-                <CardBody style={{maxHeight: '400px', overflowY: 'auto'}}>
+                <CardBody style={{ maxHeight: '400px', overflowY: 'auto' }}>
                     <ListGroup className="mb-1">
-                        {form.fields.map((field: any) => (
-                            <ListGroupItem className="list-group-item-action d-flex align-items-center justify-content-between cursor-pointer">
-                                <div className="d-flex align-items-center gap-2">
-                                    <Text size={18} />First Name
-                                </div>
-                                <Dropdown onClick={e => e.stopPropagation()}>
-                                    <Dropdown.Toggle
-                                        variant="light"
-                                        size="sm"
-                                        className="btn-icon"
-                                    >
-                                        <Ellipsis size={14} />
-                                    </Dropdown.Toggle>
-                                    <Dropdown.Menu>
-                                        <Dropdown.Item> Edit</Dropdown.Item>
-                                        <Dropdown.Item
-                                            className="text-danger fw-semibold"
-                                        >
-                                            Delete
-                                        </Dropdown.Item>
-                                    </Dropdown.Menu>
-                                </Dropdown>
-                            </ListGroupItem>
-                        ))}
+                        {form.fields.map((field: any) => <FormField key={field.id} field={field} />)}
                     </ListGroup>
                 </CardBody>
                 <CardFooter>
-                    <Button 
-                        variant="primary" 
+                    <Button
+                        variant="primary"
                         className="d-block w-100 d-flex align-items-center justify-content-center"
                         onClick={() => setShowFieldsModal(true)}
                     >
@@ -78,8 +56,8 @@ export default function FormFields() {
 
             {selectedFieldType && (
                 <CreateEditFieldModal
-                    show={showCreateEditFieldModal}
-                    onHide={() => setShowCreateEditFieldModal(false)}
+                    show={showCreateFieldModal}
+                    onHide={() => setShowCreateFieldModal(false)}
                     fieldType={selectedFieldType}
                 />
             )}

@@ -1,4 +1,4 @@
-import { LucideProps, Text, Type } from "lucide-react";
+import { CircleChevronDown, LucideProps, SquareCheck, Text, Type } from "lucide-react";
 import { ForwardRefExoticComponent, RefAttributes } from "react";
 
 export type FieldType = {
@@ -11,11 +11,21 @@ export const fieldTypes: FieldType[] = [
     {
         name: 'text',
         label: 'Short Text',
-        icon: Type
+        icon: Type,
     },
     {
         name: 'long_text',
         label: 'Long Text',
-        icon: Text
+        icon: Text,
+    },
+    {
+        name: 'choice',
+        label: 'Choice',
+        icon: SquareCheck,
+    },
+    {
+        name: 'dropdown',
+        label: 'Dropdown',
+        icon: CircleChevronDown,
     },
 ]
