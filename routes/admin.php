@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ColorSchemeController;
+use App\Http\Controllers\Admin\CountryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OrganizerController;
 use App\Http\Controllers\Admin\PlatFormController;
@@ -36,4 +37,7 @@ Route::middleware(['auth', 'panel:admin'])->prefix('admin')->name('admin.')->gro
     // Event Catergory Routs
     Route::resource('event-category', EventCategoryController::class);
     Route::delete('evnet-category/delete/many', [EventCategoryController::class, 'destroyMany'])->name('event.category.destroy.many');
+
+    //Country
+    Route::get('countries', [CountryController::class, 'index'])->name('countries');
 });
