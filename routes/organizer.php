@@ -27,6 +27,7 @@ use App\Http\Controllers\Organizer\Event\WebsiteController;
 use App\Http\Controllers\Organizer\Event\WorkshopController;
 use App\Http\Controllers\Organizer\ProfileController;
 use App\Http\Controllers\Organizer\RoleController;
+use App\Http\Controllers\Organizer\Settings\OrganizerPaymentSettingController;
 use App\Http\Controllers\Organizer\UserController;
 use App\Http\Middleware\CurrentEventMiddleware;
 use Illuminate\Support\Facades\Route;
@@ -47,6 +48,16 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
     // Roles
     Route::resource('roles', RoleController::class);
 
+    // Payment Settings
+    Route::prefix('settings')->name('settings.')->group(function () {
+        Route::prefix('payment')->name('payment.')->group(function () {
+            Route::get('/', [OrganizerPaymentSettingController::class, 'index'])->name('index');
+            Route::put('update', [OrganizerPaymentSettingController::class, 'update'])->name('update');
+        });
+    });
+
+
+    //Events
     Route::prefix('events')->name('events.')->group(function () {
         Route::get('/', [EventController::class, 'index'])->name('index');
         Route::post('/', [EventController::class, 'store'])->name('store');

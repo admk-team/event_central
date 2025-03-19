@@ -7,7 +7,7 @@ import logoLight from '../../../../images/logo-light.png';
 export default function Register() {
     const eventApp: any = usePage().props.eventApp;
 
-    // console.log(eventApp);
+    console.log(eventApp);
 
     const { data, setData, post, processing, errors, reset } = useForm({
         first_name: '',

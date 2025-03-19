@@ -67,7 +67,7 @@ const Index = ({ eventApp }: any) => {
 
     return (
         <React.Fragment>
-            <Head title="Event Tickets" />
+            <Head title="Tickets" />
             <section className="section bg-light" id="tickets">
                 <div className="bg-overlay bg-overlay-pattern"></div>
                 <Container>

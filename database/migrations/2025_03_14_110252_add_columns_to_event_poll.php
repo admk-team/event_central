@@ -24,9 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('event_posts', function (Blueprint $table) {
-            $table->text('post_poll')->nullable();
-            $table->integer('likes')->nullable()->default(0);
-            $table->integer('dis_likes')->nullable()->default(0);
+            $table->dropColumn(['post_poll', 'likes', 'dis_likes']);
         });
     }
 };
