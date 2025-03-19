@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('form_fields', function (Blueprint $table) {
             $table->id();
             $table->foreignId('form_id')->constrained()->onDelete('cascade');
-            $table->string('label')->nullable()->default(null);
+            $table->string('label');
             $table->text('description')->nullable()->default(null);
             $table->string('placeholder')->nullable()->default(null);
             $table->string('type');

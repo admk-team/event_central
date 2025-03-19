@@ -155,3 +155,18 @@ File: Custom Css File
 .form-fields .dropdown-toggle::after {
     display: none;
 }
+
+.field-catalog {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(116px, 1fr));
+    grid-auto-rows: minmax(80px, auto);
+    gap: 10px;
+}
+
+.hide-dropdown-icon::after {
+    display: none !important;
+}
+
+.form-field-option:focus-visible {
+    background-color: rgba(17, 17, 17, 0.05);
+}
