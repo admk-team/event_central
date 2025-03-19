@@ -3,6 +3,8 @@ import Layout from "../../../Layouts/Attendee";
 import React, { useState, useEffect } from "react";
 import {Button,Card,Col,Container,Row, Form,Image,ProgressBar} from "react-bootstrap";
 import { router } from '@inertiajs/react'
+import "./css/index.css";
+import { Label } from "@headlessui/react";
 
 const Index = ({ eventApp, newsfeeds }: any) => {
 console.log(eventApp);
@@ -36,7 +38,8 @@ console.log(eventApp);
         }
     );
     };
-    
+
+
     return (
         <React.Fragment>
             <Head title="Event Posts" />
@@ -108,74 +111,31 @@ console.log(eventApp);
 
                                             {/* Post Poll (if available) */}
                                             {post.post_poll && (
-                                                <div className="border rounded p-3 bg-light">
+                                                <div className="poll-container bg-light">
+                                                    <div className="poll-options">
                                                     {(() => {
                                                         try {
-                                                            const pollData =
-                                                                post.post_poll?.trim() !==
-                                                                ""
-                                                                    ? JSON.parse(
-                                                                          post.post_poll
-                                                                      )
-                                                                    : {
-                                                                          options:
-                                                                              [],
-                                                                      };
-                                                            const totalVotes =
-                                                                pollData.reduce(
-                                                                    (
-                                                                        sum: number,
-                                                                        poll: any
-                                                                    ) =>
-                                                                        sum +
-                                                                        (poll
-                                                                            .like
-                                                                            .length ||
-                                                                            0),
-                                                                    0
-                                                                );
-                                                            return pollData.map(
-                                                                (
-                                                                    pollData: any,
-                                                                    index: number
-                                                                ) => {
-                                                                    const likePercentage =
-                                                                        totalVotes
-                                                                            ? (pollData
-                                                                                  .like
-                                                                                  .length /
-                                                                                  totalVotes) *
-                                                                              100
-                                                                            : 0;
+                                                            const pollData = post.post_poll?.trim() !==""? JSON.parse(post.post_poll): {options:[],};
+                                                            const totalVotes = pollData.reduce((sum: number,poll: any) => sum +( poll.like.length || 0 ), 0);
+                                                            return pollData.map((pollData: any,index: number) => {
+                                                                    const likePercentage = totalVotes ? (pollData.like.length / totalVotes) * 100 : 0;
                                                                     return (
-                                                                        <div
-                                                                            key={
-                                                                                index
-                                                                            }
-                                                                            className="my-3"
-                                                                        >
-                                                                            <div className="d-flex justify-content-between align-items-center">
-                                                                                {pollData.text ??
-                                                                                    "N/A"}
-                                                                                <span>
-                                                                                    {pollData
-                                                                                        .like
-                                                                                        .length ||
-                                                                                        0}{" "}
-                                                                                    Likes{" "}
-                                                                                </span>
-                                                                            </div>
-                                                                            <div className="d-flex justify-content-between align-items-center">
-                                                                                <ProgressBar className="flex-grow-1">
-                                                                                    <ProgressBar
-                                                                                        className="text-dark fw-bold"
-                                                                                        now={likePercentage}
-                                                                                        label={`${likePercentage.toFixed(1)}%`}
-                                                                                        variant="success"
-                                                                                        key={1}
-                                                                                    />
-                                                                                </ProgressBar>
+                                                                        <div key={index} className="poll-option">
+                                                                            <div className="d-flex align-items-center">
                                                                                 <Form.Check checked={pollData.like.includes(eventApp.id)} type="radio" name="pollOptions"  value={`${index}`}  onChange={(e) => getPollData(e, post.id)} className="me-2" />
+                                                                                <label htmlFor={`poll-option-${index}`} className="flex-grow-1">
+                                                                                    {pollData.text ?? "N/A"} <span className="float-end">{pollData.like.length || 0}</span>
+                                                                                </label>
+                                                                            </div>
+                                                                            
+                                                                            <div className="progress">
+                                                                                <div className="progress-bar"
+                                                                                    role="progressbar"
+                                                                                    style={{ width: `${likePercentage}%` }}
+                                                                                    aria-valuenow={likePercentage}
+                                                                                    aria-valuemin="0"
+                                                                                    aria-valuemax="100"
+                                                                                ></div>
                                                                             </div>
                                                                         </div>
                                                                     );
@@ -195,6 +155,7 @@ console.log(eventApp);
                                                             );
                                                         }
                                                     })()}
+                                                    </div>
                                                 </div>
                                             )}
 
