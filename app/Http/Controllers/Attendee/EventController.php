@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Attendee;
 use App\Http\Controllers\Controller;
 use App\Models\EventApp;
 use App\Models\EventSession;
+use App\Models\EventPost;
 use App\Models\EventSpeaker;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class EventController extends Controller
@@ -75,5 +77,11 @@ class EventController extends Controller
     {
         $eventApp->load('organiser');
         return Inertia::render('Attendee/AttendeeMore', compact(['eventApp']));
+    }
+
+    public function getPostsMore(EventApp $eventApp)
+    {
+        $newsfeeds = EventPost::where('event_app_id',Auth::user()->event_app_id)->get();
+        return Inertia::render('Attendee/Posts/Index', compact(['eventApp','newsfeeds']));
     }
 }
