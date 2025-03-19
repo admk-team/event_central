@@ -16,25 +16,46 @@ class ProfileUpdateRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
+     * 'nullable|url:http,https|active_url|regex:/http(?:s):\/\/(?:www\.)facebook\.com\/.+/i',
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            'email' => 'required|email',
-            'first_name' => 'required|string',
-            'last_name' => 'required|string',
-            'company' => 'nullable|string',
-            'position' => 'nullable|string',
-            'other_link' => 'nullable|string',
-            'facebook_link' => 'nullable|string',
-            'linkedin_link' => 'nullable|string',
-            'twitter_link' => 'nullable|string',
-            'country' => 'nullable|string',
-            'phone' => 'nullable|string',
-            'bio' => 'nullable|string',
-            'avatar' => 'nullable|string',
+            'first_name' => 'required|string|max:150',
+            'last_name' => 'required|string|max:150',
+            'company' => 'nullable|max:100',
+            'position' => 'nullable|max:100',
+            'other_link' => 'nullable|url:http,https|active_url',
+            'facebook_link' => 'nullable|url:http,https|active_url',
+            'linkedin_link' => 'nullable|url:http,https|active_url',
+            'twitter_link' => 'nullable|url:http,https|active_url',
+            'country' => 'nullable|max:100',
+            'phone' => 'nullable|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
+            'bio' => 'nullable|max:250',
+        ];
+    }
+
+    /**
+     * Get the validation messages that apply to the request.
+     *
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     */
+    public function messages(): array
+    {
+        return [
+            'first_name.max' => 'Max 150 characters',
+            'last_name.max' => 'Max 150 characters',
+            'company.max' => 'Max 100 characters',
+            'position.max' => 'Max 100 characters',
+            'other_link.url' => 'Must be valid url',
+            'other_link.active_url' => 'Must be active valid url',
+            'facebook_link.active_url' => 'Must be valid url',
+            'linkedin_link.active_url' => 'Must be valid url',
+            'twitter_link.active' => 'Must be valid url',
+            'country.max' => 'Max 100 characters',
+            'phone.regex' => 'Must be valid phone number',
+            'bio.max' => 'Max 250 characters',
         ];
     }
 }

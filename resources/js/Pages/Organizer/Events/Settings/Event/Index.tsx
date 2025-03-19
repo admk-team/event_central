@@ -13,8 +13,8 @@ function Event() {
             <Head title='Starter | Velzon - React Admin & Dashboard Template' />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb2 
-                        title="Event" 
+                    <BreadCrumb2
+                        title="Event"
                         items={[
                             { title: "Settings", link: route('organizer.events.settings.event.index') }
                         ]}

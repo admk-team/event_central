@@ -6,7 +6,8 @@ import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 
 
 export default function Login({ status, canResetPassword }: any) {
-    const eventApp = usePage().props.eventApp;
+    const eventApp: any = usePage().props.eventApp;
+    console.log(eventApp);
     const [passwordShow, setPasswordShow] = useState<boolean>(false);
     const { data, setData, post, processing, errors, reset } = useForm({
         email: 'attendee@gmail.com',
@@ -22,7 +23,7 @@ export default function Login({ status, canResetPassword }: any) {
 
     const submit = (e: any) => {
         e.preventDefault();
-        post(route('attendee.login', [1]));
+        post(route('attendee.login', eventApp.id));
     };
     return (
         <React.Fragment>

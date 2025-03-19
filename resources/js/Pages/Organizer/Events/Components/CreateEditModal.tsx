@@ -41,7 +41,7 @@ function CreateEditModal({ show, hide, onHide, event, recurring_types, event_cat
         type: 'in-person',
         is_recurring: event?.is_recurring ?? false,
         schedual_type: event?.schedual_type ?? 'singleday',
-        logo_file: '',      //To be use for new file
+        logo_file: null,      //To be use for new file
     });
 
 

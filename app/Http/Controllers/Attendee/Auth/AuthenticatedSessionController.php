@@ -3,15 +3,13 @@
 namespace App\Http\Controllers\Attendee\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\AttendeeLoginRequest;
+use App\Http\Requests\Attendee\AttendeeLoginRequest;
 use App\Models\Attendee;
 use App\Models\EventApp;
-use App\Providers\RouteServiceProvider;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -36,9 +34,10 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(AttendeeLoginRequest $request, EventApp $eventApp): RedirectResponse
     {
+        Log::info($eventApp);
         $request->authenticate();    //Attendee Login Request
         $request->session()->regenerate();
-        return redirect()->intended(route('attendee.event.detail.dashboard', [$eventApp]));
+        return redirect()->intended(route('attendee.event.detail.dashboard', [$eventApp->id]));
     }
 
     /**

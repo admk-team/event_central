@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import GuestLayout from '../../Layouts/Theme/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
-import logoLight from '../../../images/logo-light.png';
+import logoLight from '../../../images/logo.png';
 
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -129,7 +129,7 @@ export default function Register() {
                                                 </div>
 
                                                 <div className="mb-4 mt-4">
-                                                    <p className="mb-0 fs-12 text-muted fst-italic">By registering you agree to the Velzon 
+                                                    <p className="mb-0 fs-12 text-muted fst-italic">By registering you agree to the Velzon
                                                         <Link href="#" className="text-primary text-decoration-underline fst-normal fw-medium ms-2"> Terms of Use</Link></p>
                                                 </div>
 

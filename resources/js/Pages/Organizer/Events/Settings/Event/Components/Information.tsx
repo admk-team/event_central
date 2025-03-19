@@ -1,9 +1,12 @@
 import { useForm, usePage } from '@inertiajs/react';
-import React, { useState } from 'react';
-import { Button, Card, CardBody, CardHeader, CardText, CardTitle, Form, FormGroup, Spinner } from 'react-bootstrap';
+import axios from 'axios';
+import React, { useEffect, useState } from 'react';
+import { Button, Card, CardBody, CardHeader, CardText, CardTitle, Form, FormGroup, Spinner, Row, Col, InputGroup } from 'react-bootstrap';
 
 export default function Information() {
     const event = usePage().props.event as Record<string, string>;
+
+    // console.log(event);
 
     const { data, setData, post, processing, errors } = useForm({
         _method: 'PUT',
@@ -11,20 +14,24 @@ export default function Information() {
         name: event.name,
         description: event.description,
         location_base: event.location_base,
+        registration_private: event?.registration_private ?? 0,
+        registration_link: event?.registration_link ?? '',
     });
 
     const submit: React.FormEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
+        console.log(data);
         post(route('organizer.events.settings.event.info'));
     }
 
     const [preview, setPreview] = useState<any>(event.logo_img); // State to store the preview image URL
+    const [registrationPrivate, setRegistrationPrivate] = useState<any>(event.registration_private === 1); // State to store the preview image URL
 
     // Handle file upload
     const handleImageChange = (e: any) => {
         const file = e.target.files[0];
         if (file) {
-            setData({ ...data, logo: file }); 
+            setData({ ...data, logo: file });
             const reader = new FileReader();
             reader.onloadend = () => {
                 setPreview(reader.result); // Set the preview image URL
@@ -32,6 +39,29 @@ export default function Information() {
             reader.readAsDataURL(file);
         }
     };
+
+    const handleCheckChangeRegistration = (e: any) => {
+        if (e.target.checked) {
+            setData('registration_private', 1);
+            setRegistrationPrivate(true);
+        } else {
+            setData('registration_private', 0);
+            setRegistrationPrivate(false);
+        }
+    }
+
+    const generateLink = () => {
+        axios.get(route('organizer.events.settings.event.link')).then((response) => {
+            console.log(response);
+            setData('registration_link', response.data.link);
+        }).finally(() => {
+
+        });
+    }
+
+    const CopyLink = (link: string) => {
+        navigator.clipboard.writeText(link);
+    }
 
     return (
         <Form onSubmit={submit} className="tablelist-form">
@@ -135,6 +165,43 @@ export default function Information() {
                             <Form.Control.Feedback type="invalid">{errors.location_base}</Form.Control.Feedback>
                         )}
                     </FormGroup>
+                    <Row >
+                        <Col md={3} lg={3} className='d-flex align-items-center'>
+                            <FormGroup>
+                                {/* <Form.Label className="form-label">Registration Private</Form.Label> */}
+                                <Form.Check
+                                    type='checkbox'
+                                    checked={data.registration_private == 1}
+                                    label="Attendee will Register privately"
+                                    id="select-all-features"
+                                    onChange={handleCheckChangeRegistration}
+                                />
+                            </FormGroup>
+                        </Col>
+                        {registrationPrivate && <>
+                            <Col md={7} lg={7}>
+                                <InputGroup className="mb-3">
+                                    <Form.Control
+                                        type="text"
+                                        disabled
+                                        className="form-control"
+                                        value={data.registration_link}
+                                        onChange={(e) => setData('registration_link', e.target.value)}
+                                        isInvalid={!!errors.registration_link}
+                                    />
+                                    <Button variant="outline-secondary" id="button-copyLink" onClick={() => CopyLink(data.registration_link)}>
+                                        <i className='bx bx-copy'></i>
+                                    </Button>
+                                    <Form.Control.Feedback type="invalid">{errors.registration_link}</Form.Control.Feedback>
+                                </InputGroup>
+                            </Col>
+                            <Col md={2} lg={2}>
+                                <Button type="button" onClick={generateLink}>
+                                    Generate Link
+                                </Button>
+                            </Col>
+                        </>}
+                    </Row>
                 </CardBody>
             </Card>
         </Form>

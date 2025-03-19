@@ -3,25 +3,16 @@
 namespace App\Http\Controllers\Attendee;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Attendee\ProfileUpdateRequest;
 use App\Models\Attendee;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Intervention\Image\ImageManagerStatic as Image;
 
 class ProfileController extends Controller
 {
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Attendee $attendee)
+    public function update(ProfileUpdateRequest $request, Attendee $attendee)
     {
-        // $imageName = time() . '.' . $request->image->extension();
-        // $path = storage_path('app/public/attendee/avatars');
-
-        $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-        ]);
 
         $attendee->update($request->all());
 
@@ -39,6 +30,6 @@ class ProfileController extends Controller
             $attendee->save();
         }
 
-        return back()->withSuccess("Profile Changes saved successfully");
+        return back()->withSuccess("Profile Changes Updated Successfully");
     }
 }

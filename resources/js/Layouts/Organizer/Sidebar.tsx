@@ -11,6 +11,7 @@ import { Container } from "react-bootstrap";
 import { Link } from "@inertiajs/react";
 import HorizontalLayout from "../Theme/HorizontalLayout";
 import TwoColumnLayout from "../Theme/TwoColumnLayout";
+import Logo from "../../Components/Logo";
 
 const Sidebar = ({ layoutType } : any) => {
 
@@ -38,23 +39,7 @@ const Sidebar = ({ layoutType } : any) => {
     <React.Fragment>
       <div className="app-menu navbar-menu">
         <div className="navbar-brand-box">
-          <Link href="/" className="logo logo-dark">
-            <span className="logo-sm">
-              <img src={logoSm} alt="" height="22" />
-            </span>
-            <span className="logo-lg">
-              <img src={logoDark} alt="" height="17" />
-            </span>
-          </Link>
-
-          <Link href="/" className="logo logo-light">
-            <span className="logo-sm">
-              <img src={logoSm} alt="" height="22" />
-            </span>
-            <span className="logo-lg">
-              <img src={logoLight} alt="" height="17" />
-            </span>
-          </Link>
+          <Logo />
           <button
             onClick={addEventListenerOnSmHoverMenu}
             type="button"

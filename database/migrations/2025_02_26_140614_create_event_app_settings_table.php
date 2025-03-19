@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('event_app_settings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('event_app_id')->constrained()->onDelete('cascade');
-            $table->string('key')->unique();
+            $table->string('key');
             $table->text('value')->nullable()->default(null);
             $table->string('type')->default('string'); // string, boolean, number, json
             $table->string('group')->nullable();
@@ -22,6 +22,7 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index(['event_app_id', 'group']);
+            $table->unique(['event_app_id', 'key']);
         });
     }
 

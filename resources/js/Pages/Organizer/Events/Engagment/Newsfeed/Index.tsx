@@ -1,161 +1,318 @@
-import React, { useState } from 'react';
-import { Button, Col, Container, Row, Table } from 'react-bootstrap';
-import { Head, Link, useForm } from '@inertiajs/react';
-import BreadCrumb from '../../../../../Components/Common/BreadCrumb';
-import Layout from '../../../../../Layouts/Event';
-// import Pagination2 from '../../../Pages/Admin/';
-import DeleteModal from '../../../../../Components/Common/DeleteModal';
-import DataTable, { ColumnDef } from '../../../../../Components/DataTable';
-import DeleteManyModal from '../../../../../Components/Common/DeleteManyModal';
-import CreateEditModal from './Component/CreateEditModal';
+import React, { useState } from "react";
+import {
+    Button,
+    Card,
+    Col,
+    Container,
+    Row,
+    Table,
+    Image,
+    ProgressBar,
+} from "react-bootstrap";
+import DeleteManyModal from "../../../../../Components/Common/DeleteManyModal";
+import { Head, Link, useForm } from "@inertiajs/react";
+import BreadCrumb from "../../../../../Components/Common/BreadCrumb";
+import Layout from "../../../../../Layouts/Event";
+import AddPost from "./Component/AddPost";
+import { usePage } from "@inertiajs/react";
+import DeleteModal from "../../../../../Components/Common/DeleteModal";
 
-function Index({ newsfeeds }: any) {
+function Index({ newsfeeds, events, editfeeds }: any) {
+    console.log(editfeeds);
     const [deleteNewsfeed, setDeleteNewsfeed] = React.useState<any>(null);
-    const [editPost, setEditPost] = React.useState<any>(null);
+    const [deletePost, setDeletePost] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-    const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
-
-    const { get } = useForm()
-
+    const [showEditPost, setshowEditPost] =
+        useState([]);
 
     const deleteForm = useForm({
-        _method: 'DELETE'
-    });
-    const deleteManyForm = useForm<{ _method: string; ids: number[] }>({
-        _method: 'DELETE',
-        ids: [],
+        _method: "DELETE",
     });
 
-    const [addNewsfeedModal, setAddNewsfeedModal] = useState(false);
-    function showModal() {
-        setAddNewsfeedModal(!addNewsfeedModal);
-    }
-
-    const editAction = (newsfeed: any) => {
-        setEditPost(newsfeed);
-        console.log('post', newsfeed);
-        showModal();
-    }
-    const deleteAction = (newsfeed: any) => {
-        setDeleteNewsfeed(newsfeed);
+    const deleteAction = (event: any) => {
+        setDeletePost(event);
         setShowDeleteConfirmation(true);
-    }
+    };
+
+    const editAction = (data: any) => {
+        setshowEditPost(data)
+    };
+
     const handleDelete = () => {
-
-        deleteForm.post(route('organizer.events.engagement.newsfeed.destroy', deleteNewsfeed.id));
+        deleteForm.post(
+            route("organizer.events.engagement.newsfeed.destroy", deletePost)
+        );
         setShowDeleteConfirmation(false);
-    }
-    const deleteManyAction = (ids: number[]) => {
-        deleteManyForm.setData(data => ({ ...data, ids: ids }));
-        setShowDeleteManyConfirmation(true);
-    }
-    const handleDeleteMany = () => {
-        deleteManyForm.delete(route('organizer.events.engagement.newsfeed.destroy.many'));
-        setShowDeleteManyConfirmation(false);
-    }
-
-    const columns: ColumnDef<typeof newsfeeds.data[0]> = [
-        {
-            header: () => 'ID',
-            cell: (newsfeed) => newsfeed.id,
-            cellClass: "fw-medium"
-        },
-        {
-            header: () => 'Image',
-            cell: (newsfeed) => (
-                <img src={newsfeed.img} alt={newsfeed.name} width="50" height="50" />
-            ),
-        },
-        {
-            header: () => 'Title',
-            cell: (newsfeed) => newsfeed.title,
-        },
-        {
-            header: () => 'Content',
-            cell: (newsfeed) => newsfeed.content,
-        },
-        {
-            header: () => 'Send Notification',
-            cell: (newsfeed) => newsfeed.send_notification ? 'Yes' : 'No',
-        },
-        {
-            header: () => 'Sending Date',
-            cell: (newsfeed) => newsfeed.sending_date,
-        },
-        {
-            header: () => 'Sending Time',
-            cell: (newsfeed) => newsfeed.sending_time,
-        },
-        {
-            header: () => 'Action',
-            cell: (newsfeed) => (
-                <div className="hstack gap-3 fs-15">
-                    <span className="link-primary cursor-pointer" onClick={() => editAction(newsfeed)}><i className="ri-edit-fill"></i></span>
-                    <span className="link-danger cursor-pointer" onClick={() => deleteAction(newsfeed)}>
-                        <i className="ri-delete-bin-5-line"></i>
-                    </span>
-                </div>
-            ),
-        },
-    ];
-
+    };
 
     return (
         <React.Fragment>
             <Head>
                 <title>Newsfeed | Organizer Dashboard</title>
-                <meta name="description" content="Manage event Newsfeeds, edit details, and delete records from the organizer's dashboard." />
-                <meta name="keywords" content="event Newsfeeds, Newsfeed management, conference Newsfeeds, admin dashboard" />
+                <meta
+                    name="description"
+                    content="Manage event Newsfeeds, edit details, and delete records from the organizer's dashboard."
+                />
+                <meta
+                    name="keywords"
+                    content="event Newsfeeds, Newsfeed management, conference Newsfeeds, admin dashboard"
+                />
                 <meta name="robots" content="index, follow" />
 
                 {/* Open Graph Meta Tags */}
-                <meta property="og:title" content="Newsfeed | Organizer Dashboard" />
-                <meta property="og:description" content="Manage event Newsfeeds, edit details, and delete records from the organizer's dashboard." />
+                <meta
+                    property="og:title"
+                    content="Newsfeed | Organizer Dashboard"
+                />
+                <meta
+                    property="og:description"
+                    content="Manage event Newsfeeds, edit details, and delete records from the organizer's dashboard."
+                />
                 <meta property="og:type" content="website" />
-                <meta property="og:url" content={route('organizer.events.engagement.newsfeed.index')} />
+                <meta
+                    property="og:url"
+                    content={route(
+                        "organizer.events.engagement.newsfeed.index"
+                    )}
+                />
             </Head>
 
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Newsfeed" pageTitle="Dashboard" />
+                    <BreadCrumb title="Posts" pageTitle="Dashboard" />
                     <Row>
-                        <Col xs={12}>
-                            <DataTable
-                                data={newsfeeds}
-                                columns={columns}
-                                title="Newsfeed"
-                                actions={[
-                                    // Delete multiple
-                                    {
-                                        render: (dataTable) => <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>,
-                                        showOnRowSelection: true,
-                                    },
-
-                                    // Add new
-                                    {
-                                        render: <Button className='btn btn-primary' onClick={() => showModal()}><i className="ri-login-box-line"></i> Add New</Button>
-                                    }
-
-                                ]}
-                            />
+                        <Col lg={6} className="mx-auto">
+                            <AddPost events={events[0]}
+                            editPostData={showEditPost} />
                         </Col>
                     </Row>
                 </Container>
-            </div>
-            <DeleteModal
-                show={showDeleteConfirmation}
-                onDeleteClick={handleDelete}
-                onCloseClick={() => { setShowDeleteConfirmation(false) }}
-            />
+                <Container fluid>
+                    <Row className="justify-content-center">
+                        <Col lg={6} className="mt-3">
+                            {newsfeeds.length > 0 ? (
+                                newsfeeds.map((post: any) => (
+                                    <Card
+                                        key={post.id}
+                                        className="mb-4 shadow-sm"
+                                    >
+                                        <Card.Header>
+                                            <div className="d-flex gap-2 justify-content-end">
+                                                {/* <span
+                                                    className="link-primary cursor-pointer"
+                                                    onClick={() =>
+                                                        editAction(post)
+                                                    }
+                                                >
+                                                    <i className="ri-edit-fill"></i>
+                                                </span> */}
+                                                <span
+                                                    className="link-danger cursor-pointer"
+                                                    onClick={() =>
+                                                        deleteAction(post.id)
+                                                    }
+                                                >
+                                                    <i className="ri-delete-bin-5-line"></i>
+                                                </span>
+                                            </div>
+                                        </Card.Header>
+                                        <Card.Body>
+                                            {/* Post Header */}
+                                            <div className="d-flex align-items-center mb-2">
+                                                <Image
+                                                    src={`/storage/${events[0].logo}`}
+                                                    roundedCircle
+                                                    width="40"
+                                                    height="40"
+                                                    className="me-2 thumbnail"
+                                                />
+                                                <div>
+                                                    <strong>
+                                                        {events[0].name}
+                                                    </strong>
+                                                    <div
+                                                        className="text-muted"
+                                                        style={{
+                                                            fontSize: "12px",
+                                                        }}
+                                                    >
+                                                        {newsfeeds[0]
+                                                            ?.sending_date &&
+                                                        newsfeeds[0]
+                                                            ?.sending_time
+                                                            ? `${newsfeeds[0].sending_date} at ${newsfeeds[0].sending_time}`
+                                                            : ""}
+                                                    </div>
+                                                </div>
+                                            </div>
 
-            <DeleteManyModal
-                show={showDeleteManyConfirmation}
-                onDeleteClick={handleDeleteMany}
-                onCloseClick={() => { setShowDeleteManyConfirmation(false) }}
-            />
-            {addNewsfeedModal && <CreateEditModal addNewsfeedModal={addNewsfeedModal} showModal={showModal} editPost={editPost} />}
+                                            {/* Post Title */}
+                                            {post.title && (
+                                                <h5 className="h5">
+                                                    {post.title}
+                                                </h5>
+                                            )}
+
+                                            {/* Post Image */}
+                                            {post.image && (
+                                                <div className="mb-2">
+                                                    <Image
+                                                        src={`/storage/${post.image}`}
+                                                        alt="Post Image"
+                                                        height="400"
+                                                        style={{
+                                                            width: "100%",
+                                                        }}
+                                                    />
+                                                </div>
+                                            )}
+
+                                            {/* Post Content */}
+                                            {post.content && (
+                                                <p>{post.content}</p>
+                                            )}
+
+                                            {/* Post Poll (if available) */}
+                                            {post.post_poll && (
+                                                <div className="border rounded p-3 bg-light">
+                                                    <label className="h5">
+                                                        {
+                                                            JSON.parse(
+                                                                post.post_poll
+                                                            ).question
+                                                        }
+                                                    </label>
+
+                                                    {(() => {
+                                                        const pollData =
+                                                            JSON.parse(
+                                                                post.post_poll
+                                                            );
+                                                        const totalVotes =
+                                                            pollData.options.reduce(
+                                                                (
+                                                                    sum: number,
+                                                                    option: any
+                                                                ) =>
+                                                                    sum +
+                                                                    option.like +
+                                                                    (option.dislike ||
+                                                                        0),
+                                                                0
+                                                            );
+
+                                                        return pollData.options.map(
+                                                            (
+                                                                option: any,
+                                                                index: number
+                                                            ) => {
+                                                                const likePercentage =
+                                                                    totalVotes
+                                                                        ? (option.like /
+                                                                              totalVotes) *
+                                                                          100
+                                                                        : 0;
+
+                                                                const dislikePercentage =
+                                                                    totalVotes
+                                                                        ? ((option.dislike ||
+                                                                              0) /
+                                                                              totalVotes) *
+                                                                          100
+                                                                        : 0;
+
+                                                                return (
+                                                                    <div
+                                                                        key={
+                                                                            index
+                                                                        }
+                                                                        className="my-3"
+                                                                    >
+                                                                        <div className="d-flex justify-content-between align-items-center">
+                                                                            {
+                                                                                option.text
+                                                                            }
+                                                                            <span>
+                                                                                {
+                                                                                    option.like
+                                                                                }{" "}
+                                                                                Likes
+                                                                                |{" "}
+                                                                                {option.dislike ||
+                                                                                    0}{" "}
+                                                                                Dislikes
+                                                                            </span>
+                                                                        </div>
+                                                                        <ProgressBar>
+                                                                            <ProgressBar
+                                                                                className="text-dark fw-bold"
+                                                                                now={
+                                                                                    likePercentage
+                                                                                }
+                                                                                label={`${likePercentage.toFixed(
+                                                                                    1
+                                                                                )}%`}
+                                                                                variant="success"
+                                                                                key={
+                                                                                    1
+                                                                                }
+                                                                            />
+                                                                            {/* <ProgressBar
+                                                                                now={
+                                                                                    dislikePercentage
+                                                                                }
+                                                                                label={`${dislikePercentage.toFixed(
+                                                                                    1
+                                                                                )}%`}
+                                                                                variant="danger"
+                                                                                key={
+                                                                                    2
+                                                                                }
+                                                                            /> */}
+                                                                        </ProgressBar>
+                                                                    </div>
+                                                                );
+                                                            }
+                                                        );
+                                                    })()}
+                                                </div>
+                                            )}
+
+                                            {/* Like & Dislike Buttons */}
+                                            <div className="d-flex justify-content-between mt-3">
+                                                <Button variant="outline-success">
+                                                    👍 Like{" "}
+                                                    {post.likes > 0 &&
+                                                        `(${post.likes})`}
+                                                </Button>
+                                                <Button variant="outline-danger">
+                                                    👎 Dislike{" "}
+                                                    {post.dis_likes > 0 &&
+                                                        `(${post.dis_likes})`}
+                                                </Button>
+                                            </div>
+                                        </Card.Body>
+                                    </Card>
+                                ))
+                            ) : (
+                                <p className="text-center">
+                                    No posts available.
+                                </p>
+                            )}
+                        </Col>
+                    </Row>
+                </Container>
+
+                <DeleteModal
+                    show={showDeleteConfirmation}
+                    onDeleteClick={handleDelete}
+                    onCloseClick={() => {
+                        setShowDeleteConfirmation(false);
+                    }}
+                />
+            </div>
         </React.Fragment>
-    )
+    );
 }
 
 Index.layout = (page: any) => <Layout children={page} />;

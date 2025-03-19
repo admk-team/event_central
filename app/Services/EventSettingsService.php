@@ -40,7 +40,7 @@ class EventSettingsService
                 $type = 'json';
                 break;
         }
-        
+
         if (! $setting) {
             $setting = EventAppSetting::create([
                 'event_app_id' => $event_id,

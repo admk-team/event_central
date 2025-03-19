@@ -82,6 +82,18 @@ const UserInfo = (props: any) => {
                     </div>
 
                     <Row>
+                        {/* <Col md={12} lg={12}>
+                            <Form.Control
+                                id="email"
+                                type="text"
+                                name="email"
+                                placeholder="Your Email"
+                                value={data.email}
+                                className={'mt-1 form-control' + (errors.email ? 'is-invalid' : '')}
+                                autoComplete="first_name"
+                                disabled
+                            />
+                        </Col> */}
                         <Col md={6} lg={6}>
                             {/* <Form.Label htmlFor="first_name" value="First Name" className='form-label'> First Name </Form.Label> */}
                             {/* <span className="text-danger ms-1">*</span> */}
