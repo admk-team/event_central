@@ -3,8 +3,8 @@ import React, { useState } from "react";
 
 //import images
 import logoSm from "../../../../images/logo-sm.png";
-import logoDark from "../../../../images/logo-dark.png";
-import logoLight from "../../../../images/logo-light.png";
+import logoDark from "../../../../images/logo.png";
+import logoLight from "../../../../images/logo-white.png";
 import { useDispatch, useSelector } from "react-redux";
 import { createSelector } from "@reduxjs/toolkit";
 import { Dropdown, Form } from "react-bootstrap";
@@ -69,9 +69,9 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
             document.body.classList.contains('twocolumn-panel') ? document.body.classList.remove('twocolumn-panel') : document.body.classList.add('twocolumn-panel');
         }
     };
-      const { currentEvent } = usePage().props as Record<string, any>;
-      
-      const { events, auth } = usePage<{ events: any[], auth: { user: any } }>().props;
+    const { currentEvent } = usePage().props as Record<string, any>;
+
+    const { events, auth } = usePage<{ events: any[], auth: { user: any } }>().props;
 
     return (
         <React.Fragment>

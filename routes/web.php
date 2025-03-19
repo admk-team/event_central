@@ -3,8 +3,14 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+<<<<<<< HEAD
 use Inertia\Inertia;
 
+=======
+
+
+use Inertia\Inertia;
+>>>>>>> 8189945155616fb79d1c5803c82a9a8122cdbc3c
 
 /*
 |--------------------------------------------------------------------------

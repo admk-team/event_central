@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import GuestLayout from '../../../Layouts/Attendee/GuestLayout';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import logoLight from "../../../../images/logo-light.png";
+import logoLight from "../../../../images/logo-white.png";
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 
 

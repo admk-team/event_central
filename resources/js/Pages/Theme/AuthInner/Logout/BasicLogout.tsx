@@ -4,13 +4,13 @@ import { Head, Link } from '@inertiajs/react';
 import GuestLayout from '../../../../Layouts/Theme/GuestLayout';
 
 //import images
-import logoLight from "../../../../../images/logo-light.png";
+import logoLight from "../../../../../images/logo-white.png";
 
 const BasicLogout = () => {
     return (
         <React.Fragment>
             <GuestLayout>
-                <Head title='Log Out | Velzon - React Admin & Dashboard Template'/>
+                <Head title='Log Out | Velzon - React Admin & Dashboard Template' />
                 <div className="auth-page-content mt-lg-5">
                     <Container>
                         <Row>
@@ -45,7 +45,7 @@ const BasicLogout = () => {
                         </Row>
                     </Container>
                 </div>
-                </GuestLayout>
+            </GuestLayout>
         </React.Fragment >
     );
 };

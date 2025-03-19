@@ -42,7 +42,10 @@ Route::prefix('attendee')->group(function () {
         Route::post('profile/update/{attendee}', [ProfileController::class, 'update']);
         Route::post('/logout', [AuthController::class, 'logout']);
 
-        Route::get('{eventApp}', [AttendeeEventController::class, 'getEventDetailDashboard'])->name('api.attendee.event');
+        Route::get('event/{eventApp}', [AttendeeEventController::class, 'getEventDetailDashboard']);
+        Route::get('event/session/{eventApp}', [AttendeeEventController::class, 'getEventDetailDashboard']);
+
+        Route::get('event/ticket/{eventApp}', [AttendeeEventController::class, 'ticket']);
     });
 });
 

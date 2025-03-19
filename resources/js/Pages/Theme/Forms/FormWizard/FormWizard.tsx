@@ -12,8 +12,8 @@ import {
 } from "react-bootstrap";
 //Import images
 import dummyUser from "../../../../../images/users/user-dummy-img.jpg";
-import logoDark from "../../../../../images/logo-dark.png";
-import logoLight from "../../../../../images/logo-light.png";
+import logoDark from "../../../../../images/logo.png";
+import logoLight from "../../../../../images/logo-white.png";
 
 import BreadCrumb from "../../../../Components/Common/BreadCrumb";
 import { Head } from "@inertiajs/react";
