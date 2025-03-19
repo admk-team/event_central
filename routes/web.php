@@ -2,13 +2,10 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-<<<<<<< HEAD
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 
-=======
 use Inertia\Inertia;
->>>>>>> 999e9119028408f0047b3349c9e9640bfa063cd2
 
 /*
 |--------------------------------------------------------------------------
