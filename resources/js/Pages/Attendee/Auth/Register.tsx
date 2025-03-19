@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import GuestLayout from '../../../Layouts/Attendee/GuestLayout';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
@@ -6,12 +6,14 @@ import logoLight from '../../../../images/logo-light.png';
 
 export default function Register() {
     const eventApp: any = usePage().props.eventApp;
+    const [isGroup, setIsGroup] = useState(false);
     const { data, setData, post, processing, errors, reset } = useForm({
         first_name: '',
         last_name: '',
         email: '',
         password: '',
         password_confirmation: '',
+        groupUser: ''
     });
 
     useEffect(() => {
@@ -125,7 +127,16 @@ export default function Register() {
 
                             <Form.Control.Feedback type="invalid" className='mt-2 d-block'>{errors.password_confirmation}</Form.Control.Feedback>
                         </div>
+                        {!isGroup && <p className='text-decoration-underline cursor-pointer text-primary' onClick={() => setIsGroup(true)}>Is Group</p>}
+                        {isGroup && <p className='text-decoration-underline cursor-pointer text-primary' onClick={() => setIsGroup(false)}>Remove Group</p>}
+                        {isGroup && <div className="mt-4">
+                            <Form.Label htmlFor="password_confirmation" value="Confirm Password" className='form-label'> Group Registration:  <span style={{ fontSize: '13px' }}>name,email | name,email</span></Form.Label>
 
+                            <div className="">
+                                <textarea onChange={(e: any) => setData('groupUser', e.target.value)} className="form-control" aria-label="With textarea" rows="2"></textarea>
+                            </div>
+                        </div>
+                        }
                         <Button type="submit" className="btn btn-success w-100 mt-4" disabled={processing}>
                             Sign Up
                         </Button>

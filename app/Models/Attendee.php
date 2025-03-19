@@ -29,7 +29,8 @@ class Attendee extends Authenticatable
         'bio',
         'type',
         'avatar',
-        'qr_code'
+        'qr_code',
+        'parent_id',
     ];
 
     protected $appends = [
@@ -59,5 +60,14 @@ class Attendee extends Authenticatable
     public function eventSelectedSessions()
     {
         return $this->belongsToMany(EventSession::class, 'attendee_event_session')->withPivot('rating', 'rating_description')->withTimestamps();
+    }
+
+    public function invitedUsers()
+    {
+        return $this->hasMany(Invite::class, 'invited_by');
+    }
+    public function invitedBy()
+    {
+        return $this->hasMany(Invite::class, 'invite_to');
     }
 }
