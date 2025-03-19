@@ -2,14 +2,14 @@ import React from 'react';
 import { Row, Col } from 'react-bootstrap';
 
 //import Images
-import logo_dark from "../../../../../../images/logo-dark.png";
+import logo_dark from "../../../../../../images/logo.png";
 import avatar03 from "../../../../../../images/users/avatar-3.jpg";
 import { Link } from '@inertiajs/react';
 const BasicAction = () => {
-    function changeBackground(e:any) {
+    function changeBackground(e: any) {
         e.target.style.background = "#099885";
     }
-    function bgColor(e:any) {
+    function bgColor(e: any) {
         e.target.style.background = "#0ab39c";
     }
     return (

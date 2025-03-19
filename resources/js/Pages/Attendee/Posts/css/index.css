@@ -1,0 +1,44 @@
+.poll-container {
+    border-radius: 15px;
+    padding: 20px;
+}
+
+.poll-question {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.poll-option {
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 10px;
+    background: #fff;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.poll-option:hover {
+    background: #e1e8ed;
+}
+
+.poll-option input {
+    margin-right: 10px;
+}
+
+.poll-option label {
+    font-size: 1rem;
+    color: #333;
+    cursor: pointer;
+}
+
+.progress {
+    height: 8px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.progress-bar {
+    background-color: #1da1f2;
+}

@@ -11,6 +11,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
@@ -60,6 +61,6 @@ class RegisteredUserController extends Controller
 
         Auth::guard('attendee')->login($user);
 
-        return redirect(route('attendee.event.detail.dashboard', [$eventApp]));
+        return redirect(route('attendee.event.detail.dashboard', [$eventApp->id]));
     }
 }

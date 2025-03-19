@@ -4,7 +4,7 @@ import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 // Import Images
-import logoLight from "../../../../images/logo-light.png";
+import logoLight from "../../../../images/logo-white.png";
 import { Link } from "@inertiajs/react";
 
 const AuthSlider = () => {
@@ -24,7 +24,7 @@ const AuthSlider = () => {
                                 <i className="ri-double-quotes-l display-4 text-success"></i>
                             </div>
 
-                            <Carousel showThumbs={false} autoPlay={true} showArrows={false} showStatus={false} infiniteLoop={true} className="slide" 
+                            <Carousel showThumbs={false} autoPlay={true} showArrows={false} showStatus={false} infiniteLoop={true} className="slide"
                             // id="qoutescarouselIndicators"
                             >
                                 <div className="carousel-inner text-center text-white-50 pb-5">

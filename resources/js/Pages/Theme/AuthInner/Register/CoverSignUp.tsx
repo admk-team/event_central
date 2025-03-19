@@ -32,7 +32,7 @@ const CoverSignUp = () => {
     });
     return (
         <React.Fragment>
-            <Head title = "Cover SignUp | Velzon - React Admin & Dashboard Template"/>
+            <Head title="Cover SignUp | Velzon - React Admin & Dashboard Template" />
             <div className="auth-page-wrapper auth-bg-cover py-5 d-flex justify-content-center align-items-center min-vh-100">
                 <div className="bg-overlay"></div>
                 <div className="auth-page-content overflow-hidden pt-lg-5">
@@ -92,7 +92,7 @@ const CoverSignUp = () => {
                                                         </div>
 
                                                         <div className="mb-4">
-                                                            <p className="mb-0 fs-12 text-muted fst-italic">By registering you agree to the Velzon <Link href="#" className="text-primary text-decoration-underline fst-normal fw-medium ms-2">Terms of Use</Link></p>
+                                                            <p className="mb-0 fs-12 text-muted fst-italic">By registering you agree to the Event Central <Link href="#" className="text-primary text-decoration-underline fst-normal fw-medium ms-2">Terms of Use</Link></p>
                                                         </div>
 
                                                         <div id="password-contain" className="p-3 bg-light mb-2 rounded">

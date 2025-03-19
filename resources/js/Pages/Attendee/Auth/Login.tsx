@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import GuestLayout from '../../../Layouts/Attendee/GuestLayout';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import logoLight from "../../../../images/logo-light.png";
+import logoLight from "../../../../images/logo-white.png";
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 
 
 export default function Login({ status, canResetPassword }: any) {
-    const eventApp = usePage().props.eventApp;
+    const eventApp: any = usePage().props.eventApp;
+    console.log(eventApp);
     const [passwordShow, setPasswordShow] = useState<boolean>(false);
     const { data, setData, post, processing, errors, reset } = useForm({
         email: 'attendee@gmail.com',
@@ -22,7 +23,7 @@ export default function Login({ status, canResetPassword }: any) {
 
     const submit = (e: any) => {
         e.preventDefault();
-        post(route('attendee.login', [1]));
+        post(route('attendee.login', eventApp.id));
     };
     return (
         <React.Fragment>

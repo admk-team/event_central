@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import SimpleBar from "simplebar-react";
 //import logo
 import logoSm from "../../../images/logo-sm.png";
-import logoDark from "../../../images/logo-dark.png";
-import logoLight from "../../../images/logo-light.png";
+import logoDark from "../../../images/logo.png";
+import logoLight from "../../../images/logo-white.png";
 import defaultEventImage from '../../../images/default-event-image.png';
 //Import Components
 import VerticalLayout from "./VerticalLayouts";
@@ -35,6 +35,10 @@ const Sidebar = ({ layoutType }: any) => {
         }
     };
 
+    const truncateAppName = (name: any) => {
+        return name.length > 18 ? name.substring(0, 17) + "..." : name;
+    }
+
     return (
         <React.Fragment>
             <div className="app-menu navbar-menu">
@@ -46,7 +50,7 @@ const Sidebar = ({ layoutType }: any) => {
                         <span className="logo-lg">
                             <div className="d-flex justify-content-start align-items-center">
                                 <img src={defaultEventImage} alt="default event image" style={{ height: '35px', borderRadius: '50%' }} />
-                                <span style={{ marginLeft: '15px' }}>{eventApp.name}</span>
+                                <span style={{ marginLeft: '15px' }} title={eventApp.name}>{truncateAppName(eventApp.name)}</span>
                             </div>
                         </span>
                     </Link>

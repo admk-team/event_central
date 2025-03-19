@@ -2,10 +2,13 @@ import React, { useEffect } from 'react';
 import GuestLayout from '../../../Layouts/Attendee/GuestLayout';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
-import logoLight from '../../../../images/logo-light.png';
+import logoLight from '../../../../images/logo-white.png';
 
 export default function Register() {
     const eventApp: any = usePage().props.eventApp;
+
+    // console.log(eventApp);
+
     const { data, setData, post, processing, errors, reset } = useForm({
         first_name: '',
         last_name: '',

@@ -18,7 +18,7 @@ class EventApp extends Model
         'organizer_id',
         'regis_page_id',
         'name',
-        'logo',
+        // 'logo',    Causing issue while updating event
         'description',
         'location_type',
         'location_base',
@@ -26,16 +26,19 @@ class EventApp extends Model
         'schedual_type',
         'event_app_category_id',
         'is_recurring',
-        'recurring_type_id'
+        'recurring_type_id',
     ];
 
     protected $casts = [
-        'is_recurring' => 'boolean'
+        'is_recurring' => 'boolean',
+        'registration_private' => 'boolean'
     ];
     protected $appends = [
         'start_date',   //Picks first date from dates table
         'created_at' => 'created_at_date',
-        'logo' => 'logo_img'
+        'logo' => 'logo_img',
+        'registration_private',
+        'registration_link'
     ];
     protected $with = [
         'category',
@@ -125,6 +128,11 @@ class EventApp extends Model
     {
         return $this->hasMany(Footer::class);
     }
+    public function tickets()
+    {
+        return $this->hasMany(EventAppTicket::class);
+    }
+
 
     public function getStartDateAttribute()
     {
@@ -132,12 +140,21 @@ class EventApp extends Model
         return $temp ? $temp->date : null;
     }
 
+    public function getRegistrationPrivateAttribute()
+    {
+        if (session('event_id')) {
+            return eventSettings()->getValue('registration_private', false);
+        }
+        return null;
+    }
 
-    // //Mutator
-    // public function setIsRecurringAttribute($value)
-    // {
-    //     $this->attributes['is_recurring'] = (int) $value;
-    // }
+    public function getRegistrationLinkAttribute()
+    {
+        if (session('event_id')) {
+            return eventSettings()->getValue('registration_link');
+        }
+        return null;
+    }
 
     //     Registering Model Life Cycle Events
     protected static function booted()

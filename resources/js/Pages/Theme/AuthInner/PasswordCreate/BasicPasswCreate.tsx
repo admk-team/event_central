@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Button, Card, Col, Container, Row, Form,} from 'react-bootstrap';
-import logoLight from "../../../../../images/logo-light.png";
+import { Button, Card, Col, Container, Row, Form, } from 'react-bootstrap';
+import logoLight from "../../../../../images/logo-white.png";
 
 //formik
 import { useFormik } from 'formik';
@@ -37,7 +37,7 @@ const BasicPasswCreate = () => {
     });
     return (
         <GuestLayout>
-            <Head title = "Create New Password | Velzon - React Admin & Dashboard Template"/>
+            <Head title="Create New Password | Velzon - React Admin & Dashboard Template" />
             <div className="auth-page-content mt-lg-5">
                 <Container>
                     <Row>

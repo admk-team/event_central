@@ -25,6 +25,7 @@ use App\Http\Controllers\Organizer\Event\RegistrationFormController;
 use App\Http\Controllers\Organizer\Event\ScheduleController;
 use App\Http\Controllers\Organizer\Event\Settings\RegistrationFormSettingsController;
 use App\Http\Controllers\Organizer\Event\Settings\WebsiteSettingsController;
+use App\Http\Controllers\Organizer\Event\TicketFeatureController;
 use App\Http\Controllers\Organizer\Event\WebsiteController;
 use App\Http\Controllers\Organizer\Event\WorkshopController;
 use App\Http\Controllers\Organizer\ProfileController;
@@ -97,6 +98,10 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::resource('tickets', EventAppTicketController::class)->only(['index', 'store', 'update', 'destroy']);
             Route::delete('tickets/delete/many', [EventAppTicketController::class, 'destroyMany'])->name('tickets.destroy.many');
 
+            // Ticket-Features
+            Route::resource('tickets-feature', TicketFeatureController::class)->only(['store', 'update', 'destroy']);
+            Route::get('tickets-feature/{event_app_ticket?}', [TicketFeatureController::class, 'index'])->name('tickets-feature.index');
+
             // Promo Codes
             Route::resource('promo-codes', EventPromoCodeController::class)->only(['index', 'store', 'update', 'destroy']);
             Route::delete('promo-codes/delete/many', [EventPromoCodeController::class, 'destroyMany'])->name('promo-codes.destroy.many');
@@ -133,6 +138,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                     Route::get('/', [EventSettingsController::class, 'index'])->name('index');
                     Route::delete('/', [EventSettingsController::class, 'destroyEvent'])->name('destroy');
                     Route::put('info', [EventSettingsController::class, 'updateInfo'])->name('info');
+                    Route::get('generate-link', [EventSettingsController::class, 'generateLink'])->name('link');
                 });
 
                 // Payment
@@ -161,7 +167,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                 Route::prefix('newsfeed')->name('newsfeed.')->group(function () {
                     Route::get('/', [NewsfeedController::class, 'index'])->name('index');
                     Route::post('/', [NewsfeedController::class, 'store'])->name('store');
-                    Route::Put('/{post}/update', [NewsfeedController::class, 'update'])->name('update');
+                    Route::post('/{post}/update', [NewsfeedController::class, 'updatePost'])->name('update');
                     Route::delete('/{post}', [NewsfeedController::class, 'destroy'])->name('destroy');
                     Route::delete('/delete/many', [NewsfeedController::class, 'destroyMany'])->name('destroy.many');
 
