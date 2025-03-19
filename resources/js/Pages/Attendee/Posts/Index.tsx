@@ -6,15 +6,37 @@ import { router } from '@inertiajs/react'
 
 const Index = ({ eventApp, newsfeeds }: any) => {
 console.log(eventApp);
+    // send request to toggle the poll data 
     const getPollData = (e: any, postId: any) => {
         const optionNumber = e.target.value;
         console.log(`Post ID: ${postId}, ${optionNumber}`);
-
         router.post(route('attendee.poll.rating'), {
             post_id: postId,
             option: optionNumber
         });
     };
+
+    // send request likes and dislike 
+    const LikePost = (postId: any) => {
+        router.post(route('attendee.like.rating'), 
+        { post_id: postId},
+        {
+            preserveScroll: true,
+            only: ['newsfeeds']
+        }
+    );
+    };
+    // send request likes and dislike 
+    const DislikePost = (postId: any) => {
+        router.post(route('attendee.dislike.rating'), 
+        { post_id: postId},
+        {
+            preserveScroll: true,
+            only: ['newsfeeds']
+        }
+    );
+    };
+    
     return (
         <React.Fragment>
             <Head title="Event Posts" />
@@ -153,7 +175,7 @@ console.log(eventApp);
                                                                                         key={1}
                                                                                     />
                                                                                 </ProgressBar>
-                                                                                <Form.Check type="radio" name="pollOptions"  value={`${index}`}  onChange={(e) => getPollData(e, post.id)} className="me-2" />
+                                                                                <Form.Check checked={pollData.like.includes(eventApp.id)} type="radio" name="pollOptions"  value={`${index}`}  onChange={(e) => getPollData(e, post.id)} className="me-2" />
                                                                             </div>
                                                                         </div>
                                                                     );
@@ -178,17 +200,33 @@ console.log(eventApp);
 
                                             {/* Like & Dislike Buttons */}
                                             <div className="d-flex justify-content-between mt-3">
-                                                <Button variant="outline-success">
-                                                    👍 Like{" "}
-                                                    {post.likes > 0 &&
-                                                        `(${post.likes})`}
-                                                </Button>
-                                                <Button variant="outline-danger">
-                                                    👎 Dislike{" "}
-                                                    {post.dis_likes > 0 &&
-                                                        `(${post.dis_likes})`}
-                                                </Button>
+                                                <label 
+                                                    onClick={() => LikePost(post.id)} 
+                                                    style={{ cursor: "pointer" }} 
+                                                    className="d-flex align-items-center"
+                                                >
+                                                    <i className="bx bxs-like" style={{ fontSize: "18px", marginRight: "5px" , color: post.likes && JSON.parse(post.likes).includes(eventApp.id) ? "blue" : "black"}}></i>
+                                                    <span style={{ fontSize: "15px" }}>
+                                                        {post.likes && JSON.parse(post.likes).length > 0
+                                                            ? `(${JSON.parse(post.likes).length})`
+                                                            : `(0)`}
+                                                    </span>
+                                                </label>
+
+                                                <label 
+                                                    onClick={() => DislikePost(post.id)} 
+                                                    style={{ cursor: "pointer" }} 
+                                                    className="d-flex align-items-center"
+                                                >
+                                                    <i className="bx bxs-dislike" style={{ fontSize: "18px", marginRight: "5px" , color: post.dis_likes && JSON.parse(post.dis_likes).includes(eventApp.id) ? "blue" : "black"}}></i>
+                                                    <span style={{ fontSize: "15px" }}>
+                                                        {post.dis_likes && JSON.parse(post.dis_likes).length > 0
+                                                            ? `(${JSON.parse(post.dis_likes).length})`
+                                                            : `(0)`}
+                                                    </span>
+                                                </label>
                                             </div>
+
                                         </Card.Body>
                                     </Card>
                                 ))

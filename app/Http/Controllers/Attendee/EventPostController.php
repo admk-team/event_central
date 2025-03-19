@@ -11,11 +11,11 @@ use Inertia\Inertia;
 class EventPostController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * edit the polling data into the post
      */
     public function pollToggle(Request $request)
     {
-        $userId = Auth::id(); // Get the logged-in user ID
+        $userId = Auth::id();
         $event = EventPost::where('id', $request->post_id)->first();
 
         if (!$event) {
@@ -28,60 +28,69 @@ class EventPostController extends Controller
             $option['like'] = array_values(array_diff($option['like'], [$userId]));
         }
         // Add user ID to the selected option's "like" array
-        $selectedOptionIndex = $request->option; // Ensure this is a valid index
-        if (isset($pollData[$selectedOptionIndex])) {
-            $pollData[$selectedOptionIndex]['like'][] = $userId;
+        if (isset($pollData[$request->option])) {
+            $pollData[$request->option]['like'][] = $userId;
         }
         // Encode data back to JSON and update the column
         $event->post_poll = json_encode($pollData);
         $event->save();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function toggleLike(Request $request)
     {
-        //
+        $userId = Auth::id();
+        $event = EventPost::find($request->post_id);
+
+        if (!$event) {
+            return abort(404);
+        }
+
+        // Decode likes and dislikes
+        $likes = json_decode($event->likes, true) ?? [];
+        $dislikes = json_decode($event->dis_likes, true) ?? [];
+
+        // Remove user from dislikes (if they had disliked before)
+        $dislikes = array_values(array_diff($dislikes, [$userId]));
+
+        // Toggle like: if user already liked, remove; otherwise, add
+        if (in_array($userId, $likes)) {
+            $likes = array_values(array_diff($likes, [$userId])); // Remove like
+        } else {
+            $likes[] = $userId; // Add like
+        }
+
+        // Update post
+        $event->likes = json_encode($likes);
+        $event->dis_likes = json_encode($dislikes);
+        $event->save();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function toggleDislike(Request $request)
     {
-        //
-    }
+        $userId = Auth::id();
+        $event = EventPost::find($request->post_id);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        if (!$event) {
+            return abort(404);
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        // Decode likes and dislikes
+        $likes = json_decode($event->likes, true) ?? [];
+        $dislikes = json_decode($event->dis_likes, true) ?? [];
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+        // Remove user from likes (if they had liked before)
+        $likes = array_values(array_diff($likes, [$userId]));
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        // Toggle dislike: if user already disliked, remove; otherwise, add
+        if (in_array($userId, $dislikes)) {
+            $dislikes = array_values(array_diff($dislikes, [$userId]));
+        } else {
+            $dislikes[] = $userId; 
+        }
+
+        // Update post
+        $event->likes = json_encode($likes);
+        $event->dis_likes  = json_encode($dislikes);
+        $event->save();
     }
 }

@@ -257,16 +257,18 @@ function Index({ newsfeeds, events }: any) {
 
                                             {/* Like & Dislike Buttons */}
                                             <div className="d-flex justify-content-between mt-3">
-                                                <Button variant="outline-success">
-                                                    👍 Like{" "}
-                                                    {post.likes > 0 &&
-                                                        `(${post.likes})`}
-                                                </Button>
-                                                <Button variant="outline-danger">
-                                                    👎 Dislike{" "}
-                                                    {post.dis_likes > 0 &&
-                                                        `(${post.dis_likes})`}
-                                                </Button>
+                                                <label>
+                                                    👍 {" "}
+                                                    {post.likes && JSON.parse(post.likes).length > 0
+                                                        ? `(${JSON.parse(post.likes).length})`
+                                                        : `(0)`}
+                                                </label>
+                                                <label>
+                                                    👎 {" "}
+                                                    {post.dis_likes && JSON.parse(post.dis_likes).length > 0
+                                                        ? `(${JSON.parse(post.dis_likes).length})`
+                                                        : `(0)`}
+                                                </label>
                                             </div>
                                         </Card.Body>
                                     </Card>

@@ -9,7 +9,7 @@ function EditModal({ show, onHide, editPost }: any) {
     const [options, setOptions] = useState([{ text: "", like: [] }]);
     const [pollData, setPollData] = useState(true);
 
-    const { data, setData, put, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm({
         title: editPost?.title || "",
         content: editPost?.content || "",
         image: editPost?.img || null,
@@ -21,6 +21,7 @@ function EditModal({ show, onHide, editPost }: any) {
 
     useEffect(() => {
         if (editPost) {
+            setPreview(editPost.img ?? null);
             setData({
                 title: editPost.title || "",
                 content: editPost.content || "",
@@ -30,7 +31,6 @@ function EditModal({ show, onHide, editPost }: any) {
                 sending_time: editPost.sending_time || null,
                 post_poll: editPost?.post_poll || "",
             });
-            setPreview(editPost.img);
             setOptions(JSON.parse(editPost.post_poll) ?? []);
         }
     }, [editPost]);
@@ -40,26 +40,27 @@ function EditModal({ show, onHide, editPost }: any) {
     const submit = (e: any) => {
         e.preventDefault();
         console.log(data);
-        put(route("organizer.events.engagement.newsfeed.update", editPost.id), {
-            onSuccess: () => {
-                reset();
-                onHide();
-            },
-            onError: (error) => {
-                console.error("Error:", error);
-            },
-        });
+        // post(route("organizer.events.engagement.newsfeed.update", editPost.id), {
+        //     onSuccess: () => {
+        //         reset();
+        //         onHide();
+        //     },
+        //     onError: (error) => {
+        //         console.error("Error:", error);
+        //     },
+        // });
     };
+
 
     const handleImageChange = (e: any) => {
         const file = e.target.files[0];
         if (file) {
-            setData("image", file);
             const reader = new FileReader();
             reader.onloadend = () => {
                 setPreview(reader.result);
             };
             reader.readAsDataURL(file);
+            setData("image", file);
         }
     };
 

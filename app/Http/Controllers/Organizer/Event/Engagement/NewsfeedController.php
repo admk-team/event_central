@@ -34,8 +34,9 @@ class NewsfeedController extends Controller
         return back()->withSuccess('Post created successfully');
     }
 
-    public function update(Request $request, EventPost $post)
+    public function updatePost(Request $request, EventPost $post)
     {
+        dd($request->all());
         $data = $request->all();
         if ($request->hasFile('image')) {
             if ($post->image) {
