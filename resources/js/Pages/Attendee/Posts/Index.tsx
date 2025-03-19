@@ -12,7 +12,12 @@ const Index = ({ eventApp, newsfeeds }: any) => {
         router.post(route('attendee.poll.rating'), {
             post_id: postId,
             option: optionNumber
-        });
+        },
+        {
+            preserveScroll: true,
+            only: ['newsfeeds']
+        }
+    );
     };
 
     // send request likes and dislike 
