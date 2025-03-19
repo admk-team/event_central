@@ -1,20 +1,21 @@
 import { Head, Link, useForm } from '@inertiajs/react';
-import React, { useState } from 'react';
-import Layout from '../../Layouts/Attendee';
+import React, { useEffect, useState } from 'react';
+import Layout from '../../../Layouts/Attendee';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import TicketCard from './TicketCard';
 
 
-const Tickets = ({ eventApp }: any) => {
+const Index = ({ eventApp }: any) => {
 
     const [grandTotal, setGrandTotal] = useState(0);
     const [selectedTickets, setSelectedTicket] = useState(Array<any>);
 
 
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors, reset, transform } = useForm({
         _method: 'POST',
         event_app_id: eventApp.id,
-        ticketData: Array<any>()
+        tickets: Array(),
+        grandTotalAmount: 0,
     });
 
     const addToCart = (ticket: any, price: any, quantity: any, subTotal: any, discount: any, total: any, discountCode: any) => {
@@ -29,10 +30,12 @@ const Tickets = ({ eventApp }: any) => {
             discountCode: discountCode
         });
         setSelectedTicket(list);
-        setData('ticketData', selectedTickets);
-        setGrandTotal(list.reduce((accumulator, value) => {
+        setData('tickets', list);
+        let gTotal = list.reduce((accumulator, value) => {
             return accumulator + value.total;
-        }, 0));
+        }, 0);
+        setGrandTotal(gTotal);
+        setData('grandTotalAmount', gTotal);
     }
 
     const removeFromCart = (ticket: any) => {
@@ -41,21 +44,31 @@ const Tickets = ({ eventApp }: any) => {
             return item.ticket_id !== ticket.id
         });
         setSelectedTicket(list);
-        setData('ticketData', selectedTickets);
-        setGrandTotal(list.reduce((accumulator, value) => {
+        setData('tickets', list);
+        let gTotal = list.reduce((accumulator, value) => {
             return accumulator + value.total;
-        }, 0));
+        }, 0);
+        setGrandTotal(gTotal);
+        setData('grandTotalAmount', gTotal);
     }
 
-    const proceedNext = () => {
-        console.log(selectedTickets);
-        post(route('attendee.tickets.post', eventApp.id));
+
+    const submitCheckOut = (e: any) => {
+        e.preventDefault();
+        transform((data: any) => ({
+            ...data,
+            tickets: selectedTickets,
+        }));
+
+        post(route('attendee.tickets.post', eventApp.id), {
+            preserveScroll: true,
+        });
     }
 
     return (
         <React.Fragment>
-            {/* <Head title="Event Tickets" /> */}
-            <section className="section bg-light" id="plans">
+            <Head title="Event Tickets" />
+            <section className="section bg-light" id="tickets">
                 <div className="bg-overlay bg-overlay-pattern"></div>
                 <Container>
                     <Row className="justify-content-center">
@@ -77,21 +90,28 @@ const Tickets = ({ eventApp }: any) => {
                             </TicketCard>
                         )}
                     </Row>
-                    <Row className="mt-4 d-flex justify-content-center">
-                        {grandTotal}
-                        <Col md={6} lg={6}>
+                    <Row className="mt-4 justify-content-center">
+                        <Col md={3} lg={3} >
+                            <h5 className="mb-1 pt-2 pb-2 mr-2 text-end">
+                                Total Payable : <sup>
+                                    <small>$</small>
+                                </sup>
+                                {grandTotal}
+                            </h5>
+                        </Col>
+                        <Col md={3} lg={3}>
                             <Button
                                 disabled={selectedTickets.length === 0}
-                                onClick={proceedNext}
+                                onClick={submitCheckOut}
                                 className="btn btn-success w-100">
-                                Proceed Next {selectedTickets.length > 0 ? '(' + selectedTickets.length + ')' : ''}
+                                Checkout
                             </Button>
                         </Col>
                     </Row>
                 </Container>
-            </section>
-        </React.Fragment>
+            </section >
+        </React.Fragment >
     );
 };
-Tickets.layout = (page: any) => <Layout children={page} />
-export default Tickets;
+Index.layout = (page: any) => <Layout children={page} />
+export default Index;

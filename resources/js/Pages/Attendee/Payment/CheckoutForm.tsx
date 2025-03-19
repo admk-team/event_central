@@ -2,8 +2,10 @@ import { PaymentElement } from "@stripe/react-stripe-js";
 import { useState } from "react";
 import { useStripe, useElements } from "@stripe/react-stripe-js";
 import { Button, Col, Container, Row } from "react-bootstrap";
+import axios from "axios";
+import { router } from "@inertiajs/react";
 
-export default function CheckoutForm({ eventId }: number) {
+export default function CheckoutForm({ eventId, amount, tickets }: any) {
     const stripe = useStripe();
     const elements = useElements();
 
@@ -11,12 +13,10 @@ export default function CheckoutForm({ eventId }: number) {
     const [isProcessing, setIsProcessing] = useState(false);
 
     const handleSubmit = async (e: any) => {
-        console.log("submitting");
         e.preventDefault();
 
         if (!stripe || !elements) {
-            // Stripe.js has not yet loaded.
-            // Make sure to disable form submission until Stripe.js has loaded.
+            // Stripe.js has not yet loaded. Make sure to disable form submission until Stripe.js has loaded.
             return;
         }
 
@@ -25,18 +25,27 @@ export default function CheckoutForm({ eventId }: number) {
         const { error } = await stripe.confirmPayment({
             elements,
             confirmParams: {
-                // Make sure to change this to your payment completion page
-                // return_url: `${window.location.origin}/payment-success`,
                 return_url: route("attendee.payment.success", eventId),
             },
+            redirect: 'if_required'
         });
 
-        if (error.type === "card_error" || error.type === "validation_error") {
-            setMessage(error.message);
+        if (!error) {
+            //Update Purchased Tickets status
+            axios.post(route('attendee.update.payment', eventId), { amount: amount, tickets: tickets }).then((response) => {
+                console.log(response);
+                router.visit(route("attendee.payment.success", eventId));
+            }).catch((errorPost) => {
+                console.log(errorPost);
+            });
+            console.log('callback running');
         } else {
-            setMessage("An unexpected error occured.");
+            if (error.type === "card_error" || error.type === "validation_error") {
+                setMessage(error.message);
+            } else {
+                setMessage("An unexpected error occured.");
+            }
         }
-
         setIsProcessing(false);
     };
 

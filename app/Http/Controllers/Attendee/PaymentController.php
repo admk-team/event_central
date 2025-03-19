@@ -19,14 +19,21 @@ class PaymentController extends Controller
     public function ticketsPage(EventApp $eventApp)
     {
         $eventApp->load(['tickets.sessions']);
-        return Inertia::render('Attendee/Tickets', compact(['eventApp']));
+        return Inertia::render('Attendee/Tickets/Index', compact(['eventApp']));
     }
 
 
     public function postTickets(Request $request, EventApp $eventApp)
     {
         Log::info($request->all());
-        return Inertia::render('Attendee/Payment', compact(['eventApp']));
+        $amount = $request->get('grandTotalAmount');
+        $tickets = $request->get('tickets');
+
+        return Inertia::render('Attendee/Payment/Index', compact([
+            'eventApp',
+            'amount',
+            'tickets'
+        ]));
     }
 
 
@@ -38,6 +45,9 @@ class PaymentController extends Controller
 
     public function createPaymentIntent(Request $request)
     {
+        // Stripe::setApiKey('sk_test_51R3iHCPNcWTtCzebYEqRS1ZyIUkRPiNYrnhm0kpMrqv5kfZKeELsElbWAl5Pvy19ZbmpKUZUZ7HjpIdiLmarvFEp001S8D1Jhe');
+        // Keys
+
         //Ansar
         // public  pk_test_51R3iHCPNcWTtCzebbzvUsG7XMmMnTqUxbs4NE9v8CH5IJxtaMXDgz5FMA96HnS93ZQw9DN6wHLlxgtFW90XW0Q4z004QlcW5Z8
         // secret sk_test_51R3iHCPNcWTtCzebYEqRS1ZyIUkRPiNYrnhm0kpMrqv5kfZKeELsElbWAl5Pvy19ZbmpKUZUZ7HjpIdiLmarvFEp001S8D1Jhe
@@ -46,24 +56,34 @@ class PaymentController extends Controller
         // public  pk_test_51Py6kWHInNTlTUGPM5l30Odo4AOb48C48enPnOsKrw9xhueHWeYlC0lpnRRvtbwMNosFC3UWEZY4c48MsuohS5F700Lyxn0hSm
         // secret sk_test_51Py6kWHInNTlTUGPSnnyUIva83aHRr6ZMpApIGHZKtkgQcVIN1jsgcTQ5Ubp4oW96UdyDeeJROudsNDKFUjpdGrl00ItMh1P7P
 
-        Stripe::setApiKey('sk_test_51R3iHCPNcWTtCzebYEqRS1ZyIUkRPiNYrnhm0kpMrqv5kfZKeELsElbWAl5Pvy19ZbmpKUZUZ7HjpIdiLmarvFEp001S8D1Jhe');
+        $amount = $request->input('amount');
 
         $stripe = new \Stripe\StripeClient('sk_test_51R3iHCPNcWTtCzebYEqRS1ZyIUkRPiNYrnhm0kpMrqv5kfZKeELsElbWAl5Pvy19ZbmpKUZUZ7HjpIdiLmarvFEp001S8D1Jhe');
         $paymentIntent = $stripe->paymentIntents->create([
-            'amount' => 2000,
-            'currency' => 'usd',
+            'amount' => $amount * 100,
+            'currency' => 'USD',
+            // 'customer' => auth()->user()->first_name,
+            'receipt_email' => auth()->user()->email,
+            "description" => 'Event Central Ticket Purchasing',
             'automatic_payment_methods' => ['enabled' => true],
         ]);
 
-        return response()->json(['client_secret' => $paymentIntent->client_secret]);
+        return response()->json(['client_secret' => $paymentIntent->client_secret, 'intent' => $paymentIntent]);
     }
 
     public function paymentSuccess(EventApp $eventApp)
     {
         return Inertia::render(
-            'Attendee/PaymentSuccess',
+            'Attendee/Payment/PaymentSuccess',
             compact(['eventApp'])
         );
+    }
+
+    public function updateAttendeePaymnet(Request $request)
+    {
+        Log::info('Payment Updating. . .');
+        Log::info($request->all());
+        return response()->json(['message' => 'Attendee payment status has been updated']);
     }
 
     public function  validateDiscCode($ticketId, $code)

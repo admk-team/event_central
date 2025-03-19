@@ -1,13 +1,13 @@
 import { Head } from "@inertiajs/react";
 import React from "react";
-import Layout from "../../Layouts/Attendee";
+import Layout from "../../../Layouts/Attendee";
 import { Button, Col, Container, Row } from "react-bootstrap";
 
 const PaymentSuccess = () => {
     return (
         <React.Fragment>
             <Head title="Payment Successful" />
-            <section className="section bg-light" id="plans">
+            <section className="section bg-light mt-4" id="success">
                 <div className="bg-overlay bg-overlay-pattern"></div>
                 <Container>
                     <Row className="justify-content-center">

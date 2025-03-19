@@ -4,9 +4,13 @@ import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
-import Layout from "../../Layouts/Attendee";
+import Layout from "../../../Layouts/Attendee";
+import { Head } from "@inertiajs/react";
 
-function Payment({ eventApp }: any) {
+const Index = ({ eventApp, amount, tickets }: any) => {
+
+    console.log(amount, tickets);
+
     const [stripePromise, setStripePromise] = useState(
         loadStripe(
             "pk_test_51R3iHCPNcWTtCzebbzvUsG7XMmMnTqUxbs4NE9v8CH5IJxtaMXDgz5FMA96HnS93ZQw9DN6wHLlxgtFW90XW0Q4z004QlcW5Z8"
@@ -15,10 +19,10 @@ function Payment({ eventApp }: any) {
     const [clientSecret, setClientSecret] = useState("");
 
     useEffect(() => {
-        axios.post(route("attendee.payment.intent")).then((response) => {
+        axios.post(route("attendee.payment.intent"), { amount: amount }).then((response) => {
             let clientSecret = response.data.client_secret;
             setClientSecret(clientSecret);
-            console.log(clientSecret);
+            console.log(response);
         });
     }, []);
 
@@ -38,8 +42,8 @@ function Payment({ eventApp }: any) {
 
     return (
         <React.Fragment>
-            {/* <Head title="Event Tickets" /> */}
-            <section className="section bg-light" id="plans">
+            <Head title="Payments" />
+            <section className="section bg-light mt-4" id="payment">
                 <div className="bg-overlay bg-overlay-pattern"></div>
                 <Container>
                     <Row className="justify-content-center">
@@ -57,6 +61,8 @@ function Payment({ eventApp }: any) {
                                         >
                                             <CheckoutForm
                                                 eventId={eventApp.id}
+                                                amount={amount}
+                                                tickets={tickets}
                                             />
                                         </Elements>
                                     </CardBody>
@@ -69,5 +75,5 @@ function Payment({ eventApp }: any) {
         </React.Fragment>
     );
 }
-Payment.layout = (page: any) => <Layout children={page} />;
-export default Payment;
+Index.layout = (page: any) => <Layout children={page} />;
+export default Index;
