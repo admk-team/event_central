@@ -5,9 +5,13 @@ import logoLight from "../../../../images/logo-white.png";
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 
 
-export default function Login({ status, canResetPassword }: any) {
+export default function Login({ status, canResetPassword, registration_allowed }: any) {
+
     const eventApp: any = usePage().props.eventApp;
+
     console.log(eventApp);
+    console.log(registration_allowed);
+
     const [passwordShow, setPasswordShow] = useState<boolean>(false);
     const { data, setData, post, processing, errors, reset } = useForm({
         email: 'attendee@gmail.com',
@@ -133,7 +137,7 @@ export default function Login({ status, canResetPassword }: any) {
                     </Form>
                 </div>
                 <div className="mt-4 text-center">
-                    <p className="mb-0">Don't have an account ? <Link href={route('attendee.register', [eventApp.id])} className="fw-semibold text-primary text-decoration-underline"> Signup </Link> </p>
+                    {registration_allowed && <p className="mb-0">Don't have an account ? <Link href={route('attendee.register', [eventApp.id])} className="fw-semibold text-primary text-decoration-underline"> Signup </Link> </p>}
                 </div>
             </GuestLayout >
         </React.Fragment >
