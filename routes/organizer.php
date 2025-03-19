@@ -146,7 +146,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                 Route::prefix('newsfeed')->name('newsfeed.')->group(function () {
                     Route::get('/', [NewsfeedController::class, 'index'])->name('index');
                     Route::post('/', [NewsfeedController::class, 'store'])->name('store');
-                    Route::Put('/{post}/update', [NewsfeedController::class, 'update'])->name('update');
+                    Route::post('/{post}/update', [NewsfeedController::class, 'updatePost'])->name('update');
                     Route::delete('/{post}', [NewsfeedController::class, 'destroy'])->name('destroy');
                     Route::delete('/delete/many', [NewsfeedController::class, 'destroyMany'])->name('destroy.many');
 
