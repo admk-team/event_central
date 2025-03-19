@@ -6,6 +6,7 @@ import BreadCrumb2 from '../../../../../Components/Common/BreadCrumb2';
 import FormStatus from './Components/FormStatus';
 import FormFields from './Components/FormFields';
 import RenderForm from '../../../../../Components/FormBuilder/RenderForm';
+import FormUrl from './Components/FormUrl';
 
 
 function Index({ form }: any) {
@@ -29,12 +30,17 @@ function Index({ form }: any) {
                 <Col xs={12}>
                   <FormFields />
                 </Col>
+                <Col xs={12}>
+                  <FormUrl />
+                </Col>
               </Row>
             </Col>
             <Col xl={9}>
               <Row>
                 <Col xs={12}>
-                  <RenderForm form={form} />
+                  <Container>
+                    <RenderForm form={form} preview={true} />
+                  </Container>
                 </Col>
               </Row>
             </Col>

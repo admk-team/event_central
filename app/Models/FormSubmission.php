@@ -10,4 +10,19 @@ class FormSubmission extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    public function form()
+    {
+        return $this->belongsTo(Form::class);
+    }
+
+    public function fieldValues()
+    {
+        return $this->hasMany(FormFieldValue::class);
+    }
+    
+    public function attendee()
+    {
+        return $this->belongsTo(Attendee::class);
+    }
 }

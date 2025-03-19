@@ -14,9 +14,9 @@ export default function FieldTypesModal({ show, onHide, onSelect }: { show: bool
                 </h5>
             </Modal.Header>
                 <Modal.Body className="field-catalog">
-                    {fieldTypes.map(fieldType => (
+                    {Object.entries(fieldTypes).map(([key, fieldType]) => (
                         <Button
-                            key={fieldType.name}
+                            key={key}
                             variant="light" 
                             className="field fw-semibold"
                             onClick={() => _onSelect(fieldType)}

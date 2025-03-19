@@ -1,9 +1,8 @@
 import { Form, FormGroup } from "react-bootstrap";
 import { useFormBuilder } from "../RenderForm";
 
-export default function Text({ field }: any) {
-  const {data, setData} = useFormBuilder();
-  const name = `field_${field.id}`;
+export default function ShortText({ name, field }: any) {
+  const {data, setData, errors} = useFormBuilder();
 
   return (
     <FormGroup className="mb-3">
@@ -14,13 +13,16 @@ export default function Text({ field }: any) {
         className="form-control"
         value={data[name]}
         onChange={e => setData(name, e.target.value)}
-      // value={data.label}
-      // onChange={(e) => setData('label', e.target.value)}
-      // isInvalid={!!errors.label}
+        isInvalid={!!errors[name]}
       />
-      {/* {errors.label && (
-          <Form.Control.Feedback type="invalid">{errors.label}</Form.Control.Feedback>
-      )} */}
+      {errors[name] && (
+          <Form.Control.Feedback type="invalid">{errors[name]}</Form.Control.Feedback>
+      )}
+      {field.description && (
+        <div className="form-text">
+            {field.description}
+        </div>
+      )}
     </FormGroup>
   )
 }

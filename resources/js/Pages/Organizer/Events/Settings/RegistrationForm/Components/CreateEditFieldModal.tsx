@@ -5,6 +5,7 @@ import FormCheckInput from "react-bootstrap/esm/FormCheckInput";
 import { FormEventHandler } from "react";
 import { Ellipsis, Plus } from "lucide-react";
 import { string } from "yup";
+import FieldTypeHas from "./FieldTypeHas";
 
 export default function CreateEditFieldModal({ show, onHide, fieldType, field }: { show: boolean; onHide: () => void; fieldType?: FieldType | null; field?: any }) {
     const isEdit = field ? true : false;
@@ -68,55 +69,63 @@ export default function CreateEditFieldModal({ show, onHide, fieldType, field }:
         <Modal show={show} onHide={onHide} centered>
             <Modal.Header className="bg-light p-3" closeButton>
                 <h5 className="modal-title">
-                    {fieldType?.label ?? fieldTypes.find(fieldType => fieldType.name === field.type)?.label}
+                    {fieldType?.label ?? fieldTypes[field.type]?.label}
                 </h5>
             </Modal.Header>
             <Form onSubmit={submit}>
                 <Modal.Body className="field-catalog">
                     <div>
-                        <FormGroup className="mb-3">
-                            <Form.Label className="form-label">Label</Form.Label>
-                            <Form.Control
-                                type="text"
-                                className="form-control"
-                                value={data.label}
-                                onChange={(e) => setData('label', e.target.value)}
-                                isInvalid={!!errors.label}
-                            />
-                            {errors.label && (
-                                <Form.Control.Feedback type="invalid">{errors.label}</Form.Control.Feedback>
-                            )}
-                        </FormGroup>
-                        <FormGroup className="mb-3">
-                            <Form.Label className="form-label">Placeholder</Form.Label>
-                            <Form.Control
-                                type="text"
-                                className="form-control"
-                                value={data.placeholder}
-                                onChange={(e) => setData('placeholder', e.target.value)}
-                                isInvalid={!!errors.placeholder}
-                            />
-                            {errors.placeholder && (
-                                <Form.Control.Feedback type="invalid">{errors.placeholder}</Form.Control.Feedback>
-                            )}
-                        </FormGroup>
-                        <FormGroup className="mb-4">
-                            <Form.Label className="form-label">Description</Form.Label>
-                            <Form.Control
-                                as="textarea"
-                                className="form-control"
-                                value={data.description}
-                                rows={3}
-                                onChange={(e) => setData('description', e.target.value)}
-                                isInvalid={!!errors.description}
-                            />
-                            {errors.description && (
-                                <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>
-                            )}
-                        </FormGroup>
+                        <FieldTypeHas type={type} name="label">
+                            <FormGroup className="mb-3">
+                                <Form.Label className="form-label">Label</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    className="form-control"
+                                    value={data.label}
+                                    onChange={(e) => setData('label', e.target.value)}
+                                    isInvalid={!!errors.label}
+                                />
+                                {errors.label && (
+                                    <Form.Control.Feedback type="invalid">{errors.label}</Form.Control.Feedback>
+                                )}
+                            </FormGroup>
+                        </FieldTypeHas>
+
+                        <FieldTypeHas type={type} name="placeholder">
+                            <FormGroup className="mb-3">
+                                <Form.Label className="form-label">Placeholder</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    className="form-control"
+                                    value={data.placeholder}
+                                    onChange={(e) => setData('placeholder', e.target.value)}
+                                    isInvalid={!!errors.placeholder}
+                                />
+                                {errors.placeholder && (
+                                    <Form.Control.Feedback type="invalid">{errors.placeholder}</Form.Control.Feedback>
+                                )}
+                            </FormGroup>
+                        </FieldTypeHas>
+
+                        <FieldTypeHas type={type} name="description">
+                            <FormGroup className="mb-4">
+                                <Form.Label className="form-label">Description</Form.Label>
+                                <Form.Control
+                                    as="textarea"
+                                    className="form-control"
+                                    value={data.description}
+                                    rows={3}
+                                    onChange={(e) => setData('description', e.target.value)}
+                                    isInvalid={!!errors.description}
+                                />
+                                {errors.description && (
+                                    <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>
+                                )}
+                            </FormGroup>
+                        </FieldTypeHas>
                         
                         {/* Options */}
-                        {(data.type === 'choice' || data.type === 'dropdown') && (
+                        <FieldTypeHas type={type} name="options">
                             <FormGroup className="mb-4">
                                 <Form.Label className="form-label">Options</Form.Label>
                                 <ListGroup>
@@ -161,10 +170,10 @@ export default function CreateEditFieldModal({ show, onHide, fieldType, field }:
                                     <Plus size={18} />Add Option
                                 </Button>
                             </FormGroup>
-                        )}
-
+                        </FieldTypeHas>
+                        
                         <ListGroup className="mb-3">
-                            {data.type === 'choice' && (
+                            <FieldTypeHas type={type} name="multiple_selection">
                                 <ListGroupItem as="label" className="d-flex align-items-center justify-content-between">
                                     <span className="fw-semibold">Multiple Selection</span>
                                     <div className="form-check form-switch form-switch-lg mb-0" dir='ltr'>
@@ -176,18 +185,21 @@ export default function CreateEditFieldModal({ show, onHide, fieldType, field }:
                                         />
                                     </div>
                                 </ListGroupItem>
-                            )}
-                            <ListGroupItem as="label" className="d-flex align-items-center justify-content-between">
-                                <span className="fw-semibold">Required Field</span>
-                                <div className="form-check form-switch form-switch-lg mb-0" dir='ltr'>
-                                    <FormCheckInput
-                                        type="checkbox"
-                                        className="form-check-input"
-                                        checked={data.is_required}
-                                        onChange={e => setData('is_required', e.target.checked)}
-                                    />
-                                </div>
-                            </ListGroupItem>
+                            </FieldTypeHas>
+                            
+                            <FieldTypeHas type={type} name="required_field">
+                                <ListGroupItem as="label" className="d-flex align-items-center justify-content-between">
+                                    <span className="fw-semibold">Required Field</span>
+                                    <div className="form-check form-switch form-switch-lg mb-0" dir='ltr'>
+                                        <FormCheckInput
+                                            type="checkbox"
+                                            className="form-check-input"
+                                            checked={data.is_required}
+                                            onChange={e => setData('is_required', e.target.checked)}
+                                        />
+                                    </div>
+                                </ListGroupItem>
+                            </FieldTypeHas>
                         </ListGroup>
                     </div>
                 </Modal.Body>

@@ -21,6 +21,7 @@ use App\Http\Controllers\Organizer\Event\EventAppTicketController;
 use App\Http\Controllers\Organizer\Event\EventDateController;
 use App\Http\Controllers\Organizer\Event\EventPromoCodeController;
 use App\Http\Controllers\Organizer\Event\FormFieldController;
+use App\Http\Controllers\Organizer\Event\RegistrationFormController;
 use App\Http\Controllers\Organizer\Event\ScheduleController;
 use App\Http\Controllers\Organizer\Event\Settings\RegistrationFormSettingsController;
 use App\Http\Controllers\Organizer\Event\Settings\WebsiteSettingsController;
@@ -36,6 +37,12 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('e/{uuid}')->name('organizer.events.website')->group(function () {
     Route::get('/', [WebsiteController::class, 'index']);
     Route::get('{slug}', [WebsiteController::class, 'page'])->name('.page');
+});
+
+// Event Registration Form
+Route::prefix('event-registration-form/{uuid}')->name('organizer.events.event-registration-form')->group(function () {
+    Route::get('/', [RegistrationFormController::class, 'index']);
+    Route::post('/', [RegistrationFormController::class, 'submit'])->name('.submit');
 });
 
 Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organizer.')->group(function () {

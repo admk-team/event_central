@@ -7,7 +7,7 @@ import { router } from "@inertiajs/react";
 import CreateEditFieldModal from "./CreateEditFieldModal";
 
 export default function FormField({ field }: any) {
-    const Icon = fieldTypes.find(fieldType => fieldType.name === field.type)?.icon;
+    const Icon = fieldTypes[field.type]?.icon;
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showEditFieldModal, setShowEditFieldModal] = useState(false);
 
