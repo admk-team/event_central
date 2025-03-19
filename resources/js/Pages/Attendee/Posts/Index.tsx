@@ -9,7 +9,6 @@ const Index = ({ eventApp, newsfeeds }: any) => {
     // send request to toggle the poll data 
     const getPollData = (e: any, postId: any) => {
         const optionNumber = e.target.value;
-        console.log(`Post ID: ${postId}, ${optionNumber}`);
         router.post(route('attendee.poll.rating'), {
             post_id: postId,
             option: optionNumber
@@ -131,8 +130,8 @@ const Index = ({ eventApp, newsfeeds }: any) => {
                                                                                     role="progressbar"
                                                                                     style={{ width: `${likePercentage}%` }}
                                                                                     aria-valuenow={likePercentage}
-                                                                                    aria-valuemin="0"
-                                                                                    aria-valuemax="100"
+                                                                                    aria-valuemin={0} 
+                                                                                    aria-valuemax={100}
                                                                                 ></div>
                                                                             </div>
                                                                         </div>
