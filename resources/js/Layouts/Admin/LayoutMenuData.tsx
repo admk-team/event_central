@@ -8,6 +8,7 @@ const Navdata = () => {
     const [isOrganizers, setIsOrganizers] = useState<boolean>(false);
     const [isPlatforms, setIsPlatforms] = useState<boolean>(false);
     const [isEventCategory, setIsEventCategory] = useState<boolean>(false);
+    const [IsCountry, setIsCountry] = useState<boolean>(false);
 
 
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
@@ -43,6 +44,9 @@ const Navdata = () => {
         }
         if (iscurrentState !== 'Event Category') {
             setIsEventCategory(false);
+        }
+        if (iscurrentState !== 'Countries') {
+            setIsCountry(false);
         }
     }, [
         history,
@@ -147,6 +151,19 @@ const Navdata = () => {
                 e.preventDefault();
                 setIsEventCategory(!isEventCategory);
                 setIscurrentState('Event Category');
+                updateIconSidebar(e);
+            }
+        },
+        {
+            id: "countries",
+            label: "Countries",
+            icon: "bx bx-globe",
+            link: route('admin.countries'),
+            stateVariables: isOrganizers,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsCountry(!IsCountry);
+                setIscurrentState('Countries');
                 updateIconSidebar(e);
             }
         },
