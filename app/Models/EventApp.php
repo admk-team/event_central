@@ -172,4 +172,8 @@ class EventApp extends Model
             }
         });
     }
+    public function questions()
+    {
+        return $this->hasMany(Question::class, 'event_app_id');
+    }
 }

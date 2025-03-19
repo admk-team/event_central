@@ -10,6 +10,8 @@ use App\Http\Controllers\Attendee\PaymentController;
 use App\Http\Controllers\Attendee\EventPostController;
 use App\Http\Controllers\Attendee\ProfileController;
 use App\Http\Controllers\Attendee\QrCodeController;
+use App\Http\Controllers\Attendee\QuestionAttendeeController as AttendeeQuestionAttendeeController;
+use App\Http\Controllers\QuestionAttendeeController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->prefix('attendee')->group(function () {
@@ -72,4 +74,9 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
     Route::post('/attendee-poll-rating', [EventPostController::class, 'pollToggle'])->name('attendee.poll.rating');
     Route::post('/attendee-post-likes', [EventPostController::class, 'toggleLike'])->name('attendee.like.rating');
     Route::post('/attendee-post-dislikes', [EventPostController::class, 'toggleDislike'])->name('attendee.dislike.rating');
+    
+    Route::get('/events/qa', [AttendeeQuestionAttendeeController::class, 'index'])->name('attendee.events.qa.index');
+    Route::post('/events/{event}/questions', [AttendeeQuestionAttendeeController::class, 'storeQuestion'])->name('attendee.events.qa.store');
+    Route::post('/events/questions/{questionId}/vote', [AttendeeQuestionAttendeeController::class, 'vote'])->name('attendee.events.qa.vote');
+    Route::post('/events/questions/{questionId}/answer', [AttendeeQuestionAttendeeController::class, 'storeAnswer'])->name('attendee.events.qa.answer');
 });

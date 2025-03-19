@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\Organizer\Event\CustomMenuController;
 use App\Http\Controllers\Organizer\Event\DashboardController;
 use App\Http\Controllers\Organizer\Event\Engagement\NewsfeedController;
@@ -32,6 +33,7 @@ use App\Http\Controllers\Organizer\ProfileController;
 use App\Http\Controllers\Organizer\RoleController;
 use App\Http\Controllers\Organizer\Settings\OrganizerPaymentSettingController;
 use App\Http\Controllers\Organizer\UserController;
+use App\Http\Controllers\QuestionController;
 use App\Http\Middleware\CurrentEventMiddleware;
 use Illuminate\Support\Facades\Route;
 
@@ -181,12 +183,14 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                     Route::post('/{post}/update', [NewsfeedController::class, 'updatePost'])->name('update');
                     Route::delete('/{post}', [NewsfeedController::class, 'destroy'])->name('destroy');
                     Route::delete('/delete/many', [NewsfeedController::class, 'destroyMany'])->name('destroy.many');
-
                 });
             });
 
             Route::post('import/{importType}', [ImportController::class, 'import'])->name('import');
         });
     });
+    Route::get('/events/qa', [QuestionController::class, 'index'])->name('events.qa.index');
+    Route::post('/events/{event}/questions', [QuestionController::class, 'storeQuestion'])->name('events.qa.store');
+    Route::post('/events/questions/{questionId}/vote', [QuestionController::class, 'vote'])->name('events.qa.vote');
+    Route::post('/events/questions/{questionId}/answer', [QuestionController::class, 'storeAnswer'])->name('events.qa.answer');
 });
-

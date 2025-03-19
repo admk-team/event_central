@@ -12,6 +12,7 @@ const Navdata = () => {
     const [isQr, setIsQr] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
+      const [IsQA, setIsQA] = useState<boolean>(false);
 
     function updateIconSidebar(e: any) {
         if (e && e.target && e.target.getAttribute("sub-items")) {
@@ -41,11 +42,8 @@ const Navdata = () => {
         if (iscurrentState !== "More") {
             setIsMore(false);
         }
-        if (iscurrentState !== 'Qr') {
-            setIsQr(false);
-        }
-        if (iscurrentState !== "Posts") {
-            setIsPost(false);
+        if (iscurrentState !== 'Q&A') {
+            setIsQA(false);
         }
     }, [
         history,
@@ -141,32 +139,19 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
-        // {
-        //     id: "checkout",
-        //     label: "Checkout",
-        //     icon: "bx bx-qr",
-        //     link: route('attendee.checkout.get', eventApp.id),
-        //     stateVariables: isMore,
-        //     click: function (e: any) {
-        //         e.preventDefault();
-        //         setIsMore(!isMore);
-        //         setIscurrentState('More');
-        //         updateIconSidebar(e);
-        //     },
-        // },
-        // {
-        //     id: "qr-code",
-        //     label: "QR Code",
-        //     icon: "bx bx-qr",
-        //     link: route('attendee.qr-code.get', eventApp.id),
-        //     stateVariables: isMore,
-        //     click: function (e: any) {
-        //         e.preventDefault();
-        //         setIsMore(!isMore);
-        //         setIscurrentState('More');
-        //         updateIconSidebar(e);
-        //     },
-        // },
+        {
+            id: "qa",
+            label: "Q&A",
+            icon: "bx bxs-dashboard",
+            link: route('attendee.events.qa.index'),
+            stateVariables: IsQA,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsQA(!IsQA);
+                setIscurrentState('Q&A');
+                updateIconSidebar(e);
+            }
+        },
     ];
     return <React.Fragment>{menuItems}</React.Fragment>;
 };
