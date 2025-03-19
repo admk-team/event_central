@@ -2,9 +2,13 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+<<<<<<< HEAD
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 
+=======
+use Inertia\Inertia;
+>>>>>>> 999e9119028408f0047b3349c9e9640bfa063cd2
 
 /*
 |--------------------------------------------------------------------------
@@ -27,7 +31,9 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 // });
 
 // Route::get("/apps-ecommerce-orders", [ProfileController::class, 'index'])->name('order-list');
-Route::redirect('/', 'login');
+Route::get('/', function () {
+    return Inertia::render('Home');
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile-edit', [ProfileController::class, 'edit'])->name('profile.edit'); // To be removed in future
@@ -41,10 +47,10 @@ Route::get('/test-qr', function () {
 
 require __DIR__.'/auth.php';
 
-require __DIR__.'/admin.php';
+require __DIR__ . '/admin.php';
 
-require __DIR__.'/organizer.php';
+require __DIR__ . '/organizer.php';
 
-require __DIR__.'/theme.php';
+require __DIR__ . '/theme.php';
 
 require __DIR__ . '/attendee.php';
