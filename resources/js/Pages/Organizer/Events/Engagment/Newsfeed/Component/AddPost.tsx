@@ -15,9 +15,9 @@ function AddPost({ events, editPost }: any) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [preview, setPreview] = useState<any>();
     const [schedulePost, setSchedulePost] = useState<any>(false);
-    const [options, setOptions] = useState([{ text: "", like: 0, dislike: 0 }]);
+    const [options, setOptions] = useState([{ text: "", like: [] }]);
     const [pollData, setPollData] = useState(false);
-    const { data, setData, post, put, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors, reset } = useForm({
         title: "",
         content: "",
         image: editPost?.image || null,
@@ -68,7 +68,7 @@ function AddPost({ events, editPost }: any) {
 
     const clearPoll = () => {
         setData("post_poll", "");
-        setOptions([{ text: "", like: 0, dislike: 0 }]);
+        setOptions([{ text: "", like: [] }]);
         setPollData(false);
     };
 
@@ -78,7 +78,9 @@ function AddPost({ events, editPost }: any) {
 
     // Add a new option
     const addOption = () => {
-        setOptions([...options, { text: "", like: 0, dislike: 0 }]);
+        if (options.length < 4) {
+            setOptions([...options, { text: "", like: [] }]);
+        }
     };
 
     // Handle option change
@@ -336,20 +338,11 @@ function AddPost({ events, editPost }: any) {
                                         </Form.Group>
                                     ))}
 
-                                    <Button
-                                        variant="outline-primary"
-                                        onClick={addOption}
-                                        className="mt-2"
-                                    >
-                                        + Add Option
-                                    </Button>
-                                    <Button
-                                        variant="outline-primary"
-                                        onClick={clearPoll}
-                                        className="mt-2 ms-2"
-                                    >
-                                        Remove
-                                    </Button>
+                                    {options.length < 4 ? (<Button variant="outline-primary"
+                                        onClick={addOption} className="mt-2">+ Add Option</Button>):
+                                        <Button variant="outline-primary"
+                                        disabled className="mt-2">+ Add Option</Button>}
+                                    {options.length > 0 ? (<Button variant="outline-primary" onClick={clearPoll} className="mt-2 ms-2">Remove</Button>) : null}
                                 </FormGroup>
                             )}
                             <Row className="mt-2 align-items-center">
@@ -379,6 +372,7 @@ function AddPost({ events, editPost }: any) {
                                         type="submit"
                                         variant="primary"
                                         className="rounded-pill"
+                                        disabled={processing}
                                     >
                                         <span>Add Post</span>
                                     </Button>

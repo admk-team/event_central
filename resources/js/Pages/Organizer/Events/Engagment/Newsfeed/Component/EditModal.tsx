@@ -6,7 +6,7 @@ import { Button, Col, Form, FormGroup, Modal, Row } from "react-bootstrap";
 function EditModal({ show, onHide, editPost }: any) {
     const [preview, setPreview] = useState<any>(null);
     const [schedulePost, setSchedulePost] = useState<any>(false);
-    const [options, setOptions] = useState([{ text: "", like: 0, dislike: 0 }]);
+    const [options, setOptions] = useState([{ text: "", like: [] }]);
     const [pollData, setPollData] = useState(true);
 
     const { data, setData, put, processing, errors, reset } = useForm({
@@ -39,7 +39,7 @@ function EditModal({ show, onHide, editPost }: any) {
 
     const submit = (e: any) => {
         e.preventDefault();
-        console.log(data)
+        console.log(data);
         put(route("organizer.events.engagement.newsfeed.update", editPost.id), {
             onSuccess: () => {
                 reset();
@@ -64,7 +64,9 @@ function EditModal({ show, onHide, editPost }: any) {
     };
 
     const addOption = () => {
-        setOptions([...options, { text: "", like: 0, dislike: 0 }]);
+        if (options.length < 4) {
+            setOptions([...options, { text: "", like: [] }]);
+        }
     };
 
     // Handle option change
@@ -78,7 +80,7 @@ function EditModal({ show, onHide, editPost }: any) {
 
     const clearPoll = () => {
         setData("post_poll", "");
-        setOptions([{ text: "", like: 0, dislike: 0 }]);
+        setOptions([{ text: "", like: [] }]);
         setPollData(false);
     };
 
@@ -333,13 +335,10 @@ function EditModal({ show, onHide, editPost }: any) {
                                     </Form.Group>
                                 ))}
 
-                                <Button
-                                    variant="outline-primary"
-                                    onClick={addOption}
-                                    className="mt-2"
-                                >
-                                    + Add Option
-                                </Button>
+                                {options.length < 4 ? (<Button variant="outline-primary"
+                                onClick={addOption} className="mt-2">+ Add Option</Button>):
+                                <Button variant="outline-primary"
+                                disabled className="mt-2">+ Add Option</Button>}
                                 {options.length > 0 ? (
                                     <Button
                                         variant="outline-primary"

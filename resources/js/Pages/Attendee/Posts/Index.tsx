@@ -1,94 +1,24 @@
-import React, { useState } from "react";
-import {
-    Button,
-    Card,
-    Col,
-    Container,
-    Row,
-    Table,
-    Image,
-    ProgressBar,
-    Form,
-} from "react-bootstrap";
-import { Head, Link, useForm } from "@inertiajs/react";
-import BreadCrumb from "../../../../../Components/Common/BreadCrumb";
-import Layout from "../../../../../Layouts/Event";
-import AddPost from "./Component/AddPost";
-import { usePage } from "@inertiajs/react";
-import DeleteModal from "../../../../../Components/Common/DeleteModal";
-import EditModal from "./Component/EditModal";
+import { Head } from "@inertiajs/react";
+import Layout from "../../../Layouts/Attendee";
+import React, { useState, useEffect } from "react";
+import {Button,Card,Col,Container,Row, Form,Image,ProgressBar} from "react-bootstrap";
+import { router } from '@inertiajs/react'
 
-function Index({ newsfeeds, events }: any) {
-    const [deletePost, setDeletePost] = React.useState<any>(null);
-    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-    const [showEditPost, setshowEditPost] = React.useState<any>(null);
-    const [showEditModal, setshowEditModal] = React.useState<any>(false);
+const Index = ({ eventApp, newsfeeds }: any) => {
+console.log(eventApp);
+    const getPollData = (e: any, postId: any) => {
+        const optionNumber = e.target.value;
+        console.log(`Post ID: ${postId}, ${optionNumber}`);
 
-    const deleteForm = useForm({
-        _method: "DELETE",
-    });
-
-    const deleteAction = (event: any) => {
-        setDeletePost(event);
-        setShowDeleteConfirmation(true);
+        router.post(route('attendee.poll.rating'), {
+            post_id: postId,
+            option: optionNumber
+        });
     };
-
-    const editAction = (data: any) => {
-        setshowEditPost(data);
-        setshowEditModal(true);
-    };
-
-    const handleDelete = () => {
-        deleteForm.post(
-            route("organizer.events.engagement.newsfeed.destroy", deletePost)
-        );
-        setShowDeleteConfirmation(false);
-    };
-
     return (
         <React.Fragment>
-            <Head>
-                <title>Newsfeed | Organizer Dashboard</title>
-                <meta
-                    name="description"
-                    content="Manage event Newsfeeds, edit details, and delete records from the organizer's dashboard."
-                />
-                <meta
-                    name="keywords"
-                    content="event Newsfeeds, Newsfeed management, conference Newsfeeds, admin dashboard"
-                />
-                <meta name="robots" content="index, follow" />
-
-                {/* Open Graph Meta Tags */}
-                <meta
-                    property="og:title"
-                    content="Newsfeed | Organizer Dashboard"
-                />
-                <meta
-                    property="og:description"
-                    content="Manage event Newsfeeds, edit details, and delete records from the organizer's dashboard."
-                />
-                <meta property="og:type" content="website" />
-                <meta
-                    property="og:url"
-                    content={route(
-                        "organizer.events.engagement.newsfeed.index"
-                    )}
-                />
-            </Head>
-
+            <Head title="Event Posts" />
             <div className="page-content">
-                <Container fluid>
-                    <BreadCrumb title="Posts" pageTitle="Dashboard" />
-                    <Row>
-                        <Col lg={6} className="mx-auto">
-                            <AddPost
-                                events={events[0]}
-                                editPostData={showEditPost}
-                            />
-                        </Col>
-                    </Row>
-                </Container>
                 <Container fluid>
                     <Row className="justify-content-center">
                         <Col lg={6} className="mt-3">
@@ -98,39 +28,11 @@ function Index({ newsfeeds, events }: any) {
                                         key={post.id}
                                         className="mb-4 shadow-sm"
                                     >
-                                        <Card.Header>
-                                            <div className="d-flex gap-2 justify-content-end">
-                                                <span
-                                                    className="link-primary cursor-pointer"
-                                                    onClick={() =>
-                                                        editAction(post)
-                                                    }
-                                                >
-                                                    <i className="ri-edit-fill"></i>
-                                                </span>
-                                                <EditModal
-                                                    show={showEditModal}
-                                                    onHide={() =>
-                                                        setshowEditModal(false)
-                                                    }
-                                                    editPost={showEditPost}
-                                                />
-
-                                                <span
-                                                    className="link-danger cursor-pointer"
-                                                    onClick={() =>
-                                                        deleteAction(post.id)
-                                                    }
-                                                >
-                                                    <i className="ri-delete-bin-5-line"></i>
-                                                </span>
-                                            </div>
-                                        </Card.Header>
                                         <Card.Body>
                                             {/* Post Header */}
                                             <div className="d-flex align-items-center mb-2">
                                                 <Image
-                                                    src={`/storage/${events[0].logo}`}
+                                                    src={`/storage/${eventApp.logo}`}
                                                     roundedCircle
                                                     width="40"
                                                     height="40"
@@ -138,7 +40,7 @@ function Index({ newsfeeds, events }: any) {
                                                 />
                                                 <div>
                                                     <strong>
-                                                        {events[0].name}
+                                                        {eventApp.name}
                                                     </strong>
                                                     <div
                                                         className="text-muted"
@@ -197,13 +99,32 @@ function Index({ newsfeeds, events }: any) {
                                                                           options:
                                                                               [],
                                                                       };
-                                                            const totalVotes = pollData.reduce((sum:number, poll:any) => sum + (poll.like.length || 0), 0);
+                                                            const totalVotes =
+                                                                pollData.reduce(
+                                                                    (
+                                                                        sum: number,
+                                                                        poll: any
+                                                                    ) =>
+                                                                        sum +
+                                                                        (poll
+                                                                            .like
+                                                                            .length ||
+                                                                            0),
+                                                                    0
+                                                                );
                                                             return pollData.map(
                                                                 (
                                                                     pollData: any,
                                                                     index: number
                                                                 ) => {
-                                                                    const likePercentage = totalVotes ? (pollData.like.length / totalVotes) * 100: 0;
+                                                                    const likePercentage =
+                                                                        totalVotes
+                                                                            ? (pollData
+                                                                                  .like
+                                                                                  .length /
+                                                                                  totalVotes) *
+                                                                              100
+                                                                            : 0;
                                                                     return (
                                                                         <div
                                                                             key={
@@ -215,25 +136,25 @@ function Index({ newsfeeds, events }: any) {
                                                                                 {pollData.text ??
                                                                                     "N/A"}
                                                                                 <span>
-                                                                                    {pollData.like.length ||
-                                                                                        0}{" "}Likes{" "}
+                                                                                    {pollData
+                                                                                        .like
+                                                                                        .length ||
+                                                                                        0}{" "}
+                                                                                    Likes{" "}
                                                                                 </span>
                                                                             </div>
-                                                                            <ProgressBar>
-                                                                                <ProgressBar
-                                                                                    className="text-dark fw-bold"
-                                                                                    now={
-                                                                                        likePercentage
-                                                                                    }
-                                                                                    label={`${likePercentage.toFixed(
-                                                                                        1
-                                                                                    )}%`}
-                                                                                    variant="success"
-                                                                                    key={
-                                                                                        1
-                                                                                    }
-                                                                                />
-                                                                            </ProgressBar>
+                                                                            <div className="d-flex justify-content-between align-items-center">
+                                                                                <ProgressBar className="flex-grow-1">
+                                                                                    <ProgressBar
+                                                                                        className="text-dark fw-bold"
+                                                                                        now={likePercentage}
+                                                                                        label={`${likePercentage.toFixed(1)}%`}
+                                                                                        variant="success"
+                                                                                        key={1}
+                                                                                    />
+                                                                                </ProgressBar>
+                                                                                <Form.Check type="radio" name="pollOptions"  value={`${index}`}  onChange={(e) => getPollData(e, post.id)} className="me-2" />
+                                                                            </div>
                                                                         </div>
                                                                     );
                                                                 }
@@ -279,19 +200,9 @@ function Index({ newsfeeds, events }: any) {
                         </Col>
                     </Row>
                 </Container>
-
-                <DeleteModal
-                    show={showDeleteConfirmation}
-                    onDeleteClick={handleDelete}
-                    onCloseClick={() => {
-                        setShowDeleteConfirmation(false);
-                    }}
-                />
             </div>
         </React.Fragment>
     );
-}
-
+};
 Index.layout = (page: any) => <Layout children={page} />;
-
 export default Index;

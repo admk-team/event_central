@@ -6,6 +6,7 @@ use App\Http\Controllers\Attendee\Auth\PasswordController;
 use App\Http\Controllers\Attendee\Auth\RegisteredUserController;
 use App\Http\Controllers\Attendee\EventController;
 use App\Http\Controllers\Attendee\EventSessionController;
+use App\Http\Controllers\Attendee\EventPostController;
 use App\Http\Controllers\Attendee\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -34,6 +35,7 @@ Route::middleware(['auth:attendee'])->group(function () {
         Route::get('{eventApp}/detail/session/{eventSession}', [EventController::class, 'getEventSessionDetail'])->name('attendee.event.detail.session');
         Route::get('{eventApp}/detail/speakers/{eventSpeaker?}', [EventController::class, 'getEventSpeakerDetail'])->name('attendee.event.detail.speakers');
         Route::get('{eventApp}/detail/more', [EventController::class, 'getEventDetailMore'])->name('attendee.event.detail.more');
+        Route::get('{eventApp}/event-posts', [EventController::class, 'getPostsMore'])->name('attendee.posts.index');
     });
 
     Route::put('/attendee-profile-update/{attendee}', [ProfileController::class, 'update'])->name('attendee.profile.update');
@@ -43,4 +45,6 @@ Route::middleware(['auth:attendee'])->group(function () {
     Route::post('/attendee-save-session/{eventSession}/{type}', [EventSessionController::class, 'saveSession'])->name('attendee.save.session');
 
     Route::post('/attendee-save-rating/{eventSession}', [EventSessionController::class, 'saveRating'])->name('attendee.save.rating');
+
+    Route::post('/attendee-poll-rating', [EventPostController::class, 'pollToggle'])->name('attendee.poll.rating');
 });
