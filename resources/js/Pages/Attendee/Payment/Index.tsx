@@ -48,7 +48,7 @@ const Index = ({ eventApp, amount, tickets }: any) => {
                 <Container>
                     <Row className="justify-content-center">
                         <Col md={6} lg={6}>
-                            <h1>Payment</h1>
+                            <h1>Stripe Payment</h1>
                             {clientSecret && stripePromise && (
                                 <Card>
                                     <CardBody>
