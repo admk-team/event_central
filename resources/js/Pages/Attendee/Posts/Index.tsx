@@ -4,10 +4,8 @@ import React, { useState, useEffect } from "react";
 import {Button,Card,Col,Container,Row, Form,Image,ProgressBar} from "react-bootstrap";
 import { router } from '@inertiajs/react'
 import "./css/index.css";
-import { Label } from "@headlessui/react";
 
 const Index = ({ eventApp, newsfeeds }: any) => {
-console.log(eventApp);
     // send request to toggle the poll data 
     const getPollData = (e: any, postId: any) => {
         const optionNumber = e.target.value;

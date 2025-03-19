@@ -216,7 +216,7 @@ function Index({ newsfeeds, events }: any) {
                                                                                     "N/A"}
                                                                                 <span>
                                                                                     {pollData.like.length ||
-                                                                                        0}{" "}Likes{" "}
+                                                                                        0}{" "}
                                                                                 </span>
                                                                             </div>
                                                                             <ProgressBar>
