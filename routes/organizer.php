@@ -20,7 +20,10 @@ use App\Http\Controllers\Organizer\Event\PartnerController;
 use App\Http\Controllers\Organizer\Event\EventAppTicketController;
 use App\Http\Controllers\Organizer\Event\EventDateController;
 use App\Http\Controllers\Organizer\Event\EventPromoCodeController;
+use App\Http\Controllers\Organizer\Event\FormFieldController;
+use App\Http\Controllers\Organizer\Event\RegistrationFormController;
 use App\Http\Controllers\Organizer\Event\ScheduleController;
+use App\Http\Controllers\Organizer\Event\Settings\RegistrationFormSettingsController;
 use App\Http\Controllers\Organizer\Event\Settings\WebsiteSettingsController;
 use App\Http\Controllers\Organizer\Event\TicketFeatureController;
 use App\Http\Controllers\Organizer\Event\WebsiteController;
@@ -36,6 +39,12 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('e/{uuid}')->name('organizer.events.website')->group(function () {
     Route::get('/', [WebsiteController::class, 'index']);
     Route::get('{slug}', [WebsiteController::class, 'page'])->name('.page');
+});
+
+// Event Registration Form
+Route::prefix('event-registration-form/{uuid}')->name('organizer.events.event-registration-form')->group(function () {
+    Route::get('/', [RegistrationFormController::class, 'index']);
+    Route::post('/', [RegistrationFormController::class, 'submit'])->name('.submit');
 });
 
 Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organizer.')->group(function () {
@@ -130,6 +139,9 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::get('footers/{footer}/builder', [FooterController::class, 'builder'])->name('footers.builder');
             Route::post('footers/{footer}/builder', [FooterController::class, 'builderSave'])->name('footers.builder.save');
 
+            // Form Fields
+            Route::resource('form-fields', FormFieldController::class)->only(['store', 'update', 'destroy']);
+
             // Settings
             Route::prefix('settings')->name('settings.')->group(function () {
                 // Event
@@ -139,11 +151,20 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                     Route::put('info', [EventSettingsController::class, 'updateInfo'])->name('info');
                     Route::get('generate-link', [EventSettingsController::class, 'generateLink'])->name('link');
                 });
+
                 // Payment
                 Route::prefix('payment')->name('payment.')->group(function () {
                     Route::get('/', [EventAppPaymentController::class, 'index'])->name('index');
                     Route::put('update', [EventAppPaymentController::class, 'update'])->name('update');
                 });
+
+                // Registration Form
+                Route::prefix('registration-form')->name('registration-form.')->group(function () {
+                    Route::get('/', [RegistrationFormSettingsController::class, 'index'])->name('index');
+                    Route::post('/toggle-status', [RegistrationFormSettingsController::class, 'toggleStatus'])->name('toggle-status');
+                    Route::post('/website', [RegistrationFormSettingsController::class, 'toggleStatus'])->name('toggle-status');
+                });
+                
                 // Website
                 Route::prefix('website')->name('website.')->group(function () {
                     Route::get('/', [WebsiteSettingsController::class, 'index'])->name('index');

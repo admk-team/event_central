@@ -31,7 +31,7 @@ Route::middleware('guest')->prefix('attendee')->group(function () {
 Route::get('/google-login/redirect', [AuthenticatedSessionController::class, 'googleRedirect'])->name('attendee.google.redirect');
 Route::get('/google-login/callback', [AuthenticatedSessionController::class, 'googleCallback'])->name('attendee.google.callback');
 
-Route::middleware(['auth:attendee'])->group(function () {
+Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(function () {
 
     Route::prefix('attendee')->group(function () {
         Route::get('profile-edit', [ProfileController::class, 'edit'])->name('attendee.profile.edit');

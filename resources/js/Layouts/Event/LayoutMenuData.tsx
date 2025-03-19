@@ -197,6 +197,12 @@ const Navdata = () => {
                     parentId: "dashboard",
                 },
                 {
+                    id: "registrationForm",
+                    label: "Registration Form",
+                    link: route('organizer.events.settings.registration-form.index'),
+                    parentId: "settings",
+                },
+                {
                     id: "website",
                     label: "Website",
                     link: route('organizer.events.settings.website.index'),
