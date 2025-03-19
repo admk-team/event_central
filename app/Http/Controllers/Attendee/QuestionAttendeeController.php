@@ -1,19 +1,22 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Attendee;
 
+use App\Http\Controllers\Controller;
 use App\Models\EventApp;
 use App\Models\Question;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class QuestionController extends Controller
+class QuestionAttendeeController extends Controller
 {
     public function index(Request $request)
     {
-        $event = EventApp::findOrFail(session('event_id'));
-        $questions = Question::where('event_app_id', session('event_id'))
+        $eventID = session('event_id') ?? Auth::user()->event_app_id;
+        $event = EventApp::findOrFail($eventID);
+        $questions = Question::where('event_app_id', $eventID)
             ->with(['user', 'answers.user'])
             ->get();
 
@@ -21,8 +24,8 @@ class QuestionController extends Controller
             return response()->json(['questionlist' => $questions]);
         }
 
-        return Inertia::render("Organizer/Events/Q&A/Index", [
-            'event' => $event,
+        return Inertia::render("Attendee/Q&A/Index", [
+            'eventApp' => $event,
             'questionlist' => $questions,
         ]);
     }

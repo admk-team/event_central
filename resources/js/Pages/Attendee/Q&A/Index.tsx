@@ -1,10 +1,11 @@
-import Layout from "../../../../Layouts/Event";
+import Layout from '../../../Layouts/Attendee';
 import React, { useState, useEffect } from "react";
 import { Head, Link, usePage } from "@inertiajs/react";
 import { Container, Row, Col } from "react-bootstrap";
-import BreadCrumb from "../../../../Components/Common/BreadCrumb";
-import QuestionList from "../../Events/Q&A/Components/QuestionList";
-import QuestionForm from "../../Events/Q&A/Components/QuestionForm";
+import BreadCrumb from "../../../Components/Common/BreadCrumb";
+import QuestionList from "./Components/QuestionList";
+import QuestionForm from "./Components/QuestionForm";
+
 
 interface User {
     id?: number;
@@ -29,12 +30,12 @@ interface Event {
 }
 
 interface Props {
-    event: Event;
+    eventApp: Event;
     questionlist: Question[];
     newAnswer?: { id: number; content: string; created_at: string; user: { name: string } };
 }
 
-function Index({ event, questionlist: initialQuestions, newAnswer }: Props) {
+function Index({ eventApp, questionlist: initialQuestions, newAnswer }: Props) {
     const { auth } = usePage().props as { auth: { user: User } };
     const [questions, setQuestions] = useState<Question[]>(initialQuestions);
 
@@ -48,7 +49,7 @@ function Index({ event, questionlist: initialQuestions, newAnswer }: Props) {
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
         const interval = setInterval(async () => {
             try {
-                const url = route("organizer.events.qa.index");
+                const url = route("attendee.events.qa.index");
                 const response = await fetch(url, {
                     method: "GET",
                     headers: {
@@ -78,34 +79,24 @@ function Index({ event, questionlist: initialQuestions, newAnswer }: Props) {
 
     return (
         <React.Fragment>
-            <Head title={`Q&A | ${event?.name || "Event Central"}`} />
+            <Head title={`Q&A | ${eventApp?.name || "Event Central"}`} />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title={`Q&A for ${event?.name || "Unnamed Event"}`} pageTitle="Events" />
+                    <BreadCrumb title={`Q&A for ${eventApp?.name || "Unnamed Event"}`} pageTitle="Events" />
                     <Row className="justify-content-center">
                         <Col xs={12} md={8} lg={6}>
                             <div className="text-center">
                                 <h1>Q&A</h1>
                             </div>
                             <div className="mt-4">
-                                <QuestionForm eventId={event?.id} />
+                                <QuestionForm eventId={eventApp?.id} />
                             </div>
                             <QuestionList
-                                eventId={event?.id}
+                                eventId={eventApp?.id}
                                 user={auth?.user || ({} as User)}
                                 questions={questions}
                                 newAnswer={newAnswer}
                             />
-                        </Col>
-                    </Row>
-                    <Row className="mt-4">
-                        <Col className="text-center">
-                            <Link
-                                href={route("organizer.events.index")}
-                                className="btn btn-outline-primary"
-                            >
-                                <i className="ri-arrow-left-line"></i> Back to Events
-                            </Link>
                         </Col>
                     </Row>
                 </Container>

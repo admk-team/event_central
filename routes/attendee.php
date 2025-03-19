@@ -7,6 +7,8 @@ use App\Http\Controllers\Attendee\Auth\RegisteredUserController;
 use App\Http\Controllers\Attendee\EventController;
 use App\Http\Controllers\Attendee\EventSessionController;
 use App\Http\Controllers\Attendee\ProfileController;
+use App\Http\Controllers\Attendee\QuestionAttendeeController as AttendeeQuestionAttendeeController;
+use App\Http\Controllers\QuestionAttendeeController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('attendee')->group(function () {
@@ -43,4 +45,9 @@ Route::middleware(['auth:attendee'])->group(function () {
     Route::post('/attendee-save-session/{eventSession}/{type}', [EventSessionController::class, 'saveSession'])->name('attendee.save.session');
 
     Route::post('/attendee-save-rating/{eventSession}', [EventSessionController::class, 'saveRating'])->name('attendee.save.rating');
+
+    Route::get('/events/qa', [AttendeeQuestionAttendeeController::class, 'index'])->name('attendee.events.qa.index');
+    Route::post('/events/{event}/questions', [AttendeeQuestionAttendeeController::class, 'storeQuestion'])->name('attendee.events.qa.store');
+    Route::post('/events/questions/{questionId}/vote', [AttendeeQuestionAttendeeController::class, 'vote'])->name('attendee.events.qa.vote');
+    Route::post('/events/questions/{questionId}/answer', [AttendeeQuestionAttendeeController::class, 'storeAnswer'])->name('attendee.events.qa.answer');
 });
