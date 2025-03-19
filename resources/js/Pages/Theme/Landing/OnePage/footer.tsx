@@ -2,7 +2,7 @@ import React from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 
 // Import Images
-import logolight from "../../../../../images/logo-light.png";
+import logolight from "../../../../../images/logo-white.png";
 import { Link } from '@inertiajs/react';
 
 

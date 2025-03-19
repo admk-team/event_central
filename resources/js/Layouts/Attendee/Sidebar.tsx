@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import SimpleBar from "simplebar-react";
 //import logo
 import logoSm from "../../../images/logo-sm.png";
-import logoDark from "../../../images/logo-dark.png";
-import logoLight from "../../../images/logo-light.png";
+import logoDark from "../../../images/logo.png";
+import logoLight from "../../../images/logo-white.png";
 import defaultEventImage from '../../../images/default-event-image.png';
 //Import Components
 import VerticalLayout from "./VerticalLayouts";

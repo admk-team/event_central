@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import GuestLayout from '../../Layouts/Theme/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
-import logoLight from '../../../images/logo.png';
+import logoLight from '../../../images/logo-white.png';
 
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -35,10 +35,9 @@ export default function Register() {
                                 <div className="text-center mt-sm-5 mb-4 text-white-50">
                                     <div>
                                         <Link href="/" className="d-inline-block auth-logo">
-                                            <img src={logoLight} alt="" height="20" />
+                                            <img src={logoLight} alt="" height="70" />
                                         </Link>
                                     </div>
-                                    <p className="mt-3 fs-15 fw-medium">Premium Admin & Dashboard Template</p>
                                 </div>
                             </Col>
                         </Row>
@@ -129,7 +128,7 @@ export default function Register() {
                                                 </div>
 
                                                 <div className="mb-4 mt-4">
-                                                    <p className="mb-0 fs-12 text-muted fst-italic">By registering you agree to the Velzon
+                                                    <p className="mb-0 fs-12 text-muted fst-italic">By registering you agree to the Event Central
                                                         <Link href="#" className="text-primary text-decoration-underline fst-normal fw-medium ms-2"> Terms of Use</Link></p>
                                                 </div>
 
