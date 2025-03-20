@@ -18,12 +18,13 @@ class RegistrationFormSettingsController extends Controller
             $currentEvent->form()->create([
                 'title' => '',
                 'description' => '',
+                'status' => false,
             ]);
             $currentEvent->load('form');
         }
 
         return Inertia::render("Organizer/Events/Settings/RegistrationForm/Index", [
-            'url' => route('organizer.events.event-registration-form', $currentEvent->uuid),
+            'url' => route('attendee.event-registration-form', $currentEvent->id),
             'form' => $currentEvent->form()->with('fields')->first(),
         ]);
     }

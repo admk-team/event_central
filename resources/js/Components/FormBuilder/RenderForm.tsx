@@ -25,8 +25,8 @@ export default function RenderForm({ form, preview = false }: any) {
   const submit = (e: any) => {
     e.preventDefault();
 
-    post(route('organizer.events.event-registration-form', {
-      uuid: currentEvent.uuid,
+    post(route('attendee.event-registration-form', {
+      id: currentEvent.id,
       preview: preview ? 'true' : undefined,
     }), {
       preserveScroll: true,
