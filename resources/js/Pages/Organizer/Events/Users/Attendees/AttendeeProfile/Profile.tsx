@@ -12,7 +12,11 @@ const Profile = ({ attendee }: any) => {
                 <Container fluid>
                     <div className="profile-foreground position-relative mx-n4 mt-n4">
                         <div className="profile-wid-bg">
-                            <img src={attendee.avatar_img} alt="" className="profile-wid-img" />
+                            <img
+                                src={attendee.avatar_img}
+                                alt=""
+                                className="profile-wid-img"
+                            />
                         </div>
                     </div>
                     <div className="pt-4 mb-4 mb-lg-3 pb-lg-4">
@@ -30,7 +34,8 @@ const Profile = ({ attendee }: any) => {
                             <Col>
                                 <div className="p-2">
                                     <h3 className="text-white mb-1">
-                                        {attendee.first_name}{" "}{attendee.last_name}
+                                        {attendee.first_name}{" "}
+                                        {attendee.last_name}
                                     </h3>
                                     <p className="text-white text-opacity-75">
                                         {attendee.email}
@@ -60,7 +65,12 @@ const Profile = ({ attendee }: any) => {
                                                                 Full Name :
                                                             </th>
                                                             <td className="text-muted">
-                                                                Anna Adame
+                                                                {
+                                                                    attendee.first_name
+                                                                }{" "}
+                                                                {
+                                                                    attendee.last_name
+                                                                }
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -71,7 +81,8 @@ const Profile = ({ attendee }: any) => {
                                                                 Mobile :
                                                             </th>
                                                             <td className="text-muted">
-                                                                +(1) 987 6543
+                                                                {attendee.mobile ??
+                                                                    "N/A"}
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -82,7 +93,7 @@ const Profile = ({ attendee }: any) => {
                                                                 E-mail :
                                                             </th>
                                                             <td className="text-muted">
-                                                                daveadame@velzon.com
+                                                                {attendee.email}
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -93,8 +104,7 @@ const Profile = ({ attendee }: any) => {
                                                                 Location :
                                                             </th>
                                                             <td className="text-muted">
-                                                                California,
-                                                                United States
+                                                                {attendee.country ?? 'N/A'}
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -105,7 +115,7 @@ const Profile = ({ attendee }: any) => {
                                                                 Joining Date
                                                             </th>
                                                             <td className="text-muted">
-                                                                24 Nov 2021
+                                                                {new Date(attendee.created_at).toLocaleString() ?? 'N/A'}
                                                             </td>
                                                         </tr>
                                                     </tbody>
