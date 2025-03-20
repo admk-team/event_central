@@ -22,7 +22,7 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
         name: ticket?.name ?? '',
         description: ticket?.description ?? '',
         type: 'NORMAL',
-        price: ticket?.price ?? '',
+        base_price: ticket?.base_price ?? '',
         increment_by: ticket?.increment_by ?? '',
         increment_rate: ticket?.increment_rate ?? '',
         increment_type: ticket?.increment_type ?? 'Percentage',
@@ -240,14 +240,14 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
                                 {errors.name && <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>}
                             </FormGroup>
                             <FormGroup className="mb-3">
-                                <Form.Label>Price</Form.Label>
+                                <Form.Label>Base Price</Form.Label>
                                 <Form.Control
                                     type="number"
-                                    value={data.price}
-                                    onChange={(e) => setData('price', e.target.value)}
-                                    isInvalid={!!errors.price}
+                                    value={data.base_price}
+                                    onChange={(e) => setData('base_price', e.target.value)}
+                                    isInvalid={!!errors.base_price}
                                 />
-                                {errors.price && <Form.Control.Feedback type="invalid">{errors.price}</Form.Control.Feedback>}
+                                {errors.base_price && <Form.Control.Feedback type="invalid">{errors.base_price}</Form.Control.Feedback>}
                             </FormGroup>
                         </Col>
 

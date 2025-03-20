@@ -31,6 +31,9 @@ class DatabaseSeeder extends Seeder
 
             // Platforms
             PlatformSeeder::class,
+
+            //Inser a complet set of Event, Session, Tickets etc.
+            //SampleEventDataSeeder::class
         ]);
 
         // \App\Models\User::factory(10)->create();
