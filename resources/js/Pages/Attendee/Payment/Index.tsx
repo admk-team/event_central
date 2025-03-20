@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Col, Container, Row, CardBody } from "react-bootstrap";
+import { Button, Card, Col, Container, Row, CardBody, Spinner } from "react-bootstrap";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
 import { loadStripe } from "@stripe/stripe-js";
@@ -7,22 +7,26 @@ import axios from "axios";
 import Layout from "../../../Layouts/Attendee";
 import { Head } from "@inertiajs/react";
 
-const Index = ({ eventApp, amount, tickets }: any) => {
+const Index = ({ eventApp, amount, tickets, stripe_pub_key }: any) => {
 
-    console.log(amount, tickets);
+    // console.log(amount, stripe_pub_key);
 
     const [stripePromise, setStripePromise] = useState(
         loadStripe(
-            "pk_test_51R3iHCPNcWTtCzebbzvUsG7XMmMnTqUxbs4NE9v8CH5IJxtaMXDgz5FMA96HnS93ZQw9DN6wHLlxgtFW90XW0Q4z004QlcW5Z8"
+            stripe_pub_key
         )
     );
     const [clientSecret, setClientSecret] = useState("");
+    const [loadingIntent, setLoadingIntent] = useState(false);
 
     useEffect(() => {
+        setLoadingIntent(true);
         axios.post(route("attendee.payment.intent"), { amount: amount }).then((response) => {
             let clientSecret = response.data.client_secret;
             setClientSecret(clientSecret);
             console.log(response);
+        }).finally(() => {
+            setLoadingIntent(false);
         });
     }, []);
 
@@ -48,7 +52,12 @@ const Index = ({ eventApp, amount, tickets }: any) => {
                 <Container>
                     <Row className="justify-content-center">
                         <Col md={6} lg={6}>
-                            <h1>Stripe Payment</h1>
+                            <div className="d-flex justify-content-between">
+                                <h4>Stripe Payment</h4>
+                                {loadingIntent && <Spinner animation="border" role="status">
+                                    <span className="visually-hidden">Loading...</span>
+                                </Spinner>}
+                            </div>
                             {clientSecret && stripePromise && (
                                 <Card>
                                     <CardBody>

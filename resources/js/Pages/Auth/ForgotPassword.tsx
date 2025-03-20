@@ -2,7 +2,7 @@ import GuestLayout from '../../Layouts/Theme/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import React from 'react';
 import { Alert, Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
-import logoLight from '../../../images/logo-light.png';
+import logoLight from '../../../images/logo-white.png';
 export default function ForgotPassword({ status }: any) {
     const { data, setData, post, processing, errors } = useForm({
         email: '',

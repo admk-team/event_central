@@ -22,6 +22,12 @@ class EventController extends Controller
         return $this->successResponse(new EventResource($eventApp));
     }
 
+    public function ticket(EventApp $eventApp)
+    {
+        $eventApp->load(['tickets']);
+        return $this->successResponse(new EventResource($eventApp));
+    }
+
     // public function getEventSessionDetail(Request $request, EventApp $eventApp, EventSession $eventSession)
     // {
     //     // Finding previous and next session ids with reference to current session

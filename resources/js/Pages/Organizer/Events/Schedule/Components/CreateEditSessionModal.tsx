@@ -41,7 +41,7 @@ export default function CreateEditSessionModal({ show, hide, onHide, eventSessio
         }
     };
 
- 
+
 
     return (
         <Modal show={show} onHide={onHide} centered>
@@ -101,7 +101,7 @@ export default function CreateEditSessionModal({ show, hide, onHide, eventSessio
                                             setData('start_time', selectedDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }));
                                         }
                                     }}
-                                    
+
 
                                 />
                                 {errors.start_time && <Form.Control.Feedback type="invalid">{errors.start_time}</Form.Control.Feedback>}

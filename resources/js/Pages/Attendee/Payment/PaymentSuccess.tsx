@@ -1,7 +1,7 @@
 import { Head } from "@inertiajs/react";
 import React from "react";
 import Layout from "../../../Layouts/Attendee";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Button, Col, Container, Row, Card, CardBody } from "react-bootstrap";
 
 const PaymentSuccess = () => {
     return (
@@ -12,11 +12,15 @@ const PaymentSuccess = () => {
                 <Container>
                     <Row className="justify-content-center">
                         <Col lg={8}>
-                            <div className="text-center mb-5">
-                                <h3 className="mb-3 fw-bold">
-                                    Your Payment was Successful.
-                                </h3>
-                            </div>
+                            <Card>
+                                <CardBody>
+                                    <div className="d-flex justify-content-center align-items-center " style={{ height: '300px' }}>
+                                        <div><span className="fs-2 text-green">
+                                            Payment was processed successful. <i className='bx bx-smile text-primary'></i>
+                                        </span></div>
+                                    </div>
+                                </CardBody>
+                            </Card>
                         </Col>
                     </Row>
                 </Container>

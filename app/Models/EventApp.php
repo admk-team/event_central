@@ -109,6 +109,11 @@ class EventApp extends Model
         return $this->hasMany(EventAppDate::class);
     }
 
+    public function form()
+    {
+        return $this->hasOne(Form::class);
+    }
+
     public function pages()
     {
         return $this->hasMany(Page::class);
@@ -166,5 +171,9 @@ class EventApp extends Model
                 }
             }
         });
+    }
+    public function questions()
+    {
+        return $this->hasMany(Question::class, 'event_app_id');
     }
 }

@@ -4,8 +4,8 @@ import Scrollspy from "react-scrollspy";
 
 
 //import Images
-import logodark from "../../../../../images/logo-dark.png";
-import logolight from "../../../../../images/logo-light.png";
+import logodark from "../../../../../images/logo.png";
+import logolight from "../../../../../images/logo-white.png";
 import { Link } from '@inertiajs/react';
 
 const Navbar = () => {
@@ -88,28 +88,28 @@ const Navbar = () => {
                                 className="navbar-nav mx-auto mt-2 mt-lg-0"
                                 id="navbar-example"
                             >
-                                 <li className="nav-item">
-                                <NavLink href="#hero" className="fs-14 fw-semibold">Home</NavLink>
-                            </li>
-                            <li className="nav-item">
-                                <NavLink href="#wallet" className="fs-14 fw-semibold">Wallet</NavLink>
-                            </li>
-                            <li className="nav-item">
-                                <NavLink href="#marketplace" className="fs-14 fw-semibold">Marketplace</NavLink>
-                            </li>
-                            <li className="nav-item">
-                                <NavLink href="#categories" className="fs-14 fw-semibold">Categories</NavLink>
-                            </li>
-                            <li className="nav-item">
-                                <NavLink href="#creators" className="fs-14 fw-semibold">Creators</NavLink>
-                            </li>
+                                <li className="nav-item">
+                                    <NavLink href="#hero" className="fs-14 fw-semibold">Home</NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink href="#wallet" className="fs-14 fw-semibold">Wallet</NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink href="#marketplace" className="fs-14 fw-semibold">Marketplace</NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink href="#categories" className="fs-14 fw-semibold">Categories</NavLink>
+                                </li>
+                                <li className="nav-item">
+                                    <NavLink href="#creators" className="fs-14 fw-semibold">Creators</NavLink>
+                                </li>
                             </Scrollspy>
 
                             <div className="">
                                 <Link href="/apps-nft-wallet" className="btn btn-success">Wallet Connect </Link>
                             </div>
-                            </>
-                        </Collapse>
+                        </>
+                    </Collapse>
                 </Container>
             </nav>
             <div className="bg-overlay bg-overlay-pattern"></div>

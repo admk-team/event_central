@@ -73,6 +73,7 @@ class Kernel extends HttpKernel
         'panel' => \App\Http\Middleware\CheckPanelAccess::class,
         'event_is_selected' => \App\Http\Middleware\CurrentEventMiddleware::class,
         'ability' => \App\Http\Middleware\AbilityMiddleware::class,
+        'check_attendee_registration_form' => \App\Http\Middleware\CheckAttendeeRegistrationForm::class,
         'check_event_registration_method' => \App\Http\Middleware\CheckEventRegistrationMethod::class
     ];
 

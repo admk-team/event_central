@@ -27,7 +27,7 @@ class EventPostRequest extends FormRequest
             'image' => 'nullable|image',
             'send_notification' => 'boolean',
             'sending_date' => 'nullable|date',
-            'sending_time' => 'nullable|date_format:H:i',
+            'sending_time' => 'nullable',
         ];
     }
 }

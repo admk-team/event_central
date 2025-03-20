@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Card, Col, Container, Row, } from 'react-bootstrap';
 
 //import images
-import logoLight from "../../../../../images/logo-light.png";
+import logoLight from "../../../../../images/logo-white.png";
 import { Head, Link } from '@inertiajs/react';
 import GuestLayout from '../../../../Layouts/Theme/GuestLayout';
 

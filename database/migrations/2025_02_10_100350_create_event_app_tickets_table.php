@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->mediumText('description');
             $table->string('type')->default('Normal');
-            $table->decimal('price')->default(0);
+            $table->decimal('base_price')->default(0);
             $table->json('addon_features')->nullable();
 
             $table->decimal('increment_by')->nullable();

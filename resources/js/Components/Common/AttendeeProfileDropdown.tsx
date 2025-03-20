@@ -63,7 +63,7 @@ const AttendeeProfileDropdown = () => {
                             className="dropdown-item"
                             as="button"
                             method="post"
-                            href={route("attendee.logout", [eventApp.id])}
+                            href={route("attendee.logout", user.event_app_id)}
                         >
                             <i className="mdi mdi-logout text-muted fs-16 align-middle me-1"></i>{" "}
                             <span className="align-middle" data-key="t-logout">

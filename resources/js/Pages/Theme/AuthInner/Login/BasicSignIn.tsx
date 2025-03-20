@@ -3,7 +3,7 @@ import { Card, Col, Container, Row, Button, Form } from 'react-bootstrap';
 
 
 //import images
-import logoLight from "../../../../../images/logo-light.png";
+import logoLight from "../../../../../images/logo-white.png";
 import { Head, Link } from '@inertiajs/react';
 import GuestLayout from '../../../../Layouts/Theme/GuestLayout';
 
@@ -13,8 +13,8 @@ const BasicSignIn = () => {
     return (
         <React.Fragment>
             <GuestLayout>
-                <Head title="Basic SignIn | Velzon - React Admin & Dashboard Template"/>
-                <div className="auth-page-content mt-lg-5">                
+                <Head title="Basic SignIn | Velzon - React Admin & Dashboard Template" />
+                <div className="auth-page-content mt-lg-5">
                     <Container>
                         <Row>
                             <Col lg={12}>

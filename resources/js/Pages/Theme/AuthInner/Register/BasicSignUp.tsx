@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Col, Container, Row, Form, Button } from 'react-bootstrap';
-//import images 
-import logoLight from "../../../../../images/logo-light.png";
+//import images
+import logoLight from "../../../../../images/logo-white.png";
 
 //formik
 import { useFormik } from 'formik';
@@ -35,7 +35,7 @@ const BasicSignUp = () => {
     return (
         <React.Fragment>
             <GuestLayout>
-                <Head title = "Basic SignUp | Velzon - React Admin & Dashboard Template"/>
+                <Head title="Basic SignUp | Velzon - React Admin & Dashboard Template" />
                 <div className="auth-page-content mt-lg-5">
 
                     <Container>
@@ -102,7 +102,7 @@ const BasicSignUp = () => {
                                                 </div>
 
                                                 <div className="mb-4">
-                                                    <p className="mb-0 fs-12 text-muted fst-italic">By registering you agree to the Velzon
+                                                    <p className="mb-0 fs-12 text-muted fst-italic">By registering you agree to the Event Central
                                                         <Link href="#" className="text-primary text-decoration-underline fst-normal fw-medium ms-2">Terms of Use</Link></p>
                                                 </div>
 

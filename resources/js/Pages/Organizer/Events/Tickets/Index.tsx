@@ -92,8 +92,8 @@ function Index({ tickets, sessions }: any) {
             cell: (ticket) => ticket.type,
         },
         {
-            header: () => 'Price',
-            cell: (ticket) => ticket.price,
+            header: () => 'Base Price',
+            cell: (ticket) => ticket.base_price,
         },
         {
             header: () => 'Sessions',

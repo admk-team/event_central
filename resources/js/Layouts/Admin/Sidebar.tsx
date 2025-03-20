@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import SimpleBar from "simplebar-react";
 //import logo
 import logoSm from "../../../images/logo-sm.png";
-import logoDark from "../../../images/logo-dark.png";
-import logoLight from "../../../images/logo-light.png";
+import logoDark from "../../../images/logo.png";
+import logoLight from "../../../images/logo-white.png";
 
 //Import Components
 import VerticalLayout from "./VerticalLayouts";
@@ -13,7 +13,7 @@ import HorizontalLayout from "../Theme/HorizontalLayout";
 import TwoColumnLayout from "../Theme/TwoColumnLayout";
 import Logo from "../../Components/Logo";
 
-const Sidebar = ({ layoutType } : any) => {
+const Sidebar = ({ layoutType }: any) => {
 
   useEffect(() => {
     var verticalOverlay = document.getElementsByClassName("vertical-overlay");

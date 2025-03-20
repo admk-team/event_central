@@ -1,7 +1,7 @@
 import { PaymentElement } from "@stripe/react-stripe-js";
 import { useState } from "react";
 import { useStripe, useElements } from "@stripe/react-stripe-js";
-import { Button, Col, Container, Row } from "react-bootstrap";
+import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import axios from "axios";
 import { router } from "@inertiajs/react";
 
@@ -52,6 +52,12 @@ export default function CheckoutForm({ eventId, amount, tickets }: any) {
     return (
         <form id="payment-form" onSubmit={handleSubmit}>
             <PaymentElement id="payment-element" />
+
+            {!(stripe && elements) && <Spinner animation="border" role="status">
+                <span className="visually-hidden">Loading...</span>
+            </Spinner>
+            }
+
             <Button
                 className="btn btn-success mt-2"
                 disabled={isProcessing || !stripe || !elements}
@@ -61,7 +67,6 @@ export default function CheckoutForm({ eventId, amount, tickets }: any) {
                     {isProcessing ? "Processing ... " : "Pay now"}
                 </span>
             </Button>
-            {/* Show any error or success messages */}
             {message && <div id="payment-message">{message}</div>}
         </form>
     );

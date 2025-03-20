@@ -23,10 +23,10 @@ class EventAppPaymentController extends Controller
                 'paypal_secret' => '',
             ]
         );
-    
+
         return Inertia::render("Organizer/Events/Settings/Payment/Index", compact('event'));
     }
-    
+
 
     public function update(Request $request)
     {
@@ -36,16 +36,15 @@ class EventAppPaymentController extends Controller
             'stripe_secret' => 'nullable|string',
             'stripe_pub' => 'nullable|string',
         ]);
-    
+
         $event = EventAppPayment::where('event_app_id', session('event_id'))->first();
-    
+
         if ($event) {
             $event->update($input);
         } else {
             return back()->withErrors(['error' => 'Payment record not found']);
         }
-    
+
         return back()->with('success', 'Payment details updated successfully');
     }
-    
 }

@@ -2,18 +2,18 @@ import React from 'react';
 import { Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
 
 //import images
-import logoLight from "../../../../../images/logo-light.png";
+import logoLight from "../../../../../images/logo-white.png";
 import avatar1 from "../../../../../images/users/avatar-1.jpg";
 import GuestLayout from '../../../../Layouts/Theme/GuestLayout';
 import { Head, Link } from '@inertiajs/react';
 
 
 const BasicLockScreen = () => {
-    
+
     return (
         <React.Fragment>
             <GuestLayout>
-                <Head title = "Lock Screen | Velzon - React Admin & Dashboard Template"/>
+                <Head title="Lock Screen | Velzon - React Admin & Dashboard Template" />
                 <div className="auth-page-content mt-lg-5">
                     <Container>
                         <Row>
