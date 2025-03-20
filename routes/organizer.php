@@ -102,8 +102,9 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::delete('tickets/delete/many', [EventAppTicketController::class, 'destroyMany'])->name('tickets.destroy.many');
 
             // Ticket-Features
-            Route::resource('tickets-feature', TicketFeatureController::class)->only(['store', 'update', 'destroy']);
-            Route::get('tickets-feature/{event_app_ticket?}', [TicketFeatureController::class, 'index'])->name('tickets-feature.index');
+            Route::resource('tickets-feature', TicketFeatureController::class)->only(['index', 'store', 'update', 'destroy']);
+            Route::get('ticket-feature/{event_app_ticket_id?}', [TicketFeatureController::class, 'getAllFeatures'])->name('fetch');
+            Route::delete('tickets-feature/delete/many', [TicketFeatureController::class, 'destroyMany'])->name('tickets-feature.destroy.many');
 
             // Promo Codes
             Route::resource('promo-codes', EventPromoCodeController::class)->only(['index', 'store', 'update', 'destroy']);
@@ -156,7 +157,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                     Route::post('/toggle-status', [RegistrationFormSettingsController::class, 'toggleStatus'])->name('toggle-status');
                     Route::post('/website', [RegistrationFormSettingsController::class, 'toggleStatus'])->name('toggle-status');
                 });
-                
+
                 // Website
                 Route::prefix('website')->name('website.')->group(function () {
                     Route::get('/', [WebsiteSettingsController::class, 'index'])->name('index');
