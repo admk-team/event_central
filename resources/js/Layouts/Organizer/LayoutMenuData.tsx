@@ -6,6 +6,7 @@ const Navdata = () => {
     const [isDashboard, setIsDashboard] = useState<boolean>(false);
     const [isEvents, setIsEvents] = useState<boolean>(false);
     const [isUserManagement, setIsUserManagement] = useState<boolean>(false);
+    const [isPaymentSettings, setIsPaymentSettings] = useState<boolean>(false);
 
 
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
@@ -36,12 +37,16 @@ const Navdata = () => {
         if (iscurrentState !== 'UserManagement') {
             setIsUserManagement(false);
         }
+        if (iscurrentState !== 'PaymentSettings') {
+            setIsPaymentSettings(false);
+        }
     }, [
         history,
         iscurrentState,
         isDashboard,
         isEvents,
         isUserManagement,
+        isPaymentSettings
     ]);
 
     const menuItems: any = [
@@ -113,6 +118,19 @@ const Navdata = () => {
                     ]
                 },
             ],
+        },
+        {
+            id: "payment_settings",
+            label: "Payment Settings",
+            icon: "bx bxs-cog",
+            link: route('organizer.settings.payment.index'),
+            stateVariables: isPaymentSettings,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsDashboard(!isPaymentSettings);
+                setIscurrentState('PaymentSettings');
+                updateIconSidebar(e);
+            }
         },
     ];
     return <React.Fragment>{menuItems}</React.Fragment>;

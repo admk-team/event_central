@@ -11,11 +11,11 @@ if (! function_exists('eventSettings')) {
         if (is_null($eventId)) {
             $eventId = session('event_id');
         }
-        
+
         return new class($eventId) {
             protected $service;
 
-            public function __construct(protected $eventId) 
+            public function __construct(protected $eventId)
             {
                 $this->service = new EventSettingsService();
             }
@@ -35,5 +35,5 @@ if (! function_exists('eventSettings')) {
                 return $this->service->set($this->eventId, $key, $value, $group, $description);
             }
         };
-    }   
+    }
 }

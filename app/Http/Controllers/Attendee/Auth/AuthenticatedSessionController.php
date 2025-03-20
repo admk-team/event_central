@@ -3,15 +3,14 @@
 namespace App\Http\Controllers\Attendee\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\AttendeeLoginRequest;
+use App\Http\Requests\Attendee\AttendeeLoginRequest;
 use App\Models\Attendee;
 use App\Models\EventApp;
-use App\Providers\RouteServiceProvider;
+use App\Models\EventAppSetting;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -24,10 +23,15 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(EventApp $eventApp): Response
     {
+        //Check if registration is public or private
+        $event_setting = EventAppSetting::where('event_app_id', $eventApp->id)->where('key', 'registration_private')->first();
+        $registration_allowed = ($event_setting && $event_setting->value === 1) ? false : true;
+
         return Inertia::render('Attendee/Auth/Login', [
             'canResetPassword' => Route::has('password.request'),
             'status' => session('status'),
-            'eventApp' => $eventApp
+            'eventApp' => $eventApp,
+            'registration_allowed' => $registration_allowed
         ]);
     }
 
@@ -38,7 +42,7 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();    //Attendee Login Request
         $request->session()->regenerate();
-        return redirect()->intended(route('attendee.event.detail.dashboard', [$eventApp]));
+        return redirect()->intended(route('attendee.event.detail.dashboard', [$eventApp->id]));
     }
 
     /**

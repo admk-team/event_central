@@ -8,6 +8,7 @@ const Navdata = () => {
     const [isOrganizers, setIsOrganizers] = useState<boolean>(false);
     const [isPlatforms, setIsPlatforms] = useState<boolean>(false);
     const [isEventCategory, setIsEventCategory] = useState<boolean>(false);
+    const [IsCountry, setIsCountry] = useState<boolean>(false);
 
 
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
@@ -43,6 +44,9 @@ const Navdata = () => {
         }
         if (iscurrentState !== 'Event Category') {
             setIsEventCategory(false);
+        }
+        if (iscurrentState !== 'Countries') {
+            setIsCountry(false);
         }
     }, [
         history,
@@ -125,9 +129,9 @@ const Navdata = () => {
             }
         },
         {
-            id: "platforms",
-            label: "Platforms",
-            icon: "ri-group-fill",
+            id: "plateforms",
+            label: "Plateforms",
+            icon: "bx bx-devices",
             link: route('admin.platforms.index'),
             stateVariables: isOrganizers,
             click: function (e: any) {
@@ -139,14 +143,27 @@ const Navdata = () => {
         },
         {
             id: "eventcategory",
-            label: "Event Category",
-            icon: "bx bx-category",
+            label: "Event Categories",
+            icon: "bx bx-category-alt",
             link: route('admin.event-category.index'),
             stateVariables: isOrganizers,
             click: function (e: any) {
                 e.preventDefault();
                 setIsEventCategory(!isEventCategory);
                 setIscurrentState('Event Category');
+                updateIconSidebar(e);
+            }
+        },
+        {
+            id: "countries",
+            label: "Countries",
+            icon: "bx bx-globe",
+            link: route('admin.countries'),
+            stateVariables: isOrganizers,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsCountry(!IsCountry);
+                setIscurrentState('Countries');
                 updateIconSidebar(e);
             }
         },

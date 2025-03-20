@@ -6,25 +6,41 @@ use App\Http\Controllers\Attendee\Auth\PasswordController;
 use App\Http\Controllers\Attendee\Auth\RegisteredUserController;
 use App\Http\Controllers\Attendee\EventController;
 use App\Http\Controllers\Attendee\EventSessionController;
+use App\Http\Controllers\Attendee\PaymentController;
+use App\Http\Controllers\Attendee\EventPostController;
+use App\Http\Controllers\Attendee\EventRegistrationFormController;
 use App\Http\Controllers\Attendee\ProfileController;
+use App\Http\Controllers\Attendee\QrCodeController;
+use App\Http\Controllers\Attendee\QuestionAttendeeController as AttendeeQuestionAttendeeController;
+use App\Http\Controllers\QuestionAttendeeController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('attendee')->group(function () {
-    Route::get('{id}', [EventController::class, 'getEventDetail'])->name('attendee.event');
+Route::middleware('guest')->prefix('attendee')->group(function () {
+    // Route::get('{id}', [EventController::class, 'getEventDetail'])->name('attendee.event');
 
     Route::get('{eventApp}/login', [AuthenticatedSessionController::class, 'create'])->name('attendee.login');
     Route::post('{eventApp}/login', [AuthenticatedSessionController::class, 'store'])->name('attendee.login.store');
     Route::post('{eventApp}/logout', [AuthenticatedSessionController::class, 'destroy'])->name('attendee.logout');
 
-    Route::get('{eventApp}/register', [RegisteredUserController::class, 'create'])->name('attendee.register');
-    Route::post('{eventApp}/register', [RegisteredUserController::class, 'store'])->name('attendee.register.store');
+    Route::middleware('check_event_registration_method')->group(
+        function () {
+            Route::get('{eventApp}/register', [RegisteredUserController::class, 'create'])->name('attendee.register');
+            Route::post('{eventApp}/register', [RegisteredUserController::class, 'store'])->name('attendee.register.store');
+        }
+    );
+
+    // Event Registration Form
+    Route::prefix('{eventApp}/event-registration-form')->name('attendee.event-registration-form')->group(function () {
+        Route::get('/', [EventRegistrationFormController::class, 'index']);
+        Route::post('/', [EventRegistrationFormController::class, 'submit'])->name('.submit');
+    });
 });
 
 // http://127.0.0.1:8000/google-login/callback
 Route::get('/google-login/redirect', [AuthenticatedSessionController::class, 'googleRedirect'])->name('attendee.google.redirect');
 Route::get('/google-login/callback', [AuthenticatedSessionController::class, 'googleCallback'])->name('attendee.google.callback');
 
-Route::middleware(['auth:attendee'])->group(function () {
+Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(function () {
 
     Route::prefix('attendee')->group(function () {
         Route::get('profile-edit', [ProfileController::class, 'edit'])->name('attendee.profile.edit');
@@ -34,6 +50,24 @@ Route::middleware(['auth:attendee'])->group(function () {
         Route::get('{eventApp}/detail/session/{eventSession}', [EventController::class, 'getEventSessionDetail'])->name('attendee.event.detail.session');
         Route::get('{eventApp}/detail/speakers/{eventSpeaker?}', [EventController::class, 'getEventSpeakerDetail'])->name('attendee.event.detail.speakers');
         Route::get('{eventApp}/detail/more', [EventController::class, 'getEventDetailMore'])->name('attendee.event.detail.more');
+
+        //QR Routes
+        Route::get('/qr-code/{eventApp}', [QrCodeController::class, 'getQrCode'])->name('attendee.qr-code.get');
+        Route::post('/qr-code/{eventApp}', [QrCodeController::class, 'postQrCode'])->name('attendee.qr-code.post');
+
+        //Payment Processing
+        Route::get('{eventApp}/tickets', [PaymentController::class, 'ticketsPage'])->name('attendee.tickets.get');
+        Route::post('{eventApp}/tickets', [PaymentController::class, 'postTickets'])->name('attendee.tickets.post');
+
+        Route::post('{eventApp}/checkout', [PaymentController::class, 'checkoutPage'])->name('attendee.checkout.post');
+
+        Route::post('validate-discount-code/{ticketId}/{code}', [PaymentController::class, 'validateDiscCode'])->name('attendee.validateCode.post');
+
+        Route::post('create-payment-intent', [PaymentController::class, 'createPaymentIntent'])->name('attendee.payment.intent');
+        Route::post('{eventApp}/update-attendee-payment', [PaymentController::class, 'updateAttendeePaymnet'])->name('attendee.update.payment');
+
+        Route::get('{eventApp}/payment-success', [PaymentController::class, 'paymentSuccess'])->name('attendee.payment.success');
+        Route::get('{eventApp}/event-posts', [EventController::class, 'getPostsMore'])->name('attendee.posts.index');
     });
 
     Route::put('/attendee-profile-update/{attendee}', [ProfileController::class, 'update'])->name('attendee.profile.update');
@@ -43,4 +77,17 @@ Route::middleware(['auth:attendee'])->group(function () {
     Route::post('/attendee-save-session/{eventSession}/{type}', [EventSessionController::class, 'saveSession'])->name('attendee.save.session');
 
     Route::post('/attendee-save-rating/{eventSession}', [EventSessionController::class, 'saveRating'])->name('attendee.save.rating');
+
+    Route::post('/attendee-poll-rating', [EventPostController::class, 'pollToggle'])->name('attendee.poll.rating');
+    Route::post('/attendee-post-likes', [EventPostController::class, 'toggleLike'])->name('attendee.like.rating');
+    Route::post('/attendee-post-dislikes', [EventPostController::class, 'toggleDislike'])->name('attendee.dislike.rating');
+
+    Route::get('/events/qa', [AttendeeQuestionAttendeeController::class, 'index'])->name('attendee.events.qa.index');
+    Route::post('/events/{event}/questions', [AttendeeQuestionAttendeeController::class, 'storeQuestion'])->name('attendee.events.qa.store');
+    Route::post('/events/questions/{questionId}/vote', [AttendeeQuestionAttendeeController::class, 'vote'])->name('attendee.events.qa.vote');
+    Route::post('/events/questions/{questionId}/answer', [AttendeeQuestionAttendeeController::class, 'storeAnswer'])->name('attendee.events.qa.answer');
+    Route::group(['prefix' => 'events/qa', 'as' => 'attendee.events.qa.'], function () {
+        Route::put('/question/{questionId}', [AttendeeQuestionAttendeeController::class, 'updateQuestion'])->name('updateQuestion');
+        Route::delete('/question/{questionId}', [AttendeeQuestionAttendeeController::class, 'destroyQuestion'])->name('destroyQuestion');
+    });
 });

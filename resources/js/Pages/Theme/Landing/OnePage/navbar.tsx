@@ -3,8 +3,8 @@ import { Collapse, Container, NavbarToggle, NavLink } from "react-bootstrap";
 import Scrollspy from "react-scrollspy";
 
 // Import Images
-import logodark from "../../../../../images/logo-dark.png";
-import logolight from "../../../../../images/logo-light.png";
+import logodark from "../../../../../images/logo.png";
+import logolight from "../../../../../images/logo-white.png";
 import { Link } from "@inertiajs/react";
 
 const Navbar = () => {

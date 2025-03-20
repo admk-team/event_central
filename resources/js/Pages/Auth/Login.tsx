@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import GuestLayout from '../../Layouts/Theme/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
-import logoLight from "../../../images/logo-light.png";
+import logoLight from "../../../images/logo-white.png";
 import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
 
 export default function Login({ status, canResetPassword }: any) {
@@ -36,7 +36,7 @@ export default function Login({ status, canResetPassword }: any) {
                                 <div className="text-center mt-sm-5 mb-4 text-white-50">
                                     <div>
                                         <Link href='/' className="d-inline-block auth-logo">
-                                            <img src={logoLight} alt="" height="20" />
+                                            <img src={logoLight} alt="" height="70" />
                                         </Link>
                                     </div>
                                     <p className="mt-3 fs-15 fw-medium">Premium Admin & Dashboard Template</p>

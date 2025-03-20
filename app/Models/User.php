@@ -52,6 +52,15 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+
+    public function payment_keys()
+    {
+        return $this->hasOne(OrganizerPaymentKeys::class, 'user_id');
+        // if ($this->hasRole('organizer')) {
+        // }
+        // return null;
+    }
+
     public function scopeOfOwner(Builder $query): void
     {
         $query->where('role', 'organizer')

@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import SimpleBar from "simplebar-react";
 //import logo
 import logoSm from "../../../images/logo-sm.png";
-import logoDark from "../../../images/logo-dark.png";
-import logoLight from "../../../images/logo-light.png";
+import logoDark from "../../../images/logo.png";
+import logoLight from "../../../images/logo-white.png";
 
 //Import Components
 import VerticalLayout from "./VerticalLayouts";
@@ -11,8 +11,9 @@ import { Container } from "react-bootstrap";
 import { Link } from "@inertiajs/react";
 import HorizontalLayout from "../Theme/HorizontalLayout";
 import TwoColumnLayout from "../Theme/TwoColumnLayout";
+import Logo from "../../Components/Logo";
 
-const Sidebar = ({ layoutType } : any) => {
+const Sidebar = ({ layoutType }: any) => {
 
   useEffect(() => {
     var verticalOverlay = document.getElementsByClassName("vertical-overlay");
@@ -38,23 +39,7 @@ const Sidebar = ({ layoutType } : any) => {
     <React.Fragment>
       <div className="app-menu navbar-menu">
         <div className="navbar-brand-box">
-          <Link href="/" className="logo logo-dark">
-            <span className="logo-sm">
-              <img src={logoSm} alt="" height="22" />
-            </span>
-            <span className="logo-lg">
-              <img src={logoDark} alt="" height="17" />
-            </span>
-          </Link>
-
-          <Link href="/" className="logo logo-light">
-            <span className="logo-sm">
-              <img src={logoSm} alt="" height="22" />
-            </span>
-            <span className="logo-lg">
-              <img src={logoLight} alt="" height="17" />
-            </span>
-          </Link>
+          <Logo />
           <button
             onClick={addEventListenerOnSmHoverMenu}
             type="button"

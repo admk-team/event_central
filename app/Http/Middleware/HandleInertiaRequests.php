@@ -43,7 +43,7 @@ class HandleInertiaRequests extends Middleware
                 'location' => $request->url(),
             ],
             'events' => EventApp::ofOwner()->select('id', 'name', 'logo', 'created_at')->latest()->take(5)->get(),
-            'currentEvent' => EventApp::find(session('event_id')) ?? null,
+            'currentEvent' => EventApp::find(session('event_id') ?? Auth::guard('attendee')->user()?->event_app_id) ?? null,
             'messages' => fn() => session()->get('messages') ?? [],
             'permissions' => function () {
                 if (Auth::guard('web')->check('attendee')) {

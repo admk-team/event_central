@@ -1,6 +1,6 @@
 import React from 'react';
 import { Alert, Card, Col, Container, Row, Form, } from 'react-bootstrap';
-import logoLight from "../../../../../images/logo-light.png";
+import logoLight from "../../../../../images/logo-white.png";
 
 //formik
 import { useFormik } from 'formik';
@@ -28,7 +28,7 @@ const BasicPasswReset = () => {
     return (
         <React.Fragment>
             <GuestLayout>
-                <Head title = "Reset Password | Velzon - React Admin & Dashboard Template"/>
+                <Head title="Reset Password | Velzon - React Admin & Dashboard Template" />
                 <div className="auth-page-content mt-lg-5">
                     <Container>
                         <Row>

@@ -3,8 +3,8 @@ import React, { useState } from "react";
 
 //import images
 import logoSm from "../../../images/logo-sm.png";
-import logoDark from "../../../images/logo-dark.png";
-import logoLight from "../../../images/logo-light.png";
+import logoDark from "../../../images/logo.png";
+import logoLight from "../../../images/logo-white.png";
 import { useDispatch, useSelector } from "react-redux";
 import { createSelector } from "@reduxjs/toolkit";
 import { Dropdown, Form } from "react-bootstrap";

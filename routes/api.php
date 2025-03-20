@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\v1\Attendee\EventController as AttendeeEventController;
+use App\Http\Controllers\Api\v1\Attendee\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\v1\AuthController;
@@ -38,9 +39,13 @@ Route::prefix('attendee')->group(function () {
         Route::get('/me', function (Request $request) {
             return $request->user();
         });
+        Route::post('profile/update/{attendee}', [ProfileController::class, 'update']);
         Route::post('/logout', [AuthController::class, 'logout']);
 
-        Route::get('{eventApp}', [AttendeeEventController::class, 'getEventDetailDashboard'])->name('api.attendee.event');
+        Route::get('event/{eventApp}', [AttendeeEventController::class, 'getEventDetailDashboard']);
+        Route::get('event/session/{eventApp}', [AttendeeEventController::class, 'getEventDetailDashboard']);
+
+        Route::get('event/ticket/{eventApp}', [AttendeeEventController::class, 'ticket']);
     });
 });
 

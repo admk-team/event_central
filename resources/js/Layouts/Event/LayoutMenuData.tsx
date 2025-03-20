@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 const Navdata = () => {
     //state data
     const [isDashboard, setIsDashboard] = useState<boolean>(false);
+    const [IsQA, setIsQA] = useState<boolean>(false);
     const [isContent, setIsContent] = useState<boolean>(false);
     const [isEngagement, setIsEngagement] = useState<boolean>(false);
     const [isUsers, setIsUsers] = useState<boolean>(false);
@@ -38,6 +39,9 @@ const Navdata = () => {
         }
         if (iscurrentState !== 'Settings') {
             setIsSettingsMenu(false);
+        }
+        if (iscurrentState !== 'Q&A') {
+            setIsQA(false);
         }
         // Add Here
     }, [
@@ -116,6 +120,12 @@ const Navdata = () => {
                     parentId: "Content",
                 },
                 {
+                    id: "tickets-feature",
+                    label: "Ticket Features",
+                    link: route('organizer.events.tickets-feature.index'),
+                    parentId: "Content",
+                },
+                {
                     id: "promo-codes",
                     label: "Promo Codes",
                     link: route('organizer.events.promo-codes.index'),
@@ -138,7 +148,7 @@ const Navdata = () => {
             subItems: [
                 {
                     id: "newsfeed",
-                    label: "Newsfeed",
+                    label: "Posts",
                     link: route('organizer.events.engagement.newsfeed.index'),
                     parentId: "dashboard",
                 }
@@ -197,12 +207,31 @@ const Navdata = () => {
                     parentId: "dashboard",
                 },
                 {
+                    id: "registrationForm",
+                    label: "Registration Form",
+                    link: route('organizer.events.settings.registration-form.index'),
+                    parentId: "settings",
+                },
+                {
                     id: "website",
                     label: "Website",
                     link: route('organizer.events.settings.website.index'),
                     parentId: "settings",
                 },
             ]
+        },
+        {
+            id: "qa",
+            label: "Q&A",
+            icon: "bx bxs-dashboard",
+            link: route('organizer.events.qa.index'),
+            stateVariables: IsQA,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsQA(!IsQA);
+                setIscurrentState('Q&A');
+                updateIconSidebar(e);
+            }
         },
     ];
     return <React.Fragment>{menuItems}</React.Fragment>;

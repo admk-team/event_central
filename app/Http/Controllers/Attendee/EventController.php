@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Attendee;
 use App\Http\Controllers\Controller;
 use App\Models\EventApp;
 use App\Models\EventSession;
+use App\Models\EventPost;
 use App\Models\EventSpeaker;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class EventController extends Controller
@@ -15,7 +17,7 @@ class EventController extends Controller
 
     public function getEventDetailDashboard(EventApp $eventApp)
     {
-        $eventApp->load(['event_sessions.eventSpeaker', 'event_sessions.event_platform']);
+        $eventApp->load(['event_sessions.eventSpeaker', 'event_sessions.eventPlatform']);
 
         return Inertia::render('Attendee/AttendeeDashboard', compact([
             'eventApp',
@@ -24,7 +26,7 @@ class EventController extends Controller
 
     public function getEventDetailAgenda(EventApp $eventApp)
     {
-        $eventApp->load(['event_sessions.eventSpeaker', 'event_sessions.event_platform']);
+        $eventApp->load(['event_sessions.eventSpeaker', 'event_sessions.eventPlatform']);
         return Inertia::render('Attendee/AttendeeAgenda', compact('eventApp'));
     }
 
@@ -40,6 +42,11 @@ class EventController extends Controller
                 $next_session_id = $index < (count($sessions) - 1)  ? $sessions[$index + 1] : null;
             }
         }
+
+        //Note : after upgrading to Laravel 11, above code can be
+        // replaced by following two lines.
+        // $next_session_id = $sessions->after($eventSession->id);
+        // $prev_session_id = $sessions->before($eventSession->id);
         //------------------------------------------------------------------------
         $eventSession->load(['eventSpeaker']);
         $selectedSessionDetails = DB::table('attendee_event_session')->where(function ($query) use ($eventSession) {
@@ -53,7 +60,6 @@ class EventController extends Controller
             'selectedSessionDetails',
             'prev_session_id',
             'next_session_id',
-            'prev_url'
         ]));
     }
 
@@ -71,5 +77,11 @@ class EventController extends Controller
     {
         $eventApp->load('organiser');
         return Inertia::render('Attendee/AttendeeMore', compact(['eventApp']));
+    }
+
+    public function getPostsMore(EventApp $eventApp)
+    {
+        $newsfeeds = EventPost::where('event_app_id',Auth::user()->event_app_id)->get();
+        return Inertia::render('Attendee/Posts/Index', compact(['eventApp','newsfeeds']));
     }
 }

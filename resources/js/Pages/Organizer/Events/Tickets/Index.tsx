@@ -15,7 +15,7 @@ import moment from 'moment';
 function Index({ tickets, sessions }: any) {
     // console.log('tickets', tickets);
     // console.log('sessions', sessions);
-
+    // console.log('features', ticket_features);
 
     const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
     const [editTicket, setEditTicket] = React.useState<any>(null);
@@ -39,13 +39,11 @@ function Index({ tickets, sessions }: any) {
         ids: [],
     });
     const editAction = (ticket: any) => {
-        // console.log(ticket);
         setEditTicket(ticket);
         setShowCreateEditModal(true);
     }
 
     const deleteAction = (ticket: any) => {
-        // console.log(ticket);
         setDeleteSchedule(ticket);
         setShowDeleteConfirmation(true);
     }
@@ -53,6 +51,7 @@ function Index({ tickets, sessions }: any) {
         deleteForm.post(route('organizer.events.tickets.destroy', deleteschedule.id));
         setShowDeleteConfirmation(false);
     }
+
     const deleteManyAction = (ids: number[]) => {
         // console.log(ids);
         deleteManyForm.setData(data => ({ ...data, ids: ids }));
@@ -71,7 +70,10 @@ function Index({ tickets, sessions }: any) {
         },
         {
             header: () => 'Event Name',
-            cell: (ticket) => (<span key={ticket.event.id} className="badge rounded-pill border border-success text-success text-uppercase fs-6" style={{ marginRight: '3px' }}>{ticket.event.name}</span>),
+            cell: (ticket) => (
+                <span key={ticket.event.id} className="badge rounded-pill border border-success text-success text-uppercase fs-6"
+                    style={{ marginRight: '3px', maxWidth: '300px', textWrap: 'balance' }}>{ticket.event.name}</span>
+            ),
         },
         {
             header: () => 'Name',
@@ -79,15 +81,19 @@ function Index({ tickets, sessions }: any) {
         },
         {
             header: () => 'Description',
-            cell: (ticket) => ticket.description,
+            cell: (ticket) => (
+                <div style={{ width: '300px', textWrap: 'balance' }}>
+                    <p>{ticket.description}</p>
+                </div>
+            ),
         },
         {
             header: () => 'Type',
             cell: (ticket) => ticket.type,
         },
         {
-            header: () => 'Price',
-            cell: (ticket) => ticket.price,
+            header: () => 'Base Price',
+            cell: (ticket) => ticket.base_price,
         },
         {
             header: () => 'Sessions',
@@ -174,7 +180,7 @@ function Index({ tickets, sessions }: any) {
                     sessions={sessions}
                 />
             )}
-            <DeleteManyModal
+            <DeleteModal
                 show={showDeleteConfirmation}
                 onDeleteClick={handleDelete}
                 onCloseClick={() => { setShowDeleteConfirmation(false) }}
