@@ -23,8 +23,14 @@ class RegistrationFormController extends Controller
             return redirect()->route('attendee.register', $event);
         }
 
+        $form = $event->form()->with('fields')->first();
+
+        if (!$form || !$form->status) {
+            abort(404);
+        }
+
         return Inertia::render("Organizer/Events/RegistrationForm", [
-            'form' => $event->form()->with('fields')->first(),
+            'form' => $form,
         ]);
     }
 

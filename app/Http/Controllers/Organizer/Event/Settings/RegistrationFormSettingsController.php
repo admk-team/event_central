@@ -18,6 +18,7 @@ class RegistrationFormSettingsController extends Controller
             $currentEvent->form()->create([
                 'title' => '',
                 'description' => '',
+                'status' => false,
             ]);
             $currentEvent->load('form');
         }

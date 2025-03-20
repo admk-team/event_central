@@ -21,9 +21,8 @@ class CheckAttendeeRegistrationForm
 
         $event = EventApp::find($attendee->event_app_id);
         $form = $event->form;
-        $formFilled = $form->submissions()->where('attendee_id', $attendee->id)->count();
 
-        if ($form->status && !$formFilled) {
+        if ($form && $form->status && $form->submissions()->where('attendee_id', $attendee->id)->count() === 0) {
             return redirect()->route('organizer.events.event-registration-form', $event->uuid);
         }
 
