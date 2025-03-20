@@ -61,6 +61,7 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
 
         Route::get('{eventApp}/payment-success', [PaymentController::class, 'paymentSuccess'])->name('attendee.payment.success');
         Route::get('{eventApp}/event-posts', [EventController::class, 'getPostsMore'])->name('attendee.posts.index');
+
     });
 
     Route::put('/attendee-profile-update/{attendee}', [ProfileController::class, 'update'])->name('attendee.profile.update');

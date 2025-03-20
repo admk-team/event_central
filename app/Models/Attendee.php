@@ -60,4 +60,9 @@ class Attendee extends Authenticatable
     {
         return $this->belongsToMany(EventSession::class, 'attendee_event_session')->withPivot('rating', 'rating_description')->withTimestamps();
     }
+
+    public function eventApp()
+    {
+        return $this->belongsTo(EventApp::class);
+    }
 }

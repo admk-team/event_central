@@ -18,14 +18,14 @@ class CheckAttendeeRegistrationForm
     public function handle(Request $request, Closure $next): Response
     {
         $attendee = Auth::guard('attendee')->user();
-
         $event = EventApp::find($attendee->event_app_id);
-        $form = $event->form;
-        $formFilled = $form->submissions()->where('attendee_id', $attendee->id)->count();
+        // $form = $event->form;
+        // dd($form);
+        // $formFilled = $form->submissions()->where('attendee_id', $attendee->id)->count();
 
-        if ($form->status && !$formFilled) {
-            return redirect()->route('organizer.events.event-registration-form', $event->uuid);
-        }
+        // if ($form->status && !$formFilled) {
+        //     return redirect()->route('organizer.events.event-registration-form', $event->uuid);
+        // }
 
         return $next($request);
     }

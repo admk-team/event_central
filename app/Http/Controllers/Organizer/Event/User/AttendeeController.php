@@ -57,4 +57,11 @@ class AttendeeController extends Controller
         }
         return back()->withSuccess('Attendees deleted successfully.');
     }
+
+
+    public function showInfo(String $id)
+    {
+        $attendee =Attendee::find($id);
+        return Inertia::render('Organizer/Events/Users/Attendees/AttendeeProfile/Profile',compact('attendee'));
+    }
 }

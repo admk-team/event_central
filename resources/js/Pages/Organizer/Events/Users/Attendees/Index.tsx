@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Col, Container, Row, Table } from 'react-bootstrap';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 import BreadCrumb from '../../../../../Components/Common/BreadCrumb';
 import Layout from '../../../../../Layouts/Event';
 // import Pagination2 from '../../../Pages/Admin/';
@@ -8,6 +8,8 @@ import DeleteModal from '../../../../../Components/Common/DeleteModal';
 import DataTable, { ColumnDef } from '../../../../../Components/DataTable';
 import DeleteManyModal from '../../../../../Components/Common/DeleteManyModal';
 import ImportModal from '../../Components/ImportModal';
+
+import Profile from './AttendeeProfile/Profile';
 
 function Index({ attendees }: any) {
     const [deleteAttendee, setDeleteAttendee] = React.useState<any>(null);
@@ -93,6 +95,7 @@ function Index({ attendees }: any) {
                     <span className="link-danger cursor-pointer" onClick={() => deleteAction(attendee)}>
                         <i className="ri-delete-bin-5-line"></i>
                     </span>
+                    <Link href={route('organizer.events.attendee.info', { id: attendee.id })} className="link-primary cursor-pointer"><i className="ri-information-line"></i></Link>
                 </div>
             ),
         },

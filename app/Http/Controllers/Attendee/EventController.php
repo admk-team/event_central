@@ -81,7 +81,7 @@ class EventController extends Controller
 
     public function getPostsMore(EventApp $eventApp)
     {
-        $newsfeeds = EventPost::where('event_app_id',Auth::user()->event_app_id)->get();
-        return Inertia::render('Attendee/Posts/Index', compact(['eventApp','newsfeeds']));
+        $newsfeeds = EventPost::where('event_app_id', Auth::user()->event_app_id)->get();
+        return Inertia::render('Attendee/Posts/Index', compact(['eventApp', 'newsfeeds']));
     }
 }
