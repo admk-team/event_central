@@ -7,7 +7,7 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import rootReducer from './slices';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Event Central';
+export const appName = import.meta.env.VITE_APP_NAME || 'Event Central';
 const store = configureStore({
     reducer: rootReducer,
     devTools: import.meta.env.DEV,

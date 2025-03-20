@@ -17,13 +17,10 @@ use App\Http\Controllers\Organizer\Event\PageController;
 use App\Http\Controllers\Organizer\Event\Settings\EventAppPaymentController;
 use App\Http\Controllers\Organizer\Event\Settings\EventSettingsController;
 use App\Http\Controllers\Organizer\Event\User\AttendeeController;
-use App\Http\Controllers\Organizer\Event\PartnerController;
 use App\Http\Controllers\Organizer\Event\EventAppTicketController;
 use App\Http\Controllers\Organizer\Event\EventDateController;
 use App\Http\Controllers\Organizer\Event\EventPromoCodeController;
 use App\Http\Controllers\Organizer\Event\FormFieldController;
-use App\Http\Controllers\Organizer\Event\RegistrationFormController;
-use App\Http\Controllers\Organizer\Event\ScheduleController;
 use App\Http\Controllers\Organizer\Event\Settings\RegistrationFormSettingsController;
 use App\Http\Controllers\Organizer\Event\Settings\WebsiteSettingsController;
 use App\Http\Controllers\Organizer\Event\TicketFeatureController;
@@ -34,19 +31,12 @@ use App\Http\Controllers\Organizer\RoleController;
 use App\Http\Controllers\Organizer\Settings\OrganizerPaymentSettingController;
 use App\Http\Controllers\Organizer\UserController;
 use App\Http\Controllers\QuestionController;
-use App\Http\Middleware\CurrentEventMiddleware;
 use Illuminate\Support\Facades\Route;
 
 // Event Website
 Route::prefix('e/{uuid}')->name('organizer.events.website')->group(function () {
     Route::get('/', [WebsiteController::class, 'index']);
     Route::get('{slug}', [WebsiteController::class, 'page'])->name('.page');
-});
-
-// Event Registration Form
-Route::prefix('event-registration-form/{uuid}')->name('organizer.events.event-registration-form')->group(function () {
-    Route::get('/', [RegistrationFormController::class, 'index']);
-    Route::post('/', [RegistrationFormController::class, 'submit'])->name('.submit');
 });
 
 Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organizer.')->group(function () {

@@ -23,7 +23,7 @@ class CheckAttendeeRegistrationForm
         $form = $event->form;
 
         if ($form && $form->status && $form->submissions()->where('attendee_id', $attendee->id)->count() === 0) {
-            return redirect()->route('organizer.events.event-registration-form', $event->uuid);
+            return redirect()->route('attendee.event-registration-form', $event->id);
         }
 
         return $next($request);

@@ -8,6 +8,7 @@ use App\Http\Controllers\Attendee\EventController;
 use App\Http\Controllers\Attendee\EventSessionController;
 use App\Http\Controllers\Attendee\PaymentController;
 use App\Http\Controllers\Attendee\EventPostController;
+use App\Http\Controllers\Attendee\EventRegistrationFormController;
 use App\Http\Controllers\Attendee\ProfileController;
 use App\Http\Controllers\Attendee\QrCodeController;
 use App\Http\Controllers\Attendee\QuestionAttendeeController as AttendeeQuestionAttendeeController;
@@ -27,6 +28,12 @@ Route::middleware('guest')->prefix('attendee')->group(function () {
             Route::post('{eventApp}/register', [RegisteredUserController::class, 'store'])->name('attendee.register.store');
         }
     );
+
+    // Event Registration Form
+    Route::prefix('{eventApp}/event-registration-form')->name('attendee.event-registration-form')->group(function () {
+        Route::get('/', [EventRegistrationFormController::class, 'index']);
+        Route::post('/', [EventRegistrationFormController::class, 'submit'])->name('.submit');
+    });
 });
 
 // http://127.0.0.1:8000/google-login/callback

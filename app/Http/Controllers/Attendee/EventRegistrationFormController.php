@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Organizer\Event;
+namespace App\Http\Controllers\Attendee;
 
 use App\Http\Controllers\Controller;
 use App\Models\EventApp;
@@ -9,39 +9,37 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
-class RegistrationFormController extends Controller
+class EventRegistrationFormController extends Controller
 {
-    public function index($uuid)
+    public function index(EventApp $eventApp)
     {
-        $event = EventApp::where('uuid', $uuid)->first();
-
-        if (! $event) {
+        if (! $eventApp) {
             abort(404);
         }
 
         if (! Auth::guard('attendee')->check()) {
-            return redirect()->route('attendee.register', $event);
+            return redirect()->route('attendee.register', $eventApp);
         }
 
-        $form = $event->form()->with('fields')->first();
+        $form = $eventApp->form()->with('fields')->first();
 
         if (!$form || !$form->status) {
             abort(404);
         }
 
-        return Inertia::render("Organizer/Events/RegistrationForm", [
+        return Inertia::render("Attendee/Auth/EventRegistrationForm", [
             'form' => $form,
+            'eventApp' => $eventApp,
         ]);
     }
 
-    public function submit($uuid, Request $request)
+    public function submit(Request $request, EventApp $eventApp)
     {
         if (! Auth::guard('attendee')->check() && !$request->has('preview')) {
             return abort(401);
         }
 
-        $event = EventApp::where('uuid', $uuid)->first();
-        $form = $event->form()->with('fields')->first();
+        $form = $eventApp->form()->with('fields')->first();
 
         $validationRules = [];
         $validationMessages = [];
@@ -86,6 +84,6 @@ class RegistrationFormController extends Controller
             ]);
         }
 
-        return redirect()->intended(route('attendee.event.detail.dashboard', [$event]));
+        return redirect()->intended(route('attendee.event.detail.dashboard', [$eventApp]));
     }
 }
