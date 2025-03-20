@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Attendee\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Mail\GroupUserPasswordMail;
 use App\Models\Attendee;
+use App\Models\attendeePassword;
 use App\Models\EventApp;
 use App\Models\invite;
 use App\Providers\RouteServiceProvider;
@@ -14,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
@@ -90,6 +93,12 @@ class RegisteredUserController extends Controller
                                 'email' => $email,
                                 'password' => Hash::make($randomPassword),
                             ]);
+                            // store passwords temporary
+                            attendeePassword::create([
+                                'user_id' => $groupUser->id,
+                                'email' => $groupUser->email,
+                                'arzi_password' => $randomPassword
+                            ]);
 
                             // Store invite entry
                             Invite::create([
@@ -97,6 +106,9 @@ class RegisteredUserController extends Controller
                                 'invite_to' => $groupUser->id, // Group member
                                 'accepted' => false, // Default as not accepted yet
                             ]);
+
+                            // Send email with credentials
+                            Mail::to($groupUser->email)->send(new GroupUserPasswordMail($groupUser, $randomPassword, $eventApp->id));
                         }
                     }
                 }

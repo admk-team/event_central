@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Attendee\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Attendee\AttendeeLoginRequest;
 use App\Models\Attendee;
+use App\Models\attendeePassword;
 use App\Models\EventApp;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Http\RedirectResponse;
@@ -34,9 +35,15 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(AttendeeLoginRequest $request, EventApp $eventApp): RedirectResponse
     {
+        $is_save = attendeePassword::where('arzi_password', $request->password)->exists();
+        if ($is_save) {
+            // If the password exists, delete the record
+            attendeePassword::where('arzi_password', $request->password)->delete();
+        }
         Log::info($eventApp);
         $request->authenticate();    //Attendee Login Request
         $request->session()->regenerate();
+
         return redirect()->intended(route('attendee.event.detail.dashboard', [$eventApp->id]));
     }
 

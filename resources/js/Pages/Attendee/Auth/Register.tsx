@@ -128,7 +128,7 @@ export default function Register() {
                             <Form.Control.Feedback type="invalid" className='mt-2 d-block'>{errors.password_confirmation}</Form.Control.Feedback>
                         </div>
                         {!isGroup && <p className='text-decoration-underline cursor-pointer text-primary' onClick={() => setIsGroup(true)}>Is Group</p>}
-                        {isGroup && <p className='text-decoration-underline cursor-pointer text-primary' onClick={() => setIsGroup(false)}>Remove Group</p>}
+                        {isGroup && <p className='text-decoration-underline cursor-pointer text-primary' onClick={() => { setIsGroup(false); setData('groupUser', '') }}>Remove Group</p>}
                         {isGroup && <div className="mt-4">
                             <Form.Label htmlFor="password_confirmation" value="Confirm Password" className='form-label'> Group Registration:  <span style={{ fontSize: '13px' }}>name,email | name,email</span></Form.Label>
 

@@ -11,7 +11,6 @@ class invite extends Model
     protected $fillable = [
         'invited_by',
         'invite_to',
-        'token',
         'accepted',
     ];
 
