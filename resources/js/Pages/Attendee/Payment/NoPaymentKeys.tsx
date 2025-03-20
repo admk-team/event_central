@@ -1,32 +1,34 @@
-import { Head } from "@inertiajs/react";
 import React from "react";
+import { Button, Card, Col, Container, Row, CardBody } from "react-bootstrap";
 import Layout from "../../../Layouts/Attendee";
-import { Button, Col, Container, Row, Card, CardBody } from "react-bootstrap";
+import { Head } from "@inertiajs/react";
 
-const PaymentSuccess = () => {
+const Index = () => {
+
     return (
         <React.Fragment>
-            <Head title="Payment Successful" />
-            <section className="section bg-light mt-4" id="success">
+            <Head title="Payments" />
+            <section className="section bg-light mt-4" id="payment">
                 <div className="bg-overlay bg-overlay-pattern"></div>
                 <Container>
                     <Row className="justify-content-center">
-                        <Col lg={8}>
+                        <Col md={6} lg={6}>
                             <Card>
                                 <CardBody>
                                     <div className="d-flex justify-content-center align-items-center " style={{ height: '300px' }}>
-                                        <div><span className="fs-2 text-green">
-                                            Payment was processed successful. <i className='bx bx-smile text-primary'></i>
+                                        <div><span className="fs-2 text-primary">
+                                            Organizer Payment Keys for Stripe not found <i className='bx bxs-error' ></i>
                                         </span></div>
                                     </div>
                                 </CardBody>
                             </Card>
+                            <h5></h5>
                         </Col>
                     </Row>
                 </Container>
             </section>
         </React.Fragment>
     );
-};
-PaymentSuccess.layout = (page: any) => <Layout children={page} />;
-export default PaymentSuccess;
+}
+Index.layout = (page: any) => <Layout children={page} />;
+export default Index;
