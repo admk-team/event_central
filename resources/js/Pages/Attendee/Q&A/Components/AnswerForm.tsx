@@ -13,7 +13,7 @@ const AnswerForm: React.FC<Props> = ({ questionId, onClose }) => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         router.post(
-            route("attendee.events..qa.answer", { questionId }),
+            route("attendee.events.qa.answer", { questionId }),
             { content },
             {
                 preserveState: true,

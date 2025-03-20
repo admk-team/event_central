@@ -20,7 +20,7 @@ interface Question {
     likes_count: number;
     dislikes_count: number;
     created_at: string;
-    user: { name: string };
+    user: { id?: number; first_name: string };
     answers: { id: number; content: string; created_at: string; user: { name: string } }[];
 }
 
