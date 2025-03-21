@@ -38,7 +38,7 @@ export default function ResetPassword({ token, email }: any) {
                                             <img src={logoLight} alt="" height="20" />
                                         </Link>
                                     </div>
-                                    <p className="mt-3 fs-15 fw-semibold">Premium Admin & Dashboard Template</p>
+                                    <p className="mt-3 fs-15 fw-semibold">Your Ultimate Event Management Solution</p>
                                 </div>
                             </Col>
                         </Row>

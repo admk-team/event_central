@@ -39,7 +39,7 @@ export default function Login({ status, canResetPassword }: any) {
                                             <img src={logoLight} alt="" height="70" />
                                         </Link>
                                     </div>
-                                    <p className="mt-3 fs-15 fw-medium">Premium Admin & Dashboard Template</p>
+                                    <p className="mt-3 fs-15 fw-medium">Your Ultimate Event Management Solution</p>
                                 </div>
                             </Col>
                         </Row>

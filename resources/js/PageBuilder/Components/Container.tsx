@@ -1,5 +1,6 @@
 import { DropZone } from "@measured/puck";
 import { Container as BSContainer } from "react-bootstrap"
+import { createComponent } from "../Core/createComponent";
 
 export const Container = {
     fields: {

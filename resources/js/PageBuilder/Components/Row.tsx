@@ -4,8 +4,17 @@ import { Row as BSRow, Col } from "react-bootstrap";
 export const Row = {
     resolveFields: (data: any) => {
         let fields: any = {
+            test: {
+                type: 'select',
+            options: [
+                {label: "Male", value: "male"},
+                {label: "Female", value: "female"},
+                {label: "Other", value: "other"},
+            ],
+            default: "female"
+            },
             cols: {
-                type: "number",
+                type: "textarea",
                 max: 12,
                 min: 1,
                 label: "Columns",
@@ -19,16 +28,7 @@ export const Row = {
                     }));
                     return (
                         <div>
-                            {col.map((c: any, i: number) => (
-                                <div key={i} className="mb-3">
-                                    <div className="_Input-label_g5w3n_5">Column {i + 1}</div>
-                                    <input type="number" value={c.span} onChange={(e) => {
-                                        console.log("changeing");
-                                        col[i].span = e.target.value;
-                                        onChange([...col]);
-                                    }} className="_Input-input_g5w3n_26" />
-                                </div>
-                            ))}
+                            sdfsdfds
                         </div>
                     );   
                 },
