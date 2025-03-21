@@ -20,9 +20,9 @@ class SampleEventDataSeeder extends Seeder
         (1, '9e79c502-1a50-4d01-bd0b-9f73db250cc9', 2, 'Kids & Family', 'events-avatars/event-logo-1.png', 'test', 'test', 'test', 'in-person', 'singleday', '2025-03-20 03:12:14', '2025-03-20 03:12:14', 1, 0, NULL),
         (2, '9e79c52f-7abb-4277-b7d5-771cf8f3fd7b', 2, 'octv localhsot', 'events-avatars/event-logo-2.jpg', 'test event 2', 'test', 'test', 'in-person', 'singleday', '2025-03-20 03:12:44', '2025-03-20 03:12:44', 2, 1, 1)");
 
-        DB::statement("INSERT INTO `event_app_dates` (`id`, `event_app_id`, `date`, `created_at`, `updated_at`) VALUES
-        (1, 2, '2025-03-20', '2025-03-19 22:35:19', '2025-03-19 22:35:19'),
-        (2, 2, '2025-03-20', '2025-03-19 22:35:19', '2025-03-19 22:35:19')");
+        // DB::statement("INSERT INTO `event_app_dates` (`id`, `event_app_id`, `date`, `created_at`, `updated_at`) VALUES
+        // (1, 2, '2025-03-20', '2025-03-19 22:35:19', '2025-03-19 22:35:19'),
+        // (2, 2, '2025-03-20', '2025-03-19 22:35:19', '2025-03-19 22:35:19')");
 
         $this->command->info('  1. Sample Events Created');
 
@@ -40,9 +40,9 @@ class SampleEventDataSeeder extends Seeder
 
         $this->command->info('  3. Sample Event Platforms Created');
 
-        //Even Dates
+        // //Even Dates
         DB::statement("INSERT INTO `event_app_dates` (`id`, `event_app_id`, `date`, `created_at`, `updated_at`) VALUES
-        (1, 2, '2025-03-20', '2025-03-20 03:35:19', '2025-03-20 03:35:19')");
+        (1, 1, '2025-03-20', '2025-03-20 03:35:19', '2025-03-20 03:35:19')");
         DB::statement("INSERT INTO `event_app_dates` (`id`, `event_app_id`, `date`, `created_at`, `updated_at`) VALUES
         (2, 2, '2025-03-20', '2025-03-20 03:35:19', '2025-03-20 03:35:19')");
 
