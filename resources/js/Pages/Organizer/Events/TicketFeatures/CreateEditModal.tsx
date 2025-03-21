@@ -61,18 +61,13 @@ export default function CreateEditModal({ show, hide, onHide, feature }:
                 <Form onSubmit={submit} className="tablelist-form">
                     <Row>
                         <Col md={12}>
-                            <FormGroup className="mb-3">
-                                {/* <Form.Label>Name</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    as='textarea'
-                                    value={data.name}
-                                    onChange={(e) => setData('name', e.target.value)}
-                                    isInvalid={!!errors.name}
-                                /> */}
+                            <FormGroup className="mb-3" >
                                 <CKEditor
                                     editor={ClassicEditor}
                                     data={data.name}
+                                    config={{
+                                        // removePlugins: ['Heading', 'Image']
+                                    }}
                                     onReady={(editor) => {
                                         editorRef.current = editor;
                                         // console.log(editor);

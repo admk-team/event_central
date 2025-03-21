@@ -111,7 +111,12 @@ class EventController extends Controller
 
         //Update Event Date Date Time
         $event_date = $event_app->dates()->first();
-        $event_date->update(['date' => $data['start_date']]);
+
+        if ($event_date)
+            $event_date->update(['date' => $data['start_date']]);
+        else {
+            EventAppDate::create(['date' => $data['start_date'], 'event_app_id' => $event_app->id]);
+        }
 
         // Save Event Log File If changed
         $this->SaveLogoImage($event_app, $request);

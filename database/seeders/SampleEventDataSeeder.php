@@ -20,6 +20,10 @@ class SampleEventDataSeeder extends Seeder
         (1, '9e79c502-1a50-4d01-bd0b-9f73db250cc9', 2, 'Kids & Family', 'events-avatars/event-logo-1.png', 'test', 'test', 'test', 'in-person', 'singleday', '2025-03-20 03:12:14', '2025-03-20 03:12:14', 1, 0, NULL),
         (2, '9e79c52f-7abb-4277-b7d5-771cf8f3fd7b', 2, 'octv localhsot', 'events-avatars/event-logo-2.jpg', 'test event 2', 'test', 'test', 'in-person', 'singleday', '2025-03-20 03:12:44', '2025-03-20 03:12:44', 2, 1, 1)");
 
+        DB::statement("INSERT INTO `event_app_dates` (`id`, `event_app_id`, `date`, `created_at`, `updated_at`) VALUES
+        (1, 2, '2025-03-20', '2025-03-19 22:35:19', '2025-03-19 22:35:19'),
+        (2, 2, '2025-03-20', '2025-03-19 22:35:19', '2025-03-19 22:35:19')");
+
         $this->command->info('  1. Sample Events Created');
 
         //Speaker
@@ -86,11 +90,19 @@ class SampleEventDataSeeder extends Seeder
         $this->command->info('  8. Stripe Keys Created');
 
         DB::statement("INSERT INTO `ticket_features` (`id`, `organizer_id`, `event_app_id`, `name`, `created_at`, `updated_at`, `price`, `qty_total`, `qty_sold`) VALUES
-        (1, 2, 2, '<p>🎟 <strong>VIP Access</strong> – Skip the lines and enjoy priority seating. <i>(+ $20)</i></p>', '2025-03-21 00:23:49', '2025-03-21 00:23:49', '20.00', 50, 0),
-        (2, 2, 2, '<p>🍔 <strong>Food &amp; Drinks Voucher</strong> – Redeem for a meal and beverage at any vendor. <i>(+ $15)</i></p>', '2025-03-21 00:33:08', '2025-03-21 00:33:08', '15.00', 25, 0),
-        (3, 2, 2, '<p>👕 <strong>Event Merchandise</strong> – Get an exclusive event T-shirt and souvenirs. <i>(+ $25)</i></p>', '2025-03-21 00:33:54', '2025-03-21 00:33:54', '25.00', 50, 0),
-        (4, 2, 2, '<p>🎉 <strong>Backstage Pass</strong> – Meet the performers and enjoy a behind-the-scenes tour. <i>(+ $50)</i></p>', '2025-03-21 00:34:15', '2025-03-21 00:34:15', '50.00', 50, 0),
-        (5, 2, 2, '<p>📸 <strong>Photo Package</strong> – Receive professional event photos as a keepsake. <i>(+ $10)</i></p>', '2025-03-21 00:34:39', '2025-03-21 00:34:39', '10.00', 50, 0)");
+        (1, 2, 2, '<p>🎟 <strong>VIP Access</strong> – Skip the lines and enjoy priority seating. <i>(+ $20)</i></p>', '2025-03-20 19:23:49', '2025-03-20 19:23:49', '20.00', 50, 0),
+        (2, 2, 2, '<p>🍔 <strong>Food &amp; Drinks Voucher</strong> – Redeem for a meal and beverage at any vendor. <i>(+ $15)</i></p>', '2025-03-20 19:33:08', '2025-03-20 19:33:08', '15.00', 25, 0),
+        (3, 2, 2, '<p>👕 <strong>Event Merchandise</strong> – Get an exclusive event T-shirt and souvenirs. <i>(+ $25)</i></p>', '2025-03-20 19:33:54', '2025-03-20 19:33:54', '25.00', 50, 0),
+        (4, 2, 2, '<p>🎉 <strong>Backstage Pass</strong> – Meet the performers and enjoy a behind-the-scenes tour. <i>(+ $50)</i></p>', '2025-03-20 19:34:15', '2025-03-20 19:34:15', '50.00', 50, 0),
+        (5, 2, 2, '<p>📸 <strong>Photo Package</strong> – Receive professional event photos as a keepsake. <i>(+ $10)</i></p>', '2025-03-20 19:34:39', '2025-03-20 19:34:39', '10.00', 50, 0),
+        (6, 2, 2, '<p>🚗 <strong>Premium Parking</strong> – Get a reserved parking spot close to the venue. <i>(+ $10)</i></p>', '2025-03-21 02:29:45', '2025-03-21 02:29:45', '10.00', 60, 0),
+        (7, 2, 2, '<p>🎧 <strong>Exclusive Playlist Access</strong> – Enjoy a curated playlist featuring event artists. <i>(+ $5)</i></p>', '2025-03-21 02:30:06', '2025-03-21 02:30:06', '5.00', 50, 0),
+        (8, 2, 2, '<p>🛋 <strong>Lounge Access</strong> – Relax in a private lounge with complimentary snacks. <i>(+ $30)</i></p>', '2025-03-21 02:30:23', '2025-03-21 02:30:23', '30.00', 45, 0),
+        (9, 2, 2, '<p>🎮 <strong>Game Zone Pass</strong> – Access interactive games and activities before the show. <i>(+ $10)</i></p>', '2025-03-21 02:30:42', '2025-03-21 02:30:42', '10.00', 50, 0),
+        (10, 2, 2, '<p>🎆 <strong>After-Party Entry</strong> – Keep the fun going with exclusive after-party access. <i>(+ $40)</i></p>', '2025-03-21 02:31:12', '2025-03-21 02:31:12', '40.00', 50, 0),
+        (11, 2, 2, '<p>🎟 <strong>Bring a Friend Discount</strong> – Get a special rate when you buy an extra ticket. <i>(Varies)</i></p>', '2025-03-21 02:31:43', '2025-03-21 02:31:43', '0.00', 50, 0),
+        (12, 2, 2, '<p>📜 <strong>Signed Event Poster</strong> – Take home a limited-edition signed poster. <i>(+ $20)</i></p>', '2025-03-21 02:32:05', '2025-03-21 02:32:05', '20.00', 50, 0),
+        (13, 2, 2, '<p>🚀 <strong>Early Access</strong> – Enter the venue before general admission and grab the best spots. <i>(+ $15)</i></p>', '2025-03-21 02:32:20', '2025-03-21 02:32:20', '15.00', 50, 0)");
 
         $this->command->info('  9. Ticket Features Created');
 
