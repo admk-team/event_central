@@ -69,7 +69,7 @@ const Index = ({ eventApp }: any) => {
         <React.Fragment>
             <Head title="Tickets" />
             <section className="section bg-light" id="tickets">
-                <div className="bg-overlay bg-overlay-pattern"></div>
+                {/* <div className="bg-overlay bg-overlay-pattern"></div> */}
                 <Container>
                     <Row className="justify-content-center">
                         <Col lg={8}>
@@ -79,8 +79,7 @@ const Index = ({ eventApp }: any) => {
                             </div>
                         </Col>
                     </Row>
-
-                    <Row className="gy-4">
+                    <Row className=" justify-content-center gy-4">
                         {eventApp.tickets.length > 0 && eventApp.tickets.map((ticket: any) =>
                             <TicketCard
                                 onAddToCart={addToCart}

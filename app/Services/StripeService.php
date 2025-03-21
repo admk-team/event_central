@@ -4,14 +4,10 @@ namespace App\Services;
 
 use Exception;
 use Stripe\Stripe;
-use Stripe\Checkout\Session;
-use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Log;
 use App\Models\EventApp;
-use App\Models\EventAppTicket;
-use PhpParser\Node\Stmt\TryCatch;
 
-class StripePaymentService
+class StripeService
 {
 
     public function StripKeys()

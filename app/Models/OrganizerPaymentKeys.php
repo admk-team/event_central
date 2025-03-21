@@ -14,6 +14,8 @@ class OrganizerPaymentKeys extends Model
         'user_id',
         'stripe_publishable_key',
         'stripe_secret_key',
+
+        'paypal_base_url',
         'paypal_pub',
         'paypal_secret',
     ];

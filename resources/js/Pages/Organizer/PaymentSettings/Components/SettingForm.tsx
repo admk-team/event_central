@@ -11,8 +11,13 @@ export default function SettingForm({ keys }: any) {
 
     const { data, setData, post, processing, errors } = useForm({
         _method: 'PUT',
+
+        // Paypal fields
+        paypal_base_url: keys?.paypal_base_url ?? '',
         paypal_pub: keys?.paypal_pub ?? '',
         paypal_secret: keys?.paypal_secret ?? '',
+
+        //Stripe fields
         stripe_publishable_key: keys?.stripe_publishable_key ?? '',
         stripe_secret_key: keys?.stripe_secret_key ?? '',
     });
@@ -87,6 +92,22 @@ export default function SettingForm({ keys }: any) {
                     </div>
                 </CardHeader>
                 <CardBody>
+                    <InputGroup className="mb-3">
+                        <Form.Control
+                            type="text"
+                            placeholder='Enter Paypal URL'
+                            className="form-control"
+                            value={data.payppaypal_base_urlal_pub}
+                            onChange={(e) => setData({ ...data, paypal_base_url: e.target.value })}
+                            isInvalid={!!errors.paypal_base_url}
+                        />
+                        <Button variant="outline-secondary" id="button-copyLink" disabled={data.paypal_base_url.length === 0} onClick={() => CopyLink(data.paypal_base_url)}>
+                            <i className='bx bx-copy'></i>
+                        </Button>
+                        {errors.paypal_pub && (
+                            <Form.Control.Feedback type="invalid">{errors.paypal_pub}</Form.Control.Feedback>
+                        )}
+                    </InputGroup>
                     <InputGroup className="mb-3">
                         <Form.Control
                             type="text"

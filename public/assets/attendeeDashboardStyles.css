@@ -103,3 +103,7 @@ ul.timeline > li:before {
     margin-top: unset !important;
     margin-bottom: 0 !important;
 }
+
+#AttendeeTicketFeature p{
+    margin-bottom: 0 !important;
+}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Col, Container, Row, CardBody, Spinner } from "react-bootstrap";
+import { Button, Card, Col, Container, Row, CardBody, Spinner, Tabs, Tab } from "react-bootstrap";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
 import { loadStripe } from "@stripe/stripe-js";
@@ -52,31 +52,47 @@ const Index = ({ eventApp, amount, tickets, stripe_pub_key }: any) => {
                 <Container>
                     <Row className="justify-content-center">
                         <Col md={6} lg={6}>
-                            <div className="d-flex justify-content-between">
-                                <h4>Stripe Payment</h4>
-                                {loadingIntent && <Spinner animation="border" role="status">
-                                    <span className="visually-hidden">Loading...</span>
-                                </Spinner>}
-                            </div>
-                            {clientSecret && stripePromise && (
-                                <Card>
-                                    <CardBody>
-                                        <Elements
-                                            stripe={stripePromise}
-                                            options={{
-                                                clientSecret,
-                                                appearance,
-                                            }}
-                                        >
-                                            <CheckoutForm
-                                                eventId={eventApp.id}
-                                                amount={amount}
-                                                tickets={tickets}
-                                            />
-                                        </Elements>
-                                    </CardBody>
-                                </Card>
-                            )}
+                            <Card>
+                                <CardBody>
+                                    <Tabs
+                                        fill
+                                        defaultActiveKey="stripe"
+                                        id="uncontrolled-tab-example"
+                                        className="mb-3"
+                                    >
+                                        <Tab eventKey="stripe" title="Stripe">
+                                            {loadingIntent && <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '200px' }}>
+                                                <Spinner animation="border" role="status">
+                                                    <span className="visually-hidden">Loading...</span>
+                                                </Spinner>
+                                            </div>
+                                            }
+                                            {clientSecret && stripePromise && (
+                                                <Card>
+                                                    <CardBody>
+                                                        <Elements
+                                                            stripe={stripePromise}
+                                                            options={{
+                                                                clientSecret,
+                                                                appearance,
+                                                            }}
+                                                        >
+                                                            <CheckoutForm
+                                                                eventId={eventApp.id}
+                                                                amount={amount}
+                                                                tickets={tickets}
+                                                            />
+                                                        </Elements>
+                                                    </CardBody>
+                                                </Card>
+                                            )}
+                                        </Tab>
+                                        <Tab eventKey="paypal" title="Paypal">
+                                            Under development
+                                        </Tab>
+                                    </Tabs>
+                                </CardBody>
+                            </Card>
                         </Col>
                     </Row>
                 </Container>

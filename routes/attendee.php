@@ -6,7 +6,7 @@ use App\Http\Controllers\Attendee\Auth\PasswordController;
 use App\Http\Controllers\Attendee\Auth\RegisteredUserController;
 use App\Http\Controllers\Attendee\EventController;
 use App\Http\Controllers\Attendee\EventSessionController;
-use App\Http\Controllers\Attendee\PaymentController;
+use App\Http\Controllers\Attendee\Payment\PaymentController;
 use App\Http\Controllers\Attendee\EventPostController;
 use App\Http\Controllers\Attendee\EventRegistrationFormController;
 use App\Http\Controllers\Attendee\ProfileController;
@@ -56,15 +56,16 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::post('/qr-code/{eventApp}', [QrCodeController::class, 'postQrCode'])->name('attendee.qr-code.post');
 
         //Payment Processing
-        Route::get('{eventApp}/tickets', [PaymentController::class, 'ticketsPage'])->name('attendee.tickets.get');
-        Route::post('{eventApp}/tickets', [PaymentController::class, 'postTickets'])->name('attendee.tickets.post');
+        Route::get('view-tickets', [PaymentController::class, 'viewTickets'])->name('attendee.tickets.get');
+        Route::post('tickets', [PaymentController::class, 'postTickets'])->name('attendee.tickets.post');
 
-        Route::post('{eventApp}/checkout', [PaymentController::class, 'checkoutPage'])->name('attendee.checkout.post');
-
-        Route::post('validate-discount-code/{ticketId}/{code}', [PaymentController::class, 'validateDiscCode'])->name('attendee.validateCode.post');
-
+        Route::post('checkout', [PaymentController::class, 'checkoutPage'])->name('attendee.checkout.post');
         Route::post('create-payment-intent', [PaymentController::class, 'createPaymentIntent'])->name('attendee.payment.intent');
-        Route::post('{eventApp}/update-attendee-payment', [PaymentController::class, 'updateAttendeePaymnet'])->name('attendee.update.payment');
+        Route::post('update-attendee-payment', [PaymentController::class, 'updateAttendeePaymnet'])->name('attendee.update.payment');
+        Route::post('validate-discount-code/{ticketId}/{code}', [PaymentController::class, 'validateDiscCode'])->name('attendee.validateCode.post');
+        //PayPal
+        Route::post('/paypal/create-payment', [PaymentController::class, 'createPayPalPayment']);
+        Route::post('/paypal/capture-payment', [PaymentController::class, 'capturePayPalPayment']);
 
         Route::get('{eventApp}/payment-success', [PaymentController::class, 'paymentSuccess'])->name('attendee.payment.success');
         Route::get('{eventApp}/event-posts', [EventController::class, 'getPostsMore'])->name('attendee.posts.index');

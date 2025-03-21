@@ -132,7 +132,7 @@ const Navdata = () => {
             id: "tickets",
             label: "Tickets",
             icon: "bx bx-qr",
-            link: route('attendee.tickets.get', user.event_app_id),
+            link: route('attendee.tickets.get'),
             stateVariables: isMore,
             click: function (e: any) {
                 e.preventDefault();
