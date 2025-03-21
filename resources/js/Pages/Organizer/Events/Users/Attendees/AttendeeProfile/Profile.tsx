@@ -4,7 +4,6 @@ import { Head, Link } from "@inertiajs/react";
 import Layout from "../../../../../../Layouts/Event";
 
 const Profile = ({ attendee }: any) => {
-    console.log(attendee);
     return (
         <React.Fragment>
             <Head title="Profile | Velzon - React Admin & Dashboard Template" />
@@ -12,11 +11,7 @@ const Profile = ({ attendee }: any) => {
                 <Container fluid>
                     <div className="profile-foreground position-relative mx-n4 mt-n4">
                         <div className="profile-wid-bg">
-                            <img
-                                src={attendee.avatar_img}
-                                alt=""
-                                className="profile-wid-img"
-                            />
+                            <img src="" alt="" className="profile-wid-img" />
                         </div>
                     </div>
                     <div className="pt-4 mb-4 mb-lg-3 pb-lg-4">
@@ -24,7 +19,7 @@ const Profile = ({ attendee }: any) => {
                             <div className="col-auto">
                                 <div className="avatar-lg">
                                     <img
-                                        src=""
+                                        src={attendee.avatar ??attendee.avatar_img}
                                         alt="user-img"
                                         className="img-thumbnail rounded-circle"
                                     />
