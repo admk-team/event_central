@@ -17,13 +17,10 @@ use App\Http\Controllers\Organizer\Event\PageController;
 use App\Http\Controllers\Organizer\Event\Settings\EventAppPaymentController;
 use App\Http\Controllers\Organizer\Event\Settings\EventSettingsController;
 use App\Http\Controllers\Organizer\Event\User\AttendeeController;
-use App\Http\Controllers\Organizer\Event\PartnerController;
 use App\Http\Controllers\Organizer\Event\EventAppTicketController;
 use App\Http\Controllers\Organizer\Event\EventDateController;
 use App\Http\Controllers\Organizer\Event\EventPromoCodeController;
 use App\Http\Controllers\Organizer\Event\FormFieldController;
-use App\Http\Controllers\Organizer\Event\RegistrationFormController;
-use App\Http\Controllers\Organizer\Event\ScheduleController;
 use App\Http\Controllers\Organizer\Event\Settings\RegistrationFormSettingsController;
 use App\Http\Controllers\Organizer\Event\Settings\WebsiteSettingsController;
 use App\Http\Controllers\Organizer\Event\TicketFeatureController;
@@ -34,19 +31,12 @@ use App\Http\Controllers\Organizer\RoleController;
 use App\Http\Controllers\Organizer\Settings\OrganizerPaymentSettingController;
 use App\Http\Controllers\Organizer\UserController;
 use App\Http\Controllers\QuestionController;
-use App\Http\Middleware\CurrentEventMiddleware;
 use Illuminate\Support\Facades\Route;
 
 // Event Website
 Route::prefix('e/{uuid}')->name('organizer.events.website')->group(function () {
     Route::get('/', [WebsiteController::class, 'index']);
     Route::get('{slug}', [WebsiteController::class, 'page'])->name('.page');
-});
-
-// Event Registration Form
-Route::prefix('event-registration-form/{uuid}')->name('organizer.events.event-registration-form')->group(function () {
-    Route::get('/', [RegistrationFormController::class, 'index']);
-    Route::post('/', [RegistrationFormController::class, 'submit'])->name('.submit');
 });
 
 Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organizer.')->group(function () {
@@ -113,8 +103,9 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::delete('tickets/delete/many', [EventAppTicketController::class, 'destroyMany'])->name('tickets.destroy.many');
 
             // Ticket-Features
-            Route::resource('tickets-feature', TicketFeatureController::class)->only(['store', 'update', 'destroy']);
-            Route::get('tickets-feature/{event_app_ticket?}', [TicketFeatureController::class, 'index'])->name('tickets-feature.index');
+            Route::resource('tickets-feature', TicketFeatureController::class)->only(['index', 'store', 'update', 'destroy']);
+            Route::get('ticket-feature/{event_app_ticket_id?}', [TicketFeatureController::class, 'getAllFeatures'])->name('fetch');
+            Route::delete('tickets-feature/delete/many', [TicketFeatureController::class, 'destroyMany'])->name('tickets-feature.destroy.many');
 
             // Promo Codes
             Route::resource('promo-codes', EventPromoCodeController::class)->only(['index', 'store', 'update', 'destroy']);
@@ -167,7 +158,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                     Route::post('/toggle-status', [RegistrationFormSettingsController::class, 'toggleStatus'])->name('toggle-status');
                     Route::post('/website', [RegistrationFormSettingsController::class, 'toggleStatus'])->name('toggle-status');
                 });
-                
+
                 // Website
                 Route::prefix('website')->name('website.')->group(function () {
                     Route::get('/', [WebsiteSettingsController::class, 'index'])->name('index');
@@ -190,8 +181,15 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::post('import/{importType}', [ImportController::class, 'import'])->name('import');
         });
     });
+   // Q&A
     Route::get('/events/qa', [QuestionController::class, 'index'])->name('events.qa.index');
     Route::post('/events/{event}/questions', [QuestionController::class, 'storeQuestion'])->name('events.qa.store');
     Route::post('/events/questions/{questionId}/vote', [QuestionController::class, 'vote'])->name('events.qa.vote');
     Route::post('/events/questions/{questionId}/answer', [QuestionController::class, 'storeAnswer'])->name('events.qa.answer');
+    Route::group(['prefix' => 'events/qa', 'as' => 'events.qa.'], function () {
+        Route::put('/question/{questionId}', [QuestionController::class, 'updateQuestion'])->name('updateQuestion');
+        Route::delete('/question/{questionId}', [QuestionController::class, 'destroyQuestion'])->name('destroyQuestion');
+        Route::put('/answer/{answerId}', [QuestionController::class, 'updateAnswer'])->name('updateAnswer');
+        Route::delete('/answer/{answerId}', [QuestionController::class, 'destroyAnswer'])->name('destroyAnswer');
+    });
 });

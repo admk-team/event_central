@@ -22,7 +22,7 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
         name: ticket?.name ?? '',
         description: ticket?.description ?? '',
         type: 'NORMAL',
-        price: ticket?.price ?? '',
+        base_price: ticket?.base_price ?? '',
         increment_by: ticket?.increment_by ?? '',
         increment_rate: ticket?.increment_rate ?? '',
         increment_type: ticket?.increment_type ?? 'Percentage',
@@ -36,27 +36,12 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
 
     const [ticketFeatures, setTicketFeatures] = useState<any>([]);
     const [eventLoading, setEventLoading] = useState<any>(false);
-    const [currentFeature, setCurrentFeature] = useState<any>(null);
-    const [addFeature, setAddFeature] = useState<any>(false);
+
+    const [featureTotalPrice, setFeatureTotalPrice] = useState(0);
+    const [ticketTotalPrice, setTicketTotalPrice] = useState(ticket?.base_price ?? 0);
 
     const [deleteFeature, setDeleteFeature] = useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState<any>(false);
-
-    const { data: dataFeature,
-        setData: setDataFeature,
-        post: postFeature,
-        put: putFeature,
-        processing: processingFeature,
-        errors: errorsFeature,
-        reset: resetFeature,
-        transform: transformFeature } = useForm({
-            id: currentFeature?.id ?? null,
-            _method: currentFeature ? "PUT" : "POST",
-            organizer_id: currentFeature?.organizer_id ?? userId,
-            event_app_id: currentFeature?.event_app_id ?? eventId,
-            name: currentFeature?.name ?? '',
-            selected: currentFeature?.selected ?? 0,
-        });
 
     useEffect(() => {
         fetchFeatures();
@@ -68,10 +53,8 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
 
     const fetchFeatures = () => {
         setEventLoading(true);
-        let url = route('organizer.events.tickets-feature.index', [ticket?.id ?? null]);
-        // console.log(url);
+        let url = route('organizer.events.fetch', [ticket?.id ?? null]);
         axios.get(url).then((response) => {
-        // console.log('res', response);
             setTicketFeatures(response.data.features);
         }).finally(() => {
             setEventLoading(false);
@@ -116,35 +99,19 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
 
     const updateTicketFeatures = () => {
         const selected_features: any = [];
-        // console.log('Total items', ticketFeatures.length);
+        let all_feature_price = 0;
         ticketFeatures.forEach((item: any) => {
-            // console.log('item', item.selected);
             if (item.selected > 0) {
                 selected_features.push(item.id);
+                all_feature_price += parseFloat(item.price);
             }
         });
+        setFeatureTotalPrice(all_feature_price);
+        setTicketTotalPrice(parseFloat(data.base_price) + parseFloat(all_feature_price));
         setData('features', selected_features);
-        // console.log(selected_features);
     }
 
-    const submitFeatureForm = (e: any) => {
-        e.preventDefault();
-        if (dataFeature.id === null)
-            postFeature(route('organizer.events.tickets-feature.store'), {
-                onSuccess: () => {
-                    resetFeature();
-                    fetchFeatures();
-                }
-            });
-        else {
-            putFeature(route('organizer.events.tickets-feature.update', dataFeature.id), {
-                onSuccess: () => {
-                    resetFeature();
-                    fetchFeatures();
-                }
-            });
-        }
-    }
+
 
     const handleCheckChangeSession = (event: any) => {
         if (event.target.checked) {
@@ -156,8 +123,6 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
             setSelectAllSession(false);
         }
     }
-
-
 
     const handleCheckChangeFeature = (event: any) => {
         if (event.target.checked) {
@@ -240,19 +205,6 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
                                 {errors.name && <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>}
                             </FormGroup>
                             <FormGroup className="mb-3">
-                                <Form.Label>Price</Form.Label>
-                                <Form.Control
-                                    type="number"
-                                    value={data.price}
-                                    onChange={(e) => setData('price', e.target.value)}
-                                    isInvalid={!!errors.price}
-                                />
-                                {errors.price && <Form.Control.Feedback type="invalid">{errors.price}</Form.Control.Feedback>}
-                            </FormGroup>
-                        </Col>
-
-                        <Col md={6}>
-                            <FormGroup className="mb-3">
                                 <Form.Label>Description</Form.Label>
                                 <Form.Control
                                     as="textarea"
@@ -263,6 +215,39 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
                                     isInvalid={!!errors.description}
                                 />
                                 {errors.description && <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>}
+                            </FormGroup>
+
+                        </Col>
+                        <Col md={6}>
+                            <FormGroup className="mb-3">
+                                <Form.Label>Base Price</Form.Label>
+                                <Form.Control
+                                    type="number"
+                                    value={data.base_price}
+                                    onChange={(e) => {
+                                        setData('base_price', e.target.value);
+                                        setTicketTotalPrice(e.target.value.length > 0 ? parseFloat(e.target.value) : 0 + featureTotalPrice);
+                                    }}
+                                    isInvalid={!!errors.base_price}
+                                />
+                                {errors.base_price && <Form.Control.Feedback type="invalid">{errors.base_price}</Form.Control.Feedback>}
+                            </FormGroup>
+                            <FormGroup className="mb-3">
+                                <Form.Label>Addon Total Price</Form.Label>
+                                <Form.Control
+                                    type="number"
+                                    disabled
+                                    value={featureTotalPrice}
+                                />
+                            </FormGroup>
+                            <FormGroup className="mb-3">
+                                <Form.Label>Total Ticket Price</Form.Label>
+                                <Form.Control
+                                    type="number"
+                                    disabled
+                                    value={ticketTotalPrice}
+                                />
+                                {errors.base_price && <Form.Control.Feedback type="invalid">{errors.base_price}</Form.Control.Feedback>}
                             </FormGroup>
                         </Col>
                     </Row>
@@ -410,36 +395,20 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
                         {!eventLoading && <Table striped hover className='table-sm' style={{ maxHeight: '150px', overflowY: 'auto' }}>
                             <thead>
                                 <tr>
-                                    {/* <th>ID</th> */}
-                                    <th>Description</th>
-                                    <th>Include in Ticket</th>
-                                    <th>Actions</th>
+                                    <th>ID</th>
+                                    <th>Feature Description</th>
+                                    <th style={{ textAlign: 'center' }}>Action</th>
                                 </tr>
                             </thead>
                             <tbody >
                                 {ticketFeatures && ticketFeatures.map((feature: any) =>
                                     <tr key={feature.id}>
-                                        {/* <td>{feature.id}</td> */}
-                                        <td style={{ width: '70%' }}>{feature.name}</td>
+                                        <td>{feature.id}</td>
+                                        <td style={{ width: '80%' }}>{feature.name}</td>
                                         <td style={{ textAlign: 'center' }}>
                                             <Button title='Click to add in Ticket' variant='link' className='btn-sm' onClick={() => toggleFeatureSelection(feature)}>
                                                 <i className={'bx bx-check-square fs-5 ' + (feature.selected > 0 ? 'text-success' : 'text-muted')}></i>
                                             </Button>
-                                        </td>
-                                        <td>
-                                            {feature.id > 0 &&
-                                                <div>
-                                                    <Button title='Click to Edit Ticket' variant='link' className='btn-sm' onClick={() => {
-                                                        setCurrentFeature(feature);
-                                                        setDataFeature(feature);
-                                                        setAddFeature(true);
-                                                    }}><i className='bx bx-pencil text-primary fs-5'></i></Button>
-                                                    <Button title='Click to Delete Ticket' variant='link' className='btn-sm' onClick={() => {
-                                                        setDeleteFeature(feature);
-                                                        setShowDeleteConfirmation(true);
-                                                    }}><i className='bx bx-trash text-danger fs-5'></i>
-                                                    </Button>
-                                                </div>}
                                         </td>
                                     </tr>)}
                             </tbody>
@@ -449,47 +418,6 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
                                 onCloseClick={() => { setShowDeleteConfirmation(false) }}
                             />
                         </Table>}
-                        {!addFeature &&
-                            <button type="button" className="btn btn-primary" onClick={() => setAddFeature(true)}>
-                                New Feature</button>
-                        }
-
-                        {addFeature &&
-                            <Form onSubmit={submitFeatureForm} className="tablelist-form">
-                                <Row>
-                                    <Col md={9} lg={9}>
-                                        <FormGroup className="mb-3">
-                                            <Form.Control
-                                                rows={1}
-                                                as='textarea'
-                                                type="text"
-                                                value={dataFeature.name}
-                                                onChange={(e) => setDataFeature('name', e.target.value)}
-                                                isInvalid={!!errorsFeature.name}
-                                            />
-                                            {errorsFeature.name && <Form.Control.Feedback type="invalid">{errorsFeature.name}</Form.Control.Feedback>}
-                                        </FormGroup>
-                                    </Col>
-                                    <Col md={3} lg={3}>
-                                        {addFeature &&
-                                            <Row>
-                                                <Col>
-                                                    <button type="submit" className="btn btn-primary" disabled={processingFeature}>Save
-                                                    </button>
-                                                </Col>
-                                                <Col>
-                                                    <button type="button" className="btn btn-light" onClick={() => {
-                                                        setAddFeature(false);
-                                                        resetFeature();
-                                                        setCurrentFeature(null)
-                                                    }}>Cancel</button>
-                                                </Col>
-                                            </Row>
-                                        }
-                                    </Col>
-                                </Row>
-                            </Form>
-                        }
                     </Col>
                 </Row>
                 </Modal.Body>

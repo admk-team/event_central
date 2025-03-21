@@ -19,6 +19,7 @@ class CheckAttendeeRegistrationForm
     {
         $attendee = Auth::guard('attendee')->user();
         $event = EventApp::find($attendee->event_app_id);
+<<<<<<< HEAD
         // $form = $event->form;
         // dd($form);
         // $formFilled = $form->submissions()->where('attendee_id', $attendee->id)->count();
@@ -26,6 +27,13 @@ class CheckAttendeeRegistrationForm
         // if ($form->status && !$formFilled) {
         //     return redirect()->route('organizer.events.event-registration-form', $event->uuid);
         // }
+=======
+        $form = $event->form;
+
+        if ($form && $form->status && $form->submissions()->where('attendee_id', $attendee->id)->count() === 0) {
+            return redirect()->route('attendee.event-registration-form', $event->id);
+        }
+>>>>>>> 5943714c965db71345aa1031174b15c9e3130254
 
         return $next($request);
     }

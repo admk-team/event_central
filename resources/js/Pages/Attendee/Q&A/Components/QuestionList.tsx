@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Button, Col, Row, Card, Badge, Modal } from "react-bootstrap";
+import { Button, Col, Row, Card, Badge, Modal, Form } from "react-bootstrap";
 import { router } from '@inertiajs/react';
 import AnswerForm from "./AnswerForm";
 
@@ -16,7 +16,7 @@ interface Question {
     likes_count: number;
     dislikes_count: number;
     created_at: string;
-    user: { name: string };
+    user: { id?: number; first_name: string };
     answers: { id: number; content: string; created_at: string; user: { name: string } }[];
 }
 
@@ -24,19 +24,21 @@ interface Props {
     eventId: number;
     user: User;
     questions: Question[];
-    newAnswer?: { id: number; content: string; created_at: string; user: { name: string } }; // Added for new answer
+    newAnswer?: { id: number; content: string; created_at: string; user: { name: string } };
 }
 
 const QuestionList: React.FC<Props> = ({ eventId, user, questions: initialQuestions, newAnswer }) => {
     const [questions, setQuestions] = useState<Question[]>(initialQuestions);
     const [showAnswerModal, setShowAnswerModal] = useState(false);
     const [selectedQuestionId, setSelectedQuestionId] = useState<number | null>(null);
+    const [showEditQuestionModal, setShowEditQuestionModal] = useState(false); // Added state for edit modal
+    const [editContent, setEditContent] = useState<string>(""); // Added state for edit content
 
     useEffect(() => {
         setQuestions(initialQuestions);
         if (newAnswer && selectedQuestionId) {
             appendNewAnswer(newAnswer, selectedQuestionId);
-            setShowAnswerModal(false); // Close modal when new answer is received
+            setShowAnswerModal(false);
             setSelectedQuestionId(null);
         }
     }, [initialQuestions, newAnswer, selectedQuestionId]);
@@ -74,6 +76,49 @@ const QuestionList: React.FC<Props> = ({ eventId, user, questions: initialQuesti
         setSelectedQuestionId(null);
     };
 
+    const handleEditQuestion = (questionId: number, currentContent: string) => {
+        setSelectedQuestionId(questionId);
+        setEditContent(currentContent);
+        setShowEditQuestionModal(true);
+    };
+
+    const handleUpdateQuestion = () => {
+        if (selectedQuestionId) {
+            router.put(
+                route("attendee.events.qa.updateQuestion", { questionId: selectedQuestionId }),
+                { content: editContent },
+                {
+                    preserveState: true,
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        setQuestions((prev) =>
+                            prev.map((q) =>
+                                q.id === selectedQuestionId ? { ...q, content: editContent } : q
+                            )
+                        );
+                        setShowEditQuestionModal(false);
+                        setSelectedQuestionId(null);
+                        setEditContent("");
+                    },
+                    onError: (errors) => console.error("Update question error:", errors),
+                }
+            );
+        }
+    };
+
+    const handleDeleteQuestion = (questionId: number) => {
+        router.delete(route("attendee.events.qa.destroyQuestion", { questionId }), {
+            preserveState: true,
+            preserveScroll: true,
+            onSuccess: (page) => {
+                setQuestions((prev) => prev.filter((q) => q.id !== questionId));
+            },
+            onError: (errors) => {
+                console.error("Delete question error:", errors);
+            },
+        });
+    };
+
     const sortedQuestions = [...questions].sort(
         (a, b) => b.likes_count - b.dislikes_count - (a.likes_count - a.dislikes_count)
     );
@@ -94,11 +139,31 @@ const QuestionList: React.FC<Props> = ({ eventId, user, questions: initialQuesti
                                     <p className="text-muted fs-12 mb-0">
                                         Asked by{" "}
                                         <Badge bg="light" text="dark">
-                                            {question.user?.name || "Anonymous"}
+                                            {question.user?.first_name || "Anonymous"}
                                         </Badge>{" "}
                                         • {new Date(question.created_at).toLocaleString()}
                                     </p>
                                 </Col>
+                                {/* Only show edit/delete buttons if the user is the question owner */}
+                                {user?.id === question.user?.id && (
+                                    <Col xs="auto" className="ms-auto">
+                                        <Button
+                                            variant="outline-primary"
+                                            size="sm"
+                                            className="me-2"
+                                            onClick={() => handleEditQuestion(question.id, question.content)}
+                                        >
+                                            <i className="ri-edit-line"></i>
+                                        </Button>
+                                        <Button
+                                            variant="outline-danger"
+                                            size="sm"
+                                            onClick={() => handleDeleteQuestion(question.id)}
+                                        >
+                                            <i className="ri-delete-bin-line"></i>
+                                        </Button>
+                                    </Col>
+                                )}
                             </Row>
                             <Row className="mt-2 align-items-center">
                                 <Col xs="auto">
@@ -158,8 +223,34 @@ const QuestionList: React.FC<Props> = ({ eventId, user, questions: initialQuesti
                 </Modal.Header>
                 <Modal.Body>
                     {selectedQuestionId && (
-                        <AnswerForm questionId={selectedQuestionId} onClose={handleCloseAnswerModal} />
+                        <AnswerForm
+                            questionId={selectedQuestionId}
+                            onClose={handleCloseAnswerModal}
+                        />
                     )}
+                </Modal.Body>
+            </Modal>
+
+            {/* Edit Question Modal */}
+            <Modal show={showEditQuestionModal} onHide={() => setShowEditQuestionModal(false)} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>Edit Question</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group>
+                            <Form.Label>Question Content</Form.Label>
+                            <Form.Control
+                                as="textarea"
+                                rows={3}
+                                value={editContent}
+                                onChange={(e) => setEditContent(e.target.value)}
+                            />
+                        </Form.Group>
+                        <Button variant="primary" className="mt-3" onClick={handleUpdateQuestion}>
+                            Update Question
+                        </Button>
+                    </Form>
                 </Modal.Body>
             </Modal>
         </div>

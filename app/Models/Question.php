@@ -13,10 +13,10 @@ class Question extends Model
         return $this->belongsTo(EventApp::class, 'event_app_id'); // Adjust foreign key if different
     }
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+    // public function user()
+    // {
+    //     return $this->belongsTo(User::class);
+    // }
 
     public function answers()
     {
@@ -26,5 +26,9 @@ class Question extends Model
     public function votes()
     {
         return $this->hasMany(QuestionVote::class);
+    }
+    public function user()
+    {
+        return $this->belongsTo(Attendee::class, 'user_id');
     }
 }

@@ -2,6 +2,8 @@ import { usePage } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
 
 const Navdata = () => {
+
+    const user: any = usePage().props.auth.user;
     const eventApp: any = usePage().props.eventApp;
     //state data
     const [isDashboard, setIsDashboard] = useState<boolean>(false);
@@ -65,7 +67,7 @@ const Navdata = () => {
             id: "dashboard",
             label: "Dashboards",
             icon: "bx bxs-dashboard",
-            link: route("attendee.event.detail.dashboard", eventApp.id),
+            link: route("attendee.event.detail.dashboard", user.event_app_id),
             stateVariables: isDashboard,
             click: function (e: any) {
                 e.preventDefault();
@@ -78,7 +80,7 @@ const Navdata = () => {
             id: "program",
             label: "Program",
             icon: "bx bx-heart",
-            link: route("attendee.event.detail.agenda", eventApp.id),
+            link: route("attendee.event.detail.agenda", user.event_app_id),
             stateVariables: isProgram,
             click: function (e: any) {
                 e.preventDefault();
@@ -91,7 +93,7 @@ const Navdata = () => {
             id: "speaker",
             label: "Speaker",
             icon: "bx bx-group",
-            link: route("attendee.event.detail.speakers", eventApp.id),
+            link: route("attendee.event.detail.speakers", user.event_app_id),
             stateVariables: isSpeakers,
             click: function (e: any) {
                 e.preventDefault();
@@ -104,7 +106,7 @@ const Navdata = () => {
             id: "posts",
             label: "Posts",
             icon: "bx bx-group",
-            link: route("attendee.posts.index", eventApp.id),
+            link: route("attendee.posts.index", user.event_app_id),
             stateVariables: isPost,
             click: function (e: any) {
                 e.preventDefault();
@@ -117,7 +119,7 @@ const Navdata = () => {
             id: "more",
             label: "More",
             icon: "bx bx-info-circle",
-            link: route("attendee.event.detail.more", eventApp.id),
+            link: route("attendee.event.detail.more", user.event_app_id),
             stateVariables: isMore,
             click: function (e: any) {
                 e.preventDefault();
@@ -130,7 +132,7 @@ const Navdata = () => {
             id: "tickets",
             label: "Tickets",
             icon: "bx bx-qr",
-            link: route('attendee.tickets.get', eventApp.id),
+            link: route('attendee.tickets.get', user.event_app_id),
             stateVariables: isMore,
             click: function (e: any) {
                 e.preventDefault();

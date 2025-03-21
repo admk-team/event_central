@@ -9,7 +9,15 @@ class TicketFeature extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['organizer_id', 'event_app_id', 'name'];
+    protected $fillable = [
+        'organizer_id',
+        'event_app_id',
+        'name',
+        'price',
+        'qty_total',
+        'qty_sold',
+    ];
+
 
     public function organizer()
     {

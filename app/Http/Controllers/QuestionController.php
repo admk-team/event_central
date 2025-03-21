@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Answer;
 use App\Models\EventApp;
 use App\Models\Question;
 use Illuminate\Http\Request;
@@ -68,5 +69,34 @@ class QuestionController extends Controller
         ]);
 
         return back()->withSuccess('Answer added successfully');
+    }
+    public function updateQuestion(Request $request, $questionId) {
+        $request->validate(['content' => 'required|string|max:500']);
+        $question = Question::findOrFail($questionId);
+        // $this->authorizeQuestionAction($question, auth()->id());
+        $question->update(['content' => $request->content]);
+        return back()->withSuccess('Question updated successfully');
+    }
+    
+    public function destroyQuestion($questionId) {
+        $question = Question::findOrFail($questionId);
+        // $this->authorizeQuestionAction($question, auth()->id());
+        $question->delete();
+        return back()->withSuccess('Question deleted successfully');
+    }
+    
+    public function updateAnswer(Request $request, $answerId) {
+        $request->validate(['content' => 'required|string|max:1000']);
+        $answer = Answer::findOrFail($answerId);
+        // $this->authorizeAnswerAction($answer, auth()->id());
+        $answer->update(['content' => $request->content]);
+        return back()->withSuccess('Answer updated successfully');
+    }
+    
+    public function destroyAnswer($answerId) {
+        $answer = Answer::findOrFail($answerId);
+        // $this->authorizeAnswerAction($answer, auth()->id());
+        $answer->delete();
+        return back()->withSuccess('Answer deleted successfully');
     }
 }

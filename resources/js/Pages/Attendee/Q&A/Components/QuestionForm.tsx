@@ -12,7 +12,7 @@ const QuestionForm: React.FC<Props> = ({ eventId }) => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         router.post(
-            route('attendee.events..qa.store', { event: eventId }),
+            route('attendee.events.qa.store', { event: eventId }),
             { content },
             {
                 preserveState: true,

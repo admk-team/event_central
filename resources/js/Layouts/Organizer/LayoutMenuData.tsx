@@ -121,8 +121,8 @@ const Navdata = () => {
         },
         {
             id: "payment_settings",
-            label: "Payment Setting",
-            icon: "bx bxs-calendar-event",
+            label: "Payment Settings",
+            icon: "bx bxs-cog",
             link: route('organizer.settings.payment.index'),
             stateVariables: isPaymentSettings,
             click: function (e: any) {

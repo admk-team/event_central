@@ -9,25 +9,22 @@ import DeleteModal from '../../../../Components/Common/DeleteModal';
 import DeleteManyModal from '../../../../Components/Common/DeleteManyModal';
 import HasPermission from '../../../../Components/HasPermission';
 import CreateEditModal from './CreateEditModal';
-import moment from 'moment';
 
 
-function Index({ tickets, sessions }: any) {
-    // console.log('tickets', tickets);
-    // console.log('sessions', sessions);
-    // console.log('features', ticket_features);
+function Index({ features }: any) {
+    // console.log('features', features);
 
     const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
-    const [editTicket, setEditTicket] = React.useState<any>(null);
+    const [editTicketFeature, setEditTicketFeature] = React.useState<any>(null);
 
-    const [deleteschedule, setDeleteSchedule] = React.useState<any>(null);
+    const [deleteTicketFeature, setDeleteTicketFeature] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
 
     const setShowCreateEditModal = (state: boolean) => {
         _setShowCreateEditModal(state);
         if (state === false) {
-            setEditTicket(null);
+            setEditTicketFeature(null);
         }
     }
 
@@ -39,16 +36,16 @@ function Index({ tickets, sessions }: any) {
         ids: [],
     });
     const editAction = (ticket: any) => {
-        setEditTicket(ticket);
+        setEditTicketFeature(ticket);
         setShowCreateEditModal(true);
     }
 
     const deleteAction = (ticket: any) => {
-        setDeleteSchedule(ticket);
+        setDeleteTicketFeature(ticket);
         setShowDeleteConfirmation(true);
     }
     const handleDelete = () => {
-        deleteForm.post(route('organizer.events.tickets.destroy', deleteschedule.id));
+        deleteForm.post(route('organizer.events.tickets-feature.destroy', deleteTicketFeature.id));
         setShowDeleteConfirmation(false);
     }
 
@@ -59,66 +56,32 @@ function Index({ tickets, sessions }: any) {
     }
     const handleDeleteMany = () => {
         // console.log(deleteManyForm);
-        deleteManyForm.delete(route('organizer.events.tickets.destroy.many'));
+        deleteManyForm.delete(route('organizer.events.tickets-feature.destroy.many'));
         setShowDeleteManyConfirmation(false);
     }
-    const columns: ColumnDef<typeof tickets.data[0]> = [
+    const columns: ColumnDef<typeof features.data[0]> = [
         {
             header: () => 'ID',
-            cell: (ticket) => ticket.id,
+            cell: (feature) => feature.id,
             cellClass: "fw-medium"
         },
         {
-            header: () => 'Event Name',
-            cell: (ticket) => (
-                <span key={ticket.event.id} className="badge rounded-pill border border-success text-success text-uppercase fs-6"
-                    style={{ marginRight: '3px', maxWidth: '300px', textWrap: 'balance' }}>{ticket.event.name}</span>
-            ),
-        },
-        {
             header: () => 'Name',
-            cell: (ticket) => ticket.name,
-        },
-        {
-            header: () => 'Description',
-            cell: (ticket) => (
-                <div style={{ width: '300px', textWrap: 'balance' }}>
-                    <p>{ticket.description}</p>
-                </div>
+            cell: (feature) => (
+                <span>{feature.name}</span>
             ),
         },
         {
-            header: () => 'Type',
-            cell: (ticket) => ticket.type,
+            header: () => 'Price',
+            cell: (feature) => feature.price,
         },
         {
-            header: () => 'Base Price',
-            cell: (ticket) => ticket.base_price,
+            header: () => 'Total Qty',
+            cell: (feature) => feature.qty_total,
         },
         {
-            header: () => 'Sessions',
-            cell: (ticket) => (
-
-                ticket.sessions.map((session: any) =>
-                    <span key={session.id} className="badge rounded-pill border border-secondary text-secondary text-uppercase fs-6" style={{ marginRight: '3px' }}>{session.name}</span>
-                )
-            ),
-        },
-        {
-            header: () => 'Increment By',
-            cell: (ticket) => ticket.increment_by,
-        },
-        {
-            header: () => 'Increment Rate',
-            cell: (ticket) => ticket.increment_rate,
-        },
-        {
-            header: () => 'Start Increment',
-            cell: (ticket) => moment(ticket.start_increment).format('DD, MMM, YYYY'),
-        },
-        {
-            header: () => 'End Increment',
-            cell: (ticket) => moment(ticket.end_increment).format('DD MMM, YYYY'),
+            header: () => 'Total Sold',
+            cell: (feature) => feature.qty_sold,
         },
         {
             header: () => 'Action',
@@ -134,14 +97,14 @@ function Index({ tickets, sessions }: any) {
     ];
     return (
         <React.Fragment>
-            <Head title='Tickets' />
+            <Head title='Ticket Features' />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Tickets" pageTitle="Dashboard" />
+                    <BreadCrumb title="Ticket Features" pageTitle="Dashboard" />
                     <Row>
                         <Col xs={12}>
                             <DataTable
-                                data={tickets}
+                                data={features}
                                 columns={columns}
                                 title="tickets"
                                 actions={[
@@ -150,19 +113,14 @@ function Index({ tickets, sessions }: any) {
                                         render: (dataTable) => <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>,
                                         showOnRowSelection: true,
                                     },
-
                                     // Add new
-
                                     {
                                         render: (
                                             <HasPermission permission="create_schedule">
                                                 <Button onClick={() => setShowCreateEditModal(true)}><i className="ri-add-fill"></i> Add New</Button>
                                             </HasPermission>
                                         )
-                                    },
-                                    // {
-                                    //     render: <Link href={route('admin.color-themes.create')}><Button><i className="ri-add-fill"></i> Add New</Button></Link>
-                                    // },
+                                    }
                                 ]}
                             />
                         </Col>
@@ -176,8 +134,7 @@ function Index({ tickets, sessions }: any) {
                     show={showCreateEditModal}
                     hide={() => setShowCreateEditModal(false)}
                     onHide={() => setShowCreateEditModal(false)}
-                    ticket={editTicket}
-                    sessions={sessions}
+                    feature={editTicketFeature}
                 />
             )}
             <DeleteModal

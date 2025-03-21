@@ -7,14 +7,18 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\EventApp;
 use App\Models\EventAppTicket;
+use App\Services\StripePaymentService;
 use Exception;
-use Stripe\Stripe;
-use Stripe\Checkout\Session;
-use Illuminate\Support\Facades\Date;
-use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
+
+    protected $stripe_payment_service;
+
+    public function __construct(StripePaymentService $stripePaymentService)
+    {
+        $this->stripe_payment_service = $stripePaymentService;
+    }
 
     public function ticketsPage(EventApp $eventApp)
     {
@@ -22,53 +26,37 @@ class PaymentController extends Controller
         return Inertia::render('Attendee/Tickets/Index', compact(['eventApp']));
     }
 
-
     public function postTickets(Request $request, EventApp $eventApp)
     {
-        Log::info($request->all());
         $amount = $request->get('grandTotalAmount');
         $tickets = $request->get('tickets');
+        $stripe_pub_key = $this->stripe_payment_service->StripKeys()->stripe_publishable_key;
 
-        return Inertia::render('Attendee/Payment/Index', compact([
-            'eventApp',
-            'amount',
-            'tickets'
-        ]));
+        // Check if organizer of current Event [attendee->event_app_id] have setup strip keys in setting
+
+        if ($stripe_pub_key && $this->stripe_payment_service->StripKeys()->stripe_secret_key) {
+            return Inertia::render('Attendee/Payment/Index', compact([
+                'eventApp',
+                'amount',
+                'tickets',
+                'stripe_pub_key'
+            ]));
+        } else {
+            return Inertia::render('Attendee/Payment/NoPaymentKeys');
+        }
     }
-
 
     public function checkoutPage(EventApp $eventApp)
     {
         return Inertia::render('Attendee/Checkout', compact(['eventApp']));
     }
 
-
     public function createPaymentIntent(Request $request)
     {
-        // Stripe::setApiKey('sk_test_51R3iHCPNcWTtCzebYEqRS1ZyIUkRPiNYrnhm0kpMrqv5kfZKeELsElbWAl5Pvy19ZbmpKUZUZ7HjpIdiLmarvFEp001S8D1Jhe');
-        // Keys
-
-        //Ansar
-        // public  pk_test_51R3iHCPNcWTtCzebbzvUsG7XMmMnTqUxbs4NE9v8CH5IJxtaMXDgz5FMA96HnS93ZQw9DN6wHLlxgtFW90XW0Q4z004QlcW5Z8
-        // secret sk_test_51R3iHCPNcWTtCzebYEqRS1ZyIUkRPiNYrnhm0kpMrqv5kfZKeELsElbWAl5Pvy19ZbmpKUZUZ7HjpIdiLmarvFEp001S8D1Jhe
-
-        //Haseeb
-        // public  pk_test_51Py6kWHInNTlTUGPM5l30Odo4AOb48C48enPnOsKrw9xhueHWeYlC0lpnRRvtbwMNosFC3UWEZY4c48MsuohS5F700Lyxn0hSm
-        // secret sk_test_51Py6kWHInNTlTUGPSnnyUIva83aHRr6ZMpApIGHZKtkgQcVIN1jsgcTQ5Ubp4oW96UdyDeeJROudsNDKFUjpdGrl00ItMh1P7P
-
         $amount = $request->input('amount');
+        $client_secret = $this->stripe_payment_service->createPaymentIntent($amount);
 
-        $stripe = new \Stripe\StripeClient('sk_test_51R3iHCPNcWTtCzebYEqRS1ZyIUkRPiNYrnhm0kpMrqv5kfZKeELsElbWAl5Pvy19ZbmpKUZUZ7HjpIdiLmarvFEp001S8D1Jhe');
-        $paymentIntent = $stripe->paymentIntents->create([
-            'amount' => $amount * 100,
-            'currency' => 'USD',
-            // 'customer' => auth()->user()->first_name,
-            'receipt_email' => auth()->user()->email,
-            "description" => 'Event Central Ticket Purchasing',
-            'automatic_payment_methods' => ['enabled' => true],
-        ]);
-
-        return response()->json(['client_secret' => $paymentIntent->client_secret, 'intent' => $paymentIntent]);
+        return response()->json(['client_secret' => $client_secret, 'intent' => null]);
     }
 
     public function paymentSuccess(EventApp $eventApp)
@@ -81,8 +69,6 @@ class PaymentController extends Controller
 
     public function updateAttendeePaymnet(Request $request)
     {
-        Log::info('Payment Updating. . .');
-        Log::info($request->all());
         return response()->json(['message' => 'Attendee payment status has been updated']);
     }
 

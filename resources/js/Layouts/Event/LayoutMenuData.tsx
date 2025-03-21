@@ -120,6 +120,12 @@ const Navdata = () => {
                     parentId: "Content",
                 },
                 {
+                    id: "tickets-feature",
+                    label: "Ticket Features",
+                    link: route('organizer.events.tickets-feature.index'),
+                    parentId: "Content",
+                },
+                {
                     id: "promo-codes",
                     label: "Promo Codes",
                     link: route('organizer.events.promo-codes.index'),

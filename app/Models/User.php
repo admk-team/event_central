@@ -55,10 +55,10 @@ class User extends Authenticatable
 
     public function payment_keys()
     {
-        if ($this->hasRole('organizer')) {
-            return $this->hasOne(OrganizerPaymentKeys::class, 'organizer_stripe_keys');
-        }
-        return null;
+        return $this->hasOne(OrganizerPaymentKeys::class, 'user_id');
+        // if ($this->hasRole('organizer')) {
+        // }
+        // return null;
     }
 
     public function scopeOfOwner(Builder $query): void

@@ -2,6 +2,8 @@ import { useForm, usePage } from '@inertiajs/react';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Button, Card, CardBody, CardHeader, CardText, CardTitle, Form, FormGroup, Spinner, Row, Col, InputGroup } from 'react-bootstrap';
+import toast from 'react-hot-toast';
+
 
 export default function Information() {
     const event = usePage().props.event as Record<string, string>;
@@ -60,7 +62,13 @@ export default function Information() {
     }
 
     const CopyLink = (link: string) => {
-        navigator.clipboard.writeText(link);
+        navigator.clipboard.writeText(link)
+            .then(() => {
+                toast.success("Link Copied!");
+            })
+            .catch(() => {
+                toast.error("Failed to copy link");
+            });
     }
 
     return (
@@ -189,7 +197,7 @@ export default function Information() {
                                         onChange={(e) => setData('registration_link', e.target.value)}
                                         isInvalid={!!errors.registration_link}
                                     />
-                                    <Button variant="outline-secondary" id="button-copyLink" onClick={() => CopyLink(data.registration_link)}>
+                                    <Button variant="outline-secondary" id="button-copyLink" disabled={data.registration_link.length === 0} onClick={() => CopyLink(data.registration_link)}>
                                         <i className='bx bx-copy'></i>
                                     </Button>
                                     <Form.Control.Feedback type="invalid">{errors.registration_link}</Form.Control.Feedback>

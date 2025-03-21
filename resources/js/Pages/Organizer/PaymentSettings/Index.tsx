@@ -21,7 +21,7 @@ const Index = ({ keys }: any) => {
                         ]}
                     />
                     <Row className='justify-content-center'>
-                        <Col md={7}>
+                        <Col md={8}>
                             <SettingForm keys={keys} />
                         </Col>
                     </Row>
