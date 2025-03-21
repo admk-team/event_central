@@ -19,6 +19,12 @@ class OrganizerPermissionsSeeder extends Seeder
         'edit_users',
         'delete_users',
 
+        // Event Management
+        'view_events',
+        'create_events',
+        'edit_events',
+        'delete_events',
+
         // Role Management
         'view_roles',
         'create_roles',
