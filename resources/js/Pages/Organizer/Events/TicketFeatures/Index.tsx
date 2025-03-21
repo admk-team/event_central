@@ -10,7 +10,7 @@ import DeleteManyModal from '../../../../Components/Common/DeleteManyModal';
 import HasPermission from '../../../../Components/HasPermission';
 import CreateEditModal from './CreateEditModal';
 
-
+// import parse from 'html-react-parser';
 function Index({ features }: any) {
     // console.log('features', features);
 
@@ -68,7 +68,7 @@ function Index({ features }: any) {
         {
             header: () => 'Name',
             cell: (feature) => (
-                <span>{feature.name}</span>
+                <div dangerouslySetInnerHTML={{ __html: feature.name }} />
             ),
         },
         {
@@ -102,7 +102,7 @@ function Index({ features }: any) {
                 <Container fluid>
                     <BreadCrumb title="Ticket Features" pageTitle="Dashboard" />
                     <Row>
-                        <Col xs={12}>
+                        <Col xs={12} id="TicketFeatureTable">
                             <DataTable
                                 data={features}
                                 columns={columns}

@@ -1,3 +1,4 @@
+import React, { useRef } from 'react';
 import { useForm, usePage } from '@inertiajs/react';
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
@@ -7,7 +8,7 @@ export default function CreateEditModal({ show, hide, onHide, feature }:
     { show: boolean, hide: () => void, onHide: () => void, feature: any }) {
 
     const isEdit = feature != null ? true : false;
-
+    const editorRef = useRef<ClassicEditor>();
     const eventApp = usePage().props.currentEvent;
 
     // console.log(eventApp);
@@ -43,8 +44,9 @@ export default function CreateEditModal({ show, hide, onHide, feature }:
         }
     }
 
-    const handleChange = (e) => {
-        console.log(e);
+    const handleChange = (editorData: any) => {
+        // console.log(editorData);
+        setData('name', editorData);
     }
 
     return (
@@ -60,22 +62,25 @@ export default function CreateEditModal({ show, hide, onHide, feature }:
                     <Row>
                         <Col md={12}>
                             <FormGroup className="mb-3">
-                                <Form.Label>Name</Form.Label>
+                                {/* <Form.Label>Name</Form.Label>
                                 <Form.Control
                                     type="text"
                                     as='textarea'
                                     value={data.name}
                                     onChange={(e) => setData('name', e.target.value)}
                                     isInvalid={!!errors.name}
-                                />
-                                {/* <CKEditor
+                                /> */}
+                                <CKEditor
                                     editor={ClassicEditor}
                                     data={data.name}
                                     onReady={(editor) => {
-                                        // You can store the "editor" and use when it is needed.
+                                        editorRef.current = editor;
+                                        // console.log(editor);
                                     }}
-                                    onChange={handleChange}
-                                /> */}
+                                    onChange={() => {
+                                        handleChange(editorRef.current?.getData());
+                                    }}
+                                />
                                 {errors.name && <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>}
                             </FormGroup>
                         </Col>

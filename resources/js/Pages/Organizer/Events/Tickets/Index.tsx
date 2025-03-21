@@ -13,6 +13,7 @@ import moment from 'moment';
 
 
 function Index({ tickets, sessions }: any) {
+
     // console.log('tickets', tickets);
     // console.log('sessions', sessions);
     // console.log('features', ticket_features);
@@ -82,7 +83,7 @@ function Index({ tickets, sessions }: any) {
         {
             header: () => 'Description',
             cell: (ticket) => (
-                <div style={{ width: '300px', textWrap: 'balance' }}>
+                <div style={{ maxWidth: '300px', textWrap: 'balance' }}>
                     <p>{ticket.description}</p>
                 </div>
             ),
@@ -94,6 +95,14 @@ function Index({ tickets, sessions }: any) {
         {
             header: () => 'Base Price',
             cell: (ticket) => ticket.base_price,
+        },
+        {
+            header: () => 'Addons Price',
+            cell: (ticket) => ticket.addons_price,
+        },
+        {
+            header: () => 'Total Price',
+            cell: (ticket) => ticket.total_price,
         },
         {
             header: () => 'Sessions',
@@ -150,9 +159,7 @@ function Index({ tickets, sessions }: any) {
                                         render: (dataTable) => <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>,
                                         showOnRowSelection: true,
                                     },
-
                                     // Add new
-
                                     {
                                         render: (
                                             <HasPermission permission="create_schedule">
@@ -160,9 +167,6 @@ function Index({ tickets, sessions }: any) {
                                             </HasPermission>
                                         )
                                     },
-                                    // {
-                                    //     render: <Link href={route('admin.color-themes.create')}><Button><i className="ri-add-fill"></i> Add New</Button></Link>
-                                    // },
                                 ]}
                             />
                         </Col>

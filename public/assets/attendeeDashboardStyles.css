@@ -94,3 +94,12 @@ ul.timeline > li:before {
     align-items: center;
     width: 100%;
 }
+
+#TicketFeatureTable p{
+    margin-top: unset !important;
+    margin-bottom: 0 !important;
+}
+#TicketFeatureTable td{
+    margin-top: unset !important;
+    margin-bottom: 0 !important;
+}
