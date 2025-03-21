@@ -8,13 +8,19 @@ import DeleteModal from '../../../../../Components/Common/DeleteModal';
 import DataTable, { ColumnDef } from '../../../../../Components/DataTable';
 import DeleteManyModal from '../../../../../Components/Common/DeleteManyModal';
 import ImportModal from '../../Components/ImportModal';
-
+import EditAttendee from './Component/EditAttendee';
 import Profile from './AttendeeProfile/Profile';
+import AddAttendee from './Component/AddAttendee';
 
 function Index({ attendees }: any) {
+
     const [deleteAttendee, setDeleteAttendee] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
+
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [showAddModal, setShowEddModal] = useState(false);
+    const [isEdit, setIsEdit] = useState(false);
 
     const { get } = useForm()
 
@@ -73,7 +79,7 @@ function Index({ attendees }: any) {
         },
         {
             header: () => 'Name',
-            cell: (attendee) => attendee.name,
+            cell: (attendee) => attendee.first_name + " " + attendee.last_name,
         },
         {
             header: () => 'Email',
@@ -91,7 +97,13 @@ function Index({ attendees }: any) {
             header: () => 'Action',
             cell: (attendee) => (
                 <div className="hstack gap-3 fs-15">
-                    <span className="link-primary cursor-pointer" onClick={() => editAction(attendee)}><i className="ri-edit-fill"></i></span>
+                    <span className="link-primary cursor-pointer" onClick={() => setShowEditModal(true)} ><i className="ri-edit-fill"></i></span>
+                    <EditAttendee 
+                        show={showEditModal} 
+                        handleClose={() => setShowEditModal(false)} 
+                        user={attendee}
+                        isEdit={isEdit}
+                    />
                     <span className="link-danger cursor-pointer" onClick={() => deleteAction(attendee)}>
                         <i className="ri-delete-bin-5-line"></i>
                     </span>
@@ -139,8 +151,9 @@ function Index({ attendees }: any) {
                                     },
                                     // Add new
                                     {
-                                        render: <Link href="#"><Button><i className="ri-add-fill"></i> Add New</Button></Link>
+                                        render: <Button onClick={()=> setShowEddModal(true)}><i className="ri-add-fill"></i> Add New</Button>
                                     },
+                                   
 
                                 ]}
                             />
@@ -148,6 +161,12 @@ function Index({ attendees }: any) {
                     </Row>
                 </Container>
             </div>
+
+            <AddAttendee
+                show={showAddModal} 
+                handleClose={() => setShowEddModal(false)} 
+            />
+            
             <DeleteModal
                 show={showDeleteConfirmation}
                 onDeleteClick={handleDelete}
@@ -159,6 +178,7 @@ function Index({ attendees }: any) {
                 onDeleteClick={handleDeleteMany}
                 onCloseClick={() => { setShowDeleteManyConfirmation(false) }}
             />
+
             <ImportModal importAttendeesModal={importAttendeesModal} availableAttributes={['name','email','phone']} importType='attendees' showModal={showModal} />
 
         </React.Fragment>

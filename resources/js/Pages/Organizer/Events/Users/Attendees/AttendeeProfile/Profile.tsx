@@ -4,6 +4,7 @@ import { Head, Link } from "@inertiajs/react";
 import Layout from "../../../../../../Layouts/Event";
 
 const Profile = ({ attendee }: any) => {
+    console.log(attendee[0].attendee)
     return (
         <React.Fragment>
             <Head title="Profile | Velzon - React Admin & Dashboard Template" />
@@ -19,7 +20,7 @@ const Profile = ({ attendee }: any) => {
                             <div className="col-auto">
                                 <div className="avatar-lg">
                                     <img
-                                        src={attendee.avatar ??attendee.avatar_img}
+                                        src={attendee[0].attendee.avatar ??attendee[0].attendee.avatar_img}
                                         alt="user-img"
                                         className="img-thumbnail rounded-circle"
                                     />
@@ -29,11 +30,11 @@ const Profile = ({ attendee }: any) => {
                             <Col>
                                 <div className="p-2">
                                     <h3 className="text-white mb-1">
-                                        {attendee.first_name}{" "}
-                                        {attendee.last_name}
+                                        {attendee[0].attendee.first_name}{" "}
+                                        {attendee[0].attendee.last_name}
                                     </h3>
                                     <p className="text-white text-opacity-75">
-                                        {attendee.email}
+                                        {attendee[0].attendee.email}
                                     </p>
                                 </div>
                             </Col>
@@ -61,10 +62,10 @@ const Profile = ({ attendee }: any) => {
                                                             </th>
                                                             <td className="text-muted">
                                                                 {
-                                                                    attendee.first_name
+                                                                    attendee[0].attendee.first_name
                                                                 }{" "}
                                                                 {
-                                                                    attendee.last_name
+                                                                    attendee[0].attendee.last_name
                                                                 }
                                                             </td>
                                                         </tr>
@@ -76,7 +77,7 @@ const Profile = ({ attendee }: any) => {
                                                                 Mobile :
                                                             </th>
                                                             <td className="text-muted">
-                                                                {attendee.mobile ??
+                                                                {attendee[0].attendee.mobile ??
                                                                     "N/A"}
                                                             </td>
                                                         </tr>
@@ -88,7 +89,7 @@ const Profile = ({ attendee }: any) => {
                                                                 E-mail :
                                                             </th>
                                                             <td className="text-muted">
-                                                                {attendee.email}
+                                                                {attendee[0].attendee.email}
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -99,7 +100,7 @@ const Profile = ({ attendee }: any) => {
                                                                 Location :
                                                             </th>
                                                             <td className="text-muted">
-                                                                {attendee.country ?? 'N/A'}
+                                                                {attendee[0].attendee.country ?? 'N/A'}
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -170,40 +171,20 @@ const Profile = ({ attendee }: any) => {
                                     </Card>
                                 </Col>
                                 <Col xxl={9}>
-                                    <Card>
-                                        <Card.Body>
-                                            <h5 className="card-title mb-3">
-                                                About
-                                            </h5>
-                                            <p>
-                                                Hi I'm Anna Adame, It will be as
-                                                simple as Occidental; in fact,
-                                                it will be Occidental. To an
-                                                English person, it will seem
-                                                like simplified English, as a
-                                                skeptical Cambridge friend of
-                                                mine told me what Occidental is
-                                                European languages are members
-                                                of the same family.
-                                            </p>
-                                            <p>
-                                                You always want to make sure
-                                                that your fonts work well
-                                                together and try to limit the
-                                                number of fonts you use to three
-                                                or less. Experiment and play
-                                                around with the fonts that you
-                                                already have in the software
-                                                you’re working with reputable
-                                                font websites. This may be the
-                                                most commonly encountered tip I
-                                                received from the designers I
-                                                spoke with. They highly
-                                                encourage that you use different
-                                                fonts in one design, but do not
-                                                over-exaggerate and go
-                                                overboard.
-                                            </p>
+                                <Card>
+                                    <Card.Body>
+                                        <h5 className="card-title mb-3">Other Information</h5>
+                                        {attendee[0].field_values.length > 0 && attendee[0].form_fields.length > 0 ? (
+                                                attendee[0].form_fields.map((field:any, index:any) => (
+                                                    <div className="row p-2">
+                                                        <div className="col">
+                                                            <h6 className="mb-0">{field.label}: 
+                                                                <span className="text-secondary">{" "}{attendee[0].field_values[index].value}
+                                                                    </span></h6>
+                                                        </div>
+                                                    </div>
+                                                ))
+                                        ): (<p>No Info available</p>)}
                                         </Card.Body>
                                     </Card>
                                 </Col>
