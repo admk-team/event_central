@@ -13,13 +13,12 @@ const AddAttendee = ({ show, handleClose }:any) => {
 
     const handleSubmit = (e:any) => {
         e.preventDefault();
-        console.log(data);
-        // put(route('organizer.events.attendee.profile.update', user.id), {
-        //     onSuccess: () => {
-        //         handleClose();
-        //         reset();
-        //     }
-        // });
+        post(route('organizer.events.attendees.store'), {
+            onSuccess: () => {
+                handleClose();
+                reset();
+            }
+        });
     };
 
     return (

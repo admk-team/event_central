@@ -15,6 +15,7 @@ import AddAttendee from './Component/AddAttendee';
 function Index({ attendees }: any) {
 
     const [deleteAttendee, setDeleteAttendee] = React.useState<any>(null);
+    const [updateAttendee, setUpdateAttendee] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
 
@@ -39,7 +40,8 @@ function Index({ attendees }: any) {
     }
 
     const editAction = (attendee: any) => {
-        get(route('organizer.events.attendees.edit', attendee))
+        setUpdateAttendee(attendee);
+        setShowEditModal(true);
     }
     const deleteAction = (attendee: any) => {
         setDeleteAttendee(attendee);
@@ -97,13 +99,7 @@ function Index({ attendees }: any) {
             header: () => 'Action',
             cell: (attendee) => (
                 <div className="hstack gap-3 fs-15">
-                    <span className="link-primary cursor-pointer" onClick={() => setShowEditModal(true)} ><i className="ri-edit-fill"></i></span>
-                    <EditAttendee 
-                        show={showEditModal} 
-                        handleClose={() => setShowEditModal(false)} 
-                        user={attendee}
-                        isEdit={isEdit}
-                    />
+                    <span className="link-primary cursor-pointer" onClick={() => editAction(attendee)} ><i className="ri-edit-fill"></i></span>
                     <span className="link-danger cursor-pointer" onClick={() => deleteAction(attendee)}>
                         <i className="ri-delete-bin-5-line"></i>
                     </span>
@@ -165,6 +161,13 @@ function Index({ attendees }: any) {
             <AddAttendee
                 show={showAddModal} 
                 handleClose={() => setShowEddModal(false)} 
+            />
+
+            <EditAttendee 
+                show={showEditModal} 
+                handleClose={() => setShowEditModal(false)} 
+                user={updateAttendee}
+                isEdit={isEdit}
             />
             
             <DeleteModal

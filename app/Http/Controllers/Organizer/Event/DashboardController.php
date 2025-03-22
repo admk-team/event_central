@@ -12,9 +12,9 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $totalAttendee = EventApp::where('organizer_id', Auth::user()->id)->withCount('attendees')->get()->sum('attendees_count');
-        $totalSession = EventApp::where('organizer_id', Auth::user()->id)->withCount('event_sessions')->get()->sum('event_sessions_count');
-        $totalTickets = EventApp::where('organizer_id', Auth::user()->id)->withCount('tickets')->get()->sum('tickets_count');
+        $totalAttendee = EventApp::where('organizer_id', Auth::user()->id)->where('id',session('event_id'))->withCount('attendees')->get()->sum('attendees_count');
+        $totalSession = EventApp::where('organizer_id', Auth::user()->id)->where('id',session('event_id'))->withCount('event_sessions')->get()->sum('event_sessions_count');
+        $totalTickets = EventApp::where('organizer_id', Auth::user()->id)->where('id',session('event_id'))->withCount('tickets')->get()->sum('tickets_count');
         return Inertia::render('Organizer/Events/Dashboard/index', compact('totalAttendee', 'totalSession','totalTickets'));
     }
 }

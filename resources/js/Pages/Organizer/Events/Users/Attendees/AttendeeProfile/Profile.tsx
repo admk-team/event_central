@@ -3,8 +3,7 @@ import { Card, Col, Container, Row, Table } from "react-bootstrap";
 import { Head, Link } from "@inertiajs/react";
 import Layout from "../../../../../../Layouts/Event";
 
-const Profile = ({ attendee }: any) => {
-    console.log(attendee[0].attendee)
+const Profile = ({ attendee,user }: any) => {
     return (
         <React.Fragment>
             <Head title="Profile | Velzon - React Admin & Dashboard Template" />
@@ -20,7 +19,7 @@ const Profile = ({ attendee }: any) => {
                             <div className="col-auto">
                                 <div className="avatar-lg">
                                     <img
-                                        src={attendee[0].attendee.avatar ??attendee[0].attendee.avatar_img}
+                                        src={user.avatar ??user.avatar_img}
                                         alt="user-img"
                                         className="img-thumbnail rounded-circle"
                                     />
@@ -30,11 +29,11 @@ const Profile = ({ attendee }: any) => {
                             <Col>
                                 <div className="p-2">
                                     <h3 className="text-white mb-1">
-                                        {attendee[0].attendee.first_name}{" "}
-                                        {attendee[0].attendee.last_name}
+                                        {user.first_name}{" "}
+                                        {user.last_name}
                                     </h3>
                                     <p className="text-white text-opacity-75">
-                                        {attendee[0].attendee.email}
+                                        {user.email}
                                     </p>
                                 </div>
                             </Col>
@@ -62,10 +61,10 @@ const Profile = ({ attendee }: any) => {
                                                             </th>
                                                             <td className="text-muted">
                                                                 {
-                                                                    attendee[0].attendee.first_name
+                                                                    user.first_name
                                                                 }{" "}
                                                                 {
-                                                                    attendee[0].attendee.last_name
+                                                                    user.last_name
                                                                 }
                                                             </td>
                                                         </tr>
@@ -77,7 +76,7 @@ const Profile = ({ attendee }: any) => {
                                                                 Mobile :
                                                             </th>
                                                             <td className="text-muted">
-                                                                {attendee[0].attendee.mobile ??
+                                                                {user.phone ??
                                                                     "N/A"}
                                                             </td>
                                                         </tr>
@@ -89,7 +88,7 @@ const Profile = ({ attendee }: any) => {
                                                                 E-mail :
                                                             </th>
                                                             <td className="text-muted">
-                                                                {attendee[0].attendee.email}
+                                                                {user.email}
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -100,7 +99,7 @@ const Profile = ({ attendee }: any) => {
                                                                 Location :
                                                             </th>
                                                             <td className="text-muted">
-                                                                {attendee[0].attendee.country ?? 'N/A'}
+                                                                {user.country ?? 'N/A'}
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -111,7 +110,7 @@ const Profile = ({ attendee }: any) => {
                                                                 Joining Date
                                                             </th>
                                                             <td className="text-muted">
-                                                                {new Date(attendee.created_at).toLocaleString() ?? 'N/A'}
+                                                                {new Date(user.created_at).toLocaleString() ?? 'N/A'}
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -174,12 +173,12 @@ const Profile = ({ attendee }: any) => {
                                 <Card>
                                     <Card.Body>
                                         <h5 className="card-title mb-3">Other Information</h5>
-                                        {attendee[0].field_values.length > 0 && attendee[0].form_fields.length > 0 ? (
-                                                attendee[0].form_fields.map((field:any, index:any) => (
+                                        {attendee[0]?.field_values.length > 0 && attendee[0]?.form_fields.length > 0 ? (
+                                                attendee[0]?.form_fields.map((field:any, index:any) => (
                                                     <div className="row p-2">
                                                         <div className="col">
                                                             <h6 className="mb-0">{field.label}: 
-                                                                <span className="text-secondary">{" "}{attendee[0].field_values[index].value}
+                                                                <span className="text-secondary">{" "}{attendee[0]?.field_values[index].value}
                                                                     </span></h6>
                                                         </div>
                                                     </div>

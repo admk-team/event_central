@@ -1,10 +1,9 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Modal, Button, Form, Alert } from "react-bootstrap";
 import { useForm } from "@inertiajs/react";
 
 
-const EditAttendee = ({ show, handleClose, user, isEdit }:any) => {
-
+const EditAttendee = ({ show, handleClose, user, isEdit }: any) => {
     const [preview, setPreview] = useState<any>(user?.avatar ?? null);
 
     const { data, setData, put, processing, errors, reset } = useForm({
@@ -22,8 +21,27 @@ const EditAttendee = ({ show, handleClose, user, isEdit }:any) => {
         avatar: user?.avatar ?? null,
     });
 
+    useEffect(() => {
+        if (user) {
+            setData({
+                first_name: user?.first_name ?? '',
+                last_name: user?.last_name ?? '',
+                company: user?.company ?? '',
+                position: user?.position ?? '',
+                other_link: user?.other_link ?? '',
+                facebook_link: user?.facebook_link ?? '',
+                linkedin_link: user?.linkedin_link ?? '',
+                twitter_link: user?.twitter_link ?? '',
+                country: user?.country ?? '',
+                phone: user?.phone ?? '',
+                bio: user?.bio ?? '',
+                avatar: user?.avatar ?? null,
+            });
+        }
+    }, [user]);
+
     // Handle Input Change
-    const handleChange = (e:any) => {
+    const handleChange = (e: any) => {
         setData(e.target.name, e.target.value);
     };
 
@@ -40,9 +58,8 @@ const EditAttendee = ({ show, handleClose, user, isEdit }:any) => {
     };
 
     // Handle Form Submission
-    const handleSubmit = (e:any) => {
+    const handleSubmit = (e: any) => {
         e.preventDefault();
-        console.log(data);
         put(route('organizer.events.attendee.profile.update', user.id), {
             onSuccess: () => {
                 handleClose();
@@ -53,85 +70,85 @@ const EditAttendee = ({ show, handleClose, user, isEdit }:any) => {
 
     return (
         <Modal show={show} onHide={handleClose} centered>
-        <Modal.Header closeButton>
-            <Modal.Title>Edit Attendee</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-            <Form onSubmit={handleSubmit}>
-                <Form.Group className="mb-3">
-                    <Form.Label>First Name</Form.Label>
-                    <Form.Control
-                        type="text"
-                        name="first_name"
-                        value={data.first_name}
-                        onChange={handleChange}
-                    />
-                    <Form.Control.Feedback
-                        type="invalid"
-                        className="d-block mt-2"
-                    >
-                        {" "}
-                        {errors.first_name}{" "}
-                    </Form.Control.Feedback>
-                </Form.Group>
+            <Modal.Header closeButton>
+                <Modal.Title>Edit Attendee</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form onSubmit={handleSubmit}>
+                    <Form.Group className="mb-3">
+                        <Form.Label>First Name</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="first_name"
+                            value={data.first_name}
+                            onChange={handleChange}
+                        />
+                        <Form.Control.Feedback
+                            type="invalid"
+                            className="d-block mt-2"
+                        >
+                            {" "}
+                            {errors.first_name}{" "}
+                        </Form.Control.Feedback>
+                    </Form.Group>
 
-                <Form.Group className="mb-3">
-                    <Form.Label>Last Name</Form.Label>
-                    <Form.Control
-                        type="text"
-                        name="last_name"
-                        value={data.last_name}
-                        onChange={handleChange}
-                    />
-                    <Form.Control.Feedback
-                        type="invalid"
-                        className="d-block mt-2"
-                    >
-                        {" "}
-                        {errors.last_name}{" "}
-                    </Form.Control.Feedback>
-                </Form.Group>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Last Name</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="last_name"
+                            value={data.last_name}
+                            onChange={handleChange}
+                        />
+                        <Form.Control.Feedback
+                            type="invalid"
+                            className="d-block mt-2"
+                        >
+                            {" "}
+                            {errors.last_name}{" "}
+                        </Form.Control.Feedback>
+                    </Form.Group>
 
-                <Form.Group className="mb-3">
-                    <Form.Label>Company</Form.Label>
-                    <Form.Control
-                        type="text"
-                        name="company"
-                        value={data.company}
-                        onChange={handleChange}
-                    />
-                </Form.Group>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Company</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="company"
+                            value={data.company}
+                            onChange={handleChange}
+                        />
+                    </Form.Group>
 
-                <Form.Group className="mb-3">
-                    <Form.Label>Position</Form.Label>
-                    <Form.Control
-                        type="text"
-                        name="position"
-                        value={data.position}
-                        onChange={handleChange}
-                    />
-                </Form.Group>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Position</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="position"
+                            value={data.position}
+                            onChange={handleChange}
+                        />
+                    </Form.Group>
 
-                <Form.Group className="mb-3">
-                    <Form.Label>Phone</Form.Label>
-                    <Form.Control
-                        type="text"
-                        name="phone"
-                        value={data.phone}
-                        onChange={handleChange}
-                    />
-                </Form.Group>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Phone</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="phone"
+                            value={data.phone}
+                            onChange={handleChange}
+                        />
+                    </Form.Group>
 
-                <Form.Group className="mb-3">
-                    <Form.Label>Bio</Form.Label>
-                    <Form.Control
-                        as="textarea"
-                        rows={3}
-                        name="bio"
-                        value={data.bio}
-                        onChange={handleChange}
-                    />
-                </Form.Group>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Bio</Form.Label>
+                        <Form.Control
+                            as="textarea"
+                            rows={3}
+                            name="bio"
+                            value={data.bio}
+                            onChange={handleChange}
+                        />
+                    </Form.Group>
 
 
                     {/* <Form.Label>Profile Image</Form.Label>
@@ -174,17 +191,17 @@ const EditAttendee = ({ show, handleClose, user, isEdit }:any) => {
                             )}
                         </Form.Group> */}
 
-                <div className="hstack gap-2 justify-content-center mt-4">
-                    <Button className="btn btn-light" onClick={handleClose}>
-                        Close
-                    </Button>
-                    <Button variant="primary" type="submit" disabled={processing}>
-                        {processing ? "Updating..." : "Update"}
-                    </Button>
-                </div>
-            </Form>
-        </Modal.Body>
-    </Modal>
+                    <div className="hstack gap-2 justify-content-center mt-4">
+                        <Button className="btn btn-light" onClick={handleClose}>
+                            Close
+                        </Button>
+                        <Button variant="primary" type="submit" disabled={processing}>
+                            {processing ? "Updating..." : "Update"}
+                        </Button>
+                    </div>
+                </Form>
+            </Modal.Body>
+        </Modal>
     );
 };
 
