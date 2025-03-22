@@ -102,7 +102,10 @@ export default function CreateEditModal({
                                     }}
                                 />
                                 {errors.name && (
-                                    <Form.Control.Feedback type="invalid" className="d-block">
+                                    <Form.Control.Feedback
+                                        type="invalid"
+                                        className="d-block"
+                                    >
                                         {errors.name}
                                     </Form.Control.Feedback>
                                 )}
