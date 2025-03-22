@@ -34,6 +34,7 @@ class TicketFeatureController extends Controller
             'organizer_id' => 'required',
             'event_app_id' => 'nullable|numeric',
             'name' => 'required|max:250',
+            'price'=> 'nullable|numeric',
             'qty_total' => 'required|numeric',
             'qty_sold' => 'nullable|numeric',
         ]);
@@ -47,6 +48,7 @@ class TicketFeatureController extends Controller
             'organizer_id' => 'required',
             'event_app_id' => 'nullable|numeric',
             'name' => 'required|max:250',
+            'price'=> 'nullable|numeric',
             'qty_total' => 'required|numeric',
             'qty_sold' => 'nullable|numeric',
         ]);
