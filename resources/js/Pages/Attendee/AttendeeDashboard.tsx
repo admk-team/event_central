@@ -75,7 +75,7 @@ const AttendeeDashboard = ({ eventApp }: any) => {
                                         <figure className="event-image">
                                             <img
                                                 className="card-top-image"
-                                                src={defaultEventImage}
+                                                src={eventApp.featured_image}
                                                 alt="event default image"
                                             />
                                             <figcaption>
@@ -94,11 +94,6 @@ const AttendeeDashboard = ({ eventApp }: any) => {
                                                         src={eventApp.logo_img}
                                                         alt="event logo"
                                                         style={{
-                                                            // display: "block",
-
-                                                            // maxWidth: "40px",
-                                                            // width: "auto",
-                                                            // height: "auto",
                                                             marginRight: "4px",
                                                         }}
                                                     />

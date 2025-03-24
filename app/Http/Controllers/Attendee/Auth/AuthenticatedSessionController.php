@@ -40,20 +40,40 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(AttendeeLoginRequest $request, EventApp $eventApp): RedirectResponse
     {
-        $request->authenticate();    //Attendee Login Request
-        $request->session()->regenerate();
-        return redirect()->intended(route('attendee.event.detail.dashboard', [$eventApp->id]));
+
+        $user = Attendee::where('event_app_id', $eventApp->id)->where('email', $request->email)->first();
+        // Log::info($user);
+        if ($user) {
+            $credentials = $request->validate([
+                'email' => ['required', 'email'],
+                'password' => ['required'],
+
+            ]);
+
+            if (Auth::attempt($credentials)) {
+                $request->session()->regenerate();
+                return redirect()->intended('dashboard');
+            }
+        }
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->onlyInput('email');
+
+        // $request->authenticate();    //Attendee Login Request
+        // $request->session()->regenerate();
+        // return redirect()->intended(route('attendee.event.detail.dashboard'));
     }
 
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request, EventApp $eventApp): RedirectResponse
+    public function destroy(Request $request): RedirectResponse
     {
+        $eventId = auth()->user()->event_app_id;
         Auth::guard('attendee')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->intended(route('attendee.login', [$eventApp]));
+        return redirect()->intended(route('attendee.login', [$eventId]));
     }
     public function googleRedirect()
     {
