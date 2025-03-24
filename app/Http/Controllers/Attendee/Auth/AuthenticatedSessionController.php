@@ -42,7 +42,7 @@ class AuthenticatedSessionController extends Controller
     {
 
         $user = Attendee::where('event_app_id', $eventApp->id)->where('email', $request->email)->first();
-        Log::info($user);
+        // Log::info($user);
         if ($user) {
             $credentials = $request->validate([
                 'email' => ['required', 'email'],
@@ -52,7 +52,6 @@ class AuthenticatedSessionController extends Controller
 
             if (Auth::attempt($credentials)) {
                 $request->session()->regenerate();
-
                 return redirect()->intended('dashboard');
             }
         }
