@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Answer;
-use App\Models\EventApp;
+use App\Models\EventSession;
 use App\Models\Question;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -11,10 +11,10 @@ use Inertia\Response;
 
 class QuestionController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, $session_id)
     {
-        $event = EventApp::findOrFail(session('event_id'));
-        $questions = Question::where('event_app_id', session('event_id'))
+        $event = EventSession::findOrFail($session_id);
+        $questions = Question::where('event_session_id', $session_id)
             ->with(['user', 'answers.user'])
             ->get();
 
@@ -29,7 +29,7 @@ class QuestionController extends Controller
     }
 
     // Other methods (storeQuestion, vote, storeAnswer) remain unchanged
-    public function storeQuestion(Request $request, EventApp $event)
+    public function storeQuestion(Request $request, EventSession $event)
     {
         $request->validate(['content' => 'required|string|max:500']);
 

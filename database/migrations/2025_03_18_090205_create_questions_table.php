@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('event_app_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('event_session_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->text('content')->nullable();
             $table->integer('likes_count')->default(0);
