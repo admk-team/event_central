@@ -55,7 +55,7 @@ class EventStoreRequest extends FormRequest
             'is_recurring.boolean' => 'Is Recurring must be True/False',
             'logo_file.image' => 'File must be an image',
             'image_files.required' => 'Min one image file is required',
-            'image_files.min:1' => 'Min one image file is required',
+            'image_files.min:1' => 'Atleast one featured image is required',
         ];
     }
 }

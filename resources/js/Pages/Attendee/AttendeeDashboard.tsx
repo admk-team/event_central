@@ -21,7 +21,7 @@ const AttendeeDashboard = ({ eventApp }: any) => {
     // console.log(eventApp.event_sessions);
 
     const selectedSessions = eventApp.event_sessions.filter(
-        (session) => session.selected_by_attendee
+        (session: any) => session.selected_by_attendee
     );
 
     // console.log(selectedSessions);
