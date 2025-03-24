@@ -92,18 +92,18 @@ function Index({ platforms }: any) {
 
     return (
         <React.Fragment>
-            <Head title='Starter | Velzon - React Admin & Dashboard Template' />
+            <Head title='Spaces & Rooms' />
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb2
-                        title="platforms"
+                        title="Spaces & Rooms"
                     />
                     <Row>
                         <Col xs={12}>
                             <DataTable
                                 data={platforms}
                                 columns={columns}
-                                title="Platforms"
+                                title="Spaces & Rooms"
                                 actions={[
                                     // Delete multiple
                                     {

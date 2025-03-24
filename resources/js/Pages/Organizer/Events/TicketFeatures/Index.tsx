@@ -9,7 +9,6 @@ import DeleteManyModal from "../../../../Components/Common/DeleteManyModal";
 import HasPermission from "../../../../Components/HasPermission";
 import CreateEditModal from "./CreateEditModal";
 
-// import parse from 'html-react-parser';
 function Index({ features }: any) {
     // console.log('features', features);
 
@@ -118,16 +117,16 @@ function Index({ features }: any) {
     ];
     return (
         <React.Fragment>
-            <Head title="Ticket Features" />
+            <Head title="Ticket Addons" />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Ticket Features" pageTitle="Dashboard" />
+                    <BreadCrumb title="Ticket Addons" pageTitle="Dashboard" />
                     <Row>
                         <Col xs={12} id="TicketFeatureTable">
                             <DataTable
                                 data={features}
                                 columns={columns}
-                                title="tickets"
+                                title="Addons"
                                 actions={[
                                     // Delete multiple
                                     {
