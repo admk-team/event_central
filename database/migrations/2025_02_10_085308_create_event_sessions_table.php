@@ -22,6 +22,7 @@ return new class extends Migration
             $table->enum('type', ['Lecture', 'Workshop', 'Break']);
             $table->string('description')->nullable();
             $table->integer('capacity')->nullable();
+            $table->boolean('qa_status')->default(false);
             $table->time('start_time')->default('00:00:00');
             $table->time('end_time')->default('00:00:00');
             $table->timestamps();

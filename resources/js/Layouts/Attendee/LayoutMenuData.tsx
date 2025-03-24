@@ -13,7 +13,7 @@ const Navdata = () => {
     const [isQr, setIsQr] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>("Dashboard");
-    const [IsQA, setIsQA] = useState<boolean>(false);
+    // const [IsQA, setIsQA] = useState<boolean>(false);
 
     function updateIconSidebar(e: any) {
         if (e && e.target && e.target.getAttribute("sub-items")) {
@@ -43,9 +43,9 @@ const Navdata = () => {
         if (iscurrentState !== "More") {
             setIsMore(false);
         }
-        if (iscurrentState !== "Q&A") {
-            setIsQA(false);
-        }
+        // if (iscurrentState !== "Q&A") {
+        //     setIsQA(false);
+        // }
     }, [
         history,
         iscurrentState,
@@ -140,19 +140,19 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
-        {
-            id: "qa",
-            label: "Q&A",
-            icon: "bx bxs-dashboard",
-            link: route("attendee.events.qa.index"),
-            stateVariables: IsQA,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsQA(!IsQA);
-                setIscurrentState("Q&A");
-                updateIconSidebar(e);
-            },
-        },
+        // {
+        //     id: "qa",
+        //     label: "Q&A",
+        //     icon: "bx bxs-dashboard",
+        //     link: route("attendee.events.qa.index"),
+        //     stateVariables: IsQA,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIsQA(!IsQA);
+        //         setIscurrentState("Q&A");
+        //         updateIconSidebar(e);
+        //     },
+        // },
     ];
     return <React.Fragment>{menuItems}</React.Fragment>;
 };
