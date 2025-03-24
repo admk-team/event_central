@@ -53,7 +53,7 @@ class AuthenticatedSessionController extends Controller
             if (Hash::check($credentials['password'], $user->password)) {
                 Auth::guard('attendee')->login($user);
                 $request->session()->regenerate();
-                return redirect()->intended('dashboard');
+                return redirect()->route('attendee.event.detail.dashboard');
             }
         }
         return back()->withErrors([
@@ -70,11 +70,12 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        $eventId = auth()->user()->event_app_id;
+        $eventId = auth('attendee')->user()->event_app_id;
         Auth::guard('attendee')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->intended(route('attendee.login', [$eventId]));
+        // return redirect()->route('attendee.login', [$eventId]);
+        return redirect(route('attendee.login', [$eventId]));
     }
     public function googleRedirect()
     {
