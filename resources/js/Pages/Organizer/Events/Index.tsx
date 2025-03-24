@@ -57,6 +57,10 @@ function Index({ events, recurring_types, event_category_types }: any) {
         setShowDeleteManyConfirmation(false);
     }
 
+    const truncateDesc = (desc: any) => {
+        return desc.length > 25 ? desc.substring(0, 25) + "..." : desc;
+    }
+
     const columns: ColumnDef<typeof events.data[0]> = [
         {
             accessorKey: 'id',
@@ -88,8 +92,8 @@ function Index({ events, recurring_types, event_category_types }: any) {
         {
             accessorKey: 'description',
             header: () => 'Description',
-            cell: (event) => <div style={{ maxWidth: '250px', overflow: 'auto' }}>
-                <p style={{ textWrap: 'pretty', textAlign: 'justify' }}>{event.description}</p>
+            cell: (event) => <div style={{ maxWidth: '200px', overflow: 'auto' }}>
+                <p style={{ textWrap: 'pretty', textAlign: 'justify' }}>{truncateDesc(event.description)}</p>
             </div >,
             enableSorting: false
         },

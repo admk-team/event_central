@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers\Organizer\Event;
 
+use Exception;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Organizer\Event\EventStoreRequest;
 use App\Models\EventApp;
 use App\Models\EventAppCategory;
 use App\Models\EventAppDate;
 use App\Models\RecurringType;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
+use App\Http\Requests\Organizer\Event\EventStoreRequest;
+use App\Http\Requests\Organizer\Event\EventUpdateRequest;
 use Inertia\Inertia;
 
 class EventController extends Controller
@@ -99,7 +98,7 @@ class EventController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(EventStoreRequest $request, EventApp $event_app)
+    public function update(EventUpdateRequest $request, EventApp $event_app)
     {
         // Log::info($request->all());
 

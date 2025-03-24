@@ -57,6 +57,7 @@ const Sidebar = ({ layoutType }: any) => {
     const { currentEvent } = usePage().props as Record<string, any>;
 
     const { events, auth } = usePage<{ events: any[], auth: { user: any } }>().props;
+
     const truncateAppName = (name: any) => {
         return name.length > 15 ? name.substring(0, 15) + "..." : name;
     }
