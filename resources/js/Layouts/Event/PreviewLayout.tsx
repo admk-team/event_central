@@ -25,7 +25,7 @@ export default function PreviewLayout({ children }: any) {
                         <Row>
                             <Col lg={12}>
                                 <div className="text-center">
-                                    <p className="mb-0 text-muted">&copy; {new Date().getFullYear()} Event Central. Crafted with <i className="mdi mdi-heart text-danger"></i> by Onlinechannel.io</p>
+                                    <p className="mb-0 text-muted">&copy; {new Date().getFullYear()} Event Central. Crafted with <i className="mdi mdi-heart text-danger"></i> by Onlinechannel.tv</p>
                                 </div>
                             </Col>
                         </Row>

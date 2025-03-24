@@ -14,13 +14,19 @@ use Exception;
 class PaymentController extends Controller
 {
 
-    protected $stripe_payment_service;
-    protected $paypal_payment_service;
+    protected $stripe_service;
+    protected $paypal_service;
 
     public function __construct(StripeService $stripePaymentService, PayPalService $payPalService)
     {
-        $this->stripe_payment_service = $stripePaymentService;
-        $this->paypal_payment_service = $payPalService;
+        $this->stripe_service = $stripePaymentService;
+        $this->paypal_service = $payPalService;
+    }
+
+    public function StripKeys()
+    {
+        $eventApp = EventApp::find(auth()->user()->event_app_id);
+        return $eventApp->organiser->payment_keys;
     }
 
     public function viewTickets()
@@ -35,16 +41,18 @@ class PaymentController extends Controller
         $eventApp =  EventApp::find(auth()->user()->event_app_id);
         $amount = $request->get('grandTotalAmount');
         $tickets = $request->get('tickets');
-        $stripe_pub_key = $this->stripe_payment_service->StripKeys()->stripe_publishable_key;
+        $stripe_pub_key = $this->stripe_service->StripKeys()->stripe_publishable_key;
+        $paypal_client_id = $this->paypal_service->payPalKeys()->paypal_pub;
 
         // Check if organizer of current Event [attendee->event_app_id]
         //have setup strip keys in setting
-        if ($stripe_pub_key && $this->stripe_payment_service->StripKeys()->stripe_secret_key) {
+        if ($stripe_pub_key && $this->stripe_service->StripKeys()->stripe_secret_key) {
             return Inertia::render('Attendee/Payment/Index', compact([
                 'eventApp',
                 'amount',
                 'tickets',
-                'stripe_pub_key'
+                'stripe_pub_key',
+                'paypal_client_id'
             ]));
         } else {
             return Inertia::render('Attendee/Payment/NoPaymentKeys');
@@ -54,18 +62,20 @@ class PaymentController extends Controller
     // PayPal Payment
     //==================================================================================
     // Create PayPal Order
-    public function createPaypalPayment(Request $request)
+    public function createPaypalOrder(Request $request)
     {
-        $order = $this->paypal_payment_service->createOrder($request->amount);
+        $order = $this->paypal_service->createOrder($request->amount);
         return response()->json($order);
     }
 
     // Capture PayPal Payment
-    public function capturePaypalPayment(Request $request)
+    public function capturePaypalOrder(Request $request)
     {
-        $response = $this->paypal_payment_service->capturePayment($request->order_id);
+        $response = $this->paypal_service->capturePayment($request->order_id);
         return response()->json($response);
     }
+
+
 
     // Stripe Payment
     //===================================================================================
@@ -77,17 +87,24 @@ class PaymentController extends Controller
     public function createPaymentIntent(Request $request)
     {
         $amount = $request->input('amount');
-        $client_secret = $this->stripe_payment_service->createPaymentIntent($amount);
+        $client_secret = $this->stripe_service->createPaymentIntent($amount);
 
         return response()->json(['client_secret' => $client_secret, 'intent' => null]);
     }
 
-    public function paymentSuccess(EventApp $eventApp)
+    public function paymentSuccess()
     {
+        $eventApp =  EventApp::find(auth()->user()->event_app_id);
+
         return Inertia::render(
             'Attendee/Payment/PaymentSuccess',
             compact(['eventApp'])
         );
+    }
+
+    public function paymentCancel()
+    {
+        return Inertia::render('Attendee/Payment/PaymentCancel');
     }
 
     public function updateAttendeePaymnet()

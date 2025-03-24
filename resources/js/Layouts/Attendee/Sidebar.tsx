@@ -4,21 +4,20 @@ import SimpleBar from "simplebar-react";
 import logoSm from "../../../images/logo-sm.png";
 import logoDark from "../../../images/logo.png";
 import logoLight from "../../../images/logo-white.png";
-import defaultEventImage from '../../../images/default-event-image.png';
+import defaultEventImage from "../../../images/default-event-image.png";
 //Import Components
 import VerticalLayout from "./VerticalLayouts";
 import { Container } from "react-bootstrap";
 import HorizontalLayout from "./HorizontalLayout";
 import TwoColumnLayout from "./TwoColumnLayout";
-import { Link, usePage } from '@inertiajs/react';
-
+import { Link, usePage } from "@inertiajs/react";
 
 const Sidebar = ({ layoutType }: any) => {
     const eventApp: any = usePage().props.currentEvent;
 
-
     useEffect(() => {
-        var verticalOverlay = document.getElementsByClassName("vertical-overlay");
+        var verticalOverlay =
+            document.getElementsByClassName("vertical-overlay");
         if (verticalOverlay) {
             verticalOverlay[0].addEventListener("click", function () {
                 document.body.classList.remove("vertical-sidebar-enable");
@@ -28,33 +27,62 @@ const Sidebar = ({ layoutType }: any) => {
 
     const addEventListenerOnSmHoverMenu = () => {
         // add listener Sidebar Hover icon on change layout from setting
-        if (document.documentElement.getAttribute('data-sidebar-size') === 'sm-hover') {
-            document.documentElement.setAttribute('data-sidebar-size', 'sm-hover-active');
-        } else if (document.documentElement.getAttribute('data-sidebar-size') === 'sm-hover-active') {
-            document.documentElement.setAttribute('data-sidebar-size', 'sm-hover');
+        if (
+            document.documentElement.getAttribute("data-sidebar-size") ===
+            "sm-hover"
+        ) {
+            document.documentElement.setAttribute(
+                "data-sidebar-size",
+                "sm-hover-active"
+            );
+        } else if (
+            document.documentElement.getAttribute("data-sidebar-size") ===
+            "sm-hover-active"
+        ) {
+            document.documentElement.setAttribute(
+                "data-sidebar-size",
+                "sm-hover"
+            );
         } else {
-            document.documentElement.setAttribute('data-sidebar-size', 'sm-hover');
+            document.documentElement.setAttribute(
+                "data-sidebar-size",
+                "sm-hover"
+            );
         }
     };
 
     const truncateAppName = (name: any) => {
         return name.length > 18 ? name.substring(0, 17) + "..." : name;
-    }
+    };
+
+    const { currentEvent } = usePage().props as Record<string, any>;
 
     return (
         <React.Fragment>
             <div className="app-menu navbar-menu">
-                <div className="navbar-brand-box">
-                    <Link href={route('attendee.event.detail.dashboard', [eventApp.id])} className="logo logo-dark">
-                        <span className="logo-sm">
-                            <img src={logoSm} alt="" height="22" />
-                        </span>
-                        <span className="logo-lg">
-                            <div className="d-flex justify-content-start align-items-center">
-                                <img src={defaultEventImage} alt="default event image" style={{ height: '35px', borderRadius: '50%' }} />
-                                <span style={{ marginLeft: '15px' }} title={eventApp.name}>{truncateAppName(eventApp.name)}</span>
+                <div className="navbar-brand-box d-flex justify-content-start py-3">
+                    <Link
+                        href={route("attendee.event.detail.dashboard")}
+                        className="inertia-link"
+                    >
+                        <div className="d-flex align-items-center event-logo">
+                            <img
+                                src={currentEvent.logo_img}
+                                alt="event"
+                                className="img-fluid rounded-circle avatar-sm"
+                            />
+                            <div className="fs-6 fw-semibold ms-2 text-start event-name">
+                                <span
+                                    className="d-block text-capitalize"
+                                    title={currentEvent.name}
+                                >
+                                    {truncateAppName(currentEvent.name)}
+                                </span>
+                                <span className="d-block fw-normal text-muted">
+                                    {currentEvent.created_at_date}
+                                </span>
                             </div>
-                        </span>
+                        </div>
                     </Link>
                     <Link href="/" className="logo logo-light">
                         <span className="logo-sm">
@@ -82,7 +110,7 @@ const Sidebar = ({ layoutType }: any) => {
                             </ul>
                         </Container>
                     </div>
-                ) : layoutType === 'twocolumn' ? (
+                ) : layoutType === "twocolumn" ? (
                     <React.Fragment>
                         <TwoColumnLayout layoutType={layoutType} />
                         <div className="sidebar-background"></div>

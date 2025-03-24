@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 class OrganizerPaymentKeys extends Model
 {
@@ -29,7 +30,12 @@ class OrganizerPaymentKeys extends Model
     // Decrypt the secret key when retrieving
     public function getStripeSecretKeyAttribute($value)
     {
-        return $value ? decrypt($value) : '';
+        try {
+            return $value ? decrypt($value) : '';
+        } catch (\Exception $e) {
+            Log::error('Error decrypting Stripe secret key: ' . $e->getMessage());
+            return '';
+        }
     }
 
     // Encrypt the secret key automatically when saving
@@ -41,6 +47,11 @@ class OrganizerPaymentKeys extends Model
     // Decrypt the secret key when retrieving
     public function getPaypalSecretAttribute($value)
     {
-        return $value ? decrypt($value) : '';
+        try {
+            return $value ? decrypt($value) : '';
+        } catch (\Exception $e) {
+            Log::error('Error decrypting paypal secret key: ' . $e->getMessage());
+            return '';
+        }
     }
 }

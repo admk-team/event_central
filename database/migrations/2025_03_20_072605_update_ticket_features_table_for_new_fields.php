@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('ticket_features', function (Blueprint $table) {
-            $table->decimal('price')->default(0);
+            $table->decimal('price')->nullable()->default(0);
             $table->unsignedSmallInteger('qty_total');
             $table->unsignedSmallInteger('qty_sold');
         });

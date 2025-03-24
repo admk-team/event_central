@@ -2,7 +2,6 @@ import { usePage } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
 
 const Navdata = () => {
-
     const user: any = usePage().props.auth.user;
     const eventApp: any = usePage().props.eventApp;
     //state data
@@ -13,8 +12,8 @@ const Navdata = () => {
     const [isMore, setIsMore] = useState<boolean>(false);
     const [isQr, setIsQr] = useState<boolean>(false);
 
-    const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
-      const [IsQA, setIsQA] = useState<boolean>(false);
+    const [iscurrentState, setIscurrentState] = useState<any>("Dashboard");
+    const [IsQA, setIsQA] = useState<boolean>(false);
 
     function updateIconSidebar(e: any) {
         if (e && e.target && e.target.getAttribute("sub-items")) {
@@ -44,7 +43,7 @@ const Navdata = () => {
         if (iscurrentState !== "More") {
             setIsMore(false);
         }
-        if (iscurrentState !== 'Q&A') {
+        if (iscurrentState !== "Q&A") {
             setIsQA(false);
         }
     }, [
@@ -67,7 +66,7 @@ const Navdata = () => {
             id: "dashboard",
             label: "Dashboards",
             icon: "bx bxs-dashboard",
-            link: route("attendee.event.detail.dashboard", user.event_app_id),
+            link: route("attendee.event.detail.dashboard"),
             stateVariables: isDashboard,
             click: function (e: any) {
                 e.preventDefault();
@@ -80,7 +79,7 @@ const Navdata = () => {
             id: "program",
             label: "Program",
             icon: "bx bx-heart",
-            link: route("attendee.event.detail.agenda", user.event_app_id),
+            link: route("attendee.event.detail.agenda"),
             stateVariables: isProgram,
             click: function (e: any) {
                 e.preventDefault();
@@ -93,7 +92,7 @@ const Navdata = () => {
             id: "speaker",
             label: "Speaker",
             icon: "bx bx-group",
-            link: route("attendee.event.detail.speakers", user.event_app_id),
+            link: route("attendee.event.detail.speakers"),
             stateVariables: isSpeakers,
             click: function (e: any) {
                 e.preventDefault();
@@ -106,7 +105,7 @@ const Navdata = () => {
             id: "posts",
             label: "Posts",
             icon: "bx bx-group",
-            link: route("attendee.posts.index", user.event_app_id),
+            link: route("attendee.posts.index"),
             stateVariables: isPost,
             click: function (e: any) {
                 e.preventDefault();
@@ -119,7 +118,7 @@ const Navdata = () => {
             id: "more",
             label: "More",
             icon: "bx bx-info-circle",
-            link: route("attendee.event.detail.more", user.event_app_id),
+            link: route("attendee.event.detail.more"),
             stateVariables: isMore,
             click: function (e: any) {
                 e.preventDefault();
@@ -132,12 +131,12 @@ const Navdata = () => {
             id: "tickets",
             label: "Tickets",
             icon: "bx bx-qr",
-            link: route('attendee.tickets.get'),
+            link: route("attendee.tickets.get"),
             stateVariables: isMore,
             click: function (e: any) {
                 e.preventDefault();
                 setIsMore(!isMore);
-                setIscurrentState('More');
+                setIscurrentState("More");
                 updateIconSidebar(e);
             },
         },
@@ -145,14 +144,14 @@ const Navdata = () => {
             id: "qa",
             label: "Q&A",
             icon: "bx bxs-dashboard",
-            link: route('attendee.events.qa.index'),
+            link: route("attendee.events.qa.index"),
             stateVariables: IsQA,
             click: function (e: any) {
                 e.preventDefault();
                 setIsQA(!IsQA);
-                setIscurrentState('Q&A');
+                setIscurrentState("Q&A");
                 updateIconSidebar(e);
-            }
+            },
         },
     ];
     return <React.Fragment>{menuItems}</React.Fragment>;

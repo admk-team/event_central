@@ -56,36 +56,71 @@ const Sidebar = ({ layoutType }: any) => {
 
     const { currentEvent } = usePage().props as Record<string, any>;
 
-    const { events, auth } = usePage<{ events: any[], auth: { user: any } }>().props;
+    const { events, auth } = usePage<{ events: any[]; auth: { user: any } }>()
+        .props;
 
     const truncateAppName = (name: any) => {
         return name.length > 15 ? name.substring(0, 15) + "..." : name;
-    }
+    };
     return (
         <React.Fragment>
             <div className="app-menu navbar-menu">
                 <Dropdown className="navbar-brand-box my-3">
-                    <Dropdown.Toggle as="button" className="btn d-flex align-items-center p-1" id="dropdown.MenuButton">
+                    <Dropdown.Toggle
+                        as="button"
+                        className="btn d-flex align-items-center p-1"
+                        id="dropdown.MenuButton"
+                    >
                         <div className="d-flex align-items-center ">
-                            <img src={currentEvent.logo_img} alt="event" className="img-fluid rounded-circle avatar-sm" />
+                            <img
+                                src={currentEvent.logo_img}
+                                alt="event"
+                                className="img-fluid rounded-circle avatar-sm"
+                            />
                             <div className="fs-6 fw-semibold ms-2 text-start">
-                                <span className="d-block" title={currentEvent.name}>{truncateAppName(currentEvent.name)}</span>
-                                <span className="d-block fw-normal text-muted">{currentEvent.created_at_date}</span>
+                                <span
+                                    className="d-block"
+                                    title={currentEvent.name}
+                                >
+                                    {truncateAppName(currentEvent.name)}
+                                </span>
+                                <span className="d-block fw-normal text-muted">
+                                    {currentEvent.created_at_date}
+                                </span>
                             </div>
                         </div>
                     </Dropdown.Toggle>
                     <Dropdown.Menu className="w-75">
                         {events?.map((event: any, key: any) => (
-                            <Dropdown.Item key={key} className="p-2 px-4 text-primary d-flex align-items-center gap-2"
-                                onClick={() => router.visit(route('organizer.events.select', event.id))}>
-                                <img src={event.logo_img} alt="event" className="img-fluid rounded-circle avatar-xxs" />
+                            <Dropdown.Item
+                                key={key}
+                                className="p-2 px-4 text-primary d-flex align-items-center gap-2"
+                                onClick={() =>
+                                    router.visit(
+                                        route(
+                                            "organizer.events.select",
+                                            event.id
+                                        )
+                                    )
+                                }
+                            >
+                                <img
+                                    src={event.logo_img}
+                                    alt="event"
+                                    className="img-fluid rounded-circle avatar-xxs"
+                                />
                                 <span className="d-block text-wrap">
                                     {event.name}
                                 </span>
                             </Dropdown.Item>
                         ))}
                         <div className="border-top my-2"></div>
-                        <Dropdown.Item className="p-2 px-4 text-primary " onClick={() => router.visit(route('organizer.events.index'))}>
+                        <Dropdown.Item
+                            className="p-2 px-4 text-primary "
+                            onClick={() =>
+                                router.visit(route("organizer.events.index"))
+                            }
+                        >
                             See all events
                         </Dropdown.Item>
                     </Dropdown.Menu>

@@ -7,26 +7,26 @@ use App\Models\EventApp;
 
 class PayPalService
 {
-    protected $baseUrl;
-    protected $clientId;
-    protected $clientSecret;
-
-    public function getPaymentKeys()
+    public function PayPalKeys()
     {
         $eventApp = EventApp::find(auth()->user()->event_app_id);
-
-        $keys = $eventApp->organiser->payment_keys;
-        $this->baseUrl = $keys->paypal_base_url;
-        $this->clientId = $keys->paypal_pub;
-        $this->clientSecret = $keys->paypal_secret;
-        return true;
+        return $eventApp->organiser->payment_keys;
     }
 
+    public function getClientId()
+    {
+        return $this->PayPalKeys()->paypal_pub;
+    }
     // Get Access Token
     public function getAccessToken()
     {
-        $response = Http::asForm()->withBasicAuth($this->clientId, $this->clientSecret)
-            ->post("{$this->baseUrl}/v1/oauth2/token", [
+        $keys = $this->PayPalKeys();
+        $clientId = $keys->paypal_pub;
+        $clientSecret = $keys->paypal_secret;
+        $baseUrl = $keys->paypal_base_url;
+
+        $response = Http::asForm()->withBasicAuth($clientId, $clientSecret)
+            ->post("{$baseUrl}/v1/oauth2/token", [
                 'grant_type' => 'client_credentials'
             ]);
 
@@ -36,9 +36,12 @@ class PayPalService
     // Create Order
     public function createOrder($amount, $currency = 'USD')
     {
+        $keys = $this->PayPalKeys();
+        $baseUrl = $keys->paypal_base_url;
+
         $accessToken = $this->getAccessToken();
 
-        $response = Http::withToken($accessToken)->post("{$this->baseUrl}/v2/checkout/orders", [
+        $response = Http::withToken($accessToken)->post("{$baseUrl}/v2/checkout/orders", [
             'intent' => 'CAPTURE',
             'purchase_units' => [
                 [
@@ -56,9 +59,12 @@ class PayPalService
     // Capture Payment
     public function capturePayment($orderId)
     {
+        $keys = $this->PayPalKeys();
+        $baseUrl = $keys->paypal_base_url;
+
         $accessToken = $this->getAccessToken();
 
-        $response = Http::withToken($accessToken)->post("{$this->baseUrl}/v2/checkout/orders/{$orderId}/capture");
+        $response = Http::withToken($accessToken)->post("{$baseUrl}/v2/checkout/orders/{$orderId}/capture");
 
         return $response->json();
     }

@@ -1,33 +1,50 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Col, Container, Row, CardBody, Spinner, Tabs, Tab } from "react-bootstrap";
+import {
+    Button,
+    Card,
+    Col,
+    Container,
+    Row,
+    CardBody,
+    Spinner,
+    Tabs,
+    Tab,
+} from "react-bootstrap";
 import { Elements } from "@stripe/react-stripe-js";
-import CheckoutForm from "./CheckoutForm";
+import StripeCheckoutForm from "./components/StripeCheckoutForm";
+import PayPalButton from "./components/PayPalButton";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
 import Layout from "../../../Layouts/Attendee";
 import { Head } from "@inertiajs/react";
 
-const Index = ({ eventApp, amount, tickets, stripe_pub_key }: any) => {
-
+const Index = ({
+    eventApp,
+    amount,
+    tickets,
+    stripe_pub_key,
+    paypal_client_id,
+}: any) => {
     // console.log(amount, stripe_pub_key);
 
     const [stripePromise, setStripePromise] = useState(
-        loadStripe(
-            stripe_pub_key
-        )
+        loadStripe(stripe_pub_key)
     );
     const [clientSecret, setClientSecret] = useState("");
     const [loadingIntent, setLoadingIntent] = useState(false);
 
     useEffect(() => {
         setLoadingIntent(true);
-        axios.post(route("attendee.payment.intent"), { amount: amount }).then((response) => {
-            let clientSecret = response.data.client_secret;
-            setClientSecret(clientSecret);
-            console.log(response);
-        }).finally(() => {
-            setLoadingIntent(false);
-        });
+        axios
+            .post(route("attendee.payment.intent"), { amount: amount })
+            .then((response) => {
+                let clientSecret = response.data.client_secret;
+                setClientSecret(clientSecret);
+                console.log(response);
+            })
+            .finally(() => {
+                setLoadingIntent(false);
+            });
     }, []);
 
     const appearance = {
@@ -61,26 +78,43 @@ const Index = ({ eventApp, amount, tickets, stripe_pub_key }: any) => {
                                         className="mb-3"
                                     >
                                         <Tab eventKey="stripe" title="Stripe">
-                                            {loadingIntent && <div className="d-flex justify-content-center align-items-center" style={{ minHeight: '200px' }}>
-                                                <Spinner animation="border" role="status">
-                                                    <span className="visually-hidden">Loading...</span>
-                                                </Spinner>
-                                            </div>
-                                            }
+                                            {loadingIntent && (
+                                                <div
+                                                    className="d-flex justify-content-center align-items-center"
+                                                    style={{
+                                                        minHeight: "200px",
+                                                    }}
+                                                >
+                                                    <Spinner
+                                                        animation="border"
+                                                        role="status"
+                                                    >
+                                                        <span className="visually-hidden">
+                                                            Loading...
+                                                        </span>
+                                                    </Spinner>
+                                                </div>
+                                            )}
                                             {clientSecret && stripePromise && (
                                                 <Card>
                                                     <CardBody>
                                                         <Elements
-                                                            stripe={stripePromise}
+                                                            stripe={
+                                                                stripePromise
+                                                            }
                                                             options={{
                                                                 clientSecret,
                                                                 appearance,
                                                             }}
                                                         >
-                                                            <CheckoutForm
-                                                                eventId={eventApp.id}
+                                                            <StripeCheckoutForm
+                                                                eventId={
+                                                                    eventApp.id
+                                                                }
                                                                 amount={amount}
-                                                                tickets={tickets}
+                                                                tickets={
+                                                                    tickets
+                                                                }
                                                             />
                                                         </Elements>
                                                     </CardBody>
@@ -88,7 +122,12 @@ const Index = ({ eventApp, amount, tickets, stripe_pub_key }: any) => {
                                             )}
                                         </Tab>
                                         <Tab eventKey="paypal" title="Paypal">
-                                            Under development
+                                            <PayPalButton
+                                                eventId={eventApp.id}
+                                                amount={amount}
+                                                tickets={tickets}
+                                                client_id={paypal_client_id}
+                                            />
                                         </Tab>
                                     </Tabs>
                                 </CardBody>
@@ -99,6 +138,6 @@ const Index = ({ eventApp, amount, tickets, stripe_pub_key }: any) => {
             </section>
         </React.Fragment>
     );
-}
+};
 Index.layout = (page: any) => <Layout children={page} />;
 export default Index;

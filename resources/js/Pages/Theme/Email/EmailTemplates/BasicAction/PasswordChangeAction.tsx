@@ -83,7 +83,7 @@ const PasswordChangeAction = () => {
                                         <div style={{ textAlign: "center", margin: "28px auto 0px auto" }}>
                                             <h4>Need Help ?</h4>
                                             <p style={{ color: "#878a99" }}>Please send and feedback or bug info to <Link href="/" style={{ fontWeight: "500px" }}>info@velzon.com</Link></p>
-                                            <p style={{ fontFamily: "Roboto, sans-serif", fontSize: "14px", color: "#98a6ad", margin: "0px" }}>2025 Event Central. Design & Develop by OnlineChannel.io</p>
+                                            <p style={{ fontFamily: "Roboto, sans-serif", fontSize: "14px", color: "#98a6ad", margin: "0px" }}>2025 Event Central. Design & Develop by Onlinechannel.tv</p>
                                         </div>
                                     </div>
                                 </td>
