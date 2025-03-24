@@ -43,11 +43,10 @@ Route::prefix('attendee')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
 
         Route::get('event/{eventApp}', [AttendeeEventController::class, 'getEventDetailDashboard']);
-        Route::get('event/session/{eventApp}', [AttendeeEventController::class, 'getEventDetailDashboard']);
-
+        Route::get('event/{eventApp}/session/{eventSession}', [AttendeeEventController::class, 'eventsessions']);
+        // Route::get('event/{eventApp}/session', [AttendeeEventController::class, 'eventsessions']);
         Route::get('event/ticket/{eventApp}', [AttendeeEventController::class, 'ticket']);
+        Route::get('event/speaker/{eventApp}', [AttendeeEventController::class, 'speaker']);
+        Route::get('event/contact/{eventApp}', [AttendeeEventController::class, 'contact']);
     });
 });
-
-// Route::post('/login', [AuthController::class, 'login']);
-// Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
