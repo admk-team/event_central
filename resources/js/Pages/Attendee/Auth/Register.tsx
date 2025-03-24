@@ -25,7 +25,7 @@ export default function Register() {
 
     const submit = (e: any) => {
         e.preventDefault();
-        console.log('here')
+        console.log(data);
         post(route('attendee.register', [eventApp.id]));
     };
 

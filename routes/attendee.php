@@ -20,7 +20,7 @@ Route::middleware('guest')->prefix('attendee')->group(function () {
 
     Route::get('{eventApp}/login', [AuthenticatedSessionController::class, 'create'])->name('attendee.login');
     Route::post('{eventApp}/login', [AuthenticatedSessionController::class, 'store'])->name('attendee.login.store');
-    Route::post('{eventApp}/logout', [AuthenticatedSessionController::class, 'destroy'])->name('attendee.logout');
+    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('attendee.logout');
 
     Route::middleware('check_event_registration_method')->group(
         function () {

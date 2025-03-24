@@ -21,7 +21,7 @@ function Index({ events, recurring_types, event_category_types }: any) {
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
     const [imageHash, setImageHash] = useState(Date.now());
 
-    // console.log(events);
+    console.log(events);
 
     const deleteForm = useForm({
         _method: 'DELETE'
@@ -93,7 +93,7 @@ function Index({ events, recurring_types, event_category_types }: any) {
             accessorKey: 'description',
             header: () => 'Description',
             cell: (event) => <div style={{ maxWidth: '200px', overflow: 'auto' }}>
-                <p style={{ textWrap: 'pretty', textAlign: 'justify' }}>{truncateDesc(event.description)}</p>
+                <p style={{ textWrap: 'pretty', textAlign: 'justify', marginBottom: 'unset !important' }}>{truncateDesc(event.description)}</p>
             </div >,
             enableSorting: false
         },

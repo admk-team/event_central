@@ -54,7 +54,7 @@ const AttendeeMore = ({ eventApp }: any) => {
                                             </div>
                                         </CardHeader>
                                         <CardBody>
-                                            <img src={defaultEventImage} alt="event default bg" width={'100%'} />
+                                            <img src={eventApp.featured_image} alt="event default bg" width={'100%'} />
                                             <div className="d-flex align-items-center mt-3">
                                                 <img width="50" height="50" className="img-thumbnail rounded-circle" src={defaultEventIcon} style={{ marginRight: '10px' }} />
                                                 <div className="d-flex flex-column">

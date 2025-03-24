@@ -34,6 +34,7 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request, EventApp $eventApp): RedirectResponse
     {
+
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -61,6 +62,6 @@ class RegisteredUserController extends Controller
 
         Auth::guard('attendee')->login($user);
 
-        return redirect(route('attendee.event.detail.dashboard', [$eventApp->id]));
+        return redirect(route('attendee.event.detail.dashboard'));
     }
 }
