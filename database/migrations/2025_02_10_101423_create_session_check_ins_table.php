@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('session_id');
             $table->foreign('session_id')->references('id')->on('event_sessions');
             $table->dateTime('checked_in');
-            $table->string('qr_code');
+            $table->string('qr_code')->nullable();
             $table->timestamps();
         });
     }

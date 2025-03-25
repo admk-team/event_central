@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('event_app_images', function (Blueprint $table) {
             $table->id();
             $table->foreignId('event_app_id')->constrained()->cascadeOnDelete();
-            $table->string('image_file_name');
-            $table->string('image_url');
+            $table->string('image_file_name')->nullable();
+            $table->string('image_url')->nullable();
             $table->boolean('is_feature_image')->default(false);
             $table->timestamps();
         });
