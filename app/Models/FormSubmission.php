@@ -20,9 +20,14 @@ class FormSubmission extends Model
     {
         return $this->hasMany(FormFieldValue::class);
     }
-    
+
     public function attendee()
     {
         return $this->belongsTo(Attendee::class);
+    }
+
+    public function formFields()
+    {
+        return $this->hasManyThrough(FormField::class, Form::class, 'id', 'form_id', 'form_id', 'id');
     }
 }

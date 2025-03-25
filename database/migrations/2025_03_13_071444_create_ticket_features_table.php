@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('organizer_id')->constrained('users')->cascadeOnDelete();
             $table->foreignId('event_app_id')->nullable()->constrained()->nullOnDelete();
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->timestamps();
         });
     }

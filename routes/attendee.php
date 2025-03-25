@@ -20,7 +20,7 @@ Route::middleware('guest')->prefix('attendee')->group(function () {
 
     Route::get('{eventApp}/login', [AuthenticatedSessionController::class, 'create'])->name('attendee.login');
     Route::post('{eventApp}/login', [AuthenticatedSessionController::class, 'store'])->name('attendee.login.store');
-    Route::post('{eventApp}/logout', [AuthenticatedSessionController::class, 'destroy'])->name('attendee.logout');
+    Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])->name('attendee.logout');
 
     Route::middleware('check_event_registration_method')->group(
         function () {
@@ -62,6 +62,9 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         // Route::post('checkout', [PaymentController::class, 'checkoutPage'])->name('attendee.checkout.post');
         Route::post('create-payment-intent', [PaymentController::class, 'createPaymentIntent'])->name('attendee.payment.intent');
         Route::post('update-attendee-payment', [PaymentController::class, 'updateAttendeePaymnet'])->name('attendee.update.payment');
+
+        Route::get('{eventApp}/payment-success', [PaymentController::class, 'paymentSuccess'])->name('attendee.payment.success');
+        Route::get('{eventApp}/event-posts', [EventController::class, 'getPostsMore'])->name('attendee.posts.index');
 
         //PayPal
         Route::post('/paypal/create-order', [PaymentController::class, 'createPayPalOrder'])->name('attendee.paypal.create-order');

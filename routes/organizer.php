@@ -81,6 +81,8 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             // Attendies
             Route::resource('attendees', AttendeeController::class);
             Route::delete('attendees/delete/many', [AttendeeController::class, 'destroyMany'])->name('attendees.destroy.many');
+            Route::get('attendee/info/{id}', [AttendeeController::class, 'showInfo'])->name('attendee.info');
+            Route::put('/attendee/profile/update/{id}', [AttendeeController::class, 'updateAttendee'])->name('attendee.profile.update');
 
             // Wordshop
             Route::resource('workshop', WorkshopController::class);

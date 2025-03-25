@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('event_app_tickets', function (Blueprint $table) {
             $table->id();
             $table->foreignId('event_app_id')->constrained()->cascadeOnDelete();
-            $table->string('name');
-            $table->mediumText('description');
+            $table->string('name')->nullable();
+            $table->mediumText('description')->nullable();
             $table->string('type')->default('Normal');
             $table->decimal('base_price')->default(0);
             $table->decimal('addons_price')->default(0);

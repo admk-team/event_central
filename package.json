@@ -90,6 +90,7 @@
         "react-select": "^5.8.1",
         "react-table": "^7.8.0",
         "react-toastify": "^10.0.6",
+        "read-excel-file": "^5.8.7",
         "redux": "^5.0.1",
         "sass": "1.69.7",
         "simplebar-react": "^3.2.6",

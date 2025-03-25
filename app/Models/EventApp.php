@@ -34,36 +34,38 @@ class EventApp extends Model
         'registration_private' => 'boolean'
     ];
     protected $appends = [
-        'start_date',   //Picks first date from dates table
+        'start_date',
         'created_at' => 'created_at_date',
         'logo' => 'logo_img',
         'registration_private',
-        'registration_link'
+        'registration_link',
+        'featured_image'
     ];
     protected $with = [
         'category',
         'recurring_type'
     ];
 
+    
     public function uniqueIds(): array
     {
         return ['uuid'];
     }
-
+    
     // Relationship with Registration Page
     public function registrationPage()
     {
         return $this->belongsTo(RegistrationPage::class, 'regis_page_id');
     }
-
+    
     // Relationship with Color Scheme
     public function colorSchemes()
     {
         return $this->hasMany(ColorScheme::class, 'event_id');
     }
-
+    
     // getters
-
+    
     public function getCreatedAtDateAttribute()
     {
         return $this->created_at->format('d M, Y');
@@ -77,21 +79,31 @@ class EventApp extends Model
     {
         $query->where('organizer_id', Auth::user()?->owner_id);
     }
-
+    
     // Relations
     public function event_sessions()
     {
         return $this->hasMany(EventSession::class);
     }
-
+    
     public function event_speakers()
     {
         return $this->hasMany(EventSpeaker::class);
     }
 
+    public function images()
+    {
+        return $this->hasMany(EventAppImage::class);
+    }
+
     public function organiser()
     {
         return $this->belongsTo(User::class, 'organizer_id');
+    }
+    
+    public function attendees()
+    {
+        return $this->hasMany(Attendee::class, 'event_app_id', 'id');
     }
 
     public function category()
@@ -128,11 +140,21 @@ class EventApp extends Model
     {
         return $this->hasMany(Footer::class);
     }
+    
     public function tickets()
     {
         return $this->hasMany(EventAppTicket::class);
     }
 
+    public function getFeaturedImageAttribute()
+    {
+        $images = $this->images;
+        if (count($images) > 0) {
+            return $images[0]->image_url;
+        } else {
+            return url('/default-event-feature-image.png');
+        }
+    }
 
     public function getStartDateAttribute()
     {

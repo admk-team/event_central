@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('event_speaker_id')->nullable();
             $table->foreign('event_speaker_id')->references('id')->on('event_speakers');
             $table->unsignedBigInteger('event_date_id')->nullable();
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->enum('type', ['Lecture', 'Workshop', 'Break']);
             $table->string('description')->nullable();
             $table->integer('capacity')->nullable();

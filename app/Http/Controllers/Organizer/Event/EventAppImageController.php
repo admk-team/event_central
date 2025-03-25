@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Organizer\Event;
 
+use App\Http\Controllers\Controller;
 use App\Models\EventAppImage;
 use Illuminate\Http\Request;
 
@@ -10,18 +11,8 @@ class EventAppImageController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        //
-    }
+    public function index() {}
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -31,21 +22,6 @@ class EventAppImageController extends Controller
         //
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(EventAppImage $eventAppImage)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(EventAppImage $eventAppImage)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.

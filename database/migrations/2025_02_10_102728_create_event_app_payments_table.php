@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('event_app_id');
             $table->foreign('event_app_id')->references('id')->on('event_apps');
-            $table->string('stripe_pub');
-            $table->string('stripe_secret');
-            $table->string('paypal_pub');
-            $table->string('paypal_secret');
+            $table->string('stripe_pub')->nullable();
+            $table->string('stripe_secret')->nullable();
+            $table->string('paypal_pub')->nullable();
+            $table->string('paypal_secret')->nullable();
             $table->timestamps();
         });
     }

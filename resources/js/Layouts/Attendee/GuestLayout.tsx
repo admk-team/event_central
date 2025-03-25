@@ -1,13 +1,13 @@
-import React from 'react';
-import ApplicationLogo from '../../Components/ApplicationLogo';
-import AttendeeEventInfoBox from '../../Components/Common/AttendeeEventInfoBox';
-import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
-import AuthSlider from '../../Pages/Theme/AuthInner/authCarousel';
-import { appName } from '../../app';
-import useToastMessages from '../../hooks/useToastMessages';
-import { Toaster } from 'react-hot-toast';
+import React from "react";
+import ApplicationLogo from "../../Components/ApplicationLogo";
+import AttendeeEventInfoBox from "../../Components/Common/AttendeeEventInfoBox";
+import { Container, Row, Col, Card, Form, Button } from "react-bootstrap";
+import AuthSlider from "../../Pages/Theme/AuthInner/authCarousel";
+import useToastMessages from "../../hooks/useToastMessages";
+import { Toaster } from "react-hot-toast";
 
 export default function GuestLayout({ children }: any) {
+    const appName = import.meta.env.VITE_APP_NAME || "Event Central";
     useToastMessages();
     return (
         <React.Fragment>
@@ -29,7 +29,6 @@ export default function GuestLayout({ children }: any) {
                                     </Row>
                                 </Card>
                             </Col>
-
                         </Row>
                     </Container>
                 </div>
@@ -39,15 +38,17 @@ export default function GuestLayout({ children }: any) {
                         <div className="row">
                             <div className="col-lg-12">
                                 <div className="text-center">
-                                    <p className="mb-0">{new Date().getFullYear()} {appName}</p>
+                                    <p className="mb-0">
+                                        {new Date().getFullYear()} {appName} -
+                                        All Rights Reserved
+                                    </p>
                                 </div>
                             </div>
                         </div>
                     </Container>
                 </footer>
+                <Toaster />
             </div>
-
-            <Toaster />
         </React.Fragment>
     );
 }

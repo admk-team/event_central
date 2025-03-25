@@ -32,6 +32,7 @@ class EventSessionRequest extends FormRequest
             'start_time' => 'required',
             'end_time' => 'required',
             'qa_status' => 'boolean',
+            'posts' => 'required',
         ];
     }
 }

@@ -18,10 +18,9 @@ class CheckAttendeeRegistrationForm
     public function handle(Request $request, Closure $next): Response
     {
         $attendee = Auth::guard('attendee')->user();
-
         $event = EventApp::find($attendee->event_app_id);
         $form = $event->form;
-
+        
         if ($form && $form->status && $form->submissions()->where('attendee_id', $attendee->id)->count() === 0) {
             return redirect()->route('attendee.event-registration-form', $event->id);
         }

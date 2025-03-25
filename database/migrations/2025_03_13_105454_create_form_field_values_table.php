@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('form_submission_id')->constrained()->onDelete('cascade');
             $table->foreignId('form_field_id')->constrained()->onDelete('cascade');
-            $table->text('value');
+            $table->text('value')->nullable();
             $table->timestamps();
         });
     }
