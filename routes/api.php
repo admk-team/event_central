@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\Api\v1\Attendee\EventController as AttendeeEventController;
-use App\Http\Controllers\Api\v1\Attendee\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\v1\AuthController;
+use App\Http\Controllers\Api\v1\Attendee\ProfileController;
+use App\Http\Controllers\Api\v1\Attendee\RegisterController;
+use App\Http\Controllers\Api\v1\Attendee\EventController as AttendeeEventController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,7 @@ Route::prefix('user')->group(function () {
 
 Route::prefix('attendee')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->defaults('type', 'attendee');
+    Route::post('register/{eventId}', [RegisterController::class, 'register']);
     Route::middleware(['auth:sanctum', 'ability:role:attendee'])->group(function () {
 
         Route::get('/me', function (Request $request) {
