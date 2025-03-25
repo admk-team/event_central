@@ -145,14 +145,14 @@ const Navdata = () => {
                 setIscurrentState('engagement');
                 updateIconSidebar(e);
             },
-            subItems: [
-                {
-                    id: "newsfeed",
-                    label: "Posts",
-                    link: route('organizer.events.engagement.newsfeed.index'),
-                    parentId: "dashboard",
-                }
-            ]
+            // subItems: [
+            //     {
+            //         id: "newsfeed",
+            //         label: "Posts",
+            //         link: route('organizer.events.engagement.newsfeed.index',$id),
+            //         parentId: "dashboard",
+            //     }
+            // ]
         },
         {
             id: "users",

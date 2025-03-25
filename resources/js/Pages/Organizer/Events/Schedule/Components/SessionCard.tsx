@@ -9,6 +9,7 @@ interface Session {
     start_time: string;
     end_time: string;
     qa_status: boolean;
+    posts: boolean;
 }
 
 export default function SessionCard({
@@ -113,24 +114,43 @@ export default function SessionCard({
                                 </p>
                                 <div className="d-flex justify-content-between align-items-center mb-2">
                                     {badge}
-                                    {session.qa_status == true && (
-                                        <Link
-                                            href={route(
-                                                "organizer.events.qa.index",
-                                                {
-                                                    session_id: session.id,
-                                                }
-                                            )}
-                                            className="d-flex align-items-center text-decoration-none"
-                                        >
-                                            <i className="bx bx-message-square-detail fs-4 text-primary"></i>{" "}
-                                            {/* Q&A Icon */}
-                                            <span className="fw-bold text-primary ms-1">
-                                                Q&A
-                                            </span>{" "}
-                                            {/* Attractive text styling */}
-                                        </Link>
-                                    )}
+                                    <div>
+                                        {session.qa_status == true && (
+                                            <Link
+                                                href={route(
+                                                    "organizer.events.qa.index",
+                                                    {
+                                                        session_id: session.id,
+                                                    }
+                                                )}
+                                                className="d-flex align-items-center text-decoration-none"
+                                            >
+                                                <i className="bx bx-message-square-detail fs-4 text-primary"></i>{" "}
+                                                {/* Q&A Icon */}
+                                                <span className="fw-bold text-primary ms-1">
+                                                    Q&A
+                                                </span>{" "}
+                                                {/* Attractive text styling */}
+                                            </Link>
+                                        )}
+                                        {session.posts == true && (
+                                            <Link
+                                                href={route(
+                                                    "organizer.posts.index",{
+                                                        id: session.id,
+                                                    }
+                                                )}
+                                                className="d-flex align-items-center text-decoration-none"
+                                            >
+                                                <i className="ri-image-edit-line fs-4 text-primary"></i>{" "}
+                                                {/* Q&A Icon */}
+                                                <span className="fw-bold text-primary ms-1">
+                                                    Posts
+                                                </span>{" "}
+                                                {/* Attractive text styling */}
+                                            </Link>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         </div>

@@ -12,20 +12,20 @@ use Inertia\Inertia;
 
 class NewsfeedController extends Controller
 {
-    public function index(Request $request)
+    public function index(String $id)
     {
         $events = EventApp::ofOwner()->get();
-        $newsfeeds = EventPost::where('event_app_id', session('event_id'))->get();
-        return Inertia::render('Organizer/Events/Engagment/Newsfeed/Index', compact('newsfeeds', 'events'));
+        $newsfeeds = EventPost::where('event_app_id', session('event_id'))->where('session_id', $id)->get();
+        return Inertia::render('Organizer/Events/Engagment/Newsfeed/Index', compact('newsfeeds', 'events','id'));
     }
 
     public function store(EventPostRequest $request)
     {
         logger($request->all());
-
         $data = $request->validated();
         $data['event_app_id'] = session('event_id');
         $data['post_poll'] = $request->post_poll;
+        $data['session_id'] = $request->session_id;
         if ($data['image']) {
             $name = uniqid() . '.' . $data['image']->getClientOriginalName();
             $data['image'] = $data['image']->storeAs('posts/images', $name, 'public');
@@ -36,7 +36,6 @@ class NewsfeedController extends Controller
 
     public function updatePost(Request $request, EventPost $post)
     {
-        dd($request->all());
         $data = $request->all();
         if ($request->hasFile('image')) {
             if ($post->image) {

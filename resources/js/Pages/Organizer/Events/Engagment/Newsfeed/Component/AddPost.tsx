@@ -11,12 +11,13 @@ import {
 } from "react-bootstrap";
 import Flatpickr from "react-flatpickr";
 
-function AddPost({ events, editPost }: any) {
+function AddPost({ events, editPost , session_id }: any) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [preview, setPreview] = useState<any>();
     const [schedulePost, setSchedulePost] = useState<any>(false);
     const [options, setOptions] = useState([{ text: "", like: [] }]);
     const [pollData, setPollData] = useState(false);
+
     const { data, setData, post, processing, errors, reset } = useForm({
         title: "",
         content: "",
@@ -25,7 +26,14 @@ function AddPost({ events, editPost }: any) {
         sending_date: null,
         sending_time: null,
         post_poll: "",
+        session_id: session_id,
     });
+
+    useEffect(()=>{
+        if(session_id){
+            setData('session_id',session_id)
+        }
+    },[session_id])
 
     const updateFormData = (key: string, value: string) => {
         setData((prevData) => ({
@@ -37,7 +45,7 @@ function AddPost({ events, editPost }: any) {
     const submit = (e: any) => {
         e.preventDefault();
         console.log(data);
-        post(route("organizer.events.engagement.newsfeed.store", data), {
+        post(route("organizer.posts.store", data), {
             onSuccess: () => {
                 reset();
                 Clearfields();

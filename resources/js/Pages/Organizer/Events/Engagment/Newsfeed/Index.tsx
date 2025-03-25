@@ -18,7 +18,7 @@ import { usePage } from "@inertiajs/react";
 import DeleteModal from "../../../../../Components/Common/DeleteModal";
 import EditModal from "./Component/EditModal";
 
-function Index({ newsfeeds, events }: any) {
+function Index({ newsfeeds, events, id }: any) {
     const [deletePost, setDeletePost] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showEditPost, setshowEditPost] = React.useState<any>(null);
@@ -40,7 +40,7 @@ function Index({ newsfeeds, events }: any) {
 
     const handleDelete = () => {
         deleteForm.post(
-            route("organizer.events.engagement.newsfeed.destroy", deletePost)
+            route("organizer.posts.destroy", deletePost)
         );
         setShowDeleteConfirmation(false);
     };
@@ -72,7 +72,7 @@ function Index({ newsfeeds, events }: any) {
                 <meta
                     property="og:url"
                     content={route(
-                        "organizer.events.engagement.newsfeed.index"
+                        "organizer.posts.index",{id:id}
                     )}
                 />
             </Head>
@@ -85,7 +85,19 @@ function Index({ newsfeeds, events }: any) {
                             <AddPost
                                 events={events[0]}
                                 editPostData={showEditPost}
+                                session_id = {id}
                             />
+                        </Col>
+                    </Row>
+                    <Row className="mt-4">
+                        <Col className="text-center">
+                            <Link
+                                href={route("organizer.events.schedule.index")}
+                                className="btn btn-outline-primary"
+                            >
+                                <i className="ri-arrow-left-line"></i> Back to
+                                Schedule
+                            </Link>
                         </Col>
                     </Row>
                 </Container>
@@ -108,14 +120,6 @@ function Index({ newsfeeds, events }: any) {
                                                 >
                                                     <i className="ri-edit-fill"></i>
                                                 </span>
-                                                <EditModal
-                                                    show={showEditModal}
-                                                    onHide={() =>
-                                                        setshowEditModal(false)
-                                                    }
-                                                    editPost={showEditPost}
-                                                />
-
                                                 <span
                                                     className="link-danger cursor-pointer"
                                                     onClick={() =>
@@ -288,6 +292,13 @@ function Index({ newsfeeds, events }: any) {
                     onCloseClick={() => {
                         setShowDeleteConfirmation(false);
                     }}
+                />
+                <EditModal
+                    show={showEditModal}
+                    onHide={() =>
+                        setshowEditModal(false)
+                    }
+                    editPost={showEditPost}
                 />
             </div>
         </React.Fragment>

@@ -167,21 +167,18 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                 });
             });
 
-            // engagement
-            Route::prefix('engagement')->name('engagement.')->group(function () {
-                // Event
-                Route::prefix('newsfeed')->name('newsfeed.')->group(function () {
-                    Route::get('/', [NewsfeedController::class, 'index'])->name('index');
-                    Route::post('/', [NewsfeedController::class, 'store'])->name('store');
-                    Route::post('/{post}/update', [NewsfeedController::class, 'updatePost'])->name('update');
-                    Route::delete('/{post}', [NewsfeedController::class, 'destroy'])->name('destroy');
-                    Route::delete('/delete/many', [NewsfeedController::class, 'destroyMany'])->name('destroy.many');
-                });
-            });
-
             Route::post('import/{importType}', [ImportController::class, 'import'])->name('import');
         });
     });
+    // Event
+    Route::prefix('posts')->name('posts.')->group(function () {
+        Route::get('/event/posts/{id}', [NewsfeedController::class, 'index'])->name('index');
+        Route::post('/event/post', [NewsfeedController::class, 'store'])->name('store');
+        Route::post('/event/{post}/update', [NewsfeedController::class, 'updatePost'])->name('update');
+        Route::delete('/{post}', [NewsfeedController::class, 'destroy'])->name('destroy');
+        Route::delete('/delete/many', [NewsfeedController::class, 'destroyMany'])->name('destroy.many');
+    });
+    
     // Q&A
     Route::get('/events/qa/{session_id}', [QuestionController::class, 'index'])->name('events.qa.index');
     Route::post('/events/{event}/questions', [QuestionController::class, 'storeQuestion'])->name('events.qa.store');
