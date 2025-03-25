@@ -12,10 +12,8 @@ class ImportController extends Controller
 {
     public function import(Request $request)
     {
-        // Log::info($request->all());
+        Log::info($request->all());
         try {
-            // logger($request->data);
-
             if ($request->importType == 'attendees') {
                 foreach ($request->data as $a) {
                     Attendee::create([
