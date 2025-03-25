@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('promo_codes', function (Blueprint $table) {
             $table->id();
             $table->foreignId('event_app_id')->constrained()->cascadeOnDelete();
-            $table->string('code', 50);
-            $table->mediumText('description');
+            $table->string('code', 50)->nullable();
+            $table->mediumText('description')->nullable();
             $table->enum('discount_type', ['fixed', 'percentage'])->default('fixed');
             $table->unsignedDecimal('discount_value');
             $table->unsignedInteger('usage_limit')->nullable();

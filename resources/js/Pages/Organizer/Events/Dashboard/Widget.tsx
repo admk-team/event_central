@@ -5,7 +5,7 @@ import CountUp from "react-countup";
 //Import Icons
 import FeatherIcon from "feather-icons-react";
 
-const Widget = () => {
+const Widget = ({totaluser,totalSession,totalTickets}:any) => {
     return (
         <React.Fragment>
             <Row>
@@ -14,16 +14,21 @@ const Widget = () => {
                         <Card.Body>
                             <div className="d-flex justify-content-between">
                                 <div>
-                                    <p className="fw-medium text-muted mb-0">Users</p>
+                                    <p className="fw-medium text-muted mb-0">Attendees</p>
                                     <h2 className="mt-4 ff-secondary fw-semibold">
                                         <span className="counter-value">
                                             <CountUp
+                                                key={totaluser} 
                                                 start={0}
-                                                end={28.05}
-                                                decimals={1}
+                                                end={Number(totaluser)}
+                                                decimals={totaluser >= 1000 ? 1 : 0}
                                                 duration={4}
+                                                formattingFn={(value:any) => 
+                                                    value >= 1000 ? (value / 1000).toFixed(1) + "K" : value
+                                                }
                                             />
-                                            0</span>k</h2>
+                                            </span>
+                                            </h2>
                                     <p className="mb-0 text-muted text-truncate "><span className="badge bg-light text-success mb-0">
                                         <i className="ri-arrow-up-line align-middle"></i> 16.24 %
                                     </span> vs. previous month</p>
@@ -52,12 +57,16 @@ const Widget = () => {
                                     <h2 className="fs-22 mt-4 ff-secondary fw-semibold">
                                         <span className="counter-value" data-target="97.66">
                                             <CountUp
+                                                key={totalSession}
                                                 start={0}
-                                                end={97.66}
-                                                decimals={2}
+                                                end={Number(totalSession)}
+                                                decimals={totalSession >= 1000 ? 1 : 0}
                                                 duration={4}
+                                                formattingFn={(value:any) => 
+                                                    value >= 1000 ? (value / 1000).toFixed(1) + "K" : value
+                                                }
                                             />
-                                        </span>k</h2>
+                                        </span></h2>
                                     <p className="mb-0 text-muted text-truncate "><span className="badge bg-light text-danger mb-0">
                                         <i className="ri-arrow-down-line align-middle"></i> 3.96 %
                                     </span> vs. previous month</p>
@@ -66,7 +75,7 @@ const Widget = () => {
                                     <div className="avatar-sm flex-shrink-0">
                                         <span className="avatar-title bg-info-subtle rounded-circle fs-2">
                                             <FeatherIcon
-                                                icon="activity"
+                                                icon="tv"
                                                 className="text-info"
                                             />
                                         </span>
@@ -84,22 +93,20 @@ const Widget = () => {
                         <Card.Body>
                             <div className="d-flex justify-content-between">
                                 <div>
-                                    <p className="fw-medium text-muted mb-0">Avg. Visit Duration</p>
+                                    <p className="fw-medium text-muted mb-0">Total Ticket Sold</p>
                                     <h2 className="fs-22 mt-4 ff-secondary fw-semibold">
                                         <span className="counter-value" data-target="3">
                                             <CountUp
+                                                key={totalTickets}
                                                 start={0}
-                                                end={3}
+                                                end={Number(totalTickets)}
+                                                decimals={totalTickets >= 1000 ? 1 : 0}
                                                 duration={4}
+                                                formattingFn={(value:any) => 
+                                                    value >= 1000 ? (value / 1000).toFixed(1) + "K" : value
+                                                }
                                             />
-                                        </span>m{" "}
-                                        <span className="counter-value" data-target="40">
-                                            <CountUp
-                                                start={0}
-                                                end={40}
-                                                duration={4}
-                                            />
-                                        </span>sec</h2>
+                                        </span></h2>
                                     <p className="mb-0 text-muted text-truncate "><span className="badge bg-light text-danger mb-0">
                                         <i className="ri-arrow-down-line align-middle"></i> 0.24 %
                                     </span> vs. previous month</p>
@@ -108,7 +115,7 @@ const Widget = () => {
                                     <div className="avatar-sm flex-shrink-0">
                                         <span className="avatar-title bg-info-subtle rounded-circle fs-2">
                                             <FeatherIcon
-                                                icon="clock"
+                                                icon="activity"
                                                 className="text-info"
                                             />
                                         </span>

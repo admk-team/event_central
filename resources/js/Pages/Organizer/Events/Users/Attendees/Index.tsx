@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Col, Container, Row, Table } from 'react-bootstrap';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, router, useForm } from '@inertiajs/react';
 import BreadCrumb from '../../../../../Components/Common/BreadCrumb';
 import Layout from '../../../../../Layouts/Event';
 // import Pagination2 from '../../../Pages/Admin/';
@@ -8,11 +8,20 @@ import DeleteModal from '../../../../../Components/Common/DeleteModal';
 import DataTable, { ColumnDef } from '../../../../../Components/DataTable';
 import DeleteManyModal from '../../../../../Components/Common/DeleteManyModal';
 import ImportModal from '../../Components/ImportModal';
+import EditAttendee from './Component/EditAttendee';
+import Profile from './AttendeeProfile/Profile';
+import AddAttendee from './Component/AddAttendee';
 
 function Index({ attendees }: any) {
+
     const [deleteAttendee, setDeleteAttendee] = React.useState<any>(null);
+    const [updateAttendee, setUpdateAttendee] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
+
+    const [showEditModal, setShowEditModal] = useState(false);
+    const [showAddModal, setShowEddModal] = useState(false);
+    const [isEdit, setIsEdit] = useState(false);
 
     const { get } = useForm()
 
@@ -31,7 +40,8 @@ function Index({ attendees }: any) {
     }
 
     const editAction = (attendee: any) => {
-        get(route('organizer.events.attendees.edit', attendee))
+        setUpdateAttendee(attendee);
+        setShowEditModal(true);
     }
     const deleteAction = (attendee: any) => {
         setDeleteAttendee(attendee);
@@ -89,10 +99,11 @@ function Index({ attendees }: any) {
             header: () => 'Actions',
             cell: (attendee) => (
                 <div className="hstack gap-3 fs-15">
-                    <span className="link-primary cursor-pointer" onClick={() => editAction(attendee)}><i className="ri-edit-fill"></i></span>
+                    <span className="link-primary cursor-pointer" onClick={() => editAction(attendee)} ><i className="ri-edit-fill"></i></span>
                     <span className="link-danger cursor-pointer" onClick={() => deleteAction(attendee)}>
                         <i className="ri-delete-bin-5-line"></i>
                     </span>
+                    <Link href={route('organizer.events.attendee.info', { id: attendee.id })} className="link-primary cursor-pointer"><i className="ri-information-line"></i></Link>
                 </div>
             ),
         },
@@ -136,8 +147,9 @@ function Index({ attendees }: any) {
                                     },
                                     // Add new
                                     {
-                                        render: <Link href="#"><Button><i className="ri-add-fill"></i> Add New</Button></Link>
+                                        render: <Button onClick={() => setShowEddModal(true)}><i className="ri-add-fill"></i> Add New</Button>
                                     },
+
 
                                 ]}
                             />
@@ -145,6 +157,19 @@ function Index({ attendees }: any) {
                     </Row>
                 </Container>
             </div>
+
+            <AddAttendee
+                show={showAddModal}
+                handleClose={() => setShowEddModal(false)}
+            />
+
+            <EditAttendee
+                show={showEditModal}
+                handleClose={() => setShowEditModal(false)}
+                user={updateAttendee}
+                isEdit={isEdit}
+            />
+
             <DeleteModal
                 show={showDeleteConfirmation}
                 onDeleteClick={handleDelete}
@@ -156,7 +181,8 @@ function Index({ attendees }: any) {
                 onDeleteClick={handleDeleteMany}
                 onCloseClick={() => { setShowDeleteManyConfirmation(false) }}
             />
-            <ImportModal importAttendeesModal={importAttendeesModal} availableAttributes={['name','email','phone']} importType='attendees' showModal={showModal} />
+
+            <ImportModal importAttendeesModal={importAttendeesModal} availableAttributes={['name', 'email', 'phone']} importType='attendees' showModal={showModal} />
 
         </React.Fragment>
     )

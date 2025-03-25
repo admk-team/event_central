@@ -11,10 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('recurring_types', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->nullable();
-            $table->timestamps();
+        Schema::table('event_sessions', function (Blueprint $table) {
+            $table->boolean('posts')->nullable()->default(false);
         });
     }
 
@@ -23,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('recurring_types');
+        Schema::table('event_sessions', function (Blueprint $table) {
+            $table->dropColumn('posts');
+        });
     }
 };

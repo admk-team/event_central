@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('event_app_id');
             $table->foreign('event_app_id')->references('id')->on('event_apps');
-            $table->string('name');
-            $table->integer('order');
+            $table->string('name')->nullable();
+            $table->integer('order')->nullable();
             $table->timestamps();
         });
     }

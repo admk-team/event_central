@@ -17,10 +17,10 @@ return new class extends Migration
             $table->foreign('form_id')->references('id')->on('registration_forms');
             $table->unsignedBigInteger('color_scheme_id');
             $table->foreign('color_scheme_id')->references('id')->on('color_schemes');
-            $table->string('branding_options');
-            $table->string('event_logo');
-            $table->string('banner');
-            $table->string('custom_url');
+            $table->string('branding_options')->nullable();
+            $table->string('event_logo')->nullable();
+            $table->string('banner')->nullable();
+            $table->string('custom_url')->nullable();
             $table->boolean('public')->default(0);
             $table->timestamps();
         });
