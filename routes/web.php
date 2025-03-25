@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -54,9 +55,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile-destroy', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/test-qr', function () {
-    return QrCode::format('png')->size(256)->generate('https://google.com');
-});
+Route::get('/test-qr', [AnswerController::class, 'generate']);
 
 require __DIR__ . '/auth.php';
 
