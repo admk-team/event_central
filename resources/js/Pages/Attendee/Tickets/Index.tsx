@@ -21,7 +21,7 @@ const Index = ({ eventApp }: any) => {
     const addToCart = (ticket: any, price: any, quantity: any, subTotal: any, discount: any, total: any, discountCode: any) => {
         let list = Array<any>(...selectedTickets);
         list.push({
-            ticket_id: ticket.id,
+            event_app_ticket_id: ticket.id,
             price: price,
             qty: quantity,
             subTotal: subTotal,
@@ -60,7 +60,7 @@ const Index = ({ eventApp }: any) => {
             tickets: selectedTickets,
         }));
 
-        post(route('attendee.tickets.post', eventApp.id), {
+        post(route('attendee.tickets.post'), {
             preserveScroll: true,
         });
     }

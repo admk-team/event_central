@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Attendee\Payment;
 
 use App\Http\Controllers\Controller;
+use App\Models\AttendeePayment;
+use App\Models\AttendeePurchasedTickets;
 use App\Models\EventApp;
 use App\Models\EventAppTicket;
 use App\Services\PayPalService;
@@ -10,6 +12,9 @@ use App\Services\StripeService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use PhpParser\Node\Stmt\Catch_;
 
 class PaymentController extends Controller
 {
@@ -107,8 +112,40 @@ class PaymentController extends Controller
         return Inertia::render('Attendee/Payment/PaymentCancel');
     }
 
-    public function updateAttendeePaymnet()
+    public function updateAttendeePaymnet(Request $request)
     {
+        Log::info($request->all());
+        $data = $request->all();
+        $event_id = auth()->user()->event_app_id;
+        $attendee_id = auth()->user()->id;
+
+        DB::beginTransaction();
+        // try {
+        $payment = AttendeePayment::create([
+            'event_app_id' => $event_id,
+            'attendee_id' => $attendee_id,
+            'amount_paid' => $data['amount'],
+            'payment_method' => 'stripe'
+        ]);
+        foreach ($data['tickets'] as $ticket) {
+            AttendeePurchasedTickets::create([
+                'attendee_payment_id' => $payment->id,
+                'event_app_ticket_id' => $ticket['ticket_id'],
+                'qty' => $ticket['qty'],
+                'discountCode' => $ticket['discountCode'],
+                'price' => $ticket['price'],
+                'discount' => $ticket['discount'],
+                'subTotal' => $ticket['subTotal'],
+                'total' => $ticket['total']
+            ]);
+        }
+        // } catch (\Throwable $th) {
+        //     //throw $th;
+        // }
+
+
+
+
         return response()->json(['message' => 'Attendee payment status has been updated']);
     }
 

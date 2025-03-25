@@ -25,7 +25,7 @@ const Index = ({
     stripe_pub_key,
     paypal_client_id,
 }: any) => {
-    // console.log(amount, stripe_pub_key);
+    console.log(tickets);
 
     const [stripePromise, setStripePromise] = useState(
         loadStripe(stripe_pub_key)
