@@ -1,12 +1,13 @@
 import { useForm, usePage } from '@inertiajs/react';
 import Flatpickr from "react-flatpickr";
 import { Spinner, Col, Form, FormGroup, Modal, Nav, Row, Tab } from 'react-bootstrap';
+import { useState } from 'react';
 
 export default function CreateEditSessionModal({ show, hide, onHide, eventSession, selectedDate, selectedPlatform }: { show: boolean, hide: () => void, onHide: () => void, eventSession: any, selectedDate: any, selectedPlatform: any }) {
     const isEdit = eventSession != null ? true : false;
-
+    const [enablePost, setEnablePost] = useState<boolean>(false);
     const speakers = usePage().props.speakers as any;
-
+    console.log(enablePost)
     // Initialize the form data with the existing date and time
     const { data, setData, post, put, processing, errors, reset } = useForm({
         _method: isEdit ? "PUT" : "POST",
@@ -19,6 +20,7 @@ export default function CreateEditSessionModal({ show, hide, onHide, eventSessio
         capacity: eventSession?.capacity ?? '',
         start_time: eventSession?.start_time ?? '00:00' , // Default time with time
         end_time: eventSession?.end_time ?? '00:00', // Default date with time
+        posts: eventSession?.posts ?? false
     });
 
     const submit = (e: any) => {
@@ -176,6 +178,22 @@ export default function CreateEditSessionModal({ show, hide, onHide, eventSessio
                             {errors.description && <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>}
                         </FormGroup>
                     )}
+                    <div className="form-check form-switch mt-3">
+                        <Form.Check.Input
+                            type="checkbox"
+                            className="form-check-input"
+                            id="schedulePost"
+                            checked={data.posts}
+                            onChange={(e) => setData('posts', e.target.checked)}
+                            />
+                        <Form.Check.Label
+                            className="form-check-label"
+                            htmlFor="schedulePost"
+                            >
+                                {data.posts ? 'Disable Posts' : 'Enable Posts'}
+                            {/* Enable Post */}
+                        </Form.Check.Label>
+                    </div>
                 </Modal.Body>
 
                 <div className="modal-footer">

@@ -22,6 +22,7 @@ class EventSession extends Model
         'start_time',
         'end_time',
         'event_app_id',
+        'posts'
     ];
 
     public function scopeCurrentEvent($query)
