@@ -6,6 +6,13 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Auth;
 
+use BaconQrCode\Renderer\ImageRenderer;
+use BaconQrCode\Renderer\Image\ImagickImageBackEnd;
+use BaconQrCode\Renderer\Image\SvgImageBackEnd;
+use BaconQrCode\Renderer\PlainTextRenderer;
+use BaconQrCode\Renderer\RendererStyle\RendererStyle;
+use BaconQrCode\Writer;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,7 +34,6 @@ use Illuminate\Support\Facades\Auth;
 //     ]);
 // });
 
-// Route::get("/apps-ecommerce-orders", [ProfileController::class, 'index'])->name('order-list');
 
 Route::get('/', function () {
     //If Attendee User is logged in then redirect to Attendee Dashboard
@@ -54,9 +60,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile-destroy', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/test-qr', function () {
-    return QrCode::format('png')->size(256)->generate('https://google.com');
-});
 
 require __DIR__ . '/auth.php';
 
@@ -67,3 +70,19 @@ require __DIR__ . '/organizer.php';
 require __DIR__ . '/theme.php';
 
 require __DIR__ . '/attendee.php';
+
+
+
+// Route::get('/test-qr', function () {
+
+//     $renderer = new ImageRenderer(
+//         new RendererStyle(400),
+//         new SvgImageBackEnd()
+//     );
+
+//     $writer = new Writer($renderer);
+//     if (!file_exists(storage_path('app/passes'))) {
+//         mkdir(storage_path('app/passes'), 0777, true);
+//     }
+//     $writer->writeFile('Hello World! 123456789cb hds hkjhjkfhk', storage_path('app/passes/qr-code.svg'));
+// });
