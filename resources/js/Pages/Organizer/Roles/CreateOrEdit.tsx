@@ -96,7 +96,7 @@ function CreateOrEdit({ role, permissions, roleSpecific }: { role: any | null, p
                                                     <Form.Check
                                                         type="checkbox"
                                                         id={`permission-${permission.id}`}
-                                                        label={permission.name.replace('_', ' ')}
+                                                        label={permission.name.replaceAll('_', ' ')}
                                                         checked={data.permissions.includes(permission.id)}
                                                         onChange={() => handleCheckboxChange(permission.id)}
                                                     />

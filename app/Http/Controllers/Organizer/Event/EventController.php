@@ -22,10 +22,16 @@ class EventController extends Controller
      */
     public function index()
     {
-        // $events = EventApp::ofOwner()->get();
+        if (! Auth::user()->canAny(['view_events', 'create_events', 'edit_events', 'delete_events'])) {
+            abort(403);
+        }
+
         $recurring_types = RecurringType::get();
         $event_category_types = EventAppCategory::get();
-        $events = $this->datatable(EventApp::ofOwner());
+        $events = $this->datatable(
+            EventApp::ofOwner()->whereCanBeAccessedBy(Auth::user())
+        );
+
         return Inertia::render('Organizer/Events/Index', [
             'events' => $events,
             'recurring_types' => $recurring_types,
@@ -34,15 +40,14 @@ class EventController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create(Request $request) {}
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(EventStoreRequest $request)
     {
+        if (! Auth::user()->can('create_events')) {
+            abort(403);
+        }
+
         $data = $request->validated();
         $data['organizer_id'] = Auth::user()->owner_id;
 
@@ -63,6 +68,10 @@ class EventController extends Controller
 
     private function SaveLogoImage(EventApp $event, Request $request)
     {
+        if (! Auth::user()->can('edit_events', $event)) {
+            abort(403);
+        }
+
         if ($request->hasFile('logo_file')) {
             // Log::info('has file changed');
             $imageFileName = 'event-logo-' . $event->id . '.' . $request->logo_file->extension();
@@ -79,6 +88,10 @@ class EventController extends Controller
     public function selectEvent(Request $request, $id)
     {
         $event = EventApp::ofOwner()->find($id);
+
+        if (! Auth::user()->can('edit_events', $event)) {
+            abort(403);
+        }
 
         if (! $event) {
             abort(403);
@@ -101,10 +114,13 @@ class EventController extends Controller
      */
     public function update(EventStoreRequest $request, EventApp $event_app)
     {
+        if (! Auth::user()->can('edit_events', $event_app)) {
+            abort(403);
+        }
+
         // Log::info($request->all());
 
         $data = $request->validated();
-        $data['organizer_id'] = Auth::id();
 
         //Update Event fields
         $event_app->update($data);
@@ -125,6 +141,10 @@ class EventController extends Controller
      */
     public function destroy(EventApp $event_app)
     {
+        if (! Auth::user()->can('delete_events', $event_app)) {
+            abort(403);
+        }
+        
         try {
             $event_app->delete();
             return back()->withMessage('Event Removed Successfully');
@@ -138,12 +158,18 @@ class EventController extends Controller
      */
     public function destroyMany(Request $request)
     {
-        $ids = $request->get('ids');
         $request->validate([
             'ids' => 'required|array'
         ]);
-        foreach ($ids as $id) {
-            EventApp::find($id)?->delete();
+
+        foreach ($request->ids as $id) {
+            $event = EventApp::find($id);
+
+            if (! Auth::user()->can('delete_events', $event)) {
+                abort(403);
+            }
+
+            $event?->delete();
         }
     }
 }

@@ -21,7 +21,11 @@ class AuthServiceProvider extends ServiceProvider
 
     public function register()
     {
-        Gate::after(function (User $user, string $ability, mixed $arguments) {
+        Gate::before(function (User $user, string $ability, mixed $arguments) {
+            if ($user->hasRole('superadmin') || $user->hasRole('owner')) {
+                return true;
+            }
+
             if (! isset($arguments[0])) {
                 return null;
             }
@@ -29,6 +33,14 @@ class AuthServiceProvider extends ServiceProvider
             if (! $user->hasPermissionTo($ability)) {
                 return false;
             }
+            
+            $model = $arguments[0];
+
+            if (! method_exists($model, 'canBeAccessedBy')) {
+                return true;
+            }
+
+            return $model->canBeAccessedBy($user) || $model->canBeAccessedBy($user->roles[0]);
         });
     }
 

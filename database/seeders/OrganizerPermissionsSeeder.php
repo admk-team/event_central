@@ -25,6 +25,12 @@ class OrganizerPermissionsSeeder extends Seeder
         'edit_events',
         'delete_events',
 
+        // Event Session Management
+        'view_event_sessions',
+        'create_event_sessions',
+        'edit_event_sessions',
+        'delete_event_sessions',
+
         // Role Management
         'view_roles',
         'create_roles',

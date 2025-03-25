@@ -6,6 +6,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +16,8 @@ use Spatie\Permission\Traits\HasRoles;
 use Spatie\Permission\Contracts\Permission;
 use Spatie\Permission\Exceptions\PermissionDoesNotExist;
 use Spatie\Permission\PermissionRegistrar;
+use Illuminate\Support\Collection;
+use Spatie\Permission\Models\Permission as ModelsPermission;
 
 class User extends Authenticatable
 {
@@ -117,5 +121,41 @@ class User extends Authenticatable
         }
 
         return $permission;
+    }
+
+    /**
+     * Return all the permissions the model has, both directly and via roles. Also Check
+     * for superadmin roles
+     */
+    public function getAllPermissions(): Collection
+    {
+        if ($this->hasRole('superadmin')) {
+            return ModelsPermission::where('panel', 'admin')->get();
+        }
+
+        if ($this->hasRole('owner')) {
+            return ModelsPermission::where('panel', 'organizer')->get();
+        }
+
+        /** @var Collection $permissions */
+        $permissions = $this->permissions;
+
+        if (! is_a($this, Permission::class)) {
+            $permissions = $permissions->merge($this->getPermissionsViaRoles());
+        }
+
+        return $permissions->sort()->values();
+    }
+
+    public function accessibleEvents(): MorphToMany
+    {
+        return $this->morphedByMany(EventApp::class, 'model', 'model_permissions', 'authorizable_id')
+            ->where('authorizable_type', User::class);
+    }
+
+    public function accessibleEventSessions(): MorphToMany
+    {
+        return $this->morphedByMany(EventSession::class, 'model', 'model_permissions', 'authorizable_id')
+            ->where('authorizable_type', User::class);
     }
 }
