@@ -42,16 +42,55 @@ class HandleInertiaRequests extends Middleware
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
             ],
-            'events' => EventApp::ofOwner()->select('id', 'name', 'logo', 'created_at')->latest()->take(5)->get(),
-            'currentEvent' => EventApp::find(session('event_id') ?? Auth::guard('attendee')->user()?->event_app_id) ?? null,
             'messages' => fn() => session()->get('messages') ?? [],
+            ...$this->data(),
+        ];
+    }
+
+    protected function adminData(): array
+    {
+        return [
             'permissions' => function () {
-                if (Auth::guard('web')->check('attendee')) {
-                    return Auth::user()?->getAllPermissions()->pluck('name') ?? [];
-                } else if (Auth::guard('attendee')->check()) {
-                    return [];
-                }
+                return Auth::user()?->getAllPermissions()->pluck('name') ?? [];
             }
         ];
+    }
+
+    protected function organizerData(): array
+    {
+        return [
+            'events' => EventApp::ofOwner()->select('id', 'name', 'logo', 'created_at')->latest()->take(5)->get(),
+            'currentEvent' => EventApp::find(session('event_id')) ?? null,
+            'permissions' => function () {
+                return Auth::user()?->getAllPermissions()->pluck('name') ?? [];
+            }
+        ];
+    }
+
+    protected function attendeeData(): array
+    {
+        return [
+            'currentEvent' => EventApp::find(Auth::guard('attendee')->user()?->event_app_id) ?? null,
+        ];
+    }
+
+    protected function guestData(): array
+    {
+        return [];
+    }
+
+    protected function data(): array
+    {
+        if (Auth::guard('web')->check()) {
+            if (Auth::user()->role === 'admin') {
+                return $this->adminData();
+            } else {
+                return $this->organizerData();
+            }
+        } else if (Auth::guard('attendee')) {
+            return $this->attendeeData();
+        } else {
+            return $this->guestData();
+        }
     }
 }

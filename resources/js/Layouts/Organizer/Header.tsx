@@ -11,12 +11,12 @@ import { Dropdown, Form } from "react-bootstrap";
 import { changeSidebarVisibility } from "../../slices/thunk";
 import SearchOption from "../../Components/Common/SearchOption";
 import LanguageDropdown from "../../Components/Common/LanguageDropdown";
-import WebAppsDropdown from "../../Components/Common/WebAppsDropdown";
-import MyCartDropdown from "../../Components/Common/MyCartDropdown";
+// import WebAppsDropdown from "../../Components/Common/WebAppsDropdown";
+// import MyCartDropdown from "../../Components/Common/MyCartDropdown";
 import FullScreenDropdown from "../../Components/Common/FullScreenDropdown";
 import ProfileDropdown from "../../Components/Common/ProfileDropdown";
 import LightDark from "../../Components/Common/LightDark";
-import NotificationDropdown from "../../Components/Common/NotificationDropdown";
+// import NotificationDropdown from "../../Components/Common/NotificationDropdown";
 import AdminProfileDropdown from "../../Components/Common/AdminProfileDropdown";
 
 const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
@@ -60,32 +60,32 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
             (document.documentElement.getAttribute("data-layout") ===
                 "vertical" ||
                 document.documentElement.getAttribute("data-layout") ===
-                    "semibox")
+                "semibox")
         ) {
             if (windowSize < 1025 && windowSize > 767) {
                 document.body.classList.remove("vertical-sidebar-enable");
                 document.documentElement.getAttribute("data-sidebar-size") ===
-                "sm"
+                    "sm"
                     ? document.documentElement.setAttribute(
-                          "data-sidebar-size",
-                          ""
-                      )
+                        "data-sidebar-size",
+                        ""
+                    )
                     : document.documentElement.setAttribute(
-                          "data-sidebar-size",
-                          "sm"
-                      );
+                        "data-sidebar-size",
+                        "sm"
+                    );
             } else if (windowSize > 1025) {
                 document.body.classList.remove("vertical-sidebar-enable");
                 document.documentElement.getAttribute("data-sidebar-size") ===
-                "lg"
+                    "lg"
                     ? document.documentElement.setAttribute(
-                          "data-sidebar-size",
-                          "sm"
-                      )
+                        "data-sidebar-size",
+                        "sm"
+                    )
                     : document.documentElement.setAttribute(
-                          "data-sidebar-size",
-                          "lg"
-                      );
+                        "data-sidebar-size",
+                        "lg"
+                    );
             } else if (windowSize <= 767) {
                 document.body.classList.add("vertical-sidebar-enable");
                 document.documentElement.setAttribute(
@@ -194,10 +194,10 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
                             <LanguageDropdown />
 
                             {/* WebAppsDropdown */}
-                            <WebAppsDropdown />
+                            {/* <WebAppsDropdown /> */}
 
                             {/* MyCartDropdwon */}
-                            <MyCartDropdown />
+                            {/* <MyCartDropdown /> */}
 
                             {/* FullScreenDropdown */}
                             <FullScreenDropdown />
@@ -209,7 +209,7 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
                             />
 
                             {/* NotificationDropdown */}
-                            <NotificationDropdown />
+                            {/* <NotificationDropdown /> */}
 
                             {/* ProfileDropdown */}
                             <AdminProfileDropdown />
