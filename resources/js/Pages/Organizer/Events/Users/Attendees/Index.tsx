@@ -70,8 +70,8 @@ function Index({ attendees }: any) {
             ),
         },
         {
-            header: () => 'Name',
-            cell: (attendee) => attendee.name,
+            header: () => 'First Name',
+            cell: (attendee) => attendee.first_name,
         },
         {
             header: () => 'Email',
@@ -86,7 +86,7 @@ function Index({ attendees }: any) {
             cell: (attendee) => attendee.phone,
         },
         {
-            header: () => 'Action',
+            header: () => 'Actions',
             cell: (attendee) => (
                 <div className="hstack gap-3 fs-15">
                     <span className="link-primary cursor-pointer" onClick={() => editAction(attendee)}><i className="ri-edit-fill"></i></span>
@@ -102,7 +102,7 @@ function Index({ attendees }: any) {
     return (
         <React.Fragment>
             <Head>
-                <title>Attendees Management | Organizer Dashboard</title>
+                <title>Attendees Management </title>
                 <meta name="description" content="Manage event attendees, edit details, and delete records from the organizer's dashboard." />
                 <meta name="keywords" content="event attendees, attendee management, conference attendees, admin dashboard" />
                 <meta name="robots" content="index, follow" />

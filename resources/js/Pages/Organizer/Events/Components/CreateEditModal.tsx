@@ -22,6 +22,8 @@ const containerStyle = {
     height: "200px",
 };
 
+//https://advanced-cropper.github.io/react-advanced-cropper/ To be used in future
+
 const center = { lat: 37.778519, lng: -122.40564 };
 const second = { lat: 54.526, lng: 15.2551 };
 const third = { lat: 8.7832, lng: 34.5085 };
@@ -299,8 +301,7 @@ function CreateEditModal({
                                         )}
                                 </Form.Select>
                                 <Form.Control.Feedback type="invalid">
-                                    {" "}
-                                    {errors.event_app_category_id}{" "}
+                                    {errors.event_app_category_id}
                                 </Form.Control.Feedback>
                             </FormGroup>
                             <FormGroup className="mb-3">
