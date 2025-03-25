@@ -130,7 +130,7 @@ const Navdata = () => {
         },
         {
             id: "plateforms",
-            label: "Plateforms",
+            label: "Spaces & Rooms",
             icon: "bx bx-devices",
             link: route('admin.platforms.index'),
             stateVariables: isOrganizers,

@@ -85,7 +85,7 @@ class EventPostController extends Controller
         if (in_array($userId, $dislikes)) {
             $dislikes = array_values(array_diff($dislikes, [$userId]));
         } else {
-            $dislikes[] = $userId; 
+            $dislikes[] = $userId;
         }
 
         // Update post

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('question_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->integer('vote'); // 1 for like, -1 for dislike
+            $table->integer('vote')->nullable(); // 1 for like, -1 for dislike
             $table->timestamps();
         });
     }

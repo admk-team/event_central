@@ -24,7 +24,9 @@ class EventSession extends Model
         'capacity',
         'start_time',
         'end_time',
+        'qa_status',
         'event_app_id',
+        'posts'
     ];
 
     public function scopeCurrentEvent($query)
@@ -56,5 +58,9 @@ class EventSession extends Model
             return $this->attendees()->where('attendee_id', auth('attendee')->user()->id)->first() ? true : false;
         }
         return null;
+    }
+    public function questions()
+    {
+        return $this->hasMany(Question::class, 'event_session_id');
     }
 }

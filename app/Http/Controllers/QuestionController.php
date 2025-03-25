@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\EventApp;
+use App\Models\Answer;
+use App\Models\EventSession;
 use App\Models\Question;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -10,10 +11,10 @@ use Inertia\Response;
 
 class QuestionController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, $session_id)
     {
-        $event = EventApp::findOrFail(session('event_id'));
-        $questions = Question::where('event_app_id', session('event_id'))
+        $event = EventSession::findOrFail($session_id);
+        $questions = Question::where('event_session_id', $session_id)
             ->with(['user', 'answers.user'])
             ->get();
 
@@ -28,7 +29,7 @@ class QuestionController extends Controller
     }
 
     // Other methods (storeQuestion, vote, storeAnswer) remain unchanged
-    public function storeQuestion(Request $request, EventApp $event)
+    public function storeQuestion(Request $request, EventSession $event)
     {
         $request->validate(['content' => 'required|string|max:500']);
 
@@ -68,5 +69,34 @@ class QuestionController extends Controller
         ]);
 
         return back()->withSuccess('Answer added successfully');
+    }
+    public function updateQuestion(Request $request, $questionId) {
+        $request->validate(['content' => 'required|string|max:500']);
+        $question = Question::findOrFail($questionId);
+        // $this->authorizeQuestionAction($question, auth()->id());
+        $question->update(['content' => $request->content]);
+        return back()->withSuccess('Question updated successfully');
+    }
+    
+    public function destroyQuestion($questionId) {
+        $question = Question::findOrFail($questionId);
+        // $this->authorizeQuestionAction($question, auth()->id());
+        $question->delete();
+        return back()->withSuccess('Question deleted successfully');
+    }
+    
+    public function updateAnswer(Request $request, $answerId) {
+        $request->validate(['content' => 'required|string|max:1000']);
+        $answer = Answer::findOrFail($answerId);
+        // $this->authorizeAnswerAction($answer, auth()->id());
+        $answer->update(['content' => $request->content]);
+        return back()->withSuccess('Answer updated successfully');
+    }
+    
+    public function destroyAnswer($answerId) {
+        $answer = Answer::findOrFail($answerId);
+        // $this->authorizeAnswerAction($answer, auth()->id());
+        $answer->delete();
+        return back()->withSuccess('Answer deleted successfully');
     }
 }

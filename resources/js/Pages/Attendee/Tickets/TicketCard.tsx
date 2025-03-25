@@ -8,14 +8,14 @@ const TicketCard = ({ ticket, onAddToCart, onRemoveFromCart }: any) => {
     const [isAddedToCart, setIsAddedToCart] = useState(false);
 
     const [quantity, setQuantity] = useState(1);
-    const [price, setPrice] = useState(parseFloat(ticket.price));
+    const [price, setPrice] = useState(parseFloat(ticket.total_price));
     const [subTotal, setSubTotal] = useState(quantity * price);
     const [discount, setDiscount] = useState(0);
     const [total, setTotal] = useState(subTotal - discount);
     const [discountCode, setDiscountCode] = useState('');
     const [haveCode, setHaveCode] = useState(false);
     const [codeError, setCodeError] = useState(false);
-
+    const [viewAllFeatures, setViewAllFeatures] = useState(false);
 
     const handleHaveCode = (e) => {
         if (e.target.checked) {
@@ -57,8 +57,8 @@ const TicketCard = ({ ticket, onAddToCart, onRemoveFromCart }: any) => {
 
 
     return (
-        <Col lg={4}>
-            <Card className="plan-box mb-0">
+        <Col lg={8}>
+            <Card className="mb-0">
                 <Card.Body className="p-4 m-2" style={{ minHeight: '400px' }}>
                     <div className="d-flex align-items-center">
                         <div className="flex-grow-1">
@@ -70,7 +70,7 @@ const TicketCard = ({ ticket, onAddToCart, onRemoveFromCart }: any) => {
                                 <sup>
                                     <small>$</small>
                                 </sup>
-                                <span className="ff-secondary fw-bold">{ticket.price}</span>
+                                <span className="ff-secondary fw-bold">{ticket.total_price}</span>
                                 <span
                                     className="fs-13 text-muted">
                                 </span>
@@ -94,104 +94,119 @@ const TicketCard = ({ ticket, onAddToCart, onRemoveFromCart }: any) => {
                             )}
 
                         </ul>
-                        <h5 className="mb-1 fw-bold bg-light p-2 ">Addon Features</h5>
-                        <ul className="list-unstyled text-muted vstack gap-3">
-                            {ticket.all_features.length > 0 && ticket.all_features.map((feature: any) =>
-                                feature.selected > 0 ? <li key={feature.id}>
-                                    <div className="d-flex">
-                                        <div className="flex-shrink-0 text-success me-1">
-                                            <i className="ri-checkbox-circle-fill fs-15 align-middle"></i>
-                                        </div>
-                                        <div className="flex-grow-1">
-                                            {feature.name}
-                                        </div>
-                                    </div>
-                                </li> :
-                                    < li key={feature.id}>
+                        <Row className='bg-light p-2'>
+                            <Col md={9} lg={9}>
+                                <h5 className="mb-1 fw-bold ">Addon Features</h5>
+                            </Col>
+                            <Col md={3} lg={3} className='d-flex justify-content-end'>
+                                <Button className='btn-sm' onClick={() => setViewAllFeatures(!viewAllFeatures)}>
+                                    {viewAllFeatures ? "Only Included" : "View All"}
+                                </Button>
+                            </Col>
+                        </Row>
+                        <ul className="list-unstyled text-muted vstack gap-3" id="AttendeeTicketFeature">
+                            {!viewAllFeatures &&
+                                ticket.all_features.length > 0 && ticket.all_features.map((feature: any) =>
+                                    feature.selected > 0 && <li key={feature.id}>
                                         <div className="d-flex">
-                                            <div className="flex-shrink-0 text-muted me-1">
-                                                <i className="ri-close-circle-fill fs-15 align-middle"></i>
+                                            <div className="flex-shrink-0 text-success me-1">
+                                                <i className="ri-checkbox-circle-fill fs-15 align-middle"></i>
                                             </div>
-                                            <div className="flex-grow-1">
-                                                {feature.name}
-                                            </div>
+                                            <div dangerouslySetInnerHTML={{ __html: feature.name }} />
                                         </div>
                                     </li>
-                            )}
+                                )
+                            }
+                            {viewAllFeatures &&
+                                ticket.all_features.length > 0 && ticket.all_features.map((feature: any) =>
+                                    <li key={feature.id}>
+                                        <div className="d-flex">
+                                            {feature.selected > 0 ? <div className="flex-shrink-0 text-success me-1">
+                                                <i className="ri-checkbox-circle-fill fs-15 align-middle"></i>
+                                            </div> : <div className="flex-shrink-0 text-muted me-1">
+                                                <i className="ri-checkbox-circle-fill fs-15 align-middle"></i>
+                                            </div>}
+                                            <div dangerouslySetInnerHTML={{ __html: feature.name }} />
+                                        </div>
+                                    </li>
+                                )
+                            }
                         </ul>
                         <Row>
-                            <Col md={6} lg={6}><Form.Label column>Quantity</Form.Label></Col>
                             <Col md={6} lg={6}>
-                                <Form.Control
-                                    // size='sm'
-                                    id="ticket-quantity"
-                                    type="number"
-                                    min={1}
-                                    style={{ textAlign: 'center' }}
-                                    disabled={isAddedToCart}
-                                    name="ticket_quantity"
-                                    placeholder="Quantity"
-                                    value={quantity}
-                                    autoComplete="ticket_quantity"
-                                    onChange={(e: any) => setQuantity(parseInt(e.target.value))}
-                                />
-                            </Col>
-                        </Row>
-                        <Row className='mt-2'>
-                            <Col md={12} lg={12}>
-                                <Form.Check
-                                    disabled={isAddedToCart}
-                                    type='checkbox'
-                                    id={"coupon-checkbox-" + ticket.id}
-                                    label="Do you have Discount Coupon?"
-                                    onChange={handleHaveCode}
-                                />
-                            </Col>
-                        </Row>
-                        {haveCode &&
-                            <>
-                                <Row className='fw-bold bg-light mt-2'>
-                                    <Col md={6} lg={6}>
-                                        <h5 className="mb-1 pt-2 pb-2">Sub Total</h5></Col>
-                                    <Col md={6} lg={6}>
-                                        <h5 className="mb-1 pt-2 pb-2 text-end">
-                                            <sup>
-                                                <small>$</small>
-                                            </sup>
-                                            {subTotal}
-                                        </h5>
+                                <Row>
+                                    <Col className='d-flex align-items-center'><Form.Label column>Quantity</Form.Label></Col>
+                                    <Col><Form.Control
+                                        id="ticket-quantity"
+                                        type="number"
+                                        min={1}
+                                        style={{ textAlign: 'center' }}
+                                        disabled={isAddedToCart}
+                                        name="ticket_quantity"
+                                        placeholder="Quantity"
+                                        value={quantity}
+                                        autoComplete="ticket_quantity"
+                                        onChange={(e: any) => setQuantity(parseInt(e.target.value))}
+                                    /></Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                        <Form.Check
+                                            className='mt-4'
+                                            disabled={isAddedToCart}
+                                            type='checkbox'
+                                            id={"coupon-checkbox-" + ticket.id}
+                                            label="Do you have Discount Coupon?"
+                                            onChange={handleHaveCode}
+                                        />
+                                        {haveCode &&
+                                            <>
+                                                <Row className='fw-bold bg-light mt-2'>
+                                                    <Col md={6} lg={6}>
+                                                        <h5 className="mb-1 pt-2 pb-2">Sub Total</h5></Col>
+                                                    <Col md={6} lg={6}>
+                                                        <h5 className="mb-1 pt-2 pb-2 text-end">
+                                                            <sup>
+                                                                <small>$</small>
+                                                            </sup>
+                                                            {subTotal}
+                                                        </h5>
+                                                    </Col>
+                                                </Row>
+                                                <Row className='mt-2'>
+                                                    <Col md={4} lg={4}>
+                                                        <Form.Label column>Code</Form.Label>
+                                                    </Col>
+                                                    <Col md={8} lg={8}>
+                                                        <InputGroup >
+                                                            <Form.Control
+                                                                disabled={isAddedToCart}
+                                                                id={"ticket-discount-code" + ticket.id}
+                                                                type="text"
+                                                                isInvalid={codeError}
+                                                                name={"ticket_quantity_" + ticket.id}
+                                                                placeholder="Code Here"
+                                                                value={discountCode}
+                                                                onChange={(e: any) => setDiscountCode(e.target.value)}
+                                                            />
+                                                            <Button
+                                                                disabled={isAddedToCart}
+                                                                id={"button-addon2" + ticket.id} onClick={validateCode}>
+                                                                Apply
+                                                            </Button>
+                                                        </InputGroup>
+                                                        {codeError && <div className="invalid-feedback d-block">Invalid Code</div>}
+                                                    </Col>
+                                                </Row>
+                                            </>
+                                        }
                                     </Col>
                                 </Row>
-                                <Row className='mt-2'>
-                                    <Col md={4} lg={4}>
-                                        <Form.Label column>Code</Form.Label>
-                                    </Col>
-                                    <Col md={8} lg={8}>
-                                        <InputGroup >
-                                            <Form.Control
-                                                disabled={isAddedToCart}
-                                                id={"ticket-discount-code" + ticket.id}
-                                                type="text"
-                                                isInvalid={codeError}
-                                                name={"ticket_quantity_" + ticket.id}
-                                                placeholder="Code Here"
-                                                value={discountCode}
-                                                onChange={(e: any) => setDiscountCode(e.target.value)}
-                                            />
-                                            <Button
-                                                disabled={isAddedToCart}
-                                                id={"button-addon2" + ticket.id} onClick={validateCode}>
-                                                Apply
-                                            </Button>
-                                        </InputGroup>
-                                        {codeError && <div className="invalid-feedback d-block">Invalid Code</div>}
-                                    </Col>
-                                </Row>
-                            </>
-                        }
+                            </Col>
+                        </Row>
                         <Row className='fw-bold bg-light mt-2'>
                             <Col md={6} lg={6}>
-                                <h5 className="mb-1  pt-2 pb-2">Total</h5></Col>
+                                <h5 className="mb-1  pt-2 pb-2">Total Payable</h5></Col>
                             <Col md={6} lg={6}>
                                 <h5 className="mb-1 pt-2 pb-2 text-end">
                                     <sup>

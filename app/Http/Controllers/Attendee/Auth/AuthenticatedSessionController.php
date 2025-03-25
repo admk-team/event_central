@@ -11,6 +11,7 @@ use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -40,20 +41,41 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(AttendeeLoginRequest $request, EventApp $eventApp): RedirectResponse
     {
-        $request->authenticate();    //Attendee Login Request
-        $request->session()->regenerate();
-        return redirect()->intended(route('attendee.event.detail.dashboard', [$eventApp->id]));
+
+        $user = Attendee::where('event_app_id', $eventApp->id)->where('email', $request->email)->first();
+        // Log::info($user);
+        if ($user) {
+            $credentials = $request->validate([
+                'email' => ['required', 'email'],
+                'password' => ['required'],
+            ]);
+
+            if (Hash::check($credentials['password'], $user->password)) {
+                Auth::guard('attendee')->login($user);
+                $request->session()->regenerate();
+                return redirect()->route('attendee.event.detail.dashboard');
+            }
+        }
+        return back()->withErrors([
+            'email' => 'The provided credentials do not match our records.',
+        ])->onlyInput('email');
+
+        // $request->authenticate();    //Attendee Login Request
+        // $request->session()->regenerate();
+        // return redirect()->intended(route('attendee.event.detail.dashboard'));
     }
 
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request, EventApp $eventApp): RedirectResponse
+    public function destroy(Request $request): RedirectResponse
     {
+        $eventId = auth('attendee')->user()->event_app_id;
         Auth::guard('attendee')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        return redirect()->intended(route('attendee.login', [$eventApp]));
+        // return redirect()->route('attendee.login', [$eventId]);
+        return redirect(route('attendee.login', [$eventId]));
     }
     public function googleRedirect()
     {

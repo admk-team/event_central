@@ -41,7 +41,7 @@ class RouteServiceProvider extends ServiceProvider
 
     public static function getHome()
     {
-        return match(Auth::user()->role) {
+        return match (Auth::user()->role) {
             'admin' => route('admin.dashboard'),
             'organizer' => route('organizer.events.index'),
         };

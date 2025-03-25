@@ -27,13 +27,14 @@ class EventStoreRequest extends FormRequest
             'description'   => ['required', 'string'],
             'start_date'    => ['required', 'date', 'after_or_equal:today'],
             'location_type' => ['required', 'string', 'max:255'],
-            'location_base' => ['required', 'string', 'max:255'],
+            'location_base' => ['nullable', 'string', 'max:255'],
             'type'          => ['required', 'string', 'max:255'],
             'schedual_type' => ['required', 'in:singleday,multiday'],
             'event_app_category_id' => 'required|numeric',
             'recurring_type_id' => 'required_if_accepted:is_recurring',
             'is_recurring' => ['boolean'],
             'logo_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp'],
+            'image_files' => ['required', 'array', 'min:1'],
         ];
     }
 
@@ -52,7 +53,9 @@ class EventStoreRequest extends FormRequest
             'event_app_category_id.required' => 'Choose Event Category Type',
             'recurring_type_id.required_if_accepted' => 'Choose Recurring Frequency',
             'is_recurring.boolean' => 'Is Recurring must be True/False',
-            'logo_file.image' => 'File must be an image'
+            'logo_file.image' => 'File must be an image',
+            'image_files.required' => 'Min one image file is required',
+            'image_files.min:1' => 'Atleast one featured image is required',
         ];
     }
 }

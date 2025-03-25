@@ -20,7 +20,7 @@ interface Question {
     likes_count: number;
     dislikes_count: number;
     created_at: string;
-    user: { name: string };
+    user: { id?: number; first_name: string };
     answers: { id: number; content: string; created_at: string; user: { name: string } }[];
 }
 
@@ -49,7 +49,8 @@ function Index({ eventApp, questionlist: initialQuestions, newAnswer }: Props) {
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
         const interval = setInterval(async () => {
             try {
-                const url = route("attendee.events.qa.index");
+                const url = route("attendee.events.qa.index", { session_id: eventApp?.id }); // Pass event.id as session_id
+                // const url = route("attendee.events.qa.index");
                 const response = await fetch(url, {
                     method: "GET",
                     headers: {
@@ -82,9 +83,28 @@ function Index({ eventApp, questionlist: initialQuestions, newAnswer }: Props) {
             <Head title={`Q&A | ${eventApp?.name || "Event Central"}`} />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title={`Q&A for ${eventApp?.name || "Unnamed Event"}`} pageTitle="Events" />
+                    {/* <BreadCrumb title={`Q&A for ${eventApp?.name || "Unnamed Event"}`} pageTitle="Events" /> */}
                     <Row className="justify-content-center">
+
                         <Col xs={12} md={8} lg={6}>
+                         <div className="d-flex justify-content-between align-items-center mb-4">
+                                                                <div className="d-flex flex-row align-items-center">
+                                                                    {/* href = { route('attendee.event.detail.agenda', eventApp.id) */}
+                        
+                                                                    <Link
+                                                                        href={route(
+                                                                            "attendee.event.detail.agenda",
+                                                                            eventApp.id
+                                                                        )}
+                                                                        style={{ marginRight: "3px" }}
+                                                                    >
+                                                                        <i className="bx bx-arrow-back fs-3 fw-bolder text-muted"></i>
+                                                                    </Link>
+                                                                    <h5 className="m-0 fw-bolder">
+                                                                    Back
+                                                                    </h5>
+                                                                </div>
+                                                            </div>
                             <div className="text-center">
                                 <h1>Q&A</h1>
                             </div>

@@ -84,13 +84,13 @@ function Index({ partners }: any) {
             <Head title='Starter | Velzon - React Admin & Dashboard Template' />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="partners" pageTitle="Dashboard" />
+                    <BreadCrumb title="Event Partners" pageTitle="Dashboard" />
                     <Row>
                         <Col xs={12}>
                             <DataTable
                                 data={partners}
                                 columns={columns}
-                                title="partners"
+                                title="Partners"
                                 actions={[
                                     // Delete multiple
                                     {
@@ -103,7 +103,7 @@ function Index({ partners }: any) {
                                         render: (
                                             // <HasPermission permission="add_partner">
                                             <Link href={route('organizer.events.partner.create')}><Button><i className="ri-add-fill"></i> Add New</Button></Link>
-                                            //    </HasPermission> 
+                                            //    </HasPermission>
                                         )
 
                                     },

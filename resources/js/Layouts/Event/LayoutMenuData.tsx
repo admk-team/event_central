@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 const Navdata = () => {
     //state data
     const [isDashboard, setIsDashboard] = useState<boolean>(false);
-    const [IsQA, setIsQA] = useState<boolean>(false);
+    // const [IsQA, setIsQA] = useState<boolean>(false);
     const [isContent, setIsContent] = useState<boolean>(false);
     const [isEngagement, setIsEngagement] = useState<boolean>(false);
     const [isUsers, setIsUsers] = useState<boolean>(false);
@@ -40,9 +40,9 @@ const Navdata = () => {
         if (iscurrentState !== 'Settings') {
             setIsSettingsMenu(false);
         }
-        if (iscurrentState !== 'Q&A') {
-            setIsQA(false);
-        }
+        // if (iscurrentState !== 'Q&A') {
+        //     setIsQA(false);
+        // }
         // Add Here
     }, [
         iscurrentState,
@@ -117,6 +117,12 @@ const Navdata = () => {
                     id: "tickets",
                     label: "Tickets",
                     link: route('organizer.events.tickets.index'),
+                    parentId: "Content",
+                },
+                {
+                    id: "ticket-addons",
+                    label: "Ticket Add-ons",
+                    link: route('organizer.events.tickets-feature.index'),
                     parentId: "Content",
                 },
                 {
@@ -214,19 +220,19 @@ const Navdata = () => {
                 },
             ]
         },
-        {
-            id: "qa",
-            label: "Q&A",
-            icon: "bx bxs-dashboard",
-            link: route('organizer.events.qa.index'),
-            stateVariables: IsQA,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsQA(!IsQA);
-                setIscurrentState('Q&A');
-                updateIconSidebar(e);
-            }
-        },
+        // {
+        //     id: "qa",
+        //     label: "Q&A",
+        //     icon: "bx bxs-dashboard",
+        //     link: route('organizer.events.qa.index'),
+        //     stateVariables: IsQA,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIsQA(!IsQA);
+        //         setIscurrentState('Q&A');
+        //         updateIconSidebar(e);
+        //     }
+        // },
     ];
     return <React.Fragment>{menuItems}</React.Fragment>;
 };

@@ -15,7 +15,7 @@ const FormEditor = () => {
       <Head title="Editors | Velzon - React Admin & Dashboard Template" />
       <UiContent />
       <div className="page-content">
-        
+
         <Container fluid>
           <BreadCrumb title="Editors" pageTitle="Forms" />
 

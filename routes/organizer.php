@@ -81,6 +81,8 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             // Attendies
             Route::resource('attendees', AttendeeController::class);
             Route::delete('attendees/delete/many', [AttendeeController::class, 'destroyMany'])->name('attendees.destroy.many');
+            Route::get('attendee/info/{id}', [AttendeeController::class, 'showInfo'])->name('attendee.info');
+            Route::put('/attendee/profile/update/{id}', [AttendeeController::class, 'updateAttendee'])->name('attendee.profile.update');
 
             // Wordshop
             Route::resource('workshop', WorkshopController::class);
@@ -102,8 +104,9 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::delete('tickets/delete/many', [EventAppTicketController::class, 'destroyMany'])->name('tickets.destroy.many');
 
             // Ticket-Features
-            Route::resource('tickets-feature', TicketFeatureController::class)->only(['store', 'update', 'destroy']);
-            Route::get('tickets-feature/{event_app_ticket?}', [TicketFeatureController::class, 'index'])->name('tickets-feature.index');
+            Route::resource('tickets-feature', TicketFeatureController::class)->only(['index', 'store', 'update', 'destroy']);
+            Route::get('ticket-feature/{event_app_ticket_id?}', [TicketFeatureController::class, 'getAllFeatures'])->name('fetch');
+            Route::delete('tickets-feature/delete/many', [TicketFeatureController::class, 'destroyMany'])->name('tickets-feature.destroy.many');
 
             // Promo Codes
             Route::resource('promo-codes', EventPromoCodeController::class)->only(['index', 'store', 'update', 'destroy']);
@@ -156,7 +159,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                     Route::post('/toggle-status', [RegistrationFormSettingsController::class, 'toggleStatus'])->name('toggle-status');
                     Route::post('/website', [RegistrationFormSettingsController::class, 'toggleStatus'])->name('toggle-status');
                 });
-                
+
                 // Website
                 Route::prefix('website')->name('website.')->group(function () {
                     Route::get('/', [WebsiteSettingsController::class, 'index'])->name('index');
@@ -179,8 +182,15 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::post('import/{importType}', [ImportController::class, 'import'])->name('import');
         });
     });
-    Route::get('/events/qa', [QuestionController::class, 'index'])->name('events.qa.index');
+    // Q&A
+    Route::get('/events/qa/{session_id}', [QuestionController::class, 'index'])->name('events.qa.index');
     Route::post('/events/{event}/questions', [QuestionController::class, 'storeQuestion'])->name('events.qa.store');
     Route::post('/events/questions/{questionId}/vote', [QuestionController::class, 'vote'])->name('events.qa.vote');
     Route::post('/events/questions/{questionId}/answer', [QuestionController::class, 'storeAnswer'])->name('events.qa.answer');
+    Route::group(['prefix' => 'events/qa', 'as' => 'events.qa.'], function () {
+        Route::put('/question/{questionId}', [QuestionController::class, 'updateQuestion'])->name('updateQuestion');
+        Route::delete('/question/{questionId}', [QuestionController::class, 'destroyQuestion'])->name('destroyQuestion');
+        Route::put('/answer/{answerId}', [QuestionController::class, 'updateAnswer'])->name('updateAnswer');
+        Route::delete('/answer/{answerId}', [QuestionController::class, 'destroyAnswer'])->name('destroyAnswer');
+    });
 });

@@ -11,9 +11,9 @@ import { Head, Link } from '@inertiajs/react';
 const CoverPasswCreate = () => {
 
     const [passwordShow, setPasswordShow] = useState<boolean>(false);
-    const [confrimPasswordShow, setConfrimPasswordShow] = useState<boolean>(false);   
+    const [confrimPasswordShow, setConfrimPasswordShow] = useState<boolean>(false);
 
-    const validation :any= useFormik({
+    const validation: any = useFormik({
         enableReinitialize: true,
 
         initialValues: {
@@ -27,7 +27,7 @@ const CoverPasswCreate = () => {
                 .matches(RegExp('(.*[A-Z].*)'), 'At least uppercase letter')
                 .matches(RegExp('(.*[0-9].*)'), 'At least one number')
                 .required("This field is required"),
-                confirm_password: Yup.string()
+            confirm_password: Yup.string()
                 .oneOf([Yup.ref('password'), ""],)
                 .required('Confirm Password is required')
         }),
@@ -37,7 +37,7 @@ const CoverPasswCreate = () => {
     });
     return (
         <React.Fragment>
-            <Head title = "Create New Password | Velzon - React Admin & Dashboard Template"/>
+            <Head title="Create New Password | Velzon - React Admin & Dashboard Template" />
             <div className="auth-page-wrapper auth-bg-cover py-5 d-flex justify-content-center align-items-center min-vh-100">
                 <div className="bg-overlay"></div>
                 <div className="auth-page-content overflow-hidden pt-lg-5">
@@ -95,7 +95,7 @@ const CoverPasswCreate = () => {
                                                                     <Form.Control.Feedback type="invalid">{validation.errors.confrim_password}</Form.Control.Feedback>
                                                                 ) : null}
                                                                 <Button variant="link" onClick={() => setConfrimPasswordShow(!confrimPasswordShow)} className="position-absolute end-0 top-0 text-decoration-none text-muted password-addon">
-                                                                <i className="ri-eye-fill align-middle"></i></Button>
+                                                                    <i className="ri-eye-fill align-middle"></i></Button>
                                                             </div>
                                                         </div>
 
@@ -134,7 +134,7 @@ const CoverPasswCreate = () => {
                         <Row>
                             <Col lg={12}>
                                 <div className="text-center">
-                                    <p className="mb-0">&copy; {new Date().getFullYear()} Velzon. Crafted with <i className="mdi mdi-heart text-danger"></i> by Themesbrand</p>
+                                    <p className="mb-0">&copy; {new Date().getFullYear()} Event Central. Crafted with <i className="mdi mdi-heart text-danger"></i> by Onlinechannel.tv</p>
                                 </div>
                             </Col>
                         </Row>

@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('event_app_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->nullable()->default(null)->constrained()->onDelete('set null');
-            $table->string('title');
-            $table->longText('content');
+            $table->string('title')->nullable();
+            $table->longText('content')->nullable();
             $table->boolean('is_default')->default(false);
             $table->timestamps();
         });

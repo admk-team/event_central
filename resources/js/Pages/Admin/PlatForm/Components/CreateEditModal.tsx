@@ -36,7 +36,7 @@ export default function CreateEditModal({ show, hide, onHide, platform }: { show
         <Modal show={show} onHide={onHide} centered>
             <Modal.Header className="bg-light p-3" closeButton>
                 <h5 className="modal-title">
-                    {isEdit ? 'Edit platform' : 'Add platform'}
+                    {isEdit ? 'Edit' : 'Add New'}
                 </h5>
             </Modal.Header>
 
@@ -44,9 +44,9 @@ export default function CreateEditModal({ show, hide, onHide, platform }: { show
                 <Modal.Body>
                     <FormGroup className="mb-3">
                         <Form.Label className="form-label">Name</Form.Label>
-                        <Form.Control 
-                            type="text" 
-                            className="form-control" 
+                        <Form.Control
+                            type="text"
+                            className="form-control"
                             value={data.name}
                             onChange={(e) => setData({...data, name: e.target.value})}
                             isInvalid={!!errors.name}
@@ -55,7 +55,7 @@ export default function CreateEditModal({ show, hide, onHide, platform }: { show
                             <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
                         )}
                         </FormGroup>
-         
+
                 </Modal.Body>
                 <div className="modal-footer">
                     <div className="hstack gap-2 justify-content-end">

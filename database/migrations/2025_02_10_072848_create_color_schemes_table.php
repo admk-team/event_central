@@ -14,14 +14,14 @@ return new class extends Migration
         Schema::create('color_schemes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('event_id');
-            $table->string('title');
-            $table->string('bg_color');
-            $table->string('header_bg_color');
-            $table->string('nav_bg_color');
-            $table->string('card_bg_color');
-            $table->string('primary_color');
-            $table->string('secondary_color');
-            $table->string('footer_color');
+            $table->string('title')->nullable();
+            $table->string('bg_color')->nullable();
+            $table->string('header_bg_color')->nullable();
+            $table->string('nav_bg_color')->nullable();
+            $table->string('card_bg_color')->nullable();
+            $table->string('primary_color')->nullable();
+            $table->string('secondary_color')->nullable();
+            $table->string('footer_color')->nullable();
             $table->timestamps();
         });
     }

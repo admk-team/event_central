@@ -32,6 +32,7 @@ class EventAppTicketController extends Controller
     public function store(EventAppTicketRequest $request)
     {
         $data = $request->validated();
+
         $data['event_app_id'] = session('event_id');
         $data['sessions'] = $this->transformSessions($data);
 
@@ -50,6 +51,7 @@ class EventAppTicketController extends Controller
     public function update(EventAppTicketRequest $request, EventAppTicket $ticket)
     {
         $data = $request->validated();
+
         $data['sessions'] = $this->transformSessions($data);
         $ticket->update($data);
 

@@ -16,6 +16,7 @@ class OrganizerPaymentSettingController extends Controller
         $keys = OrganizerPaymentKeys::firstOrCreate(
             ['user_id' => auth()->user()->id],
             [
+                'paypal_base_url' => '',
                 'paypal_pub' => '',
                 'paypal_secret' => '',
                 'stripe_secret_key' => '',
@@ -29,6 +30,7 @@ class OrganizerPaymentSettingController extends Controller
     public function update(Request $request)
     {
         $input = $request->validate([
+            'paypal_base_url' => 'nullable|string',
             'paypal_secret' => 'nullable|string',
             'paypal_pub' => 'nullable|string',
 
@@ -38,6 +40,7 @@ class OrganizerPaymentSettingController extends Controller
         OrganizerPaymentKeys::updateOrCreate(
             ['user_id' => auth()->user()->id],
             [
+                'paypal_base_url' => $input['paypal_base_url'],
                 'paypal_pub' => $input['paypal_pub'],
                 'paypal_secret' => $input['paypal_secret'],
                 'stripe_secret_key' => $input['stripe_secret_key'],

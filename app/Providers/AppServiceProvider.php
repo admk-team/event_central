@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Http\RedirectResponse;
+use App\Models\Attendee;
+use App\Observers\OrganizerAttendeeObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -37,5 +39,7 @@ class AppServiceProvider extends ServiceProvider
                 ]
             ]);
         });
+
+        Attendee::observe(OrganizerAttendeeObserver::class);
     }
 }

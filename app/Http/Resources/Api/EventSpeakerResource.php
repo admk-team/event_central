@@ -33,6 +33,7 @@ class EventSpeakerResource extends JsonResource
             'language' => $this->language,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'event_session' => EventSessionResource::collection($this->whenLoaded('eventSessions'))
         ];
     }
 }

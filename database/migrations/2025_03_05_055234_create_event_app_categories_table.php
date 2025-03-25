@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('event_app_categories', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name')->nullable();
             $table->json('fields')->nullable();   //For future use
             $table->timestamps();
         });
