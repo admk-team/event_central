@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers\Organizer\Event;
 
+use Exception;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Organizer\Event\EventStoreRequest;
 use App\Models\EventApp;
 use App\Models\EventAppCategory;
 use App\Models\EventAppDate;
 use App\Models\RecurringType;
-use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use App\Http\Requests\Organizer\Event\EventStoreRequest;
+use App\Http\Requests\Organizer\Event\EventUpdateRequest;
+use App\Models\EventAppImage;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
@@ -25,7 +26,8 @@ class EventController extends Controller
         // $events = EventApp::ofOwner()->get();
         $recurring_types = RecurringType::get();
         $event_category_types = EventAppCategory::get();
-        $events = $this->datatable(EventApp::ofOwner());
+        $events = $this->datatable(EventApp::ofOwner()->with('images'));
+
         return Inertia::render('Organizer/Events/Index', [
             'events' => $events,
             'recurring_types' => $recurring_types,
@@ -54,26 +56,11 @@ class EventController extends Controller
 
         // Save Event Log File
         $this->SaveLogoImage($event, $request);
-
+        $this->SaveOtherImages($event, $request);
         // Set newly created event in session for making it currently selected event
         session()->put('event_id', $event->id);
 
         return back()->withSuccess('Event created successfully.');
-    }
-
-    private function SaveLogoImage(EventApp $event, Request $request)
-    {
-        if ($request->hasFile('logo_file')) {
-            // Log::info('has file changed');
-            $imageFileName = 'event-logo-' . $event->id . '.' . $request->logo_file->extension();
-            $path = storage_path('app/public/events-avatars');
-            if (file_exists($path . '/' . $imageFileName)) {
-                unlink($path . '/' . $imageFileName);  //Delete previous file
-            }
-            $request->logo_file->move(storage_path('app/public/events-avatars'), $imageFileName);
-            $event->logo = 'events-avatars/' . $imageFileName;
-            $event->save();
-        }
     }
 
     public function selectEvent(Request $request, $id)
@@ -99,7 +86,7 @@ class EventController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(EventStoreRequest $request, EventApp $event_app)
+    public function update(EventUpdateRequest $request, EventApp $event_app)
     {
         // Log::info($request->all());
 
@@ -111,10 +98,17 @@ class EventController extends Controller
 
         //Update Event Date Date Time
         $event_date = $event_app->dates()->first();
-        $event_date->update(['date' => $data['start_date']]);
+
+        if ($event_date)
+            $event_date->update(['date' => $data['start_date']]);
+        else {
+            EventAppDate::create(['date' => $data['start_date'], 'event_app_id' => $event_app->id]);
+        }
 
         // Save Event Log File If changed
         $this->SaveLogoImage($event_app, $request);
+        $this->SaveOtherImages($event_app, $request);
+
         session()->put('event_id', $event_app->id);
 
         return back()->withSuccess('Event Updated successfully.');
@@ -133,7 +127,7 @@ class EventController extends Controller
         }
     }
 
-    /** organizer.events.destroyMany
+    /**
      * Remove the specified resource from database.
      */
     public function destroyMany(Request $request)
@@ -144,6 +138,39 @@ class EventController extends Controller
         ]);
         foreach ($ids as $id) {
             EventApp::find($id)?->delete();
+        }
+    }
+
+
+    private function SaveLogoImage(EventApp $event, Request $request)
+    {
+        if ($request->hasFile('logo_file')) {
+            $imageFileName = 'event-logo-' . $event->id . '.' . $request->logo_file->extension();
+            $path = storage_path('app/public/events-avatars');
+            if (file_exists($path . '/' . $imageFileName)) {
+                unlink($path . '/' . $imageFileName);  //Delete previous file
+            }
+            $request->logo_file->move(storage_path('app/public/events-avatars'), $imageFileName);
+            $event->logo = 'events-avatars/' . $imageFileName;
+            $event->save();
+        }
+    }
+
+    private function SaveOtherImages(EventApp $event, Request $request)
+    {
+        if ($request->hasFile('image_files')) {
+            $images = $request->file('image_files');
+            foreach ($images as $image) {
+                $imageFileName = $image->getClientOriginalName();
+                $path = storage_path('app/public/events-images');
+                $image->move(storage_path('app/public/events-images'), $imageFileName);
+                EventAppImage::create([
+                    'event_app_id' => $event->id,
+                    'image_file_name' => $imageFileName,
+                    'image_url' => 'events-images/' . $imageFileName,
+                    'is_feature_image' => false
+                ]);
+            }
         }
     }
 }

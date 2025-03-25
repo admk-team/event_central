@@ -1,20 +1,37 @@
-import { useForm, usePage } from '@inertiajs/react';
-import React from 'react';
-import { Button, Card, CardBody, CardHeader, CardText, CardTitle, Form, FormGroup, Spinner, Row, Col, InputGroup } from 'react-bootstrap';
-import stripe from '../../../../../images/stripe.png';
-import paypal from '../../../../../images/paypal.png';
-import toast from 'react-hot-toast';
+import { useForm, usePage } from "@inertiajs/react";
+import React from "react";
+import {
+    Button,
+    Card,
+    CardBody,
+    CardHeader,
+    CardText,
+    CardTitle,
+    Form,
+    FormGroup,
+    Spinner,
+    Row,
+    Col,
+    InputGroup,
+} from "react-bootstrap";
+import stripe from "../../../../../images/stripe.png";
+import paypal from "../../../../../images/paypal.png";
+import toast from "react-hot-toast";
 
 export default function SettingForm({ keys }: any) {
-
     // console.log(keys);
 
     const { data, setData, post, processing, errors } = useForm({
-        _method: 'PUT',
-        paypal_pub: keys?.paypal_pub ?? '',
-        paypal_secret: keys?.paypal_secret ?? '',
-        stripe_publishable_key: keys?.stripe_publishable_key ?? '',
-        stripe_secret_key: keys?.stripe_secret_key ?? '',
+        _method: "PUT",
+
+        // Paypal fields
+        paypal_base_url: keys?.paypal_base_url ?? "",
+        paypal_pub: keys?.paypal_pub ?? "",
+        paypal_secret: keys?.paypal_secret ?? "",
+
+        //Stripe fields
+        stripe_publishable_key: keys?.stripe_publishable_key ?? "",
+        stripe_secret_key: keys?.stripe_secret_key ?? "",
     });
 
     const submit: React.FormEventHandler<HTMLFormElement> = (e) => {
@@ -22,59 +39,96 @@ export default function SettingForm({ keys }: any) {
 
         // console.log(data);
 
-        post(route('organizer.settings.payment.update'));
-    }
+        post(route("organizer.settings.payment.update"));
+    };
 
     const CopyLink = (link: string) => {
-        navigator.clipboard.writeText(link)
+        navigator.clipboard
+            .writeText(link)
             .then(() => {
                 toast.success("Key Copied!");
             })
             .catch(() => {
                 toast.error("Failed to copy key");
             });
-    }
+    };
 
     return (
         <Form onSubmit={submit} className="tablelist-form">
             <Card>
                 <CardHeader className="d-flex justify-content-between align-items-center gap-2">
                     <div>
-                        <CardTitle>{stripe && <img height={35} src={stripe} alt="stripe-image" />}</CardTitle>
-                        <CardText>Edit global Stripe Setting for all events.</CardText>
+                        <CardTitle>
+                            {stripe && (
+                                <img
+                                    height={35}
+                                    src={stripe}
+                                    alt="stripe-image"
+                                />
+                            )}
+                        </CardTitle>
+                        <CardText>
+                            Edit global Stripe Setting for all events.
+                        </CardText>
                     </div>
                 </CardHeader>
                 <CardBody>
                     <InputGroup className="mb-3">
                         <Form.Control
                             type="text"
-                            placeholder='Enter Stripe Public Key'
+                            placeholder="Enter Stripe Public Key"
                             className="form-control"
                             value={data.stripe_publishable_key}
-                            onChange={(e) => setData({ ...data, stripe_publishable_key: e.target.value })}
+                            onChange={(e) =>
+                                setData({
+                                    ...data,
+                                    stripe_publishable_key: e.target.value,
+                                })
+                            }
                             isInvalid={!!errors.stripe_publishable_key}
                         />
-                        <Button variant="outline-secondary" id="button-copyLink" disabled={data.stripe_publishable_key.length === 0} onClick={() => CopyLink(data.stripe_publishable_key)}>
-                            <i className='bx bx-copy'></i>
+                        <Button
+                            variant="outline-secondary"
+                            id="button-copyLink"
+                            disabled={data.stripe_publishable_key.length === 0}
+                            onClick={() =>
+                                CopyLink(data.stripe_publishable_key)
+                            }
+                        >
+                            <i className="bx bx-copy"></i>
                         </Button>
                         {errors.stripe_publishable_key && (
-                            <Form.Control.Feedback type="invalid">{errors.stripe_publishable_key}</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">
+                                {errors.stripe_publishable_key}
+                            </Form.Control.Feedback>
                         )}
                     </InputGroup>
                     <InputGroup className="mb-3">
                         <Form.Control
                             type="text"
-                            placeholder='Enter Stripe Secret Key'
+                            placeholder="Enter Stripe Secret Key"
                             className="form-control"
                             value={data.stripe_secret_key}
-                            onChange={(e) => setData({ ...data, stripe_secret_key: e.target.value })}
+                            onChange={(e) =>
+                                setData({
+                                    ...data,
+                                    stripe_secret_key: e.target.value,
+                                })
+                            }
                             isInvalid={!!errors.stripe_secret_key}
                         />
-                        <Button variant="outline-secondary" id="button-copyLink" disabled={data.stripe_secret_key.length === 0} onClick={() => CopyLink(data.stripe_secret_key)}>
-                            <i className='bx bx-copy'></i>
+                        <Button
+                            variant="outline-secondary"
+                            id="button-copyLink"
+                            disabled={data.stripe_secret_key.length === 0}
+                            onClick={() => CopyLink(data.stripe_secret_key)}
+                        >
+                            <i className="bx bx-copy"></i>
                         </Button>
                         {errors.stripe_secret_key && (
-                            <Form.Control.Feedback type="invalid">{errors.stripe_secret_key}</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">
+                                {errors.stripe_secret_key}
+                            </Form.Control.Feedback>
                         )}
                     </InputGroup>
                 </CardBody>
@@ -82,48 +136,111 @@ export default function SettingForm({ keys }: any) {
             <Card>
                 <CardHeader className="d-flex justify-content-between align-items-center gap-2">
                     <div>
-                        <CardTitle>{paypal && <img height={25} src={paypal} alt="paypal-image" />}</CardTitle>
-                        <CardText>Edit global Paypal Setting for all events.</CardText>
+                        <CardTitle>
+                            {paypal && (
+                                <img
+                                    height={25}
+                                    src={paypal}
+                                    alt="paypal-image"
+                                />
+                            )}
+                        </CardTitle>
+                        <CardText>
+                            Edit global Paypal Setting for all events.
+                        </CardText>
                     </div>
                 </CardHeader>
                 <CardBody>
                     <InputGroup className="mb-3">
                         <Form.Control
                             type="text"
-                            placeholder='Enter Paypal Client ID'
+                            placeholder="Enter Paypal URL"
                             className="form-control"
-                            value={data.paypal_pub}
-                            onChange={(e) => setData({ ...data, paypal_pub: e.target.value })}
-                            isInvalid={!!errors.paypal_pub}
+                            value={data.paypal_base_url}
+                            onChange={(e) =>
+                                setData({
+                                    ...data,
+                                    paypal_base_url: e.target.value,
+                                })
+                            }
+                            isInvalid={!!errors.paypal_base_url}
                         />
-                        <Button variant="outline-secondary" id="button-copyLink" disabled={data.paypal_pub.length === 0} onClick={() => CopyLink(data.paypal_pub)}>
-                            <i className='bx bx-copy'></i>
+                        <Button
+                            variant="outline-secondary"
+                            id="button-copyLink"
+                            disabled={data.paypal_base_url.length === 0}
+                            onClick={() => CopyLink(data.paypal_base_url)}
+                        >
+                            <i className="bx bx-copy"></i>
                         </Button>
                         {errors.paypal_pub && (
-                            <Form.Control.Feedback type="invalid">{errors.paypal_pub}</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">
+                                {errors.paypal_pub}
+                            </Form.Control.Feedback>
                         )}
                     </InputGroup>
                     <InputGroup className="mb-3">
                         <Form.Control
                             type="text"
-                            placeholder='Enter Paypal Secret Key'
+                            placeholder="Enter Paypal Client ID"
+                            className="form-control"
+                            value={data.paypal_pub}
+                            onChange={(e) =>
+                                setData({ ...data, paypal_pub: e.target.value })
+                            }
+                            isInvalid={!!errors.paypal_pub}
+                        />
+                        <Button
+                            variant="outline-secondary"
+                            id="button-copyLink"
+                            disabled={data.paypal_pub.length === 0}
+                            onClick={() => CopyLink(data.paypal_pub)}
+                        >
+                            <i className="bx bx-copy"></i>
+                        </Button>
+                        {errors.paypal_pub && (
+                            <Form.Control.Feedback type="invalid">
+                                {errors.paypal_pub}
+                            </Form.Control.Feedback>
+                        )}
+                    </InputGroup>
+                    <InputGroup className="mb-3">
+                        <Form.Control
+                            type="text"
+                            placeholder="Enter Paypal Secret Key"
                             className="form-control"
                             value={data.paypal_secret}
-                            onChange={(e) => setData({ ...data, paypal_secret: e.target.value })}
+                            onChange={(e) =>
+                                setData({
+                                    ...data,
+                                    paypal_secret: e.target.value,
+                                })
+                            }
                             isInvalid={!!errors.paypal_secret}
                         />
-                        <Button variant="outline-secondary" id="button-copyLink" disabled={data.paypal_secret.length === 0} onClick={() => CopyLink(data.paypal_secret)}>
-                            <i className='bx bx-copy'></i>
+                        <Button
+                            variant="outline-secondary"
+                            id="button-copyLink"
+                            disabled={data.paypal_secret.length === 0}
+                            onClick={() => CopyLink(data.paypal_secret)}
+                        >
+                            <i className="bx bx-copy"></i>
                         </Button>
                         {errors.paypal_secret && (
-                            <Form.Control.Feedback type="invalid">{errors.paypal_secret}</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">
+                                {errors.paypal_secret}
+                            </Form.Control.Feedback>
                         )}
                     </InputGroup>
                 </CardBody>
             </Card>
             <Row className="justify-content-center">
                 <Col md={6} lg={6}>
-                    <Button type="submit" disabled={processing} className='w-100'>
+                    <Button
+                        type="submit"
+                        disabled={processing}
+                        className="w-100"
+                    >
                         {processing ? (
                             <span className="d-flex gap-1 align-items-center">
                                 <Spinner
@@ -142,5 +259,5 @@ export default function SettingForm({ keys }: any) {
                 </Col>
             </Row>
         </Form>
-    )
+    );
 }

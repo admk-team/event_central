@@ -10,13 +10,14 @@ class EventAppTicket extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'event_app_id',
         'name',
         'description',
         'type',
         'base_price',
+        'addons_price',
+        'total_price',
         'addon_features',
-        'event_app_id',
-
         'increment_by',
         'increment_rate',
         'increment_type',

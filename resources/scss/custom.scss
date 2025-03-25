@@ -1,0 +1,16 @@
+:is([data-layout="vertical"], [data-layout="semibox"])[data-sidebar-size="sm"]
+    .navbar-menu {
+    .navbar-brand-box {
+        justify-content: center !important;
+        .inertia-link {
+            .event-logo {
+                img {
+                    transform: scale(0.75);
+                }
+                .event-name {
+                    display: none;
+                }
+            }
+        }
+    }
+}

@@ -15,23 +15,25 @@ use Inertia\Inertia;
 class EventController extends Controller
 {
 
-    public function getEventDetailDashboard(EventApp $eventApp)
+    public function getEventDetailDashboard()
     {
+        $eventApp = EventApp::find(Auth::user()->event_app_id);
         $eventApp->load(['event_sessions.eventSpeaker', 'event_sessions.eventPlatform']);
-
         return Inertia::render('Attendee/AttendeeDashboard', compact([
             'eventApp',
         ]));
     }
 
-    public function getEventDetailAgenda(EventApp $eventApp)
+    public function getEventDetailAgenda()
     {
+        $eventApp = EventApp::find(Auth::user()->event_app_id);
         $eventApp->load(['event_sessions.eventSpeaker', 'event_sessions.eventPlatform']);
         return Inertia::render('Attendee/AttendeeAgenda', compact('eventApp'));
     }
 
-    public function getEventSessionDetail(Request $request, EventApp $eventApp, EventSession $eventSession)
+    public function getEventSessionDetail(Request $request, EventSession $eventSession)
     {
+        $eventApp = EventApp::find(Auth::user()->event_app_id);
         // Finding previous and next session ids with reference to current session
         $next_session_id = null;
         $prev_session_id = null;
@@ -63,8 +65,9 @@ class EventController extends Controller
         ]));
     }
 
-    public function getEventSpeakerDetail(EventApp $eventApp, EventSpeaker $eventSpeaker)
+    public function getEventSpeakerDetail(EventSpeaker $eventSpeaker)
     {
+        $eventApp = EventApp::find(Auth::user()->event_app_id);
         $eventApp->load('event_speakers.eventSessions');
 
         if ($eventSpeaker) {
@@ -73,15 +76,17 @@ class EventController extends Controller
         return Inertia::render('Attendee/AttendeeSpeakerDetail', compact(['eventApp', 'eventSpeaker']));
     }
 
-    public function getEventDetailMore(EventApp $eventApp)
+    public function getEventDetailMore()
     {
+        $eventApp = EventApp::find(Auth::user()->event_app_id);
         $eventApp->load('organiser');
         return Inertia::render('Attendee/AttendeeMore', compact(['eventApp']));
     }
 
-    public function getPostsMore(EventApp $eventApp)
+    public function getPostsMore()
     {
-        $newsfeeds = EventPost::where('event_app_id', Auth::user()->event_app_id)->get();
+        $eventApp = EventApp::find(Auth::user()->event_app_id);
+        $newsfeeds = EventPost::where('event_app_id', $eventApp->id)->get();
         return Inertia::render('Attendee/Posts/Index', compact(['eventApp', 'newsfeeds']));
     }
 }

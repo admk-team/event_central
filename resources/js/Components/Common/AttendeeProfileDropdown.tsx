@@ -55,15 +55,11 @@ const AttendeeProfileDropdown = () => {
                         <UserProfileRightSidebar
                             dropdown={isProfileDropdown}
                         ></UserProfileRightSidebar>
-                        {/* <Dropdown.Item href={route('profile.edit')} className="dropdown-item">
-                            <i className="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i>
-                            <span className="align-middle">Edit Profile</span>
-                        </Dropdown.Item> */}
                         <Link
                             className="dropdown-item"
                             as="button"
                             method="post"
-                            href={route("attendee.logout", user.event_app_id)}
+                            href={route("attendee.logout")}
                         >
                             <i className="mdi mdi-logout text-muted fs-16 align-middle me-1"></i>{" "}
                             <span className="align-middle" data-key="t-logout">

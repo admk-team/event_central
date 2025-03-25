@@ -60,7 +60,7 @@ function Index({ event, questionlist: initialQuestions, newAnswer }: Props) {
             ?.getAttribute("content");
         const interval = setInterval(async () => {
             try {
-                const url = route("organizer.events.qa.index");
+                const url = route("organizer.events.qa.index", { session_id: event?.id }); // Pass event.id as session_id
                 const response = await fetch(url, {
                     method: "GET",
                     headers: {
@@ -121,11 +121,11 @@ function Index({ event, questionlist: initialQuestions, newAnswer }: Props) {
                     <Row className="mt-4">
                         <Col className="text-center">
                             <Link
-                                href={route("organizer.events.index")}
+                                href={route("organizer.events.schedule.index")}
                                 className="btn btn-outline-primary"
                             >
                                 <i className="ri-arrow-left-line"></i> Back to
-                                Events
+                                Schedule
                             </Link>
                         </Col>
                     </Row>

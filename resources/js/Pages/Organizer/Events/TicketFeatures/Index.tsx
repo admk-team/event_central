@@ -1,94 +1,114 @@
-
-import { Button, Col, Container, Row } from 'react-bootstrap';
-import Layout from '../../../../Layouts/Event';
-import BreadCrumb from '../../../../Components/Common/BreadCrumb';
-import React, { useState } from 'react';
-import { Head, Link, useForm } from '@inertiajs/react';
-import DataTable, { ColumnDef } from '../../../../Components/DataTable';
-import DeleteModal from '../../../../Components/Common/DeleteModal';
-import DeleteManyModal from '../../../../Components/Common/DeleteManyModal';
-import HasPermission from '../../../../Components/HasPermission';
-import CreateEditModal from './CreateEditModal';
-
+import { Button, Col, Container, Row } from "react-bootstrap";
+import Layout from "../../../../Layouts/Event";
+import BreadCrumb from "../../../../Components/Common/BreadCrumb";
+import React, { useState } from "react";
+import { Head, Link, useForm } from "@inertiajs/react";
+import DataTable, { ColumnDef } from "../../../../Components/DataTable";
+import DeleteModal from "../../../../Components/Common/DeleteModal";
+import DeleteManyModal from "../../../../Components/Common/DeleteManyModal";
+import HasPermission from "../../../../Components/HasPermission";
+import CreateEditModal from "./CreateEditModal";
 
 function Index({ features }: any) {
     // console.log('features', features);
 
-    const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
+    const [showCreateEditModal, _setShowCreateEditModal] =
+        React.useState(false);
     const [editTicketFeature, setEditTicketFeature] = React.useState<any>(null);
 
-    const [deleteTicketFeature, setDeleteTicketFeature] = React.useState<any>(null);
+    const [deleteTicketFeature, setDeleteTicketFeature] =
+        React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-    const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
+    const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] =
+        useState(false);
 
     const setShowCreateEditModal = (state: boolean) => {
         _setShowCreateEditModal(state);
         if (state === false) {
             setEditTicketFeature(null);
         }
-    }
+    };
 
     const deleteForm = useForm({
-        _method: 'DELETE'
+        _method: "DELETE",
     });
     const deleteManyForm = useForm<{ _method: string; ids: number[] }>({
-        _method: 'DELETE',
+        _method: "DELETE",
         ids: [],
     });
     const editAction = (ticket: any) => {
         setEditTicketFeature(ticket);
         setShowCreateEditModal(true);
-    }
+    };
 
     const deleteAction = (ticket: any) => {
         setDeleteTicketFeature(ticket);
         setShowDeleteConfirmation(true);
-    }
+    };
     const handleDelete = () => {
-        deleteForm.post(route('organizer.events.tickets-feature.destroy', deleteTicketFeature.id));
+        deleteForm.post(
+            route(
+                "organizer.events.tickets-feature.destroy",
+                deleteTicketFeature.id
+            )
+        );
         setShowDeleteConfirmation(false);
-    }
+    };
 
     const deleteManyAction = (ids: number[]) => {
         // console.log(ids);
-        deleteManyForm.setData(data => ({ ...data, ids: ids }));
+        deleteManyForm.setData((data) => ({ ...data, ids: ids }));
         setShowDeleteManyConfirmation(true);
-    }
+    };
     const handleDeleteMany = () => {
         // console.log(deleteManyForm);
-        deleteManyForm.delete(route('organizer.events.tickets-feature.destroy.many'));
+        deleteManyForm.delete(
+            route("organizer.events.tickets-feature.destroy.many")
+        );
         setShowDeleteManyConfirmation(false);
-    }
-    const columns: ColumnDef<typeof features.data[0]> = [
+    };
+    const columns: ColumnDef<(typeof features.data)[0]> = [
         {
-            header: () => 'ID',
+            header: () => "ID",
             cell: (feature) => feature.id,
-            cellClass: "fw-medium"
+            cellClass: "fw-medium",
         },
         {
-            header: () => 'Name',
+            header: () => "Name",
             cell: (feature) => (
-                <span>{feature.name}</span>
+                <div dangerouslySetInnerHTML={{ __html: feature.name }} />
             ),
         },
         {
-            header: () => 'Price',
-            cell: (feature) => feature.price,
+            header: () => "Price",
+            cell: (feature) => (
+                <span className="text-right d-block">
+                    {feature.price > 0 ? feature.price : "Free"}
+                </span>
+            ),
         },
         {
-            header: () => 'Total Qty',
+            header: () => "Total Qty",
             cell: (feature) => feature.qty_total,
         },
         {
-            header: () => 'Total Sold',
+            header: () => "Total Sold",
             cell: (feature) => feature.qty_sold,
         },
         {
-            header: () => 'Action',
+            header: () => "Action",
             cell: (ticket) => (
                 <div className="hstack gap-3 fs-15">
-                    <span className="link-primary cursor-pointer" onClick={() => editAction(ticket)}><i className="ri-edit-fill"></i></span>
-                    <span className="link-danger cursor-pointer" onClick={() => deleteAction(ticket)}>
+                    <span
+                        className="link-primary cursor-pointer"
+                        onClick={() => editAction(ticket)}
+                    >
+                        <i className="ri-edit-fill"></i>
+                    </span>
+                    <span
+                        className="link-danger cursor-pointer"
+                        onClick={() => deleteAction(ticket)}
+                    >
                         <i className="ri-delete-bin-5-line"></i>
                     </span>
                 </div>
@@ -97,35 +117,64 @@ function Index({ features }: any) {
     ];
     return (
         <React.Fragment>
-            <Head title='Ticket Features' />
+            <Head title="Ticket Addons" />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Ticket Features" pageTitle="Dashboard" />
+                    <BreadCrumb title="Ticket Addons" pageTitle="Dashboard" />
                     <Row>
-                        <Col xs={12}>
+                        <Col xs={12} id="TicketFeatureTable">
                             <DataTable
                                 data={features}
                                 columns={columns}
-                                title="tickets"
+                                title="Addons"
                                 actions={[
                                     // Delete multiple
                                     {
-                                        render: (dataTable) => <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>,
+                                        render: (dataTable) => (
+                                            <Button
+                                                className="btn-danger"
+                                                onClick={() =>
+                                                    deleteManyAction(
+                                                        dataTable
+                                                            .getSelectedRows()
+                                                            .map(
+                                                                (row) => row.id
+                                                            )
+                                                    )
+                                                }
+                                            >
+                                                <i className="ri-delete-bin-5-line"></i>{" "}
+                                                Delete (
+                                                {
+                                                    dataTable.getSelectedRows()
+                                                        .length
+                                                }
+                                                )
+                                            </Button>
+                                        ),
                                         showOnRowSelection: true,
                                     },
                                     // Add new
                                     {
                                         render: (
                                             <HasPermission permission="create_schedule">
-                                                <Button onClick={() => setShowCreateEditModal(true)}><i className="ri-add-fill"></i> Add New</Button>
+                                                <Button
+                                                    onClick={() =>
+                                                        setShowCreateEditModal(
+                                                            true
+                                                        )
+                                                    }
+                                                >
+                                                    <i className="ri-add-fill"></i>{" "}
+                                                    Add New
+                                                </Button>
                                             </HasPermission>
-                                        )
-                                    }
+                                        ),
+                                    },
                                 ]}
                             />
                         </Col>
                     </Row>
-
                 </Container>
             </div>
 
@@ -140,17 +189,20 @@ function Index({ features }: any) {
             <DeleteModal
                 show={showDeleteConfirmation}
                 onDeleteClick={handleDelete}
-                onCloseClick={() => { setShowDeleteConfirmation(false) }}
+                onCloseClick={() => {
+                    setShowDeleteConfirmation(false);
+                }}
             />
 
             <DeleteManyModal
                 show={showDeleteManyConfirmation}
                 onDeleteClick={handleDeleteMany}
-                onCloseClick={() => { setShowDeleteManyConfirmation(false) }}
+                onCloseClick={() => {
+                    setShowDeleteManyConfirmation(false);
+                }}
             />
         </React.Fragment>
-    )
+    );
 }
 Index.layout = (page: any) => <Layout children={page} />;
 export default Index;
-

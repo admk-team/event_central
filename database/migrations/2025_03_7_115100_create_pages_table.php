@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('event_app_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->nullable()->default(null)->constrained()->onDelete('set null');
-            $table->string('title');
-            $table->string('slug');
+            $table->string('title')->nullable();
+            $table->string('slug')->nullable();
             $table->longText('content');
             $table->string('meta_title')->nullable();
             $table->text('meta_description')->nullable();

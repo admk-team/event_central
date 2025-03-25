@@ -16,6 +16,8 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->text('stripe_publishable_key')->nullable();
             $table->text('stripe_secret_key')->nullable();
+
+            $table->string('paypal_base_url')->nullable();
             $table->text('paypal_pub')->nullable();
             $table->text('paypal_secret')->nullable();
             $table->timestamps();

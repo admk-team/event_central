@@ -10,10 +10,10 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
     { show: boolean, hide: () => void, onHide: () => void, ticket: any, sessions: any | null }) {
 
     const isEdit = ticket != null ? true : false;
-    const userId = usePage().props.auth.user.id;
-    const eventId = usePage().props.currentEvent.id;
+    // const userId = usePage().props.auth.user.id;
+    // const eventId = usePage().props.currentEvent.id;
 
-    // console.log(usePage().props);
+    // console.log(ticket);
 
     const { data, setData, post, put, processing, errors, reset, transform } = useForm({
         _method: isEdit ? "PUT" : "POST",
@@ -22,7 +22,11 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
         name: ticket?.name ?? '',
         description: ticket?.description ?? '',
         type: 'NORMAL',
-        base_price: ticket?.base_price ?? '',
+
+        base_price: ticket?.base_price ?? 0,
+        addons_price: ticket?.addons_price ?? 0,
+        total_price: ticket?.total_price ?? 0,
+
         increment_by: ticket?.increment_by ?? '',
         increment_rate: ticket?.increment_rate ?? '',
         increment_type: ticket?.increment_type ?? 'Percentage',
@@ -37,19 +41,18 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
     const [ticketFeatures, setTicketFeatures] = useState<any>([]);
     const [eventLoading, setEventLoading] = useState<any>(false);
 
-    const [featureTotalPrice, setFeatureTotalPrice] = useState(0);
-    const [ticketTotalPrice, setTicketTotalPrice] = useState(ticket?.base_price ?? 0);
-
-    const [deleteFeature, setDeleteFeature] = useState<any>(null);
-    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState<any>(false);
+    const [basePrice, setBasePrice] = useState(ticket?.base_price ?? 0);
+    const [addonsPrice, setAddonsPrice] = useState(ticket?.addons_price ?? 0);
+    const [totalPrice, setTotalPrice] = useState(ticket?.total_price ?? 0);
 
     useEffect(() => {
         fetchFeatures();
     }, []);
 
     useEffect(() => {
-        updateTicketFeatures();
-    }, [ticketFeatures]);
+        updatePricing();
+        updateTicketSelectedFeatures();
+    }, [ticketFeatures, addonsPrice, totalPrice, basePrice]);
 
     const fetchFeatures = () => {
         setEventLoading(true);
@@ -63,7 +66,14 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
 
     const submit = (e: any) => {
         e.preventDefault();
-        // console.log(data);
+
+        transform((prevData) => ({
+            ...prevData,
+            base_price: basePrice,
+            addons_price: addonsPrice,
+            total_price: totalPrice
+        }));
+
         if (isEdit) {
             post(route('organizer.events.tickets.update', ticket.id), {
                 onSuccess: () => {
@@ -79,7 +89,6 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
                 }
             })
         }
-        // console.log('testing ticket', errors);
     }
 
     const toggleFeatureSelection = (feature: any) => {
@@ -94,21 +103,36 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
             return item;
         });
         setTicketFeatures(newList);
-        updateTicketFeatures();
+        updateTicketSelectedFeatures();
+        updatePricing();
     }
 
-    const updateTicketFeatures = () => {
+    const updateTicketSelectedFeatures = () => {
+
         const selected_features: any = [];
-        let all_feature_price = 0;
         ticketFeatures.forEach((item: any) => {
             if (item.selected > 0) {
                 selected_features.push(item.id);
-                all_feature_price += parseFloat(item.price);
             }
         });
-        setFeatureTotalPrice(all_feature_price);
-        setTicketTotalPrice(parseFloat(data.base_price) + parseFloat(all_feature_price));
         setData('features', selected_features);
+    }
+
+    const updatePricing = (base_price = data.base_price) => {
+
+        let addons_price = 0;
+        ticketFeatures.forEach((item: any) => {
+            if (item.selected > 0) {
+                addons_price += parseFloat(item.price);
+            }
+        });
+
+        let total_price = parseFloat(basePrice) + addons_price;
+
+        addons_price = (Math.round(addons_price * 100) / 100).toFixed(2);
+        total_price = (Math.round(total_price * 100) / 100).toFixed(2);
+        setAddonsPrice(addons_price);
+        setTotalPrice(total_price);
     }
 
 
@@ -148,17 +172,7 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
         }
     }
 
-    const deleteForm = useForm({
-        _method: 'DELETE'
-    });
-
-    const handleDelete = (feature: any) => {
-        deleteForm.post(route('organizer.events.tickets-feature.destroy', feature.id));
-        setDeleteFeature(null);
-        fetchFeatures();
-        setShowDeleteConfirmation(false);
-    }
-
+    // Style for Select 2
     const customStyles = {
         multiValue: (styles: any, { data }: any) => {
             return {
@@ -223,31 +237,31 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
                                 <Form.Label>Base Price</Form.Label>
                                 <Form.Control
                                     type="number"
-                                    value={data.base_price}
+                                    value={basePrice}
                                     onChange={(e) => {
-                                        setData('base_price', e.target.value);
-                                        setTicketTotalPrice(e.target.value.length > 0 ? parseFloat(e.target.value) : 0 + featureTotalPrice);
+                                        setBasePrice(e.target.value.length > 0 ? e.target.value : 0)
                                     }}
                                     isInvalid={!!errors.base_price}
                                 />
                                 {errors.base_price && <Form.Control.Feedback type="invalid">{errors.base_price}</Form.Control.Feedback>}
                             </FormGroup>
                             <FormGroup className="mb-3">
-                                <Form.Label>Addon Total Price</Form.Label>
+                                <Form.Label>Addons Price</Form.Label>
                                 <Form.Control
                                     type="number"
                                     disabled
-                                    value={featureTotalPrice}
+                                    value={addonsPrice}
                                 />
+                                {errors.addons_price && <Form.Control.Feedback type="invalid">{errors.addons_price}</Form.Control.Feedback>}
                             </FormGroup>
                             <FormGroup className="mb-3">
                                 <Form.Label>Total Ticket Price</Form.Label>
                                 <Form.Control
                                     type="number"
                                     disabled
-                                    value={ticketTotalPrice}
+                                    value={totalPrice}
                                 />
-                                {errors.base_price && <Form.Control.Feedback type="invalid">{errors.base_price}</Form.Control.Feedback>}
+                                {errors.total_price && <Form.Control.Feedback type="invalid">{errors.total_price}</Form.Control.Feedback>}
                             </FormGroup>
                         </Col>
                     </Row>
@@ -302,7 +316,6 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
                                                 setData((prevData) => ({
                                                     ...prevData,
                                                     start_increment: selectedDate.toLocaleDateString("en-CA").split("T")[0]
-                                                    // start_increment: selectedDate
                                                 }))
                                             }
                                             }
@@ -327,7 +340,6 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
                                                 setData((prevData) => ({
                                                     ...prevData,
                                                     end_increment: selectedDate.toLocaleDateString("en-CA").split("T")[0]
-                                                    // end_increment: selectedDate
                                                 }))
                                             }
                                             }
@@ -377,7 +389,6 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
                 <Row>
                     <Col md={3} lg={3} className='d-flex '>
                         <FormGroup className="mb-3">
-                            {/* <Form.Label>Sessions</Form.Label> */}
                             <Form.Check
                                 type='checkbox'
                                 label="Select All Features"
@@ -404,7 +415,9 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
                                 {ticketFeatures && ticketFeatures.map((feature: any) =>
                                     <tr key={feature.id}>
                                         <td>{feature.id}</td>
-                                        <td style={{ width: '80%' }}>{feature.name}</td>
+                                        <td style={{ width: '80%' }}>
+                                            <div dangerouslySetInnerHTML={{ __html: feature.name }} />
+                                        </td>
                                         <td style={{ textAlign: 'center' }}>
                                             <Button title='Click to add in Ticket' variant='link' className='btn-sm' onClick={() => toggleFeatureSelection(feature)}>
                                                 <i className={'bx bx-check-square fs-5 ' + (feature.selected > 0 ? 'text-success' : 'text-muted')}></i>
@@ -412,11 +425,6 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
                                         </td>
                                     </tr>)}
                             </tbody>
-                            <DeleteModal
-                                show={showDeleteConfirmation}
-                                onDeleteClick={() => handleDelete(deleteFeature)}
-                                onCloseClick={() => { setShowDeleteConfirmation(false) }}
-                            />
                         </Table>}
                     </Col>
                 </Row>

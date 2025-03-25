@@ -27,20 +27,29 @@ export default function CheckoutForm({ eventId, amount, tickets }: any) {
             confirmParams: {
                 return_url: route("attendee.payment.success", eventId),
             },
-            redirect: 'if_required'
+            redirect: "if_required",
         });
 
         if (!error) {
             //Update Purchased Tickets status
-            axios.post(route('attendee.update.payment', eventId), { amount: amount, tickets: tickets }).then((response) => {
-                console.log(response);
-                router.visit(route("attendee.payment.success", eventId));
-            }).catch((errorPost) => {
-                console.log(errorPost);
-            });
-            console.log('callback running');
+            axios
+                .post(route("attendee.update.payment", eventId), {
+                    amount: amount,
+                    tickets: tickets,
+                })
+                .then((response) => {
+                    console.log(response);
+                    router.visit(route("attendee.payment.success", eventId));
+                })
+                .catch((errorPost) => {
+                    console.log(errorPost);
+                });
+            console.log("callback running");
         } else {
-            if (error.type === "card_error" || error.type === "validation_error") {
+            if (
+                error.type === "card_error" ||
+                error.type === "validation_error"
+            ) {
                 setMessage(error.message);
             } else {
                 setMessage("An unexpected error occured.");
@@ -53,20 +62,23 @@ export default function CheckoutForm({ eventId, amount, tickets }: any) {
         <form id="payment-form" onSubmit={handleSubmit}>
             <PaymentElement id="payment-element" />
 
-            {!(stripe && elements) && <Spinner animation="border" role="status">
-                <span className="visually-hidden">Loading...</span>
-            </Spinner>
-            }
+            {!(stripe && elements) && (
+                <Spinner animation="border" role="status">
+                    <span className="visually-hidden">Loading...</span>
+                </Spinner>
+            )}
 
-            <Button
-                className="btn btn-success mt-2"
-                disabled={isProcessing || !stripe || !elements}
-                type="submit"
-            >
-                <span id="button-text">
-                    {isProcessing ? "Processing ... " : "Pay now"}
-                </span>
-            </Button>
+            <div className="d-flex justify-content-center">
+                <Button
+                    className="mt-3 btn btn-success mt-2 w-75 rounded-pill"
+                    disabled={isProcessing || !stripe || !elements}
+                    type="submit"
+                >
+                    <span id="button-text">
+                        {isProcessing ? "Processing ... " : "Pay $" + amount}
+                    </span>
+                </Button>
+            </div>
             {message && <div id="payment-message">{message}</div>}
         </form>
     );

@@ -27,7 +27,7 @@ export default function Register() {
     return (
         <React.Fragment>
             <GuestLayout>
-                <Head title="Basic SignUp | Velzon - React Admin & Dashboard Template" />
+                <Head title="Register" />
                 <div className="auth-page-content mt-lg-5">
                     <Container>
                         <Row>

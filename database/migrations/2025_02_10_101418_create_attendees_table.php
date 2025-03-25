@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('attendees', function (Blueprint $table) {
             $table->id();
-            $table->string('email');
-            $table->string('password');
+            $table->string('email')->nullable();
+            $table->string('password')->nullable();
             $table->foreignId('event_app_id')->constrained();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();

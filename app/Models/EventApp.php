@@ -34,11 +34,12 @@ class EventApp extends Model
         'registration_private' => 'boolean'
     ];
     protected $appends = [
-        'start_date',   //Picks first date from dates table
+        'start_date',
         'created_at' => 'created_at_date',
         'logo' => 'logo_img',
         'registration_private',
-        'registration_link'
+        'registration_link',
+        'featured_image'
     ];
     protected $with = [
         'category',
@@ -89,7 +90,12 @@ class EventApp extends Model
     {
         return $this->hasMany(EventSpeaker::class);
     }
-    
+
+    public function images()
+    {
+        return $this->hasMany(EventAppImage::class);
+    }
+
     public function organiser()
     {
         return $this->belongsTo(User::class, 'organizer_id');
@@ -140,6 +146,15 @@ class EventApp extends Model
         return $this->hasMany(EventAppTicket::class);
     }
 
+    public function getFeaturedImageAttribute()
+    {
+        $images = $this->images;
+        if (count($images) > 0) {
+            return $images[0]->image_url;
+        } else {
+            return url('/default-event-feature-image.png');
+        }
+    }
 
     public function getStartDateAttribute()
     {
@@ -179,8 +194,5 @@ class EventApp extends Model
             }
         });
     }
-    public function questions()
-    {
-        return $this->hasMany(Question::class, 'event_app_id');
-    }
+   
 }

@@ -25,7 +25,7 @@ const CoverPasswReset = () => {
 
     return (
         <React.Fragment>
-            <Head title = "Reset Password | Velzon - React Admin & Dashboard Template"/>
+            <Head title="Reset Password | Velzon - React Admin & Dashboard Template" />
             <div className="auth-page-wrapper auth-bg-cover py-5 d-flex justify-content-center align-items-center min-vh-100">
                 <div className="bg-overlay"></div>
                 <div className="auth-page-content overflow-hidden pt-lg-5">
@@ -90,7 +90,7 @@ const CoverPasswReset = () => {
                         <Row>
                             <Col lg={12}>
                                 <div className="text-center">
-                                    <p className="mb-0">&copy; {new Date().getFullYear()} Velzon. Crafted with <i className="mdi mdi-heart text-danger"></i> by Themesbrand</p>
+                                    <p className="mb-0">&copy; {new Date().getFullYear()} Event Central. Crafted with <i className="mdi mdi-heart text-danger"></i> by Onlinechannel.tv</p>
                                 </div>
                             </Col>
                         </Row>

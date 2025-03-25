@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Attendee;
 use App\Http\Controllers\Controller;
 use App\Models\Answer;
 use App\Models\EventApp;
+use App\Models\EventSession;
 use App\Models\Question;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,11 +14,12 @@ use Inertia\Response;
 
 class QuestionAttendeeController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, $session_id)
     {
-        $eventID = session('event_id') ?? Auth::user()->event_app_id;
-        $event = EventApp::findOrFail($eventID);
-        $questions = Question::where('event_app_id', $eventID)
+        // dd($session_id);
+        $eventID = $session_id;
+        $event = EventSession::findOrFail($eventID);
+        $questions = Question::where('event_session_id', $eventID)
             ->with(['user', 'answers.user'])
             ->get();
         if ($request->wantsJson()) {
@@ -31,7 +33,7 @@ class QuestionAttendeeController extends Controller
     }
 
     // Other methods (storeQuestion, vote, storeAnswer) remain unchanged
-    public function storeQuestion(Request $request, EventApp $event)
+    public function storeQuestion(Request $request, EventSession $event)
     {
         $request->validate(['content' => 'required|string|max:500']);
 

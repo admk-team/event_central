@@ -1,132 +1,179 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Col, Container, Row, Table } from 'react-bootstrap';
-import { Head, Link, useForm } from '@inertiajs/react';
-import Layout from '../../../Layouts/Organizer';
+import React, { useEffect, useState } from "react";
+import { Button, Col, Container, Row, Table } from "react-bootstrap";
+import { Head, Link, useForm } from "@inertiajs/react";
+import Layout from "../../../Layouts/Organizer";
 
-import CreateEditModal from './Components/CreateEditModal';
-import DeleteModal from '../../../Components/Common/DeleteModal';
+import CreateEditModal from "./Components/CreateEditModal";
+import DeleteModal from "../../../Components/Common/DeleteModal";
 
-import DataTable, { ColumnDef } from '../../../Components/DataTable';
-import BreadCrumb2 from '../../../Components/Common/BreadCrumb2';
-import DeleteManyModal from '../../../Components/Common/DeleteManyModal';
-import HasPermission from '../../../Components/HasPermission';
-import moment from 'moment';
+import DataTable, { ColumnDef } from "../../../Components/DataTable";
+import BreadCrumb2 from "../../../Components/Common/BreadCrumb2";
+import DeleteManyModal from "../../../Components/Common/DeleteManyModal";
+import HasPermission from "../../../Components/HasPermission";
+import moment from "moment";
 
 function Index({ events, recurring_types, event_category_types }: any) {
-
     const [showCreateEditModal, setShowCreateEditModal] = React.useState(false);
     const [currentEvent, setCurrentEvent] = React.useState<any>(null);
     const [deleteUser, setDeleteEvent] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-    const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
+    const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] =
+        useState(false);
     const [imageHash, setImageHash] = useState(Date.now());
 
     // console.log(events);
 
     const deleteForm = useForm({
-        _method: 'DELETE'
+        _method: "DELETE",
     });
 
     const deleteManyForm = useForm<{ _method: string; ids: number[] }>({
-        _method: 'DELETE',
+        _method: "DELETE",
         ids: [],
     });
 
     const showModal = function (event: any) {
         setCurrentEvent(event);
         setShowCreateEditModal(true);
-    }
+    };
 
     const deleteAction = (event: any) => {
         setDeleteEvent(event);
         setShowDeleteConfirmation(true);
-    }
+    };
 
     const handleDelete = () => {
-        deleteForm.post(route('organizer.events.destroy', deleteUser.id));
+        deleteForm.post(route("organizer.events.destroy", deleteUser.id));
         setShowDeleteConfirmation(false);
-    }
+    };
 
     const deleteManyAction = (ids: number[]) => {
-        deleteManyForm.setData(data => ({ ...data, ids: ids }));
+        deleteManyForm.setData((data) => ({ ...data, ids: ids }));
         setShowDeleteManyConfirmation(true);
-    }
+    };
 
     const handleDeleteMany = () => {
-        deleteManyForm.delete(route('organizer.events.destroy.many'));
+        deleteManyForm.delete(route("organizer.events.destroy.many"));
         setShowDeleteManyConfirmation(false);
-    }
+    };
 
-    const columns: ColumnDef<typeof events.data[0]> = [
+    const truncateDesc = (desc: any) => {
+        return desc.length > 25 ? desc.substring(0, 25) + "..." : desc;
+    };
+
+    const columns: ColumnDef<(typeof events.data)[0]> = [
         {
-            accessorKey: 'id',
-            header: () => 'ID',
+            accessorKey: "id",
+            header: () => "ID",
             cell: (event) => event.id,
             cellClass: "fw-medium",
-            enableSorting: false
+            enableSorting: false,
         },
         {
-            accessorKey: 'logo',
-            header: () => 'Logo',
+            accessorKey: "logo",
+            header: () => "Logo",
             cell: (event) => (
-                < img className='rounded-circle' src={(event.logo ? '/storage/' + event.logo : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s') + "?" + imageHash} alt="event logo" height={'35px'} />
+                <img
+                    className="img-fluid rounded-circle avatar-sm"
+                    src={event.logo_img + "?" + imageHash}
+                    alt="event logo"
+                    height={"35px"}
+                />
             ),
-            enableSorting: false
+            enableSorting: false,
         },
         {
-            accessorKey: 'category',
-            header: () => 'Category',
-            cell: (event) => event.category?.name ?? '',
-            enableSorting: false
+            accessorKey: "category",
+            header: () => "Category",
+            cell: (event) => event.category?.name ?? "",
+            enableSorting: false,
         },
         {
-            accessorKey: 'name',
-            header: () => 'Name',
+            accessorKey: "name",
+            header: () => "Name",
             cell: (event) => event.name,
-            enableSorting: false
+            enableSorting: false,
         },
         {
-            accessorKey: 'description',
-            header: () => 'Description',
-            cell: (event) => <div style={{ maxWidth: '250px', overflow: 'auto' }}>
-                <p style={{ textWrap: 'pretty', textAlign: 'justify' }}>{event.description}</p>
-            </div >,
-            enableSorting: false
+            accessorKey: "description",
+            header: () => "Description",
+            cell: (event) => (
+                <div style={{ maxWidth: "200px", overflow: "auto" }}>
+                    <p
+                        style={{
+                            textWrap: "pretty",
+                            textAlign: "justify",
+                            marginBottom: "unset !important",
+                        }}
+                    >
+                        {truncateDesc(event.description)}
+                    </p>
+                </div>
+            ),
+            enableSorting: false,
         },
         {
-            accessorKey: 'start_date',
-            header: () => 'Start Date',
-            cell: (event) => moment(event.start_date).format('DD MMM, YYYY'),
-            enableSorting: false
+            accessorKey: "start_date",
+            header: () => "Start Date",
+            cell: (event) => moment(event.start_date).format("DD MMM, YYYY"),
+            enableSorting: false,
         },
         {
-            accessorKey: 'is_recurring',
-            header: () => 'Recurring',
-            cell: (event) => <div className='d-flex justify-content-center w-50'>
-                {event.is_recurring && <span className="badge bg-success-subtle text-success fs-6">Yes</span>}
-                {!event.is_recurring && <span className="badge bg-secondary-subtle text-secondary fs-6">No</span>}
-            </div>,
-            enableSorting: false
+            accessorKey: "is_recurring",
+            header: () => "Recurring",
+            cell: (event) => (
+                <div className="d-flex justify-content-center w-50">
+                    {event.is_recurring && (
+                        <span className="badge bg-success-subtle text-success fs-6">
+                            Yes
+                        </span>
+                    )}
+                    {!event.is_recurring && (
+                        <span className="badge bg-secondary-subtle text-secondary fs-6">
+                            No
+                        </span>
+                    )}
+                </div>
+            ),
+            enableSorting: false,
         },
         {
-            accessorKey: 'recurring_frequency',
-            header: () => 'R.Frequency',
-            cell: (event) => event.recurring_type ? event.recurring_type.name : '',
-            enableSorting: false
+            accessorKey: "recurring_frequency",
+            header: () => "R.Frequency",
+            cell: (event) =>
+                event.recurring_type ? event.recurring_type.name : "",
+            enableSorting: false,
         },
         {
-            header: () => 'Action',
+            header: () => "Action",
             cell: (event) => (
                 <div className="hstack gap-3 fs-15 ">
                     <HasPermission permission="edit_users">
-                        <Link title='Click to select this Event' href={route('organizer.events.select', { 'id': event.id, 'back': false })}><i className='bx bxs-hand-up'></i></Link>
+                        <Link
+                            title="Click to select this Event"
+                            href={route("organizer.events.select", {
+                                id: event.id,
+                                back: false,
+                            })}
+                        >
+                            <i className="bx bxs-hand-up"></i>
+                        </Link>
                     </HasPermission>
                     {/* <Link href={route('organizer.events.select', { 'id': event.id, 'back': false })}>Open</Link> */}
                     <HasPermission permission="edit_users">
-                        <span title='Click to Edit this Event' className="link-primary cursor-pointer" onClick={() => showModal(event)}><i className="ri-edit-fill"></i></span>
+                        <span
+                            title="Click to Edit this Event"
+                            className="link-primary cursor-pointer"
+                            onClick={() => showModal(event)}
+                        >
+                            <i className="ri-edit-fill"></i>
+                        </span>
                     </HasPermission>
                     <HasPermission permission="edit_users">
-                        <span className="link-danger cursor-pointer" onClick={() => deleteAction(event)}>
+                        <span
+                            className="link-danger cursor-pointer"
+                            onClick={() => deleteAction(event)}
+                        >
                             <i className="ri-delete-bin-5-line"></i>
                         </span>
                     </HasPermission>
@@ -142,16 +189,13 @@ function Index({ events, recurring_types, event_category_types }: any) {
 
     return (
         <React.Fragment>
-            <Head title='Events' />
+            <Head title="Events" />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb2
-                        title="Events"
-                    />
+                    <BreadCrumb2 title="Events" />
                     <Row>
                         <Col xs={12} id="eventsTableWrapper">
                             <DataTable
-
                                 data={events}
                                 columns={columns}
                                 title="Events"
@@ -160,7 +204,27 @@ function Index({ events, recurring_types, event_category_types }: any) {
                                     {
                                         render: (dataTable) => (
                                             <HasPermission permission="delete_users">
-                                                <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>
+                                                <Button
+                                                    className="btn-danger"
+                                                    onClick={() =>
+                                                        deleteManyAction(
+                                                            dataTable
+                                                                .getSelectedRows()
+                                                                .map(
+                                                                    (row) =>
+                                                                        row.id
+                                                                )
+                                                        )
+                                                    }
+                                                >
+                                                    <i className="ri-delete-bin-5-line"></i>{" "}
+                                                    Delete (
+                                                    {
+                                                        dataTable.getSelectedRows()
+                                                            .length
+                                                    }
+                                                    )
+                                                </Button>
                                             </HasPermission>
                                         ),
                                         showOnRowSelection: true,
@@ -169,9 +233,16 @@ function Index({ events, recurring_types, event_category_types }: any) {
                                     {
                                         render: (
                                             <HasPermission permission="create_users">
-                                                <Button onClick={() => showModal(null)}><i className="ri-add-fill"></i> Add New Event</Button>
+                                                <Button
+                                                    onClick={() =>
+                                                        showModal(null)
+                                                    }
+                                                >
+                                                    <i className="ri-add-fill"></i>{" "}
+                                                    Add New Event
+                                                </Button>
                                             </HasPermission>
-                                        )
+                                        ),
                                     },
                                 ]}
                             />
@@ -194,16 +265,20 @@ function Index({ events, recurring_types, event_category_types }: any) {
             <DeleteModal
                 show={showDeleteConfirmation}
                 onDeleteClick={handleDelete}
-                onCloseClick={() => { setShowDeleteConfirmation(false) }}
+                onCloseClick={() => {
+                    setShowDeleteConfirmation(false);
+                }}
             />
 
             <DeleteManyModal
                 show={showDeleteManyConfirmation}
                 onDeleteClick={handleDeleteMany}
-                onCloseClick={() => { setShowDeleteManyConfirmation(false) }}
+                onCloseClick={() => {
+                    setShowDeleteManyConfirmation(false);
+                }}
             />
         </React.Fragment>
-    )
+    );
 }
 
 Index.layout = (page: any) => <Layout children={page} />;
