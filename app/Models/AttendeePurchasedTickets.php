@@ -13,10 +13,20 @@ class AttendeePurchasedTickets extends Model
         'attendee_payment_id',
         'event_app_ticket_id',
         'qty',
-        'discountCode',
+        'discount_code',
         'price',
         'discount',
         'subTotal',
         'total'
     ];
+
+    public function payment()
+    {
+        return $this->belongsTo(AttendeePayment::class, 'attendee_payment_id');
+    }
+
+    public function ticket()
+    {
+        return $this->belongsTo(EventAppTicket::class, 'event_app_ticket_id');
+    }
 }

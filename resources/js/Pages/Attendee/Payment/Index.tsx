@@ -25,7 +25,7 @@ const Index = ({
     stripe_pub_key,
     paypal_client_id,
 }: any) => {
-    console.log(tickets);
+    // console.log(tickets);
 
     const [stripePromise, setStripePromise] = useState(
         loadStripe(stripe_pub_key)
@@ -69,7 +69,7 @@ const Index = ({
                 <Container>
                     <Row className="justify-content-center">
                         <Col md={6} lg={6}>
-                            <Card>
+                            <Card className="pricing-rates starter-plan shadow bg-white p-4 rounded border-0">
                                 <CardBody>
                                     <Tabs
                                         fill
@@ -96,7 +96,12 @@ const Index = ({
                                                 </div>
                                             )}
                                             {clientSecret && stripePromise && (
-                                                <Card>
+                                                <Card
+                                                    style={{
+                                                        backgroundColor:
+                                                            "var(--vz-border-color-translucent)",
+                                                    }}
+                                                >
                                                     <CardBody>
                                                         <Elements
                                                             stripe={

@@ -9,7 +9,7 @@ class AttendeePayment extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'event_app_ticket_id',
+        'event_app_id',
         'attendee_id',
         'amount_paid',
         'payment_method'

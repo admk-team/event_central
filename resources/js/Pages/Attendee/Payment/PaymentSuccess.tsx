@@ -14,10 +14,23 @@ const PaymentSuccess = () => {
                         <Col lg={8}>
                             <Card>
                                 <CardBody>
-                                    <div className="d-flex justify-content-center align-items-center " style={{ height: '300px' }}>
-                                        <div><span className="fs-2 text-green">
-                                            Payment was processed successful. <i className='bx bx-smile text-primary'></i>
-                                        </span></div>
+                                    <div
+                                        className="d-flex justify-content-center align-items-center"
+                                        style={{ height: "300px" }}
+                                    >
+                                        <div className="d-flex justify-content-center align-items-center flex-column">
+                                            <i
+                                                className="bx bxs-check-circle"
+                                                style={{
+                                                    fontSize: "50px",
+                                                    color: "green",
+                                                }}
+                                            ></i>
+                                            <span className="fs-3 text-green">
+                                                Payment was processed
+                                                successfuly.
+                                            </span>
+                                        </div>
                                     </div>
                                 </CardBody>
                             </Card>

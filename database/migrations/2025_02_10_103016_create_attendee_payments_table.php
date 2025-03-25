@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('attendee_payments', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('event_app_ticket_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('event_app_id')->constrained()->cascadeOnDelete();
             $table->foreignId('attendee_id')->constrained()->cascadeOnDelete();
             $table->decimal('amount_paid');
             $table->enum('payment_method', ['stripe', 'paypal']);
