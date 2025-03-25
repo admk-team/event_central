@@ -11,12 +11,12 @@ import { Dropdown, Form } from "react-bootstrap";
 import { changeSidebarVisibility } from "../../slices/thunk";
 import SearchOption from "../../Components/Common/SearchOption";
 import LanguageDropdown from "../../Components/Common/LanguageDropdown";
-import WebAppsDropdown from "../../Components/Common/WebAppsDropdown";
-import MyCartDropdown from "../../Components/Common/MyCartDropdown";
+// import WebAppsDropdown from "../../Components/Common/WebAppsDropdown";
+// import MyCartDropdown from "../../Components/Common/MyCartDropdown";
 import FullScreenDropdown from "../../Components/Common/FullScreenDropdown";
 import ProfileDropdown from "../../Components/Common/ProfileDropdown";
 import LightDark from "../../Components/Common/LightDark";
-import NotificationDropdown from "../../Components/Common/NotificationDropdown";
+// import NotificationDropdown from "../../Components/Common/NotificationDropdown";
 import AdminProfileDropdown from "../../Components/Common/AdminProfileDropdown";
 
 const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
@@ -137,10 +137,10 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
                             <LanguageDropdown />
 
                             {/* WebAppsDropdown */}
-                            <WebAppsDropdown />
+                            {/* <WebAppsDropdown /> */}
 
                             {/* MyCartDropdwon */}
-                            <MyCartDropdown />
+                            {/* <MyCartDropdown /> */}
 
                             {/* FullScreenDropdown */}
                             <FullScreenDropdown />
@@ -152,7 +152,7 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
                             />
 
                             {/* NotificationDropdown */}
-                            <NotificationDropdown />
+                            {/* <NotificationDropdown /> */}
 
                             {/* ProfileDropdown */}
                             <AdminProfileDropdown />
