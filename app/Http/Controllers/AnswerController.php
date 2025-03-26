@@ -11,6 +11,8 @@ use chillerlan\QRCode\QROptions;
 use chillerlan\QRCode\Common\EccLevel;
 use chillerlan\QRCode\Output\QRImage;
 use Illuminate\Support\Facades\Storage;
+// use Barryvdh\DomPDF\Facade\Pdf;
+
 
 class AnswerController extends Controller
 {
@@ -74,8 +76,10 @@ class AnswerController extends Controller
             $qrData
         ));
 
+
+        // $pdf = Pdf::loadView('attendee-pass-pdf', compact(['attendee', 'event']));
+        // return $pdf->download('pass.pdf');
+        // return view('attendee-pass-pdf', compact(['attendee', 'event']));
         return view('attendee-pass', compact(['attendee', 'event']));
-        // return response($qrcode->render($qrData))
-        //     ->header('Content-Type', 'image/png');
     }
 }
