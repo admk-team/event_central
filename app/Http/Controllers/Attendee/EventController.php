@@ -7,6 +7,7 @@ use App\Models\EventApp;
 use App\Models\EventSession;
 use App\Models\EventPost;
 use App\Models\EventSpeaker;
+use App\Models\SessionCheckIn;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -33,6 +34,7 @@ class EventController extends Controller
 
     public function getEventSessionDetail(Request $request, EventSession $eventSession)
     {
+        $checkin = SessionCheckIn::where('attendee_id',auth()->user()->id)->where('session_id',$eventSession->id)->exists();
         $eventApp = EventApp::find(Auth::user()->event_app_id);
         // Finding previous and next session ids with reference to current session
         $next_session_id = null;
@@ -62,6 +64,7 @@ class EventController extends Controller
             'selectedSessionDetails',
             'prev_session_id',
             'next_session_id',
+            'checkin',
         ]));
     }
 

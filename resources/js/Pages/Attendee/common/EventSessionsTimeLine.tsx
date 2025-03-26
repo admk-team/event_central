@@ -5,8 +5,7 @@ import moment from 'moment';
 
 
 const EventSessionsTimeLine = ({ eventApp, sessions }: any) => {
-
-    const sessionLists = sessions.map(session =>
+    const sessionLists = sessions.map((session:any) =>
         <li key={session.id}>
             <Link href={route('attendee.event.detail.session', { eventApp: eventApp.id, eventSession: session.id })}>
                 <div className='d-flex justify-content-between'>

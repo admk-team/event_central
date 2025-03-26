@@ -27,6 +27,7 @@ const AttendeeSessionDetail = ({
     selectedSessionDetails,
     prev_session_id,
     next_session_id,
+    checkin
 }: any) => {
     const { data, setData, post, processing, errors, reset } = useForm({
         _method: "POST",
@@ -34,13 +35,22 @@ const AttendeeSessionDetail = ({
         rating_description: selectedSessionDetails?.rating_description ?? "",
     });
 
-    const ratingEnabled = moment(eventSession.start_date) < moment();
+    const ratingEnabled = moment(eventSession.end_date_time) < moment();
+
+    const now = moment(); 
+    const startTime = moment(eventSession.start_date_time);
+    const endTime = moment(eventSession.end_date_time);
+    const canCheckIn = now.isBetween(startTime, endTime);
 
     const submitRatingChange = (e: any) => {
         e.preventDefault();
         post(route("attendee.save.rating", eventSession.id));
         console.log("Rating form submitted");
     };
+    const submitCheckIn = (e: any) =>{
+        e.preventDefault();
+        post(route("attendee.checkin", eventSession.id));
+    }
 
     const form = useForm({
         eventId: eventApp.id,
@@ -398,6 +408,35 @@ const AttendeeSessionDetail = ({
                                                             </div>
                                                         )}
                                                     </form>
+                                                )}
+                                            </Accordion.Body>
+                                        </Accordion.Item>
+                                        <Accordion.Item eventKey="1">
+                                            <Accordion.Header>
+                                                <h6>Check In</h6>
+                                            </Accordion.Header>
+                                            <Accordion.Body>
+                                            {canCheckIn ? (
+                                                    <form onSubmit={submitCheckIn}>
+                                                        <div className="d-flex justify-content-between">
+                                                            <Button
+                                                                type="submit"
+                                                                className={`btn btn-success w-100 mt-4 ${checkin ? 'disabled' : ''}`}
+                                                                disabled={processing}
+                                                            >
+                                                                Check In
+                                                            </Button>
+                                                        </div>
+                                                    </form>
+                                                ) : (
+                                                    <p>
+                                                        * Check-in is only allowed between{" "}
+                                                        {moment(eventSession.start_date_time).format("DD MMM, YYYY hh:mm A")} 
+                                                        {" and "}
+                                                        {moment(eventSession.end_date_time).format("DD MMM, YYYY hh:mm A")}
+                                                        <br />
+                                                        * Your check-in time: {moment().format("DD MMM, YYYY hh:mm A")}
+                                                    </p>
                                                 )}
                                             </Accordion.Body>
                                         </Accordion.Item>

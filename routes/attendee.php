@@ -83,6 +83,7 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
     Route::post('/attendee-save-session/{eventSession}/{type}', [EventSessionController::class, 'saveSession'])->name('attendee.save.session');
 
     Route::post('/attendee-save-rating/{eventSession}', [EventSessionController::class, 'saveRating'])->name('attendee.save.rating');
+    Route::post('/attendee-check-in/{eventSession}', [EventSessionController::class, 'saveCheckIn'])->name('attendee.checkin');
 
     Route::post('/attendee-poll-rating', [EventPostController::class, 'pollToggle'])->name('attendee.poll.rating');
     Route::post('/attendee-post-likes', [EventPostController::class, 'toggleLike'])->name('attendee.like.rating');
