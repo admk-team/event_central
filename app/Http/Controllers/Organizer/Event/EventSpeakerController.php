@@ -24,7 +24,7 @@ class EventSpeakerController extends Controller
     {
         // $colorschemes = ColorScheme::latest()->paginate($request->per_page ?? 10);
         $events = EventApp::ofOwner()->get();
-        return Inertia::render("Organizer/Events/Speekers/CreateOrEdit",[
+        return Inertia::render("Organizer/Events/Speekers/CreateOrEdit", [
             'events' => $events
         ]);
     }
@@ -54,12 +54,15 @@ class EventSpeakerController extends Controller
     public function update(EventSpeakerRequest $request, EventSpeaker $speaker)
     {
         $input = $request->validated();
-        if ($input['avatar'] && Storage::disk('public')->exists($input['avatar'])) {
-            Storage::disk('public')->delete($input['avatar']);
+        if ($input['avatar']) {
+            if (Storage::disk('public')->exists($input['avatar'])) {
+                Storage::disk('public')->delete($input['avatar']);
+                $name = uniqid() . '.' . $request->avatar->getClientOriginalExtension();
+                $input['avatar'] = $request->avatar->storeAs('organizer/organizer-avatars', $name, 'public');
+            }
+        } else {
+            unset($input['avatar']);
         }
-        $name = uniqid() . '.' . $input['avatar']->getClientOriginalExtension();
-        $input['avatar'] = $input['avatar']->storeAs('organizer/organizer-avatars', $name, 'public');
-
 
         $speaker->update($input);
 
