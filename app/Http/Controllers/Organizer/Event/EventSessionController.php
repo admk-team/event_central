@@ -55,7 +55,7 @@ class EventSessionController extends Controller
 
         $data = $request->validated();
         $schedule->update($data);
-        return back();
+        return back()->withSuccess("Session Updated Successfully");
     }
 
     public function destroy(EventSession $schedule)
@@ -65,7 +65,7 @@ class EventSessionController extends Controller
         }
 
         $schedule->delete();
-        return back();
+        return back()->withSuccess("Session Deleted Successfully");
     }
 
     public function destroyMany(Request $request)
