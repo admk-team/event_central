@@ -16,7 +16,7 @@ import Layout from "../../../../Layouts/Event";
 import Widgets1 from "../../../Theme/DashboardCrypto/Widgets1";
 import Widget1 from "./Widget1";
 
-const DashboardAnalytics = ({ totalAttendee,totalSession,totalSpeakers,totalPartners,totalTickets,totalPosts }: any) => {
+const DashboardAnalytics = ({ totalAttendee,totalSession,totalSpeakers,totalPartners,totalTickets,totalPosts,totalRevenue }: any) => {
     return (
         <React.Fragment>
             <Head title="Analytics | Velzon - React Admin & Dashboard Template" />
@@ -46,6 +46,7 @@ const DashboardAnalytics = ({ totalAttendee,totalSession,totalSpeakers,totalPart
                                 totalTickets = {totalTickets}
                                 totalSpeakers = {totalSpeakers}
                                 totalPartners = {totalPartners}
+                                totalRevenue = {totalRevenue}
                             />
                         </Col>
                         <LiveUsers />

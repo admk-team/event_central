@@ -12,6 +12,7 @@ const Widget = ({
     totaluser,
     totalPartners,
     totalSpeakers,
+    totalRevenue,
 }: any) => {
     return (
         <React.Fragment>
@@ -30,11 +31,11 @@ const Widget = ({
                                             data-target="97.66"
                                         >
                                             <CountUp
-                                                key={totalPosts}
+                                                key={totalRevenue}
                                                 start={0}
-                                                end={Number(totalPosts)}
+                                                end={Number(totalRevenue)}
                                                 decimals={
-                                                    totalPosts >= 1000 ? 1 : 0
+                                                    totalRevenue >= 1000 ? 1 : 0
                                                 }
                                                 duration={4}
                                                 formattingFn={(value: any) =>
@@ -59,7 +60,7 @@ const Widget = ({
                                     <div className="avatar-sm flex-shrink-0">
                                         <span className="avatar-title bg-info-subtle rounded-circle fs-2">
                                             <FeatherIcon
-                                                icon="share"
+                                                icon="bar-chart-2"
                                                 className="text-success"
                                             />
                                         </span>
@@ -111,7 +112,7 @@ const Widget = ({
                                     <div className="avatar-sm flex-shrink-0">
                                         <span className="avatar-title bg-info-subtle rounded-circle fs-2">
                                             <FeatherIcon
-                                                icon="mic"
+                                                icon="rotate-ccw"
                                                 className="text-success"
                                             />
                                         </span>

@@ -165,7 +165,7 @@ const Widget1 = ({
                                     <div className="avatar-sm flex-shrink-0">
                                         <span className="avatar-title bg-info-subtle rounded-circle fs-2">
                                             <FeatherIcon
-                                                icon="briefcase"
+                                                icon="credit-card"
                                                 className="text-success"
                                             />
                                         </span>
