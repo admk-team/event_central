@@ -27,7 +27,7 @@ const AttendeeSessionDetail = ({
     selectedSessionDetails,
     prev_session_id,
     next_session_id,
-    checkin
+    checkin,
 }: any) => {
     const { data, setData, post, processing, errors, reset } = useForm({
         _method: "POST",
@@ -37,7 +37,7 @@ const AttendeeSessionDetail = ({
 
     const ratingEnabled = moment(eventSession.end_date_time) < moment();
 
-    const now = moment(); 
+    const now = moment();
     const startTime = moment(eventSession.start_date_time);
     const endTime = moment(eventSession.end_date_time);
     const canCheckIn = now.isBetween(startTime, endTime);
@@ -47,10 +47,10 @@ const AttendeeSessionDetail = ({
         post(route("attendee.save.rating", eventSession.id));
         console.log("Rating form submitted");
     };
-    const submitCheckIn = (e: any) =>{
+    const submitCheckIn = (e: any) => {
         e.preventDefault();
         post(route("attendee.checkin", eventSession.id));
-    }
+    };
 
     const form = useForm({
         eventId: eventApp.id,
@@ -106,8 +106,7 @@ const AttendeeSessionDetail = ({
                                         </div>
 
                                         <div className="d-flex flex-row align-items-center">
-                                            {eventSession.qa_status ==
-                                                true && (
+                                            {eventSession.qa_status == true && (
                                                 <div className="d-flex align-items-center gap-2 me-3">
                                                     {" "}
                                                     {/* Gap between Q&A and icons */}
@@ -152,7 +151,7 @@ const AttendeeSessionDetail = ({
                                                     href="#"
                                                     className="pe-auto"
                                                     onClick={selectSession}
-                                                        title="Not Purchased Session"
+                                                    title="Not Purchased Session"
                                                 >
                                                     <i className="bx bx-heart fs-3 fw-bolder text-muted"></i>{" "}
                                                     {/* Empty Heart Icon */}
@@ -166,7 +165,9 @@ const AttendeeSessionDetail = ({
                                             <figure className="event-image">
                                                 <img
                                                     className="card-full-image"
-                                                    src={eventApp.featured_image}
+                                                    src={
+                                                        eventApp.featured_image
+                                                    }
                                                     alt="event default image"
                                                 />
                                                 <figcaption>
@@ -204,7 +205,8 @@ const AttendeeSessionDetail = ({
                                                 </Badge>
                                                 <Badge bg="secondary">
                                                     {moment(
-                                                        eventSession.event_date.date
+                                                        eventSession.event_date
+                                                            .date
                                                     ).format("DD MMM ") +
                                                         " - " +
                                                         moment(
@@ -222,10 +224,7 @@ const AttendeeSessionDetail = ({
                                                 <Link
                                                     href={route(
                                                         "attendee.event.detail.session",
-                                                        [
-
-                                                            prev_session_id,
-                                                        ]
+                                                        [prev_session_id]
                                                     )}
                                                     title="Previous Session"
                                                 >
@@ -236,10 +235,7 @@ const AttendeeSessionDetail = ({
                                                 <Link
                                                     href={route(
                                                         "attendee.event.detail.session",
-                                                        [
-
-                                                            next_session_id,
-                                                        ]
+                                                        [next_session_id]
                                                     )}
                                                     title="Next Session"
                                                 >
@@ -305,7 +301,8 @@ const AttendeeSessionDetail = ({
                                                 {!sessionSelected && (
                                                     <p className="fs-5">
                                                         Rating can be left for
-                                                        purchased session(s) only.
+                                                        purchased session(s)
+                                                        only.
                                                     </p>
                                                 )}
                                                 {sessionSelected && (
@@ -380,7 +377,12 @@ const AttendeeSessionDetail = ({
                                                                 * Ratings can be
                                                                 added only after
                                                                 the session has
-                                                                started i.e {moment(eventSession.start_date_time).format('DD MMM, YYYY hh:mm')}
+                                                                started i.e{" "}
+                                                                {moment(
+                                                                    eventSession.start_date_time
+                                                                ).format(
+                                                                    "DD MMM, YYYY hh:mm"
+                                                                )}
                                                             </p>
                                                         )}
 
@@ -406,28 +408,54 @@ const AttendeeSessionDetail = ({
                                                 <h6>Check In</h6>
                                             </Accordion.Header>
                                             <Accordion.Body>
-                                            {canCheckIn ? (
-                                                    <form onSubmit={submitCheckIn}>
-                                                        <div className="d-flex justify-content-between">
-                                                            <Button
-                                                                type="submit"
-                                                                className={`btn btn-success w-100 mt-4 ${checkin ? 'disabled' : ''}`}
-                                                                disabled={processing}
-                                                            >
-                                                                Check In
-                                                            </Button>
-                                                        </div>
-                                                    </form>
-                                                ) : (
-                                                    <p>
-                                                        * Check-in is only allowed between{" "}
-                                                        {moment(eventSession.start_date_time).format("DD MMM, YYYY hh:mm A")} 
-                                                        {" and "}
-                                                        {moment(eventSession.end_date_time).format("DD MMM, YYYY hh:mm A")}
-                                                        <br />
-                                                        * Your check-in time: {moment().format("DD MMM, YYYY hh:mm A")}
+                                                {!sessionSelected && (
+                                                    <p className="fs-5">
+                                                        checkin can be left for
+                                                        purchased session(s)
+                                                        only.
+                                                        <br />* Your check-in
+                                                        time:{" "}
+                                                        {moment().format(
+                                                            "DD MMM, YYYY hh:mm A"
+                                                        )}
                                                     </p>
                                                 )}
+
+                                                {
+                                                    sessionSelected && (
+                                                        <form
+                                                            onSubmit={
+                                                                submitCheckIn
+                                                            }
+                                                        >
+                                                            <div className="d-flex justify-content-between">
+                                                                <Button
+                                                                    type="submit"
+                                                                    className={`btn btn-success w-100 mt-4 ${
+                                                                        checkin
+                                                                            ? "disabled"
+                                                                            : ""
+                                                                    }`}
+                                                                    disabled={
+                                                                        processing
+                                                                    }
+                                                                >
+                                                                    Check In
+                                                                </Button>
+                                                            </div>
+                                                        </form>
+                                                    )
+                                                    // : (
+                                                    //     <p>
+                                                    //         * Check-in is only allowed between{" "}
+                                                    //         {moment(eventSession.start_date_time).format("DD MMM, YYYY hh:mm A")}
+                                                    //         {" and "}
+                                                    //         {moment(eventSession.end_date_time).format("DD MMM, YYYY hh:mm A")}
+                                                    //         <br />
+                                                    //         * Your check-in time: {moment().format("DD MMM, YYYY hh:mm A")}
+                                                    //     </p>
+                                                    // )
+                                                }
                                             </Accordion.Body>
                                         </Accordion.Item>
                                     </Accordion>
