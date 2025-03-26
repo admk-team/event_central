@@ -5,17 +5,20 @@ import moment from 'moment';
 
 
 const EventSessionsTimeLine = ({ eventApp, sessions }: any) => {
-    const sessionLists = sessions.map((session:any) =>
+
+    console.log(sessions);
+
+    const sessionLists = sessions.map(session =>
         <li key={session.id}>
-            <Link href={route('attendee.event.detail.session', { eventApp: eventApp.id, eventSession: session.id })}>
+            <Link href={route('attendee.event.detail.session', { eventSession: session.id })}>
                 <div className='d-flex justify-content-between'>
-                    <span style={{ color: 'var(--vz-success)' }}>{moment(session.start_date).format('DD MMM YYYY')}   ({moment(session.start_date).format('hh:mm:ss')}-{moment(session.end_date).format('hh:mm:ss')})</span>
+                    <span style={{ color: 'var(--vz-success)' }}>{moment(session.start_date_time).format('DD MMM YYYY')}   ({moment(session.start_date_time).format('hh:mm')}-{moment(session.end_date_time).format('hh:mm')})</span>
                     <span style={{ color: 'var(--vz-success)' }}>
                         <i className="mr-2 bx bx-time" ></i>
-                        {moment(session.end_date).diff(moment(session.start_date), 'minutes')} minutes</span>
+                        {moment(session.end_date_time).diff(moment(session.start_date_time), 'minutes')} minutes</span>
                 </div>
                 <Card >
-                    <CardBody>
+                    <CardBody >
                         <Row>
                             <Col md={10} lg={10}>
                                 <div className="d-flex flex-column">

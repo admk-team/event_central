@@ -37,13 +37,14 @@ class EventSessionController extends Controller
     public function store(EventSessionRequest $request)
     {
         if (! Auth::user()->can('create_event_sessions')) {
-            abort(403);
+            // abort(403);
+            return back()->withError("Invalid User Permissions to create session");
         }
 
         $data = $request->validated();
         $data['event_app_id'] = session('event_id');
         EventSession::create($data);
-        return back();
+        return back()->withSuccess("Session Created Successfully");
     }
 
     public function update(EventSessionRequest $request, EventSession $schedule)
@@ -72,7 +73,7 @@ class EventSessionController extends Controller
         $request->validate([
             'ids' => 'required|array'
         ]);
-        
+
         foreach ($request->ids as $id) {
             $schedule = EventSession::find($id);
 

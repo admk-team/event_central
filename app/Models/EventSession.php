@@ -12,8 +12,8 @@ class EventSession extends Model
 {
     use HasFactory, HasModelPermissions;
 
-    protected $appends = ['selected_by_attendee'];
-    
+    protected $appends = ['selected_by_attendee', 'start_date_time', 'end_date_time'];
+
     protected $fillable = [
         'name',
         'event_speaker_id',
@@ -48,6 +48,7 @@ class EventSession extends Model
     {
         return $this->belongsToMany(Attendee::class, 'attendee_event_session')->withPivot('rating', 'rating_description')->withTimestamps();
     }
+
     public function eventDate(){
         return $this->belongsTo(EventAppDate::class,'event_date_id');
     }
@@ -62,5 +63,15 @@ class EventSession extends Model
     public function questions()
     {
         return $this->hasMany(Question::class, 'event_session_id');
+    }
+
+    public function getStartDateTimeAttribute() //Being usedin Attendee Side
+    {
+        return $this->eventDate ? $this->eventDate->date . ' ' . $this->attributes['start_time'] : '';
+    }
+
+    public function getEndDateTimeAttribute() //Being usedin Attendee Side
+    {
+        return $this->eventDate ? $this->eventDate->date . ' ' . $this->attributes['end_time'] : '';
     }
 }

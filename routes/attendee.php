@@ -96,5 +96,7 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
     Route::group(['prefix' => 'events/qa', 'as' => 'attendee.events.qa.'], function () {
         Route::put('/question/{questionId}', [AttendeeQuestionAttendeeController::class, 'updateQuestion'])->name('updateQuestion');
         Route::delete('/question/{questionId}', [AttendeeQuestionAttendeeController::class, 'destroyQuestion'])->name('destroyQuestion');
+        Route::put('/answer/{answerId}', [AttendeeQuestionAttendeeController::class, 'updateAnswer'])->name('updateAnswer');
+        Route::delete('/answer/{answerId}', [AttendeeQuestionAttendeeController::class, 'destroyAnswer'])->name('destroyAnswer');
     });
 });

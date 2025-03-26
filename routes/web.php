@@ -59,9 +59,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile-edit', [ProfileController::class, 'edit'])->name('profile.edit'); // To be removed in future
     Route::patch('/profile-update', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile-destroy', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+
+    Route::get('/test-attendee-qr', [AnswerController::class, 'generate']);
 });
 
-Route::get('/test-qr', [AnswerController::class, 'generate']);
+
+Route::middleware('auth:attendee')->group(function () {
+
+    Route::get('/test-attendee-qr', [AnswerController::class, 'generate']);
+});
+
+
 
 require __DIR__ . '/auth.php';
 

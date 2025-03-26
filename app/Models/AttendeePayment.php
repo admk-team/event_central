@@ -21,4 +21,8 @@ class AttendeePayment extends Model
     {
         return $this->hasMany(AttendeePurchasedTickets::class);
     }
+    public function scopeCurrentEvent($query)
+    {
+        $query->where('event_app_id', session('event_id'));
+    }
 }

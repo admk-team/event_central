@@ -118,16 +118,18 @@ class PaymentController extends Controller
     {
         $data = $request->all();
         $event_id = auth()->user()->event_app_id;
-        $attendee_id = auth()->user()->id;
+        $attendee = auth()->user();
 
         DB::beginTransaction();
         try {
+            // Create Attendee Payment record
             $payment = AttendeePayment::create([
                 'event_app_id' => $event_id,
-                'attendee_id' => $attendee_id,
+                'attendee_id' => $attendee->id,
                 'amount_paid' => $data['amount'],
                 'payment_method' => 'stripe'
             ]);
+            // Create record for every tickets purchased by attendee
             foreach ($data['tickets'] as $purchased_ticket) {
                 AttendeePurchasedTickets::create([
                     'attendee_payment_id' => $payment->id,
@@ -150,12 +152,24 @@ class PaymentController extends Controller
                 // Update Ticket Feature Qty Sold
                 $ticket = EventAppTicket::find($purchased_ticket['event_app_ticket_id']);
                 $features_ids = $ticket->features()->pluck('id');
+
                 foreach ($features_ids as $id) {
                     $feature = TicketFeature::find($id);
                     $qty_sold = $feature->qty_sold + intval($purchased_ticket['qty']);
                     Log::info($qty_sold);
                     $feature->update(['qty_sold' => $qty_sold]);
                     $feature->save();
+                }
+
+                //Update Attendee Sessions
+                $session_ids = $ticket->sessions()->pluck('id');
+                foreach ($session_ids as $id) {
+                    // Session might be already attached to attendee from any other ticket
+                    try {
+                        $attendee->eventSelectedSessions()->attach($id);
+                    } catch (Exception $ex) {
+                        Log::error($ex->getMessage());
+                    }
                 }
             }
             DB::commit();

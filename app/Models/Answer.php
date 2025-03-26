@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Answer extends Model
 {
-    protected $fillable = ['question_id', 'user_id', 'content'];
+    protected $fillable = ['question_id', 'user_id', 'user_type', 'content'];
 
     public function question()
     {
@@ -15,6 +15,6 @@ class Answer extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->morphTo('user', 'user_type', 'user_id'); // Polymorphic relationship
     }
 }
