@@ -21,7 +21,7 @@ export default function CreateEditSessionModal({
     const isEdit = eventSession != null ? true : false;
     const [enablePost, setEnablePost] = useState<boolean>(false);
     const speakers = usePage().props.speakers as any;
-    console.log(enablePost)
+    // console.log(enablePost)
     // Initialize the form data with the existing date and time
     const { data, setData, post, put, processing, errors, reset } = useForm({
         _method: isEdit ? "PUT" : "POST",
@@ -29,7 +29,7 @@ export default function CreateEditSessionModal({
         event_speaker_id: eventSession?.event_speaker_id ?? "",
         event_platform_id: selectedPlatform.id,
         event_date_id: selectedDate?.id,
-        type: eventSession?.type ?? "Lecture",
+        type: eventSession?.type ?? "Session",
         description: eventSession?.description ?? "",
         capacity: eventSession?.capacity ?? "",
         start_time: eventSession?.start_time ?? "00:00", // Default time with time
@@ -40,7 +40,7 @@ export default function CreateEditSessionModal({
 
     const submit = (e: any) => {
         e.preventDefault();
-
+        console.log(data);
         if (isEdit) {
             post(route("organizer.events.schedule.update", eventSession.id), {
                 preserveScroll: true,
@@ -92,10 +92,10 @@ export default function CreateEditSessionModal({
                         >
                             <Nav.Item>
                                 <Nav.Link
-                                    eventKey="Lecture"
-                                    onClick={() => setData("type", "Lecture")}
+                                    eventKey="Session"
+                                    onClick={() => setData("type", "Session")}
                                 >
-                                    Lecture
+                                    Session
                                 </Nav.Link>
                             </Nav.Item>
                             <Nav.Item>
@@ -211,7 +211,7 @@ export default function CreateEditSessionModal({
                         </Row>
                     </FormGroup>
 
-                    {(data.type === "Lecture" || data.type === "Workshop") && (
+                    {(data.type === "Session" || data.type === "Workshop") && (
                         <>
                             <FormGroup className="mb-3">
                                 <Form.Label
@@ -255,7 +255,7 @@ export default function CreateEditSessionModal({
                         </>
                     )}
 
-                    {data.type === "Workshop" && (
+                    {(data.type === "Session" || data.type === "Workshop") && (
                         <FormGroup className="mb-3">
                             <Form.Label>Capacity</Form.Label>
                             <Form.Control

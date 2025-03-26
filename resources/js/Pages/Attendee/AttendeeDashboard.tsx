@@ -19,9 +19,6 @@ import moment from "moment";
 
 const AttendeeDashboard = ({ eventApp }: any) => {
 
-    // console.log(eventApp.event_sessions);
-    // console.log(usePage().props.auth.user);
-
     const selectedSessions = eventApp.event_sessions.filter(
         (session: any) => session.selected_by_attendee
     );
@@ -61,14 +58,13 @@ const AttendeeDashboard = ({ eventApp }: any) => {
                                             onClick={() => {
                                                 router.visit(
                                                     route(
-                                                        "attendee.event.detail.agenda",
-                                                        [eventApp.id]
+                                                        "attendee.event.detail.agenda"
                                                     )
                                                 );
                                             }}
                                             variant="success"
                                         >
-                                            Program
+                                            Event Agenda
                                         </Button>
                                     </div>
                                 </Col>

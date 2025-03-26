@@ -6,17 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Question extends Model
 {
-    protected $fillable = ['event_session_id', 'user_id', 'content', 'likes_count', 'dislikes_count'];
+    protected $fillable = ['event_session_id', 'user_id', 'user_type', 'content', 'likes_count', 'dislikes_count'];
 
-    public function eventApp() // Use `eventApp` to match `EventApp`
+    public function eventApp()
     {
-        return $this->belongsTo(EventSession::class, 'event_session_id'); // Adjust foreign key if different
+        return $this->belongsTo(EventSession::class, 'event_session_id');
     }
 
-    // public function user()
-    // {
-    //     return $this->belongsTo(User::class);
-    // }
+    public function user()
+    {
+        return $this->morphTo('user', 'user_type', 'user_id'); // Polymorphic relationship
+    }
 
     public function answers()
     {
@@ -26,9 +26,5 @@ class Question extends Model
     public function votes()
     {
         return $this->hasMany(QuestionVote::class);
-    }
-    public function user()
-    {
-        return $this->belongsTo(Attendee::class, 'user_id');
     }
 }
