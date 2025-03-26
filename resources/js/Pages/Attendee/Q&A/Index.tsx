@@ -92,11 +92,22 @@ function Index({ eventApp, organizer_questions: initialOrganizerQuestions, atten
                                         <i className="bx bx-arrow-back fs-3 fw-bolder text-muted"></i>
                                     </Link>
                                     <h5 className="m-0 fw-bolder">Back</h5>
+                                    
                                 </div>
                             </div>
+                            
                             <div className="text-center">
                                 <h1>Q&A</h1>
                             </div>
+                             {/* Event Title Section */}
+                             <div className="text-center">
+                                        <h6 className="text-2xl font-bold text-gray-500 text-center">
+                                            Q&A for{" "}
+                                            <span className="text-black">
+                                                {eventApp.name}
+                                            </span>
+                                        </h6>
+                                    </div>
                             <div className="mt-4">
                                 <QuestionForm eventId={eventApp?.id} />
                             </div>
