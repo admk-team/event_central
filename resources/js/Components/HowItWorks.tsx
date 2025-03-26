@@ -45,36 +45,36 @@ const HowItWorks: React.FC = () => {
                     <div>
                         <img src={icon1 || "/placeholder.svg"} alt="Register icon" />
                     </div>
-                    <h3>User Registration</h3>
-                    <p>Create your profile and get matched with suitable projects</p>
+                    <h3 style={{ textAlign: "center" }}>Easy Registration & Ticketing</h3>
+                    <p>Simplify signups with customizable forms and seamless payment integration.</p>
                 </div>
                 <div className="box2" id="box2">
                     <div>
                         <img src={icon2 || "/placeholder.svg"} alt="Project icon" />
                     </div>
-                    <h3>Project Creation</h3>
-                    <p>Define your project parameters and target audience.</p>
+                    <h3 style={{ textAlign: "center" }}>End-to-End Event Management</h3>
+                    <p>From planning to post-event reports — everything you need in one platform.</p>
                 </div>
                 <div className="box" id="box3">
                     <div>
                         <img src={icon3 || "/placeholder.svg"} alt="Participant icon" />
                     </div>
-                    <h3>Participant Matching</h3>
-                    <p>Our system matches participants based on your criteria</p>
+                    <h3>Real-Time Analytics</h3>
+                    <p>Track attendees, sales, and engagement to make smarter decisions on the go.</p>
                 </div>
                 <div className="box2" id="box4">
                     <div>
                         <img src={icon4 || "/placeholder.svg"} alt="Sessions icon" />
                     </div>
-                    <h3>Event Sessions</h3>
-                    <p>Conduct insightful sessions with easy-to-use online tools.</p>
+                    <h3>Virtual & Hybrid Ready</h3>
+                    <p>Run fully virtual or hybrid events with built-in tools for streaming and engagement.</p>
                 </div>
                 <div className="box" id="box5">
                     <div>
                         <img src={icon5 || "/placeholder.svg"} alt="Feedback icon" />
                     </div>
-                    <h3>Feedback & Analysis</h3>
-                    <p>Collect and analyze feedback to drive your product innovation.</p>
+                    <h3>Engagement Features</h3>
+                    <p>Keep your attendees involved with live polling, Q&A, networking, and more.</p>
                 </div>
             </div>
         </section>

@@ -43,6 +43,7 @@ export default function CreateEditSessionModal({
 
         if (isEdit) {
             post(route("organizer.events.schedule.update", eventSession.id), {
+                preserveScroll: true,
                 onSuccess: () => {
                     reset();
                     hide();
@@ -50,6 +51,7 @@ export default function CreateEditSessionModal({
             });
         } else {
             post(route("organizer.events.schedule.store", data), {
+                preserveScroll: true,
                 onSuccess: () => {
                     reset();
                     hide();

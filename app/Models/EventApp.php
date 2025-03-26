@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Traits\HasModelPermissions;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 
 class EventApp extends Model
 {
-    use HasFactory, HasUuids;
+    use HasFactory, HasUuids, HasModelPermissions;
 
     protected $fillable = [
         'organizer_id',

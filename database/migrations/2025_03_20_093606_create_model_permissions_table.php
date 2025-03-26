@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('attendee_payments', function (Blueprint $table) {
+        Schema::create('model_permissions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('event_app_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('attendee_id')->constrained()->cascadeOnDelete();
-            $table->decimal('amount_paid');
-            $table->enum('payment_method', ['stripe', 'paypal']);
+            $table->morphs('authorizable');
+            $table->morphs('model');
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('attendee_payments');
+        Schema::dropIfExists('model_permissions');
     }
 };

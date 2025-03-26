@@ -65,4 +65,9 @@ class Attendee extends Authenticatable
     {
         return $this->belongsTo(EventApp::class);
     }
+
+    public function payments()
+    {
+        return $this->hasMany(AttendeePayment::class);
+    }
 }

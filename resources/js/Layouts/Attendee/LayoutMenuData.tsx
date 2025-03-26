@@ -116,7 +116,7 @@ const Navdata = () => {
         },
         {
             id: "more",
-            label: "Contact Organizer",
+            label: "Contact",
             icon: "bx bx-info-circle",
             link: route("attendee.event.detail.more"),
             stateVariables: isMore,

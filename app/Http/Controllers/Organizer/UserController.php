@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Organizer;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organizer\UserRequest;
+use App\Models\EventApp;
+use App\Models\EventSession;
+use App\Models\ModelPermission;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -21,9 +24,14 @@ class UserController extends Controller
             abort(403);
         }
 
-        $users = $this->datatable(User::ofOwner()->with('roles:name'));
+        $users = $this->datatable(
+            User::ofOwner()
+                ->with(['roles:id,name', 'accessibleEvents', 'accessibleEventSessions'])
+        );
         $roles = Role::ofOwner()->get();
-        return Inertia::render("Organizer/Users/Index", compact('users', 'roles'));
+        $events = EventApp::ofOwner()->with('event_sessions')->get();
+
+        return Inertia::render("Organizer/Users/Index", compact('users', 'roles', 'events'));
     }
 
     /**
@@ -39,6 +47,12 @@ class UserController extends Controller
         $role_id = (int) $input['role_id'];
         unset($input['role_id']);
 
+        $accessibleEvents = $input['accessible_events'] ?? [];
+        unset($input['accessible_events']);
+
+        $accessibleEventSessions = $input['accessible_event_sessions'] ?? [];
+        unset($input['accessible_event_sessions']);
+
         $input['parent_id'] = Auth::user()->owner_id;
         $input['role'] = 'organizer'; // User type
 
@@ -46,15 +60,11 @@ class UserController extends Controller
 
         $user->syncRoles(Role::whereIn('id', [$role_id])->get());
 
-        return back()->withSuccess("Created");
-    }
+        EventApp::syncModelPermissions($accessibleEvents, $user);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        
+        EventSession::syncModelPermissions($accessibleEventSessions, $user);
+
+        return back()->withSuccess("Created");
     }
 
     /**
@@ -74,11 +84,21 @@ class UserController extends Controller
         $role_id = $input['role_id'];
         unset($input['role_id']);
 
+        $accessibleEvents = $input['accessible_events'] ?? [];
+        unset($input['accessible_events']);
+
+        $accessibleEventSessions = $input['accessible_event_sessions'] ?? [];
+        unset($input['accessible_event_sessions']);
+
         $input['role'] = 'organizer'; // User type
 
         $user->update($input);
 
         $user->syncRoles(Role::whereIn('id', [$role_id])->get());
+
+        EventApp::syncModelPermissions($accessibleEvents, $user);
+
+        EventSession::syncModelPermissions($accessibleEventSessions, $user);
 
         return back()->withSuccess('Updated');
     }
@@ -112,7 +132,7 @@ class UserController extends Controller
         ]);
 
         foreach ($request->ids as $id) {
-            if (in_array($user->id, [Auth::id(), 1])) {
+            if (in_array($id, [Auth::id(), 1])) {
                 return back()->withError('This user cannot be deleted');
             }
 

@@ -3,13 +3,20 @@
 namespace App\Http\Controllers\Attendee\Payment;
 
 use App\Http\Controllers\Controller;
+use App\Models\AttendeePayment;
+use App\Models\AttendeePurchasedTickets;
 use App\Models\EventApp;
 use App\Models\EventAppTicket;
+use App\Models\PromoCode;
+use App\Models\TicketFeature;
 use App\Services\PayPalService;
 use App\Services\StripeService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Exception;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use PhpParser\Node\Stmt\Catch_;
 
 class PaymentController extends Controller
 {
@@ -107,8 +114,56 @@ class PaymentController extends Controller
         return Inertia::render('Attendee/Payment/PaymentCancel');
     }
 
-    public function updateAttendeePaymnet()
+    public function updateAttendeePaymnet(Request $request)
     {
+        $data = $request->all();
+        $event_id = auth()->user()->event_app_id;
+        $attendee_id = auth()->user()->id;
+
+        DB::beginTransaction();
+        try {
+            $payment = AttendeePayment::create([
+                'event_app_id' => $event_id,
+                'attendee_id' => $attendee_id,
+                'amount_paid' => $data['amount'],
+                'payment_method' => 'stripe'
+            ]);
+            foreach ($data['tickets'] as $purchased_ticket) {
+                AttendeePurchasedTickets::create([
+                    'attendee_payment_id' => $payment->id,
+                    'event_app_ticket_id' => $purchased_ticket['event_app_ticket_id'],
+                    'qty' => $purchased_ticket['qty'],
+                    'discount_code' => $purchased_ticket['discountCode'],
+                    'price' => $purchased_ticket['price'],
+                    'discount' => $purchased_ticket['discount'],
+                    'subTotal' => $purchased_ticket['subTotal'],
+                    'total' => $purchased_ticket['total']
+                ]);
+
+                // Update Promo Code Usage Count
+                $code = PromoCode::where('code', $purchased_ticket['discountCode'])->first();
+                if ($code) {
+                    $code->increment('used_count');
+                    $code->save();
+                }
+
+                // Update Ticket Feature Qty Sold
+                $ticket = EventAppTicket::find($purchased_ticket['event_app_ticket_id']);
+                $features_ids = $ticket->features()->pluck('id');
+                foreach ($features_ids as $id) {
+                    $feature = TicketFeature::find($id);
+                    $qty_sold = $feature->qty_sold + intval($purchased_ticket['qty']);
+                    Log::info($qty_sold);
+                    $feature->update(['qty_sold' => $qty_sold]);
+                    $feature->save();
+                }
+            }
+            DB::commit();
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+            DB::rollBack();
+            return response()->json(['message' => 'Something went wrong'], 500);
+        }
         return response()->json(['message' => 'Attendee payment status has been updated']);
     }
 

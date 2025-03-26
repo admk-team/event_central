@@ -6,7 +6,7 @@ const Navdata = () => {
     // const [IsQA, setIsQA] = useState<boolean>(false);
     const [isContent, setIsContent] = useState<boolean>(false);
     const [isEngagement, setIsEngagement] = useState<boolean>(false);
-    const [isUsers, setIsUsers] = useState<boolean>(false);
+    const [isAttendees, setIsAttendees] = useState<boolean>(false);
     const [isSettingsMenu, setIsSettingsMenu] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
@@ -35,7 +35,7 @@ const Navdata = () => {
             setIsContent(false);
         }
         if (iscurrentState !== 'users') {
-            setIsUsers(false);
+            setIsAttendees(false);
         }
         if (iscurrentState !== 'Settings') {
             setIsSettingsMenu(false);
@@ -47,7 +47,7 @@ const Navdata = () => {
     }, [
         iscurrentState,
         isDashboard,
-        isUsers,
+        isAttendees,
         isSettingsMenu,
         // Add Here
     ]);
@@ -93,18 +93,6 @@ const Navdata = () => {
                     id: "speakers",
                     label: "Speakers",
                     link: route('organizer.events.speaker.index'),
-                    parentId: "Content",
-                },
-                {
-                    id: "workShops",
-                    label: "WorkShops",
-                    link: route('organizer.events.workshop.index'),
-                    parentId: "Content",
-                },
-                {
-                    id: "custom_menu",
-                    label: "Custom menu",
-                    link: route('organizer.events.custom-menu.index'),
                     parentId: "Content",
                 },
                 {
@@ -155,31 +143,17 @@ const Navdata = () => {
             // ]
         },
         {
-            id: "users",
-            label: "Users",
+            id: "attendees",
+            label: "Attendees",
             icon: "bx bxs-user-account",
-            link: "/#",
-            stateVariables: isUsers,
+            link: route('organizer.events.attendees.index'),
+            stateVariables: isAttendees,
             click: function (e: any) {
                 e.preventDefault();
-                setIsUsers(!isUsers);
+                setIsAttendees(!isAttendees);
                 setIscurrentState('users');
                 updateIconSidebar(e);
             },
-            subItems: [
-                {
-                    id: "attendees",
-                    label: "Attendees",
-                    link: route('organizer.events.attendees.index'),
-                    parentId: "dashboard",
-                },
-                {
-                    id: "team",
-                    label: "Team",
-                    link: '/events/teams',
-                    parentId: "dashboard",
-                }
-            ]
         },
         {
             id: "settings",

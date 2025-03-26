@@ -39,7 +39,7 @@ class AppServiceProvider extends ServiceProvider
                 ]
             ]);
         });
-        
+
         Attendee::observe(OrganizerAttendeeObserver::class);
     }
 }

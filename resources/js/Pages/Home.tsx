@@ -12,7 +12,7 @@ import heroimage2 from '../../images/heorsection.png'
 export default function Home() {
     return (
         <MainLayout>
-            <Head title="Fokus Network - Connect with like-minded individuals" />
+            <Head title="Event Central" />
 
             <main>
                 {/* Hero Section */}
@@ -29,10 +29,9 @@ export default function Home() {
                     <div className="container hero-content" >
                         <div className="row justify-content-center">
                             <div className="col-md-8 text-center" style={{ top: '130px' }}>
-                                <h1 className="mb-4 display-4 fw-bold text-white">Connect with like-minded individuals</h1>
+                                <h1 className="mb-4 display-4 fw-bold text-white">Your All-in-One Event Management Platform</h1>
                                 <p className="mb-5 lead text-white">
-                                    Join our community of focused individuals who are dedicated to personal growth, productivity, and
-                                    achieving their goals.
+                                    Whether you’re hosting a small seminar or a multi-day conference, Event Central gives you the tools to organize, promote, and execute events effortlessly — all in one place.
                                 </p>
                                 <div className="d-flex flex-column flex-sm-row gap-3 justify-content-center">
                                     <a href="#" className="btn btn-primary btn-lg">
@@ -53,8 +52,10 @@ export default function Home() {
                         <div className="text-center mb-5">
                             <h2 className="mb-3 display-5 fw-bold">Why Choose Event Central?</h2>
                             <p className="mx-auto text-muted-dark" style={{ maxWidth: "700px" }}>
-                                Our platform offers unique features designed to help you stay focused, connect with others, and achieve
-                                your goals.
+                                Let’s Make Your Next Event Unforgettable
+                            </p>
+                            <p className="mx-auto text-muted-dark" style={{ maxWidth: "700px" }}>
+                                Get started today — it’s fast, easy, and designed for event pros like you.
                             </p>
                         </div>
                         <div className="row g-4">
