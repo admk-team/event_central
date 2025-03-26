@@ -47,26 +47,26 @@ class EventApp extends Model
         'recurring_type'
     ];
 
-    
+
     public function uniqueIds(): array
     {
         return ['uuid'];
     }
-    
+
     // Relationship with Registration Page
     public function registrationPage()
     {
         return $this->belongsTo(RegistrationPage::class, 'regis_page_id');
     }
-    
+
     // Relationship with Color Scheme
     public function colorSchemes()
     {
         return $this->hasMany(ColorScheme::class, 'event_id');
     }
-    
+
     // getters
-    
+
     public function getCreatedAtDateAttribute()
     {
         return $this->created_at->format('d M, Y');
@@ -80,13 +80,13 @@ class EventApp extends Model
     {
         $query->where('organizer_id', Auth::user()?->owner_id);
     }
-    
+
     // Relations
     public function event_sessions()
     {
         return $this->hasMany(EventSession::class);
     }
-    
+
     public function event_speakers()
     {
         return $this->hasMany(EventSpeaker::class);
@@ -101,7 +101,7 @@ class EventApp extends Model
     {
         return $this->belongsTo(User::class, 'organizer_id');
     }
-    
+
     public function attendees()
     {
         return $this->hasMany(Attendee::class, 'event_app_id', 'id');
@@ -141,7 +141,7 @@ class EventApp extends Model
     {
         return $this->hasMany(Footer::class);
     }
-    
+
     public function tickets()
     {
         return $this->hasMany(EventAppTicket::class);
@@ -195,5 +195,4 @@ class EventApp extends Model
             }
         });
     }
-   
 }
