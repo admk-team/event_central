@@ -25,20 +25,15 @@ interface Props {
     user: User;
     questions: Question[];
     newAnswer?: {
-        id: number;
-        content: string;
-        created_at: string;
-        user: { name: string };
+        id: number; content: string; created_at: string; user: { name?: string };
     };
-    canAnswer?: boolean;
 }
 
-const QuestionList: React.FC<Props> = ({
+const OrganizerQuestionList: React.FC<Props> = ({
     eventId,
     user,
     questions: initialQuestions,
     newAnswer,
-    canAnswer = false,
 }) => {
     const [questions, setQuestions] = useState<Question[]>(initialQuestions);
     const [showAnswerModal, setShowAnswerModal] = useState(false);
@@ -59,12 +54,14 @@ const QuestionList: React.FC<Props> = ({
 
     const handleVote = (questionId: number, vote: 1 | -1) => {
         router.post(
-            route("attendee.events.qa.vote", { questionId }),
+            route("organizer.events.qa.vote", { questionId }),
             { vote },
             {
                 preserveState: true,
                 preserveScroll: true,
-                onSuccess: () => {},
+                onSuccess: () => {
+                    // router.reload({ only: ["OrganizerQuestionList"] });
+                },
                 onError: (errors) => console.error("Vote error:", errors),
             }
         );
@@ -97,7 +94,7 @@ const QuestionList: React.FC<Props> = ({
     const handleUpdateQuestion = () => {
         if (selectedQuestionId) {
             router.put(
-                route("attendee.events.qa.updateQuestion", { questionId: selectedQuestionId }),
+                route("organizer.events.qa.updateQuestion", { questionId: selectedQuestionId }),
                 { content: editContent },
                 {
                     preserveState: true,
@@ -119,13 +116,15 @@ const QuestionList: React.FC<Props> = ({
     };
 
     const handleDeleteQuestion = (questionId: number) => {
-        router.delete(route("attendee.events.qa.destroyQuestion", { questionId }), {
+        router.delete(route("organizer.events.qa.destroyQuestion", { questionId }), {
             preserveState: true,
             preserveScroll: true,
-            onSuccess: () => {
+            onSuccess: (page) => {
                 setQuestions((prev) => prev.filter((q) => q.id !== questionId));
             },
-            onError: (errors) => console.error("Delete question error:", errors),
+            onError: (errors) => {
+                console.error("Delete question error:", errors);
+            },
         });
     };
 
@@ -138,7 +137,7 @@ const QuestionList: React.FC<Props> = ({
     const handleUpdateAnswer = () => {
         if (selectedAnswerId) {
             router.put(
-                route("attendee.events.qa.updateAnswer", { answerId: selectedAnswerId }),
+                route("organizer.events.qa.updateAnswer", { answerId: selectedAnswerId }),
                 { content: editContent },
                 {
                     preserveState: true,
@@ -163,10 +162,10 @@ const QuestionList: React.FC<Props> = ({
     };
 
     const handleDeleteAnswer = (answerId: number, questionId: number) => {
-        router.delete(route("attendee.events.qa.destroyAnswer", { answerId }), {
+        router.delete(route("organizer.events.qa.destroyAnswer", { answerId }), {
             preserveState: true,
             preserveScroll: true,
-            onSuccess: () => {
+            onSuccess: (page) => {
                 setQuestions((prev) =>
                     prev.map((q) =>
                         q.id === questionId
@@ -175,7 +174,9 @@ const QuestionList: React.FC<Props> = ({
                     )
                 );
             },
-            onError: (errors) => console.error("Delete answer error:", errors),
+            onError: (errors) => {
+                console.error("Delete answer error:", errors);
+            },
         });
     };
 
@@ -204,7 +205,7 @@ const QuestionList: React.FC<Props> = ({
                                         • {new Date(question.created_at).toLocaleString()}
                                     </p>
                                 </Col>
-                                {user?.id === question.user?.id && (
+                                {(user?.id === question.user?.id || user?.role === "organizer") && (
                                     <Col xs="auto" className="ms-auto">
                                         <Button
                                             variant="outline-primary"
@@ -240,7 +241,7 @@ const QuestionList: React.FC<Props> = ({
                                         <i className="ri-thumb-down-line"></i> {question.dislikes_count}
                                     </Button>
                                 </Col>
-                                {canAnswer && (
+                                {user?.role === "organizer" && (
                                     <Col xs="auto" className="ms-auto">
                                         <Button
                                             variant="success"
@@ -263,12 +264,12 @@ const QuestionList: React.FC<Props> = ({
                                                         <p className="text-muted fs-12 mt-1">
                                                             Answered by{" "}
                                                             <Badge bg="light" text="dark">
-                                                                {answer.user?.name || answer.user?.first_name || "Anonymous"}
+                                                            {answer.user?.name || answer.user?.first_name || "Anonymous"}
                                                             </Badge>{" "}
                                                             • {new Date(answer.created_at).toLocaleString()}
                                                         </p>
                                                     </Col>
-                                                    {user?.id === answer.user?.id && (
+                                                    {(user?.id === answer.user?.id || user?.role === "organizer") && (
                                                         <Col xs="auto" className="ms-auto">
                                                             <Button
                                                                 variant="outline-primary"
@@ -298,6 +299,7 @@ const QuestionList: React.FC<Props> = ({
                 ))
             )}
 
+            {/* Answer Modal */}
             <Modal show={showAnswerModal} onHide={handleCloseAnswerModal} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Answer Question</Modal.Title>
@@ -309,6 +311,7 @@ const QuestionList: React.FC<Props> = ({
                 </Modal.Body>
             </Modal>
 
+            {/* Edit Question Modal */}
             <Modal show={showEditQuestionModal} onHide={() => setShowEditQuestionModal(false)} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Edit Question</Modal.Title>
@@ -331,6 +334,7 @@ const QuestionList: React.FC<Props> = ({
                 </Modal.Body>
             </Modal>
 
+            {/* Edit Answer Modal */}
             <Modal show={showEditAnswerModal} onHide={() => setShowEditAnswerModal(false)} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Edit Answer</Modal.Title>
@@ -356,4 +360,4 @@ const QuestionList: React.FC<Props> = ({
     );
 };
 
-export default QuestionList;
+export default OrganizerQuestionList;
