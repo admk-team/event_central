@@ -23,6 +23,10 @@ class PromoCode extends Model
         'status'
     ];
 
+    public function setCodeAttribute($value)
+    {
+        $this->attributes['code'] = strtoupper($value);
+    }
     public function scopeCurrentEvent($query)
     {
         $query->where('event_app_id', session('event_id'));

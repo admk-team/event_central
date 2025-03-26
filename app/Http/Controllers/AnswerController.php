@@ -26,6 +26,14 @@ class AnswerController extends Controller
 
     public function generate(Request $request)
     {
+        $attendee = auth()->user();
+        $attendee->load('payments');
+
+
+
+        return $attendee;
+
+
         $data = 'https://www.google.com';
         $options = new QROptions([
             'version' => 5,

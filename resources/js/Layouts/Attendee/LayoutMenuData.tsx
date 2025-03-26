@@ -141,6 +141,19 @@ const Navdata = () => {
             },
         },
         // {
+        //     id: "attendee-pass",
+        //     label: "Attendee Pass",
+        //     icon: "bx bx-qr",
+        //     link: route("attendee.pass.get"),
+        //     stateVariables: isMore,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIsMore(!isMore);
+        //         setIscurrentState("Pass");
+        //         updateIconSidebar(e);
+        //     },
+        // },
+        // {
         //     id: "qa",
         //     label: "Q&A",
         //     icon: "bx bxs-dashboard",
