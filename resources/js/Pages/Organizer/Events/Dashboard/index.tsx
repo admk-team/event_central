@@ -13,8 +13,10 @@ import TopReferrals from "./TopReferrals";
 import TopPages from "./TopPages";
 import { Head } from "@inertiajs/react";
 import Layout from "../../../../Layouts/Event";
+import Widgets1 from "../../../Theme/DashboardCrypto/Widgets1";
+import Widget1 from "./Widget1";
 
-const DashboardAnalytics = ({ totalAttendee,totalSession,totalTickets }: any) => {
+const DashboardAnalytics = ({ totalAttendee,totalSession,totalSpeakers,totalPartners,totalTickets,totalPosts,totalRevenue }: any) => {
     return (
         <React.Fragment>
             <Head title="Analytics | Velzon - React Admin & Dashboard Template" />
@@ -22,12 +24,29 @@ const DashboardAnalytics = ({ totalAttendee,totalSession,totalTickets }: any) =>
                 <Container fluid>
                     <BreadCrumb title="Analytics" pageTitle="Dashboards" />
                     <Row>
+                        <Col xxl={12}>
+                            {/* <UpgradeAccountNotise /> */}
+                            <Widget1
+                                totaluser = {totalAttendee}
+                                totalSession = {totalSession}
+                                totalPosts = {totalPosts}
+                                totalTickets = {totalTickets}
+                                totalSpeakers = {totalSpeakers}
+                                totalPartners = {totalPartners}
+                            />
+                        </Col>
+                    </Row>
+                    <Row>
                         <Col xxl={5}>
-                            <UpgradeAccountNotise />
+                            {/* <UpgradeAccountNotise /> */}
                             <Widget 
                                 totaluser = {totalAttendee}
                                 totalSession = {totalSession}
+                                totalPosts = {totalPosts}
                                 totalTickets = {totalTickets}
+                                totalSpeakers = {totalSpeakers}
+                                totalPartners = {totalPartners}
+                                totalRevenue = {totalRevenue}
                             />
                         </Col>
                         <LiveUsers />

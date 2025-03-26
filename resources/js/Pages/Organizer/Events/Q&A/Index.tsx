@@ -5,6 +5,9 @@ import { Container, Row, Col, Card } from "react-bootstrap";
 import BreadCrumb from "../../../../Components/Common/BreadCrumb";
 import QuestionList from "../../Events/Q&A/Components/QuestionList";
 import QuestionForm from "../../Events/Q&A/Components/QuestionForm";
+import OrganizerQuestionList from "./Components/OrganizerQuestionList";
+
+
 
 interface User {
     id?: number;
@@ -19,13 +22,8 @@ interface Question {
     likes_count: number;
     dislikes_count: number;
     created_at: string;
-    user: { id?: number; first_name: string };
-    answers: {
-        id: number;
-        content: string;
-        created_at: string;
-        user: { name: string };
-    }[];
+    user: { id?: number; name?: string; first_name?: string };
+    answers: { id: number; content: string; created_at: string; user: { name?: string } }[]; // Corrected to 'answers'
 }
 
 interface Event {
@@ -35,7 +33,8 @@ interface Event {
 
 interface Props {
     event: Event;
-    questionlist: Question[];
+    questionlist: Question[]; // Attendee questions
+    organizer_questions: Question[]; // Organizer questions
     newAnswer?: {
         id: number;
         content: string;
@@ -44,23 +43,26 @@ interface Props {
     };
 }
 
-function Index({ event, questionlist: initialQuestions, newAnswer }: Props) {
+function Index({ event, questionlist: initialQuestions, organizer_questions: initialOrganizerQuestions, newAnswer }: Props) {
     const { auth } = usePage().props as { auth: { user: User } };
-    const [questions, setQuestions] = useState<Question[]>(initialQuestions);
+    const [questions, setQuestions] = useState<Question[]>(initialQuestions); // Attendee questions
+    const [organizerQuestions, setOrganizerQuestions] = useState<Question[]>(initialOrganizerQuestions); // Organizer questions
 
     // Sync initial questions from props
     useEffect(() => {
-        setQuestions(initialQuestions);
+        setQuestions(initialQuestions); // Attendee questions
     }, [initialQuestions]);
+
+    useEffect(() => {
+        setOrganizerQuestions(initialOrganizerQuestions); // Organizer questions
+    }, [initialOrganizerQuestions]);
 
     // AJAX polling for new questions every 5 seconds
     useEffect(() => {
-        const csrfToken = document
-            .querySelector('meta[name="csrf-token"]')
-            ?.getAttribute("content");
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute("content");
         const interval = setInterval(async () => {
             try {
-                const url = route("organizer.events.qa.index", { session_id: event?.id }); // Pass event.id as session_id
+                const url = route("organizer.events.qa.index", { session_id: event?.id });
                 const response = await fetch(url, {
                     method: "GET",
                     headers: {
@@ -74,18 +76,17 @@ function Index({ event, questionlist: initialQuestions, newAnswer }: Props) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
                 const data = await response.json();
-                const newQuestions = (data.questionlist || []) as Question[]; // Fallback to empty array if undefined
-                // Replace the entire questions state with the new data from the response
-                setQuestions(() => {
-                    return newQuestions;
-                });
+                const newAttendeeQuestions = (data.questionlist || []) as Question[]; // Align with backend response
+                const newOrganizerQuestions = (data.organizer_questions || []) as Question[];
+                setQuestions(newAttendeeQuestions); // Update attendee questions
+                setOrganizerQuestions(newOrganizerQuestions); // Update organizer questions
             } catch (error) {
                 console.error("AJAX polling error:", error);
             }
-        }, 5000); // Every 5 seconds
+        }, 5000);
 
         return () => clearInterval(interval);
-    }, []);
+    }, [event?.id]); // Dependency on event.id
 
     return (
         <React.Fragment>
@@ -110,6 +111,17 @@ function Index({ event, questionlist: initialQuestions, newAnswer }: Props) {
                                     </h5>
                                 </Card>
                             </div>
+                            <div className="mt-4">
+                                <QuestionForm eventId={event?.id} />
+                            </div>
+                            <h3 className="mt-4">Organizer Questions</h3>
+                            <OrganizerQuestionList
+                                eventId={event?.id}
+                                user={auth?.user || ({} as User)}
+                                questions={organizerQuestions}
+                                newAnswer={newAnswer}
+                            />
+                            <h3 className="mt-4">Attendee Questions</h3>
                             <QuestionList
                                 eventId={event?.id}
                                 user={auth?.user || ({} as User)}
