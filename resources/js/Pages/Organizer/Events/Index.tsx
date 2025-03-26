@@ -94,24 +94,24 @@ function Index({ events, recurring_types, event_category_types }: any) {
             cell: (event) => event.name,
             enableSorting: false,
         },
-        {
-            accessorKey: "description",
-            header: () => "Description",
-            cell: (event) => (
-                <div style={{ maxWidth: "200px", overflow: "auto" }}>
-                    <p
-                        style={{
-                            textWrap: "pretty",
-                            textAlign: "justify",
-                            marginBottom: "unset !important",
-                        }}
-                    >
-                        {truncateDesc(event.description)}
-                    </p>
-                </div>
-            ),
-            enableSorting: false,
-        },
+        // {
+        //     accessorKey: "description",
+        //     header: () => "Description",
+        //     cell: (event) => (
+        //         <div style={{ maxWidth: "200px", overflow: "auto" }}>
+        //             <p
+        //                 style={{
+        //                     textWrap: "pretty",
+        //                     textAlign: "justify",
+        //                     marginBottom: "unset !important",
+        //                 }}
+        //             >
+        //                 {truncateDesc(event.description)}
+        //             </p>
+        //         </div>
+        //     ),
+        //     enableSorting: false,
+        // },
         {
             accessorKey: "start_date",
             header: () => "Start Date",
