@@ -1,4 +1,4 @@
-export default function ComponentStyles<T extends keyof React.JSX.IntrinsicElements | React.JSXElementConstructor<any>>({
+export default function ComponentWrapper<T extends keyof React.JSX.IntrinsicElements | React.JSXElementConstructor<any>>({
     fields,
     children,
     as,
