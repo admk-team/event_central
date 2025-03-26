@@ -77,7 +77,7 @@ const Navdata = () => {
         },
         {
             id: "program",
-            label: "Program",
+            label: "Event Agenda",
             icon: "bx bx-heart",
             link: route("attendee.event.detail.agenda"),
             stateVariables: isProgram,
