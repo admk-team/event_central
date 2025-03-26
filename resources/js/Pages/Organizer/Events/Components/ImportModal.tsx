@@ -1,6 +1,7 @@
 import { Link, router, useForm } from '@inertiajs/react';
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import Flatpickr from "react-flatpickr";
+import readXlsxFile from 'read-excel-file'
 import Papa from 'papaparse';
 import Select from 'react-select';
 import { Button, Col, Form, FormGroup, Modal, Nav, Row, Spinner, Tab } from 'react-bootstrap';
@@ -20,6 +21,10 @@ function ImportModal({
     onImportSuccess, }: ImportModalProps) {
 
     const [method, setMethod] = useState<string | null>(null);
+    const [invalidFileType, setInvalidFileType] = useState(false);
+    const [enableHeaderCheckBox, setEnableHeaderCheckBox] = useState(false);
+    const [fileName, setFileName] = useState<string>('');
+    const [firstRowHeader, setFirstRowHeader] = useState<boolean | undefined>(null);
     const [chooseFile, setChooseFile] = useState<File | null>(null);
     const [importText, setImportText] = useState<string | null>(availableAttributes.join(", "));
     const [defaultActiveKey, setDefaultActiveKey] = useState<string>("1");
@@ -28,6 +33,7 @@ function ImportModal({
     const [attributeMapping, setAttributeMapping] = useState<Record<string, string>>({});
     const [hoveredCard, setHoveredCard] = useState<string | null>(null);
     const [processing, setProcessing] = useState<boolean | undefined>(false);
+
 
     // styles for the import method cards
     const cardStyle = (isHovered: any) => ({
@@ -47,23 +53,65 @@ function ImportModal({
         setMethod(method);
     }
 
+    const handleFirstRowContainsHeaderCheckBox = (e) => {
+        if (e.target.checked) {
+            setFirstRowHeader(true);
+        } else {
+            setFirstRowHeader(false);
+        }
+    }
+
+    const handleFileChange = (e: any) => {
+        if (e.target.files) {
+            let file = e.target.files[0];
+            setChooseFile(file);
+            if (file.name.endsWith('.xls') || file.name.endsWith('.xlsx')) {
+                setEnableHeaderCheckBox(true);
+                setFirstRowHeader(true);
+                setInvalidFileType(false);
+            } else if (file.name.endsWith('.csv')) {
+                setEnableHeaderCheckBox(false);
+                setFirstRowHeader(false);
+                setInvalidFileType(false);
+            } else {
+                setInvalidFileType(true);
+            }
+            setFileName(file.name);
+        }
+    }
+
     const handleContinue = () => {
-        if (method === "file" && chooseFile) {
+        if (method === "file" && chooseFile && chooseFile.name.endsWith('.csv')) {
             // Parse the file using PapaParse
             Papa.parse(chooseFile, {
                 complete: (result) => {
                     const data = result.data as string[][];
-
-
+                    // console.log(data);
                     if (data.length > 0) {
                         setHeaders(data[0]); // Set headers from the first row
-                        setParsedData(data.slice(1)); // Set parsed data (excluding headers)
+                        // setParsedData(data.slice(1)); // Set parsed data (excluding headers)
+                        setParsedData(data); // Set parsed data (excluding headers)
                         setDefaultActiveKey("3"); // Move to "Map Attributes" tab
                     }
                 },
                 header: false,
                 skipEmptyLines: true,
             });
+        } else if (method === "file" && chooseFile && (chooseFile.name.endsWith('.xls') || chooseFile.name.endsWith('.xlsx'))) {
+            console.log('excel');
+
+            readXlsxFile(chooseFile).then((rows: any) => {
+                if (rows.length > 0) {
+                    setHeaders(rows[0]);
+                    if (firstRowHeader) {
+                        setParsedData(rows.slice(1));
+                    } else {
+                        setParsedData(rows);
+                    }
+                    setDefaultActiveKey("3");
+                }
+                // console.log(rows);
+            })
         } else if (method === "manual" && importText) {
             // Parse the text using PapaParse
             const result = Papa.parse(importText, {
@@ -71,12 +119,19 @@ function ImportModal({
                 skipEmptyLines: true,
             });
             const data = result.data as string[][];
+            // console.log(result);
+
             if (data.length > 0) {
                 setHeaders(data[0]);
                 setParsedData(data.slice(1));
                 setDefaultActiveKey("3");
             }
         }
+
+        setFirstRowHeader(false);
+        setChooseFile(null);
+        setEnableHeaderCheckBox(false);
+        setFileName('');
     };
 
     const handleMappingChange = (header: string, attribute: string) => {
@@ -96,6 +151,8 @@ function ImportModal({
             });
             return newRow;
         });
+
+        // console.log(transformedData);
 
         try {
             const response = router.post(
@@ -199,19 +256,36 @@ function ImportModal({
                                 </Tab.Pane>
                                 <Tab.Pane eventKey="2" id="custom-v-pills-profile" className="">
                                     {method === 'file' ? (
-                                        <div
-                                            className="card border p-5 rounded-4 text-muted mt-5"
-                                            style={cardStyle(hoveredCard === 'file')}
-                                            onMouseEnter={() => setHoveredCard('file')}
-                                            onMouseLeave={() => setHoveredCard(null)}
-                                            onClick={() => document.getElementById('importFile')?.click()}
-                                        >
-                                            <i className="ri-download-cloud-2-line d-block fs-20 mb-1"
-                                                style={contentStyle(hoveredCard === 'file')}>
-                                            </i>
-                                            <span style={contentStyle(hoveredCard === 'file')}>Choose .csv, .xls, .xlsx file</span>
-                                            <input type="file" name="importFile" id="importFile" style={{ display: 'none' }}
-                                                onChange={(e) => e.target.files && setChooseFile(e.target.files[0])} />
+                                        <div className='d-flex flex-column align-items-center'>
+                                            <div
+                                                className="card border p-5 rounded-4 text-muted mt-5 w-100"
+                                                style={cardStyle(hoveredCard === 'file')}
+                                                onMouseEnter={() => setHoveredCard('file')}
+                                                onMouseLeave={() => setHoveredCard(null)}
+                                                onClick={() => document.getElementById('importFile')?.click()}
+                                            >
+                                                <i className="ri-download-cloud-2-line d-block fs-20 mb-1"
+                                                    style={contentStyle(hoveredCard === 'file')}>
+                                                </i>
+                                                <span style={contentStyle(hoveredCard === 'file')}>Choose .csv, .xls, .xlsx file</span>
+                                                <input type="file" name="importFile" id="importFile" style={{ display: 'none' }}
+                                                    onChange={handleFileChange} accept=".csv,.xls,.xlsx" />
+                                            </div>
+                                            {invalidFileType && <Form.Control.Feedback type="invalid" className='d-block'>
+                                                Invalid File Type Selected, only *.csv, *.xls, *.xlsx files are allowed
+                                            </Form.Control.Feedback>}
+                                            {chooseFile &&
+                                                <Row className='w-100 mb-3 mt-2'>
+                                                    <Col className='d-flex justify-content-start' md={3} lg={3}>Selected File : </Col>
+                                                    <Col className='d-flex justify-content-start' md={9} lg={9}>{fileName}</Col>
+                                                </Row>
+                                            }
+                                            {enableHeaderCheckBox && <Row className='d-flex justify-content-start w-100 mb-3'>
+                                                <Col>
+                                                    <Form.Check type="checkbox" id="first-row-contains-header" onChange={handleFirstRowContainsHeaderCheckBox}
+                                                        checked={firstRowHeader} label="First Row Contains Header" disabled={!enableHeaderCheckBox} />
+                                                </Col>
+                                            </Row>}
                                         </div>
                                     ) : (
                                         <>
@@ -227,8 +301,7 @@ function ImportModal({
                                             </textarea>
                                         </>
                                     )}
-                                    <Button className="btn btn-success text-end" disabled={!chooseFile && !importText} onClick={handleContinue}>Continue</Button>
-
+                                    <Button className="btn btn-success text-end" disabled={(!chooseFile && !importText) || invalidFileType} onClick={handleContinue}>Continue</Button>
                                 </Tab.Pane>
                                 <Tab.Pane eventKey="3" id="custom-v-pills-messages">
                                     <h6>Map Attributes</h6>
@@ -269,7 +342,7 @@ function ImportModal({
                                 </Tab.Pane>
                                 <Tab.Pane eventKey="4" id="custom-v-pills-messages">
                                     <h6>Import Progress</h6>
-                                    <p className='my-5 py-5'>Ready to import <span className="display-6">{parsedData.length}</span> records.</p>
+                                    <p className='my-5 py-5 fs-2'>Ready to import <span className="">{parsedData.length}</span> records.</p>
 
                                     {/* <Button className="btn btn-success"  disabled={parsedData.length === 0}>
                                     </Button> */}

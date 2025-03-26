@@ -21,7 +21,7 @@ class UserController extends Controller
             abort(403);
         }
 
-        $users = $this->datatable(User::where('role', 'admin')->with('roles:name'));
+        $users = $this->datatable(User::where('role', 'admin')->with('roles:id,name'));
         $roles = $roles = Role::where('panel', 'admin')->get();
         return Inertia::render("Admin/Users/Index", compact('users', 'roles'));
     }
@@ -111,7 +111,7 @@ class UserController extends Controller
         ]);
 
         foreach ($request->ids as $id) {
-            if (in_array($user->id, [Auth::id(), 1])) {
+            if (in_array($id, [Auth::id(), 1])) {
                 return back()->withError('This user cannot be deleted');
             }
 

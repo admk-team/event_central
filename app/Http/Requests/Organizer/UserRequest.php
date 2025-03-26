@@ -24,6 +24,8 @@ class UserRequest extends FormRequest
         $rules = [
             'name' => 'required|string',
             'role_id' => 'required',
+            'accessible_events' => 'nullable|array',
+            'accessible_event_sessions' => 'nullable|array',
         ];
 
         if ($this->route()->getName() === 'organizer.users.store') {

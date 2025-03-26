@@ -20,7 +20,7 @@ class EventTicketResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'type' => $this->type,
-            'price' => $this->price,
+            'base_price' => $this->base_price,
             'increment_by' => $this->increment_by,
             'increment_rate' => $this->increment_rate,
             'increment_type' => $this->increment_type,

@@ -9,9 +9,9 @@ import DataTable, { ColumnDef } from '../../../../../Components/DataTable';
 import DeleteManyModal from '../../../../../Components/Common/DeleteManyModal';
 import ImportModal from '../../Components/ImportModal';
 import EditAttendee from './Component/EditAttendee';
-import Profile from './AttendeeProfile/Profile';
+// import Profile from './AttendeeProfile/Profile';
 import AddAttendee from './Component/AddAttendee';
-
+import writeXlsxFile from 'write-excel-file'
 function Index({ attendees }: any) {
 
     const [deleteAttendee, setDeleteAttendee] = React.useState<any>(null);
@@ -35,7 +35,7 @@ function Index({ attendees }: any) {
     });
 
     const [importAttendeesModal, setImportAttendeesModal] = useState(false);
-    function showModal() {
+    function showImportModal() {
         setImportAttendeesModal(!importAttendeesModal);
     }
 
@@ -61,6 +61,37 @@ function Index({ attendees }: any) {
         setShowDeleteManyConfirmation(false);
     }
 
+    // const exportSchema: any = [
+    //     {
+    //         column: 'Name',
+    //         type: String,
+    //         value: attendee => attendee.first_name
+    //     },
+    //     {
+    //         column: 'Email',
+    //         type: String,
+    //         value: attendee => attendee.email
+    //     },
+    //     {
+    //         column: 'Phone',
+    //         type: String,
+    //         value: attendee => attendee.email
+    //     }
+    // ];
+
+    // const handleExport = async () => {
+    //     // console.log(attendees.data);
+    //     // let list: any = [];
+    //     // attendees.data.forEach((obj) => {
+    //     //     var result = Object.keys(obj).map((key) => [key, obj[key]]);
+    //     //     list.push(result);
+    //     // });
+    //     // console.log(list);
+    //     await writeXlsxFile(attendees.data, {
+    //         exportSchema,
+    //         fileName: 'file.xlsx'
+    //     });
+    // }
     const columns: ColumnDef<typeof attendees.data[0]> = [
         {
             header: () => 'ID',
@@ -80,8 +111,8 @@ function Index({ attendees }: any) {
             ),
         },
         {
-            header: () => 'Name',
-            cell: (attendee) => attendee.first_name + " " + attendee.last_name,
+            header: () => 'First Name',
+            cell: (attendee) => attendee.first_name,
         },
         {
             header: () => 'Email',
@@ -96,7 +127,7 @@ function Index({ attendees }: any) {
             cell: (attendee) => attendee.phone,
         },
         {
-            header: () => 'Action',
+            header: () => 'Actions',
             cell: (attendee) => (
                 <div className="hstack gap-3 fs-15">
                     <span className="link-primary cursor-pointer" onClick={() => editAction(attendee)} ><i className="ri-edit-fill"></i></span>
@@ -113,7 +144,7 @@ function Index({ attendees }: any) {
     return (
         <React.Fragment>
             <Head>
-                <title>Attendees Management | Organizer Dashboard</title>
+                <title>Attendees Management </title>
                 <meta name="description" content="Manage event attendees, edit details, and delete records from the organizer's dashboard." />
                 <meta name="keywords" content="event attendees, attendee management, conference attendees, admin dashboard" />
                 <meta name="robots" content="index, follow" />
@@ -141,16 +172,18 @@ function Index({ attendees }: any) {
                                         showOnRowSelection: true,
                                     },
 
-                                    // import events
+                                    // import Attendees
                                     {
-                                        render: <Button className='btn btn-outline-primary' onClick={() => showModal()}><i className="ri-login-box-line"></i> Import</Button>
+                                        render: <Button className='btn btn-outline-primary' onClick={() => showImportModal()}><i className="ri-login-box-line"></i> Import</Button>
                                     },
-                                    // Add new
+                                    // // Export Attendees
+                                    // {
+                                    //     render: <Button className='btn btn-outline-primary' onClick={handleExport}><i className="ri-login-box-line"></i> Export</Button>
+                                    // },
+                                    // Add new Attendee
                                     {
-                                        render: <Button onClick={()=> setShowEddModal(true)}><i className="ri-add-fill"></i> Add New</Button>
+                                        render: <Button onClick={() => setShowEddModal(true)}><i className="ri-add-fill"></i> Add New</Button>
                                     },
-                                   
-
                                 ]}
                             />
                         </Col>
@@ -159,17 +192,17 @@ function Index({ attendees }: any) {
             </div>
 
             <AddAttendee
-                show={showAddModal} 
-                handleClose={() => setShowEddModal(false)} 
+                show={showAddModal}
+                handleClose={() => setShowEddModal(false)}
             />
 
-            <EditAttendee 
-                show={showEditModal} 
-                handleClose={() => setShowEditModal(false)} 
+            <EditAttendee
+                show={showEditModal}
+                handleClose={() => setShowEditModal(false)}
                 user={updateAttendee}
                 isEdit={isEdit}
             />
-            
+
             <DeleteModal
                 show={showDeleteConfirmation}
                 onDeleteClick={handleDelete}
@@ -182,7 +215,7 @@ function Index({ attendees }: any) {
                 onCloseClick={() => { setShowDeleteManyConfirmation(false) }}
             />
 
-            <ImportModal importAttendeesModal={importAttendeesModal} availableAttributes={['name','email','phone']} importType='attendees' showModal={showModal} />
+            <ImportModal importAttendeesModal={importAttendeesModal} availableAttributes={['name', 'email', 'phone']} importType='attendees' showModal={showImportModal} />
 
         </React.Fragment>
     )

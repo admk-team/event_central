@@ -9,7 +9,7 @@ import {
     Button,
 } from "react-bootstrap";
 
-import { Head, Link, router } from "@inertiajs/react";
+import { Head, Link, router, usePage } from "@inertiajs/react";
 import Layout from "../../Layouts/Attendee";
 import defaultEventImage from "../../../images/defaultEventImage.png";
 import defaultEventIcon from "../../../images/default-event-image.png";
@@ -18,7 +18,9 @@ import EventSessionsTimeLine from "./common/EventSessionsTimeLine";
 import moment from "moment";
 
 const AttendeeDashboard = ({ eventApp }: any) => {
+
     // console.log(eventApp.event_sessions);
+    // console.log(usePage().props.auth.user);
 
     const selectedSessions = eventApp.event_sessions.filter(
         (session: any) => session.selected_by_attendee
