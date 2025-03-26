@@ -39,10 +39,10 @@ class EventSpeakerController extends Controller
             $name = uniqid() . '.' . $input['avatar']->getClientOriginalExtension();
             $input['avatar'] = $input['avatar']->storeAs('organizer/organizer-avatars', $name, 'public');
         }
-
+        $input['language'] = implode(",", $input['language']);
         EventSpeaker::create($input);
 
-        return redirect()->route('organizer.events.speaker.index')->with('success', 'speaker created successfully.');
+        return redirect()->route('organizer.events.speaker.index')->withSuccess('success', 'Speaker created successfully.');
     }
 
     public function edit(string $id)
@@ -63,10 +63,10 @@ class EventSpeakerController extends Controller
         } else {
             unset($input['avatar']);
         }
-
+        $input['language'] = implode(",", $input['language']);
         $speaker->update($input);
 
-        return back();
+        return redirect()->route('organizer.events.speaker.index')->withSuccess('success', 'Speaker updated successfully.');
     }
 
     public function destroy(EventSpeaker $speaker)

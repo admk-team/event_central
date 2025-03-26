@@ -25,7 +25,7 @@ function CreateOrEdit({ speaker, events }: any) {
         twitter: speaker?.twitter || "",
         instagram: speaker?.instagram || "",
         country: speaker?.country || "",
-        language: speaker?.language || "",
+        language: speaker?.language ? speaker.language.split(",") : [], // Convert to array
         _method: speaker?.id ? "PUT" : "POST", // Spoof method
     });
 
@@ -287,8 +287,9 @@ function CreateOrEdit({ speaker, events }: any) {
                                                     <Select
                                                         id="language"
                                                         options={languageOptions}
-                                                        value={languageOptions.find(option => option.value === data.language)}
-                                                        onChange={(selected) => setData("language", selected?.value || "")}
+                                                        isMulti={true}
+                                                        value={languageOptions.filter(option => data.language?.includes(option.value))}
+                                                        onChange={(selected) => setData("language", selected ? selected.map(option => option.value) : [])}
                                                         isSearchable={true}
                                                         placeholder="Select a language..."
                                                     />
