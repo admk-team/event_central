@@ -35,7 +35,7 @@ class EventRegistrationFormController extends Controller
 
     public function submit(Request $request, EventApp $eventApp)
     {
-        if (! Auth::guard('attendee')->check() && !$request->has('preview')) {
+        if (! Auth::guard('attendee')->check() && !Auth::guard('web')->check()) {
             return abort(401);
         }
 
@@ -52,7 +52,7 @@ class EventRegistrationFormController extends Controller
 
         $request->validate($validationRules, $validationMessages);
 
-        if ($request->has('preview')) { // For Preview
+        if (Auth::guard('web')->check()) { // For Preview
             return back()->withSuccess('Form Submitted successfully');
         }
 
