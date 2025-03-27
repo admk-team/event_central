@@ -1,15 +1,19 @@
+import { usePage } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
 
 const Navdata = () => {
-    //state data
+    const currentEvent = usePage().props.currentEvent as any;
+    console.log("Event Start Date:", currentEvent?.dates[0]?.date);
+
+    // State data
     const [isDashboard, setIsDashboard] = useState<boolean>(false);
-    // const [IsQA, setIsQA] = useState<boolean>(false);
     const [isContent, setIsContent] = useState<boolean>(false);
     const [isEngagement, setIsEngagement] = useState<boolean>(false);
     const [isAttendees, setIsAttendees] = useState<boolean>(false);
     const [isEvent, setIsEvent] = useState<boolean>(false);
     const [isForm, setIsForm] = useState<boolean>(false);
     const [IsWebsite, setIsWebsite] = useState<boolean>(false);
+    const [IsSessionAttendance, setIsSessionAttendance] = useState<boolean>(false);
     const [IspayemntSettings, setIspayemntSettings] = useState<boolean>(false);
     const [isSettingsMenu, setIsSettingsMenu] = useState<boolean>(false);
 
@@ -32,35 +36,15 @@ const Navdata = () => {
 
     useEffect(() => {
         document.body.classList.remove('twocolumn-panel');
-        if (iscurrentState !== 'Dashboard') {
-            setIsDashboard(false);
-        }
-        if (iscurrentState !== 'Event') {
-            setIsEvent(false);
-        }
-        if (iscurrentState !== 'Content') {
-            setIsContent(false);
-        }
-        if (iscurrentState !== 'users') {
-            setIsAttendees(false);
-        }
-        if (iscurrentState !== 'registrationForm') {
-            setIsForm(false);
-        }
-        if (iscurrentState !== 'website') {
-            setIsWebsite(false);
-        }
-        if (iscurrentState !== 'Settings') {
-            setIsSettingsMenu(false);
-        }
-        if (iscurrentState !== 'payemntSettings') {
-            setIspayemntSettings(false);
-        }
-
-        // if (iscurrentState !== 'Q&A') {
-        //     setIsQA(false);
-        // }
-        // Add Here
+        if (iscurrentState !== 'Dashboard') setIsDashboard(false);
+        if (iscurrentState !== 'Event') setIsEvent(false);
+        if (iscurrentState !== 'Content') setIsContent(false);
+        if (iscurrentState !== 'users') setIsAttendees(false);
+        if (iscurrentState !== 'registrationForm') setIsForm(false);
+        if (iscurrentState !== 'website') setIsWebsite(false);
+        if (iscurrentState !== 'Settings') setIsSettingsMenu(false);
+        if (iscurrentState !== 'payemntSettings') setIspayemntSettings(false);
+        if (iscurrentState !== 'sessionAttendance') setIsSessionAttendance(false);
     }, [
         iscurrentState,
         isDashboard,
@@ -70,8 +54,13 @@ const Navdata = () => {
         isForm,
         IsWebsite,
         IspayemntSettings,
-        // Add Here
+        IsSessionAttendance,
     ]);
+
+    // Dynamic current date
+    const currentDate = new Date();
+    const eventStartDate = currentEvent?.dates[0]?.date ? new Date(currentEvent.dates[0].date) : null;
+    const isEventStarted = eventStartDate && currentDate >= eventStartDate;
 
     const menuItems: any = [
         {
@@ -104,7 +93,6 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
-       
         {
             id: "Content",
             label: "Content",
@@ -118,42 +106,12 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
             subItems: [
-                {
-                    id: "schedule",
-                    label: "Schedule",
-                    link: route('organizer.events.schedule.index'),
-                    parentId: "Content",
-                },
-                {
-                    id: "speakers",
-                    label: "Speakers",
-                    link: route('organizer.events.speaker.index'),
-                    parentId: "Content",
-                },
-                {
-                    id: "partners",
-                    label: "Partners",
-                    link: route('organizer.events.partner.index'),
-                    parentId: "Content",
-                },
-                {
-                    id: "tickets",
-                    label: "Tickets",
-                    link: route('organizer.events.tickets.index'),
-                    parentId: "Content",
-                },
-                {
-                    id: "ticket-addons",
-                    label: "Ticket Add-ons",
-                    link: route('organizer.events.tickets-feature.index'),
-                    parentId: "Content",
-                },
-                {
-                    id: "promo-codes",
-                    label: "Promo Codes",
-                    link: route('organizer.events.promo-codes.index'),
-                    parentId: "Content",
-                },
+                { id: "schedule", label: "Schedule", link: route('organizer.events.schedule.index'), parentId: "Content" },
+                { id: "speakers", label: "Speakers", link: route('organizer.events.speaker.index'), parentId: "Content" },
+                { id: "partners", label: "Partners", link: route('organizer.events.partner.index'), parentId: "Content" },
+                { id: "tickets", label: "Tickets", link: route('organizer.events.tickets.index'), parentId: "Content" },
+                { id: "ticket-addons", label: "Ticket Add-ons", link: route('organizer.events.tickets-feature.index'), parentId: "Content" },
+                { id: "promo-codes", label: "Promo Codes", link: route('organizer.events.promo-codes.index'), parentId: "Content" },
             ]
         },
         {
@@ -169,12 +127,7 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
             subItems: [
-                {
-                    id: "newsfeed",
-                    label: "Posts",
-                    link: route('organizer.events.engagement.newsfeed.index'),
-                    parentId: "dashboard",
-                }
+                { id: "newsfeed", label: "Posts", link: route('organizer.events.engagement.newsfeed.index'), parentId: "dashboard" }
             ]
         },
         {
@@ -203,6 +156,19 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
+        ...(isEventStarted ? [{
+            id: "sessionAttendance",
+            label: "Sessions Attendance",
+            icon: "bx bx-calendar-check",
+            link: route('organizer.events.attendance.index'),
+            stateVariables: IsSessionAttendance,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsSessionAttendance(!IsSessionAttendance);
+                setIscurrentState('sessionAttendance');
+                updateIconSidebar(e);
+            },
+        }] : []),
         {
             id: "website",
             label: "Website",
@@ -229,60 +195,9 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
-       
-        // {
-        //     id: "settings",
-        //     label: "Settings",
-        //     icon: "bx bx-cog",
-        //     link: "/#",
-        //     stateVariables: isSettingsMenu,
-        //     click: function (e: any) {
-        //         e.preventDefault();
-        //         setIsSettingsMenu(!isSettingsMenu);
-        //         setIscurrentState('Settings');
-        //         updateIconSidebar(e);
-        //     },
-        //     subItems: [
-        //         // {
-        //         //     id: "eventSettings",
-        //         //     label: "Event",
-        //         //     link: route('organizer.events.settings.event.index'),
-        //         //     parentId: "dashboard",
-        //         // },
-        //         {
-        //             id: "payemntSettings",
-        //             label: "Payment Settings",
-        //             link: route('organizer.events.settings.payment.index'),
-        //             parentId: "dashboard",
-        //         },
-        //         // {
-        //         //     id: "registrationForm",
-        //         //     label: "Registration Form",
-        //         //     link: route('organizer.events.settings.registration-form.index'),
-        //         //     parentId: "settings",
-        //         // },
-        //         // {
-        //         //     id: "website",
-        //         //     label: "Website",
-        //         //     link: route('organizer.events.settings.website.index'),
-        //         //     parentId: "settings",
-        //         // },
-        //     ]
-        // },
-        // {
-        //     id: "qa",
-        //     label: "Q&A",
-        //     icon: "bx bxs-dashboard",
-        //     link: route('organizer.events.qa.index'),
-        //     stateVariables: IsQA,
-        //     click: function (e: any) {
-        //         e.preventDefault();
-        //         setIsQA(!IsQA);
-        //         setIscurrentState('Q&A');
-        //         updateIconSidebar(e);
-        //     }
-        // },
     ];
+
     return <React.Fragment>{menuItems}</React.Fragment>;
 };
+
 export default Navdata;
