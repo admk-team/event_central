@@ -80,7 +80,7 @@ const Widget = ({
                                     </p>
                                     <h2 className="mt-4 ff-secondary fw-semibold">
                                         <span className="counter-value">
-                                            <CountUp
+                                            {/* <CountUp
                                                 key={totalSpeakers}
                                                 start={0}
                                                 end={Number(totalSpeakers)}
@@ -97,7 +97,8 @@ const Widget = ({
                                                           ).toFixed(1) + "K"
                                                         : value
                                                 }
-                                            /> $
+                                            /> */}
+                                            0$
                                         </span>
                                     </h2>
                                     <p className="mb-0 text-muted text-truncate ">

@@ -2,11 +2,14 @@ import Layout from "../../../../Layouts/Event";
 import { Head, Link, useForm } from '@inertiajs/react';
 import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 import React, { useState } from 'react';
+import Select from "react-select";
 import { Button, Col, Container, Row, Form, Card } from 'react-bootstrap';
+import languageData from "../../../../common/language-list.json";
+import countryData from "../../../../common/countries.json";
 
 function CreateOrEdit({ speaker, events }: any) {
     // Determine if the form is in edit mode
-    const isEdit = !!speaker;    
+    const isEdit = !!speaker;
     const { data, setData, post, processing, errors, reset } = useForm({
         event_app_id: speaker?.event_app_id || "",
         name: speaker?.name || "",
@@ -22,14 +25,24 @@ function CreateOrEdit({ speaker, events }: any) {
         twitter: speaker?.twitter || "",
         instagram: speaker?.instagram || "",
         country: speaker?.country || "",
-        language: speaker?.language || "",
+        language: speaker?.language ? speaker.language.split(",") : [], // Convert to array
         _method: speaker?.id ? "PUT" : "POST", // Spoof method
     });
+
+    // Convert JSON object into an array of { value: key, label: name }
+    const languageOptions = Object.entries(languageData).map(([key, value]) => ({
+        value: key, // "af_NA"
+        label: value.name, // "Afrikaans (Namibia)"
+    }));
+
+    const countryOptions = countryData.map(country => ({
+        value: country.name, // "AF"
+        label: country.name  // "Afghanistan"
+    }));
 
     function handleAvatar(e: any) {
         const file = e.target.files[0]
         setData('avatar', file);
-
     }
 
     const submit = (e: any) => {
@@ -255,13 +268,13 @@ function CreateOrEdit({ speaker, events }: any) {
                                             <Col xxl={6} md={6}>
                                                 <div className="">
                                                     <Form.Label htmlFor="country" className="form-label">Country</Form.Label>
-                                                    <Form.Control
-                                                        type="text"
-                                                        className="form-control"
+                                                    <Select
                                                         id="country"
-                                                        placeholder="Enter country"
-                                                        value={data.country}
-                                                        onChange={(e) => setData('country', e.target.value)}
+                                                        options={countryOptions}
+                                                        value={countryOptions.find(option => option.value === data.country)}
+                                                        onChange={(selected) => setData("country", selected?.value || "")}
+                                                        isSearchable={true}
+                                                        placeholder="Select a Country..."
                                                     />
                                                     <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.country} </Form.Control.Feedback>
 
@@ -271,13 +284,14 @@ function CreateOrEdit({ speaker, events }: any) {
                                             <Col xxl={6} md={6}>
                                                 <div className="">
                                                     <Form.Label htmlFor="language" className="form-label">Language</Form.Label>
-                                                    <Form.Control
-                                                        type="text"
-                                                        className="form-control"
+                                                    <Select
                                                         id="language"
-                                                        placeholder="Enter language"
-                                                        value={data.language}
-                                                        onChange={(e) => setData('language', e.target.value)}
+                                                        options={languageOptions}
+                                                        isMulti={true}
+                                                        value={languageOptions.filter(option => data.language?.includes(option.value))}
+                                                        onChange={(selected) => setData("language", selected ? selected.map(option => option.value) : [])}
+                                                        isSearchable={true}
+                                                        placeholder="Select a language..."
                                                     />
                                                     <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.language} </Form.Control.Feedback>
 
