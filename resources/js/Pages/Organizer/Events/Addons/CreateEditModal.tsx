@@ -19,14 +19,14 @@ export default function CreateEditModal({
     show,
     hide,
     onHide,
-    feature,
+    addon,
 }: {
     show: boolean;
     hide: () => void;
     onHide: () => void;
-    feature: any;
+        addon: any;
 }) {
-    const isEdit = feature != null ? true : false;
+    const isEdit = addon != null ? true : false;
     const editorRef = useRef<ClassicEditor>();
     const eventApp = usePage().props.currentEvent;
 
@@ -35,27 +35,26 @@ export default function CreateEditModal({
     const { data, setData, post, put, processing, errors, reset, transform } =
         useForm({
             _method: isEdit ? "PUT" : "POST",
-            event_app_id: feature?.event_app_id ?? eventApp.id,
-            organizer_id: feature?.organizer_id ?? eventApp.organizer_id,
-            name: feature?.name ?? "",
-            price: feature?.price ?? "0",
-            qty_total: feature?.qty_total ?? "",
-            qty_sold: feature?.qty_sold ?? "0",
+            event_app_id: addon?.event_app_id ?? eventApp.id,
+            organizer_id: addon?.organizer_id ?? eventApp.organizer_id,
+            name: addon?.name ?? "",
+            price: addon?.price ?? "0",
+            qty_total: addon?.qty_total ?? "",
+            qty_sold: addon?.qty_sold ?? "0",
         });
 
     const submit = (e: any) => {
         e.preventDefault();
 
-        console.log(data);
         if (isEdit) {
-            post(route("organizer.events.tickets-feature.update", feature.id), {
+            post(route("organizer.events.addon.update", addon.id), {
                 onSuccess: () => {
                     reset();
                     hide();
                 },
             });
         } else {
-            post(route("organizer.events.tickets-feature.store"), {
+            post(route("organizer.events.addon.store"), {
                 onSuccess: () => {
                     reset();
                     hide();
@@ -65,7 +64,6 @@ export default function CreateEditModal({
     };
 
     const handleChange = (editorData: any) => {
-        // console.log(editorData);
         setData("name", editorData);
     };
 
@@ -73,7 +71,7 @@ export default function CreateEditModal({
         <Modal show={show} onHide={onHide} centered size="lg">
             <Modal.Header className="bg-light p-3" closeButton>
                 <h5 className="modal-title">
-                    {isEdit ? "Edit Ticket Feature" : "New Ticket Feature"}
+                    {isEdit ? "Edit Addon" : "Create Addon"}
                 </h5>
             </Modal.Header>
 
@@ -82,6 +80,22 @@ export default function CreateEditModal({
                     <Row>
                         <Col md={12}>
                             <FormGroup className="mb-3">
+                                <Form.Label>Name</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    value={data.name}
+                                    onChange={(e) =>
+                                        setData("name", e.target.value)
+                                    }
+                                    isInvalid={!!errors.name}
+                                />
+                                {errors.name && (
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.name}
+                                    </Form.Control.Feedback>
+                                )}
+                            </FormGroup>
+                            {/* <FormGroup className="mb-3">
                                 <CKEditor
                                     id="name"
                                     editor={ClassicEditor}
@@ -109,7 +123,7 @@ export default function CreateEditModal({
                                         {errors.name}
                                     </Form.Control.Feedback>
                                 )}
-                            </FormGroup>
+                            </FormGroup> */}
                         </Col>
                     </Row>
                     <Row>

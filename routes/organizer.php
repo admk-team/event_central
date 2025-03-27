@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AnswerController;
+use App\Http\Controllers\Organizer\Event\AddonController;
 use App\Http\Controllers\Organizer\Event\CustomMenuController;
 use App\Http\Controllers\Organizer\Event\DashboardController;
 use App\Http\Controllers\Organizer\Event\Engagement\NewsfeedController;
@@ -21,9 +22,9 @@ use App\Http\Controllers\Organizer\Event\EventAppTicketController;
 use App\Http\Controllers\Organizer\Event\EventDateController;
 use App\Http\Controllers\Organizer\Event\EventPromoCodeController;
 use App\Http\Controllers\Organizer\Event\FormFieldController;
+use App\Http\Controllers\Organizer\Event\SessionAttendanceController;
 use App\Http\Controllers\Organizer\Event\Settings\RegistrationFormSettingsController;
 use App\Http\Controllers\Organizer\Event\Settings\WebsiteSettingsController;
-use App\Http\Controllers\Organizer\Event\TicketFeatureController;
 use App\Http\Controllers\Organizer\Event\WebsiteController;
 use App\Http\Controllers\Organizer\Event\WorkshopController;
 use App\Http\Controllers\Organizer\ProfileController;
@@ -105,9 +106,9 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::delete('tickets/delete/many', [EventAppTicketController::class, 'destroyMany'])->name('tickets.destroy.many');
 
             // Ticket-Features
-            Route::resource('tickets-feature', TicketFeatureController::class)->only(['index', 'store', 'update', 'destroy']);
-            Route::get('ticket-feature/{event_app_ticket_id?}', [TicketFeatureController::class, 'getAllFeatures'])->name('fetch');
-            Route::delete('tickets-feature/delete/many', [TicketFeatureController::class, 'destroyMany'])->name('tickets-feature.destroy.many');
+            Route::resource('addon', AddonController::class)->only(['index', 'store', 'update', 'destroy']);
+            // Route::get('addon/{event_app_ticket_id?}', [AddonController::class, 'getAllAddons'])->name('fetch');
+            Route::delete('addon/delete/many', [AddonController::class, 'destroyMany'])->name('addon.destroy.many');
 
             // Promo Codes
             Route::resource('promo-codes', EventPromoCodeController::class)->only(['index', 'store', 'update', 'destroy']);
@@ -195,4 +196,10 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
         Route::put('/answer/{answerId}', [QuestionController::class, 'updateAnswer'])->name('updateAnswer');
         Route::delete('/answer/{answerId}', [QuestionController::class, 'destroyAnswer'])->name('destroyAnswer');
     });
+
+    //SessionAttendance
+    Route::get('/events/attendance', [SessionAttendanceController::class, 'index'])->name('events.attendance.index');
+    Route::delete('/events/attendance/{id}', [SessionAttendanceController::class, 'destroy'])->name('events.attendance.destroy');
+    Route::delete('/events/attendance/destroy/many', [SessionAttendanceController::class, 'destroyMany'])->name('events.attendance.destroy.many');
+    // Route::post('/events/attendance/destroy/many', [SessionAttendanceController::class, 'destroyMany'])->name('events.attendance.destroy.many');
 });

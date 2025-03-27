@@ -8,6 +8,8 @@ const Index = ({ eventApp }: any) => {
     const [grandTotal, setGrandTotal] = useState(0);
     const [selectedTickets, setSelectedTicket] = useState(Array<any>);
 
+    console.log(eventApp);
+
     const { data, setData, post, processing, errors, reset, transform } =
         useForm({
             _method: "POST",
@@ -16,47 +18,52 @@ const Index = ({ eventApp }: any) => {
             grandTotalAmount: 0,
         });
 
-    const addToCart = (
-        ticket: any,
-        price: any,
-        quantity: any,
-        subTotal: any,
-        discount: any,
-        total: any,
-        discountCode: any
-    ) => {
-        let list = Array<any>(...selectedTickets);
-        list.push({
-            event_app_ticket_id: ticket.id,
-            price: price,
-            qty: quantity,
-            subTotal: subTotal,
-            discount: discount,
-            total: total,
-            discountCode: discountCode,
-        });
-        setSelectedTicket(list);
-        setData("tickets", list);
-        let gTotal = list.reduce((accumulator, value) => {
-            return accumulator + value.total;
-        }, 0);
-        setGrandTotal(gTotal);
-        setData("grandTotalAmount", gTotal);
-    };
+    // const addToCart = (
+    //     ticket: any,
+    //     price: any,
+    //     quantity: any,
+    //     subTotal: any,
+    //     discount: any,
+    //     total: any,
+    //     discountCode: any
+    // ) => {
+    //     let list = Array<any>(...selectedTickets);
+    //     list.push({
+    //         event_app_ticket_id: ticket.id,
+    //         price: price,
+    //         qty: quantity,
+    //         subTotal: subTotal,
+    //         discount: discount,
+    //         total: total,
+    //         discountCode: discountCode,
+    //     });
+    //     setSelectedTicket(list);
+    //     setData("tickets", list);
+    //     let gTotal = list.reduce((accumulator, value) => {
+    //         return accumulator + value.total;
+    //     }, 0);
+    //     setGrandTotal(gTotal);
+    //     setData("grandTotalAmount", gTotal);
+    // };
 
-    const removeFromCart = (ticket: any) => {
-        let list = [...selectedTickets];
-        list = list.filter((item) => {
-            return item.ticket_id !== ticket.id;
-        });
-        setSelectedTicket(list);
-        setData("tickets", list);
-        let gTotal = list.reduce((accumulator, value) => {
-            return accumulator + value.total;
-        }, 0);
-        setGrandTotal(gTotal);
-        setData("grandTotalAmount", gTotal);
-    };
+
+    // const removeFromCart = (ticket: any) => {
+    //     let list = [...selectedTickets];
+    //     list = list.filter((item) => {
+    //         return item.ticket_id !== ticket.id;
+    //     });
+    //     setSelectedTicket(list);
+    //     setData("tickets", list);
+    //     let gTotal = list.reduce((accumulator, value) => {
+    //         return accumulator + value.total;
+    //     }, 0);
+    //     setGrandTotal(gTotal);
+    //     setData("grandTotalAmount", gTotal);
+    // };
+
+    const hadleTicketCardChanged = (data: any) => {
+        console.log(data);
+    }
 
     const submitCheckOut = (e: any) => {
         e.preventDefault();
@@ -90,12 +97,12 @@ const Index = ({ eventApp }: any) => {
                     </Row>
                     <Row className=" justify-content-center gy-4">
                         {eventApp.tickets.length > 0 &&
-                            eventApp.tickets.map((ticket: any) => (
+                            eventApp.tickets.map((ticket: any, index: any) => (
                                 <TicketCard
-                                    onAddToCart={addToCart}
-                                    onRemoveFromCart={removeFromCart}
                                     ticket={ticket}
                                     key={ticket.id}
+                                    ticketIndex={ticket.id + "-" + index}
+                                    onChange={hadleTicketCardChanged}
                                 ></TicketCard>
                             ))}
                     </Row>

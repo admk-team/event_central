@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('feature_ticket', function (Blueprint $table) {
+        Schema::create('addon_event_app_ticket', function (Blueprint $table) {
             $table->foreignId('event_app_ticket_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('ticket_feature_id')->constrained()->cascadeOnDelete();
-            $table->primary(['event_app_ticket_id', 'ticket_feature_id']);
+            $table->foreignId('addon_id')->constrained()->cascadeOnDelete();
+
+            $table->primary(['event_app_ticket_id', 'addon_id']);
             $table->timestamps();
         });
     }

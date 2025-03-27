@@ -18,8 +18,6 @@ return new class extends Migration
             $table->mediumText('description')->nullable();
             $table->string('type')->default('Normal');
             $table->decimal('base_price')->default(0);
-            $table->decimal('addons_price')->default(0);
-            $table->decimal('total_price')->default(0);
             $table->decimal('increment_by')->nullable();
             $table->decimal('increment_rate')->nullable();;
             $table->enum('increment_type', ['Fixed', 'Percentage']);

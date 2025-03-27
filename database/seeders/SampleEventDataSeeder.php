@@ -57,9 +57,9 @@ class SampleEventDataSeeder extends Seeder
         $this->command->info('  5. Sample Event Sessions Created');
 
         //Tickets
-        DB::statement("INSERT INTO `event_app_tickets` (`id`, `event_app_id`, `name`, `description`, `type`, `base_price`, `addons_price`, `total_price`, `increment_by`, `increment_rate`, `increment_type`, `start_increment`, `end_increment`, `created_at`, `updated_at`) VALUES
-        (1, 2, 'Normal Ticket', 'test ticket', 'NORMAL', '35.00', 0, '35.00', '23.00', '34.00', 'Percentage', '2025-03-20', '2025-03-22', '2025-03-20 03:18:14', '2025-03-20 03:18:14'),
-        (2, 2, 'VIP Ticket', 'test desc', 'NORMAL', '96.00', 0, '96.00', '23.00', '32.00', 'Percentage', '2025-03-20', '2025-03-20', '2025-03-20 03:18:56', '2025-03-20 03:18:56');");
+        DB::statement("INSERT INTO `event_app_tickets` (`id`, `event_app_id`, `name`, `description`, `type`, `base_price`,  `increment_by`, `increment_rate`, `increment_type`, `start_increment`, `end_increment`, `created_at`, `updated_at`) VALUES
+        (1, 2, 'Normal Ticket', 'test ticket', 'NORMAL', '35.00', '23.00', '34.00', 'Percentage', '2025-03-20', '2025-03-22', '2025-03-20 03:18:14', '2025-03-20 03:18:14'),
+        (2, 2, 'VIP Ticket', 'test desc', 'NORMAL', '96.00', '23.00', '32.00', 'Percentage', '2025-03-20', '2025-03-20', '2025-03-20 03:18:56', '2025-03-20 03:18:56');");
 
 
         DB::statement("INSERT INTO `session_ticket` (`event_app_ticket_id`, `event_session_id`, `created_at`, `updated_at`) VALUES
@@ -89,7 +89,7 @@ class SampleEventDataSeeder extends Seeder
 
         $this->command->info('  8. Stripe Keys Created');
 
-        DB::statement("INSERT INTO `ticket_features` (`id`, `organizer_id`, `event_app_id`, `name`, `created_at`, `updated_at`, `price`, `qty_total`, `qty_sold`) VALUES
+        DB::statement("INSERT INTO `addons` (`id`, `organizer_id`, `event_app_id`, `name`, `created_at`, `updated_at`, `price`, `qty_total`, `qty_sold`) VALUES
         (1, 2, 2, '<p>🎟 <strong>VIP Access</strong> – Skip the lines and enjoy priority seating. <i>(+ $20)</i></p>', '2025-03-20 19:23:49', '2025-03-20 19:23:49', '20.00', 50, 0),
         (2, 2, 2, '<p>🍔 <strong>Food &amp; Drinks Voucher</strong> – Redeem for a meal and beverage at any vendor. <i>(+ $15)</i></p>', '2025-03-20 19:33:08', '2025-03-20 19:33:08', '15.00', 25, 0),
         (3, 2, 2, '<p>👕 <strong>Event Merchandise</strong> – Get an exclusive event T-shirt and souvenirs. <i>(+ $25)</i></p>', '2025-03-20 19:33:54', '2025-03-20 19:33:54', '25.00', 50, 0),
@@ -104,7 +104,7 @@ class SampleEventDataSeeder extends Seeder
         (12, 2, 2, '<p>📜 <strong>Signed Event Poster</strong> – Take home a limited-edition signed poster. <i>(+ $20)</i></p>', '2025-03-21 02:32:05', '2025-03-21 02:32:05', '20.00', 50, 0),
         (13, 2, 2, '<p>🚀 <strong>Early Access</strong> – Enter the venue before general admission and grab the best spots. <i>(+ $15)</i></p>', '2025-03-21 02:32:20', '2025-03-21 02:32:20', '15.00', 50, 0)");
 
-        $this->command->info('  9. Ticket Features Created');
+        $this->command->info('  9. Addons Created');
 
         Attendee::create([
             'email' => 'ansar@gmail.com',
