@@ -21,6 +21,7 @@ use App\Http\Controllers\Organizer\Event\EventAppTicketController;
 use App\Http\Controllers\Organizer\Event\EventDateController;
 use App\Http\Controllers\Organizer\Event\EventPromoCodeController;
 use App\Http\Controllers\Organizer\Event\FormFieldController;
+use App\Http\Controllers\Organizer\Event\SessionAttendanceController;
 use App\Http\Controllers\Organizer\Event\Settings\RegistrationFormSettingsController;
 use App\Http\Controllers\Organizer\Event\Settings\WebsiteSettingsController;
 use App\Http\Controllers\Organizer\Event\TicketFeatureController;
@@ -193,4 +194,10 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
         Route::put('/answer/{answerId}', [QuestionController::class, 'updateAnswer'])->name('updateAnswer');
         Route::delete('/answer/{answerId}', [QuestionController::class, 'destroyAnswer'])->name('destroyAnswer');
     });
+
+    //SessionAttendance
+    Route::get('/events/attendance', [SessionAttendanceController::class, 'index'])->name('events.attendance.index');
+    Route::delete('/events/attendance/{id}', [SessionAttendanceController::class, 'destroy'])->name('events.attendance.destroy');
+    Route::delete('/events/attendance/destroy/many', [SessionAttendanceController::class, 'destroyMany'])->name('events.attendance.destroy.many');
+    // Route::post('/events/attendance/destroy/many', [SessionAttendanceController::class, 'destroyMany'])->name('events.attendance.destroy.many');
 });

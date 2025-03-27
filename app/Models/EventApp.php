@@ -195,4 +195,8 @@ class EventApp extends Model
             }
         });
     }
+    public function attendances()
+    {
+        return $this->hasMany(AttendeeAttendance::class, 'event_app_id');
+    }
 }
