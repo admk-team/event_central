@@ -9,41 +9,55 @@ import {
     Button,
     Form,
     InputGroup,
-    Accordion
+    Accordion,
 } from "react-bootstrap";
-import TicketAddOns from "./TicketAddOns";
+import TicketDetail from "./TicketDetail";
 
-
-const TicketCard = ({ ticket, ticketIndex, onChange }: any) => {
-
+const TicketCard = ({ ticket, onTicketDetailsUpdated }: any) => {
     const [isAddedToCart, setIsAddedToCart] = useState(false);
     const [ticketQty, setTicketQty] = useState(0);
-    const [tickets, setTickets] = useState<any>([]);
+    const [ticketDetails, setTicketDetails] = useState<any>([]);
 
     useEffect(() => {
         let list = [];
         for (let i = 0; i < ticketQty; i++) {
-            list.push(Object.assign({}, ticket));
+            list.push({
+                ticket_no: i + 1,
+                ticket: Object.assign({}, ticket),
+                addons: [],
+            });
         }
-        setTickets([...list]);
+        setTicketDetails([...list]);
     }, [ticketQty]);
 
-
     const createQtyOptions = (items: any, ticket: any) => {
-        const listItems = []
+        const listItems = [];
         for (let i = 0; i < items; i++) {
-            listItems.push(<option value={i} key={ticketIndex + i + '-' + ticket.id}>{i}</option>)
+            listItems.push(
+                <option value={i} key={i + "-" + ticket.id}>
+                    {i}
+                </option>
+            );
         }
-        return listItems
-    }
+        return listItems;
+    };
 
-    const handleAddonSelected = (addon: any, ticketIndex: any) => {
-        console.log(addon, ticketIndex);
-    }
+    const handleAddonUpdated = (addons: any, ticket_no: any) => {
+        console.log(addons, ticket_no);
+        let list = [...ticketDetails];
+        list.forEach((item: any) => {
+            if (item.ticket_no === ticket_no) {
+                item.addons = addons;
+            }
+        });
+        setTicketDetails([...list]);
+        onTicketDetailsUpdated([...list]);
+        console.log("Ticket Details", list);
+    };
 
-    const handleAddonRemoved = (addon: any, ticketIndex: any) => {
-        console.log(addon, ticketIndex);
-    }
+    useEffect(() => {
+        onTicketDetailsUpdated(ticketDetails);
+    }, [ticketDetails]);
 
     return (
         <Col lg={8}>
@@ -66,21 +80,24 @@ const TicketCard = ({ ticket, ticketIndex, onChange }: any) => {
                                 </span>
                             </Col>
                             <Col md={2} lg={2}>
-                                <Form.Select aria-label="Ticket Qty"
+                                <Form.Select
+                                    aria-label="Ticket Qty"
                                     disabled={isAddedToCart}
                                     name="ticket_quantity"
-                                    value={ticketQty} onChange={(e: any) =>
-                                        setTicketQty(
-                                            parseInt(e.target.value)
-                                        )
-                                    }>
+                                    value={ticketQty}
+                                    onChange={(e: any) =>
+                                        setTicketQty(parseInt(e.target.value))
+                                    }
+                                >
                                     {createQtyOptions(10, ticket)}
                                 </Form.Select>
                             </Col>
                         </Row>
                         <Row className="mt-2">
                             <Col md={12} lg={12}>
-                                <h5 className="mb-1 fw-bold bg-light p-2 ">Sessions</h5>
+                                <h5 className="mb-1 fw-bold bg-light p-2 ">
+                                    Sessions
+                                </h5>
                                 <ul className="list-unstyled text-muted vstack gap-1">
                                     {ticket.sessions.length > 0 &&
                                         ticket.sessions.map((session: any) => (
@@ -99,20 +116,19 @@ const TicketCard = ({ ticket, ticketIndex, onChange }: any) => {
                             </Col>
                         </Row>
 
-                        {tickets.map((ticket: any, index: any) =>
-                            <div>
-                                <p className="mb-1 fw-bold bg-light p-2 ">Ticket # {index + 1} Details</p>
-                                <TicketAddOns
-                                    ticket={ticket}
-                                    ticketIndex={index}
-                                    ticketNo={ticketIndex + "-" + index}
-                                    key={ticketIndex + '-addons-' + ticket.id + "-" + index}
-                                    onAddonSelected={handleAddonSelected}
-                                    onAddonRemoved={handleAddonRemoved}
-                                >
-                                </TicketAddOns>
-                            </div>
-                        )}
+                        {ticketDetails.map((ticketDetail: any) => (
+                            <TicketDetail
+                                ticket={ticket}
+                                ticket_no={ticketDetail.ticket_no}
+                                key={
+                                    "ticketDetail-" +
+                                    ticket.id +
+                                    "-" +
+                                    ticketDetail.ticket_no
+                                }
+                                onAddonsUpdated={handleAddonUpdated}
+                            ></TicketDetail>
+                        ))}
                     </Accordion.Body>
                 </Accordion.Item>
             </Accordion>

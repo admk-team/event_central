@@ -7,8 +7,9 @@ import TicketCard from "./TicketCard";
 const Index = ({ eventApp }: any) => {
     const [grandTotal, setGrandTotal] = useState(0);
     const [selectedTickets, setSelectedTicket] = useState(Array<any>);
+    const [allTicketDetails, setAllTicketsDetails] = useState(Array<any>);
 
-    console.log(eventApp);
+    // console.log(eventApp);
 
     const { data, setData, post, processing, errors, reset, transform } =
         useForm({
@@ -17,53 +18,6 @@ const Index = ({ eventApp }: any) => {
             tickets: Array(),
             grandTotalAmount: 0,
         });
-
-    // const addToCart = (
-    //     ticket: any,
-    //     price: any,
-    //     quantity: any,
-    //     subTotal: any,
-    //     discount: any,
-    //     total: any,
-    //     discountCode: any
-    // ) => {
-    //     let list = Array<any>(...selectedTickets);
-    //     list.push({
-    //         event_app_ticket_id: ticket.id,
-    //         price: price,
-    //         qty: quantity,
-    //         subTotal: subTotal,
-    //         discount: discount,
-    //         total: total,
-    //         discountCode: discountCode,
-    //     });
-    //     setSelectedTicket(list);
-    //     setData("tickets", list);
-    //     let gTotal = list.reduce((accumulator, value) => {
-    //         return accumulator + value.total;
-    //     }, 0);
-    //     setGrandTotal(gTotal);
-    //     setData("grandTotalAmount", gTotal);
-    // };
-
-
-    // const removeFromCart = (ticket: any) => {
-    //     let list = [...selectedTickets];
-    //     list = list.filter((item) => {
-    //         return item.ticket_id !== ticket.id;
-    //     });
-    //     setSelectedTicket(list);
-    //     setData("tickets", list);
-    //     let gTotal = list.reduce((accumulator, value) => {
-    //         return accumulator + value.total;
-    //     }, 0);
-    //     setGrandTotal(gTotal);
-    //     setData("grandTotalAmount", gTotal);
-    // };
-
-    const hadleTicketCardChanged = (data: any) => {
-        console.log(data);
-    }
 
     const submitCheckOut = (e: any) => {
         e.preventDefault();
@@ -77,6 +31,29 @@ const Index = ({ eventApp }: any) => {
         });
     };
 
+    const hadleTicketCardChanged = (ticketDetails: any) => {
+        // let list = [...selectedTickets];
+        // let index = list.findIndex((item: any) => item.id === ticket.id);
+        // if (index > -1) {
+        //     list.splice(index, 1);
+        // } else {
+        //     list.push(ticket);
+        // }
+        // setSelectedTicket(list);
+        // let total = 0;
+        // list.map((item: any) => {
+        //     total += item.price;
+        // });
+        // setGrandTotal(total);
+        // console.log("Selected Tickets", list);
+        // console.log("Grand Total", total);
+        // setData({
+        //     ...data,
+        //     tickets: list,
+        //     grandTotalAmount: total,
+        // });
+        // console.log("Ticket Details", ticketDetails);
+    };
     return (
         <React.Fragment>
             <Head title="Tickets" />
@@ -97,12 +74,13 @@ const Index = ({ eventApp }: any) => {
                     </Row>
                     <Row className=" justify-content-center gy-4">
                         {eventApp.tickets.length > 0 &&
-                            eventApp.tickets.map((ticket: any, index: any) => (
+                            eventApp.tickets.map((ticket: any) => (
                                 <TicketCard
                                     ticket={ticket}
                                     key={ticket.id}
-                                    ticketIndex={ticket.id + "-" + index}
-                                    onChange={hadleTicketCardChanged}
+                                    onTicketDetailsUpdated={
+                                        hadleTicketCardChanged
+                                    }
                                 ></TicketCard>
                             ))}
                     </Row>

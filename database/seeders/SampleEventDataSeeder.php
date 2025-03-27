@@ -85,24 +85,38 @@ class SampleEventDataSeeder extends Seeder
         $this->command->info('  7. Sample Promo Codes Created');
 
         DB::statement("INSERT INTO `organizer_payment_keys` (`id`, `user_id`, `stripe_publishable_key`, `stripe_secret_key`, `paypal_base_url`, `paypal_pub`, `paypal_secret`, `created_at`, `updated_at`) VALUES
-(1, 2, 'pk_test_51R3iHCPNcWTtCzebbzvUsG7XMmMnTqUxbs4NE9v8CH5IJxtaMXDgz5FMA96HnS93ZQw9DN6wHLlxgtFW90XW0Q4z004QlcW5Z8', 'eyJpdiI6ImlDNE52MDVSREpwNUFCa2ttWTAyN1E9PSIsInZhbHVlIjoiWGJMd2xYZjl6bmRVbXdvWi9Yc0hPaEc3Z3Zxa1hHc3FEdFZzK1FweXk4aHg3ZmFrNVdlQ29BbDM2Nm5wdnJPSnBjc1UxUWpOZjdMaFFaWjlBTVQrSEFjZldka3JnQ1paK1puQmRMd0loQUJQb21uSXc4c1F6RGdzRTJoSTRhU0VySjBqVGU5eGVubkxsbFFsd0Z0RGNNRUI3MDIzb2pFeUxVWEhJREsrUktnPSIsIm1hYyI6IjZiNzBiNzczZjYxNmEyNDJlZTQ5YjFjOTMxN2QzYTcyOTYwYzY5M2ZlNTJiOGY5NmJhMDZhYTkyZGEwMjNkMmIiLCJ0YWciOiIifQ==', 'https://api-m.sandbox.paypal.com', 'AarFoaRqHBfyzdXvqagFqjOF4RPsxuRYmmkpP1WTroOsRYUeixH-3w8LwxHcZkmWO7ow1OI_Ei2F7lnw', 'eyJpdiI6IlNxWHRqSHQ5SEVYNUo0dmxNTjJ0c1E9PSIsInZhbHVlIjoiWmJ3MHVKbGQxSlFDVU96cUFkUkFnczYxUG1iTExwd0JLdUtHdWtCaFZHZXllb0tNZVdVK0ZrNjBCOHNIRFE1YmtkWnc5L2E4UEI3VHdiUUdXc3hBVjlCQVhibHFxRDRNdEljeHdTbGoxL2hsQWJJN0pKWTY5VnpQeVlydEVpQkgiLCJtYWMiOiI3NmEzZWUyODgzMTEyMGNlNDE3OGNmZmE4N2ZkMTg3YjJjYTgzYjI0ZGNkNTVkOWNiMzJmZTM4YWQ2MTY2ZDY4IiwidGFnIjoiIn0=', '2025-03-20 18:47:39', '2025-03-25 11:53:45')");
+        (1, 2, 'pk_test_51R3iHCPNcWTtCzebbzvUsG7XMmMnTqUxbs4NE9v8CH5IJxtaMXDgz5FMA96HnS93ZQw9DN6wHLlxgtFW90XW0Q4z004QlcW5Z8', 'eyJpdiI6ImlDNE52MDVSREpwNUFCa2ttWTAyN1E9PSIsInZhbHVlIjoiWGJMd2xYZjl6bmRVbXdvWi9Yc0hPaEc3Z3Zxa1hHc3FEdFZzK1FweXk4aHg3ZmFrNVdlQ29BbDM2Nm5wdnJPSnBjc1UxUWpOZjdMaFFaWjlBTVQrSEFjZldka3JnQ1paK1puQmRMd0loQUJQb21uSXc4c1F6RGdzRTJoSTRhU0VySjBqVGU5eGVubkxsbFFsd0Z0RGNNRUI3MDIzb2pFeUxVWEhJREsrUktnPSIsIm1hYyI6IjZiNzBiNzczZjYxNmEyNDJlZTQ5YjFjOTMxN2QzYTcyOTYwYzY5M2ZlNTJiOGY5NmJhMDZhYTkyZGEwMjNkMmIiLCJ0YWciOiIifQ==', 'https://api-m.sandbox.paypal.com', 'AarFoaRqHBfyzdXvqagFqjOF4RPsxuRYmmkpP1WTroOsRYUeixH-3w8LwxHcZkmWO7ow1OI_Ei2F7lnw', 'eyJpdiI6IlNxWHRqSHQ5SEVYNUo0dmxNTjJ0c1E9PSIsInZhbHVlIjoiWmJ3MHVKbGQxSlFDVU96cUFkUkFnczYxUG1iTExwd0JLdUtHdWtCaFZHZXllb0tNZVdVK0ZrNjBCOHNIRFE1YmtkWnc5L2E4UEI3VHdiUUdXc3hBVjlCQVhibHFxRDRNdEljeHdTbGoxL2hsQWJJN0pKWTY5VnpQeVlydEVpQkgiLCJtYWMiOiI3NmEzZWUyODgzMTEyMGNlNDE3OGNmZmE4N2ZkMTg3YjJjYTgzYjI0ZGNkNTVkOWNiMzJmZTM4YWQ2MTY2ZDY4IiwidGFnIjoiIn0=', '2025-03-20 18:47:39', '2025-03-25 11:53:45')");
 
         $this->command->info('  8. Stripe Keys Created');
 
-        DB::statement("INSERT INTO `addons` (`id`, `organizer_id`, `event_app_id`, `name`, `created_at`, `updated_at`, `price`, `qty_total`, `qty_sold`) VALUES
-        (1, 2, 2, '<p>🎟 <strong>VIP Access</strong> – Skip the lines and enjoy priority seating. <i>(+ $20)</i></p>', '2025-03-20 19:23:49', '2025-03-20 19:23:49', '20.00', 50, 0),
-        (2, 2, 2, '<p>🍔 <strong>Food &amp; Drinks Voucher</strong> – Redeem for a meal and beverage at any vendor. <i>(+ $15)</i></p>', '2025-03-20 19:33:08', '2025-03-20 19:33:08', '15.00', 25, 0),
-        (3, 2, 2, '<p>👕 <strong>Event Merchandise</strong> – Get an exclusive event T-shirt and souvenirs. <i>(+ $25)</i></p>', '2025-03-20 19:33:54', '2025-03-20 19:33:54', '25.00', 50, 0),
-        (4, 2, 2, '<p>🎉 <strong>Backstage Pass</strong> – Meet the performers and enjoy a behind-the-scenes tour. <i>(+ $50)</i></p>', '2025-03-20 19:34:15', '2025-03-20 19:34:15', '50.00', 50, 0),
-        (5, 2, 2, '<p>📸 <strong>Photo Package</strong> – Receive professional event photos as a keepsake. <i>(+ $10)</i></p>', '2025-03-20 19:34:39', '2025-03-20 19:34:39', '10.00', 50, 0),
-        (6, 2, 2, '<p>🚗 <strong>Premium Parking</strong> – Get a reserved parking spot close to the venue. <i>(+ $10)</i></p>', '2025-03-21 02:29:45', '2025-03-21 02:29:45', '10.00', 60, 0),
-        (7, 2, 2, '<p>🎧 <strong>Exclusive Playlist Access</strong> – Enjoy a curated playlist featuring event artists. <i>(+ $5)</i></p>', '2025-03-21 02:30:06', '2025-03-21 02:30:06', '5.00', 50, 0),
-        (8, 2, 2, '<p>🛋 <strong>Lounge Access</strong> – Relax in a private lounge with complimentary snacks. <i>(+ $30)</i></p>', '2025-03-21 02:30:23', '2025-03-21 02:30:23', '30.00', 45, 0),
-        (9, 2, 2, '<p>🎮 <strong>Game Zone Pass</strong> – Access interactive games and activities before the show. <i>(+ $10)</i></p>', '2025-03-21 02:30:42', '2025-03-21 02:30:42', '10.00', 50, 0),
-        (10, 2, 2, '<p>🎆 <strong>After-Party Entry</strong> – Keep the fun going with exclusive after-party access. <i>(+ $40)</i></p>', '2025-03-21 02:31:12', '2025-03-21 02:31:12', '40.00', 50, 0),
-        (11, 2, 2, '<p>🎟 <strong>Bring a Friend Discount</strong> – Get a special rate when you buy an extra ticket. <i>(Varies)</i></p>', '2025-03-21 02:31:43', '2025-03-21 02:31:43', '0.00', 50, 0),
-        (12, 2, 2, '<p>📜 <strong>Signed Event Poster</strong> – Take home a limited-edition signed poster. <i>(+ $20)</i></p>', '2025-03-21 02:32:05', '2025-03-21 02:32:05', '20.00', 50, 0),
-        (13, 2, 2, '<p>🚀 <strong>Early Access</strong> – Enter the venue before general admission and grab the best spots. <i>(+ $15)</i></p>', '2025-03-21 02:32:20', '2025-03-21 02:32:20', '15.00', 50, 0)");
+        DB::statement("INSERT INTO `addons` (`id`, `organizer_id`, `event_app_id`, `name`, `price`, `qty_total`, `qty_sold`, `created_at`, `updated_at`) VALUES
+        (1, 2, 2, 'Walk the red carpet', 0.00, 50, 0, '2025-03-27 11:35:31', '2025-03-27 11:35:31'),
+        (2, 2, 2, 'Sign up for the Pitch-A-Thon', 0.00, 100, 0, '2025-03-27 11:35:48', '2025-03-27 11:35:48'),
+        (3, 2, 2, 'Sign up to sit in the Audition Room (Filmmaker)', 0.00, 10, 0, '2025-03-27 11:36:05', '2025-03-27 11:36:05'),
+        (4, 2, 2, 'Sign up to Audition (Actor/Actress)', 10.00, 10, 0, '2025-03-27 11:36:22', '2025-03-27 11:36:22'),
+        (5, 2, 2, 'Need Airport Pickup and Drop-off', 15.00, 12, 0, '2025-03-27 11:36:39', '2025-03-27 11:36:39'),
+        (6, 2, 2, 'After Party', 0.00, 12, 0, '2025-03-27 11:36:52', '2025-03-27 11:36:52'),
+        (7, 2, 2, 'CFF Academy (Wednesday & Thursday)', 125.00, 15, 0, '2025-03-27 11:37:20', '2025-03-27 11:37:20'),
+        (8, 2, 2, 'ICFF Music Academy', 0.00, 13, 0, '2025-03-27 11:37:34', '2025-03-27 11:37:34')");
+
+        DB::statement("(1, 1, NULL, NULL),
+        (1, 2, NULL, NULL),
+        (1, 3, NULL, NULL),
+        (1, 4, NULL, NULL),
+        (1, 5, NULL, NULL),
+        (1, 6, NULL, NULL),
+        (1, 7, NULL, NULL),
+        (1, 8, NULL, NULL),
+        (2, 1, NULL, NULL),
+        (2, 2, NULL, NULL),
+        (2, 3, NULL, NULL),
+        (2, 4, NULL, NULL),
+        (2, 5, NULL, NULL),
+        (2, 6, NULL, NULL),
+        (2, 7, NULL, NULL),
+        (2, 8, NULL, NULL);
+        ");
+
 
         $this->command->info('  9. Addons Created');
 
