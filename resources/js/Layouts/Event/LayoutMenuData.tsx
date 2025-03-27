@@ -110,7 +110,7 @@ const Navdata = () => {
                 { id: "speakers", label: "Speakers", link: route('organizer.events.speaker.index'), parentId: "Content" },
                 { id: "partners", label: "Partners", link: route('organizer.events.partner.index'), parentId: "Content" },
                 { id: "tickets", label: "Tickets", link: route('organizer.events.tickets.index'), parentId: "Content" },
-                { id: "ticket-addons", label: "Ticket Add-ons", link: route('organizer.events.tickets-feature.index'), parentId: "Content" },
+                { id: "ticket-addons", label: "Ticket Add-ons", link: route('organizer.events.addon.index'), parentId: "Content" },
                 { id: "promo-codes", label: "Promo Codes", link: route('organizer.events.promo-codes.index'), parentId: "Content" },
             ]
         },
