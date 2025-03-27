@@ -58,6 +58,7 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         //Payment Processing
         Route::get('view-tickets', [PaymentController::class, 'viewTickets'])->name('attendee.tickets.get');
         Route::post('tickets', [PaymentController::class, 'postTickets'])->name('attendee.tickets.post');
+        Route::get('purchased/tickets', [PaymentController::class, 'purchasedTickets'])->name('attendee.purchased.tickets');
 
         // Route::post('checkout', [PaymentController::class, 'checkoutPage'])->name('attendee.checkout.post');
         Route::post('create-payment-intent', [PaymentController::class, 'createPaymentIntent'])->name('attendee.payment.intent');
