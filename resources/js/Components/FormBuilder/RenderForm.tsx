@@ -27,7 +27,6 @@ export default function RenderForm({ form, preview = false }: any) {
 
     post(route('attendee.event-registration-form', {
       id: currentEvent.id,
-      preview: preview ? 'true' : undefined,
     }), {
       preserveScroll: true,
       onSuccess: () => reset(),
@@ -41,31 +40,33 @@ export default function RenderForm({ form, preview = false }: any) {
       processing,
       errors,
     }}>
-      <Form onSubmit={submit}>
-        <div className="mb-4">
-          {form.fields.map((field: any) => {
-            const name = `field_${field.id}`;
-            const FieldComp = fieldTypes[field.type]?.render ?? null;
-            return FieldComp ? <FieldComp key={field.id} name={name} field={field} /> : null;
-          })}
-        </div>
-        <Button type="submit" disabled={processing}>
-          {processing ? (
-            <span className="d-flex gap-1 align-items-center">
-              <Spinner
-                as="span"
-                animation="border"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-              />
-              Submitting
-            </span>
-          ) : (
-            <span>Submit</span>
-          )}
-        </Button>
-      </Form>
+      {form.fields.length > 0 && (
+        <Form onSubmit={submit}>
+          <div className="mb-4">
+            {form.fields.map((field: any) => {
+              const name = `field_${field.id}`;
+              const FieldComp = fieldTypes[field.type]?.render ?? null;
+              return FieldComp ? <FieldComp key={field.id} name={name} field={field} /> : null;
+            })}
+          </div>
+          <Button type="submit" disabled={processing}>
+            {processing ? (
+              <span className="d-flex gap-1 align-items-center">
+                <Spinner
+                  as="span"
+                  animation="border"
+                  size="sm"
+                  role="status"
+                  aria-hidden="true"
+                />
+                Submitting
+              </span>
+            ) : (
+              <span>Submit</span>
+            )}
+          </Button>
+        </Form>
+      )}
     </FormBuilderContext.Provider>
   )
 }

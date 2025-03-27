@@ -28,12 +28,12 @@ Route::middleware('guest')->prefix('attendee')->group(function () {
             Route::post('{eventApp}/register', [RegisteredUserController::class, 'store'])->name('attendee.register.store');
         }
     );
+});
 
-    // Event Registration Form
-    Route::prefix('{eventApp}/event-registration-form')->name('attendee.event-registration-form')->group(function () {
-        Route::get('/', [EventRegistrationFormController::class, 'index']);
-        Route::post('/', [EventRegistrationFormController::class, 'submit'])->name('.submit');
-    });
+// Event Registration Form
+Route::prefix('{eventApp}/event-registration-form')->name('attendee.event-registration-form')->group(function () {
+    Route::get('/', [EventRegistrationFormController::class, 'index']);
+    Route::post('/', [EventRegistrationFormController::class, 'submit'])->name('.submit');
 });
 
 // http://127.0.0.1:8000/google-login/callback
