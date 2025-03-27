@@ -106,11 +106,11 @@ const AttendeeSessionDetail = ({
                                         </div>
 
                                         <div className="d-flex flex-row align-items-center">
-                                            {eventSession.qa_status == true && (
                                                 <div className="d-flex align-items-center gap-2 me-3">
                                                     {" "}
                                                     {/* Gap between Q&A and icons */}
-                                                    <Link
+                                                    {eventSession.qa_status == true && (
+                                                        <Link
                                                         href={route(
                                                             "attendee.events.qa.index",
                                                             {
@@ -119,16 +119,30 @@ const AttendeeSessionDetail = ({
                                                             }
                                                         )}
                                                         className="d-flex align-items-center text-decoration-none"
-                                                    >
+                                                        >
                                                         <i className="bx bx-message-square-detail fs-4 text-primary"></i>{" "}
                                                         {/* Q&A Icon */}
                                                         <span className="fw-bold text-primary ms-1">
                                                             Q&A
                                                         </span>{" "}
                                                         {/* Attractive text styling */}
+                                                        </Link>
+                                                    )}
+                                                  
+                                                    {eventSession.posts == true && (
+                                                        <Link
+                                                        href={route("attendee.posts.index",{id:eventSession.id,})}
+                                                        className="d-flex align-items-center text-decoration-none"
+                                                    >
+                                                        <i className="ri-image-edit-line fs-4 text-primary"></i>{" "}
+                                                        {/* Q&A Icon */}
+                                                        <span className="fw-bold text-primary ms-1">
+                                                            Posts
+                                                        </span>{" "}
+                                                        {/* Attractive text styling */}
                                                     </Link>
+                                                    )}
                                                 </div>
-                                            )}
 
                                             {sessionSelected ? (
                                                 <a

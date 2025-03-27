@@ -86,10 +86,11 @@ class EventController extends Controller
         return Inertia::render('Attendee/AttendeeMore', compact(['eventApp']));
     }
 
-    public function getPostsMore()
+    public function getPostsMore(String $id)
     {
+        $attendee= Auth::user()->id;
         $eventApp = EventApp::find(Auth::user()->event_app_id);
-        $newsfeeds = EventPost::where('event_app_id', $eventApp->id)->get();
-        return Inertia::render('Attendee/Posts/Index', compact(['eventApp', 'newsfeeds']));
+        $newsfeeds = EventPost::where('event_app_id', $eventApp->id)->where('session_id',$id)->get();
+        return Inertia::render('Attendee/Posts/Index', compact(['eventApp', 'newsfeeds','attendee']));
     }
 }

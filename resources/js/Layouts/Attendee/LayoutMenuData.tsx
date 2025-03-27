@@ -101,19 +101,19 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
-        {
-            id: "posts",
-            label: "Posts",
-            icon: "bx bx-group",
-            link: route("attendee.posts.index"),
-            stateVariables: isPost,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsPost(!isPost);
-                setIscurrentState("Posts");
-                updateIconSidebar(e);
-            },
-        },
+        // {
+        //     id: "posts",
+        //     label: "Posts",
+        //     icon: "bx bx-group",
+        //     link: route("attendee.posts.index"),
+        //     stateVariables: isPost,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIsPost(!isPost);
+        //         setIscurrentState("Posts");
+        //         updateIconSidebar(e);
+        //     },
+        // },
         {
             id: "more",
             label: "Contact",
