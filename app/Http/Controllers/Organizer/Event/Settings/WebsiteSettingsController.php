@@ -26,7 +26,7 @@ class WebsiteSettingsController extends Controller
             // 'pages' => $this->datatable(Page::where('event_app_id', session('event_id'))),
             // 'footers' => $this->datatable(Footer::where('event_app_id', session('event_id'))),
             // 'homePageSelected' => $currentEvent->pages()->homePage()->count() !== 0,
-            'colors' => eventSettings()->getValue('website_colors', $this->getDefaultColors()),
+            'colors' => eventSettings()->getValue('website_colors', config('event_website.colors')),
         ]);
     }
 
@@ -35,6 +35,12 @@ class WebsiteSettingsController extends Controller
         $value = eventSettings()->getValue('website_status', false);
         eventSettings()->set('website_status', !$value);
         return back()->withSuccess(!$value ? "Activated" : "Deactivated");
+    }
+
+    public function saveColors(Request $request)
+    {
+        eventSettings()->set('website_colors', $request->colors);
+        return back()->withSuccess("Saved");
     }
 
     protected function createDefaults($event)
@@ -69,23 +75,5 @@ class WebsiteSettingsController extends Controller
                 'default_footer' => true,
             ]);
         }
-    }
-
-    protected function getDefaultColors(): array
-    {
-        return [
-            'light' => [
-                'base' => [
-                    'background' => '#ffffff',
-                    'foreground' => '#111827',
-                ],
-                'primary' => [
-                    'primary' => '#6366f1',
-                    'primary_light' => '#818cf8',
-                    'primary_dark' => '#4f46e5',
-                    'primary_foreground' => '#ffffff',
-                ]
-            ]
-        ];
     }
 }

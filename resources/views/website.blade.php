@@ -10,6 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
 
+    @include('partials.website-colors')
+
     @vite(['resources/css/website-styles.css'])
 
     <script>
@@ -42,7 +44,7 @@
                 </ul>
             </nav>
             <div class="header-actions">
-                <button class="theme-toggle" aria-label="Toggle dark mode">
+                {{-- <button class="theme-toggle" aria-label="Toggle dark mode">
                     <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                         stroke-linejoin="round">
@@ -61,7 +63,7 @@
                         stroke-linejoin="round">
                         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                     </svg>
-                </button>
+                </button> --}}
                 <a href="{{ route('attendee.register', $event) }}" class="btn btn-primary">Register Now</a>
             </div>
         </div>
@@ -85,7 +87,7 @@
                     </div>
                     <h1 class="event-title">{{ $event->name }} <span
                             class="highlight">{{ date('Y', strtotime($event->dates[0]->date)) }}</span></h1>
-                    <p class="event-tagline">{{ $event->description }}</p>
+                    <p class="event-tagline">{{ Str::substr($event->description, 0, 120) }} {{ strlen($event->description) > 120 ? '...' : '' }}</p>
                     <div class="hero-cta">
                         <a href="{{ route('attendee.register', $event) }}" class="btn btn-primary btn-lg">Secure Your
                             Spot</a>
@@ -196,91 +198,35 @@
             </div>
         </section>
 
-        <section id="about" class="about">
-            <div class="container">
-                <div class="section-header">
-                    <span class="section-tag">About the Event</span>
-                    <h2 class="section-title">The Ultimate Developer Experience</h2>
-                    <p class="section-subtitle">Join us for three days of learning, networking, and inspiration</p>
-                </div>
-                <div class="about-content">
-                    <div class="about-text">
-                        <p>DevCon 2025 is the premier conference for developers, designers, and tech leaders. With over
-                            120 sessions, 80+ speakers, and 40+ workshops, you'll gain insights into the latest
-                            technologies, best practices, and future trends.</p>
-                        <p>Whether you're a frontend developer, backend engineer, DevOps specialist, or tech leader,
-                            DevCon offers valuable content tailored to your interests and career goals.</p>
-                        <div class="about-features">
-                            <div class="feature-item">
-                                <div class="feature-icon">
+        @if (strlen($event->description) > 120)
+            <section id="about" class="about">
+                <div class="container">
+                    <div class="section-header">
+                        <span class="section-tag">About the Event</span>
+                        <h2 class="section-title">{{ $event->name }}</h2>
+                        {{-- <p class="section-subtitle">Join us for three days of learning, networking, and inspiration</p> --}}
+                    </div>
+                    <div class="about-content">
+                        <div class="about-text">
+                            {{ $event->description }}
+                        </div>
+                        <div class="about-video">
+                            <div class="video-wrapper">
+                                <img src="{{ $event->images[0]->image_url ?? '' }}" alt="{{ $event->name }}">
+                                {{-- <button class="play-button" aria-label="Play video">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                         viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                         stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                        <circle cx="9" cy="7" r="4"></circle>
-                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                        <circle cx="12" cy="12" r="10"></circle>
+                                        <polygon points="10 8 16 12 10 16 10 8"></polygon>
                                     </svg>
-                                </div>
-                                <h3>Networking</h3>
-                                <p>Connect with industry leaders and peers from around the world</p>
-                            </div>
-                            <div class="feature-item">
-                                <div class="feature-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-                                    </svg>
-                                </div>
-                                <h3>Learning</h3>
-                                <p>Gain insights from expert-led sessions and hands-on workshops</p>
-                            </div>
-                            <div class="feature-item">
-                                <div class="feature-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round">
-                                        <polygon
-                                            points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                                        </polygon>
-                                    </svg>
-                                </div>
-                                <h3>Inspiration</h3>
-                                <p>Get inspired by innovative ideas and cutting-edge technologies</p>
-                            </div>
-                            <div class="feature-item">
-                                <div class="feature-icon">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                        stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                        <circle cx="8.5" cy="7" r="4"></circle>
-                                        <polyline points="17 11 19 13 23 9"></polyline>
-                                    </svg>
-                                </div>
-                                <h3>Career Growth</h3>
-                                <p>Enhance your skills and advance your career in tech</p>
+                                </button> --}}
                             </div>
                         </div>
                     </div>
-                    <div class="about-video">
-                        <div class="video-wrapper">
-                            <img src="/placeholder.svg?height=400&width=600" alt="DevCon event highlights">
-                            <button class="play-button" aria-label="Play video">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <circle cx="12" cy="12" r="10"></circle>
-                                    <polygon points="10 8 16 12 10 16 10 8"></polygon>
-                                </svg>
-                            </button>
-                        </div>
-                    </div>
                 </div>
-            </div>
-        </section>
+            </section>
+        @endif
 
         <section id="speakers" class="speakers">
             <div class="container">
@@ -390,285 +336,82 @@
                     <h2 class="section-title">Austin Convention Center</h2>
                     <p class="section-subtitle">500 E Cesar Chavez St, Austin, TX 78701</p>
                 </div>
-                <div class="venue-content">
+                {{-- <div class="venue-content">
                     <div class="venue-map">
                         <img src="/placeholder.svg?height=500&width=800" alt="Map of Austin Convention Center">
                     </div>
-                </div>
+                </div> --}}
             </div>
         </section>
-
-        <section id="sponsors" class="sponsors">
-            <div class="container">
-                <div class="section-header">
-                    <span class="section-tag">Our Sponsors</span>
-                    <h2 class="section-title">Supported By Industry Leaders</h2>
-                    <p class="section-subtitle">DevCon 2025 is made possible by our amazing sponsors</p>
-                </div>
-                <div class="sponsors-tiers">
-                    <div class="sponsors-tier">
-                        <h3 class="tier-title">Platinum Sponsors</h3>
-                        <div class="sponsors-grid platinum">
-                            <div class="sponsor-logo">
-                                <img src="/placeholder.svg?height=150&width=300" alt="Sponsor 1">
-                            </div>
-                            <div class="sponsor-logo">
-                                <img src="/placeholder.svg?height=150&width=300" alt="Sponsor 2">
-                            </div>
-                            <div class="sponsor-logo">
-                                <img src="/placeholder.svg?height=150&width=300" alt="Sponsor 3">
-                            </div>
-                        </div>
+        
+        @if ($partnerCategories->count() > 0 && $event->partners->count() > 0)
+            <section id="sponsors" class="sponsors">
+                <div class="container">
+                    <div class="section-header">
+                        <span class="section-tag">Our Sponsors</span>
                     </div>
-                    <div class="sponsors-tier">
-                        <h3 class="tier-title">Gold Sponsors</h3>
-                        <div class="sponsors-grid gold">
-                            <div class="sponsor-logo">
-                                <img src="/placeholder.svg?height=100&width=200" alt="Sponsor 4">
-                            </div>
-                            <div class="sponsor-logo">
-                                <img src="/placeholder.svg?height=100&width=200" alt="Sponsor 5">
-                            </div>
-                            <div class="sponsor-logo">
-                                <img src="/placeholder.svg?height=100&width=200" alt="Sponsor 6">
-                            </div>
-                            <div class="sponsor-logo">
-                                <img src="/placeholder.svg?height=100&width=200" alt="Sponsor 7">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="sponsors-tier">
-                        <h3 class="tier-title">Silver Sponsors</h3>
-                        <div class="sponsors-grid silver">
-                            <div class="sponsor-logo">
-                                <img src="/placeholder.svg?height=80&width=160" alt="Sponsor 8">
-                            </div>
-                            <div class="sponsor-logo">
-                                <img src="/placeholder.svg?height=80&width=160" alt="Sponsor 9">
-                            </div>
-                            <div class="sponsor-logo">
-                                <img src="/placeholder.svg?height=80&width=160" alt="Sponsor 10">
-                            </div>
-                            <div class="sponsor-logo">
-                                <img src="/placeholder.svg?height=80&width=160" alt="Sponsor 11">
-                            </div>
-                            <div class="sponsor-logo">
-                                <img src="/placeholder.svg?height=80&width=160" alt="Sponsor 12">
-                            </div>
-                            <div class="sponsor-logo">
-                                <img src="/placeholder.svg?height=80&width=160" alt="Sponsor 13">
-                            </div>
-                        </div>
+                    <div class="sponsors-tiers">
+                        @foreach ($partnerCategories as $category)
+                            @if ($category->partners->count() > 0)
+                                <div class="sponsors-tier">
+                                    <h3 class="tier-title">{{ $category->name }}</h3>
+                                    <div class="sponsors-grid gold">
+                                        @foreach ($category->partners as $partner) 
+                                            <div class="sponsor-logo">
+                                                <img src="{{ url("storage/{$partner->exhibitor_logo}") }}" alt="{{ $partner->name }}">
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            @endif
+                        @endforeach
                     </div>
                 </div>
-                <div class="sponsors-cta">
-                    <p>Interested in becoming a sponsor?</p>
-                    <a href="#" class="btn btn-outline">View Sponsorship Opportunities</a>
-                </div>
-            </div>
-        </section>
+            </section>
+        @endif
 
         <section id="register" class="register">
             <div class="container">
                 <div class="section-header light">
                     <span class="section-tag">Register Now</span>
-                    <h2 class="section-title">Secure Your Spot at DevCon 2025</h2>
-                    <p class="section-subtitle">Early bird pricing available until June 30, 2025</p>
+                    <h2 class="section-title">Tickets</h2>
+                    {{-- <p class="section-subtitle">Early bird pricing available until June 30, 2025</p> --}}
                 </div>
                 <div class="pricing-tiers">
-                    <div class="pricing-card">
-                        <div class="pricing-header">
-                            <h3>Standard Pass</h3>
-                            <div class="pricing">
-                                <span class="price">$599</span>
-                                <span class="period">Early Bird</span>
+                    @foreach ($event->tickets as $ticket)
+                        <div class="pricing-card">
+                            <div class="pricing-header">
+                                <h3>{{ $ticket->name }}</h3>
+                                <div class="pricing">
+                                    <span class="price">${{ $ticket->base_price }}</span>
+                                    <span class="period">Early Bird</span>
+                                </div>
                             </div>
+                            <ul class="pricing-features">
+                                @foreach ($ticket->sessions as $session)
+                                    <li>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span>{{ $session->name }}</span>
+                                    </li>
+                                @endforeach
+                            </ul>
+                            <a href="{{ route('attendee.register', $event) }}" class="btn btn-primary btn-block">Register Now</a>
                         </div>
-                        <ul class="pricing-features">
-                            <li>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                <span>Access to all keynotes</span>
-                            </li>
-                            <li>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                <span>Access to all sessions</span>
-                            </li>
-                            <li>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                <span>Conference swag</span>
-                            </li>
-                            <li>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                <span>Lunch and refreshments</span>
-                            </li>
-                            <li class="disabled">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                                </svg>
-                                <span>Workshop access</span>
-                            </li>
-                            <li class="disabled">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                                </svg>
-                                <span>VIP networking event</span>
-                            </li>
-                        </ul>
-                        <a href="#" class="btn btn-primary btn-block">Register Now</a>
-                    </div>
-                    <div class="pricing-card featured">
-                        <div class="pricing-badge">Most Popular</div>
-                        <div class="pricing-header">
-                            <h3>Pro Pass</h3>
-                            <div class="pricing">
-                                <span class="price">$899</span>
-                                <span class="period">Early Bird</span>
-                            </div>
-                        </div>
-                        <ul class="pricing-features">
-                            <li>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                <span>Access to all keynotes</span>
-                            </li>
-                            <li>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                <span>Access to all sessions</span>
-                            </li>
-                            <li>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                <span>Premium conference swag</span>
-                            </li>
-                            <li>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                <span>Lunch and refreshments</span>
-                            </li>
-                            <li>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                <span>Access to all workshops</span>
-                            </li>
-                            <li>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                <span>VIP networking event</span>
-                            </li>
-                        </ul>
-                        <a href="#" class="btn btn-primary btn-block">Register Now</a>
-                    </div>
-                    <div class="pricing-card">
-                        <div class="pricing-header">
-                            <h3>Team Pass</h3>
-                            <div class="pricing">
-                                <span class="price">$499</span>
-                                <span class="period">per person</span>
-                            </div>
-                        </div>
-                        <ul class="pricing-features">
-                            <li>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                <span>Access to all keynotes</span>
-                            </li>
-                            <li>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                <span>Access to all sessions</span>
-                            </li>
-                            <li>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                <span>Conference swag</span>
-                            </li>
-                            <li>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                <span>Lunch and refreshments</span>
-                            </li>
-                            <li>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                <span>Team meeting room</span>
-                            </li>
-                            <li>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <polyline points="20 6 9 17 4 12"></polyline>
-                                </svg>
-                                <span>Group discount (5+ people)</span>
-                            </li>
-                        </ul>
-                        <a href="#" class="btn btn-primary btn-block">Register Team</a>
-                    </div>
+                    @endforeach
                 </div>
-                <div class="register-note">
+                {{-- <div class="register-note">
                     <p>All prices will increase after June 30, 2025. Group discounts available for teams of 5 or more.
                     </p>
                     <p>Need help with registration? <a href="#">Contact us</a></p>
-                </div>
+                </div> --}}
             </div>
         </section>
 
-        <section class="newsletter">
+        {{-- <section class="newsletter">
             <div class="container">
                 <div class="newsletter-content">
                     <div class="newsletter-text">
@@ -690,10 +433,10 @@
                     </form>
                 </div>
             </div>
-        </section>
+        </section> --}}
     </main>
 
-    <footer class="site-footer">
+    {{-- <footer class="site-footer">
         <div class="container">
             <div class="footer-grid">
                 <div class="footer-brand">
@@ -795,7 +538,7 @@
                 </div>
             </div>
         </div>
-    </footer>
+    </footer> --}}
 
     @vite(['resources/js/website-script.js'])
 </body>

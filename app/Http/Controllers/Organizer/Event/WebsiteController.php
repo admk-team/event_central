@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Organizer\Event;
 
 use App\Http\Controllers\Controller;
 use App\Models\EventApp;
+use App\Models\EventPartnerCategory;
 use App\Models\Page;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -18,7 +19,10 @@ class WebsiteController extends Controller
             abort(404);
         }
 
-        return view('website', compact('event'));
+        $colors = eventSettings($event->id)->getValue('website_colors', config('event_website.colors'));
+        $partnerCategories = EventPartnerCategory::where('event_app_id', $event->id)->with(['partners'])->get();
+
+        return view('website', compact('event', 'colors', 'partnerCategories'));
     }
 
     // public function index($uuid)

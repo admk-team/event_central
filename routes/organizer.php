@@ -164,6 +164,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                 Route::prefix('website')->name('website.')->group(function () {
                     Route::get('/', [WebsiteSettingsController::class, 'index'])->name('index');
                     Route::post('/toggle-status', [WebsiteSettingsController::class, 'toggleStatus'])->name('toggle-status');
+                    Route::post('/save-colors', [WebsiteSettingsController::class, 'saveColors'])->name('save-colors');
                 });
             });
 
