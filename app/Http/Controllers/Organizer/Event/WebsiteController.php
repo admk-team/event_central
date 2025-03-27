@@ -25,6 +25,20 @@ class WebsiteController extends Controller
         return view('website', compact('event', 'colors', 'partnerCategories'));
     }
 
+    public function schedule($uuid)
+    {
+        $event = EventApp::where('uuid', $uuid)->first();
+
+        if (! $event || !eventSettings($event->id)->getValue('website_status', false)) {
+            abort(404);
+        }
+
+        $colors = eventSettings($event->id)->getValue('website_colors', config('event_website.colors'));
+        $partnerCategories = EventPartnerCategory::where('event_app_id', $event->id)->with(['partners'])->get();
+
+        return view('website-schedule', compact('event', 'colors', 'partnerCategories'));
+    }
+
     // public function index($uuid)
     // {
     //     $event = EventApp::where('uuid', $uuid)->first();

@@ -149,7 +149,7 @@
   }
   
   .main-nav {
-    position: relative;
+    /* position: relative; */
   }
   
   .nav-links {
@@ -195,11 +195,39 @@
     background-color: var(--color-foreground);
     transition: transform var(--transition-fast) ease;
   }
+
+  @media (min-width: 1024px) {
+    .menu-toggle {
+      display: none;
+    }
+  }
   
   .header-actions {
+    display: none;
+  }
+
+  .header-actions-mobile {
     display: flex;
     align-items: center;
     gap: var(--spacing-4);
+    margin-top: 18px;
+  }
+
+  .header-actions-mobile a {
+    color: var(--color-primary-foreground) !important;
+  }
+
+  @media(min-width: 600px) {
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-4);
+    }
+
+    .header-actions-mobile {
+      display: none;
+    }
+
   }
   
   .theme-toggle {
