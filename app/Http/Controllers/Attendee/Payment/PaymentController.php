@@ -39,7 +39,7 @@ class PaymentController extends Controller
     public function viewTickets()
     {
         $eventApp =  EventApp::find(auth()->user()->event_app_id);
-        $eventApp->load(['tickets.sessions']);
+        $eventApp->load(['tickets.sessions', 'tickets.addons']);
         return Inertia::render('Attendee/Tickets/Index', compact(['eventApp']));
     }
 
