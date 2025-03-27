@@ -31,11 +31,6 @@
                 </div>
             </a>
             <nav class="main-nav">
-                {{-- <button class="menu-toggle" aria-label="Toggle menu">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button> --}}
                 <ul class="nav-links">
                     <li><a href="#about">About</a></li>
                     <li><a href="#speakers">Speakers</a></li>
@@ -43,6 +38,10 @@
                     {{-- <li><a href="#workshops">Workshops</a></li> --}}
                     <li><a href="#venue">Venue</a></li>
                     <li><a href="#sponsors">Sponsors</a></li>
+                    <li class="header-actions-mobile">
+                        <a href="{{ route('organizer.events.website.schedule', $event->uuid) }}" class="btn btn-primary">Check Schedule</a>
+                        <a href="{{ route('attendee.register', $event) }}" class="btn btn-primary">Register Now</a>
+                    </li>
                 </ul>
             </nav>
             <div class="header-actions">
@@ -69,6 +68,11 @@
                 <a href="{{ route('organizer.events.website.schedule', $event->uuid) }}" class="btn btn-primary">Check Schedule</a>
                 <a href="{{ route('attendee.register', $event) }}" class="btn btn-primary">Register Now</a>
             </div>
+            <button class="menu-toggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
         </div>
     </header>
 

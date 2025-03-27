@@ -25,9 +25,11 @@
 
     <header class="site-header">
         <div class="container">
-            <div class="logo">
-                <img src="{{ $event->logo_img }}" alt="{{ $event->name }}" />
-            </div>
+            <a href="{{ route('organizer.events.website', $event->uuid) }}">
+                <div class="logo">
+                    <img src="{{ $event->logo_img }}" alt="{{ $event->name }}" />
+                </div>
+            </a>
             <nav class="main-nav">
                 <ul class="nav-links">
                     <li><a href="#about">About</a></li>
