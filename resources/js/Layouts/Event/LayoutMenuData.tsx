@@ -108,9 +108,9 @@ const Navdata = () => {
                     parentId: "Content",
                 },
                 {
-                    id: "ticket-addons",
+                    id: "addons",
                     label: "Ticket Add-ons",
-                    link: route('organizer.events.tickets-feature.index'),
+                    link: route('organizer.events.addon.index'),
                     parentId: "Content",
                 },
                 {

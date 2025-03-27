@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Organizer\Event;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organizer\Event\EventAppTicketRequest;
+use App\Models\Addon;
 use App\Models\EventAppTicket;
 use App\Models\EventSession;
 use App\Models\TicketFeature;
@@ -20,12 +21,15 @@ class EventAppTicketController extends Controller
      */
     public function index()
     {
-        $tickets = $this->datatable(EventAppTicket::currentEvent()->with(['event', 'sessions']));
         $speakers = null;
-        $sessions = EventSession::currentEvent()->select(['id as value', 'name as label'])->get();
 
-        return Inertia::render('Organizer/Events/Tickets/Index', compact(['tickets', 'sessions']));
+        $tickets = $this->datatable(EventAppTicket::currentEvent()->with(['event', 'sessions']));
+        $sessions = EventSession::currentEvent()->select(['id as value', 'name as label'])->get();
+        $addons = Addon::currentEvent()->select(['id as value', 'name as label'])->get();
+
+        return Inertia::render('Organizer/Events/Tickets/Index', compact(['tickets', 'sessions', 'addons']));
     }
+
     /**
      * Store a newly created resource in storage.
      */
@@ -35,12 +39,13 @@ class EventAppTicketController extends Controller
 
         $data['event_app_id'] = session('event_id');
         $data['sessions'] = $this->transformSessions($data);
+        $data['addons'] = $this->transformAddons($data);
 
         // Log::info($data['sessions']);
         $ticket = EventAppTicket::create($data);
 
         $ticket->sessions()->sync($data['sessions']);
-        $ticket->features()->sync($data['features']);
+        $ticket->addons()->sync($data['addons']);
 
         return back()->withSuccess('Ticket created successfully');
     }
@@ -53,10 +58,11 @@ class EventAppTicketController extends Controller
         $data = $request->validated();
 
         $data['sessions'] = $this->transformSessions($data);
+        $data['addons'] = $this->transformAddons($data);
         $ticket->update($data);
 
         $ticket->sessions()->sync($data['sessions']);
-        $ticket->features()->sync($data['features']);
+        $ticket->addons()->sync($data['addons']);
 
         return back()->withSuccess('Ticket Updated successfully');
     }
@@ -85,6 +91,16 @@ class EventAppTicketController extends Controller
     private function transformSessions($data)
     {
         $sessions = array_values($data['sessions']);
+        $temp = [];
+        foreach ($sessions as $session) {
+            array_push($temp, $session['value']);
+        }
+        return $temp;
+    }
+
+    private function transformAddons($data)
+    {
+        $sessions = array_values($data['addons']);
         $temp = [];
         foreach ($sessions as $session) {
             array_push($temp, $session['value']);

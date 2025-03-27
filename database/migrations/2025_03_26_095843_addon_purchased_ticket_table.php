@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ticket_features', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('organizer_id')->constrained('users')->cascadeOnDelete();
-            $table->foreignId('event_app_id')->nullable()->constrained()->nullOnDelete();
-            $table->string('name')->nullable();
+        Schema::create('addon_purchased_ticket', function (Blueprint $table) {
+            $table->foreignId('attendee_purchased_ticket_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('addon_id')->constrained()->cascadeOnDelete();
+            //
+            $table->primary(['attendee_purchased_ticket_id', 'addon_id']);
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ticket_features');
+        Schema::dropIfExists('feature_ticket');
     }
 };

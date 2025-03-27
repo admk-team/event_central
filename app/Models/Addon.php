@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TicketFeature extends Model
+class Addon extends Model
 {
     use HasFactory;
 
@@ -18,6 +18,7 @@ class TicketFeature extends Model
         'qty_sold',
     ];
 
+    protected $appends = ['full_name'];
 
     public function organizer()
     {
@@ -39,9 +40,8 @@ class TicketFeature extends Model
         $query->where('organizer_id', auth()->user()->id);
     }
 
-
-    public function tickets()
+    public function getFullNameAttribute()
     {
-        return $this->belongsToMany(EventAppTicket::class, 'feature_ticket');
+        return $this->name . ($this->price > 0 ? '($' . $this->price . ')' : '(Free)');
     }
 }
