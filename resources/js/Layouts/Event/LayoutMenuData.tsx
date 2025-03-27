@@ -2,7 +2,7 @@ import { usePage } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
 
 const Navdata = () => {
-    const { currentEvent } = usePage().props as { currentEvent: any };
+    const currentEvent = usePage().props.currentEvent as any;
     console.log("Event Start Date:", currentEvent?.dates[0]?.date);
 
     // State data
@@ -159,7 +159,7 @@ const Navdata = () => {
         ...(isEventStarted ? [{
             id: "sessionAttendance",
             label: "Sessions Attendance",
-            icon: "bx bxs-user-plus",
+            icon: "bx bx-calendar-check",
             link: route('organizer.events.attendance.index'),
             stateVariables: IsSessionAttendance,
             click: function (e: any) {
