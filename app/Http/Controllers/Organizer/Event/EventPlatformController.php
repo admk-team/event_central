@@ -16,7 +16,7 @@ class EventPlatformController extends Controller
         $data = $request->validated();     
         $data['event_app_id'] = session('event_id');
         EventPlatform::create($data);
-        return back();
+        return back()->withSucces('Platform created successfully!');
     }
     
     public function update(EventPlatformRequest $request,EventPlatform $event_platform)
@@ -24,12 +24,11 @@ class EventPlatformController extends Controller
         $data = $request->validated();     
         $data['event_app_id'] = session('event_id');
         $event_platform->update($data);
-        return back();
+        return back()->withSucces('Platform updated successfully!');
     }
 
     public function destroy(EventPlatform $event_platform){
       $event_platform->delete();
       return back()->withSucces('Platform deleted successfully!');
-     
     }
 }

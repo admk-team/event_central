@@ -16,13 +16,8 @@ interface Question {
     likes_count: number;
     dislikes_count: number;
     created_at: string;
-    user: { id?: number; first_name: string };
-    answers: {
-        id: number;
-        content: string;
-        created_at: string;
-        user: { id?: number; name: string };
-    }[];
+    user: { id?: number; name?: string; first_name?: string };
+    answers: { id: number; content: string; created_at: string; user: { id?: number; name?: string; first_name?: string } }[];
 }
 
 interface Props {
@@ -30,10 +25,7 @@ interface Props {
     user: User;
     questions: Question[];
     newAnswer?: {
-        id: number;
-        content: string;
-        created_at: string;
-        user: { name: string };
+        id: number; content: string; created_at: string; user: { name?: string };
     };
 }
 

@@ -95,6 +95,7 @@
         "sass": "1.69.7",
         "simplebar-react": "^3.2.6",
         "swiper": "^11.1.14",
+        "write-excel-file": "^2.3.2",
         "yup": "^1.4.0"
     }
 }

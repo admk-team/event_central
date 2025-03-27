@@ -75,7 +75,7 @@ const AttendeeSpeakerDetail = ({ eventApp, eventSpeaker }: any) => {
                                         <span className='fs-4'>Speaker Sessions</span>
                                     </Card>
                                     {sessions && sessions.map((session: any) =>
-                                        <Link href={route('attendee.event.detail.session', [eventApp.id, session.id])} key={session.id}>
+                                        <Link href={route('attendee.event.detail.session', [session.id])} key={session.id}>
                                             <Card >
                                                 <CardBody>
                                                     <Row className='d-flex justify-content-between'>

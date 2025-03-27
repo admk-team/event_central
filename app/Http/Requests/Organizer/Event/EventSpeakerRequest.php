@@ -36,7 +36,7 @@ class EventSpeakerRequest extends FormRequest
             'twitter' => 'nullable|url|max:255',
             'instagram' => 'nullable|url|max:255',
             'country' => 'nullable|string|max:100',
-            'language' => 'nullable|string|max:50',
+            'language' => 'nullable|array',
         ];
     }
 }

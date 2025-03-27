@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Attendee;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -57,8 +58,8 @@ class SampleEventDataSeeder extends Seeder
 
         //Tickets
         DB::statement("INSERT INTO `event_app_tickets` (`id`, `event_app_id`, `name`, `description`, `type`, `base_price`, `addons_price`, `total_price`, `increment_by`, `increment_rate`, `increment_type`, `start_increment`, `end_increment`, `created_at`, `updated_at`) VALUES
-        (1, 2, 'Normal Ticket', 'test ticket', 'NORMAL', '35.00', 0, 0, '23.00', '34.00', 'Percentage', '2025-03-20', '2025-03-22', '2025-03-20 03:18:14', '2025-03-20 03:18:14'),
-        (2, 2, 'VIP Ticket', 'test desc', 'NORMAL', '96.00', 0, 0, '23.00', '32.00', 'Percentage', '2025-03-20', '2025-03-20', '2025-03-20 03:18:56', '2025-03-20 03:18:56');");
+        (1, 2, 'Normal Ticket', 'test ticket', 'NORMAL', '35.00', 0, '35.00', '23.00', '34.00', 'Percentage', '2025-03-20', '2025-03-22', '2025-03-20 03:18:14', '2025-03-20 03:18:14'),
+        (2, 2, 'VIP Ticket', 'test desc', 'NORMAL', '96.00', 0, '96.00', '23.00', '32.00', 'Percentage', '2025-03-20', '2025-03-20', '2025-03-20 03:18:56', '2025-03-20 03:18:56');");
 
 
         DB::statement("INSERT INTO `session_ticket` (`event_app_ticket_id`, `event_session_id`, `created_at`, `updated_at`) VALUES
@@ -83,9 +84,8 @@ class SampleEventDataSeeder extends Seeder
 
         $this->command->info('  7. Sample Promo Codes Created');
 
-        DB::statement("INSERT INTO `organizer_payment_keys` (`id`, `user_id`, `stripe_publishable_key`, `stripe_secret_key`, `paypal_pub`, `paypal_secret`, `created_at`, `updated_at`) VALUES
-        (1, 2, 'pk_test_51Py6kWHInNTlTUGPM5l30Odo4AOb48C48enPnOsKrw9xhueHWeYlC0lpnRRvtbwMNosFC3UWEZY4c48MsuohS5F700Lyxn0hSm', 'eyJpdiI6Ik9PYlUrckxkUGxaVjVhWmtNT2FsZ0E9PSIsInZhbHVlIjoiUXV1RFBwNUVEMG0yME03MEpjMmF1bzU3Z3IwSXJ2Und2ZXh4WXpacHhYRFp2TDhVdHFrb1o5ZEtSeUgrSFRHcWRHRHYzU1oxNXNJTXV4cnpOWXB4Y0pudytibDd0TTZFd052RGxPRXZVMzVQQ05uLzVkVTZnSEkzTVpWa21iYlRXK0VzMlpiVmk1MThGeGoxV29NdkFKQnhIWnZlU0NFUmlJQ0hSalNzRTJBPSIsIm1hYyI6ImUwODY3ZmRkYTdmNWUzZDdlMzhhYzg1MGFmMzUxODk2OGQwZDUzNjAwYWI5NTlhNGMwNDJjN2M5ZGNiOThlZWEiLCJ0YWciOiIifQ==', NULL, 'eyJpdiI6IkZOOGRWYm9OelEwWmgzcTdrVjdRYnc9PSIsInZhbHVlIjoiMkc3SlNlZUQ0cHVNOXAwSUZueWJYdz09IiwibWFjIjoiNGU2MDk5MTFhZTg1NTYzMzI1ZWY1YjBmMDUzMzEyMzBiMTYzMDJjN2MwYjdhNjc1NWZlNDUyNzc4Y2MxNjA4MSIsInRhZyI6IiJ9', '2025-03-20 23:47:39', '2025-03-20 23:48:26')
-        ");
+        DB::statement("INSERT INTO `organizer_payment_keys` (`id`, `user_id`, `stripe_publishable_key`, `stripe_secret_key`, `paypal_base_url`, `paypal_pub`, `paypal_secret`, `created_at`, `updated_at`) VALUES
+(1, 2, 'pk_test_51R3iHCPNcWTtCzebbzvUsG7XMmMnTqUxbs4NE9v8CH5IJxtaMXDgz5FMA96HnS93ZQw9DN6wHLlxgtFW90XW0Q4z004QlcW5Z8', 'eyJpdiI6ImlDNE52MDVSREpwNUFCa2ttWTAyN1E9PSIsInZhbHVlIjoiWGJMd2xYZjl6bmRVbXdvWi9Yc0hPaEc3Z3Zxa1hHc3FEdFZzK1FweXk4aHg3ZmFrNVdlQ29BbDM2Nm5wdnJPSnBjc1UxUWpOZjdMaFFaWjlBTVQrSEFjZldka3JnQ1paK1puQmRMd0loQUJQb21uSXc4c1F6RGdzRTJoSTRhU0VySjBqVGU5eGVubkxsbFFsd0Z0RGNNRUI3MDIzb2pFeUxVWEhJREsrUktnPSIsIm1hYyI6IjZiNzBiNzczZjYxNmEyNDJlZTQ5YjFjOTMxN2QzYTcyOTYwYzY5M2ZlNTJiOGY5NmJhMDZhYTkyZGEwMjNkMmIiLCJ0YWciOiIifQ==', 'https://api-m.sandbox.paypal.com', 'AarFoaRqHBfyzdXvqagFqjOF4RPsxuRYmmkpP1WTroOsRYUeixH-3w8LwxHcZkmWO7ow1OI_Ei2F7lnw', 'eyJpdiI6IlNxWHRqSHQ5SEVYNUo0dmxNTjJ0c1E9PSIsInZhbHVlIjoiWmJ3MHVKbGQxSlFDVU96cUFkUkFnczYxUG1iTExwd0JLdUtHdWtCaFZHZXllb0tNZVdVK0ZrNjBCOHNIRFE1YmtkWnc5L2E4UEI3VHdiUUdXc3hBVjlCQVhibHFxRDRNdEljeHdTbGoxL2hsQWJJN0pKWTY5VnpQeVlydEVpQkgiLCJtYWMiOiI3NmEzZWUyODgzMTEyMGNlNDE3OGNmZmE4N2ZkMTg3YjJjYTgzYjI0ZGNkNTVkOWNiMzJmZTM4YWQ2MTY2ZDY4IiwidGFnIjoiIn0=', '2025-03-20 18:47:39', '2025-03-25 11:53:45')");
 
         $this->command->info('  8. Stripe Keys Created');
 
@@ -105,6 +105,17 @@ class SampleEventDataSeeder extends Seeder
         (13, 2, 2, '<p>🚀 <strong>Early Access</strong> – Enter the venue before general admission and grab the best spots. <i>(+ $15)</i></p>', '2025-03-21 02:32:20', '2025-03-21 02:32:20', '15.00', 50, 0)");
 
         $this->command->info('  9. Ticket Features Created');
+
+        Attendee::create([
+            'email' => 'ansar@gmail.com',
+            'password' => '$2y$12$ORw4GwYHv/ne/0ckSIew6ecx4BxCc8bBZqNYdMTjbpqX441PgJuYO',
+            'event_app_id' => 2,
+            'first_name' => 'Ansar',
+            'last_name' => 'Khan',
+            'type' => 'anonymous'
+        ]);
+
+        $this->command->info('  10. Sample Attendee Created');
 
         $this->command->info('Sample Event Data Seeded Successfully');
     }

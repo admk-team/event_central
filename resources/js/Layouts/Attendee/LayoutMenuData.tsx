@@ -77,7 +77,7 @@ const Navdata = () => {
         },
         {
             id: "program",
-            label: "Program",
+            label: "Event Agenda",
             icon: "bx bx-heart",
             link: route("attendee.event.detail.agenda"),
             stateVariables: isProgram,
@@ -116,7 +116,7 @@ const Navdata = () => {
         },
         {
             id: "more",
-            label: "Contact Organizer",
+            label: "Contact",
             icon: "bx bx-info-circle",
             link: route("attendee.event.detail.more"),
             stateVariables: isMore,
@@ -140,6 +140,19 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
+        // {
+        //     id: "attendee-pass",
+        //     label: "Attendee Pass",
+        //     icon: "bx bx-qr",
+        //     link: route("attendee.pass.get"),
+        //     stateVariables: isMore,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIsMore(!isMore);
+        //         setIscurrentState("Pass");
+        //         updateIconSidebar(e);
+        //     },
+        // },
         // {
         //     id: "qa",
         //     label: "Q&A",

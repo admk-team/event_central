@@ -34,7 +34,7 @@ const AttendeeSessionDetail = ({
         rating_description: selectedSessionDetails?.rating_description ?? "",
     });
 
-    const ratingEnabled = moment(eventSession.start_date) < moment();
+    const ratingEnabled = moment(eventSession.end_date_time) < moment();
 
     const submitRatingChange = (e: any) => {
         e.preventDefault();
@@ -50,20 +50,19 @@ const AttendeeSessionDetail = ({
     const [sessionSelected, SetSessionSelected] = useState<boolean>(
         selectedSessionDetails ? true : false
     );
-    // const [previousUrl, SetPreviousUrl] = useState(prev_url);
 
     const [showModal, SetShowModal] = useState<boolean>(false);
 
     const selectSession = () => {
-        form.post(route("attendee.save.session", [eventSession.id, "select"]));
-        SetSessionSelected(true);
+        // form.post(route("attendee.save.session", [eventSession.id, "select"]));
+        // SetSessionSelected(true);
     };
 
     const unSelectSession = () => {
-        form.post(
-            route("attendee.save.session", [eventSession.id, "un-select"])
-        );
-        SetSessionSelected(false);
+        // form.post(
+        //     route("attendee.save.session", [eventSession.id, "un-select"])
+        // );
+        // SetSessionSelected(false);
     };
 
     const handleRatingChange = (v: any) => {
@@ -85,8 +84,7 @@ const AttendeeSessionDetail = ({
 
                                             <Link
                                                 href={route(
-                                                    "attendee.event.detail.agenda",
-                                                    eventApp.id
+                                                    "attendee.event.detail.agenda"
                                                 )}
                                                 style={{ marginRight: "3px" }}
                                             >
@@ -123,14 +121,6 @@ const AttendeeSessionDetail = ({
                                                 </div>
                                             )}
 
-                                            <a
-                                                style={{ marginRight: "15px" }}
-                                                href="#"
-                                            >
-                                                <i className="bx bx-link fs-3 fw-bolder text-muted"></i>{" "}
-                                                {/* Link Icon */}
-                                            </a>
-
                                             {sessionSelected ? (
                                                 <a
                                                     style={{
@@ -139,7 +129,7 @@ const AttendeeSessionDetail = ({
                                                     href="#"
                                                     className="pe-auto"
                                                     onClick={unSelectSession}
-                                                    title="Click to un-select session"
+                                                    title="Purchased Session"
                                                 >
                                                     <i className="bx bxs-heart fs-3 fw-bolder text-danger"></i>{" "}
                                                     {/* Filled Heart Icon */}
@@ -152,7 +142,7 @@ const AttendeeSessionDetail = ({
                                                     href="#"
                                                     className="pe-auto"
                                                     onClick={selectSession}
-                                                    title="Click to select session"
+                                                        title="Not Purchased Session"
                                                 >
                                                     <i className="bx bx-heart fs-3 fw-bolder text-muted"></i>{" "}
                                                     {/* Empty Heart Icon */}
@@ -166,7 +156,7 @@ const AttendeeSessionDetail = ({
                                             <figure className="event-image">
                                                 <img
                                                     className="card-full-image"
-                                                    src={defaultEventImage}
+                                                    src={eventApp.featured_image}
                                                     alt="event default image"
                                                 />
                                                 <figcaption>
@@ -204,15 +194,15 @@ const AttendeeSessionDetail = ({
                                                 </Badge>
                                                 <Badge bg="secondary">
                                                     {moment(
-                                                        eventSession.start_date
+                                                        eventSession.event_date.date
                                                     ).format("DD MMM ") +
                                                         " - " +
                                                         moment(
-                                                            eventSession.start_date
+                                                            eventSession.start_date_time
                                                         ).format("hh:mm") +
                                                         " - " +
                                                         moment(
-                                                            eventSession.end_date
+                                                            eventSession.end_date_time
                                                         ).format("hh:mm")}
                                                 </Badge>
                                             </h5>
@@ -223,7 +213,7 @@ const AttendeeSessionDetail = ({
                                                     href={route(
                                                         "attendee.event.detail.session",
                                                         [
-                                                            eventApp.id,
+
                                                             prev_session_id,
                                                         ]
                                                     )}
@@ -237,7 +227,7 @@ const AttendeeSessionDetail = ({
                                                     href={route(
                                                         "attendee.event.detail.session",
                                                         [
-                                                            eventApp.id,
+
                                                             next_session_id,
                                                         ]
                                                     )}
@@ -303,9 +293,9 @@ const AttendeeSessionDetail = ({
                                             </Accordion.Header>
                                             <Accordion.Body>
                                                 {!sessionSelected && (
-                                                    <p>
+                                                    <p className="fs-5">
                                                         Rating can be left for
-                                                        selected sessions only
+                                                        purchased session(s) only.
                                                     </p>
                                                 )}
                                                 {sessionSelected && (
@@ -380,7 +370,7 @@ const AttendeeSessionDetail = ({
                                                                 * Ratings can be
                                                                 added only after
                                                                 the session has
-                                                                started
+                                                                started i.e {moment(eventSession.start_date_time).format('DD MMM, YYYY hh:mm')}
                                                             </p>
                                                         )}
 
