@@ -62,7 +62,7 @@ const Index = ({ eventApp, newsfeeds,attendee }: any) => {
                     </div>
                     <Row className="justify-content-center">
                         <div className="text-center">
-                            <h2>Session Posts</h2>
+                            <h2>Posts for {eventApp.name}</h2>
                         </div>
                         <Col lg={6} className="mt-3">
                             {newsfeeds.length > 0 ? (
