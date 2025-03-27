@@ -14,64 +14,75 @@ class WebsiteController extends Controller
     {
         $event = EventApp::where('uuid', $uuid)->first();
 
-        if (! $event) {
+        if (! $event || !eventSettings($event->id)->getValue('website_status', false)) {
             abort(404);
         }
 
-        $page = $event->pages()->homePage()->with(['header', 'footer'])->first();
-
-        $header = $page->header;
-        if ($page->default_header) {
-            $header = $event->headers()->default()->first();
-        }
-
-        $footer = $page->footer;
-        if ($page->default_footer) {
-            $footer = $event->footers()->default()->first();
-        }
-
-        if (! $page) {
-            abort(404);
-        }
-
-        return Inertia::render('Organizer/Events/Website/Page', [
-            'page' => $page,
-            'header' => $header,
-            'footer' => $footer,
-        ]);
+        return view('website', compact('event'));
     }
 
-    public function page($uuid, $slug)
-    {
-        $event = EventApp::where('uuid', $uuid)->first();
+    // public function index($uuid)
+    // {
+    //     $event = EventApp::where('uuid', $uuid)->first();
 
-        if (! $event) {
-            abort(404);
-        }
+    //     if (! $event) {
+    //         abort(404);
+    //     }
 
-        $page = $event->pages()
-            ->where('slug', $slug)
-            ->published()
-            ->first();
+    //     $page = $event->pages()->homePage()->with(['header', 'footer'])->first();
 
-        $header = $page->header;
-        if ($page->default_header) {
-            $header = $event->headers()->default()->first();
-        }
+    //     $header = $page->header;
+    //     if ($page->default_header) {
+    //         $header = $event->headers()->default()->first();
+    //     }
 
-        $footer = $page->footer;
-        if ($page->default_footer) {
-            $footer = $event->footers()->default()->first();
-        }
+    //     $footer = $page->footer;
+    //     if ($page->default_footer) {
+    //         $footer = $event->footers()->default()->first();
+    //     }
 
-        if (! $page) {
-            abort(404);
-        }
+    //     if (! $page) {
+    //         abort(404);
+    //     }
 
-        return Inertia::render('Organizer/Events/Website/Page', [
-            'page' => $page,
-            'header' => $header,
-            'footer' => $footer,
-        ]);
-    }
+    //     return Inertia::render('Organizer/Events/Website/Page', [
+    //         'page' => $page,
+    //         'header' => $header,
+    //         'footer' => $footer,
+    //     ]);
+    // }
+
+    // public function page($uuid, $slug)
+    // {
+    //     $event = EventApp::where('uuid', $uuid)->first();
+
+    //     if (! $event) {
+    //         abort(404);
+    //     }
+
+    //     $page = $event->pages()
+    //         ->where('slug', $slug)
+    //         ->published()
+    //         ->first();
+
+    //     $header = $page->header;
+    //     if ($page->default_header) {
+    //         $header = $event->headers()->default()->first();
+    //     }
+
+    //     $footer = $page->footer;
+    //     if ($page->default_footer) {
+    //         $footer = $event->footers()->default()->first();
+    //     }
+
+    //     if (! $page) {
+    //         abort(404);
+    //     }
+
+    //     return Inertia::render('Organizer/Events/Website/Page', [
+    //         'page' => $page,
+    //         'header' => $header,
+    //         'footer' => $footer,
+    //     ]);
+    // }
 }

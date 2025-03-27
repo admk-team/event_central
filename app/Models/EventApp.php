@@ -147,6 +147,11 @@ class EventApp extends Model
         return $this->hasMany(EventAppTicket::class);
     }
 
+    public function partners()
+    {
+        return $this->hasMany(EventPartner::class);
+    }
+
     public function getFeaturedImageAttribute()
     {
         $images = $this->images;

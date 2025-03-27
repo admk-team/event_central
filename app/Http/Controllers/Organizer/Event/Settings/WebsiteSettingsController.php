@@ -22,10 +22,11 @@ class WebsiteSettingsController extends Controller
         return Inertia::render("Organizer/Events/Settings/Website/Index", [
             'websiteStatus' => eventSettings()->getValue('website_status', false),
             'url' => route('organizer.events.website', $currentEvent->uuid),
-            'headers' => $this->datatable(Header::where('event_app_id', session('event_id'))),
-            'pages' => $this->datatable(Page::where('event_app_id', session('event_id'))),
-            'footers' => $this->datatable(Footer::where('event_app_id', session('event_id'))),
-            'homePageSelected' => $currentEvent->pages()->homePage()->count() !== 0,
+            // 'headers' => $this->datatable(Header::where('event_app_id', session('event_id'))),
+            // 'pages' => $this->datatable(Page::where('event_app_id', session('event_id'))),
+            // 'footers' => $this->datatable(Footer::where('event_app_id', session('event_id'))),
+            // 'homePageSelected' => $currentEvent->pages()->homePage()->count() !== 0,
+            'colors' => eventSettings()->getValue('website_colors', $this->getDefaultColors()),
         ]);
     }
 
@@ -68,5 +69,23 @@ class WebsiteSettingsController extends Controller
                 'default_footer' => true,
             ]);
         }
+    }
+
+    protected function getDefaultColors(): array
+    {
+        return [
+            'light' => [
+                'base' => [
+                    'background' => '#ffffff',
+                    'foreground' => '#111827',
+                ],
+                'primary' => [
+                    'primary' => '#6366f1',
+                    'primary_light' => '#818cf8',
+                    'primary_dark' => '#4f46e5',
+                    'primary_foreground' => '#ffffff',
+                ]
+            ]
+        ];
     }
 }
