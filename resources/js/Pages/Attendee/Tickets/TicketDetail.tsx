@@ -1,30 +1,18 @@
 import { Link } from "@inertiajs/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import {
-    Card,
-    Col,
-    Container,
-    Row,
-    Button,
-    Form,
-    InputGroup,
-    Accordion,
-} from "react-bootstrap";
+import { Col, Row, Form } from "react-bootstrap";
 
 const TicketDetail = ({ ticket_no, ticket, onAddonsUpdated }: any) => {
     const [selectedAddons, setSelectedAddons] = useState<any>([]);
     const [addonOptions, setAddonsOptions] = useState<any>([]);
-    const [addons, setAddons] = useState<any>([...ticket.addons]);
-
-    // console.log(ticket.addons);
+    const [addons, setAddons] = useState<any>(ticket.addons);
 
     useEffect(() => {
         createAddonOptions();
     }, [ticket]);
 
     useEffect(() => {
-        // console.log("Selected Addon", selectedAddons);
         onAddonsUpdated(selectedAddons, ticket_no);
     }, [selectedAddons]);
 
@@ -48,22 +36,12 @@ const TicketDetail = ({ ticket_no, ticket, onAddonsUpdated }: any) => {
     };
 
     const handleCheckChanged = (e: any, addon: any) => {
-        if (e.target.checked) {
-            addon.selected = true;
-            updateSelectedAddons();
-        } else {
-            addon.selected = false;
-            updateSelectedAddons();
-        }
-    };
-
-    const updateSelectedAddons = () => {
-        let list = [];
-        list = addons.filter((item: any) => {
-            return item.selected;
-        });
-        setSelectedAddons([...list]);
-        console.log("Selected Addons", list);
+        setSelectedAddons(
+            (prev: any) =>
+                prev.includes(addon)
+                    ? prev.filter((i: any) => i.id !== addon.id) // Remove if already selected
+                    : [...prev, addon] // Add if newly selected
+        );
     };
 
     return (

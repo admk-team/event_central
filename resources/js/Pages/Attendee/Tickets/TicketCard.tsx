@@ -14,19 +14,28 @@ import {
 import TicketDetail from "./TicketDetail";
 
 const TicketCard = ({ ticket, onTicketDetailsUpdated }: any) => {
-    const [isAddedToCart, setIsAddedToCart] = useState(false);
+    const isAddedToCart = ticket.is_added_to_cart;
     const [ticketQty, setTicketQty] = useState(0);
     const [ticketDetails, setTicketDetails] = useState<any>([]);
+    const [removedIds, setRemovedIds] = useState<any>([]);
 
     useEffect(() => {
         let list = [];
+        let newIds = [];
         for (let i = 0; i < ticketQty; i++) {
+            let id = parseInt(ticket.id + "" + i);
             list.push({
+                id: id,
                 ticket_no: i + 1,
                 ticket: Object.assign({}, ticket),
                 addons: [],
             });
+            newIds.push(id);
         }
+        let prevIds = ticketDetails.map((item: any) => item.id);
+        let removedIds = prevIds.filter((id: any) => !newIds.includes(id));
+        setRemovedIds(removedIds);
+
         setTicketDetails([...list]);
     }, [ticketQty]);
 
@@ -43,20 +52,17 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated }: any) => {
     };
 
     const handleAddonUpdated = (addons: any, ticket_no: any) => {
-        console.log(addons, ticket_no);
-        let list = [...ticketDetails];
-        list.forEach((item: any) => {
-            if (item.ticket_no === ticket_no) {
-                item.addons = addons;
-            }
-        });
-        setTicketDetails([...list]);
-        onTicketDetailsUpdated([...list]);
-        console.log("Ticket Details", list);
+        setTicketDetails((prevItems: any) =>
+            prevItems.map((item: any) =>
+                item.ticket_no === ticket_no
+                    ? { ...item, addons: addons }
+                    : item
+            )
+        );
     };
 
     useEffect(() => {
-        onTicketDetailsUpdated(ticketDetails);
+        onTicketDetailsUpdated(ticketDetails, removedIds);
     }, [ticketDetails]);
 
     return (

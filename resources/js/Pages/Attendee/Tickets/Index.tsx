@@ -31,28 +31,21 @@ const Index = ({ eventApp }: any) => {
         });
     };
 
-    const hadleTicketCardChanged = (ticketDetails: any) => {
-        // let list = [...selectedTickets];
-        // let index = list.findIndex((item: any) => item.id === ticket.id);
-        // if (index > -1) {
-        //     list.splice(index, 1);
-        // } else {
-        //     list.push(ticket);
-        // }
-        // setSelectedTicket(list);
-        // let total = 0;
-        // list.map((item: any) => {
-        //     total += item.price;
-        // });
-        // setGrandTotal(total);
-        // console.log("Selected Tickets", list);
-        // console.log("Grand Total", total);
-        // setData({
-        //     ...data,
-        //     tickets: list,
-        //     grandTotalAmount: total,
-        // });
-        // console.log("Ticket Details", ticketDetails);
+    useEffect(() => {
+        console.log("All Ticket Details", allTicketDetails);
+    }, [allTicketDetails]);
+
+    const hadleTicketCardChanged = (ticketDetails: any, removedIds: any) => {
+        console.log(ticketDetails);
+        setAllTicketsDetails((prev) => {
+            const objectMap = new Map(prev.map((obj) => [obj.id, obj]));
+            // console.log([...objectMap.keys()]);
+            removedIds.forEach((id: any) => objectMap.delete(id));
+            ticketDetails.forEach((obj: any) => {
+                objectMap.set(obj.id, obj); // Add new or update existing
+            });
+            return Array.from(objectMap.values());
+        });
     };
     return (
         <React.Fragment>
