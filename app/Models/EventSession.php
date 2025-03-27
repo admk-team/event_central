@@ -74,4 +74,8 @@ class EventSession extends Model
     {
         return $this->eventDate ? $this->eventDate->date . ' ' . $this->attributes['end_time'] : '';
     }
+    public function attendances()
+    {
+        return $this->hasMany(AttendeeAttendance::class, 'session_id');
+    }
 }
