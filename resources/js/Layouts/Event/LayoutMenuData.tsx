@@ -7,6 +7,10 @@ const Navdata = () => {
     const [isContent, setIsContent] = useState<boolean>(false);
     const [isEngagement, setIsEngagement] = useState<boolean>(false);
     const [isAttendees, setIsAttendees] = useState<boolean>(false);
+    const [isEvent, setIsEvent] = useState<boolean>(false);
+    const [isForm, setIsForm] = useState<boolean>(false);
+    const [IsWebsite, setIsWebsite] = useState<boolean>(false);
+    const [IspayemntSettings, setIspayemntSettings] = useState<boolean>(false);
     const [isSettingsMenu, setIsSettingsMenu] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
@@ -31,15 +35,28 @@ const Navdata = () => {
         if (iscurrentState !== 'Dashboard') {
             setIsDashboard(false);
         }
+        if (iscurrentState !== 'Event') {
+            setIsEvent(false);
+        }
         if (iscurrentState !== 'Content') {
             setIsContent(false);
         }
         if (iscurrentState !== 'users') {
             setIsAttendees(false);
         }
+        if (iscurrentState !== 'registrationForm') {
+            setIsForm(false);
+        }
+        if (iscurrentState !== 'website') {
+            setIsWebsite(false);
+        }
         if (iscurrentState !== 'Settings') {
             setIsSettingsMenu(false);
         }
+        if (iscurrentState !== 'payemntSettings') {
+            setIspayemntSettings(false);
+        }
+
         // if (iscurrentState !== 'Q&A') {
         //     setIsQA(false);
         // }
@@ -47,8 +64,12 @@ const Navdata = () => {
     }, [
         iscurrentState,
         isDashboard,
+        isEvent,
         isAttendees,
         isSettingsMenu,
+        isForm,
+        IsWebsite,
+        IspayemntSettings,
         // Add Here
     ]);
 
@@ -70,6 +91,20 @@ const Navdata = () => {
                 updateIconSidebar(e);
             }
         },
+        {
+            id: "attendees",
+            label: "Event",
+            icon: "bx bxs-calendar-event",
+            link: route('organizer.events.settings.event.index'),
+            stateVariables: isEvent,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsEvent(!isEvent);
+                setIscurrentState('Event');
+                updateIconSidebar(e);
+            },
+        },
+       
         {
             id: "Content",
             label: "Content",
@@ -156,44 +191,84 @@ const Navdata = () => {
             },
         },
         {
-            id: "settings",
-            label: "Settings",
-            icon: "bx bx-cog",
-            link: "/#",
-            stateVariables: isSettingsMenu,
+            id: "registrationForm",
+            label: "Registration Form",
+            icon: "bx bxs-user-plus",
+            link: route('organizer.events.settings.registration-form.index'),
+            stateVariables: isForm,
             click: function (e: any) {
                 e.preventDefault();
-                setIsSettingsMenu(!isSettingsMenu);
-                setIscurrentState('Settings');
+                setIsForm(!isForm);
+                setIscurrentState('registrationForm');
                 updateIconSidebar(e);
             },
-            subItems: [
-                {
-                    id: "eventSettings",
-                    label: "Event",
-                    link: route('organizer.events.settings.event.index'),
-                    parentId: "dashboard",
-                },
-                {
-                    id: "payemntSettings",
-                    label: "Payment Settings",
-                    link: route('organizer.events.settings.payment.index'),
-                    parentId: "dashboard",
-                },
-                {
-                    id: "registrationForm",
-                    label: "Registration Form",
-                    link: route('organizer.events.settings.registration-form.index'),
-                    parentId: "settings",
-                },
-                {
-                    id: "website",
-                    label: "Website",
-                    link: route('organizer.events.settings.website.index'),
-                    parentId: "settings",
-                },
-            ]
         },
+        {
+            id: "website",
+            label: "Website",
+            icon: "bx bx-globe",
+            link: route('organizer.events.settings.website.index'),
+            stateVariables: IsWebsite,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsWebsite(!IsWebsite);
+                setIscurrentState('website');
+                updateIconSidebar(e);
+            },
+        },
+        {
+            id: "payemntSettings",
+            label: "Payment Settings",
+            icon: "bx bx-cog",
+            link: route('organizer.events.settings.payment.index'),
+            stateVariables: IspayemntSettings,
+            click: function (e: any) {
+                e.preventDefault();
+                setIspayemntSettings(!IspayemntSettings);
+                setIscurrentState('payemntSettings');
+                updateIconSidebar(e);
+            },
+        },
+       
+        // {
+        //     id: "settings",
+        //     label: "Settings",
+        //     icon: "bx bx-cog",
+        //     link: "/#",
+        //     stateVariables: isSettingsMenu,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIsSettingsMenu(!isSettingsMenu);
+        //         setIscurrentState('Settings');
+        //         updateIconSidebar(e);
+        //     },
+        //     subItems: [
+        //         // {
+        //         //     id: "eventSettings",
+        //         //     label: "Event",
+        //         //     link: route('organizer.events.settings.event.index'),
+        //         //     parentId: "dashboard",
+        //         // },
+        //         {
+        //             id: "payemntSettings",
+        //             label: "Payment Settings",
+        //             link: route('organizer.events.settings.payment.index'),
+        //             parentId: "dashboard",
+        //         },
+        //         // {
+        //         //     id: "registrationForm",
+        //         //     label: "Registration Form",
+        //         //     link: route('organizer.events.settings.registration-form.index'),
+        //         //     parentId: "settings",
+        //         // },
+        //         // {
+        //         //     id: "website",
+        //         //     label: "Website",
+        //         //     link: route('organizer.events.settings.website.index'),
+        //         //     parentId: "settings",
+        //         // },
+        //     ]
+        // },
         // {
         //     id: "qa",
         //     label: "Q&A",
