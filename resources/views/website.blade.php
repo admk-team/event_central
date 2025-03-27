@@ -39,7 +39,8 @@
                     <li><a href="#venue">Venue</a></li>
                     <li><a href="#sponsors">Sponsors</a></li>
                     <li class="header-actions-mobile">
-                        <a href="{{ route('organizer.events.website.schedule', $event->uuid) }}" class="btn btn-primary">Check Schedule</a>
+                        <a href="{{ route('organizer.events.website.schedule', $event->uuid) }}"
+                            class="btn btn-primary">Check Schedule</a>
                         <a href="{{ route('attendee.register', $event) }}" class="btn btn-primary">Register Now</a>
                     </li>
                 </ul>
@@ -65,7 +66,8 @@
                         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                     </svg>
                 </button> --}}
-                <a href="{{ route('organizer.events.website.schedule', $event->uuid) }}" class="btn btn-primary">Check Schedule</a>
+                <a href="{{ route('organizer.events.website.schedule', $event->uuid) }}" class="btn btn-primary">Check
+                    Schedule</a>
                 <a href="{{ route('attendee.register', $event) }}" class="btn btn-primary">Register Now</a>
             </div>
             <button class="menu-toggle" aria-label="Toggle menu">
@@ -94,7 +96,8 @@
                     </div>
                     <h1 class="event-title">{{ $event->name }} <span
                             class="highlight">{{ date('Y', strtotime($event->dates[0]->date)) }}</span></h1>
-                    <p class="event-tagline">{{ Str::substr($event->description, 0, 120) }} {{ strlen($event->description) > 120 ? '...' : '' }}</p>
+                    <p class="event-tagline">{{ Str::substr($event->description, 0, 120) }}
+                        {{ strlen($event->description) > 120 ? '...' : '' }}</p>
                     <div class="hero-cta">
                         <a href="{{ route('attendee.register', $event) }}" class="btn btn-primary btn-lg">Secure Your
                             Spot</a>
@@ -243,7 +246,7 @@
                     {{-- <p class="section-subtitle">Gain insights from leaders at the forefront of technology</p> --}}
                 </div>
                 <div class="speakers-grid">
-                    @foreach ($event->event_speakers as $speaker)    
+                    @foreach ($event->event_speakers as $speaker)
                         <div class="speaker-card">
                             <div class="speaker-image">
                                 <img src="{{ $speaker->avatar }}" alt="{{ $speaker->name }}">
@@ -272,7 +275,8 @@
                             </div>
                             <div class="speaker-info">
                                 <h3>{{ $speaker->name }}</h3>
-                                <p class="speaker-role">{{ $speaker->position }} {{ $speaker->company ? ', ' . $speaker->company: '' }}</p>
+                                <p class="speaker-role">{{ $speaker->position }}
+                                    {{ $speaker->company ? ', ' . $speaker->company : '' }}</p>
                                 <p class="speaker-bio">{{ $speaker->bio }}</p>
                             </div>
                         </div>
@@ -295,7 +299,7 @@
                 </div> --}}
             </div>
         </section>
-        
+
         @if ($partnerCategories->count() > 0 && $event->partners->count() > 0)
             <section id="sponsors" class="sponsors">
                 <div class="container">
@@ -308,9 +312,10 @@
                                 <div class="sponsors-tier">
                                     <h3 class="tier-title">{{ $category->name }}</h3>
                                     <div class="sponsors-grid gold">
-                                        @foreach ($category->partners as $partner) 
+                                        @foreach ($category->partners as $partner)
                                             <div class="sponsor-logo">
-                                                <img src="{{ url("storage/{$partner->exhibitor_logo}") }}" alt="{{ $partner->name }}">
+                                                <img src="{{ url("storage/{$partner->exhibitor_logo}") }}"
+                                                    alt="{{ $partner->name }}">
                                             </div>
                                         @endforeach
                                     </div>
@@ -343,8 +348,8 @@
                                 @foreach ($ticket->sessions as $session)
                                     <li>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round">
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                             <polyline points="20 6 9 17 4 12"></polyline>
                                         </svg>
                                         <span>{{ $session->name }}</span>
@@ -352,7 +357,7 @@
                                 @endforeach
                             </ul>
                             <div style="margin-bottom: 24px;">Addons</div>
-                            <ul class="pricing-features">
+                            {{-- <ul class="pricing-features">
                                 @foreach ($ticket->features as $feature)
                                     <li>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
@@ -366,8 +371,9 @@
                                         </div>
                                     </li>
                                 @endforeach
-                            </ul>
-                            <a href="{{ route('attendee.register', $event) }}" class="btn btn-primary btn-block">Register Now</a>
+                            </ul> --}}
+                            <a href="{{ route('attendee.register', $event) }}"
+                                class="btn btn-primary btn-block">Register Now</a>
                         </div>
                     @endforeach
                 </div>

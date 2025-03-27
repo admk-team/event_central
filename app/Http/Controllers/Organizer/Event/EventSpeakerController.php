@@ -32,14 +32,13 @@ class EventSpeakerController extends Controller
     public function store(EventSpeakerRequest $request)
     {
         $input = $request->validated();
-        if ($input['avatar'] && Storage::disk('public')->exists($input['avatar'])) {
-            Storage::disk('public')->delete($input['avatar']);
-        }
         if ($input['avatar'] && $input['avatar'] != null) {
             $name = uniqid() . '.' . $input['avatar']->getClientOriginalExtension();
             $input['avatar'] = $input['avatar']->storeAs('organizer/organizer-avatars', $name, 'public');
         }
-        $input['language'] = implode(",", $input['language']);
+        if (isset($input['language']) && $input['language'] != null) {
+            $input['language'] = implode(",", $input['language']);
+        }
         EventSpeaker::create($input);
 
         return redirect()->route('organizer.events.speaker.index')->withSuccess('success', 'Speaker created successfully.');
@@ -57,13 +56,16 @@ class EventSpeakerController extends Controller
         if ($input['avatar']) {
             if (Storage::disk('public')->exists($input['avatar'])) {
                 Storage::disk('public')->delete($input['avatar']);
-                $name = uniqid() . '.' . $request->avatar->getClientOriginalExtension();
-                $input['avatar'] = $request->avatar->storeAs('organizer/organizer-avatars', $name, 'public');
             }
+            $name = uniqid() . '.' . $request->avatar->getClientOriginalExtension();
+            $input['avatar'] = $request->avatar->storeAs('organizer/organizer-avatars', $name, 'public');
         } else {
             unset($input['avatar']);
         }
-        $input['language'] = implode(",", $input['language']);
+        if (isset($input['language']) && $input['language'] != null) {
+            $input['language'] = implode(",", $input['language']);
+        }
+
         $speaker->update($input);
 
         return redirect()->route('organizer.events.speaker.index')->withSuccess('success', 'Speaker updated successfully.');
