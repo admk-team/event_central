@@ -8,8 +8,9 @@ import { VectorMap } from '@south-paw/react-vector-maps'
 import world from '../../../../common/world.svg.json';
 import { createSelector } from 'reselect';
 import { ongetAllData } from '../../../../slices/thunk';
+import TopPages from './TopPages';
 
-const LiveUsers = () => {
+const LiveUsers  = ({sessionAttendance,topSession}: any) => {
     const dispatch: any = useDispatch();
 
     const [countryData, setcountryData] = useState<any>([]);
@@ -39,7 +40,8 @@ const LiveUsers = () => {
         <React.Fragment>
             <Col xxl={7}>
                 <Row className="h-100">
-                    <Col xl={6}>
+                      <TopPages topSession={topSession}  />
+                    {/* <Col xl={6}>
                         <Card className="card-height-100">
                             <div className="card-header align-items-center d-flex">
                                 <h4 className="card-title mb-0 flex-grow-1">Live Users By Country</h4>
@@ -98,13 +100,13 @@ const LiveUsers = () => {
                             </Card.Body>
 
                         </Card>
-                    </Col>
+                    </Col> */}
 
                     <Col xl={6}>
                         <Card className="card-height-100">
                             <div className="card-header align-items-center d-flex">
-                                <h4 className="card-title mb-0 flex-grow-1">Sessions by Countries</h4>
-                                <div className="d-flex gap-1">
+                                <h4 className="card-title mb-0 flex-grow-1">Sessions Attendance</h4>
+                                {/* <div className="d-flex gap-1">
                                     <button type="button" className={classNames({ active: periodType === "all" }, "btn btn-soft-secondary btn-sm")} onClick={() => { onChangeChartPeriod("all"); }}>
                                         ALL
                                     </button>
@@ -114,11 +116,12 @@ const LiveUsers = () => {
                                     <button type="button" className={classNames({ active: periodType === "halfyearly" }, "btn btn-soft-secondary btn-sm")} onClick={() => { onChangeChartPeriod("halfyearly"); }}>
                                         6M
                                     </button>
-                                </div>
+                                </div> */}
                             </div>
                             <div className="card-body p-0">
                                 <div>
-                                    <CountriesCharts series={countryData} dataColors='["--vz-info", "--vz-info", "--vz-info", "--vz-info", "--vz-danger", "--vz-info", "--vz-info", "--vz-info", "--vz-info", "--vz-info"]' />
+                                    <CountriesCharts series={sessionAttendance.series} sessionNames={sessionAttendance.sessionNames}
+                                     dataColors='["--vz-info", "--vz-success", "--vz-primary", "--vz-warning","--vz-danger","--vz-info", "--vz-success", "--vz-primary", "--vz-warning", "--vz-danger"]' />
                                 </div>
                             </div>
                         </Card>
