@@ -31,11 +31,11 @@ const Widget = ({
                                             data-target="97.66"
                                         >
                                             <CountUp
-                                                key={totalRevenue}
+                                                key={totalRevenue.totalRevenue}
                                                 start={0}
-                                                end={Number(totalRevenue)}
+                                                end={Number(totalRevenue.totalRevenue)}
                                                 decimals={
-                                                    totalRevenue >= 1000 ? 1 : 0
+                                                    totalRevenue.totalRevenue >= 1000 ? 1 : 0
                                                 }
                                                 duration={4}
                                                 formattingFn={(value: any) =>

@@ -231,7 +231,7 @@
                             @endforeach
                         </ul>
 
-                        @if ($ticket->features?->count() > 0)
+                        {{-- @if ($ticket->features?->count() > 0)
                             <div style="margin-bottom: 24px;">Addons</div>
                             <ul class="pricing-features">
                                 @foreach ($ticket->features ?? [] as $feature)
@@ -249,7 +249,7 @@
                                     </li>
                                 @endforeach
                             </ul>
-                        @endif
+                        @endif --}}
                         <a href="{{ route('attendee.register', $event) }}" class="btn btn-primary btn-block">Register
                             Now</a>
                     </div>

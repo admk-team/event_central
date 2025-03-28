@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 
 const Navdata = () => {
     const currentEvent = usePage().props.currentEvent as any;
-    console.log("Event Start Date:", currentEvent?.dates[0]?.date);
+    // console.log("Event Start Date:", currentEvent?.dates[0]?.date);
 
     // State data
     const [isDashboard, setIsDashboard] = useState<boolean>(false);
