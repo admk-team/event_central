@@ -25,4 +25,8 @@ class AttendeePayment extends Model
     {
         $query->where('event_app_id', session('event_id'));
     }
+    public function attendee()
+    {
+        return $this->belongsTo(Attendee::class, 'attendee_id');
+    }
 }
