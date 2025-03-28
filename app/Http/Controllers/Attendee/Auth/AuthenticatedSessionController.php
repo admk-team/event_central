@@ -12,7 +12,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -22,9 +21,9 @@ class AuthenticatedSessionController extends Controller
     /**
      * Display the login view.
      */
-    public function create(EventApp $eventApp): Response
+    public function create(EventApp $eventApp): Response|RedirectResponse
     {
-        //Check if registration is public or private
+        //Check if registration is public or private then show Login Page with registration button or not
         $event_setting = EventAppSetting::where('event_app_id', $eventApp->id)->where('key', 'registration_private')->first();
         $registration_allowed = ($event_setting && $event_setting->value === 1) ? false : true;
 
@@ -41,9 +40,10 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(AttendeeLoginRequest $request, EventApp $eventApp): RedirectResponse
     {
+        //Custom logic to login user as attendee may sigunup with different event keeping same email address
+        // Laravel default auth guard will not work here
 
         $user = Attendee::where('event_app_id', $eventApp->id)->where('email', $request->email)->first();
-        // Log::info($user);
         if ($user) {
             $credentials = $request->validate([
                 'email' => ['required', 'email'],
@@ -59,10 +59,6 @@ class AuthenticatedSessionController extends Controller
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ])->onlyInput('email');
-
-        // $request->authenticate();    //Attendee Login Request
-        // $request->session()->regenerate();
-        // return redirect()->intended(route('attendee.event.detail.dashboard'));
     }
 
     /**
@@ -74,7 +70,7 @@ class AuthenticatedSessionController extends Controller
         Auth::guard('attendee')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        // return redirect()->route('attendee.login', [$eventId]);
+
         return redirect(route('attendee.login', [$eventId]));
     }
     public function googleRedirect()
