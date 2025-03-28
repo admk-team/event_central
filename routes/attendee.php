@@ -71,7 +71,7 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::post('/paypal/capture-order', [PaymentController::class, 'capturePayPalOrder'])->name('attendee.paypal.capture-order');
 
         Route::get('/payment/cancel', [PaymentController::class, 'paymentCancel'])->name('attendee.payment.cancel');
-        Route::post('validate-discount-code/{ticketId}/{code}', [PaymentController::class, 'validateDiscCode'])->name('attendee.validateCode.post');
+        Route::post('validate-discount-code/{disCode}', [PaymentController::class, 'validateDiscCode'])->name('attendee.validateCode.post');
         Route::get('/payment-success', [PaymentController::class, 'paymentSuccess'])->name('attendee.payment.success');
         Route::get('/event-posts', [EventController::class, 'getPostsMore'])->name('attendee.posts.index');
     });

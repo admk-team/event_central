@@ -19,22 +19,34 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated }: any) => {
     const [ticketDetails, setTicketDetails] = useState<any>([]);
     const [removedIds, setRemovedIds] = useState<any>([]);
 
+    // console.log(ticket);
+
     useEffect(() => {
         let list = [];
         let newIds = [];
+        const ticketDetailsCopy = ticketDetails.map(item => ({ ...item }));
+
         for (let i = 0; i < ticketQty; i++) {
             let id = parseInt(ticket.id + "" + i);
-            list.push({
-                id: id,
-                ticket_no: i + 1,
-                ticket: Object.assign({}, ticket),
-                addons: [],
-            });
-            newIds.push(id);
+            const foundItem = ticketDetailsCopy.find(item => item.id === id);
+            if (foundItem) {
+                list.push(foundItem);
+            } else {
+                list.push({
+                    id: id,
+                    ticket_no: i + 1,
+                    ticket: Object.assign({}, ticket),
+                    addons: [],
+                });
+                newIds.push(id);
+            }
         }
         let prevIds = ticketDetails.map((item: any) => item.id);
         let removedIds = prevIds.filter((id: any) => !newIds.includes(id));
         setRemovedIds(removedIds);
+
+        //Sort New ticketDetails by id asc
+        list.sort((a, b) => a.id - b.id);
 
         setTicketDetails([...list]);
     }, [ticketQty]);
@@ -66,11 +78,11 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated }: any) => {
     }, [ticketDetails]);
 
     return (
-        <Col lg={8}>
+        <Col lg={12}>
             <Accordion>
                 <Accordion.Item eventKey="1">
                     <Accordion.Header>
-                        <h5 className="mb-1 fw-bold">{ticket.name}</h5>
+                        <h5 className="mb-1 fw-bold">{ticket.name} {ticketQty > 0 ? ' x ' + ticketQty : ''}</h5>
                     </Accordion.Header>
                     <Accordion.Body>
                         <Row className="d-flex justify-content-centel align-items-center">

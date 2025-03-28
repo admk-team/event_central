@@ -45,6 +45,7 @@ class PaymentController extends Controller
 
     public function postTickets(Request $request)
     {
+        // Log::info($request->all());
         $eventApp =  EventApp::find(auth()->user()->event_app_id);
         $amount = $request->get('grandTotalAmount');
         $tickets = $request->get('tickets');
@@ -53,6 +54,7 @@ class PaymentController extends Controller
 
         // Check if organizer of current Event [attendee->event_app_id]
         //have setup strip keys in setting
+
         if ($stripe_pub_key && $this->stripe_service->StripKeys()->stripe_secret_key) {
             return Inertia::render('Attendee/Payment/Index', compact([
                 'eventApp',
@@ -182,11 +184,10 @@ class PaymentController extends Controller
     }
 
     // Validate Promo Codes
-    public function  validateDiscCode($ticketId, $code)
+    public function  validateDiscCode($disCode)
     {
-        $ticket = EventAppTicket::find($ticketId);
-        $code = $ticket->promoCodes()->where(function ($subQuery) use ($code) {
-            $subQuery->where('code', $code);
+        $code = PromoCode::where(function ($subQuery) use ($disCode) {
+            $subQuery->where('code', $disCode);
             $subQuery->where('status', 'active');
             $subQuery->whereColumn('used_count', '<', 'usage_limit');
             $subQuery->whereDate('end_date', '>', date('Y-m-d'));
