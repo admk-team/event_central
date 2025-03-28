@@ -22,7 +22,7 @@
                 <div class="hero-cta">
                     <a href="{{ route('attendee.register', $event) }}" class="btn btn-primary btn-lg">Secure Your
                         Spot</a>
-                    <a href="#schedule" class="btn btn-outline btn-lg">Explore Schedule</a>
+                    <a href="{{ route('organizer.events.website.schedule', $event->uuid) }}" class="btn btn-outline btn-lg">Explore Schedule</a>
                 </div>
                 <div class="countdown" id="countdown">
                     <div class="countdown-item">
