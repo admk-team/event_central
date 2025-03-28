@@ -16,7 +16,6 @@ return new class extends Migration
             $table->uuid()->unique();
             $table->unsignedBigInteger('organizer_id');
             $table->foreign('organizer_id')->references('id')->on('users')->cascadeOnDelete();
-            // $table->string('information');
             $table->string('name')->nullable();
             $table->longText('description')->nullable();
             $table->dateTime('start_date')->nullable();

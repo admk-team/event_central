@@ -32,6 +32,6 @@ class AttendeePurchasedTickets extends Model
 
     public function purchased_addons()
     {
-        return $this->belongsToMany(Addon::class, 'addon_purchased_ticket');
+        return $this->belongsToMany(Addon::class, 'addon_purchased_ticket', 'attendee_purchased_ticket_id');
     }
 }

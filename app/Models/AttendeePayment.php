@@ -9,10 +9,16 @@ class AttendeePayment extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'uuid',
         'event_app_id',
         'attendee_id',
+        'discount_code',
+        'sub_total',
+        'discount',
         'amount_paid',
-        'payment_method'
+        'stripe_intent',
+        'status',
+        'payment_method',
     ];
 
     protected $with = ['purchased_tickets'];

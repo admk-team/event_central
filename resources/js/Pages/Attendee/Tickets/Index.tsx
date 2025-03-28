@@ -1,7 +1,7 @@
-import { Head, Link, useForm } from "@inertiajs/react";
+import { Head, Link, router, useForm } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
 import Layout from "../../../Layouts/Attendee";
-import { Button, Col, Container, Row, InputGroup, Form, Card, CardBody } from "react-bootstrap";
+import { Button, Col, Container, Row, InputGroup, Form, Card, CardBody, Spinner } from "react-bootstrap";
 import TicketCard from "./TicketCard";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -14,27 +14,29 @@ const Index = ({ eventApp }: any) => {
     const [discountCode, setDiscountCode] = useState('');
     const [discount, setDiscount] = useState(0);
     const [totalAmount, setTotalAmount] = useState(0);
-    // console.log(eventApp);
-
-    const { data, setData, post, processing, errors, reset, transform } =
-        useForm({
-            _method: "POST",
-            event_app_id: eventApp.id,
-            tickets: Array(),
-            grandTotalAmount: 0,
-        });
+    const [processing, setProcessing] = useState(false);
 
     const submitCheckOut = (e: any) => {
         e.preventDefault();
-        transform((data: any) => ({
-            ...data,
-            tickets: allTicketDetails,
-            grandTotalAmount: grandTotal,
-        }));
 
-        post(route("attendee.tickets.post"), {
-            preserveScroll: true,
-        });
+        const data = {
+            tickets: [...allTicketDetails],
+            discount: discount,
+            discount_code: discountCode,
+            subTotal: grandTotal,
+            totalAmount: totalAmount
+        };
+        // console.log(data);
+        setProcessing(true);
+        axios.post(route("attendee.tickets.checkout"), data).then((response) => {
+            // console.log(response);
+            router.visit(route('attendee.tickets.checkout.page', response.data.uuid));
+        }).catch((error) => {
+            //
+            console.log(error);
+        }).finally(() => {
+            setProcessing(false);
+        })
     };
 
     const validateCode = () => {
@@ -189,11 +191,14 @@ const Index = ({ eventApp }: any) => {
                                 <Col md={4} lg={4}></Col>
                                 <Col md={4} lg={4}>
                                     <Button
-                                        disabled={allTicketDetails.length === 0}
+                                        disabled={allTicketDetails.length === 0 || processing}
                                         onClick={submitCheckOut}
                                         className="btn btn-success w-100"
                                     >
                                         Checkout
+                                        {processing && <Spinner animation="border" role="status" className="ml-3" size="sm">
+                                            <span className="visually-hidden">Loading...</span>
+                                        </Spinner>}
                                     </Button>
                                 </Col>
                                 <Col md={4} lg={4} className="d-flex justify-content-end align-items-center">

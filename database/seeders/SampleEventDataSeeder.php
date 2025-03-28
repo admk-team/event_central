@@ -99,7 +99,8 @@ class SampleEventDataSeeder extends Seeder
         (7, 2, 2, 'CFF Academy (Wednesday & Thursday)', 125.00, 15, 0, '2025-03-27 11:37:20', '2025-03-27 11:37:20'),
         (8, 2, 2, 'ICFF Music Academy', 0.00, 13, 0, '2025-03-27 11:37:34', '2025-03-27 11:37:34')");
 
-        DB::statement("(1, 1, NULL, NULL),
+        DB::statement("INSERT INTO `addon_event_app_ticket` (`event_app_ticket_id`, `addon_id`, `created_at`, `updated_at`) VALUES
+        (1, 1, NULL, NULL),
         (1, 2, NULL, NULL),
         (1, 3, NULL, NULL),
         (1, 4, NULL, NULL),
@@ -114,8 +115,7 @@ class SampleEventDataSeeder extends Seeder
         (2, 5, NULL, NULL),
         (2, 6, NULL, NULL),
         (2, 7, NULL, NULL),
-        (2, 8, NULL, NULL);
-        ");
+        (2, 8, NULL, NULL)");
 
 
         $this->command->info('  9. Addons Created');

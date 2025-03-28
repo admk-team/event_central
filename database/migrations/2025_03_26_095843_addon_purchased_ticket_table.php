@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('addon_purchased_ticket', function (Blueprint $table) {
             $table->foreignId('attendee_purchased_ticket_id')->constrained()->cascadeOnDelete();
             $table->foreignId('addon_id')->constrained()->cascadeOnDelete();
-            //
+            $table->decimal('addon_price')->nulll()->default(0);
             $table->primary(['attendee_purchased_ticket_id', 'addon_id']);
             $table->timestamps();
         });
