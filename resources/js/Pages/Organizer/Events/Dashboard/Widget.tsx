@@ -31,11 +31,11 @@ const Widget = ({
                                             data-target="97.66"
                                         >
                                             <CountUp
-                                                key={totalRevenue}
+                                                key={totalRevenue.totalRevenue}
                                                 start={0}
-                                                end={Number(totalRevenue)}
+                                                end={Number(totalRevenue.totalRevenue)}
                                                 decimals={
-                                                    totalRevenue >= 1000 ? 1 : 0
+                                                    totalRevenue.totalRevenue >= 1000 ? 1 : 0
                                                 }
                                                 duration={4}
                                                 formattingFn={(value: any) =>
@@ -80,7 +80,7 @@ const Widget = ({
                                     </p>
                                     <h2 className="mt-4 ff-secondary fw-semibold">
                                         <span className="counter-value">
-                                            <CountUp
+                                            {/* <CountUp
                                                 key={totalSpeakers}
                                                 start={0}
                                                 end={Number(totalSpeakers)}
@@ -97,7 +97,8 @@ const Widget = ({
                                                           ).toFixed(1) + "K"
                                                         : value
                                                 }
-                                            /> $
+                                            /> */}
+                                            0$
                                         </span>
                                     </h2>
                                     <p className="mb-0 text-muted text-truncate ">

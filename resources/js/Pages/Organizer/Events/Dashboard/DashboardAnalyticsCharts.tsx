@@ -2,17 +2,27 @@ import React from 'react';
 import ReactApexChart from "react-apexcharts";
 
 import getChartColorsArray from "../../../../Components/Common/ChartsDynamicColor";
+interface CountriesChartsProps {
+    dataColors: string; // String of color array (e.g., '["--vz-primary", "--vz-success"]')
+    series: { data: number[] }[]; // ApexCharts expects an array of objects with data
+    sessionNames: string[]; // Dynamic session names for x-axis categories
+}
+interface AudiencesChartsProps {
+    dataColors: string;
+    series: { name: string; data: number[] }[];
+    sessionNames: string[]; // Now represents ticket names
+}
+const AudiencesCharts = ({ dataColors, series, sessionNames }: AudiencesChartsProps) => {
+    const chartAudienceColumnChartsColors = getChartColorsArray(dataColors);
 
-const AudiencesCharts = ({ dataColors, series }:any) => {
-    var chartAudienceColumnChartsColors = getChartColorsArray(dataColors);
-    var options:any = {
+    const options: any = {
         chart: {
             type: 'bar',
             height: 309,
             stacked: true,
             toolbar: {
                 show: false,
-            }
+            },
         },
         plotOptions: {
             bar: {
@@ -41,14 +51,14 @@ const AudiencesCharts = ({ dataColors, series }:any) => {
         stroke: {
             show: true,
             width: 2,
-            colors: ['transparent']
+            colors: ['transparent'],
         },
         grid: {
             show: false,
         },
         colors: chartAudienceColumnChartsColors,
         xaxis: {
-            categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            categories: sessionNames, // Now ticket names
             axisTicks: {
                 show: false,
             },
@@ -58,19 +68,21 @@ const AudiencesCharts = ({ dataColors, series }:any) => {
                 height: 1,
                 width: '100%',
                 offsetX: 0,
-                offsetY: 0
+                offsetY: 0,
             },
         },
         yaxis: {
-            show: false
+            show: false,
         },
         fill: {
-            opacity: 1
-        }
+            opacity: 1,
+        },
     };
+
     return (
         <React.Fragment>
-            <ReactApexChart dir="ltr"
+            <ReactApexChart
+                dir="ltr"
                 options={options}
                 series={series}
                 type="bar"
@@ -155,15 +167,15 @@ const AudiencesSessionsCharts = ({ dataColors, series }:any) => {
     );
 };
 
-const CountriesCharts = ({ dataColors, series }:any) => {
-    var barchartCountriesColors = getChartColorsArray(dataColors);
-    var options:any = {
+const CountriesCharts = ({ dataColors, series, sessionNames }: CountriesChartsProps) => {
+    const barchartCountriesColors = getChartColorsArray(dataColors);
+    const options: any = {
         chart: {
             type: 'bar',
             height: 436,
             toolbar: {
                 show: false,
-            }
+            },
         },
         plotOptions: {
             bar: {
@@ -173,7 +185,7 @@ const CountriesCharts = ({ dataColors, series }:any) => {
                 dataLabels: {
                     position: 'top',
                 },
-            }
+            },
         },
         colors: barchartCountriesColors,
         dataLabels: {
@@ -182,26 +194,26 @@ const CountriesCharts = ({ dataColors, series }:any) => {
             style: {
                 fontSize: '12px',
                 fontWeight: 400,
-                colors: ['#adb5bd']
-                // colors:['#878a99']
-            }
+                colors: ['#adb5bd'],
+            },
         },
-
         legend: {
-            show: false,
+            show: true,
         },
         grid: {
-            show: false,
+            show: true,
         },
         xaxis: {
-            categories: ['India', 'United States', 'China', 'Indonesia', 'Russia', 'Bangladesh', 'Canada', 'Brazil', 'Vietnam', 'UK'],
+            categories: sessionNames, // Use separate sessionNames prop
         },
     };
+
     return (
         <React.Fragment>
-            <ReactApexChart dir="ltr"
+            <ReactApexChart
+                dir="ltr"
                 options={options}
-                series={series}
+                series={series} // Pass series as [{ data: attendanceCounts }]
                 type="bar"
                 height="436"
                 className="apex-charts"

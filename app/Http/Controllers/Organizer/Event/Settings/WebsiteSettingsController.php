@@ -22,10 +22,11 @@ class WebsiteSettingsController extends Controller
         return Inertia::render("Organizer/Events/Settings/Website/Index", [
             'websiteStatus' => eventSettings()->getValue('website_status', false),
             'url' => route('organizer.events.website', $currentEvent->uuid),
-            'headers' => $this->datatable(Header::where('event_app_id', session('event_id'))),
-            'pages' => $this->datatable(Page::where('event_app_id', session('event_id'))),
-            'footers' => $this->datatable(Footer::where('event_app_id', session('event_id'))),
-            'homePageSelected' => $currentEvent->pages()->homePage()->count() !== 0,
+            // 'headers' => $this->datatable(Header::where('event_app_id', session('event_id'))),
+            // 'pages' => $this->datatable(Page::where('event_app_id', session('event_id'))),
+            // 'footers' => $this->datatable(Footer::where('event_app_id', session('event_id'))),
+            // 'homePageSelected' => $currentEvent->pages()->homePage()->count() !== 0,
+            'colors' => eventSettings()->getValue('website_colors', config('event_website.colors')),
         ]);
     }
 
@@ -34,6 +35,12 @@ class WebsiteSettingsController extends Controller
         $value = eventSettings()->getValue('website_status', false);
         eventSettings()->set('website_status', !$value);
         return back()->withSuccess(!$value ? "Activated" : "Deactivated");
+    }
+
+    public function saveColors(Request $request)
+    {
+        eventSettings()->set('website_colors', $request->colors);
+        return back()->withSuccess("Saved");
     }
 
     protected function createDefaults($event)

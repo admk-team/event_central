@@ -60,7 +60,7 @@ class HandleInertiaRequests extends Middleware
     {
         return [
             'events' => EventApp::ofOwner()->select('id', 'name', 'logo', 'created_at')->latest()->take(5)->get(),
-            'currentEvent' => EventApp::find(session('event_id')) ?? null,
+            'currentEvent' => EventApp::with('dates')->find(session('event_id')) ?? null,
             'permissions' => function () {
                 return Auth::user()?->getAllPermissions()->pluck('name') ?? [];
             }

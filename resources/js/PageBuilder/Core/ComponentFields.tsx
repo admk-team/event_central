@@ -1,5 +1,4 @@
-import { Field } from "formik";
-import { FormControl, FormGroup, FormLabel, Nav, Tab } from "react-bootstrap";
+import { Form, FormControl, FormGroup, FormLabel, Nav, Tab } from "react-bootstrap";
 import { getResolvedProps } from "./createComponent";
 import ComponentUserFields from "./ComponentUserFields";
 
@@ -32,6 +31,24 @@ export default function ComponentFields({ name, onChange, value }: any) {
                     </Tab.Pane>
 
                     <Tab.Pane eventKey="2" className="px-3">
+                        {/* width */}
+                        <FormGroup className="mb-3">
+                            <FormLabel className="fw-semibold text-dark d-flex justify-content-between align-items-center">
+                                <span>Width</span>
+                                <div className="form-check form-switch mb-0">
+                                    <Form.Check.Input
+                                        className="form-check-input" 
+                                        type="checkbox"
+                                        role="switch" 
+                                        id="defaultFooterSwitch" 
+                                        // checked={data.default_footer}
+                                        // onChange={(e) => setData((prev) => ({...prev, default_footer: e.target.checked}))}
+                                    />
+                                    <Form.Check.Label className="form-check-label" htmlFor="defaultFooterSwitch">Use default</Form.Check.Label>
+                                </div>
+                            </FormLabel>
+                        </FormGroup>
+
                         {/* Margin */}
                         <FormGroup className="mb-3">
                             <FormLabel className="fw-semibold text-dark">Margin</FormLabel>

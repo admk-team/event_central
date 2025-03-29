@@ -39,7 +39,7 @@ class EventPartnerController extends Controller
         $name = uniqid() . '.' . $data['exhibitor_logo']->getClientOriginalExtension();
         $data['exhibitor_logo'] = $data['exhibitor_logo']->storeAs('organizer/partner', $name, 'public');
         EventPartner::create($data);
-        return back();
+        return redirect()->route('organizer.events.partner.index')->withSuccess('success', 'Partner created successfully.');
     }
 
     public function update(EventPartnerRequest $request, EventPartner $partner)
@@ -49,7 +49,7 @@ class EventPartnerController extends Controller
             Storage::disk('public')->delete($data['exhibitor_logo']);
         }
         $partner->update($data);
-        return back();
+        return redirect()->route('organizer.events.partner.index')->withSuccess('success', 'Partner updated successfully.');
     }
 
     public function destroy(EventPartner $partner)

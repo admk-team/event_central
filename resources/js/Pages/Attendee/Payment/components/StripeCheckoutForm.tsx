@@ -5,7 +5,7 @@ import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import axios from "axios";
 import { router } from "@inertiajs/react";
 
-export default function CheckoutForm({ eventId, amount, tickets }: any) {
+export default function CheckoutForm({ payment }: any) {
     const stripe = useStripe();
     const elements = useElements();
 
@@ -22,45 +22,11 @@ export default function CheckoutForm({ eventId, amount, tickets }: any) {
 
         setIsProcessing(true);
 
-        // const { error } = await stripe.confirmPayment({
-        //     elements,
-        //     confirmParams: {
-        //         return_url: route("attendee.payment.success", eventId),
-        //     },
-        //     redirect: "if_required",
-        // });
-
-        // if (!error) {
-        //     //Update Purchased Tickets status
-        //     axios
-        //         .post(route("attendee.update.payment", eventId), {
-        //             amount: amount,
-        //             tickets: tickets,
-        //         })
-        //         .then((response) => {
-        //             console.log(response);
-        //             router.visit(route("attendee.payment.success", eventId));
-        //         })
-        //         .catch((errorPost) => {
-        //             console.log(errorPost);
-        //         });
-        //     console.log("callback running");
-        // } else {
-        //     if (
-        //         error.type === "card_error" ||
-        //         error.type === "validation_error"
-        //     ) {
-        //         setMessage(error.message);
-        //     } else {
-        //         setMessage("An unexpected error occured.");
-        //     }
-        // }
-
         stripe
             .confirmPayment({
                 elements,
                 confirmParams: {
-                    return_url: route("attendee.payment.success", eventId),
+                    return_url: route("attendee.payment.success", payment.uuid),
                 },
                 redirect: "if_required",
             })
@@ -69,13 +35,10 @@ export default function CheckoutForm({ eventId, amount, tickets }: any) {
                 if (!result.error) {
                     //Update Purchased Tickets status in database
                     axios
-                        .post(route("attendee.update.payment"), {
-                            amount: amount,
-                            tickets: tickets,
-                        })
+                        .post(route("attendee.update.payment", payment.uuid))
                         .then((response) => {
                             console.log(response);
-                            router.visit(route("attendee.payment.success"));
+                            router.visit(route("attendee.payment.success", payment.uuid));
                         })
                         .catch((errorPost) => {
                             console.log(errorPost);
@@ -112,7 +75,7 @@ export default function CheckoutForm({ eventId, amount, tickets }: any) {
                     type="submit"
                 >
                     <span id="button-text">
-                        {isProcessing ? "Processing ... " : "Pay $" + amount}
+                        {isProcessing ? "Processing ... " : "Pay $" + payment.amount_paid}
                     </span>
                 </Button>
             </div>

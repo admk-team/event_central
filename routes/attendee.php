@@ -28,12 +28,12 @@ Route::middleware('guest')->prefix('attendee')->group(function () {
             Route::post('{eventApp}/register', [RegisteredUserController::class, 'store'])->name('attendee.register.store');
         }
     );
+});
 
-    // Event Registration Form
-    Route::prefix('{eventApp}/event-registration-form')->name('attendee.event-registration-form')->group(function () {
-        Route::get('/', [EventRegistrationFormController::class, 'index']);
-        Route::post('/', [EventRegistrationFormController::class, 'submit'])->name('.submit');
-    });
+// Event Registration Form
+Route::prefix('{eventApp}/event-registration-form')->name('attendee.event-registration-form')->group(function () {
+    Route::get('/', [EventRegistrationFormController::class, 'index']);
+    Route::post('/', [EventRegistrationFormController::class, 'submit'])->name('.submit');
 });
 
 // http://127.0.0.1:8000/google-login/callback
@@ -57,11 +57,13 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
 
         //Payment Processing
         Route::get('view-tickets', [PaymentController::class, 'viewTickets'])->name('attendee.tickets.get');
-        Route::post('tickets', [PaymentController::class, 'postTickets'])->name('attendee.tickets.post');
+        // Route::post('tickets', [PaymentController::class, 'postTickets'])->name('attendee.tickets.post');
+        Route::get('checkout/{paymentUuId}', [PaymentController::class, 'showCheckoutPage'])->name('attendee.tickets.checkout.page');
+        Route::post('checkout', [PaymentController::class, 'checkout'])->name('attendee.tickets.checkout');
 
         // Route::post('checkout', [PaymentController::class, 'checkoutPage'])->name('attendee.checkout.post');
-        Route::post('create-payment-intent', [PaymentController::class, 'createPaymentIntent'])->name('attendee.payment.intent');
-        Route::post('update-attendee-payment', [PaymentController::class, 'updateAttendeePaymnet'])->name('attendee.update.payment');
+        // Route::post('create-payment-intent', [PaymentController::class, 'createPaymentIntent'])->name('attendee.payment.intent');
+        Route::post('update-attendee-payment/{paymentUuId}', [PaymentController::class, 'updateAttendeePaymnet'])->name('attendee.update.payment');
 
         Route::get('{eventApp}/payment-success', [PaymentController::class, 'paymentSuccess'])->name('attendee.payment.success');
         Route::get('{eventApp}/event-posts', [EventController::class, 'getPostsMore'])->name('attendee.posts.index');
@@ -71,10 +73,9 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::post('/paypal/capture-order', [PaymentController::class, 'capturePayPalOrder'])->name('attendee.paypal.capture-order');
 
         Route::get('/payment/cancel', [PaymentController::class, 'paymentCancel'])->name('attendee.payment.cancel');
-        Route::post('validate-discount-code/{ticketId}/{code}', [PaymentController::class, 'validateDiscCode'])->name('attendee.validateCode.post');
-        Route::get('/payment-success', [PaymentController::class, 'paymentSuccess'])->name('attendee.payment.success');
-        // Posts 
-        Route::get('/event/{id}/session-posts', [EventController::class, 'getPostsMore'])->name('attendee.posts.index');
+        Route::post('validate-discount-code/{disCode}', [PaymentController::class, 'validateDiscCode'])->name('attendee.validateCode.post');
+        Route::get('/payment-success/{paymentUuId}', [PaymentController::class, 'paymentSuccess'])->name('attendee.payment.success');
+        Route::get('/event-posts', [EventController::class, 'getPostsMore'])->name('attendee.posts.index');
     });
 
     Route::put('/attendee-profile-update/{attendee}', [ProfileController::class, 'update'])->name('attendee.profile.update');

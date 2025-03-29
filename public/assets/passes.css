@@ -93,12 +93,13 @@
     border-radius: 50%;
 }
 
-.circle:hover {
+/* .circle:hover {
     transition: ease-out 0.2s;
     border: 4px solid rgba(0, 0, 0, 0.2);
     -webkit-transition: ease-out 0.2s;
 }
 
+*/
 a.circle {
     color: transparent;
 }

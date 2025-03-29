@@ -9,23 +9,22 @@ import DeleteManyModal from "../../../../Components/Common/DeleteManyModal";
 import HasPermission from "../../../../Components/HasPermission";
 import CreateEditModal from "./CreateEditModal";
 
-function Index({ features }: any) {
-    // console.log('features', features);
+function Index({ addons }: any) {
+
+    // console.log('addons', addons);
 
     const [showCreateEditModal, _setShowCreateEditModal] =
         React.useState(false);
-    const [editTicketFeature, setEditTicketFeature] = React.useState<any>(null);
+    const [editAddon, setEditAddon] = React.useState<any>(null);
 
-    const [deleteTicketFeature, setDeleteTicketFeature] =
-        React.useState<any>(null);
+    const [deleteAddon, setDeleteAddon] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-    const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] =
-        useState(false);
+    const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
 
     const setShowCreateEditModal = (state: boolean) => {
         _setShowCreateEditModal(state);
         if (state === false) {
-            setEditTicketFeature(null);
+            setEditAddon(null);
         }
     };
 
@@ -37,77 +36,75 @@ function Index({ features }: any) {
         ids: [],
     });
     const editAction = (ticket: any) => {
-        setEditTicketFeature(ticket);
+        setEditAddon(ticket);
         setShowCreateEditModal(true);
     };
 
     const deleteAction = (ticket: any) => {
-        setDeleteTicketFeature(ticket);
+        setDeleteAddon(ticket);
         setShowDeleteConfirmation(true);
     };
     const handleDelete = () => {
         deleteForm.post(
             route(
-                "organizer.events.tickets-feature.destroy",
-                deleteTicketFeature.id
+                "organizer.events.addon.destroy",
+                deleteAddon.id
             )
         );
         setShowDeleteConfirmation(false);
     };
 
     const deleteManyAction = (ids: number[]) => {
-        // console.log(ids);
         deleteManyForm.setData((data) => ({ ...data, ids: ids }));
         setShowDeleteManyConfirmation(true);
     };
     const handleDeleteMany = () => {
-        // console.log(deleteManyForm);
         deleteManyForm.delete(
-            route("organizer.events.tickets-feature.destroy.many")
+            route("organizer.events.addon.destroy.many")
         );
         setShowDeleteManyConfirmation(false);
     };
-    const columns: ColumnDef<(typeof features.data)[0]> = [
+    const columns: ColumnDef<(typeof addons.data)[0]> = [
         {
             header: () => "ID",
-            cell: (feature) => feature.id,
+            cell: (addon) => addon.id,
             cellClass: "fw-medium",
         },
         {
-            header: () => "Name",
-            cell: (feature) => (
-                <div dangerouslySetInnerHTML={{ __html: feature.name }} />
+            header: () => "Addon Name",
+            cell: (addon) => (
+                <div style={{ minWidth: '200px' }} dangerouslySetInnerHTML={{ __html: addon.name }} />
             ),
         },
         {
             header: () => "Price",
-            cell: (feature) => (
+            cell: (addon) => (
                 <span className="text-right d-block">
-                    {feature.price > 0 ? feature.price : "Free"}
+                    {addon.price > 0 ? addon.price : "Free"}
                 </span>
             ),
         },
         {
             header: () => "Total Qty",
-            cell: (feature) => feature.qty_total,
+            cell: (addon) => addon.qty_total,
         },
         {
             header: () => "Total Sold",
-            cell: (feature) => feature.qty_sold,
+            cell: (addon) => addon.qty_sold,
         },
         {
             header: () => "Action",
-            cell: (ticket) => (
+            cell: (addon) => (
                 <div className="hstack gap-3 fs-15">
                     <span
                         className="link-primary cursor-pointer"
-                        onClick={() => editAction(ticket)}
+                        onClick={() => editAction(addon)}
                     >
                         <i className="ri-edit-fill"></i>
                     </span>
                     <span
                         className="link-danger cursor-pointer"
-                        onClick={() => deleteAction(ticket)}
+                        onClick={() => deleteAction(addon)}
                     >
                         <i className="ri-delete-bin-5-line"></i>
                     </span>
@@ -124,7 +121,7 @@ function Index({ features }: any) {
                     <Row>
                         <Col xs={12} id="TicketFeatureTable">
                             <DataTable
-                                data={features}
+                                data={addons}
                                 columns={columns}
                                 title="Addons"
                                 actions={[
@@ -183,7 +180,7 @@ function Index({ features }: any) {
                     show={showCreateEditModal}
                     hide={() => setShowCreateEditModal(false)}
                     onHide={() => setShowCreateEditModal(false)}
-                    feature={editTicketFeature}
+                    addon={editAddon}
                 />
             )}
             <DeleteModal

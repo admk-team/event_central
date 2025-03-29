@@ -1,19 +1,33 @@
 import React, { useState } from 'react';
-import { Card, Col, Dropdown, } from 'react-bootstrap';
-import { topPages } from "../../../../common/data";
-import { Link } from '@inertiajs/react';
+import { Card, Col, Dropdown } from 'react-bootstrap';
+import { Link, usePage } from '@inertiajs/react';
 
-const TopPages = () => {
+interface TopSession {
+    sessionName: string;
+    registeredAttendees: number;
+    joinedAttendees: number;
+}
+
+interface Props {
+    topSession: TopSession[];
+}
+
+const TopPages  = ({topSession}: any) => {
+
     const [isTopPageDropdown, setTopPageDropdown] = useState<boolean>(false);
-    const toggleDropdown = () => { setTopPageDropdown(!isTopPageDropdown); };
+    const toggleDropdown = () => {
+        setTopPageDropdown(!isTopPageDropdown);
+    };
+
     return (
         <React.Fragment>
-            <Col xl={4} md={6}>
+            <Col xl={6} md={6}>
                 <Card className="card-height-100">
                     <Card.Header className="align-items-center d-flex">
-                        <h4 className="card-title mb-0 flex-grow-1">Top Pages</h4>
+                        <h4 className="card-title mb-0 flex-grow-1">Top Sessions</h4>
                         <div className="flex-shrink-0">
-                            <Dropdown show={isTopPageDropdown} onClick={toggleDropdown} className="card-header-dropdown">
+                            {/* Uncomment and adjust if you want the dropdown */}
+                            {/* <Dropdown show={isTopPageDropdown} onClick={toggleDropdown} className="card-header-dropdown">
                                 <Dropdown.Toggle as="a" className="text-reset dropdown-btn arrow-none" role="button">
                                     <span className="text-muted fs-16"><i className="mdi mdi-dots-vertical align-middle"></i></span>
                                 </Dropdown.Toggle>
@@ -23,7 +37,7 @@ const TopPages = () => {
                                     <Dropdown.Item>Last Month</Dropdown.Item>
                                     <Dropdown.Item>Current Year</Dropdown.Item>
                                 </Dropdown.Menu>
-                            </Dropdown>
+                            </Dropdown> */}
                         </div>
                     </Card.Header>
                     <Card.Body>
@@ -31,19 +45,19 @@ const TopPages = () => {
                             <table className="table align-middle table-borderless table-centered table-nowrap mb-0">
                                 <thead className="text-muted table-light">
                                     <tr>
-                                        <th scope="col" style={{ width: "62" }}>Active Page</th>
-                                        <th scope="col">Active</th>
-                                        <th scope="col">Users</th>
+                                        <th scope="col" style={{ width: "62" }}>Active Sessions</th>
+                                        <th scope="col">Registered Attendees</th>
+                                        <th scope="col">Joined Attendees</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {(topPages || []).map((item, index) => (
+                                    {(topSession || []).map((item, index) => (
                                         <tr key={index}>
                                             <td>
-                                                <a href="#" >{item.page}</a>
+                                                <Link href="#">{item.sessionName}</Link>
                                             </td>
-                                            <td>{item.active}</td>
-                                            <td>{item.user}</td>
+                                            <td>{item.registeredAttendees}</td>
+                                            <td>{item.joinedAttendees}</td>
                                         </tr>
                                     ))}
                                 </tbody>

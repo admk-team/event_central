@@ -19,33 +19,18 @@ import Layout from "../../../Layouts/Attendee";
 import { Head } from "@inertiajs/react";
 
 const Index = ({
-    eventApp,
-    amount,
-    tickets,
+    payment,
     stripe_pub_key,
     paypal_client_id,
 }: any) => {
-    // console.log(tickets);
+
+    console.log(payment);
 
     const [stripePromise, setStripePromise] = useState(
         loadStripe(stripe_pub_key)
     );
-    const [clientSecret, setClientSecret] = useState("");
+    const [clientSecret, setClientSecret] = useState(payment.stripe_intent);
     const [loadingIntent, setLoadingIntent] = useState(false);
-
-    useEffect(() => {
-        setLoadingIntent(true);
-        axios
-            .post(route("attendee.payment.intent"), { amount: amount })
-            .then((response) => {
-                let clientSecret = response.data.client_secret;
-                setClientSecret(clientSecret);
-                console.log(response);
-            })
-            .finally(() => {
-                setLoadingIntent(false);
-            });
-    }, []);
 
     const appearance = {
         theme: "stripe",
@@ -113,27 +98,21 @@ const Index = ({
                                                             }}
                                                         >
                                                             <StripeCheckoutForm
-                                                                eventId={
-                                                                    eventApp.id
-                                                                }
-                                                                amount={amount}
-                                                                tickets={
-                                                                    tickets
-                                                                }
+                                                                payment={payment}
                                                             />
                                                         </Elements>
                                                     </CardBody>
                                                 </Card>
                                             )}
                                         </Tab>
-                                        <Tab eventKey="paypal" title="Paypal">
+                                        {/* <Tab eventKey="paypal" title="Paypal">
                                             <PayPalButton
                                                 eventId={eventApp.id}
                                                 amount={amount}
                                                 tickets={tickets}
                                                 client_id={paypal_client_id}
                                             />
-                                        </Tab>
+                                        </Tab> */}
                                     </Tabs>
                                 </CardBody>
                             </Card>

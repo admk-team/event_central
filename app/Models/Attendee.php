@@ -68,6 +68,6 @@ class Attendee extends Authenticatable
 
     public function payments()
     {
-        return $this->hasMany(AttendeePayment::class);
+        return $this->hasMany(AttendeePayment::class, 'attendee_id');
     }
 }
