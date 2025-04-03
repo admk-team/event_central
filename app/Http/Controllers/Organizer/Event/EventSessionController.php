@@ -42,6 +42,10 @@ class EventSessionController extends Controller
         }
 
         $data = $request->validated();
+        if($data['type'] == "Break"){
+            $data['qa_status'] = false;
+            $data['posts'] = false;
+        }
         $data['event_app_id'] = session('event_id');
         EventSession::create($data);
         return back()->withSuccess("Session Created Successfully");
@@ -54,6 +58,10 @@ class EventSessionController extends Controller
         }
 
         $data = $request->validated();
+        if($data['type'] == "Break"){
+            $data['qa_status'] = false;
+            $data['posts'] = false;
+        }
         $schedule->update($data);
         return back()->withSuccess("Session Updated Successfully");
     }
