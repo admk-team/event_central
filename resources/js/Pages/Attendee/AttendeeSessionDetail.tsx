@@ -11,7 +11,7 @@ import {
     Form,
 } from "react-bootstrap";
 import Rating from "react-rating";
-import { Head, useForm, Link, router } from "@inertiajs/react";
+import { Head, useForm, Link } from "@inertiajs/react";
 import Layout from "../../Layouts/Attendee";
 import DateDifferenceFromToday from "./common/DateDifferenceFromToday";
 import moment from "moment";
@@ -49,7 +49,7 @@ const AttendeeSessionDetail = ({
         selectedSessionDetails ? true : false
     );
 
-    const [showModal, SetShowModal] = useState<boolean>(false);
+    const [selectedSpeaker, setSelectedSpeaker] = useState<any>(null);
 
     const selectSession = () => {
         // form.post(route("attendee.save.session", [eventSession.id, "select"]));
@@ -63,6 +63,14 @@ const AttendeeSessionDetail = ({
 
     const handleRatingChange = (v: any) => {
         setData("rating", v);
+    };
+
+    const openSpeakerModal = (speaker: any) => {
+        setSelectedSpeaker(speaker);
+    };
+
+    const closeSpeakerModal = () => {
+        setSelectedSpeaker(null);
     };
 
     return (
@@ -192,22 +200,23 @@ const AttendeeSessionDetail = ({
                                     {eventSession.event_speakers && eventSession.event_speakers.length > 0 ? (
                                         <div className="d-flex flex-wrap gap-2">
                                             {eventSession.event_speakers.map((speaker: any) => (
-                                                <div key={speaker.id}>
-                                                    <Button
-                                                        variant="outline-secondary"
-                                                        onClick={() => SetShowModal(true)}
-                                                    >
-                                                        {speaker.name}
-                                                    </Button>
-                                                    <SpeakerModal
-                                                        show={showModal}
-                                                        hide={() => SetShowModal(false)}
-                                                        onHide={() => SetShowModal(false)}
-                                                        event={eventApp}
-                                                        speaker={speaker}
-                                                    />
-                                                </div>
+                                                <Button
+                                                    key={speaker.id}
+                                                    variant="outline-secondary"
+                                                    onClick={() => openSpeakerModal(speaker)}
+                                                >
+                                                    {speaker.name}
+                                                </Button>
                                             ))}
+                                            {selectedSpeaker && (
+                                                <SpeakerModal
+                                                    show={!!selectedSpeaker}
+                                                    hide={closeSpeakerModal}
+                                                    onHide={closeSpeakerModal}
+                                                    event={eventApp}
+                                                    speaker={selectedSpeaker}
+                                                />
+                                            )}
                                         </div>
                                     ) : (
                                         <p>No speakers assigned</p>
