@@ -166,9 +166,16 @@ class PaymentController extends Controller
     public function paymentSuccess($paymentUuId)
     {
         $eventApp =  EventApp::find(auth()->user()->event_app_id);
+        $payment = $this->purchasedTickets();
+        $image = [];
+        foreach ($payment as $purchasedTicket) {
+            $image[] = [
+                'qr_code' => asset('Storage/' . $purchasedTicket->qr_code),
+            ];
+        }
         return Inertia::render(
             'Attendee/Payment/PaymentSuccess',
-            compact(['eventApp'])
+            compact(['eventApp', 'image'])
         );
     }
 
@@ -249,7 +256,7 @@ class PaymentController extends Controller
 
     public function purchasedTickets()
     {
-        $qrData = env('APP_URL') . '/attendee-pass';
+
         $event = null;
         $attendee = auth()->user();
         $attendee->load('payments');
@@ -266,38 +273,36 @@ class PaymentController extends Controller
             // $qrData .= "\n";
             // $qrData .= "Tickets: " . "\n";
             foreach ($payment->purchased_tickets as $ticket_purchased) {
-                $ticket = EventAppTicket::find($ticket_purchased->event_app_ticket_id);
-                // $qrData .= " ticket_id: " . $ticket_purchased->event_app_ticket_id . "\n";
-                // $qrData .= " Name: " . $ticket->name . "\n";
-                // $qrData .= " Ticket Sessions: \n";
-                // foreach ($ticket->sessions as $session) {
-                //     $qrData .= "  session_id: " . $session->id . "\n";
-                // }
+                $purchasedticket = AttendeePurchasedTickets::find($ticket_purchased->id);
+                $code = $purchasedticket->generateUniqueKey();
+                $qrData = env('APP_URL') . '/attendee-pass/' . $code;
+
+                $options = new QROptions([
+                    // 'version' => 5,
+                    'eccLevel' => EccLevel::L,
+                    'scale' => 5,
+                    'outputType' => QRCode::OUTPUT_IMAGE_PNG,
+                    'imageBase64' => false,
+                ]);
+
+                $qrcode = new QRCode($options);
+
+                // Clear any buffer to avoid output issues
+                if (ob_get_length()) {
+                    ob_end_clean();
+                }
+
+                Storage::put('public/qr-codes/' . $code . '.png', $qrcode->render(
+                    $qrData
+                ));
+
+                $purchasedticket->update([
+                    'qr_code' => 'qr-codes/' . $code . '.png',
+                    'code' => $code
+                ]);
             }
-            $options = new QROptions([
-                // 'version' => 5,
-                'eccLevel' => EccLevel::L,
-                'scale' => 5,
-                'outputType' => QRCode::OUTPUT_IMAGE_PNG,
-                'imageBase64' => false,
-            ]);
 
-            $qrcode = new QRCode($options);
-
-            // Clear any buffer to avoid output issues
-            if (ob_get_length()) {
-                ob_end_clean();
-            }
-
-            Storage::put('public/qr-codes/' . $attendee->id . '.png', $qrcode->render(
-                $qrData
-            ));
-
-
-            // $pdf = Pdf::loadView('attendee-pass-pdf', compact(['attendee', 'event']));
-            // return $pdf->download('pass.pdf');
-            // return view('attendee-pass-pdf', compact(['attendee', 'event']));
-            return Inertia::render('Attendee/Tickets/PurchasedTickets', compact(['attendee', 'event']));
+            return $payment->purchased_tickets;
         }
     }
 }

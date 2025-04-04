@@ -17,7 +17,9 @@ class AttendeePurchasedTickets extends Model
         'price',
         'discount',
         'subTotal',
-        'total'
+        'total',
+        'qr_code',
+        'code'
     ];
 
     public function payment()
@@ -33,5 +35,22 @@ class AttendeePurchasedTickets extends Model
     public function purchased_addons()
     {
         return $this->belongsToMany(Addon::class, 'addon_purchased_ticket', 'attendee_purchased_ticket_id');
+    }
+
+    /**
+     * Generate unique key for purchased tickets.
+     *
+     * @return string
+     *
+     * @throws Exception
+     */
+    public static function generateUniqueKey(): string
+    {
+        do {
+            $code = 'a' . generateRandomKey();
+            $attendeePurchasedTickets = self::where('code', $code)->get();
+        } while ($attendeePurchasedTickets->count() > 0);
+
+        return $code;
     }
 }
