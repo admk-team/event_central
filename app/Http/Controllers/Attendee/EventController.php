@@ -28,7 +28,7 @@ class EventController extends Controller
     {
         $eventApp = EventApp::find(Auth::user()->event_app_id);
         $eventApp->load([
-            'event_sessions.eventSpeakerss', // Updated to plural 'eventSpeakers'
+            'event_sessions.eventSpeakers', // Updated to plural 'eventSpeakers'
             'event_sessions.eventPlatform'
         ]);
         
