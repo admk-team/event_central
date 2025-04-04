@@ -9,6 +9,7 @@ use App\Models\EventAppTicket;
 use App\Models\EventSession;
 use App\Models\TicketFeature;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
@@ -21,6 +22,10 @@ class EventAppTicketController extends Controller
      */
     public function index()
     {
+        if (! Auth::user()->can('view_tickets')) {
+            abort(403);
+        }
+
         $speakers = null;
 
         $tickets = $this->datatable(EventAppTicket::currentEvent()->with(['event', 'sessions']));
@@ -35,6 +40,10 @@ class EventAppTicketController extends Controller
      */
     public function store(EventAppTicketRequest $request)
     {
+        if (! Auth::user()->can('create_tickets')) {
+            abort(403);
+        }
+
         $data = $request->validated();
 
         $data['event_app_id'] = session('event_id');
@@ -55,6 +64,10 @@ class EventAppTicketController extends Controller
      */
     public function update(EventAppTicketRequest $request, EventAppTicket $ticket)
     {
+        if (! Auth::user()->can('edit_tickets')) {
+            abort(403);
+        }
+
         $data = $request->validated();
 
         $data['sessions'] = $this->transformSessions($data);
@@ -72,12 +85,20 @@ class EventAppTicketController extends Controller
      */
     public function destroy(EventAppTicket $ticket)
     {
+        if (! Auth::user()->can('delete_tickets')) {
+            abort(403);
+        }
+
         $ticket->delete();
         return back()->withSuccess('Ticket Removed Successfully');
     }
 
     public function destroyMany(Request $request)
     {
+        if (! Auth::user()->can('delete_tickets')) {
+            abort(403);
+        }
+        
         $ids = $request->get('ids');
         // Log::info($ids);
         $request->validate([

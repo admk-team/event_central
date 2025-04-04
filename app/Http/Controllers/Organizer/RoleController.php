@@ -18,7 +18,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        if (! Auth::user()->canAny(['view_roles', 'create_roles', 'edit_roles', 'delete_roles'])) {
+        if (! Auth::user()->can('view_roles')) {
             abort(403);
         }
 
@@ -37,8 +37,8 @@ class RoleController extends Controller
             abort(403);
         }
 
-        $permissions = Permission::where('panel', 'organizer')->get();
-        return Inertia::render("Organizer/Roles/CreateOrEdit", compact('permissions'));
+        $allPermissions = Permission::where('panel', 'organizer')->get();
+        return Inertia::render("Organizer/Roles/CreateOrEdit", compact('allPermissions'));
     }
 
     /**
@@ -62,14 +62,6 @@ class RoleController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit(Role $role)
@@ -83,8 +75,8 @@ class RoleController extends Controller
         }
 
         $roleSpecific = $role->permissions()->get();
-        $permissions = Permission::where('panel', 'organizer')->get();
-        return Inertia::render("Organizer/Roles/CreateOrEdit", compact('role', 'permissions', 'roleSpecific'));
+        $allPermissions = Permission::where('panel', 'organizer')->get();
+        return Inertia::render("Organizer/Roles/CreateOrEdit", compact('role', 'allPermissions', 'roleSpecific'));
     }
 
     /**

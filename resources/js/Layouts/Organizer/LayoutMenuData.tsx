@@ -51,10 +51,6 @@ const Navdata = () => {
 
     const menuItems: any = [
         {
-            label: "Menu",
-            isHeader: true,
-        },
-        {
             id: "dashboard",
             label: "Dashboards",
             icon: "bx bxs-dashboard",
@@ -65,7 +61,7 @@ const Navdata = () => {
                 setIsDashboard(!isDashboard);
                 setIscurrentState('Dashboard');
                 updateIconSidebar(e);
-            }
+            },
         },
         {
             id: "events",
@@ -78,7 +74,10 @@ const Navdata = () => {
                 setIsDashboard(!isEvents);
                 setIscurrentState('Events');
                 updateIconSidebar(e);
-            }
+            },
+            hasPermissions: [
+                'view_events',
+            ]
         },
         {
             id: "Staff",
@@ -92,17 +91,18 @@ const Navdata = () => {
                 setIscurrentState('Staff');
                 updateIconSidebar(e);
             },
+            hasAnyPermission: [
+                'view_users',
+                'view_roles',
+            ],
             subItems: [
                 {
                     id: "Users",
                     label: "Users",
                     link: route('organizer.users.index'),
                     parentId: "Staff",
-                    hasAnyPermission: [
+                    hasPermissions: [
                         'view_users',
-                        'create_users',
-                        'edit_users',
-                        'delete_users',
                     ],
                 },
                 {
@@ -110,12 +110,9 @@ const Navdata = () => {
                     label: "Roles",
                     link: route('organizer.roles.index'),
                     parentId: "Staff",
-                    hasAnyPermission: [
+                    hasPermissions: [
                         'view_roles',
-                        'create_roles',
-                        'edit_roles',
-                        'delete_roles',
-                    ]
+                    ],
                 },
             ],
         },
@@ -130,7 +127,10 @@ const Navdata = () => {
                 setIsDashboard(!isPaymentSettings);
                 setIscurrentState('PaymentSettings');
                 updateIconSidebar(e);
-            }
+            },
+            hasPermissions: [
+                'edit_payment_settings',
+            ]
         },
     ];
     return <React.Fragment>{menuItems}</React.Fragment>;

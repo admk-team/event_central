@@ -18,7 +18,7 @@ class EventSessionController extends Controller
 {
     public function index(Request $request)
     {
-        if (! Auth::user()->canAny(['view_event_sessions', 'create_event_sessions', 'edit_event_sessions', 'delete_event_sessions'])) {
+        if (! Auth::user()->can('view_event_sessions')) {
             abort(403);
         }
 
@@ -37,8 +37,7 @@ class EventSessionController extends Controller
     public function store(EventSessionRequest $request)
     {
         if (! Auth::user()->can('create_event_sessions')) {
-            // abort(403);
-            return back()->withError("Invalid User Permissions to create session");
+            abort(403);
         }
 
         $data = $request->validated();
@@ -51,9 +50,9 @@ class EventSessionController extends Controller
         return back()->withSuccess("Session Created Successfully");
     }
 
-    public function update(EventSessionRequest $request, EventSession $schedule)
+    public function update(EventSessionRequest $request, EventSession $eventSession)
     {
-        if (! Auth::user()->can('edit_event_sessions', $schedule)) {
+        if (! Auth::user()->can('edit_event_sessions', $eventSession)) {
             abort(403);
         }
 
@@ -62,17 +61,17 @@ class EventSessionController extends Controller
             $data['qa_status'] = false;
             $data['posts'] = false;
         }
-        $schedule->update($data);
+        $eventSession->update($data);
         return back()->withSuccess("Session Updated Successfully");
     }
 
-    public function destroy(EventSession $schedule)
+    public function destroy(EventSession $eventSession)
     {
-        if (! Auth::user()->can('delete_event_sessions', $schedule)) {
+        if (! Auth::user()->can('delete_event_sessions', $eventSession)) {
             abort(403);
         }
 
-        $schedule->delete();
+        $eventSession->delete();
         return back()->withSuccess("Session Deleted Successfully");
     }
 
@@ -83,13 +82,13 @@ class EventSessionController extends Controller
         ]);
 
         foreach ($request->ids as $id) {
-            $schedule = EventSession::find($id);
+            $eventSession = EventSession::find($id);
 
-            if (! Auth::user()->can('delete_event_sessions', $schedule)) {
+            if (! Auth::user()->can('delete_event_sessions', $eventSession)) {
                 abort(403);
             }
 
-            $schedule?->delete();
+            $eventSession?->delete();
         }
     }
 }

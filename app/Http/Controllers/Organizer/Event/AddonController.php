@@ -8,6 +8,7 @@ use App\Models\Addon;
 use App\Models\EventApp;
 use App\Models\EventAppTicket;
 use App\Models\TicketFeature;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -16,12 +17,19 @@ class AddonController extends Controller
 {
     public function index(EventAppTicket $event_app_ticket)
     {
+        if (! Auth::user()->can('view_tickets')) {
+            abort(403);
+        }
 
         $addons = $this->datatable(Addon::currentEvent());
         return Inertia::render('Organizer/Events/Addons/Index', compact('addons'));
     }
     public function store(Request $request)
     {
+        if (! Auth::user()->can('create_tickets')) {
+            abort(403);
+        }
+
         $request->validate([
             'organizer_id' => 'required',
             'event_app_id' => 'nullable|numeric',
@@ -36,6 +44,10 @@ class AddonController extends Controller
 
     public function update(Request $request, Addon $addon)
     {
+        if (! Auth::user()->can('edit_tickets')) {
+            abort(403);
+        }
+
         $request->validate([
             'organizer_id' => 'required',
             'event_app_id' => 'nullable|numeric',
@@ -51,12 +63,20 @@ class AddonController extends Controller
 
     public function destroy(Addon $addon)
     {
+        if (! Auth::user()->can('delete_tickets')) {
+            abort(403);
+        }
+
         $addon->delete();
         return back()->withSuccess('Addon Deleted Successfully');
     }
 
     public function destroyMany(Request $request)
     {
+        if (! Auth::user()->can('delete_tickets')) {
+            abort(403);
+        }
+        
         $request->validate([
             'ids' => 'required|array'
         ]);

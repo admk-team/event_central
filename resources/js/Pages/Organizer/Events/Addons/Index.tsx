@@ -96,18 +96,22 @@ function Index({ addons }: any) {
             header: () => "Action",
             cell: (addon) => (
                 <div className="hstack gap-3 fs-15">
-                    <span
-                        className="link-primary cursor-pointer"
-                        onClick={() => editAction(addon)}
-                    >
-                        <i className="ri-edit-fill"></i>
-                    </span>
-                    <span
-                        className="link-danger cursor-pointer"
-                        onClick={() => deleteAction(addon)}
-                    >
-                        <i className="ri-delete-bin-5-line"></i>
-                    </span>
+                    <HasPermission permission="edit_tickets">
+                        <span
+                            className="link-primary cursor-pointer"
+                            onClick={() => editAction(addon)}
+                        >
+                            <i className="ri-edit-fill"></i>
+                        </span>
+                    </HasPermission>
+                    <HasPermission permission="delete_tickets">
+                        <span
+                            className="link-danger cursor-pointer"
+                            onClick={() => deleteAction(addon)}
+                        >
+                            <i className="ri-delete-bin-5-line"></i>
+                        </span>
+                    </HasPermission>
                 </div>
             ),
         },
@@ -120,56 +124,60 @@ function Index({ addons }: any) {
                     <BreadCrumb title="Ticket Addons" pageTitle="Dashboard" />
                     <Row>
                         <Col xs={12} id="TicketFeatureTable">
-                            <DataTable
-                                data={addons}
-                                columns={columns}
-                                title="Addons"
-                                actions={[
-                                    // Delete multiple
-                                    {
-                                        render: (dataTable) => (
-                                            <Button
-                                                className="btn-danger"
-                                                onClick={() =>
-                                                    deleteManyAction(
-                                                        dataTable
-                                                            .getSelectedRows()
-                                                            .map(
-                                                                (row) => row.id
+                            <HasPermission permission="view_tickets">
+                                <DataTable
+                                    data={addons}
+                                    columns={columns}
+                                    title="Addons"
+                                    actions={[
+                                        // Delete multiple
+                                        {
+                                            render: (dataTable) => (
+                                                <HasPermission permission="delete_tickets">
+                                                    <Button
+                                                        className="btn-danger"
+                                                        onClick={() =>
+                                                            deleteManyAction(
+                                                                dataTable
+                                                                    .getSelectedRows()
+                                                                    .map(
+                                                                        (row) => row.id
+                                                                    )
                                                             )
-                                                    )
-                                                }
-                                            >
-                                                <i className="ri-delete-bin-5-line"></i>{" "}
-                                                Delete (
-                                                {
-                                                    dataTable.getSelectedRows()
-                                                        .length
-                                                }
-                                                )
-                                            </Button>
-                                        ),
-                                        showOnRowSelection: true,
-                                    },
-                                    // Add new
-                                    {
-                                        render: (
-                                            <HasPermission permission="create_schedule">
-                                                <Button
-                                                    onClick={() =>
-                                                        setShowCreateEditModal(
-                                                            true
+                                                        }
+                                                    >
+                                                        <i className="ri-delete-bin-5-line"></i>{" "}
+                                                        Delete (
+                                                        {
+                                                            dataTable.getSelectedRows()
+                                                                .length
+                                                        }
                                                         )
-                                                    }
-                                                >
-                                                    <i className="ri-add-fill"></i>{" "}
-                                                    Add New
-                                                </Button>
-                                            </HasPermission>
-                                        ),
-                                    },
-                                ]}
-                            />
+                                                    </Button>
+                                                </HasPermission>
+                                            ),
+                                            showOnRowSelection: true,
+                                        },
+                                        // Add new
+                                        {
+                                            render: (
+                                                <HasPermission permission="create_tickets">
+                                                    <Button
+                                                        onClick={() =>
+                                                            setShowCreateEditModal(
+                                                                true
+                                                            )
+                                                        }
+                                                    >
+                                                        <i className="ri-add-fill"></i>{" "}
+                                                        Add New
+                                                    </Button>
+                                                </HasPermission>
+                                            ),
+                                        },
+                                    ]}
+                                />
+                            </HasPermission>
                         </Col>
                     </Row>
                 </Container>

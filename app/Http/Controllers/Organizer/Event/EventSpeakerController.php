@@ -16,12 +16,20 @@ class EventSpeakerController extends Controller
 {
     public function index(Request $request)
     {
+        if (! Auth::user()->can('view_speakers')) {
+            abort(403);
+        }
+
         $speakers = EventSpeaker::currentEvent()->latest()->paginate($request->per_page ?? 10);
         return Inertia::render('Organizer/Events/Speekers/Index', compact('speakers'));
     }
 
     public function create()
     {
+        if (! Auth::user()->can('create_speakers')) {
+            abort(403);
+        }
+
         // $colorschemes = ColorScheme::latest()->paginate($request->per_page ?? 10);
         $events = EventApp::ofOwner()->get();
         return Inertia::render("Organizer/Events/Speekers/CreateOrEdit", [
@@ -31,6 +39,10 @@ class EventSpeakerController extends Controller
 
     public function store(EventSpeakerRequest $request)
     {
+        if (! Auth::user()->can('create_speakers')) {
+            abort(403);
+        }
+
         $input = $request->validated();
         if ($input['avatar'] && $input['avatar'] != null) {
             $name = uniqid() . '.' . $input['avatar']->getClientOriginalExtension();
@@ -46,12 +58,20 @@ class EventSpeakerController extends Controller
 
     public function edit(string $id)
     {
+        if (! Auth::user()->can('edit_speakers')) {
+            abort(403);
+        }
+
         $speaker = EventSpeaker::findOrFail($id);
         return Inertia::render("Organizer/Events/Speekers/CreateOrEdit", compact('speaker'));
     }
 
     public function update(EventSpeakerRequest $request, EventSpeaker $speaker)
     {
+        if (! Auth::user()->can('edit_speakers')) {
+            abort(403);
+        }
+
         $input = $request->validated();
         if ($input['avatar']) {
             if (Storage::disk('public')->exists($input['avatar'])) {
@@ -73,12 +93,20 @@ class EventSpeakerController extends Controller
 
     public function destroy(EventSpeaker $speaker)
     {
+        if (! Auth::user()->can('delete_speakers')) {
+            abort(403);
+        }
+
         $speaker->delete();
         return back();
     }
 
     public function destroyMany(Request $request)
     {
+        if (! Auth::user()->can('delete_speakers')) {
+            abort(403);
+        }
+        
         $request->validate([
             'ids' => 'required|Array'
         ]);

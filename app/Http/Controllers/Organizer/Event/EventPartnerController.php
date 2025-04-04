@@ -7,6 +7,7 @@ use App\Http\Requests\Organizer\Event\EventPartnerRequest;
 use App\Models\EventPartner;
 use App\Models\EventPartnerCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
@@ -14,17 +15,30 @@ class EventPartnerController extends Controller
 {
     public function index(Request $request)
     {
+        if (! Auth::user()->can('view_partner')) {
+            abort(403);
+        }
+
         $partners = EventPartner::currentEvent()->latest()->paginate($request->per_page ?? 10);
         return Inertia::render('Organizer/Events/Partners/Index', compact('partners'));
     }
+
     public function create()
     {
+        if (! Auth::user()->can('create_partner')) {
+            abort(403);
+        }
+
         $partnerCategories = EventPartnerCategory::currentEvent()->latest()->get();
         return Inertia::render('Organizer/Events/Partners/CreateOrEdit', compact('partnerCategories'));
     }
 
     public function edit(string $id)
     {
+        if (! Auth::user()->can('edit_partner')) {
+            abort(403);
+        }
+
         $partnerCategories = EventPartnerCategory::currentEvent()->latest()->get();
         $partner = EventPartner::findOrFail($id);
         return Inertia::render("Organizer/Events/Partners/CreateOrEdit", compact('partner', 'partnerCategories'));
@@ -33,6 +47,10 @@ class EventPartnerController extends Controller
 
     public function store(EventPartnerRequest $request)
     {
+        if (! Auth::user()->can('create_partner')) {
+            abort(403);
+        }
+
         $data = $request->validated();
         $data['event_app_id'] = session('event_id');
         // store image
@@ -44,6 +62,10 @@ class EventPartnerController extends Controller
 
     public function update(EventPartnerRequest $request, EventPartner $partner)
     {
+        if (! Auth::user()->can('edit_partner')) {
+            abort(403);
+        }
+
         $data = $request->validated();
         if ($data['exhibitor_logo'] && Storage::disk('public')->exists($data['exhibitor_logo'])) {
             Storage::disk('public')->delete($data['exhibitor_logo']);
@@ -54,12 +76,20 @@ class EventPartnerController extends Controller
 
     public function destroy(EventPartner $partner)
     {
+        if (! Auth::user()->can('delete_partner')) {
+            abort(403);
+        }
+
         $partner->delete();
         return back();
     }
 
     public function destroyMany(Request $request)
     {
+        if (! Auth::user()->can('delete_partner')) {
+            abort(403);
+        }
+        
         dd('tsign');
         // $request->validate([
         //     'ids' => 'required|array'
