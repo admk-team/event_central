@@ -5,7 +5,7 @@ const Navdata = () => {
     //state data
     const [isDashboard, setIsDashboard] = useState<boolean>(false);
     const [isEvents, setIsEvents] = useState<boolean>(false);
-    const [isUserManagement, setIsUserManagement] = useState<boolean>(false);
+    const [isStaff, setIsStaff] = useState<boolean>(false);
     const [isPaymentSettings, setIsPaymentSettings] = useState<boolean>(false);
 
 
@@ -34,8 +34,8 @@ const Navdata = () => {
         if (iscurrentState !== 'Events') {
             setIsEvents(false);
         }
-        if (iscurrentState !== 'UserManagement') {
-            setIsUserManagement(false);
+        if (iscurrentState !== 'Staff') {
+            setIsStaff(false);
         }
         if (iscurrentState !== 'PaymentSettings') {
             setIsPaymentSettings(false);
@@ -45,7 +45,7 @@ const Navdata = () => {
         iscurrentState,
         isDashboard,
         isEvents,
-        isUserManagement,
+        isStaff,
         isPaymentSettings
     ]);
 
@@ -81,15 +81,15 @@ const Navdata = () => {
             }
         },
         {
-            id: "UserManagement",
-            label: "User Management",
+            id: "Staff",
+            label: "Staff",
             icon: "bx bxs-user",
             link: "/#",
-            stateVariables: isUserManagement,
+            stateVariables: isStaff,
             click: function (e: any) {
                 e.preventDefault();
-                setIsUserManagement(!isUserManagement);
-                setIscurrentState('UserManagement');
+                setIsStaff(!isStaff);
+                setIscurrentState('Staff');
                 updateIconSidebar(e);
             },
             subItems: [
@@ -97,7 +97,7 @@ const Navdata = () => {
                     id: "Users",
                     label: "Users",
                     link: route('organizer.users.index'),
-                    parentId: "UserManagement",
+                    parentId: "Staff",
                     hasAnyPermission: [
                         'view_users',
                         'create_users',
@@ -109,7 +109,7 @@ const Navdata = () => {
                     id: "roles",
                     label: "Roles",
                     link: route('organizer.roles.index'),
-                    parentId: "UserManagement",
+                    parentId: "Staff",
                     hasAnyPermission: [
                         'view_roles',
                         'create_roles',
