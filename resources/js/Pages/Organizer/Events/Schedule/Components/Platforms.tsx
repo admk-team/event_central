@@ -51,6 +51,8 @@ export default function Platforms({ onPlatformChange }: { onPlatformChange: (pla
             if (eventPlatforms.length > eventPlatformsCount.current) {
                 setSelectedPlatform(eventPlatforms[eventPlatforms.length - 1]);
                 eventPlatformsCount.current = eventPlatforms.length;
+            } else {
+                setSelectedPlatform(eventPlatforms[0]);
             }
         } else {
             setSelectedPlatform(null);

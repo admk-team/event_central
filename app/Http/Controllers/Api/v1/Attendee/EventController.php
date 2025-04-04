@@ -15,14 +15,14 @@ class EventController extends Controller
 {
     public function getEventDetailDashboard(EventApp $eventApp)
     {
-        $eventApp->load(['event_sessions.eventSpeaker', 'event_sessions.eventPlatform']);
+        $eventApp->load(['event_sessions.eventSpeakers', 'event_sessions.eventPlatform']);
         // dd($eventApp->toArray());
         return $this->successResponse(new EventResource($eventApp));
     }
 
     public function getEventDetailAgenda(EventApp $eventApp)
     {
-        $eventApp->load(['event_sessions.eventSpeaker', 'event_sessions.event_platform']);
+        $eventApp->load(['event_sessions.eventSpeakers', 'event_sessions.event_platform']);
         return $this->successResponse(new EventResource($eventApp));
     }
 
@@ -51,7 +51,7 @@ class EventController extends Controller
             $eventSession->load(['eventSpeaker', 'eventPlatform']);
             return $this->successResponse(new EventSessionResource($eventSession));
         } else {
-            $eventApp->load(['event_sessions.eventSpeaker', 'event_sessions.eventPlatform']);
+            $eventApp->load(['event_sessions.eventSpeakers', 'event_sessions.eventPlatform']);
             return $this->successResponse(new EventResource($eventApp));
         }
     }

@@ -18,7 +18,7 @@ class EventController extends Controller
     public function getEventDetailDashboard()
     {
         $eventApp = EventApp::find(Auth::user()->event_app_id);
-        $eventApp->load(['event_sessions.eventSpeaker', 'event_sessions.eventPlatform']);
+        $eventApp->load(['event_sessions.eventSpeakers', 'event_sessions.eventPlatform']);
         return Inertia::render('Attendee/AttendeeDashboard', compact([
             'eventApp',
         ]));
@@ -27,35 +27,42 @@ class EventController extends Controller
     public function getEventDetailAgenda()
     {
         $eventApp = EventApp::find(Auth::user()->event_app_id);
-        $eventApp->load(['event_sessions.eventSpeaker', 'event_sessions.eventPlatform']);
+        $eventApp->load([
+            'event_sessions.eventSpeakers', // Updated to plural 'eventSpeakers'
+            'event_sessions.eventPlatform'
+        ]);
+        
         return Inertia::render('Attendee/AttendeeAgenda', compact('eventApp'));
     }
 
     public function getEventSessionDetail(Request $request, EventSession $eventSession)
     {
         $eventApp = EventApp::find(Auth::user()->event_app_id);
-        // Finding previous and next session ids with reference to current session
+        
+        // Finding previous and next session IDs with reference to current session
         $next_session_id = null;
         $prev_session_id = null;
         $sessions = $eventApp->event_sessions->pluck('id');
         foreach ($sessions as $index => $value) {
             if ($value === $eventSession->id) {
                 $prev_session_id = $index > 0 ? $sessions[$index - 1] : null;
-                $next_session_id = $index < (count($sessions) - 1)  ? $sessions[$index + 1] : null;
+                $next_session_id = $index < (count($sessions) - 1) ? $sessions[$index + 1] : null;
             }
         }
 
-        //Note : after upgrading to Laravel 11, above code can be
-        // replaced by following two lines.
+        // Note: After upgrading to Laravel 11, the above code can be replaced with:
         // $next_session_id = $sessions->after($eventSession->id);
         // $prev_session_id = $sessions->before($eventSession->id);
-        //------------------------------------------------------------------------
-        $eventSession->load(['eventSpeaker']);
-        $selectedSessionDetails = DB::table('attendee_event_session')->where(function ($query) use ($eventSession) {
-            $query->where('attendee_id', auth()->user()->id);
-            $query->where('event_session_id', $eventSession->id);
-        })->first();
 
+        // Load the eventSpeakers relationship for the specific session
+        $eventSession->load('eventSpeakers');
+
+        $selectedSessionDetails = DB::table('attendee_event_session')
+            ->where(function ($query) use ($eventSession) {
+                $query->where('attendee_id', auth()->user()->id);
+                $query->where('event_session_id', $eventSession->id);
+            })
+            ->first();
         return Inertia::render('Attendee/AttendeeSessionDetail', compact([
             'eventApp',
             'eventSession',
@@ -68,12 +75,18 @@ class EventController extends Controller
     public function getEventSpeakerDetail(EventSpeaker $eventSpeaker)
     {
         $eventApp = EventApp::find(Auth::user()->event_app_id);
-        $eventApp->load('event_speakers.eventSessions');
+        
+        // Load all speakers and their sessions for the event
+        $eventApp->load(['event_speakers' => function ($query) {
+            $query->with('eventSessions'); // Load sessions for all speakers
+        }]);
 
+        // Load sessions for the specific speaker
         if ($eventSpeaker) {
             $eventSpeaker->load('eventSessions');
         }
-        return Inertia::render('Attendee/AttendeeSpeakerDetail', compact(['eventApp', 'eventSpeaker']));
+
+        return Inertia::render('Attendee/AttendeeSpeakerDetail', compact('eventApp', 'eventSpeaker'));
     }
 
     public function getEventDetailMore()

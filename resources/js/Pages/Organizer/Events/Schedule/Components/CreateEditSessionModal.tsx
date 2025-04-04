@@ -11,6 +11,7 @@ import {
     Tab,
 } from "react-bootstrap";
 import { useState } from "react";
+import Select from "react-select";
 
 export default function CreateEditSessionModal({
     show,
@@ -27,22 +28,66 @@ export default function CreateEditSessionModal({
     selectedDate: any;
     selectedPlatform: any;
 }) {
+    const eventSessions = (usePage().props.eventSessions as any)
+        .filter((session: any) => {
+            return (session.event_date_id === selectedDate?.id) && (session.event_platform_id === selectedPlatform?.id);
+        });
+
     const isEdit = eventSession != null ? true : false;
     const [enablePost, setEnablePost] = useState<boolean>(false);
     const speakers = usePage().props.speakers as any;
-    // console.log(enablePost)
-    // Initialize the form data with the existing date and time
+
+    const customStyles = {
+        multiValue: (styles: any, { data }: any) => {
+            return {
+                ...styles,
+            };
+        },
+        multiValueLabel: (styles: any, { data }: any) => ({
+            ...styles,
+            backgroundColor: "var(--vz-secondary-bg-subtle)",
+            color: "black",
+        }),
+        multiValueRemove: (styles: any, { data }: any) => ({
+            ...styles,
+            color: "black",
+            backgroundColor: "var(--vz-secondary-bg-subtle)",
+            ":hover": {
+                backgroundColor: "var(--vz-secondary-bg-subtle)",
+                color: "dark",
+            },
+        }),
+    };
+
+    // Initialize selected speakers from eventSpeakers relationship when editing
+    const [selectedSpeakers, setSelectedSpeakers] = useState<any>(() => {
+        if (isEdit && eventSession?.event_speakers?.length > 0) {
+            return eventSession.event_speakers.map((speaker: any) => ({
+                value: speaker.id,
+                label: speaker.name,
+            }));
+        }
+        return [];
+    });
+
+    const speakerOptions = speakers.map((speaker: any) => ({
+        value: speaker.id,
+        label: speaker.name,
+    }));
+
     const { data, setData, post, put, processing, errors, reset } = useForm({
         _method: isEdit ? "PUT" : "POST",
         name: eventSession?.name ?? "",
-        event_speaker_id: eventSession?.event_speaker_id ?? "",
+        event_speaker_id: isEdit && eventSession?.event_speakers?.length > 0
+            ? eventSession.event_speakers.map((speaker: any) => speaker.id)
+            : [],
         event_platform_id: selectedPlatform.id,
         event_date_id: selectedDate?.id,
         type: eventSession?.type ?? "Session",
         description: eventSession?.description ?? "",
         capacity: eventSession?.capacity ?? "",
-        start_time: eventSession?.start_time ?? "00:00", // Default time with time
-        end_time: eventSession?.end_time ?? "00:00", // Default date with time
+        start_time: eventSession?.start_time ?? "00:00",
+        end_time: eventSession?.end_time ?? "00:00",
         qa_status: eventSession?.qa_status ?? 0,
         posts: eventSession?.posts ?? false,
     });
@@ -136,13 +181,12 @@ export default function CreateEditSessionModal({
                                             type="switch"
                                             id="qa-status-switch"
                                             label="Q&A Status"
-                                            checked={!!data.qa_status} // Ensures the value is always boolean
-                                            onChange={
-                                                (e) =>
-                                                    setData(
-                                                        "qa_status",
-                                                        e.target.checked
-                                                    ) // Passes true or false explicitly
+                                            checked={!!data.qa_status}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "qa_status",
+                                                    e.target.checked
+                                                )
                                             }
                                         />
                                         {errors.qa_status && (
@@ -152,29 +196,30 @@ export default function CreateEditSessionModal({
                                         )}
                                     </Col>
                                     <Col md={6}>
-                                    <div className="form-check form-switch">
-                                    <Form.Check.Input
-                                        type="checkbox"
-                                        className="form-check-input"
-                                        id="schedulePost"
-                                        checked={data.posts}
-                                        onChange={(e) =>
-                                            setData("posts", e.target.checked)
-                                        }
-                                    />
-                                    <Form.Check.Label
-                                        className="form-check-label"
-                                        htmlFor="schedulePost"
-                                    >
-                                        {data.posts
-                                            ? "Disable Posts"
-                                            : "Enable Posts"}
-                                        {/* Enable Post */}
-                                    </Form.Check.Label>
-                                </div>
-                                </Col>
+                                        <div className="form-check form-switch">
+                                            <Form.Check.Input
+                                                type="checkbox"
+                                                className="form-check-input"
+                                                id="schedulePost"
+                                                checked={data.posts}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        "posts",
+                                                        e.target.checked
+                                                    )
+                                                }
+                                            />
+                                            <Form.Check.Label
+                                                className="form-check-label"
+                                                htmlFor="schedulePost"
+                                            >
+                                                {data.posts
+                                                    ? "Disable Posts"
+                                                    : "Enable Posts"}
+                                            </Form.Check.Label>
+                                        </div>
+                                    </Col>
                                 </Row>
-                               
                             </>
                         )}
                         <Row>
@@ -188,6 +233,12 @@ export default function CreateEditSessionModal({
                                         enableTime: true,
                                         noCalendar: true,
                                         dateFormat: "H:i",
+                                        disable: eventSessions.map((session: any) => {
+                                            return {
+                                                from: session.start_time,
+                                                to: session.end_time,
+                                            }
+                                        }),
                                     }}
                                     value={data.start_time}
                                     onChange={([selectedDate]: Date[]) => {
@@ -221,9 +272,14 @@ export default function CreateEditSessionModal({
                                         enableTime: true,
                                         noCalendar: true,
                                         dateFormat: "H:i",
+                                        disable: eventSessions.map((session: any) => {
+                                            return {
+                                                from: session.start_time,
+                                                to: session.end_time,
+                                            }
+                                        }),
                                     }}
                                     value={data.end_time}
-                                    // onChange={(e: any) => setData('end_time', e.target.value)}
                                     onChange={([selectedDate]: Date[]) => {
                                         if (selectedDate) {
                                             setData(
@@ -251,43 +307,38 @@ export default function CreateEditSessionModal({
                     {(data.type === "Session" || data.type === "Workshop") && (
                         <>
                             <FormGroup className="mb-3">
-                                <Form.Label
-                                    htmlFor="event_app_id"
-                                    className="form-label"
-                                >
-                                    Select Event Speaker
+                                <Form.Label className="form-label">
+                                    Select Event Speakers
                                 </Form.Label>
-                                <select
-                                    className="form-select"
-                                    id="event_app_id"
-                                    aria-label="Select event app"
-                                    value={data.event_speaker_id}
-                                    onChange={(e) =>
-                                        setData(
-                                            "event_speaker_id",
-                                            e.target.value
-                                        )
+                                <Select
+                                    placeholder="Select Event Speakers"
+                                    className={
+                                        errors.event_speaker_id && "is-invalid"
                                     }
-                                >
-                                    <option value="">
-                                        Select Event Speaker
-                                    </option>
-                                    {speakers.map((speaker: any) => (
-                                        <option
-                                            value={speaker.id}
-                                            key={speaker.id}
-                                        >
-                                            {speaker.name}
-                                        </option>
-                                    ))}
-                                </select>
-                                <Form.Control.Feedback
-                                    type="invalid"
-                                    className="d-block mt-2"
-                                >
-                                    {" "}
-                                    {errors.event_speaker_id}{" "}
-                                </Form.Control.Feedback>
+                                    value={selectedSpeakers}
+                                    isMulti={true}
+                                    onChange={(selectedOptions: any) => {
+                                        setSelectedSpeakers(selectedOptions);
+                                        const speakerIds = selectedOptions.map(
+                                            (option: any) => option.value
+                                        );
+                                        setData("event_speaker_id", speakerIds);
+                                    }}
+                                    options={speakerOptions}
+                                    classNamePrefix={
+                                        errors.event_speaker_id &&
+                                        "multi-select is-invalid"
+                                    }
+                                    styles={customStyles}
+                                />
+                                {errors.event_speaker_id && (
+                                    <Form.Control.Feedback
+                                        type="invalid"
+                                        className="d-block"
+                                    >
+                                        {errors.event_speaker_id}
+                                    </Form.Control.Feedback>
+                                )}
                             </FormGroup>
                         </>
                     )}
