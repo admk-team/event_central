@@ -4,6 +4,8 @@ import { Head, Link } from "@inertiajs/react";
 import Layout from "../../../../../../Layouts/Event";
 
 const Profile = ({ attendee,user }: any) => {
+    console.log(user);
+    
     return (
         <React.Fragment>
             <Head title="Profile | Velzon - React Admin & Dashboard Template" />
@@ -126,45 +128,48 @@ const Profile = ({ attendee,user }: any) => {
                                             </h5>
                                             <div className="d-flex flex-wrap gap-2">
                                                 <div>
-                                                    <Link
-                                                        href="#"
+                                                    <a target="blank"
+                                                        href={user.facebook_link}
                                                         className="avatar-xs d-block"
                                                     >
-                                                        <span className="avatar-title rounded-circle fs-16 bg-dark text-light">
-                                                            <i className="ri-github-fill"></i>
+                                                        <span className="avatar-title rounded-circle fs-16 text-light" style={{background:'blue'}}>
+                                                            <i className="ri-facebook-fill"></i>
                                                         </span>
-                                                    </Link>
+                                                    </a>
                                                 </div>
                                                 <div>
-                                                    <Link
-                                                        href="#"
+                                                    <a target="blank"
+                                                        href={user.linkedin_link}
                                                         className="avatar-xs d-block"
                                                     >
-                                                        <span className="avatar-title rounded-circle fs-16 bg-primary">
-                                                            <i className="ri-global-fill"></i>
+                                                        <span className="avatar-title rounded-circle fs-16 text-light" style={{ background:'DodgerBlue'}}>
+                                                            <i className="ri-linkdin-fill fw-bold cursor-pointer">In</i>
                                                         </span>
-                                                    </Link>
+                                                    </a>
                                                 </div>
                                                 <div>
-                                                    <Link
-                                                        href="#"
-                                                        className="avatar-xs d-block"
-                                                    >
-                                                        <span className="avatar-title rounded-circle fs-16 bg-success">
-                                                            <i className="ri-dribbble-fill"></i>
-                                                        </span>
-                                                    </Link>
-                                                </div>
-                                                <div>
-                                                    <Link
-                                                        href="#"
+                                                    <a
+                                                        target="blank"
+                                                        href={user.other_link}
                                                         className="avatar-xs d-block"
                                                     >
                                                         <span className="avatar-title rounded-circle fs-16 bg-danger">
-                                                            <i className="ri-pinterest-fill"></i>
+                                                            <i className="ri-global-fill"></i>
                                                         </span>
-                                                    </Link>
+                                                    </a>
                                                 </div>
+                                                <div>
+                                                    <a
+                                                    target="blank"
+                                                        href={user.twitter_link}
+                                                        className="avatar-xs d-block"
+                                                    >
+                                                        <span className="avatar-title rounded-circle fs-16" style={{ background:'DodgerBlue'}}>
+                                                            <i className="ri-twitter-fill"></i>
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                                
                                             </div>
                                         </Card.Body>
                                     </Card>

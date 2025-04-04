@@ -130,11 +130,11 @@ function Index({ attendees }: any) {
             header: () => 'Actions',
             cell: (attendee) => (
                 <div className="hstack gap-3 fs-15">
+                    <Link href={route('organizer.events.attendee.info', { id: attendee.id })} className="link-primary cursor-pointer"><i className="ri-eye-fill"></i></Link>
                     <span className="link-primary cursor-pointer" onClick={() => editAction(attendee)} ><i className="ri-edit-fill"></i></span>
                     <span className="link-danger cursor-pointer" onClick={() => deleteAction(attendee)}>
                         <i className="ri-delete-bin-5-line"></i>
                     </span>
-                    <Link href={route('organizer.events.attendee.info', { id: attendee.id })} className="link-primary cursor-pointer"><i className="ri-information-line"></i></Link>
                 </div>
             ),
         },
