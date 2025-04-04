@@ -90,7 +90,7 @@ class AttendeeController extends Controller
 
     public function showInfo(String $id)
     {
-        $user = Attendee::find($id)->first();
+        $user = Attendee::where('id',$id)->first();
         $attendee = FormSubmission::where('attendee_id', $id)->with('fieldValues', 'attendee', 'formFields')->get();
         return Inertia::render('Organizer/Events/Users/Attendees/AttendeeProfile/Profile', compact('attendee','user'));
     }
