@@ -22,7 +22,7 @@ class EventSessionController extends Controller
             abort(403);
         }
 
-        $eventSessions = EventSession::with(['eventDate', 'eventPlatform'])
+        $eventSessions = EventSession::with(['eventDate', 'eventPlatform', 'eventSpeakers'])
             ->currentEvent()
             ->whereCanBeAccessedBy(Auth::user())
             ->get();
@@ -41,12 +41,21 @@ class EventSessionController extends Controller
         }
 
         $data = $request->validated();
-        if($data['type'] == "Break"){
+        if ($data['type'] == "Break") {
             $data['qa_status'] = false;
             $data['posts'] = false;
         }
         $data['event_app_id'] = session('event_id');
-        EventSession::create($data);
+        
+        // Remove event_speaker_id from main data since we'll handle it separately
+        $speakers = $data['event_speaker_id'] ?? [];
+        unset($data['event_speaker_id']);
+        
+        $session = EventSession::create($data);
+        if (!empty($speakers)) {
+            $session->eventSpeakers()->sync($speakers);
+        }
+
         return back()->withSuccess("Session Created Successfully");
     }
 
@@ -57,11 +66,20 @@ class EventSessionController extends Controller
         }
 
         $data = $request->validated();
-        if($data['type'] == "Break"){
+        if ($data['type'] == "Break") {
             $data['qa_status'] = false;
             $data['posts'] = false;
         }
+        
+        // Handle speakers separately
+        $speakers = $data['event_speaker_id'] ?? [];
+        unset($data['event_speaker_id']);
+        
         $eventSession->update($data);
+        if (!empty($speakers)) {
+            $eventSession->eventSpeakers()->sync($speakers);
+        }
+
         return back()->withSuccess("Session Updated Successfully");
     }
 
