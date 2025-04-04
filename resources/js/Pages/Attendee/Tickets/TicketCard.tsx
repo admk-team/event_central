@@ -87,7 +87,8 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated }: any) => {
                     <Accordion.Body>
                         <Row className="d-flex justify-content-centel align-items-center">
                             <Col md={8} lg={8}>
-                                <h5 className="mb-1 fw-bold">{ticket.name}</h5>
+                                {/* <h5 className="mb-1 fw-bold">{ticket.name}</h5> */}
+                                <span className="mb-1">{ticket.description}</span>
                             </Col>
                             <Col md={2} lg={2}>
                                 <sup>
