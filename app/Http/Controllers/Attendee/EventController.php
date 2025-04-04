@@ -18,7 +18,7 @@ class EventController extends Controller
     public function getEventDetailDashboard()
     {
         $eventApp = EventApp::find(Auth::user()->event_app_id);
-        $eventApp->load(['event_sessions.eventSpeaker', 'event_sessions.eventPlatform']);
+        $eventApp->load(['event_sessions.eventSpeakers', 'event_sessions.eventPlatform']);
         return Inertia::render('Attendee/AttendeeDashboard', compact([
             'eventApp',
         ]));
@@ -28,7 +28,7 @@ class EventController extends Controller
     {
         $eventApp = EventApp::find(Auth::user()->event_app_id);
         $eventApp->load([
-            'event_sessions.eventSpeakers', // Updated to plural 'eventSpeakers'
+            'event_sessions.eventSpeakerss', // Updated to plural 'eventSpeakers'
             'event_sessions.eventPlatform'
         ]);
         
