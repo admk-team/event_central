@@ -2,7 +2,6 @@ import { useForm, usePage } from "@inertiajs/react";
 import Flatpickr from "react-flatpickr";
 import { Spinner, Col, Form, FormGroup, Modal, Nav, Row, Tab } from 'react-bootstrap';
 import { useState } from 'react';
-import moment from "moment";
 
 export default function CreateEditSessionModal({
     show,
@@ -41,7 +40,7 @@ export default function CreateEditSessionModal({
         start_time: eventSession?.start_time ?? "00:00", // Default time with time
         end_time: eventSession?.end_time ?? "00:00", // Default date with time
         qa_status: eventSession?.qa_status ?? 0,
-        posts: eventSession?.posts ?? false
+        posts: eventSession?.posts ?? false,
     });
 
     const submit = (e: any) => {
@@ -124,28 +123,56 @@ export default function CreateEditSessionModal({
                     </Tab.Container>
 
                     <FormGroup className="mb-3">
-                        <Row className="mt-3 mb-3">
-                            <Col md={12}>
-                                <Form.Check
-                                    type="switch"
-                                    id="qa-status-switch"
-                                    label="Q&A Status"
-                                    checked={!!data.qa_status} // Ensures the value is always boolean
-                                    onChange={
-                                        (e) =>
-                                            setData(
-                                                "qa_status",
-                                                e.target.checked
-                                            ) // Passes true or false explicitly
-                                    }
-                                />
-                                {errors.qa_status && (
-                                    <Form.Text className="text-danger">
-                                        {errors.qa_status}
-                                    </Form.Text>
-                                )}
-                            </Col>
-                        </Row>
+                        {(data.type === "Session" ||
+                            data.type === "Workshop") && (
+                            <>
+                                <Row className="mt-3 mb-3">
+                                    <Col md={6}>
+                                        <Form.Check
+                                            type="switch"
+                                            id="qa-status-switch"
+                                            label="Q&A Status"
+                                            checked={!!data.qa_status} // Ensures the value is always boolean
+                                            onChange={
+                                                (e) =>
+                                                    setData(
+                                                        "qa_status",
+                                                        e.target.checked
+                                                    ) // Passes true or false explicitly
+                                            }
+                                        />
+                                        {errors.qa_status && (
+                                            <Form.Text className="text-danger">
+                                                {errors.qa_status}
+                                            </Form.Text>
+                                        )}
+                                    </Col>
+                                    <Col md={6}>
+                                    <div className="form-check form-switch">
+                                    <Form.Check.Input
+                                        type="checkbox"
+                                        className="form-check-input"
+                                        id="schedulePost"
+                                        checked={data.posts}
+                                        onChange={(e) =>
+                                            setData("posts", e.target.checked)
+                                        }
+                                    />
+                                    <Form.Check.Label
+                                        className="form-check-label"
+                                        htmlFor="schedulePost"
+                                    >
+                                        {data.posts
+                                            ? "Disable Posts"
+                                            : "Enable Posts"}
+                                        {/* Enable Post */}
+                                    </Form.Check.Label>
+                                </div>
+                                </Col>
+                                </Row>
+                               
+                            </>
+                        )}
                         <Row>
                             <Col md={6}>
                                 <Form.Label className="form-label mb-0">
@@ -312,22 +339,6 @@ export default function CreateEditSessionModal({
                             )}
                         </FormGroup>
                     )}
-                    <div className="form-check form-switch mt-3">
-                        <Form.Check.Input
-                            type="checkbox"
-                            className="form-check-input"
-                            id="schedulePost"
-                            checked={data.posts}
-                            onChange={(e) => setData('posts', e.target.checked)}
-                            />
-                        <Form.Check.Label
-                            className="form-check-label"
-                            htmlFor="schedulePost"
-                            >
-                                {data.posts ? 'Disable Posts' : 'Enable Posts'}
-                            {/* Enable Post */}
-                        </Form.Check.Label>
-                    </div>
                 </Modal.Body>
 
                 <div className="modal-footer">
