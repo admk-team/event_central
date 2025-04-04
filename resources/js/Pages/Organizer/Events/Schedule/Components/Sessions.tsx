@@ -27,7 +27,13 @@ export default function Sessions({ selectedDate, selectedPlatform, onEdit, onDel
     }, [selectedPlatform]);
 
     if (selectedDate === null || selectedPlatform === null) {
-        return null;
+        return (
+            <div className="h-100 d-flex justify-content-center align-items-center">
+                <div className="fw-semibold fs-5">
+                    {selectedDate === null ? 'No date selected, please select date' : 'No platform selected, please select platform'}
+                </div>
+            </div>
+        );
     }
 
     return (

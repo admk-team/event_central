@@ -2,6 +2,7 @@ import { useForm, usePage } from "@inertiajs/react";
 import Flatpickr from "react-flatpickr";
 import { Spinner, Col, Form, FormGroup, Modal, Nav, Row, Tab } from 'react-bootstrap';
 import { useState } from 'react';
+import moment from "moment";
 
 export default function CreateEditSessionModal({
     show,
@@ -18,6 +19,11 @@ export default function CreateEditSessionModal({
     selectedDate: any;
     selectedPlatform: any;
 }) {
+    const eventSessions = (usePage().props.eventSessions as any)
+        .filter((session: any) => {
+            return (session.event_date_id === selectedDate?.id) && (session.event_platform_id === selectedPlatform?.id);
+        });
+
     const isEdit = eventSession != null ? true : false;
     const [enablePost, setEnablePost] = useState<boolean>(false);
     const speakers = usePage().props.speakers as any;
@@ -151,6 +157,12 @@ export default function CreateEditSessionModal({
                                         enableTime: true,
                                         noCalendar: true,
                                         dateFormat: "H:i",
+                                        disable: eventSessions.map((session: any) => {
+                                            return {
+                                                from: session.start_time,
+                                                to: session.end_time,
+                                            }
+                                        }),
                                     }}
                                     value={data.start_time}
                                     onChange={([selectedDate]: Date[]) => {
@@ -184,6 +196,12 @@ export default function CreateEditSessionModal({
                                         enableTime: true,
                                         noCalendar: true,
                                         dateFormat: "H:i",
+                                        disable: eventSessions.map((session: any) => {
+                                            return {
+                                                from: session.start_time,
+                                                to: session.end_time,
+                                            }
+                                        }),
                                     }}
                                     value={data.end_time}
                                     // onChange={(e: any) => setData('end_time', e.target.value)}
