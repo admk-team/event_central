@@ -4,8 +4,7 @@ import { Head, Link } from "@inertiajs/react";
 import Layout from "../../../../../../Layouts/Event";
 
 const Profile = ({ attendee,user }: any) => {
-    console.log(user);
-    
+ 
     return (
         <React.Fragment>
             <Head title="Profile | Velzon - React Admin & Dashboard Template" />
