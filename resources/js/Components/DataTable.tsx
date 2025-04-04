@@ -116,18 +116,24 @@ export default function DataTable<T>({
                             </tr>
                         </thead>
                         <tbody>
-                            {data.data.map((row, rowIndex) => (
-                                <tr key={rowIndex} className={`${rowSelector.isRowSelected(row) ? 'table-active' : ''}`}>
-                                    {!disableRowSelection && (
-                                        <td>
-                                            <Form.Check.Input onChange={(e) => rowSelector.handleRowSelection(e.target.checked, row)} checked={rowSelector.isRowSelected(row)} />
-                                        </td>
-                                    )}
-                                    {columns.map((col, colIndex) => (
-                                        <td className={col.cellClass || ''} key={colIndex}>{col.cell(row)}</td>
-                                    ))}
+                            {data.data.length > 0 ? (
+                                data.data.map((row, rowIndex) => (
+                                    <tr key={rowIndex} className={`${rowSelector.isRowSelected(row) ? 'table-active' : ''}`}>
+                                        {!disableRowSelection && (
+                                            <td>
+                                                <Form.Check.Input onChange={(e) => rowSelector.handleRowSelection(e.target.checked, row)} checked={rowSelector.isRowSelected(row)} />
+                                            </td>
+                                        )}
+                                        {columns.map((col, colIndex) => (
+                                            <td className={col.cellClass || ''} key={colIndex}>{col.cell(row)}</td>
+                                        ))}
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr>
+                                    <td colSpan={columns.length + (!disableRowSelection ? 1 : 0)} className="text-center fw-semibold">No data found</td>
                                 </tr>
-                            ))}
+                            )}
                         </tbody>
                     </Table>
                 </div>
