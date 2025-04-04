@@ -13,9 +13,15 @@ return new class extends Migration
     {
         Schema::create('attendee_payments', function (Blueprint $table) {
             $table->id();
+            $table->uuid()->unique();
             $table->foreignId('event_app_id')->constrained()->cascadeOnDelete();
             $table->foreignId('attendee_id')->constrained()->cascadeOnDelete();
+            $table->string('discount_code')->nullable();
+            $table->decimal('sub_total')->default(0);
+            $table->decimal('discount')->default(0);
             $table->decimal('amount_paid');
+            $table->string('stripe_intent')->nullable();
+            $table->enum('status', ['pending', 'paid'])->default('pending');
             $table->enum('payment_method', ['stripe', 'paypal']);
             $table->timestamps();
         });

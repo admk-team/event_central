@@ -10,13 +10,11 @@ import HasPermission from "../../../../Components/HasPermission";
 import CreateEditModal from "./CreateEditModal";
 import moment from "moment";
 
-function Index({ tickets, sessions }: any) {
-    // console.log('tickets', tickets);
-    // console.log('sessions', sessions);
-    // console.log('features', ticket_features);
+function Index({ tickets, sessions, addons }: any) {
 
-    const [showCreateEditModal, _setShowCreateEditModal] =
-        React.useState(false);
+    console.log('addons', addons);
+
+    const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
     const [editTicket, setEditTicket] = React.useState<any>(null);
 
     const [deleteschedule, setDeleteSchedule] = React.useState<any>(null);
@@ -47,6 +45,7 @@ function Index({ tickets, sessions }: any) {
         setDeleteSchedule(ticket);
         setShowDeleteConfirmation(true);
     };
+
     const handleDelete = () => {
         deleteForm.post(
             route("organizer.events.tickets.destroy", deleteschedule.id)
@@ -55,15 +54,15 @@ function Index({ tickets, sessions }: any) {
     };
 
     const deleteManyAction = (ids: number[]) => {
-        // console.log(ids);
         deleteManyForm.setData((data) => ({ ...data, ids: ids }));
         setShowDeleteManyConfirmation(true);
     };
+
     const handleDeleteMany = () => {
-        // console.log(deleteManyForm);
         deleteManyForm.delete(route("organizer.events.tickets.destroy.many"));
         setShowDeleteManyConfirmation(false);
     };
+
     const columns: ColumnDef<(typeof tickets.data)[0]> = [
         {
             header: () => "ID",
@@ -105,14 +104,6 @@ function Index({ tickets, sessions }: any) {
         {
             header: () => "Base Price",
             cell: (ticket) => ticket.base_price,
-        },
-        {
-            header: () => "Addons Price",
-            cell: (ticket) => ticket.addons_price,
-        },
-        {
-            header: () => "Total Price",
-            cell: (ticket) => ticket.total_price,
         },
         {
             header: () => "Sessions",
@@ -235,6 +226,7 @@ function Index({ tickets, sessions }: any) {
                     onHide={() => setShowCreateEditModal(false)}
                     ticket={editTicket}
                     sessions={sessions}
+                    addons={addons}
                 />
             )}
             <DeleteModal

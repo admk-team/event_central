@@ -1,115 +1,93 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
-import CountUp from "react-countup";
-import { useSelector, useDispatch } from "react-redux";
-import { AudiencesCharts } from './DashboardAnalyticsCharts';
-import { createSelector } from 'reselect';
-import { ongetAudiencesMetricsChartsData } from '../../../../slices/thunk';
+import CountUp from 'react-countup';
+import { AudiencesCharts } from './DashboardAnalyticsCharts'; // Adjust path
 
-const AudiencesMetrics = () => {
+// Define the structure of each ticket data item
+interface TicketData {
+    ticketName: string;
+    ticketsSold: number;
+    totalRevenue: number;
+}
 
-    const dispatch:any = useDispatch();
+// Define the structure of ticketsMetrics
+interface TicketsMetrics {
+    totalTickets: number; // Total ticket types
+    totalTicketsSold: number; // Total tickets sold
+    totalRevenue: number; // Total revenue
+    ticketsData: TicketData[];
+}
 
-    const [chartData, setchartData] = useState<any>([]);
+// Define props interface
+interface AudiencesMetricsProps {
+    ticketsMetrics: TicketsMetrics;
+}
 
-    const audiencesData = createSelector(
-        (state:any) => state.DashboardAnalytics,
-        (audiencesMetricsData:any) => audiencesMetricsData.audiencesMetricsData
-      );
-    // Inside your component
-    const audiencesMetricsData:any = useSelector(audiencesData);
+const AudiencesMetrics = ({ ticketsMetrics }: AudiencesMetricsProps) => {
+    const [chartData, setChartData] = useState<{ name: string; data: number[] }[]>([]);
 
     useEffect(() => {
-        setchartData(audiencesMetricsData);
-    }, [audiencesMetricsData]);
-
-    const onChangeChartPeriod = (pType:any) => {
-        dispatch(ongetAudiencesMetricsChartsData(pType));
-    };
-
-    useEffect(() => {
-        dispatch(ongetAudiencesMetricsChartsData("all"));
-    }, [dispatch]);
-
-
+        // Prepare chart data from ticketsData
+        setChartData([
+            {
+                name: 'Tickets Sold',
+                data: ticketsMetrics.ticketsData.map((ticket: TicketData) => ticket.ticketsSold),
+            },
+            {
+                name: 'Total Revenue',
+                data: ticketsMetrics.ticketsData.map((ticket: TicketData) => ticket.totalRevenue),
+            },
+        ]);
+    }, [ticketsMetrics]);
 
     return (
         <React.Fragment>
             <Col xl={6}>
                 <Card>
                     <Card.Header className="border-0 align-items-center d-flex">
-                        <h4 className="card-title mb-0 flex-grow-1">Audiences Metrics</h4>
-                        <div className="d-flex gap-1">
-                            <button type="button" className="btn btn-soft-secondary btn-sm" onClick={() => { onChangeChartPeriod("all"); }}>
-                                ALL
-                            </button>
-                            <button type="button" className="btn btn-soft-secondary btn-sm" onClick={() => { onChangeChartPeriod("monthly"); }}>
-                                1M
-                            </button>
-                            <button type="button" className="btn btn-soft-secondary btn-sm" onClick={() => { onChangeChartPeriod("halfyearly"); }}>
-                                6M
-                            </button>
-                            <button type="button" className="btn btn-soft-primary btn-sm" onClick={() => { onChangeChartPeriod("yearly"); }}>
-                                1Y
-                            </button>
-                        </div>
+                        <h4 className="card-title mb-0 flex-grow-1">Tickets Metrics</h4>
                     </Card.Header>
                     <Card.Header className="p-0 border-0 bg-light-subtle">
                         <Row className="g-0 text-center">
                             <Col xs={6} sm={4}>
                                 <div className="p-3 border border-dashed border-start-0">
-                                    <h5 className="mb-1"><span className="counter-value" data-target="854">
-                                        <CountUp
-                                            start={0}
-                                            end={854}
-                                            duration={3}
-                                        />
-                                    </span>
-                                        <span className="text-success ms-1 fs-12"> 49%<i className="ri-arrow-right-up-line ms-1 align-middle"></i></span>
+                                    <h5 className="mb-1">
+                                        <CountUp start={0} end={ticketsMetrics.totalTickets} duration={3} />
                                     </h5>
-                                    <p className="text-muted mb-0">Avg. Session</p>
+                                    <p className="text-muted mb-0">Total Tickets</p>
                                 </div>
                             </Col>
                             <Col xs={6} sm={4}>
                                 <div className="p-3 border border-dashed border-start-0">
-                                    <h5 className="mb-1"><span className="counter-value" data-target="1278">
-                                        <CountUp
-                                            start={0}
-                                            end={1278}
-                                            duration={3}
-                                            separator=","
-                                        />
-                                    </span>
-                                        <span className="text-success ms-1 fs-12"> 60%<i className="ri-arrow-right-up-line ms-1 align-middle"></i></span>
+                                    <h5 className="mb-1">
+                                        <CountUp start={0} end={ticketsMetrics.totalTicketsSold} duration={3} />
                                     </h5>
-                                    <p className="text-muted mb-0">Conversion Rate</p>
+                                    <p className="text-muted mb-0">Total Tickets Sold</p>
                                 </div>
                             </Col>
                             <Col xs={6} sm={4}>
                                 <div className="p-3 border border-dashed border-start-0 border-end-0">
-                                    <h5 className="mb-1"><span className="counter-value" data-target="3">
+                                    <h5 className="mb-1">
                                         <CountUp
                                             start={0}
-                                            end={3}
+                                            end={ticketsMetrics.totalRevenue}
                                             duration={3}
+                                            separator=","
+                                            prefix="$"
                                         />
-                                    </span>m <span className="counter-value" data-target="40">
-                                            <CountUp
-                                                start={0}
-                                                end={40}
-                                                duration={3}
-                                            />
-                                        </span>sec
-                                        <span className="text-success ms-1 fs-12"> 37%<i className="ri-arrow-right-up-line ms-1 align-middle"></i></span>
                                     </h5>
-                                    <p className="text-muted mb-0">Avg. Session Duration</p>
+                                    <p className="text-muted mb-0">Total Revenue</p>
                                 </div>
                             </Col>
                         </Row>
                     </Card.Header>
                     <Card.Body className="p-0 pb-2">
                         <div>
-                            <AudiencesCharts series={chartData} dataColors='["--vz-success", "--vz-light"]' />
+                            <AudiencesCharts
+                                series={chartData}
+                                dataColors='["--vz-success", "--vz-success"]'
+                                sessionNames={ticketsMetrics.ticketsData.map((ticket: TicketData) => ticket.ticketName)}
+                            />
                         </div>
                     </Card.Body>
                 </Card>

@@ -33,7 +33,13 @@ class RegistrationFormSettingsController extends Controller
     {
         $currentEvent = EventApp::with('form')->find(session('event_id'));
         $currentEvent->form->status = !$currentEvent->form->status;
+
+        if ($currentEvent->form->status === true && $currentEvent->form->fields->count() === 0) {
+            return back()->withError("Form has no fields, please add atleast one field");
+        }
+
         $currentEvent->form->save();
+
         return back()->withSuccess(!$currentEvent->form->status ? "Activated" : "Deactivated");
     }
 }

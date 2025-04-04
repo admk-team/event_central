@@ -56,7 +56,16 @@ class FormFieldController extends Controller
      */
     public function destroy(string $id)
     {
-        FormField::find($id)?->delete();
+        $formField = FormField::find($id);
+        $form = $formField->form;
+        $formField->delete();
+        
+        // Disable form if there are no fields
+        if ($form->fields->count() === 0) {
+            $form->status = false;
+            $form->save();
+        }
+
         return back();
     }
 }

@@ -11,10 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('ticket_features', function (Blueprint $table) {
+        Schema::create('addons', function (Blueprint $table) {
+            $table->id();
+
+            $table->foreignId('organizer_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('event_app_id')->nullable()->constrained()->nullOnDelete();
+
+            $table->string('name')->nullable();
             $table->decimal('price')->nullable()->default(0);
             $table->unsignedSmallInteger('qty_total');
             $table->unsignedSmallInteger('qty_sold');
+            $table->timestamps();
         });
     }
 
@@ -23,8 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('ticket_features', function (Blueprint $table) {
-            $table->dropColumn(['price', 'qty_total', 'qty_sold']);
-        });
+        Schema::dropIfExists('ticket_features');
     }
 };

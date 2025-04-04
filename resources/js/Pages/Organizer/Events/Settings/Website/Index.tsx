@@ -9,6 +9,7 @@ import WebsiteStatus from './Components/WebsiteStatus';
 import WebsitePages from './Components/WebsitePages';
 import WebsiteHeaders from './Components/WebsiteHeaders';
 import WebsiteFooters from './Components/WebsiteFooters';
+import Colors from './Components/Colors';
 
 function Website() {
 
@@ -30,6 +31,9 @@ function Website() {
                                     <WebsiteUrl />
                                 </Col>
                                 <Col xs={12}>
+                                    <Colors />
+                                </Col>
+                                {/* <Col xs={12}>
                                     <WebsitePages />
                                 </Col>
                                 <Col xs={12}>
@@ -37,7 +41,7 @@ function Website() {
                                 </Col>
                                 <Col xs={12}>
                                     <WebsiteFooters />
-                                </Col>
+                                </Col> */}
                             </Row>
                         </Col>
                         <Col md={4}>

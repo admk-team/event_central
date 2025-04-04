@@ -3,22 +3,18 @@ import { useForm, usePage } from '@inertiajs/react';
 import Flatpickr from "react-flatpickr";
 import { Spinner, Col, Form, FormGroup, Modal, Nav, Row, Tab, Table, Button } from 'react-bootstrap';
 import Select, { StylesConfig } from 'react-select';
-import axios from 'axios';
-import DeleteModal from '../../../../Components/Common/DeleteModal';
 
-export default function CreateEditModal({ show, hide, onHide, ticket, sessions }:
-    { show: boolean, hide: () => void, onHide: () => void, ticket: any, sessions: any | null }) {
+export default function CreateEditModal({ show, hide, onHide, ticket, sessions, addons }:
+    { show: boolean, hide: () => void, onHide: () => void, ticket: any, sessions: any | null, addons: any }) {
 
     const isEdit = ticket != null ? true : false;
-    // const userId = usePage().props.auth.user.id;
-    // const eventId = usePage().props.currentEvent.id;
 
-    // console.log(ticket);
 
     const { data, setData, post, put, processing, errors, reset, transform } = useForm({
         _method: isEdit ? "PUT" : "POST",
         event_app_id: ticket?.event_app_id ?? '',
         sessions: ticket?.selected_sessions ?? [],
+        addons: ticket?.selected_addons ?? [],
         name: ticket?.name ?? '',
         description: ticket?.description ?? '',
         type: 'NORMAL',
@@ -32,11 +28,13 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
         increment_type: ticket?.increment_type ?? 'Percentage',
         start_increment: ticket?.start_increment ?? '',
         end_increment: ticket?.end_increment ?? '',
-        features: [],
     });
 
     const [selectMulti, setselectMulti] = useState<any>(ticket?.selected_sessions ?? null);
     const [selectAllSession, setSelectAllSession] = useState<any>(false);
+
+    const [selectMultiAddon, setselectMultiAddon] = useState<any>(ticket?.selected_addons ?? null);
+    const [selectAllAddons, setSelectAllAddons] = useState<any>(false);
 
     const [ticketFeatures, setTicketFeatures] = useState<any>([]);
     const [eventLoading, setEventLoading] = useState<any>(false);
@@ -45,34 +43,36 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
     const [addonsPrice, setAddonsPrice] = useState(ticket?.addons_price ?? 0);
     const [totalPrice, setTotalPrice] = useState(ticket?.total_price ?? 0);
 
-    useEffect(() => {
-        fetchFeatures();
-    }, []);
+    // useEffect(() => {
+    //     fetchFeatures();
+    // }, []);
 
-    useEffect(() => {
-        updatePricing();
-        updateTicketSelectedFeatures();
-    }, [ticketFeatures, addonsPrice, totalPrice, basePrice]);
+    // useEffect(() => {
+    //     updatePricing();
+    //     updateTicketSelectedFeatures();
+    // }, [ticketFeatures, addonsPrice, totalPrice, basePrice]);
 
-    const fetchFeatures = () => {
-        setEventLoading(true);
-        let url = route('organizer.events.fetch', [ticket?.id ?? null]);
-        axios.get(url).then((response) => {
-            setTicketFeatures(response.data.features);
-        }).finally(() => {
-            setEventLoading(false);
-        });
-    }
+    // const fetchFeatures = () => {
+    //     setEventLoading(true);
+    //     let url = route('organizer.events.fetch', [ticket?.id ?? null]);
+    //     axios.get(url).then((response) => {
+    //         setTicketFeatures(response.data.features);
+    //     }).finally(() => {
+    //         setEventLoading(false);
+    //     });
+    // }
 
     const submit = (e: any) => {
         e.preventDefault();
 
-        transform((prevData) => ({
-            ...prevData,
-            base_price: basePrice,
-            addons_price: addonsPrice,
-            total_price: totalPrice
-        }));
+        // transform((prevData) => ({
+        //     ...prevData,
+        //     base_price: basePrice,
+        //     addons_price: addonsPrice,
+        //     total_price: totalPrice
+        // }));
+
+        console.log(data);
 
         if (isEdit) {
             post(route('organizer.events.tickets.update', ticket.id), {
@@ -91,49 +91,49 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
         }
     }
 
-    const toggleFeatureSelection = (feature: any) => {
-        const newList = ticketFeatures.map((item: any) => {
-            if (item.id === feature.id) {
-                const updatedFeature = {
-                    ...item,
-                    selected: (feature.selected > 0 ? null : 1)
-                }
-                return updatedFeature;
-            }
-            return item;
-        });
-        setTicketFeatures(newList);
-        updateTicketSelectedFeatures();
-        updatePricing();
-    }
+    // const toggleFeatureSelection = (feature: any) => {
+    //     const newList = ticketFeatures.map((item: any) => {
+    //         if (item.id === feature.id) {
+    //             const updatedFeature = {
+    //                 ...item,
+    //                 selected: (feature.selected > 0 ? null : 1)
+    //             }
+    //             return updatedFeature;
+    //         }
+    //         return item;
+    //     });
+    //     setTicketFeatures(newList);
+    //     updateTicketSelectedFeatures();
+    //     updatePricing();
+    // }
 
-    const updateTicketSelectedFeatures = () => {
+    // const updateTicketSelectedFeatures = () => {
 
-        const selected_features: any = [];
-        ticketFeatures.forEach((item: any) => {
-            if (item.selected > 0) {
-                selected_features.push(item.id);
-            }
-        });
-        setData('features', selected_features);
-    }
+    //     const selected_features: any = [];
+    //     ticketFeatures.forEach((item: any) => {
+    //         if (item.selected > 0) {
+    //             selected_features.push(item.id);
+    //         }
+    //     });
+    //     setData('features', selected_features);
+    // }
 
-    const updatePricing = (base_price = data.base_price) => {
+    // const updatePricing = (base_price = data.base_price) => {
 
-        let addons_price = 0;
-        ticketFeatures.forEach((item: any) => {
-            if (item.selected > 0) {
-                addons_price += parseFloat(item.price);
-            }
-        });
+    //     let addons_price = 0;
+    //     ticketFeatures.forEach((item: any) => {
+    //         if (item.selected > 0) {
+    //             addons_price += parseFloat(item.price);
+    //         }
+    //     });
 
-        let total_price = parseFloat(basePrice) + addons_price;
+    //     let total_price = parseFloat(basePrice) + addons_price;
 
-        addons_price = (Math.round(addons_price * 100) / 100).toFixed(2);
-        total_price = (Math.round(total_price * 100) / 100).toFixed(2);
-        setAddonsPrice(addons_price);
-        setTotalPrice(total_price);
-    }
+    //     addons_price = (Math.round(addons_price * 100) / 100).toFixed(2);
+    //     total_price = (Math.round(total_price * 100) / 100).toFixed(2);
+    //     setAddonsPrice(addons_price);
+    //     setTotalPrice(total_price);
+    // }
 
 
 
@@ -148,29 +148,40 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
         }
     }
 
-    const handleCheckChangeFeature = (event: any) => {
+    const handleCheckChangeAddon = (event: any) => {
         if (event.target.checked) {
-            const newList = ticketFeatures.map((item: any) => {
-                const updatedFeature = {
-                    ...item,
-                    selected: 1
-                }
-                return updatedFeature;
-            });
-            setTicketFeatures(newList);
-            setData('features', newList);
+            setselectMultiAddon(addons);
+            setData('addons', addons);
+            setSelectAllAddons(true);
         } else {
-            const newList = ticketFeatures.map((item: any) => {
-                const updatedFeature = {
-                    ...item,
-                    selected: null
-                }
-                return updatedFeature;
-            });
-            setTicketFeatures(newList);
-            setData('features', newList);
+            setselectMultiAddon([]);
+            setSelectAllAddons(false);
         }
     }
+
+    // const handleCheckChangeFeature = (event: any) => {
+    //     if (event.target.checked) {
+    //         const newList = ticketFeatures.map((item: any) => {
+    //             const updatedFeature = {
+    //                 ...item,
+    //                 selected: 1
+    //             }
+    //             return updatedFeature;
+    //         });
+    //         setTicketFeatures(newList);
+    //         setData('features', newList);
+    //     } else {
+    //         const newList = ticketFeatures.map((item: any) => {
+    //             const updatedFeature = {
+    //                 ...item,
+    //                 selected: null
+    //             }
+    //             return updatedFeature;
+    //         });
+    //         setTicketFeatures(newList);
+    //         setData('features', newList);
+    //     }
+    // }
 
     // Style for Select 2
     const customStyles = {
@@ -218,19 +229,6 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
                                 />
                                 {errors.name && <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>}
                             </FormGroup>
-                            <FormGroup className="mb-3">
-                                <Form.Label>Description</Form.Label>
-                                <Form.Control
-                                    as="textarea"
-                                    type="text"
-                                    rows={5}
-                                    value={data.description}
-                                    onChange={(e) => setData('description', e.target.value)}
-                                    isInvalid={!!errors.description}
-                                />
-                                {errors.description && <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>}
-                            </FormGroup>
-
                         </Col>
                         <Col md={6}>
                             <FormGroup className="mb-3">
@@ -245,23 +243,21 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
                                 />
                                 {errors.base_price && <Form.Control.Feedback type="invalid">{errors.base_price}</Form.Control.Feedback>}
                             </FormGroup>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={12} lg={12}>
                             <FormGroup className="mb-3">
-                                <Form.Label>Addons Price</Form.Label>
+                                <Form.Label>Description</Form.Label>
                                 <Form.Control
-                                    type="number"
-                                    disabled
-                                    value={addonsPrice}
+                                    as="textarea"
+                                    type="text"
+                                    rows={5}
+                                    value={data.description}
+                                    onChange={(e) => setData('description', e.target.value)}
+                                    isInvalid={!!errors.description}
                                 />
-                                {errors.addons_price && <Form.Control.Feedback type="invalid">{errors.addons_price}</Form.Control.Feedback>}
-                            </FormGroup>
-                            <FormGroup className="mb-3">
-                                <Form.Label>Total Ticket Price</Form.Label>
-                                <Form.Control
-                                    type="number"
-                                    disabled
-                                    value={totalPrice}
-                                />
-                                {errors.total_price && <Form.Control.Feedback type="invalid">{errors.total_price}</Form.Control.Feedback>}
+                                {errors.description && <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>}
                             </FormGroup>
                         </Col>
                     </Row>
@@ -350,11 +346,9 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
                             </Row>
                         </Col>
                     </Row>
-                    <hr />
                     <Row>
                         <Col md={3} lg={3} className='d-flex align-items-center'>
                             <FormGroup className="mb-3">
-                                {/* <Form.Label>Sessions</Form.Label> */}
                                 <Form.Check
                                     type='checkbox'
                                     label="Select All Sessions"
@@ -384,50 +378,42 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions }
                             </FormGroup>
                         </Col>
                     </Row>
+
+                    <Row>
+                        <Col md={3} lg={3} className='d-flex align-items-center'>
+                            <FormGroup className="mb-3">
+                                <Form.Check
+                                    type='checkbox'
+                                    label="Select All Addons"
+                                    id="select-all-addons"
+                                    onChange={handleCheckChangeAddon}
+                                />
+                            </FormGroup>
+                        </Col>
+                        <Col md={9} lg={9}>
+                            <FormGroup className="mb-3">
+                                {/* <Form.Label>Sessions</Form.Label> */}
+                                <Select
+                                    placeholder="Select Event Sessions"
+                                    isDisabled={selectAllAddons}
+                                    className={errors.addons && 'is-invalid'}
+                                    value={selectMultiAddon}
+                                    isMulti={true}
+                                    onChange={(list: any) => {
+                                        setselectMultiAddon(list);
+                                        setData('addons', list);
+                                    }}
+                                    options={addons}
+
+                                    classNamePrefix={errors.addons && 'multi-select is-invalid '}
+                                    styles={customStyles}
+                                />
+                                {errors.addons && <Form.Control.Feedback type="invalid">{errors.addons}</Form.Control.Feedback>}
+                            </FormGroup>
+                        </Col>
+                    </Row>
                 </Form>
-                <hr />
-                <Row>
-                    <Col md={3} lg={3} className='d-flex '>
-                        <FormGroup className="mb-3">
-                            <Form.Check
-                                type='checkbox'
-                                label="Select All Features"
-                                id="select-all-features"
-                                onChange={handleCheckChangeFeature}
-                            />
-                        </FormGroup>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col md={12} lg={12}>
-                        {eventLoading && <Spinner animation="border" role="status" size='sm'>
-                            <span className="visually-hidden">Loading...</span>
-                        </Spinner>}
-                        {!eventLoading && <Table striped hover className='table-sm' style={{ maxHeight: '150px', overflowY: 'auto' }}>
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Feature Description</th>
-                                    <th style={{ textAlign: 'center' }}>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody >
-                                {ticketFeatures && ticketFeatures.map((feature: any) =>
-                                    <tr key={feature.id}>
-                                        <td>{feature.id}</td>
-                                        <td style={{ width: '80%' }}>
-                                            <div dangerouslySetInnerHTML={{ __html: feature.name }} />
-                                        </td>
-                                        <td style={{ textAlign: 'center' }}>
-                                            <Button title='Click to add in Ticket' variant='link' className='btn-sm' onClick={() => toggleFeatureSelection(feature)}>
-                                                <i className={'bx bx-check-square fs-5 ' + (feature.selected > 0 ? 'text-success' : 'text-muted')}></i>
-                                            </Button>
-                                        </td>
-                                    </tr>)}
-                            </tbody>
-                        </Table>}
-                    </Col>
-                </Row>
+
                 </Modal.Body>
 
                 <div className="modal-footer">
