@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Welcome to Our System</title>
+    <title>Ticket Purchase Confirmation</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -69,20 +69,20 @@
 
 <body>
     <div class="email-container">
-        <h2>Welcome, {{ $fname }} {{ $lname }}!</h2>
-        <p>We are excited to have you onboard. Below are your login credentials:</p>
+        <h2>Welcome, {{ $attenee->first_name }} {{ $attenee->last_name }}!</h2>
+        <p>You have successfully purchased following tickets:</p>
 
-        <div class="credentials">
+        {{-- <div class="credentials">
             <p><strong>Email:</strong> {{ $email }}</p>
             <p><strong>Password:</strong> {{ $password }}</p>
-        </div>
+        </div> --}}
 
-        <p>You can log in using the credentials above. For security reasons, please change your password after logging
+        {{-- <p>You can log in using the credentials above. For security reasons, please change your password after logging
             in.</p>
 
         <p style="text-align: center;">
             <a href="{{ url('/attendee/' . $event_app_id . '/login') }}" class="btn">Login Now</a>
-        </p>
+        </p> --}}
 
         <div class="footer">
             <p>Best Regards,<br><strong>{{ config('app.name') }}</strong></p>

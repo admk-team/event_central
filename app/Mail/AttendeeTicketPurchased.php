@@ -33,7 +33,7 @@ class AttendeeTicketPurchased extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Ticket Purchased',
+            subject: 'Ticket Purchase Confirmation',
         );
     }
 
