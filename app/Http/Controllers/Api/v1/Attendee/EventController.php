@@ -28,7 +28,7 @@ class EventController extends Controller
 
     public function ticket(EventApp $eventApp)
     {
-        $eventApp->load(['tickets']);
+        $eventApp->load(['public_tickets.sessions', 'public_tickets.addons']);
         return $this->successResponse(new EventResource($eventApp));
     }
 
@@ -48,7 +48,7 @@ class EventController extends Controller
     public function eventsessions(EventApp $eventApp, EventSession $eventSession)
     {
         if ($eventSession->exists) {
-            $eventSession->load(['eventSpeaker', 'eventPlatform']);
+            $eventSession->load(['eventSpeakers', 'eventPlatform']);
             return $this->successResponse(new EventSessionResource($eventSession));
         } else {
             $eventApp->load(['event_sessions.eventSpeakers', 'event_sessions.eventPlatform']);

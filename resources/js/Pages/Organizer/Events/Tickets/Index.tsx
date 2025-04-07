@@ -12,7 +12,7 @@ import moment from "moment";
 
 function Index({ tickets, sessions, addons }: any) {
 
-    console.log('addons', addons);
+    // console.log('addons', addons);
 
     const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
     const [editTicket, setEditTicket] = React.useState<any>(null);
@@ -135,6 +135,10 @@ function Index({ tickets, sessions, addons }: any) {
             header: () => "End Increment",
             cell: (ticket) =>
                 moment(ticket.end_increment).format("DD MMM, YYYY"),
+        },
+        {
+            header: () => "Show To Attendee",
+            cell: (ticket) => ticket.show_on_attendee_side ? 'Yes' : 'No',
         },
         {
             header: () => "Action",

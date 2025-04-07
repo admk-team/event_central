@@ -98,7 +98,7 @@ class EventAppTicketController extends Controller
         if (! Auth::user()->can('delete_tickets')) {
             abort(403);
         }
-        
+
         $ids = $request->get('ids');
         // Log::info($ids);
         $request->validate([

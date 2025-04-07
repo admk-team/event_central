@@ -31,7 +31,7 @@ export default function CheckoutForm({ payment }: any) {
                 redirect: "if_required",
             })
             .then((result) => {
-                console.log(result);
+                console.log('Test Pay', result);
                 if (!result.error) {
                     //Update Purchased Tickets status in database
                     axios

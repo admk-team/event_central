@@ -5,7 +5,7 @@ namespace App\Http\Resources\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class EventTicketResource extends JsonResource
+class PublicTicketResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -26,11 +26,11 @@ class EventTicketResource extends JsonResource
             'increment_type' => $this->increment_type,
             'start_increment' => $this->start_increment,
             'end_increment' => $this->end_increment,
+            'show_on_attendee_side' => $this->show_on_attendee_side,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'selected_sessions' => $this->selected_sessions,
-            'addons' => new EventTicketPromoCodeResource($this->whenLoaded('promoCodes')),
-            'promo_codes' => new EventTicketPromoCodeResource($this->whenLoaded('promoCodes'))
+            'sessions' => $this->sessions ? EventSessionResource::collection($this->whenLoaded('sessions')) : [],
+            'addons' => $this->addons ? AddonResource::collection($this->whenLoaded('addons')) : [],
         ];
     }
 }

@@ -28,8 +28,8 @@ class EventAppTicketRequest extends FormRequest
             'description' => 'required',
             'type' => 'required',
             'base_price' => 'required|numeric',
-            'addons_price' => 'required|numeric',
-            'total_price' => 'required|numeric',
+            // 'addons_price' => 'required|numeric',
+            // 'total_price' => 'required|numeric',
             'sessions' => 'required|array',
             'sessions.*' => 'required|array|min:1',
             'addons' => 'array',
@@ -39,6 +39,7 @@ class EventAppTicketRequest extends FormRequest
             'increment_type' => '',
             'start_increment' => '',
             'end_increment' => '',
+            'show_on_attendee_side' => ''
         ];
     }
 
@@ -55,10 +56,10 @@ class EventAppTicketRequest extends FormRequest
             'type.required' => 'Ticket type is required',
             'base_price.required' => 'Price is required',
             'base_price.numeric' => 'Price must be numeric',
-            'addons_price.required' => 'Price is required',
-            'addons_price.numeric' => 'Price must be numeric',
-            'total_price.required' => 'Price is required',
-            'total_price.numeric' => 'Price must be numeric',
+            // 'addons_price.required' => 'Price is required',
+            // 'addons_price.numeric' => 'Price must be numeric',
+            // 'total_price.required' => 'Price is required',
+            // 'total_price.numeric' => 'Price must be numeric',
             'sessions.required' => 'Event Session is required',
             'sessions.*.required' => 'At least one session is required',
             // 'increment_by.numeric' => 'Increment by must be numeric',

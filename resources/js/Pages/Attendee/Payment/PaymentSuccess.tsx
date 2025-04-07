@@ -1,12 +1,14 @@
-import { Head } from "@inertiajs/react";
-import React from "react";
-import Layout from "../../../Layouts/Attendee";
-import { Button, Col, Container, Row, Card, CardBody } from "react-bootstrap";
+"use client"
+
+import { Head } from "@inertiajs/react"
+import React from "react"
+import Layout from "../../../Layouts/Attendee"
+import { Card, CardBody, Col, Container, Row } from "react-bootstrap"
 
 const PaymentSuccess = () => {
     return (
         <React.Fragment>
-            <Head title="Payment Successful" />
+            <Head title="Attendee Pass" />
             <section className="section bg-light mt-4" id="success">
                 <div className="bg-overlay bg-overlay-pattern"></div>
                 <Container>
@@ -39,7 +41,9 @@ const PaymentSuccess = () => {
                 </Container>
             </section>
         </React.Fragment>
-    );
-};
-PaymentSuccess.layout = (page: any) => <Layout children={page} />;
-export default PaymentSuccess;
+    )
+}
+
+PaymentSuccess.layout = (page) => <Layout children={page} />
+export default PaymentSuccess
+

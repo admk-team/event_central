@@ -27,9 +27,6 @@
             </div>
             <div class="qrWrapper">
                 <div>
-                    <img class="attendee-avatar-img" src="{{ $attendee->avatar_img }}" alt="attendee avatar">
-                </div>
-                <div>
                     <img class="qr-code-img" src="{{ Storage::url('public/qr-codes/' . $attendee->id . '.png') }}"
                         alt="qr code">
                 </div>

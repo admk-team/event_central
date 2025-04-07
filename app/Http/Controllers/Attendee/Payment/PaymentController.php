@@ -2,25 +2,26 @@
 
 namespace App\Http\Controllers\Attendee\Payment;
 
-use App\Http\Controllers\Controller;
+use Exception;
+use Inertia\Inertia;
 use App\Models\Addon;
-use App\Models\Attendee;
-use App\Models\AttendeePayment;
-use App\Models\AttendeePurchasedTickets;
 use App\Models\EventApp;
-use App\Models\EventAppTicket;
 use App\Models\PromoCode;
-use App\Models\TicketFeature;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use chillerlan\QRCode\QRCode;
+use App\Models\EventAppTicket;
+use App\Models\TransferTicket;
+use App\Models\AttendeePayment;
 use App\Services\PayPalService;
 use App\Services\StripeService;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Exception;
+use chillerlan\QRCode\QROptions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
-
-use function PHPSTORM_META\map;
+use App\Http\Controllers\Controller;
+use chillerlan\QRCode\Common\EccLevel;
+use Illuminate\Support\Facades\Storage;
+use App\Models\AttendeePurchasedTickets;
 
 class PaymentController extends Controller
 {
@@ -43,34 +44,10 @@ class PaymentController extends Controller
     public function viewTickets()
     {
         $eventApp =  EventApp::find(auth()->user()->event_app_id);
-        $eventApp->load(['tickets.sessions', 'tickets.addons']);
+        $eventApp->load(['public_tickets.sessions', 'public_tickets.addons']);
+        // return $eventApp;
         return Inertia::render('Attendee/Tickets/Index', compact(['eventApp']));
     }
-
-    // public function postTickets(Request $request)
-    // {
-    //     // Log::info($request->all());
-    //     $eventApp =  EventApp::find(auth()->user()->event_app_id);
-    //     $amount = $request->get('grandTotalAmount');
-    //     $tickets = $request->get('tickets');
-    //     $stripe_pub_key = $this->stripe_service->StripKeys()->stripe_publishable_key;
-    //     $paypal_client_id = $this->paypal_service->payPalKeys()->paypal_pub;
-
-    //     // Check if organizer of current Event [attendee->event_app_id]
-    //     //have setup strip keys in setting
-
-    //     if ($stripe_pub_key && $this->stripe_service->StripKeys()->stripe_secret_key) {
-    //         return Inertia::render('Attendee/Payment/Index', compact([
-    //             'eventApp',
-    //             'amount',
-    //             'tickets',
-    //             'stripe_pub_key',
-    //             'paypal_client_id'
-    //         ]));
-    //     } else {
-    //         return Inertia::render('Attendee/Payment/NoPaymentKeys');
-    //     }
-    // }
 
     // PayPal Payment
     //==================================================================================
@@ -165,10 +142,8 @@ class PaymentController extends Controller
 
     public function paymentSuccess($paymentUuId)
     {
-        $eventApp =  EventApp::find(auth()->user()->event_app_id);
         return Inertia::render(
-            'Attendee/Payment/PaymentSuccess',
-            compact(['eventApp'])
+            'Attendee/Payment/PaymentSuccess'
         );
     }
 
@@ -184,7 +159,7 @@ class PaymentController extends Controller
         if (!$payment) {
             throw new Exception('Payment object not found with uuid ' . $paymentUuId);
         }
-
+        $this->purchasedTickets();
         DB::beginTransaction();
         try {
             $payment->status = 'paid';
@@ -245,5 +220,91 @@ class PaymentController extends Controller
         } else {
             throw new Exception('Invalid Code');
         }
+    }
+
+    public function purchasedTickets()
+    {
+
+        $event = null;
+        $attendee = auth()->user();
+        $attendee->load('payments');
+        if (count($attendee->payments)) {
+            $payment = $attendee->payments[0];
+            $event = EventApp::find($payment->event_app_id);
+
+            // $qrData .= "payment_id : " . $payment->id . "\n";
+            // $qrData .= "event_uuid : " . $event->uuid . "\n";
+            // $qrData .= "Event Name : " . $event->name . "\n";
+            // $qrData .= "Start Date : " . $event->start_date . "\n";
+            // $qrData .= "End Date : " . $event->end_date . "\n";
+            // $qrData .= "Amount Paid : " . $payment->amount_paid . "\n";
+            // $qrData .= "\n";
+            // $qrData .= "Tickets: " . "\n";
+            foreach ($payment->purchased_tickets as $ticket_purchased) {
+                $purchasedticket = AttendeePurchasedTickets::find($ticket_purchased->id);
+                $code = $purchasedticket->generateUniqueKey();
+                $qrData = env('APP_URL') . '/attendee-pass/' . $code;
+
+                $options = new QROptions([
+                    // 'version' => 5,
+                    'eccLevel' => EccLevel::L,
+                    'scale' => 5,
+                    'outputType' => QRCode::OUTPUT_IMAGE_PNG,
+                    'imageBase64' => false,
+                ]);
+
+                $qrcode = new QRCode($options);
+
+                // Clear any buffer to avoid output issues
+                if (ob_get_length()) {
+                    ob_end_clean();
+                }
+
+                Storage::put('public/qr-codes/' . $code . '.png', $qrcode->render(
+                    $qrData
+                ));
+
+                $purchasedticket->update([
+                    'qr_code' => 'qr-codes/' . $code . '.png',
+                    'code' => $code
+                ]);
+            }
+
+            return $payment->purchased_tickets;
+        }
+    }
+
+    public function attendeeTickets()
+    {
+        $event = null;
+        $attendee = auth()->user();
+        $attendee->load('payments');
+        $payment = $attendee->payments[0];
+        $eventApp = EventApp::find($payment->event_app_id);
+        $image = [];
+        foreach ($payment->purchased_tickets as $purchasedTicket) {
+            $image[] = [
+                'qr_code' => asset('Storage/' . $purchasedTicket->qr_code),
+                'purchased_id' => $purchasedTicket->id,
+            ];
+        }
+        return Inertia::render('Attendee/Tickets/PurchasedTickets', compact(['eventApp', 'image']));
+    }
+
+    public function submitTicketTransfer(Request $request)
+    {
+        $emails = $request->input('emails');
+        foreach ($emails as $index => $email) {
+            if ($email) {
+                $transferTicket = TransferTicket::create([
+                    'attendee_id' => auth()->user()->id,
+                    'attendee_payment_id' => $index,
+                    'event_app_id' => auth()->user()->event_app_id,
+                    'transfer_email' => $email,
+                ]);
+            }
+        }
+
+        return redirect()->back()->with('success', 'Emails submitted successfully!');
     }
 }
