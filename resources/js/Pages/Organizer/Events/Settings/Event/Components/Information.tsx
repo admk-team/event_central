@@ -14,7 +14,8 @@ export default function Information() {
         _method: 'PUT',
         logo: event.logo_img,
         name: event.name,
-        description: event.description,
+        tagline: event.tagline ?? '',
+        description: event.description ?? '',
         location_base: event.location_base,
         registration_private: event?.registration_private ?? 0,
         registration_link: event?.registration_link ?? '',
@@ -22,7 +23,6 @@ export default function Information() {
 
     const submit: React.FormEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
-        console.log(data);
         post(route('organizer.events.settings.event.info'));
     }
 
@@ -144,6 +144,19 @@ export default function Information() {
                         />
                         {errors.name && (
                             <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
+                        )}
+                    </FormGroup>
+                    <FormGroup className="mb-3">
+                        <Form.Label className="form-label">Event Tagline</Form.Label>
+                        <Form.Control
+                            type="text"
+                            className="form-control"
+                            value={data.tagline}
+                            onChange={(e) => setData({ ...data, tagline: e.target.value })}
+                            isInvalid={!!errors.tagline}
+                        />
+                        {errors.tagline && (
+                            <Form.Control.Feedback type="invalid">{errors.tagline}</Form.Control.Feedback>
                         )}
                     </FormGroup>
                     <FormGroup className="mb-3">

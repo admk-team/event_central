@@ -18,9 +18,9 @@
             </div>
             <h1 class="event-title">{{ $event->name }} <span
                     class="highlight">{{ date('Y', strtotime($event->dates[0]->date)) }}</span></h1>
-            <p class="event-tagline">{{ Str::substr($event->description, 0, 120) }}
-                {{ strlen($event->description) > 120 ? '...' : '' }}
-            </p>
+            @isset($event->tagline)
+                <p class="event-tagline">{{ $event->tagline }}</p>
+            @endisset
             <div class="hero-cta">
                 <a href="{{ route('attendee.register', $event) }}" class="btn btn-primary btn-lg">Secure Your
                     Spot</a>
@@ -131,34 +131,34 @@
     </div>
 </section>
 
-@if (strlen($event->description) > 120)
-<section id="about" class="about">
-    <div class="container">
-        <div class="section-header">
-            <span class="section-tag">About the Event</span>
-            <h2 class="section-title">{{ $event->name }}</h2>
-            {{-- <p class="section-subtitle">Join us for three days of learning, networking, and inspiration</p> --}}
-        </div>
-        <div class="about-content">
-            <div class="about-text">
-                {{ $event->description }}
+@isset($event->description)
+    <section id="about" class="about">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">About the Event</span>
+                <h2 class="section-title">{{ $event->name }}</h2>
+                {{-- <p class="section-subtitle">Join us for three days of learning, networking, and inspiration</p> --}}
             </div>
-            <div class="about-video">
-                <div class="video-wrapper">
-                    <img src="{{ $event->images[0]->image_url ?? '' }}" alt="{{ $event->name }}">
-                    {{-- <button class="play-button" aria-label="Play video">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                            stroke-linecap="round" stroke-linejoin="round">
-                                            <circle cx="12" cy="12" r="10"></circle>
-                                            <polygon points="10 8 16 12 10 16 10 8"></polygon>
-                                        </svg>
-                                    </button> --}}
+            <div class="about-content">
+                <div class="about-text">
+                    {{ $event->description }}
+                </div>
+                <div class="about-video">
+                    <div class="video-wrapper">
+                        <img src="{{ $event->images[0]->image_url ?? '' }}" alt="{{ $event->name }}">
+                        {{-- <button class="play-button" aria-label="Play video">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                                stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="12" cy="12" r="10"></circle>
+                                                <polygon points="10 8 16 12 10 16 10 8"></polygon>
+                                            </svg>
+                                        </button> --}}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 @endif
 
 <section id="venue" class="venue">
