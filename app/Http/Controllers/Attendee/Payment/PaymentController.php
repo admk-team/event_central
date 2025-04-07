@@ -246,4 +246,12 @@ class PaymentController extends Controller
             throw new Exception('Invalid Code');
         }
     }
+
+    // view all purchased tickets 
+    public function purchasedTickets()
+    {
+        $eventApp =  EventApp::find(auth()->user()->event_app_id);
+        $tickets = AttendeePayment::where('event_app_id', $eventApp->id)->where('attendee_id', auth()->user()->id)->with('purchased_tickets.ticket')->get();
+        return Inertia::render('Attendee/Tickets/PurchaseTickets', compact(['eventApp','tickets']));
+    }
 }

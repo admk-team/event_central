@@ -18,13 +18,12 @@ class EventTicketsController extends Controller
             ->join('attendee_purchased_tickets', 'attendee_payments.id', '=', 'attendee_purchased_tickets.attendee_payment_id')
             ->join('event_app_tickets', 'attendee_purchased_tickets.event_app_ticket_id', '=', 'event_app_tickets.id')
             ->where('attendee_payments.event_app_id', session('event_id'))
-            ->where('attendee_payments.status','paid')
             ->select(
                 'event_app_tickets.name as ticket_name',
                 'attendee_purchased_tickets.total as total',
                 'attendee_payments.amount_paid as amount',
                 'attendee_payments.payment_method as type',
-                'attendee_payments.discount as discount',
+                'attendee_purchased_tickets.discount as discount',
                 'attendee_purchased_tickets.qty as qty',
             )->get();
         return Inertia::render('Organizer/Events/Tickets/EventAppTickets', compact(['tickets']));
