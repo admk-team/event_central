@@ -2,25 +2,25 @@
 
 namespace App\Http\Controllers\Attendee\Payment;
 
-use App\Http\Controllers\Controller;
+use Exception;
+use Inertia\Inertia;
 use App\Models\Addon;
-use App\Models\Attendee;
-use App\Models\AttendeePayment;
-use App\Models\AttendeePurchasedTickets;
 use App\Models\EventApp;
-use App\Models\EventAppTicket;
 use App\Models\PromoCode;
-use App\Models\TicketFeature;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
+use chillerlan\QRCode\QRCode;
+use App\Models\EventAppTicket;
+use App\Models\AttendeePayment;
 use App\Services\PayPalService;
 use App\Services\StripeService;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
-use Exception;
+use chillerlan\QRCode\QROptions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
-
-use function PHPSTORM_META\map;
+use App\Http\Controllers\Controller;
+use chillerlan\QRCode\Common\EccLevel;
+use Illuminate\Support\Facades\Storage;
+use App\Models\AttendeePurchasedTickets;
 
 class PaymentController extends Controller
 {
@@ -142,9 +142,16 @@ class PaymentController extends Controller
     public function paymentSuccess($paymentUuId)
     {
         $eventApp =  EventApp::find(auth()->user()->event_app_id);
+        $payment = $this->purchasedTickets();
+        $image = [];
+        foreach ($payment as $purchasedTicket) {
+            $image[] = [
+                'qr_code' => asset('Storage/' . $purchasedTicket->qr_code),
+            ];
+        }
         return Inertia::render(
             'Attendee/Payment/PaymentSuccess',
-            compact(['eventApp'])
+            compact(['eventApp', 'image'])
         );
     }
 
@@ -220,6 +227,58 @@ class PaymentController extends Controller
             return response()->json(['code' => $code]);
         } else {
             throw new Exception('Invalid Code');
+        }
+    }
+
+    public function purchasedTickets()
+    {
+
+        $event = null;
+        $attendee = auth()->user();
+        $attendee->load('payments');
+        if (count($attendee->payments)) {
+            $payment = $attendee->payments[0];
+            $event = EventApp::find($payment->event_app_id);
+
+            // $qrData .= "payment_id : " . $payment->id . "\n";
+            // $qrData .= "event_uuid : " . $event->uuid . "\n";
+            // $qrData .= "Event Name : " . $event->name . "\n";
+            // $qrData .= "Start Date : " . $event->start_date . "\n";
+            // $qrData .= "End Date : " . $event->end_date . "\n";
+            // $qrData .= "Amount Paid : " . $payment->amount_paid . "\n";
+            // $qrData .= "\n";
+            // $qrData .= "Tickets: " . "\n";
+            foreach ($payment->purchased_tickets as $ticket_purchased) {
+                $purchasedticket = AttendeePurchasedTickets::find($ticket_purchased->id);
+                $code = $purchasedticket->generateUniqueKey();
+                $qrData = env('APP_URL') . '/attendee-pass/' . $code;
+
+                $options = new QROptions([
+                    // 'version' => 5,
+                    'eccLevel' => EccLevel::L,
+                    'scale' => 5,
+                    'outputType' => QRCode::OUTPUT_IMAGE_PNG,
+                    'imageBase64' => false,
+                ]);
+
+                $qrcode = new QRCode($options);
+
+                // Clear any buffer to avoid output issues
+                if (ob_get_length()) {
+                    ob_end_clean();
+                }
+
+                Storage::put('public/qr-codes/' . $code . '.png', $qrcode->render(
+                    $qrData
+                ));
+
+                $purchasedticket->update([
+                    'qr_code' => 'qr-codes/' . $code . '.png',
+                    'code' => $code
+                ]);
+            }
+
+            return $payment->purchased_tickets;
         }
     }
 }
