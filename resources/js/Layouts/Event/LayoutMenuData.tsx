@@ -1,5 +1,7 @@
 import { usePage } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
+import HasAnyPermission from "../../Components/HasAnyPermission";
+import HasPermission from "../../Components/HasPermission";
 
 const Navdata = () => {
     const currentEvent = usePage().props.currentEvent as any;
@@ -64,10 +66,6 @@ const Navdata = () => {
 
     const menuItems: any = [
         {
-            label: "Menu",
-            isHeader: true,
-        },
-        {
             id: "dashboard",
             label: "Dashboard",
             icon: "bx bxs-dashboard",
@@ -78,7 +76,10 @@ const Navdata = () => {
                 setIsDashboard(!isDashboard);
                 setIscurrentState('Dashboard');
                 updateIconSidebar(e);
-            }
+            },
+            hasPermissions: [
+                'view_event_dashboard',
+            ],
         },
         {
             id: "attendees",
@@ -92,6 +93,9 @@ const Navdata = () => {
                 setIscurrentState('Event');
                 updateIconSidebar(e);
             },
+            hasPermissions: [
+                'edit_events',
+            ],
         },
         {
             id: "Content",
@@ -105,13 +109,67 @@ const Navdata = () => {
                 setIscurrentState('Content');
                 updateIconSidebar(e);
             },
+            HasAnyPermission: [
+                'view_event_sessions',
+                'view_speakers',
+                'view_partner',
+                'view_tickets',
+            ],
             subItems: [
-                { id: "schedule", label: "Schedule", link: route('organizer.events.schedule.index'), parentId: "Content" },
-                { id: "speakers", label: "Speakers", link: route('organizer.events.speaker.index'), parentId: "Content" },
-                { id: "partners", label: "Partners", link: route('organizer.events.partner.index'), parentId: "Content" },
-                { id: "tickets", label: "Tickets", link: route('organizer.events.tickets.index'), parentId: "Content" },
-                { id: "ticket-addons", label: "Ticket Add-ons", link: route('organizer.events.addon.index'), parentId: "Content" },
-                { id: "promo-codes", label: "Promo Codes", link: route('organizer.events.promo-codes.index'), parentId: "Content" },
+                { 
+                    id: "schedule", 
+                    label: "Schedule", 
+                    link: route('organizer.events.schedule.index'), 
+                    parentId: "Content",
+                    hasPermissions: [
+                        'view_event_sessions',
+                    ],
+                },
+                { 
+                    id: "speakers", 
+                    label: "Speakers", 
+                    link: route('organizer.events.speaker.index'), 
+                    parentId: "Content",
+                    hasPermissions: [
+                        'view_speakers',
+                    ],
+                },
+                { 
+                    id: "partners", 
+                    label: "Partners", 
+                    link: route('organizer.events.partner.index'), 
+                    parentId: "Content",
+                    hasPermissions: [
+                        'view_partner',
+                    ],
+                },
+                { 
+                    id: "tickets", 
+                    label: "Tickets", 
+                    link: route('organizer.events.tickets.index'), 
+                    parentId: "Content",
+                    hasPermissions: [
+                        'view_tickets',
+                    ],
+                },
+                { 
+                    id: "ticket-addons", 
+                    label: "Ticket Add-ons", 
+                    link: route('organizer.events.addon.index'), 
+                    parentId: "Content",
+                    hasPermissions: [
+                        'view_tickets',
+                    ], 
+                },
+                { 
+                    id: "promo-codes", 
+                    label: "Promo Codes", 
+                    link: route('organizer.events.promo-codes.index'), 
+                    parentId: "Content",
+                    hasPermissions: [
+                        'view_tickets',
+                    ], 
+                },
             ]
         },
         {
@@ -126,8 +184,19 @@ const Navdata = () => {
                 setIscurrentState('engagement');
                 updateIconSidebar(e);
             },
+            hasAnyPermission: [
+                'view_posts',
+            ],
             subItems: [
-                { id: "newsfeed", label: "Posts", link: route('organizer.events.engagement.newsfeed.index'), parentId: "dashboard" }
+                { 
+                    id: "newsfeed", 
+                    label: "Posts", 
+                    link: route('organizer.events.engagement.newsfeed.index'), 
+                    parentId: "dashboard",
+                    hasPermissions: [
+                        'view_posts'
+                    ],
+                }
             ]
         },
         {
@@ -142,6 +211,9 @@ const Navdata = () => {
                 setIscurrentState('users');
                 updateIconSidebar(e);
             },
+            hasPermissions: [
+                'view_attendees'
+            ],
         },
         {
             id: "registrationForm",
@@ -155,6 +227,9 @@ const Navdata = () => {
                 setIscurrentState('registrationForm');
                 updateIconSidebar(e);
             },
+            hasPermissions: [
+                'edit_registration_form'
+            ],
         },
         ...(isEventStarted ? [{
             id: "sessionAttendance",
@@ -168,6 +243,9 @@ const Navdata = () => {
                 setIscurrentState('sessionAttendance');
                 updateIconSidebar(e);
             },
+            hasPermissions: [
+                'view_session_attendence'
+            ],
         }] : []),
         {
             id: "website",
@@ -181,6 +259,9 @@ const Navdata = () => {
                 setIscurrentState('website');
                 updateIconSidebar(e);
             },
+            hasPermissions: [
+                'view_website'
+            ],
         },
         {
             id: "payemntSettings",
@@ -194,6 +275,9 @@ const Navdata = () => {
                 setIscurrentState('payemntSettings');
                 updateIconSidebar(e);
             },
+            hasPermissions: [
+                'edit_payment_settings'
+            ],
         },
     ];
 

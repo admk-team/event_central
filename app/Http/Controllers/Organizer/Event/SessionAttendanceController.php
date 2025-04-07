@@ -7,13 +7,20 @@ use Illuminate\Http\Request;
 use App\Models\Attendee;
 use App\Models\AttendeeAttendance;
 use App\Models\EventSession;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class SessionAttendanceController extends Controller
 {
     public function index(Request $request)
     {
-        $eventSessions = EventSession::currentEvent()->get(); // Fetch all sessions for the current event
+        if (! Auth::user()->can('view_session_attendence')) {
+            abort(403);
+        }
+
+        $eventSessions = EventSession::currentEvent() // Fetch all sessions for the current event
+            ->whereCanBeAccessedBy(Auth::user())
+            ->get();
         $attendance = $this->datatable(AttendeeAttendance::with(['session', 'attendee']) // Eager load 
             ->currentEvent()); // Replace datatable with standard query
         if ($request->has('session_id') && !empty($request->session_id)) {
@@ -36,6 +43,10 @@ class SessionAttendanceController extends Controller
 
     public function destroy($id)
     {
+        if (! Auth::user()->can('delete_session_attendence')) {
+            abort(403);
+        }
+
         $speaker = AttendeeAttendance::findorFail($id);
         $speaker->delete();
         return back()->withSuccess('Deleted successfully');
@@ -43,9 +54,14 @@ class SessionAttendanceController extends Controller
 
     public function destroyMany(Request $request)
     {
+        if (! Auth::user()->can('delete_session_attendence')) {
+            abort(403);
+        }
+
         $request->validate([
             'ids' => 'required|Array'
         ]);
+        
         foreach ($request->ids as $id) {
             AttendeeAttendance::find($id)->delete();
         }

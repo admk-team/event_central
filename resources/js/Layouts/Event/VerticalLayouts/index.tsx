@@ -8,6 +8,7 @@ import { withTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { createSelector } from 'reselect';
 import { Link } from '@inertiajs/react';
+import NavItemHasPermission from '../../../Components/NavItemHasPermission';
 
 const VerticalLayout = (props: any) => {
     const navData = navdata().props.children;
@@ -148,7 +149,7 @@ const VerticalLayout = (props: any) => {
             {/* menu Items */}
             {(navData || []).map((item: any, key: number) => {
                 return (
-                    <React.Fragment key={key}>
+                    <NavItemHasPermission key={key} item={item}>
                         {/* Main Header */}
                         {item['isHeader'] ?
                             <li className="menu-title"><span data-key="t-menu">{props.t(item.label)} </span></li>
@@ -175,7 +176,7 @@ const VerticalLayout = (props: any) => {
                                                 <ul className="nav nav-sm flex-column test">
                                                     {/* subItms  */}
                                                     {item.subItems && ((item.subItems || []).map((subItem: any, key: number) => (
-                                                        <React.Fragment key={key}>
+                                                        <NavItemHasPermission key={key} item={subItem}>
                                                             {!subItem.isChildItem ? (
                                                                 <li className="nav-item">
                                                                     <Link
@@ -207,7 +208,7 @@ const VerticalLayout = (props: any) => {
                                                                                 {/* child subItms  */}
                                                                                 {subItem.childItems && (
                                                                                     (subItem.childItems || []).map((childItem: any, key: number) => (
-                                                                                        <React.Fragment key={key}>
+                                                                                        <NavItemHasPermission key={key} item={childItem}>
                                                                                             {!childItem.childItems ?
                                                                                                 <li className="nav-item">
                                                                                                     <Link
@@ -224,16 +225,18 @@ const VerticalLayout = (props: any) => {
                                                                                                         <div>
                                                                                                             <ul className="nav nav-sm flex-column">
                                                                                                                 {childItem.childItems.map((subChildItem: any, key: number) => (
-                                                                                                                    <li className="nav-item" key={key}>
-                                                                                                                        <Link href={subChildItem.link} className="nav-link" data-key="t-basic-action">{props.t(subChildItem.label)} </Link>
-                                                                                                                    </li>
+                                                                                                                    <NavItemHasPermission key={key} item={subChildItem}>
+                                                                                                                        <li className="nav-item">
+                                                                                                                            <Link href={subChildItem.link} className="nav-link" data-key="t-basic-action">{props.t(subChildItem.label)} </Link>
+                                                                                                                        </li>
+                                                                                                                    </NavItemHasPermission>
                                                                                                                 ))}
                                                                                                             </ul>
                                                                                                         </div>
                                                                                                     </Collapse>
                                                                                                 </li>
                                                                                             }
-                                                                                        </React.Fragment>
+                                                                                        </NavItemHasPermission>
                                                                                     ))
                                                                                 )}
                                                                             </ul>
@@ -241,7 +244,7 @@ const VerticalLayout = (props: any) => {
                                                                     </Collapse>
                                                                 </li>
                                                             )}
-                                                        </React.Fragment>
+                                                        </NavItemHasPermission>
                                                     ))
                                                     )}
                                                 </ul>
@@ -263,7 +266,7 @@ const VerticalLayout = (props: any) => {
                                 ))
                             )
                         }
-                    </React.Fragment>
+                    </NavItemHasPermission>
                 );
             })}
         </React.Fragment>
