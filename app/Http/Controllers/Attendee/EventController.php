@@ -7,6 +7,7 @@ use App\Models\EventApp;
 use App\Models\EventSession;
 use App\Models\EventPost;
 use App\Models\EventSpeaker;
+use App\Models\SessionCheckIn;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,7 +29,7 @@ class EventController extends Controller
     {
         $eventApp = EventApp::find(Auth::user()->event_app_id);
         $eventApp->load([
-            'event_sessions.eventSpeakers', // Updated to plural 'eventSpeakers'
+            'event_sessions.eventSpeakers',
             'event_sessions.eventPlatform'
         ]);
 
@@ -37,6 +38,7 @@ class EventController extends Controller
 
     public function getEventSessionDetail(Request $request, EventSession $eventSession)
     {
+        $checkin = SessionCheckIn::where('attendee_id',auth()->user()->id)->where('session_id',$eventSession->id)->exists();
         $eventApp = EventApp::find(Auth::user()->event_app_id);
 
         // Finding previous and next session IDs with reference to current session
@@ -69,6 +71,7 @@ class EventController extends Controller
             'selectedSessionDetails',
             'prev_session_id',
             'next_session_id',
+            'checkin',
         ]));
     }
 
@@ -96,10 +99,11 @@ class EventController extends Controller
         return Inertia::render('Attendee/AttendeeMore', compact(['eventApp']));
     }
 
-    public function getPostsMore()
+    public function getPostsMore(String $id)
     {
+        $attendee= Auth::user()->id;
         $eventApp = EventApp::find(Auth::user()->event_app_id);
-        $newsfeeds = EventPost::where('event_app_id', $eventApp->id)->get();
-        return Inertia::render('Attendee/Posts/Index', compact(['eventApp', 'newsfeeds']));
+        $newsfeeds = EventPost::where('event_app_id', $eventApp->id)->where('session_id',$id)->get();
+        return Inertia::render('Attendee/Posts/Index', compact(['eventApp', 'newsfeeds','attendee']));
     }
 }

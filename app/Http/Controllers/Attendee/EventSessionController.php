@@ -4,9 +4,14 @@ namespace App\Http\Controllers\Attendee;
 
 use App\Http\Controllers\Controller;
 use App\Models\EventSession;
+use App\Models\SessionCheckIn;
+use App\Models\Att;
+use App\Models\Attendee;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
+
 class EventSessionController extends Controller
 {
     public function saveSession(Request $request, EventSession $eventSession, $type)
@@ -34,5 +39,22 @@ class EventSessionController extends Controller
         })->update(['rating' => $data['rating'], 'rating_description' => $data['rating_description']]);
 
         return back()->withSuccess("Rating saved successfully");
+    }
+
+    public function saveCheckIn(Request $request, EventSession $eventSession)
+    {
+
+        $payment = SessionCheckIn::where('attendee_id', auth()->user()->id)->where('session_id', $eventSession->id)->first();
+        if ($payment) {
+            return back()->withSuccess("Already Check In");
+        } else {
+            SessionCheckIn::create([
+                'attendee_id' => auth()->user()->id,
+                'session_id' => $eventSession->id,
+                'checked_in' => Carbon::now()->toDateTimeString(),
+                'qr_code' => auth()->user()->qr_code
+            ]);
+            return back()->withSuccess("Check In Successfully");
+        }
     }
 }
