@@ -296,11 +296,18 @@ class PaymentController extends Controller
 
     public function attendeeTickets()
     {
-        $event = null;
         $attendee = auth()->user();
         $attendee->load('payments');
+
+        if ($attendee->payments->isEmpty()) {
+            return Inertia::render('Attendee/Tickets/PurchasedTickets', [
+                'hasTickets' => false,
+            ]);
+        }
+
         $payment = $attendee->payments[0];
         $eventApp = EventApp::find($payment->event_app_id);
+
         $image = [];
         foreach ($payment->purchased_tickets as $purchasedTicket) {
             $image[] = [
@@ -308,8 +315,15 @@ class PaymentController extends Controller
                 'purchased_id' => $purchasedTicket->id,
             ];
         }
-        return Inertia::render('Attendee/Tickets/PurchasedTickets', compact(['eventApp', 'image']));
+
+        return Inertia::render('Attendee/Tickets/PurchasedTickets', [
+            'eventApp' => $eventApp,
+            'attendee' => $attendee,
+            'image' => $image,
+            'hasTickets' => true,
+        ]);
     }
+
 
     public function submitTicketTransfer(Request $request)
     {
