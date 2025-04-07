@@ -20,9 +20,9 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions, 
         description: ticket?.description ?? '',
         type: 'NORMAL',
 
-        base_price: ticket?.base_price ?? 0,
-        addons_price: ticket?.addons_price ?? 0,
-        total_price: ticket?.total_price ?? 0,
+        base_price: ticket?.base_price ?? '',
+        // addons_price: ticket?.addons_price ?? 0,
+        // total_price: ticket?.total_price ?? 0,
 
         increment_by: ticket?.increment_by ?? '',
         increment_rate: ticket?.increment_rate ?? '',
@@ -41,9 +41,9 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions, 
     const [ticketFeatures, setTicketFeatures] = useState<any>([]);
     const [eventLoading, setEventLoading] = useState<any>(false);
 
-    const [basePrice, setBasePrice] = useState(ticket?.base_price ?? 0);
-    const [addonsPrice, setAddonsPrice] = useState(ticket?.addons_price ?? 0);
-    const [totalPrice, setTotalPrice] = useState(ticket?.total_price ?? 0);
+    //const [basePrice, setBasePrice] = useState(ticket?.base_price ?? 0);
+    // const [addonsPrice, setAddonsPrice] = useState(ticket?.addons_price ?? 0);
+    // const [totalPrice, setTotalPrice] = useState(ticket?.total_price ?? 0);
 
     const submit = (e: any) => {
         e.preventDefault();
@@ -148,10 +148,8 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions, 
                                 <Form.Label>Base Price</Form.Label>
                                 <Form.Control
                                     type="number"
-                                    value={basePrice}
-                                    onChange={(e) => {
-                                        setBasePrice(e.target.value.length > 0 ? e.target.value : 0)
-                                    }}
+                                    value={data.base_price}
+                                    onChange={(e) => setData('base_price', e.target.value)}
                                     isInvalid={!!errors.base_price}
                                 />
                                 {errors.base_price && <Form.Control.Feedback type="invalid">{errors.base_price}</Form.Control.Feedback>}
