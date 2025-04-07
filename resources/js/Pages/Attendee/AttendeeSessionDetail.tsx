@@ -352,7 +352,7 @@ const AttendeeSessionDetail = ({
                                                 )}
                                             </Accordion.Body>
                                         </Accordion.Item>
-                                        <Accordion.Item eventKey="1">
+                                        {/* <Accordion.Item eventKey="1">
                                             <Accordion.Header>
                                                 <h6>Check In</h6>
                                             </Accordion.Header>
@@ -406,7 +406,7 @@ const AttendeeSessionDetail = ({
                                                     // )
                                                 }
                                             </Accordion.Body>
-                                        </Accordion.Item>
+                                        </Accordion.Item> */}
                                     </Accordion>
                                 </Col>
                             </Row>

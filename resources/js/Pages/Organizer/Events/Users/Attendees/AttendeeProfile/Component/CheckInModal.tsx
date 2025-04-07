@@ -45,6 +45,14 @@ const CheckInModal = ({ show, onHide, attendee, puchaseSession }: any) => {
                                     hour: '2-digit',
                                     minute: '2-digit',
                                 });
+                            const formatEndDateTime = (date: Date) =>
+                                date.toLocaleString(undefined, {
+                                    // year: 'numeric',
+                                    // month: 'short',
+                                    // day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                });
 
                             return (
                                 <option
@@ -52,7 +60,7 @@ const CheckInModal = ({ show, onHide, attendee, puchaseSession }: any) => {
                                     value={session.id}
                                     disabled={!isDisabled}
                                 >
-                                    {session.name} — ({formatDateTime(startDateTime)} to {formatDateTime(endDateTime)})
+                                    {session.name} — ({formatDateTime(startDateTime)} to {formatEndDateTime(endDateTime)})
                                 </option>
                             );
                         })}

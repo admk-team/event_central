@@ -10,7 +10,6 @@ import EventSessionsTimeLine from './common/EventSessionsTimeLine';
 
 const AttendeeAgenda = ({ eventApp }: any) => {
 
-    console.log(eventApp);
     return (
         <React.Fragment>
             <Head title="Event Program" />
