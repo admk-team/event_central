@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\ProfileController;
+use App\Mail\AttendeeTicketPurchased;
+use App\Models\Attendee;
+use App\Models\AttendeePurchasedTickets;
 use Illuminate\Support\Facades\Route;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Inertia\Inertia;
@@ -13,6 +16,7 @@ use BaconQrCode\Renderer\Image\SvgImageBackEnd;
 use BaconQrCode\Renderer\PlainTextRenderer;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 use BaconQrCode\Writer;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 /*
@@ -81,6 +85,23 @@ require __DIR__ . '/organizer.php';
 require __DIR__ . '/theme.php';
 
 require __DIR__ . '/attendee.php';
+
+
+
+Route::get('/send-test-email', function () {
+
+    $attendee = Attendee::find(1);
+    $attendee->load('payments.purchased_tickets');
+    $attendee_purchased_tickets = [];
+
+    foreach ($attendee->payments as $payment) {
+        foreach ($payment->purchased_tickets as $ticket)
+            array_push($attendee_purchased_tickets, $ticket);
+    }
+
+    Mail::to($attendee->email)->send(new AttendeeTicketPurchased($attendee, $attendee_purchased_tickets));
+    return 'email sent';
+});
 
 
 

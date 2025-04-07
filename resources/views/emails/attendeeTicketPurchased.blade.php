@@ -22,7 +22,7 @@
 
         h2 {
             color: #333;
-            text-align: center;
+            text-align: left;
         }
 
         p {
@@ -59,30 +59,54 @@
         }
 
         .footer {
-            text-align: center;
+            text-align: left;
             font-size: 14px;
             color: #777;
             margin-top: 20px;
+        }
+
+        .full-width-table {
+            width: 100%;
+            border-collapse: collapse;
+            /* Removes space between cells */
+            table-layout: fixed;
+            /* Forces cells to be equal width */
+        }
+
+        .full-width-table th,
+        .full-width-table td {
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            text-align: left;
+            width: 33.33%;
+            /* Each column gets 1/3 of the width */
+            word-wrap: break-word;
+            /* Prevent overflow */
         }
     </style>
 </head>
 
 <body>
     <div class="email-container">
-        <h2>Welcome, {{ $attenee->first_name }} {{ $attenee->last_name }}!</h2>
+        <h2>Welcome, {{ $attendee->first_name }} {{ $attendee->last_name }}!</h2>
         <p>You have successfully purchased following tickets:</p>
+        <table class="full-width-table">
+            <tr>
+                <th>Ticket Name</th>
+                <th>Price</th>
+                <th>QR Code</th>
+            </tr>
+            @foreach ($attendee_purchased_tickets as $purchased_ticket)
+                <tr>
+                    <td>{{ $purchased_ticket->ticket->name }}</td>
+                    <td>{{ $purchased_ticket->total }}</td>
+                    <td>...
+                        {{-- <img src="{{ $message->embed($pathToImage) }}"> --}}
+                    </td>
+                </tr>
+            @endforeach
 
-        {{-- <div class="credentials">
-            <p><strong>Email:</strong> {{ $email }}</p>
-            <p><strong>Password:</strong> {{ $password }}</p>
-        </div> --}}
-
-        {{-- <p>You can log in using the credentials above. For security reasons, please change your password after logging
-            in.</p>
-
-        <p style="text-align: center;">
-            <a href="{{ url('/attendee/' . $event_app_id . '/login') }}" class="btn">Login Now</a>
-        </p> --}}
+        </table>
 
         <div class="footer">
             <p>Best Regards,<br><strong>{{ config('app.name') }}</strong></p>

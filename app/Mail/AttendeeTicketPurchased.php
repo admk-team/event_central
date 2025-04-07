@@ -21,7 +21,7 @@ class AttendeeTicketPurchased extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(Attendee $_attendee, AttendeePurchasedTickets $_attendee_purchased_tickets)
+    public function __construct(Attendee $_attendee, $_attendee_purchased_tickets)
     {
         $this->attendee = $_attendee;
         $this->attendee_purchased_tickets = $_attendee_purchased_tickets;
