@@ -81,6 +81,14 @@ class OrganizerPermissionsSeeder extends Seeder
 
         // Registration Form
         'edit_registration_form',
+
+        // Session Attendence
+        'view_session_attendence',
+        'delete_session_attendence',
+
+        // Website
+        'view_website',
+        'edit_website',
     ];
 
     public function run(): void

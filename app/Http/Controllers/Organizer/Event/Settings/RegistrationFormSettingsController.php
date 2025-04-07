@@ -6,12 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Models\EventApp;
 use App\Models\Form;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class RegistrationFormSettingsController extends Controller
 {
     public function index()
     {
+        if (! Auth::user()->can('edit_registration_form')) {
+            abort(403);
+        }
+
         $currentEvent = EventApp::with('form')->find(session('event_id'));
         
         if (! $currentEvent->form) {
@@ -31,6 +36,10 @@ class RegistrationFormSettingsController extends Controller
 
     public function toggleStatus()
     {
+        if (! Auth::user()->can('edit_registration_form')) {
+            abort(403);
+        }
+
         $currentEvent = EventApp::with('form')->find(session('event_id'));
         $currentEvent->form->status = !$currentEvent->form->status;
 
