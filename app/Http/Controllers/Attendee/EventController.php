@@ -54,9 +54,7 @@ class EventController extends Controller
         // $next_session_id = $sessions->after($eventSession->id);
         // $prev_session_id = $sessions->before($eventSession->id);
 
-        // Load the eventSpeakers relationship for the specific session
-        $eventSession->load('eventSpeakers');
-
+        $eventSession->load(['eventSpeakers', 'attendees','eventDate']);
         $selectedSessionDetails = DB::table('attendee_event_session')
             ->where(function ($query) use ($eventSession) {
                 $query->where('attendee_id', auth()->user()->id);
@@ -69,6 +67,7 @@ class EventController extends Controller
             'selectedSessionDetails',
             'prev_session_id',
             'next_session_id',
+
         ]));
     }
 
