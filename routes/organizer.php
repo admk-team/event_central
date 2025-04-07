@@ -11,6 +11,7 @@ use App\Http\Controllers\Organizer\Event\EventPartnerController;
 use App\Http\Controllers\Organizer\Event\EventPlatformController;
 use App\Http\Controllers\Organizer\Event\EventSessionController;
 use App\Http\Controllers\Organizer\Event\EventSpeakerController;
+use App\Http\Controllers\Organizer\Event\EventTicketsController;
 use App\Http\Controllers\Organizer\Event\FooterController;
 use App\Http\Controllers\Organizer\Event\HeaderController;
 use App\Http\Controllers\Organizer\Event\ImportController;
@@ -86,6 +87,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::delete('attendees/delete/many', [AttendeeController::class, 'destroyMany'])->name('attendees.destroy.many');
             Route::get('attendee/info/{id}', [AttendeeController::class, 'showInfo'])->name('attendee.info');
             Route::put('/attendee/profile/update/{id}', [AttendeeController::class, 'updateAttendee'])->name('attendee.profile.update');
+            Route::post('/attendee/checkin', [AttendeeController::class, 'chechIn'])->name('attendee.checkin');
 
             // Wordshop
             Route::resource('workshop', WorkshopController::class);
@@ -110,6 +112,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::resource('addon', AddonController::class)->only(['index', 'store', 'update', 'destroy']);
             // Route::get('addon/{event_app_ticket_id?}', [AddonController::class, 'getAllAddons'])->name('fetch');
             Route::delete('addon/delete/many', [AddonController::class, 'destroyMany'])->name('addon.destroy.many');
+            Route::get('event/tickets', [EventTicketsController::class, 'index'])->name('event.tickets');
 
             // Promo Codes
             Route::resource('promo-codes', EventPromoCodeController::class)->only(['index', 'store', 'update', 'destroy']);
@@ -171,21 +174,18 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                 });
             });
 
-            // engagement
-            Route::prefix('engagement')->name('engagement.')->group(function () {
-                // Event
-                Route::prefix('newsfeed')->name('newsfeed.')->group(function () {
-                    Route::get('/', [NewsfeedController::class, 'index'])->name('index');
-                    Route::post('/', [NewsfeedController::class, 'store'])->name('store');
-                    Route::post('/{post}/update', [NewsfeedController::class, 'updatePost'])->name('update');
-                    Route::delete('/{post}', [NewsfeedController::class, 'destroy'])->name('destroy');
-                    Route::delete('/delete/many', [NewsfeedController::class, 'destroyMany'])->name('destroy.many');
-                });
-            });
-
             Route::post('import/{importType}', [ImportController::class, 'import'])->name('import');
         });
     });
+    // Event
+    Route::prefix('posts')->name('posts.')->group(function () {
+        Route::get('/event/posts/{id}', [NewsfeedController::class, 'index'])->name('index');
+        Route::post('/event/post', [NewsfeedController::class, 'store'])->name('store');
+        Route::post('/event/{post}/update', [NewsfeedController::class, 'updatePost'])->name('update');
+        Route::delete('/{post}', [NewsfeedController::class, 'destroy'])->name('destroy');
+        Route::delete('/delete/many', [NewsfeedController::class, 'destroyMany'])->name('destroy.many');
+    });
+    
     // Q&A
     Route::get('/events/qa/{session_id}', [QuestionController::class, 'index'])->name('events.qa.index');
     Route::post('/events/{event}/questions', [QuestionController::class, 'storeQuestion'])->name('events.qa.store');

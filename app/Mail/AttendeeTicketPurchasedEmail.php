@@ -11,7 +11,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class AttendeeTicketPurchased extends Mailable
+class AttendeeTicketPurchasedEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -21,7 +21,7 @@ class AttendeeTicketPurchased extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(Attendee $_attendee, AttendeePurchasedTickets $_attendee_purchased_tickets)
+    public function __construct(Attendee $_attendee, $_attendee_purchased_tickets)
     {
         $this->attendee = $_attendee;
         $this->attendee_purchased_tickets = $_attendee_purchased_tickets;
@@ -33,7 +33,7 @@ class AttendeeTicketPurchased extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Ticket Purchase Confirmation',
+            subject: 'Ticket Purchase Confirmation ' . ': ' . env('APP_NAME'),
         );
     }
 

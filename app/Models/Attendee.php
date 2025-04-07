@@ -23,7 +23,7 @@ class Attendee extends Authenticatable
         'other_link',
         'facebook_link',
         'linkedin_link',
-        'twitter_link,',
+        'twitter_link',
         'country',
         'phone',
         'bio',

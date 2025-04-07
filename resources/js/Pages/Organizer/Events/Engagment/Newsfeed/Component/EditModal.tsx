@@ -39,16 +39,15 @@ function EditModal({ show, onHide, editPost }: any) {
 
     const submit = (e: any) => {
         e.preventDefault();
-        console.log(data);
-        // post(route("organizer.events.engagement.newsfeed.update", editPost.id), {
-        //     onSuccess: () => {
-        //         reset();
-        //         onHide();
-        //     },
-        //     onError: (error) => {
-        //         console.error("Error:", error);
-        //     },
-        // });
+        post(route("organizer.posts.update", editPost.id), {
+            onSuccess: () => {
+                reset();
+                onHide();
+            },
+            onError: (error) => {
+                console.error("Error:", error);
+            },
+        });
     };
 
 
@@ -82,7 +81,6 @@ function EditModal({ show, onHide, editPost }: any) {
     const clearPoll = () => {
         setData("post_poll", "");
         setOptions([{ text: "", like: [] }]);
-        setPollData(false);
     };
 
     return (

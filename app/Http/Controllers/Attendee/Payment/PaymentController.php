@@ -19,9 +19,12 @@ use chillerlan\QRCode\QROptions;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Mail\AttendeeTicketPurchasedEmail;
+
 use chillerlan\QRCode\Common\EccLevel;
 use Illuminate\Support\Facades\Storage;
 use App\Models\AttendeePurchasedTickets;
+use Illuminate\Support\Facades\Mail;
 
 class PaymentController extends Controller
 {
@@ -99,6 +102,7 @@ class PaymentController extends Controller
             return redirect()->route('attendee.tickets.get')->withError("Payment has already been processed against this Payment ID");
         }
     }
+
     //Create Attendee Payment record and all tickets and addons includee
     // then create stripe paymnet intent and erturn to front end.
     public function checkout(Request $request)
@@ -156,10 +160,11 @@ class PaymentController extends Controller
     {
         $attendee = auth()->user();
         $payment = AttendeePayment::where('uuid', $paymentUuId)->first();
+
         if (!$payment) {
             throw new Exception('Payment object not found with uuid ' . $paymentUuId);
         }
-        $this->purchasedTickets();
+
         DB::beginTransaction();
         try {
             $payment->status = 'paid';
@@ -177,15 +182,14 @@ class PaymentController extends Controller
             $payment->load('purchased_tickets.purchased_addons');
 
             foreach ($payment->purchased_tickets as $purchasedTicket) {
-                // Log::info($purchasedTicket);
+
                 foreach ($purchasedTicket->purchased_addons as $addon) {
-                    // Log::info($addon);
+                    // Increment Addon Sold Qty
                     $addonObject = Addon::find($addon->id);
                     $addonObject->increment('qty_sold');
-                    // $addonObject->update(['qty_sold' => $qty_sold]);
                     $addonObject->save();
                 }
-                // //Update Attendee Sessions
+                //----------Update Attendee Sessions
                 $session_ids = $purchasedTicket->ticket->sessions()->pluck('id');
                 foreach ($session_ids as $id) {
                     // Session might be already attached to attendee from any other ticket
@@ -197,6 +201,12 @@ class PaymentController extends Controller
                 }
             }
             DB::commit();
+
+            //--- Generate QR Code  for each Purchased Ticket ---------------
+            $this->purchasedTickets();
+
+            // --- Send confirmation Email to Attendee along with all Ticket QR Codes  -----
+            $this->sendPurchasedTicketsEmailToAttendee();
         } catch (\Throwable $th) {
             Log::error($th->getMessage());
             DB::rollBack();
@@ -222,6 +232,24 @@ class PaymentController extends Controller
         }
     }
 
+    public function sendPurchasedTicketsEmailToAttendee()
+    {
+        try {
+            $attendee = auth()->user();
+            $attendee->load('payments.purchased_tickets');
+            $attendee_purchased_tickets = [];
+
+            foreach ($attendee->payments as $payment) {
+                foreach ($payment->purchased_tickets as $ticket)
+                    array_push($attendee_purchased_tickets, $ticket);
+            }
+            Mail::to($attendee->email)->send(new AttendeeTicketPurchasedEmail($attendee, $attendee_purchased_tickets));
+        } catch (Exception $ex) {
+            Log::error('An Error occurred while sending confirmation email to attendee');
+            Log::error($ex->getMessage());
+        }
+    }
+
     public function purchasedTickets()
     {
 
@@ -232,14 +260,6 @@ class PaymentController extends Controller
             $payment = $attendee->payments[0];
             $event = EventApp::find($payment->event_app_id);
 
-            // $qrData .= "payment_id : " . $payment->id . "\n";
-            // $qrData .= "event_uuid : " . $event->uuid . "\n";
-            // $qrData .= "Event Name : " . $event->name . "\n";
-            // $qrData .= "Start Date : " . $event->start_date . "\n";
-            // $qrData .= "End Date : " . $event->end_date . "\n";
-            // $qrData .= "Amount Paid : " . $payment->amount_paid . "\n";
-            // $qrData .= "\n";
-            // $qrData .= "Tickets: " . "\n";
             foreach ($payment->purchased_tickets as $ticket_purchased) {
                 $purchasedticket = AttendeePurchasedTickets::find($ticket_purchased->id);
                 $code = $purchasedticket->generateUniqueKey();

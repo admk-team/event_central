@@ -31,7 +31,6 @@ export default function CheckoutForm({ payment }: any) {
                 redirect: "if_required",
             })
             .then((result) => {
-                console.log('Test Pay', result);
                 if (!result.error) {
                     //Update Purchased Tickets status in database
                     axios
@@ -42,6 +41,8 @@ export default function CheckoutForm({ payment }: any) {
                         })
                         .catch((errorPost) => {
                             console.log(errorPost);
+                        }).finally(() => {
+                            setIsProcessing(false);
                         });
                     console.log("callback running");
                 } else {
@@ -53,9 +54,9 @@ export default function CheckoutForm({ payment }: any) {
                     } else {
                         setMessage("An unexpected error occured.");
                     }
+                    setIsProcessing(false);
                 }
             });
-        setIsProcessing(false);
     };
 
     return (
@@ -69,15 +70,15 @@ export default function CheckoutForm({ payment }: any) {
             )}
 
             <div className="d-flex justify-content-center">
-                <Button
+                {(stripe && elements) && <Button
                     className="mt-3 btn btn-success mt-2 w-75 rounded-pill"
-                    disabled={isProcessing && (!stripe || !elements)}
+                    disabled={isProcessing}
                     type="submit"
                 >
                     <span id="button-text">
                         {isProcessing ? "Processing ... " : "Pay $" + payment.amount_paid}
                     </span>
-                </Button>
+                </Button>}
             </div>
             {message && <div id="payment-message">{message}</div>}
         </form>
