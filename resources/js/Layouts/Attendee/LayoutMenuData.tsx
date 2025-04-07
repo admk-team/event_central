@@ -120,19 +120,6 @@ const Navdata = () => {
             },
         },
         {
-            id: "purchase-tickets",
-            label: "Purchase Tickets",
-            icon: "bx bxs-credit-card",
-            link: route("attendee.purchase.tickets"),
-            stateVariables: purchaseTickets,
-            click: function (e: any) {
-                e.preventDefault();
-                setPurchaseTickets(!purchaseTickets);
-                setIscurrentState("Purchase");
-                updateIconSidebar(e);
-            },
-        },
-        {
             id: "tickets",
             label: "Tickets",
             icon: "bx bx-qr",
