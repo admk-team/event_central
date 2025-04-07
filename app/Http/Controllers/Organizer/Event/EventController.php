@@ -23,7 +23,7 @@ class EventController extends Controller
      */
     public function index()
     {
-        if (! Auth::user()->canAny(['view_events', 'create_events', 'edit_events', 'delete_events'])) {
+        if (! Auth::user()->can('view_events')) {
             abort(403);
         }
 
@@ -165,6 +165,10 @@ class EventController extends Controller
 
     private function SaveLogoImage(EventApp $event, Request $request)
     {
+        if (! Auth::user()->can('edit_events', $event)) {
+            abort(403);
+        }
+
         if ($request->hasFile('logo_file')) {
             $imageFileName = 'event-logo-' . $event->id . '.' . $request->logo_file->extension();
             $path = storage_path('app/public/events-avatars');
@@ -179,6 +183,10 @@ class EventController extends Controller
 
     private function SaveOtherImages(EventApp $event, Request $request)
     {
+        if (! Auth::user()->can('edit_events', $event)) {
+            abort(403);
+        }
+        
         if ($request->hasFile('image_files')) {
             $images = $request->file('image_files');
             foreach ($images as $image) {

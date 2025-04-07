@@ -66,15 +66,15 @@ function Index({ partners }: any) {
             header: () => 'Action',
             cell: (partner) => (
                 <div className="hstack gap-3 fs-15">
-                    {/* <HasPermission permission="edit_partner"> */}
-                    <span className="link-primary cursor-pointer" onClick={() => editAction(partner)}><i className="ri-edit-fill"></i></span>
-                    {/* </HasPermission> */}
+                    <HasPermission permission="edit_partner">
+                        <span className="link-primary cursor-pointer" onClick={() => editAction(partner)}><i className="ri-edit-fill"></i></span>
+                    </HasPermission>
 
-                    {/* <HasPermission permission="delete_partner"> */}
-                    <span className="link-danger cursor-pointer" onClick={() => deleteAction(partner)}>
-                        <i className="ri-delete-bin-5-line"></i>
-                    </span>
-                    {/* </HasPermission> */}
+                    <HasPermission permission="delete_partner">
+                        <span className="link-danger cursor-pointer" onClick={() => deleteAction(partner)}>
+                            <i className="ri-delete-bin-5-line"></i>
+                        </span>
+                    </HasPermission>
                 </div>
             ),
         },
@@ -87,29 +87,35 @@ function Index({ partners }: any) {
                     <BreadCrumb title="Event Partners" pageTitle="Dashboard" />
                     <Row>
                         <Col xs={12}>
-                            <DataTable
-                                data={partners}
-                                columns={columns}
-                                title="Partners"
-                                actions={[
-                                    // Delete multiple
-                                    {
-                                        render: (dataTable) => <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>,
-                                        showOnRowSelection: true,
-                                    },
+                            <HasPermission permission="view_partner">
+                                <DataTable
+                                    data={partners}
+                                    columns={columns}
+                                    title="Partners"
+                                    actions={[
+                                        // Delete multiple
+                                        {
+                                            render: (dataTable) => (
+                                                <HasPermission permission="delete_partner">
+                                                    <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>
+                                                </HasPermission>
+                                            ),
+                                            showOnRowSelection: true,
+                                        },
 
-                                    // Add new
-                                    {
-                                        render: (
-                                            // <HasPermission permission="add_partner">
-                                            <Link href={route('organizer.events.partner.create')}><Button><i className="ri-add-fill"></i> Add New</Button></Link>
-                                            //    </HasPermission>
-                                        )
+                                        // Add new
+                                        {
+                                            render: (
+                                                <HasPermission permission="create_partner">
+                                                    <Link href={route('organizer.events.partner.create')}><Button><i className="ri-add-fill"></i> Add New</Button></Link>
+                                                </HasPermission>
+                                            )
 
-                                    },
+                                        },
 
-                                ]}
-                            />
+                                    ]}
+                                />
+                            </HasPermission>
                         </Col>
                     </Row>
                 </Container>

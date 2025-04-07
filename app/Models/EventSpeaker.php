@@ -40,6 +40,7 @@ class EventSpeaker extends Model
 
     public function eventSessions()
     {
-        return $this->hasMany(EventSession::class);
+        // Updated to many-to-many relationship
+        return $this->belongsToMany(EventSession::class, 'event_session_speakers');
     }
 }

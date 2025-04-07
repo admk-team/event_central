@@ -5,7 +5,7 @@ const Navdata = () => {
     //state data
     const [isDashboard, setIsDashboard] = useState<boolean>(false);
     const [isEvents, setIsEvents] = useState<boolean>(false);
-    const [isUserManagement, setIsUserManagement] = useState<boolean>(false);
+    const [isStaff, setIsStaff] = useState<boolean>(false);
     const [isPaymentSettings, setIsPaymentSettings] = useState<boolean>(false);
 
 
@@ -34,8 +34,8 @@ const Navdata = () => {
         if (iscurrentState !== 'Events') {
             setIsEvents(false);
         }
-        if (iscurrentState !== 'UserManagement') {
-            setIsUserManagement(false);
+        if (iscurrentState !== 'Staff') {
+            setIsStaff(false);
         }
         if (iscurrentState !== 'PaymentSettings') {
             setIsPaymentSettings(false);
@@ -45,15 +45,11 @@ const Navdata = () => {
         iscurrentState,
         isDashboard,
         isEvents,
-        isUserManagement,
+        isStaff,
         isPaymentSettings
     ]);
 
     const menuItems: any = [
-        {
-            label: "Menu",
-            isHeader: true,
-        },
         {
             id: "dashboard",
             label: "Dashboards",
@@ -65,7 +61,7 @@ const Navdata = () => {
                 setIsDashboard(!isDashboard);
                 setIscurrentState('Dashboard');
                 updateIconSidebar(e);
-            }
+            },
         },
         {
             id: "events",
@@ -78,44 +74,45 @@ const Navdata = () => {
                 setIsDashboard(!isEvents);
                 setIscurrentState('Events');
                 updateIconSidebar(e);
-            }
+            },
+            hasPermissions: [
+                'view_events',
+            ]
         },
         {
-            id: "UserManagement",
-            label: "User Management",
+            id: "Staff",
+            label: "Staff",
             icon: "bx bxs-user",
             link: "/#",
-            stateVariables: isUserManagement,
+            stateVariables: isStaff,
             click: function (e: any) {
                 e.preventDefault();
-                setIsUserManagement(!isUserManagement);
-                setIscurrentState('UserManagement');
+                setIsStaff(!isStaff);
+                setIscurrentState('Staff');
                 updateIconSidebar(e);
             },
+            hasAnyPermission: [
+                'view_users',
+                'view_roles',
+            ],
             subItems: [
                 {
                     id: "Users",
                     label: "Users",
                     link: route('organizer.users.index'),
-                    parentId: "UserManagement",
-                    hasAnyPermission: [
+                    parentId: "Staff",
+                    hasPermissions: [
                         'view_users',
-                        'create_users',
-                        'edit_users',
-                        'delete_users',
                     ],
                 },
                 {
                     id: "roles",
                     label: "Roles",
                     link: route('organizer.roles.index'),
-                    parentId: "UserManagement",
-                    hasAnyPermission: [
+                    parentId: "Staff",
+                    hasPermissions: [
                         'view_roles',
-                        'create_roles',
-                        'edit_roles',
-                        'delete_roles',
-                    ]
+                    ],
                 },
             ],
         },
@@ -130,7 +127,10 @@ const Navdata = () => {
                 setIsDashboard(!isPaymentSettings);
                 setIscurrentState('PaymentSettings');
                 updateIconSidebar(e);
-            }
+            },
+            hasPermissions: [
+                'edit_payment_settings',
+            ]
         },
     ];
     return <React.Fragment>{menuItems}</React.Fragment>;

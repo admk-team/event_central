@@ -16,7 +16,6 @@ class EventSession extends Model
 
     protected $fillable = [
         'name',
-        'event_speaker_id',
         'event_date_id',
         'event_platform_id',
         'type',
@@ -29,14 +28,16 @@ class EventSession extends Model
         'posts'
     ];
 
+    // Removed event_speaker_id from fillable since we're using a pivot table
+
     public function scopeCurrentEvent($query)
     {
         $query->where('event_app_id', session('event_id'));
     }
 
-    public function eventSpeaker(): BelongsTo
+    public function eventSpeakers(): BelongsToMany
     {
-        return $this->belongsTo(EventSpeaker::class);
+        return $this->belongsToMany(EventSpeaker::class, 'event_session_speakers');
     }
 
     public function eventPlatform()
@@ -46,11 +47,14 @@ class EventSession extends Model
 
     public function attendees(): BelongsToMany
     {
-        return $this->belongsToMany(Attendee::class, 'attendee_event_session')->withPivot('rating', 'rating_description')->withTimestamps();
+        return $this->belongsToMany(Attendee::class, 'attendee_event_session')
+            ->withPivot('rating', 'rating_description')
+            ->withTimestamps();
     }
 
-    public function eventDate(){
-        return $this->belongsTo(EventAppDate::class,'event_date_id');
+    public function eventDate()
+    {
+        return $this->belongsTo(EventAppDate::class, 'event_date_id');
     }
 
     public function getSelectedByAttendeeAttribute()
@@ -60,24 +64,27 @@ class EventSession extends Model
         }
         return null;
     }
+
     public function questions()
     {
         return $this->hasMany(Question::class, 'event_session_id');
     }
 
-    public function getStartDateTimeAttribute() //Being usedin Attendee Side
+    public function getStartDateTimeAttribute()
     {
         return $this->eventDate ? $this->eventDate->date . ' ' . $this->attributes['start_time'] : '';
     }
 
-    public function getEndDateTimeAttribute() //Being usedin Attendee Side
+    public function getEndDateTimeAttribute()
     {
         return $this->eventDate ? $this->eventDate->date . ' ' . $this->attributes['end_time'] : '';
     }
+
     public function attendances()
     {
         return $this->hasMany(AttendeeAttendance::class, 'event_session_id');
     }
+
     public function tickets()
     {
         return $this->belongsToMany(EventAppTicket::class, 'session_ticket');

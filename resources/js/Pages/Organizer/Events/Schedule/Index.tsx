@@ -11,6 +11,7 @@ import moment from 'moment';
 import { ChevronDown, Menu, X } from 'lucide-react';
 import Sessions from './Components/Sessions';
 import DeleteModal from '../../../../Components/Common/DeleteModal';
+import HasPermission from '../../../../Components/HasPermission';
 
 
 function Index() {
@@ -85,7 +86,9 @@ function Index() {
                                     onDateSelect={(date) => setSelectedDate(date)}
                                 />
                             </div>
-                            <Button onClick={() => setShowSessionCreateEditModal(true)}><i className="ri-add-fill"></i> New Session</Button>
+                            <HasPermission permission="create_event_sessions">
+                                <Button onClick={() => setShowSessionCreateEditModal(true)}><i className="ri-add-fill"></i> New Session</Button>
+                            </HasPermission>
                         </CardHeader>
                         <CardBody className={`p-0 d-flex ${showPlatformsSidebar ? 'show-platform-sidebar' : ''}`}>
                             <div className="sidebar">
@@ -106,7 +109,7 @@ function Index() {
                     </Card>
                 </Container>
             </div>
-
+            
             {showSessionCreateEditModal && (
                 <CreateEditSessionModal
                     show={showSessionCreateEditModal}

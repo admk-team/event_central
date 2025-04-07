@@ -20,7 +20,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        if (! Auth::user()->canAny(['view_users', 'create_users', 'edit_users', 'delete_users'])) {
+        if (! Auth::user()->can('view_users')) {
             abort(403);
         }
 
