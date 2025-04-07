@@ -1,19 +1,22 @@
 @extends('event-website.layouts.layout')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
 @section('content')
-    <section id="speakers" class="speakers">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-tag">Meet Our Speakers</span>
-                <h2 class="section-title">Speakers</h2>
-                {{-- <p class="section-subtitle">Gain insights from leaders at the forefront of technology</p> --}}
-            </div>
-            <div class="speakers-grid">
-                @foreach ($event->event_speakers ?? [] as $speaker)
-                    <div class="speaker-card">
-                        <div class="speaker-image">
-                            <img src="{{ $speaker->avatar }}" alt="{{ $speaker->name }}">
-                            {{-- <div class="speaker-social">
+<section id="speakers" class="speakers">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-tag">Meet Our Speakers</span>
+            <h2 class="section-title">Speakers</h2>
+            {{-- <p class="section-subtitle">Gain insights from leaders at the forefront of technology</p> --}}
+        </div>
+        <div class="speakers-grid">
+            @foreach ($event->event_speakers ?? [] as $speaker)
+            <div type="button" data-bs-toggle="modal" data-bs-target="#speakerModal{{ $speaker->id }}" class="speaker-card">
+                <div class="speaker-image">
+                    <img src="{{ $speaker->avatar }}" alt="{{ $speaker->name }}">
+                    {{-- <div class="speaker-social">
                                         <a href="#" aria-label="Twitter">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -35,16 +38,70 @@
                                             </svg>
                                         </a>
                                     </div> --}}
-                        </div>
-                        <div class="speaker-info">
-                            <h3>{{ $speaker->name }}</h3>
-                            <p class="speaker-role">{{ $speaker->position }}
-                                {{ $speaker->company ? ', ' . $speaker->company : '' }}</p>
-                            <p class="speaker-bio">{{ $speaker->bio }}</p>
-                        </div>
-                    </div>
-                @endforeach
+                </div>
+                <div class="speaker-info">
+                    <h3>{{ $speaker->name }}</h3>
+                    <p class="speaker-role">{{ $speaker->position }}
+                        {{ $speaker->company ? ', ' . $speaker->company : '' }}
+                    </p>
+                    <!-- <p class="speaker-bio">{{ $speaker->bio }}</p> -->
+                </div>
             </div>
+            <!-- Modal -->
+            <div class="modal fade" id="speakerModal{{ $speaker->id }}" tabindex="-1" aria-labelledby="modalLabel{{ $speaker->id }}" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content pt-3">
+                        <div class="d-flex justify-content-center">
+                            <img class="rounded-circle" src="{{ $speaker->avatar ?$speaker->avatar: 'https://picsum.photos/200/300'}}" width="150px" height="150px" alt="{{ $speaker->name }}">
+                        </div>
+                        <div class=" text-center">
+                            <h5>{{ $speaker->name }}</h5>
+                            <p class="text-muted mb-0">{{$speaker->email}}</p>
+                            <p class="text-muted ">{{$speaker->phone}}</p>
+                            <p class="mb-0">{{ $speaker->company}}</p>
+                            <p class="text-muted">{{ $speaker->position }}</p>
+                            <p class="text-muted">{{ $speaker->bio }}</p>
+                        </div>
+                        <div class="modal-footer text-center d-flex justify-content-center">
+                            <!-- Speaker's website link -->
+                            @if ($speaker->web)
+                            <a target="_blank" href="{{ $speaker->web }}">
+                                <i class="bi bi-globe"></i> <!-- Replace with appropriate icon for website -->
+                            </a>
+                            @endif
+
+                            <!-- LinkedIn link -->
+                            @if($speaker->linkedin)
+                            <a target="_blank" href="{{ $speaker->linkedin }}">
+                                <i class="bi bi-linkedin text-info"></i>
+                            </a>
+                            @endif
+
+                            <!-- Facebook link -->
+                             @if($speaker->facebook)
+                            <a target="_blank" href="{{ $speaker->facebook }}">
+                                <i class="bi bi-facebook text-primary"></i>
+                            </a>
+                            @endif
+                            <!-- Twitter link -->
+                             @if($speaker->twitter)
+                            <a target="_blank" href="{{ $speaker->twitter }}">
+                                <i class="bi bi-twitter-x text-black"></i> <!-- Corrected 'bi-twitter-x' to 'bi-twitter' -->
+                            </a>
+                             @endif
+                            <!-- Instagram link -->
+                             @if($speaker->instagram)
+                            <a target="_blank" href="{{ $speaker->instagram }}">
+                                <i class="bi bi-instagram text-danger-emphasis"></i>
+                            </a>
+                            @endif
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            @endforeach
         </div>
-    </section>
+    </div>
+</section>
 @endsection
