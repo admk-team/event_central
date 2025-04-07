@@ -25,6 +25,7 @@ const AttendeeSessionDetail = ({
     selectedSessionDetails,
     prev_session_id,
     next_session_id,
+    checkin,
 }: any) => {
     const { data, setData, post, processing, errors, reset } = useForm({
         _method: "POST",
@@ -34,10 +35,19 @@ const AttendeeSessionDetail = ({
 
     const ratingEnabled = moment(eventSession.end_date_time) < moment();
 
+    const now = moment();
+    const startTime = moment(eventSession.start_date_time);
+    const endTime = moment(eventSession.end_date_time);
+    const canCheckIn = now.isBetween(startTime, endTime);
+
     const submitRatingChange = (e: any) => {
         e.preventDefault();
         post(route("attendee.save.rating", eventSession.id));
         console.log("Rating form submitted");
+    };
+    const submitCheckIn = (e: any) => {
+        e.preventDefault();
+        post(route("attendee.checkin", eventSession.id));
     };
 
     const form = useForm({
@@ -96,21 +106,43 @@ const AttendeeSessionDetail = ({
                                         </div>
 
                                         <div className="d-flex flex-row align-items-center">
-                                            {eventSession.qa_status == true && (
                                                 <div className="d-flex align-items-center gap-2 me-3">
-                                                    <Link
-                                                        href={route("attendee.events.qa.index", {
-                                                            session_id: eventSession.id,
-                                                        })}
+                                                    {" "}
+                                                    {/* Gap between Q&A and icons */}
+                                                    {eventSession.qa_status == true && (
+                                                        <Link
+                                                        href={route(
+                                                            "attendee.events.qa.index",
+                                                            {
+                                                                session_id:
+                                                                    eventSession.id,
+                                                            }
+                                                        )}
                                                         className="d-flex align-items-center text-decoration-none"
-                                                    >
-                                                        <i className="bx bx-message-square-detail fs-4 text-primary"></i>
+                                                        >
+                                                        <i className="bx bx-message-square-detail fs-4 text-primary"></i>{" "}
+                                                        {/* Q&A Icon */}
                                                         <span className="fw-bold text-primary ms-1">
                                                             Q&A
-                                                        </span>
+                                                        </span>{" "}
+                                                        {/* Attractive text styling */}
+                                                        </Link>
+                                                    )}
+                                                  
+                                                    {eventSession.posts == true && (
+                                                        <Link
+                                                        href={route("attendee.posts.index",{id:eventSession.id,})}
+                                                        className="d-flex align-items-center text-decoration-none"
+                                                    >
+                                                        <i className="ri-image-edit-line fs-4 text-primary"></i>{" "}
+                                                        {/* Q&A Icon */}
+                                                        <span className="fw-bold text-primary ms-1">
+                                                            Posts
+                                                        </span>{" "}
+                                                        {/* Attractive text styling */}
                                                     </Link>
+                                                    )}
                                                 </div>
-                                            )}
 
                                             {sessionSelected ? (
                                                 <a
@@ -140,7 +172,9 @@ const AttendeeSessionDetail = ({
                                             <figure className="event-image">
                                                 <img
                                                     className="card-full-image"
-                                                    src={eventApp.featured_image}
+                                                    src={
+                                                        eventApp.featured_image
+                                                    }
                                                     alt="event default image"
                                                 />
                                                 <figcaption>
@@ -318,6 +352,61 @@ const AttendeeSessionDetail = ({
                                                 )}
                                             </Accordion.Body>
                                         </Accordion.Item>
+                                        {/* <Accordion.Item eventKey="1">
+                                            <Accordion.Header>
+                                                <h6>Check In</h6>
+                                            </Accordion.Header>
+                                            <Accordion.Body>
+                                                {!sessionSelected && (
+                                                    <p className="fs-5">
+                                                        checkin can be left for
+                                                        purchased session(s)
+                                                        only.
+                                                        <br />* Your check-in
+                                                        time:{" "}
+                                                        {moment().format(
+                                                            "DD MMM, YYYY hh:mm A"
+                                                        )}
+                                                    </p>
+                                                )}
+
+                                                {
+                                                    sessionSelected && (
+                                                        <form
+                                                            onSubmit={
+                                                                submitCheckIn
+                                                            }
+                                                        >
+                                                            <div className="d-flex justify-content-between">
+                                                                <Button
+                                                                    type="submit"
+                                                                    className={`btn btn-success w-100 mt-4 ${
+                                                                        checkin
+                                                                            ? "disabled"
+                                                                            : ""
+                                                                    }`}
+                                                                    disabled={
+                                                                        processing
+                                                                    }
+                                                                >
+                                                                    Check In
+                                                                </Button>
+                                                            </div>
+                                                        </form>
+                                                    )
+                                                    // : (
+                                                    //     <p>
+                                                    //         * Check-in is only allowed between{" "}
+                                                    //         {moment(eventSession.start_date_time).format("DD MMM, YYYY hh:mm A")}
+                                                    //         {" and "}
+                                                    //         {moment(eventSession.end_date_time).format("DD MMM, YYYY hh:mm A")}
+                                                    //         <br />
+                                                    //         * Your check-in time: {moment().format("DD MMM, YYYY hh:mm A")}
+                                                    //     </p>
+                                                    // )
+                                                }
+                                            </Accordion.Body>
+                                        </Accordion.Item> */}
                                     </Accordion>
                                 </Col>
                             </Row>

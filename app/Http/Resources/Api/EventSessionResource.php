@@ -17,7 +17,7 @@ class EventSessionResource extends JsonResource
         return [
             'id' => $this->id,
             'event_app_id' => $this->event_app_id,
-            'event_speaker' => new EventSpeakerResource($this->whenLoaded('eventSpeaker')),
+            'event_speakers' => EventSpeakerResource::collection($this->whenLoaded('eventSpeakers')),
             'event_platform' => new EventPlatformResource($this->whenLoaded('eventPlatform')),
             'event_date_id' => $this->event_date_id,
             'name' => $this->name,

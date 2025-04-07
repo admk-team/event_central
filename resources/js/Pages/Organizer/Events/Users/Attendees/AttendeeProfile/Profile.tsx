@@ -1,10 +1,12 @@
-import React from "react";
-import { Card, Col, Container, Row, Table } from "react-bootstrap";
+import React, { useState } from "react";
+import { Button, Card, Col, Container, Row, Table } from "react-bootstrap";
 import { Head, Link } from "@inertiajs/react";
 import Layout from "../../../../../../Layouts/Event";
+import CheckInModal from "./Component/CheckInModal";
 
-const Profile = ({ attendee,user }: any) => {
- 
+const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
+
+    const [showModal, setShowModal] = useState(false);
     return (
         <React.Fragment>
             <Head title="Profile | Velzon - React Admin & Dashboard Template" />
@@ -37,6 +39,15 @@ const Profile = ({ attendee,user }: any) => {
                                         {user.email}
                                     </p>
                                 </div>
+                            </Col>
+                            <Col xs={12} className="col-lg-auto order-last order-lg-0">
+                                <Row className="text text-white-50 text-center">
+                                    <Col lg={12} xs={12}>
+                                        <Button className="p-2 fw-bold" onClick={() => setShowModal(true)}>
+                                            Check In
+                                        </Button>
+                                    </Col>
+                                </Row>
                             </Col>
                         </Row>
                     </div>
@@ -127,9 +138,10 @@ const Profile = ({ attendee,user }: any) => {
                                             </h5>
                                             <div className="d-flex flex-wrap gap-2">
                                                 <div>
-                                                    <a target="blank"
+                                                    <a
                                                         href={user.facebook_link}
                                                         className="avatar-xs d-block"
+                                                        target="_blank"
                                                     >
                                                         <span className="avatar-title rounded-circle fs-16 text-light" style={{background:'blue'}}>
                                                             <i className="ri-facebook-fill"></i>
@@ -137,9 +149,10 @@ const Profile = ({ attendee,user }: any) => {
                                                     </a>
                                                 </div>
                                                 <div>
-                                                    <a target="blank"
+                                                    <a
                                                         href={user.linkedin_link}
                                                         className="avatar-xs d-block"
+                                                        target="_blank"
                                                     >
                                                         <span className="avatar-title rounded-circle fs-16 text-light" style={{ background:'DodgerBlue'}}>
                                                             <i className="ri-linkdin-fill fw-bold cursor-pointer">In</i>
@@ -148,9 +161,20 @@ const Profile = ({ attendee,user }: any) => {
                                                 </div>
                                                 <div>
                                                     <a
-                                                        target="blank"
+                                                        href={user.twitter_link}
+                                                        className="avatar-xs d-block"
+                                                        target="_blank"
+                                                    >
+                                                        <span className="avatar-title rounded-circle fs-16 bg-success">
+                                                            <i className="ri-twitter-x-line"></i>
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                                <div>
+                                                    <a
                                                         href={user.other_link}
                                                         className="avatar-xs d-block"
+                                                        target="_blank"
                                                     >
                                                         <span className="avatar-title rounded-circle fs-16 bg-danger">
                                                             <i className="ri-global-fill"></i>
@@ -174,20 +198,94 @@ const Profile = ({ attendee,user }: any) => {
                                     </Card>
                                 </Col>
                                 <Col xxl={9}>
-                                <Card>
-                                    <Card.Body>
-                                        <h5 className="card-title mb-3">Other Information</h5>
-                                        {attendee[0]?.field_values.length > 0 && attendee[0]?.form_fields.length > 0 ? (
-                                                attendee[0]?.form_fields.map((field:any, index:any) => (
-                                                    <div className="row p-2">
-                                                        <div className="col">
-                                                            <h6 className="mb-0">{field.label}: 
-                                                                <span className="text-secondary">{" "}{attendee[0]?.field_values[index].value}
-                                                                    </span></h6>
+                                    <Card>
+                                        <Card.Body>
+                                            <h5 className="card-title mb-3">Other Information</h5>
+                                            {attendee[0]?.field_values.length > 0 && attendee[0]?.form_fields.length > 0 ? (
+                                                    attendee[0]?.form_fields.map((field:any, index:any) => (
+                                                        <div className="row p-2">
+                                                            <div className="col">
+                                                                <h6 className="mb-0">{field.label}: 
+                                                                    <span className="text-secondary">{" "}{attendee[0]?.field_values[index].value}
+                                                                        </span></h6>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                ))
-                                        ): (<p>No Info available</p>)}
+                                                    ))
+                                            ): (<p className="text-center">No Info available</p>)}
+                                        </Card.Body>
+                                    </Card>
+                                    <Card>
+                                        <Card.Body>
+                                            <h5 className="card-title mb-3">Tickets</h5>
+                                            <div className="table-responsive">
+                                            <Table className="table-striped table-nowrap align-middle mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Name</th>
+                                                        <th scope="col">Price</th>
+                                                        <th scope="col">Quantity</th>
+                                                        <th scope="col">Type</th>
+                                                        <th scope="col">Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {tickets && tickets.length > 0 ? (
+                                                        tickets.map((ticket: any, index: number) => (
+                                                            <tr key={index}>
+                                                                <td>{ticket.ticket_name}</td>
+                                                                <td>{ticket.amount}</td>
+                                                                <td>{ticket.qty}</td>
+                                                                <td>{ticket.type}</td>
+                                                                <td style={{ color: "#0d6efd" }}><i className="ri-checkbox-circle-line fs-17 align-middle"></i> Paid</td>
+                                                            </tr>
+                                                        ))
+                                                    ) : (
+                                                        <tr>
+                                                            <td colSpan={5} className="text-center">No record found !!</td>
+                                                        </tr>
+                                                    )}
+                                                </tbody>
+                                            </Table>
+                                            </div>
+                                        </Card.Body>
+                                    </Card>
+                                    <Card>
+                                        <Card.Body>
+                                            <h5 className="card-title mb-3">Sessions</h5>
+                                            <div className="table-responsive">
+                                            <Table className="table-striped table-nowrap align-middle mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Name</th>
+                                                        <th scope="col">Start Time</th>
+                                                        <th scope="col">End Time</th>
+                                                        <th scope="col">Check In</th>
+                                                        <th scope="col">Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                {sessions && sessions.length > 0 ? (
+                                                        sessions.map((data: any, index: number) => (
+                                                            <tr key={index}>
+                                                                <td>{data.session_name}</td>
+                                                                <td>{data.start_time}</td>
+                                                                <td>{data.end_time}</td>
+                                                                <td>{data?.check_in_time ? new Date(data.check_in_time).toLocaleString() : "N/A"}</td>
+                                                                <td>
+                                                                    <span className={`badge ${data.status === 'Checked In' ? 'bg-info' : 'bg-success'}`}>
+                                                                        {data.status}
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                        ))
+                                                    ) : (
+                                                        <tr>
+                                                            <td colSpan={5} className="text-center">No record found !!</td>
+                                                        </tr>
+                                                    )}
+                                                </tbody>
+                                            </Table>
+                                            </div>
                                         </Card.Body>
                                     </Card>
                                 </Col>
@@ -195,7 +293,14 @@ const Profile = ({ attendee,user }: any) => {
                         </Col>
                     </Row>
                 </Container>
+
             </div>
+            <CheckInModal
+                show={showModal}
+                onHide={() => setShowModal(false)}
+                attendee={user}
+                puchaseSession= {sessionsPurchased}
+            />
         </React.Fragment>
     );
 };

@@ -12,6 +12,7 @@ const Navdata = () => {
     const [isContent, setIsContent] = useState<boolean>(false);
     const [isEngagement, setIsEngagement] = useState<boolean>(false);
     const [isAttendees, setIsAttendees] = useState<boolean>(false);
+    const [isTickets, setIsTickets] = useState<boolean>(false);
     const [isEvent, setIsEvent] = useState<boolean>(false);
     const [isForm, setIsForm] = useState<boolean>(false);
     const [IsWebsite, setIsWebsite] = useState<boolean>(false);
@@ -47,6 +48,7 @@ const Navdata = () => {
         if (iscurrentState !== 'Settings') setIsSettingsMenu(false);
         if (iscurrentState !== 'payemntSettings') setIspayemntSettings(false);
         if (iscurrentState !== 'sessionAttendance') setIsSessionAttendance(false);
+        if (iscurrentState !== 'Tickets') setIsTickets(false);
     }, [
         iscurrentState,
         isDashboard,
@@ -57,6 +59,7 @@ const Navdata = () => {
         IsWebsite,
         IspayemntSettings,
         IsSessionAttendance,
+        isTickets,
     ]);
 
     // Dynamic current date
@@ -184,20 +187,20 @@ const Navdata = () => {
                 setIscurrentState('engagement');
                 updateIconSidebar(e);
             },
-            hasAnyPermission: [
-                'view_posts',
-            ],
-            subItems: [
-                { 
-                    id: "newsfeed", 
-                    label: "Posts", 
-                    link: route('organizer.events.engagement.newsfeed.index'), 
-                    parentId: "dashboard",
-                    hasPermissions: [
-                        'view_posts'
-                    ],
-                }
-            ]
+            // hasAnyPermission: [
+            //     'view_posts',
+            // ],
+            // subItems: [
+            //     { 
+            //         id: "newsfeed", 
+            //         label: "Posts", 
+            //         link: route('organizer.events.engagement.newsfeed.index'), 
+            //         parentId: "dashboard",
+            //         hasPermissions: [
+            //             'view_posts'
+            //         ],
+            //     }
+            // ]
         },
         {
             id: "attendees",
@@ -214,6 +217,19 @@ const Navdata = () => {
             hasPermissions: [
                 'view_attendees'
             ],
+        },
+        {
+            id: "tickets",
+            label: "Tickets",
+            icon: "bx bxs-credit-card",
+            link: route('organizer.events.event.tickets'),
+            stateVariables: isAttendees,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsTickets(!isTickets);
+                setIscurrentState('tickets');
+                updateIconSidebar(e);
+            },
         },
         {
             id: "registrationForm",

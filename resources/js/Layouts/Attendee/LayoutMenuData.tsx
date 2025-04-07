@@ -11,6 +11,7 @@ const Navdata = () => {
     const [isPost, setIsPost] = useState<boolean>(false);
     const [isMore, setIsMore] = useState<boolean>(false);
     const [isQr, setIsQr] = useState<boolean>(false);
+    const [purchaseTickets, setPurchaseTickets] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>("Dashboard");
     // const [IsQA, setIsQA] = useState<boolean>(false);
@@ -43,6 +44,9 @@ const Navdata = () => {
         if (iscurrentState !== "More") {
             setIsMore(false);
         }
+        if (iscurrentState !== "Purchase") {
+            setPurchaseTickets(false);
+        }
         // if (iscurrentState !== "Q&A") {
         //     setIsQA(false);
         // }
@@ -55,6 +59,7 @@ const Navdata = () => {
         isMore,
         isQr,
         isPost,
+        purchaseTickets
     ]);
 
     const menuItems: any = [
@@ -102,19 +107,6 @@ const Navdata = () => {
             },
         },
         {
-            id: "posts",
-            label: "Posts",
-            icon: "bx bx-group",
-            link: route("attendee.posts.index"),
-            stateVariables: isPost,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsPost(!isPost);
-                setIscurrentState("Posts");
-                updateIconSidebar(e);
-            },
-        },
-        {
             id: "more",
             label: "Contact",
             icon: "bx bx-info-circle",
@@ -132,6 +124,19 @@ const Navdata = () => {
             label: "Tickets",
             icon: "bx bx-qr",
             link: route("attendee.tickets.get"),
+            stateVariables: isMore,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsMore(!isMore);
+                setIscurrentState("More");
+                updateIconSidebar(e);
+            },
+        },
+        {
+            id: "purchasedtickets",
+            label: "Purchased Tickets",
+            icon: "bx bx-qr",
+            link: route("attendee.tickets.purchased"),
             stateVariables: isMore,
             click: function (e: any) {
                 e.preventDefault();

@@ -296,7 +296,6 @@ function CreateOrEdit({ speaker, events }: any) {
 
                                                 </div>
                                             </Col>
-
                                         </Row>
 
                                         <div className="mt-4 text-center ">

@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use chillerlan\QRCode\QRCode;
 use App\Models\EventAppTicket;
+use App\Models\TransferTicket;
 use App\Models\AttendeePayment;
 use App\Services\PayPalService;
 use App\Services\StripeService;
@@ -141,17 +142,8 @@ class PaymentController extends Controller
 
     public function paymentSuccess($paymentUuId)
     {
-        $eventApp =  EventApp::find(auth()->user()->event_app_id);
-        $payment = $this->purchasedTickets();
-        $image = [];
-        foreach ($payment as $purchasedTicket) {
-            $image[] = [
-                'qr_code' => asset('Storage/' . $purchasedTicket->qr_code),
-            ];
-        }
         return Inertia::render(
-            'Attendee/Payment/PaymentSuccess',
-            compact(['eventApp', 'image'])
+            'Attendee/Payment/PaymentSuccess'
         );
     }
 
@@ -167,7 +159,7 @@ class PaymentController extends Controller
         if (!$payment) {
             throw new Exception('Payment object not found with uuid ' . $paymentUuId);
         }
-
+        $this->purchasedTickets();
         DB::beginTransaction();
         try {
             $payment->status = 'paid';
@@ -280,5 +272,39 @@ class PaymentController extends Controller
 
             return $payment->purchased_tickets;
         }
+    }
+
+    public function attendeeTickets()
+    {
+        $event = null;
+        $attendee = auth()->user();
+        $attendee->load('payments');
+        $payment = $attendee->payments[0];
+        $eventApp = EventApp::find($payment->event_app_id);
+        $image = [];
+        foreach ($payment->purchased_tickets as $purchasedTicket) {
+            $image[] = [
+                'qr_code' => asset('Storage/' . $purchasedTicket->qr_code),
+                'purchased_id' => $purchasedTicket->id,
+            ];
+        }
+        return Inertia::render('Attendee/Tickets/PurchasedTickets', compact(['eventApp', 'image']));
+    }
+
+    public function submitTicketTransfer(Request $request)
+    {
+        $emails = $request->input('emails');
+        foreach ($emails as $index => $email) {
+            if ($email) {
+                $transferTicket = TransferTicket::create([
+                    'attendee_id' => auth()->user()->id,
+                    'attendee_payment_id' => $index,
+                    'event_app_id' => auth()->user()->event_app_id,
+                    'transfer_email' => $email,
+                ]);
+            }
+        }
+
+        return redirect()->back()->with('success', 'Emails submitted successfully!');
     }
 }

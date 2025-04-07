@@ -57,6 +57,8 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
 
         //Payment Processing
         Route::get('view-tickets', [PaymentController::class, 'viewTickets'])->name('attendee.tickets.get');
+        Route::get('purchased-tickets', [PaymentController::class, 'attendeeTickets'])->name('attendee.tickets.purchased');
+        Route::post('submit-ticket-emails', [PaymentController::class, 'submitTicketTransfer'])->name('attendee.tickets.transfer');
         // Route::get('view-tickets', [PaymentController::class, 'viewTickets'])->name('attendee.tickets.purchased');
         // Route::post('tickets', [PaymentController::class, 'postTickets'])->name('attendee.tickets.post');
         Route::get('checkout/{paymentUuId}', [PaymentController::class, 'showCheckoutPage'])->name('attendee.tickets.checkout.page');
@@ -86,6 +88,7 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
     Route::post('/attendee-save-session/{eventSession}/{type}', [EventSessionController::class, 'saveSession'])->name('attendee.save.session');
 
     Route::post('/attendee-save-rating/{eventSession}', [EventSessionController::class, 'saveRating'])->name('attendee.save.rating');
+    Route::post('/attendee-check-in/{eventSession}', [EventSessionController::class, 'saveCheckIn'])->name('attendee.checkin');
 
     Route::post('/attendee-poll-rating', [EventPostController::class, 'pollToggle'])->name('attendee.poll.rating');
     Route::post('/attendee-post-likes', [EventPostController::class, 'toggleLike'])->name('attendee.like.rating');
