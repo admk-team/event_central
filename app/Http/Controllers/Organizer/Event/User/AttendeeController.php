@@ -5,7 +5,11 @@ namespace App\Http\Controllers\Organizer\Event\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organizer\Event\User\AttendeeStoreRequest;
 use App\Models\Attendee;
+use App\Models\AttendeePayment;
+use App\Models\EventSession;
 use App\Models\FormSubmission;
+use App\Models\SessionCheckIn;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -110,6 +114,18 @@ class AttendeeController extends Controller
 
     public function showInfo(String $id)
     {
+        $sessionsPurchased = AttendeePayment::where('attendee_id', $id)
+            ->with('purchased_tickets.ticket.sessions.eventDate') // eager load sessions
+            ->get()
+            ->flatMap(function ($payment) {
+                return $payment->purchased_tickets->flatMap(function ($ticket) {
+                    return $ticket->ticket->sessions;
+                });
+            })
+            ->unique('id') // remove duplicates
+            ->values();
+        // dd($sessionsPurchased->toArray());
+
         // attendee sessions
         $sessions = DB::table('attendee_event_session')
             ->join('event_sessions', 'attendee_event_session.event_session_id', '=', 'event_sessions.id')
@@ -135,13 +151,32 @@ class AttendeeController extends Controller
                 'attendee_payments.payment_method as type',
                 'attendee_purchased_tickets.qty as qty'
             )->get();
-        $user = Attendee::where('id', $id)->first();
+        
         if (! Auth::user()->can('view_attendees')) {
             abort(403);
         }
 
-        $user = Attendee::find($id)->first();
+        $user = Attendee::where('id', $id)->first();
         $attendee = FormSubmission::where('attendee_id', $id)->with('fieldValues', 'attendee', 'formFields')->get();
-        return Inertia::render('Organizer/Events/Users/Attendees/AttendeeProfile/Profile', compact('attendee', 'user', 'sessions', 'tickets'));
+        return Inertia::render('Organizer/Events/Users/Attendees/AttendeeProfile/Profile', compact('attendee', 'user', 'sessions', 'tickets', 'sessionsPurchased'));
+    }
+
+    public function chechIn(Request $request)
+    {
+        $alreadyCheckedIn = SessionCheckIn::where('attendee_id', $request->attendee['id'])
+            ->where('session_id', $request->event_session_id)
+            ->exists();
+        if ($alreadyCheckedIn) {
+            return back()->withErrors(['session' => 'You have already checked into this session.']);
+        }
+
+        SessionCheckIn::create([
+            'attendee_id' => $request->attendee['id'],
+            'session_id' => $request->event_session_id,
+            'checked_in' => Carbon::now()->toDateTimeString(),
+            'qr_code' => $request->attendee['qr_code'],
+        ]);
+
+        return back()->withSuccess("Check In Successfully");
     }
 }

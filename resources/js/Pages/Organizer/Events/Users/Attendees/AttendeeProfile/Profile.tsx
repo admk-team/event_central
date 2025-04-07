@@ -1,9 +1,12 @@
-import React from "react";
-import { Card, Col, Container, Row, Table } from "react-bootstrap";
+import React, { useState } from "react";
+import { Button, Card, Col, Container, Row, Table } from "react-bootstrap";
 import { Head, Link } from "@inertiajs/react";
 import Layout from "../../../../../../Layouts/Event";
+import CheckInModal from "./Component/CheckInModal";
 
-const Profile = ({ attendee,user,sessions,tickets }: any) => {
+const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
+
+    const [showModal, setShowModal] = useState(false);
     return (
         <React.Fragment>
             <Head title="Profile | Velzon - React Admin & Dashboard Template" />
@@ -36,6 +39,15 @@ const Profile = ({ attendee,user,sessions,tickets }: any) => {
                                         {user.email}
                                     </p>
                                 </div>
+                            </Col>
+                            <Col xs={12} className="col-lg-auto order-last order-lg-0">
+                                <Row className="text text-white-50 text-center">
+                                    <Col lg={12} xs={12}>
+                                        <Button className="p-2 fw-bold" onClick={() => setShowModal(true)}>
+                                            Check In
+                                        </Button>
+                                    </Col>
+                                </Row>
                             </Col>
                         </Row>
                     </div>
@@ -269,7 +281,14 @@ const Profile = ({ attendee,user,sessions,tickets }: any) => {
                         </Col>
                     </Row>
                 </Container>
+
             </div>
+            <CheckInModal
+                show={showModal}
+                onHide={() => setShowModal(false)}
+                attendee={user}
+                puchaseSession= {sessionsPurchased}
+            />
         </React.Fragment>
     );
 };
