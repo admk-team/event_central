@@ -7,6 +7,7 @@ import Select, { StylesConfig } from 'react-select';
 export default function CreateEditModal({ show, hide, onHide, ticket, sessions, addons }:
     { show: boolean, hide: () => void, onHide: () => void, ticket: any, sessions: any | null, addons: any }) {
 
+    // console.log(ticket);
     const isEdit = ticket != null ? true : false;
 
 
@@ -28,6 +29,7 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions, 
         increment_type: ticket?.increment_type ?? 'Percentage',
         start_increment: ticket?.start_increment ?? '',
         end_increment: ticket?.end_increment ?? '',
+        show_on_attendee_side: ticket?.show_on_attendee_side ?? true
     });
 
     const [selectMulti, setselectMulti] = useState<any>(ticket?.selected_sessions ?? null);
@@ -43,99 +45,26 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions, 
     const [addonsPrice, setAddonsPrice] = useState(ticket?.addons_price ?? 0);
     const [totalPrice, setTotalPrice] = useState(ticket?.total_price ?? 0);
 
-    // useEffect(() => {
-    //     fetchFeatures();
-    // }, []);
-
-    // useEffect(() => {
-    //     updatePricing();
-    //     updateTicketSelectedFeatures();
-    // }, [ticketFeatures, addonsPrice, totalPrice, basePrice]);
-
-    // const fetchFeatures = () => {
-    //     setEventLoading(true);
-    //     let url = route('organizer.events.fetch', [ticket?.id ?? null]);
-    //     axios.get(url).then((response) => {
-    //         setTicketFeatures(response.data.features);
-    //     }).finally(() => {
-    //         setEventLoading(false);
-    //     });
-    // }
-
     const submit = (e: any) => {
         e.preventDefault();
 
-        // transform((prevData) => ({
-        //     ...prevData,
-        //     base_price: basePrice,
-        //     addons_price: addonsPrice,
-        //     total_price: totalPrice
-        // }));
-
-        console.log(data);
-
+        // console.log(data);
         if (isEdit) {
             post(route('organizer.events.tickets.update', ticket.id), {
                 onSuccess: () => {
                     reset();
                     hide();
                 }
-            })
+            });
         } else {
             post(route('organizer.events.tickets.store'), {
                 onSuccess: () => {
                     reset();
                     hide();
                 }
-            })
+            });
         }
     }
-
-    // const toggleFeatureSelection = (feature: any) => {
-    //     const newList = ticketFeatures.map((item: any) => {
-    //         if (item.id === feature.id) {
-    //             const updatedFeature = {
-    //                 ...item,
-    //                 selected: (feature.selected > 0 ? null : 1)
-    //             }
-    //             return updatedFeature;
-    //         }
-    //         return item;
-    //     });
-    //     setTicketFeatures(newList);
-    //     updateTicketSelectedFeatures();
-    //     updatePricing();
-    // }
-
-    // const updateTicketSelectedFeatures = () => {
-
-    //     const selected_features: any = [];
-    //     ticketFeatures.forEach((item: any) => {
-    //         if (item.selected > 0) {
-    //             selected_features.push(item.id);
-    //         }
-    //     });
-    //     setData('features', selected_features);
-    // }
-
-    // const updatePricing = (base_price = data.base_price) => {
-
-    //     let addons_price = 0;
-    //     ticketFeatures.forEach((item: any) => {
-    //         if (item.selected > 0) {
-    //             addons_price += parseFloat(item.price);
-    //         }
-    //     });
-
-    //     let total_price = parseFloat(basePrice) + addons_price;
-
-    //     addons_price = (Math.round(addons_price * 100) / 100).toFixed(2);
-    //     total_price = (Math.round(total_price * 100) / 100).toFixed(2);
-    //     setAddonsPrice(addons_price);
-    //     setTotalPrice(total_price);
-    // }
-
-
 
     const handleCheckChangeSession = (event: any) => {
         if (event.target.checked) {
@@ -159,29 +88,13 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions, 
         }
     }
 
-    // const handleCheckChangeFeature = (event: any) => {
-    //     if (event.target.checked) {
-    //         const newList = ticketFeatures.map((item: any) => {
-    //             const updatedFeature = {
-    //                 ...item,
-    //                 selected: 1
-    //             }
-    //             return updatedFeature;
-    //         });
-    //         setTicketFeatures(newList);
-    //         setData('features', newList);
-    //     } else {
-    //         const newList = ticketFeatures.map((item: any) => {
-    //             const updatedFeature = {
-    //                 ...item,
-    //                 selected: null
-    //             }
-    //             return updatedFeature;
-    //         });
-    //         setTicketFeatures(newList);
-    //         setData('features', newList);
-    //     }
-    // }
+    const handleShowToAttendeeSwitchChange = (event: any) => {
+        if (event.target.checked) {
+            setData('show_on_attendee_side', true);
+        } else {
+            setData('show_on_attendee_side', false);
+        }
+    }
 
     // Style for Select 2
     const customStyles = {
@@ -409,6 +322,19 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions, 
                                     styles={customStyles}
                                 />
                                 {errors.addons && <Form.Control.Feedback type="invalid">{errors.addons}</Form.Control.Feedback>}
+                            </FormGroup>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col md={12} lg={12}>
+                            <FormGroup className="mb-3">
+                                <Form.Check
+                                    type='switch'
+                                    checked={data.show_on_attendee_side}
+                                    label="Show to Attendees"
+                                    id="check-show-to-attendee"
+                                    onChange={handleShowToAttendeeSwitchChange}
+                                />
                             </FormGroup>
                         </Col>
                     </Row>

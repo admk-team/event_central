@@ -130,8 +130,8 @@ const Index = ({ eventApp }: any) => {
                         </Col>
                     </Row>
                     <Row className=" justify-content-center gy-4">
-                        {eventApp.tickets.length > 0 &&
-                            eventApp.tickets.map((ticket: any) => (
+                        {eventApp.public_tickets.length > 0 &&
+                            eventApp.public_tickets.map((ticket: any) => (
                                 <TicketCard
                                     ticket={ticket}
                                     key={ticket.id}
