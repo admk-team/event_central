@@ -52,7 +52,7 @@
                 <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content pt-3">
                         <div class="d-flex justify-content-center">
-                            <img class="rounded-circle" src="{{ $speaker->avatar ?$speaker->avatar: 'https://picsum.photos/200/300'}}" width="150px" height="150px" alt="{{ $speaker->name }}">
+                            <img class="rounded-circle" src="{{ $speaker->avatar ? $speaker->avatar: '$event->logo'}}" width="150px" height="150px" alt="{{ $speaker->name }}">
                         </div>
                         <div class=" text-center">
                             <h5>{{ $speaker->name }}</h5>
@@ -78,19 +78,19 @@
                             @endif
 
                             <!-- Facebook link -->
-                             @if($speaker->facebook)
+                            @if($speaker->facebook)
                             <a target="_blank" href="{{ $speaker->facebook }}">
                                 <i class="bi bi-facebook text-primary"></i>
                             </a>
                             @endif
                             <!-- Twitter link -->
-                             @if($speaker->twitter)
+                            @if($speaker->twitter)
                             <a target="_blank" href="{{ $speaker->twitter }}">
                                 <i class="bi bi-twitter-x text-black"></i> <!-- Corrected 'bi-twitter-x' to 'bi-twitter' -->
                             </a>
-                             @endif
+                            @endif
                             <!-- Instagram link -->
-                             @if($speaker->instagram)
+                            @if($speaker->instagram)
                             <a target="_blank" href="{{ $speaker->instagram }}">
                                 <i class="bi bi-instagram text-danger-emphasis"></i>
                             </a>
