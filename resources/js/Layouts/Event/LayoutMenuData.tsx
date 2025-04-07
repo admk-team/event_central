@@ -227,6 +227,9 @@ const Navdata = () => {
                 setIscurrentState('registrationForm');
                 updateIconSidebar(e);
             },
+            hasPermissions: [
+                'edit_registration_form'
+            ],
         },
         ...(isEventStarted ? [{
             id: "sessionAttendance",
@@ -240,6 +243,9 @@ const Navdata = () => {
                 setIscurrentState('sessionAttendance');
                 updateIconSidebar(e);
             },
+            hasPermissions: [
+                'view_session_attendence'
+            ],
         }] : []),
         {
             id: "website",
@@ -253,6 +259,9 @@ const Navdata = () => {
                 setIscurrentState('website');
                 updateIconSidebar(e);
             },
+            hasPermissions: [
+                'view_website'
+            ],
         },
         {
             id: "payemntSettings",
@@ -266,6 +275,9 @@ const Navdata = () => {
                 setIscurrentState('payemntSettings');
                 updateIconSidebar(e);
             },
+            hasPermissions: [
+                'edit_payment_settings'
+            ],
         },
     ];
 
