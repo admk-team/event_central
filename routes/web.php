@@ -3,6 +3,7 @@
 use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\ProfileController;
 use App\Mail\AttendeeTicketPurchased;
+use App\Mail\AttendeeTicketPurchasedEmail;
 use App\Models\Attendee;
 use App\Models\AttendeePurchasedTickets;
 use Illuminate\Support\Facades\Route;
@@ -85,29 +86,3 @@ require __DIR__ . '/organizer.php';
 require __DIR__ . '/theme.php';
 
 require __DIR__ . '/attendee.php';
-
-
-
-Route::get('/send-test-email', function () {
-
-    $attendee = Attendee::find(1);
-    $attendee->load('payments.purchased_tickets');
-    $attendee_purchased_tickets = [];
-
-    foreach ($attendee->payments as $payment) {
-        foreach ($payment->purchased_tickets as $ticket)
-            array_push($attendee_purchased_tickets, $ticket);
-    }
-
-    Mail::to($attendee->email)->send(new AttendeeTicketPurchased($attendee, $attendee_purchased_tickets));
-    return 'email sent';
-});
-
-
-
-// Route::get('/test-qr', function () {
-//     $svg =  QrCode::format('svg')->generate("But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system, and expound the actual teachings of the great explorer of the truth, the master-builder of human happiness. No one rejects, dislikes, or avoids pleasure itself, because it is pleasure, but because those who do not know how to pursue pleasure rationally encounter consequences that are extremely painful. Nor again is there anyone who loves or pursues or desires to obtain pain");
-
-//     file_put_contents('test.svg', $svg);
-//     return view('svg', compact('svg'));
-// });

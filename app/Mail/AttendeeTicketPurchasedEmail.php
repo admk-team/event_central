@@ -11,7 +11,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class AttendeeTicketPurchased extends Mailable
+class AttendeeTicketPurchasedEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -33,7 +33,7 @@ class AttendeeTicketPurchased extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Ticket Purchase Confirmation',
+            subject: 'Ticket Purchase Confirmation ' . ': ' . env('APP_NAME'),
         );
     }
 

@@ -65,23 +65,81 @@
             margin-top: 20px;
         }
 
-        .full-width-table {
+        .ticket-wraper {
             width: 100%;
-            border-collapse: collapse;
-            /* Removes space between cells */
-            table-layout: fixed;
-            /* Forces cells to be equal width */
+            margin-top: 15px;
+            height: 200px;
         }
 
-        .full-width-table th,
-        .full-width-table td {
-            border: 1px solid #ccc;
-            padding: 8px 12px;
+
+        .table-wrapper {
+            overflow-x: auto;
+            /* Allows horizontal scrolling on small screens */
+            -webkit-overflow-scrolling: touch;
+            /* Adds smooth scrolling for iOS devices */
+        }
+
+        .responsive-table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: auto;
+            /* Ensures table resizes based on content */
+        }
+
+        .responsive-table th,
+        .responsive-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
             text-align: left;
-            width: 33.33%;
-            /* Each column gets 1/3 of the width */
-            word-wrap: break-word;
-            /* Prevent overflow */
+        }
+
+        .responsive-table th {
+            background-color: #f4f4f4;
+            font-weight: bold;
+        }
+
+        /* For very small screens: */
+        @media screen and (max-width: 600px) {
+            .responsive-table {
+                width: 100%;
+                /* Ensures the table takes up full width on smaller screens */
+            }
+
+            .responsive-table thead {
+                display: none;
+                /* Hide table headers on small screens */
+            }
+
+            .responsive-table,
+            .responsive-table tbody,
+            .responsive-table tr,
+            .responsive-table td {
+                display: block;
+                /* Make each row block-level for stackable design */
+                width: 100%;
+                /* Ensure each cell takes up full width */
+            }
+
+            .responsive-table tr {
+                margin-bottom: 10px;
+                /* Add space between rows */
+            }
+
+            .responsive-table td {
+                position: relative;
+                padding-left: 50%;
+                /* Add some space for labels */
+            }
+
+            .responsive-table td::before {
+                content: attr(data-label);
+                /* Show the header text before each cell */
+                position: absolute;
+                left: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-weight: bold;
+            }
         }
     </style>
 </head>
@@ -89,24 +147,31 @@
 <body>
     <div class="email-container">
         <h2>Welcome, {{ $attendee->first_name }} {{ $attendee->last_name }}!</h2>
-        <p>You have successfully purchased following tickets:</p>
-        <table class="full-width-table">
-            <tr>
-                <th>Ticket Name</th>
-                <th>Price</th>
-                <th>QR Code</th>
-            </tr>
-            @foreach ($attendee_purchased_tickets as $purchased_ticket)
-                <tr>
-                    <td>{{ $purchased_ticket->ticket->name }}</td>
-                    <td>{{ $purchased_ticket->total }}</td>
-                    <td>...
-                        {{-- <img src="{{ $message->embed($pathToImage) }}"> --}}
-                    </td>
-                </tr>
-            @endforeach
+        <p>You have successfully purchased following {{count($attendee_purchased_tickets)>1? count($attendee_purchased_tickets). ' tickets' : ' ticket'}}:</p>
 
-        </table>
+        <div class="table-wrapper">
+            <table class="responsive-table">
+                <thead>
+                    <tr>
+                        <th>Ticket Name</th>
+                        <th>Price</th>
+                        <th>QR Code</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($attendee_purchased_tickets as $index => $purchased_ticket)
+                        <tr>
+                            <td>{{ $index + 1 }}. {{ $purchased_ticket->ticket->name }}</td>
+                            <td>{{ $purchased_ticket->total +  $purchased_ticket->purchased_addons()->sum('price')}}</td>
+                            <td><img
+                                    src="{{ $message->embed(storage_path('app/public/' . $purchased_ticket->qr_code)) }}">
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+
 
         <div class="footer">
             <p>Best Regards,<br><strong>{{ config('app.name') }}</strong></p>

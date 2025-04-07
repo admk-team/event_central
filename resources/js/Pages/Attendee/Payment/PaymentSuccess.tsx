@@ -12,7 +12,7 @@ const PaymentSuccess = () => {
             <section className="section bg-light mt-4" id="success">
                 <div className="bg-overlay bg-overlay-pattern"></div>
                 <Container>
-                    <Row className="justify-content-center">
+                    <Row className="flex items-center justify-content-center h-screen">
                         <Col lg={8}>
                             <Card>
                                 <CardBody>
@@ -28,9 +28,9 @@ const PaymentSuccess = () => {
                                                     color: "green",
                                                 }}
                                             ></i>
-                                            <span className="fs-3 text-green">
+                                            <span className="fs-3 text-green p-4 text-center">
                                                 Payment was processed
-                                                successfuly.
+                                                successfuly. Confirmation email with QR Codes have emailed to your provided Email address.
                                             </span>
                                         </div>
                                     </div>
