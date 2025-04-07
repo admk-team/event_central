@@ -6,8 +6,6 @@ import moment from 'moment';
 
 const EventSessionsTimeLine = ({ eventApp, sessions }: any) => {
 
-    console.log(sessions);
-
     const sessionLists = sessions.map(session =>
         <li key={session.id}>
             <Link href={route('attendee.event.detail.session', { eventSession: session.id })}>

@@ -50,19 +50,19 @@ const Navdata = () => {
     ]);
 
     const menuItems: any = [
-        {
-            id: "dashboard",
-            label: "Dashboards",
-            icon: "bx bxs-dashboard",
-            link: route('admin.dashboard'),
-            stateVariables: isDashboard,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsDashboard(!isDashboard);
-                setIscurrentState('Dashboard');
-                updateIconSidebar(e);
-            },
-        },
+        // {
+        //     id: "dashboard",
+        //     label: "Dashboards",
+        //     icon: "bx bxs-dashboard",
+        //     link: route('admin.dashboard'),
+        //     stateVariables: isDashboard,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIsDashboard(!isDashboard);
+        //         setIscurrentState('Dashboard');
+        //         updateIconSidebar(e);
+        //     },
+        // },
         {
             id: "events",
             label: "Events",
