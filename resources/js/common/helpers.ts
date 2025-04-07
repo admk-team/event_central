@@ -22,4 +22,19 @@ function getDateDiff(date1: any, date2: any) {
     // console.log(years + ' years ' + months + ' months ' + days + ' days ' + hours + ' hours ' + minutes + ' minutes ' + seconds + ' seconds');
     return { years, months, days, hours, minutes, seconds };
 }
-export { getDateDiff };
+
+function createDateFromTime(timeString: string) {
+    if (! timeString) {
+        return null;
+    }
+    
+    const [hours, minutes, seconds] = timeString.split(':').map(Number);
+    const date = new Date();
+    date.setHours(hours);
+    date.setMinutes(minutes);
+    date.setSeconds(seconds);
+    date.setMilliseconds(0);
+    return date;
+}
+
+export { getDateDiff, createDateFromTime };

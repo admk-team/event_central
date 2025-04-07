@@ -140,6 +140,19 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
+        {
+            id: "purchasedtickets",
+            label: "Purchased Tickets",
+            icon: "bx bx-qr",
+            link: route("attendee.tickets.purchased"),
+            stateVariables: isMore,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsMore(!isMore);
+                setIscurrentState("More");
+                updateIconSidebar(e);
+            },
+        },
         // {
         //     id: "attendee-pass",
         //     label: "Attendee Pass",
