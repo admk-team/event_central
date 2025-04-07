@@ -11,7 +11,6 @@ function CreateOrEdit({ speaker, events }: any) {
     // Determine if the form is in edit mode
     const isEdit = !!speaker;
     const { data, setData, post, processing, errors, reset } = useForm({
-        event_app_id: speaker?.event_app_id || "",
         name: speaker?.name || "",
         avatar: null,
         company: speaker?.company || "",
@@ -298,23 +297,6 @@ function CreateOrEdit({ speaker, events }: any) {
                                                 </div>
                                             </Col>
 
-                                            <Col xxl={6} md={6}>
-                                                <Form.Label htmlFor="event_app_id" className="form-label">Select Event App</Form.Label>
-                                                <select
-                                                    className="form-select "
-                                                    id="event_app_id"
-                                                    aria-label="Select event app"
-                                                    value={data.event_app_id}
-                                                    onChange={(e) => setData('event_app_id', e.target.value)}
-                                                >
-                                                    <option value="">Select Event</option>
-                                                    {events?.map((event: any) => (
-                                                        <option key={event.id} value={event.id}>{event.name}</option>
-                                                    ))}
-                                                </select>
-                                                <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.event_app_id} </Form.Control.Feedback>
-
-                                            </Col>
                                         </Row>
 
                                         <div className="mt-4 text-center ">
