@@ -2,10 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Button, Col, Container, Row, Table } from "react-bootstrap";
 import { Head, Link, useForm } from "@inertiajs/react";
 import Layout from "../../../Layouts/Organizer";
-
 import CreateEditModal from "./Components/CreateEditModal";
 import DeleteModal from "../../../Components/Common/DeleteModal";
-
 import DataTable, { ColumnDef } from "../../../Components/DataTable";
 import BreadCrumb2 from "../../../Components/Common/BreadCrumb2";
 import DeleteManyModal from "../../../Components/Common/DeleteManyModal";
@@ -15,7 +13,7 @@ import moment from "moment";
 function Index({ events, recurring_types, event_category_types }: any) {
     const [showCreateEditModal, setShowCreateEditModal] = React.useState(false);
     const [currentEvent, setCurrentEvent] = React.useState<any>(null);
-    const [deleteUser, setDeleteEvent] = React.useState<any>(null);
+    const [deleteEvent, setDeleteEvent] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] =
         useState(false);
@@ -43,7 +41,7 @@ function Index({ events, recurring_types, event_category_types }: any) {
     };
 
     const handleDelete = () => {
-        deleteForm.post(route("organizer.events.destroy", deleteUser.id));
+        deleteForm.post(route("organizer.events.destroy", deleteEvent.id));
         setShowDeleteConfirmation(false);
     };
 
@@ -148,7 +146,7 @@ function Index({ events, recurring_types, event_category_types }: any) {
             header: () => "Action",
             cell: (event) => (
                 <div className="hstack gap-3 fs-15 ">
-                    <HasPermission permission="edit_users">
+                    <HasPermission permission="edit_events">
                         <Link
                             title="Click to select this Event"
                             href={route("organizer.events.select", {
@@ -160,7 +158,7 @@ function Index({ events, recurring_types, event_category_types }: any) {
                         </Link>
                     </HasPermission>
                     {/* <Link href={route('organizer.events.select', { 'id': event.id, 'back': false })}>Open</Link> */}
-                    <HasPermission permission="edit_users">
+                    <HasPermission permission="edit_events">
                         <span
                             title="Click to Edit this Event"
                             className="link-primary cursor-pointer"
@@ -169,7 +167,7 @@ function Index({ events, recurring_types, event_category_types }: any) {
                             <i className="ri-edit-fill"></i>
                         </span>
                     </HasPermission>
-                    <HasPermission permission="edit_users">
+                    <HasPermission permission="delete_events">
                         <span
                             className="link-danger cursor-pointer"
                             onClick={() => deleteAction(event)}
@@ -195,57 +193,59 @@ function Index({ events, recurring_types, event_category_types }: any) {
                     <BreadCrumb2 title="Events" />
                     <Row>
                         <Col xs={12} id="eventsTableWrapper">
-                            <DataTable
-                                data={events}
-                                columns={columns}
-                                title="Events"
-                                actions={[
-                                    // Delete multiple
-                                    {
-                                        render: (dataTable) => (
-                                            <HasPermission permission="delete_users">
-                                                <Button
-                                                    className="btn-danger"
-                                                    onClick={() =>
-                                                        deleteManyAction(
-                                                            dataTable
-                                                                .getSelectedRows()
-                                                                .map(
-                                                                    (row) =>
-                                                                        row.id
-                                                                )
+                            <HasPermission permission="view_events">
+                                <DataTable
+                                    data={events}
+                                    columns={columns}
+                                    title="Events"
+                                    actions={[
+                                        // Delete multiple
+                                        {
+                                            render: (dataTable) => (
+                                                <HasPermission permission="delete_events">
+                                                    <Button
+                                                        className="btn-danger"
+                                                        onClick={() =>
+                                                            deleteManyAction(
+                                                                dataTable
+                                                                    .getSelectedRows()
+                                                                    .map(
+                                                                        (row) =>
+                                                                            row.id
+                                                                    )
+                                                            )
+                                                        }
+                                                    >
+                                                        <i className="ri-delete-bin-5-line"></i>{" "}
+                                                        Delete (
+                                                        {
+                                                            dataTable.getSelectedRows()
+                                                                .length
+                                                        }
                                                         )
-                                                    }
-                                                >
-                                                    <i className="ri-delete-bin-5-line"></i>{" "}
-                                                    Delete (
-                                                    {
-                                                        dataTable.getSelectedRows()
-                                                            .length
-                                                    }
-                                                    )
-                                                </Button>
-                                            </HasPermission>
-                                        ),
-                                        showOnRowSelection: true,
-                                    },
-                                    // Add new
-                                    {
-                                        render: (
-                                            <HasPermission permission="create_users">
-                                                <Button
-                                                    onClick={() =>
-                                                        showModal(null)
-                                                    }
-                                                >
-                                                    <i className="ri-add-fill"></i>{" "}
-                                                    Add New Event
-                                                </Button>
-                                            </HasPermission>
-                                        ),
-                                    },
-                                ]}
-                            />
+                                                    </Button>
+                                                </HasPermission>
+                                            ),
+                                            showOnRowSelection: true,
+                                        },
+                                        // Add new
+                                        {
+                                            render: (
+                                                <HasPermission permission="create_events">
+                                                    <Button
+                                                        onClick={() =>
+                                                            showModal(null)
+                                                        }
+                                                    >
+                                                        <i className="ri-add-fill"></i>{" "}
+                                                        Add New Event
+                                                    </Button>
+                                                </HasPermission>
+                                            ),
+                                        },
+                                    ]}
+                                />
+                            </HasPermission>
                         </Col>
                     </Row>
                 </Container>

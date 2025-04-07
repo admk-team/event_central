@@ -15,7 +15,7 @@ class AttendeeController extends Controller
 {
     public function index(Request $request)
     {
-        if (! Auth::user()->canAny(['view_users', 'create_users', 'edit_users', 'delete_users'])) {
+        if (! Auth::user()->can('view_attendees')) {
             abort(403);
         }
 
@@ -26,6 +26,9 @@ class AttendeeController extends Controller
  
     public function store(Request $request)
     {
+        if (! Auth::user()->can('create_attendees')) {
+            abort(403);
+        }
 
         // dd($request->all(),Auth::user(),session('event_id'));
         $request->validate([
@@ -50,6 +53,10 @@ class AttendeeController extends Controller
 
     public function update(AttendeeStoreRequest $request, Attendee $attendee)
     {
+        if (! Auth::user()->can('edit_attendees')) {
+            abort(403);
+        }
+
         $input = $request->validated();
 
         $attendee->update($input);
@@ -59,6 +66,10 @@ class AttendeeController extends Controller
 
     public function updateAttendee(Request $request, $id)
     {
+        if (! Auth::user()->can('edit_attendees')) {
+            abort(403);
+        }
+
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -72,12 +83,20 @@ class AttendeeController extends Controller
 
     public function destroy(Attendee $attendee)
     {
+        if (! Auth::user()->can('delete_attendees')) {
+            abort(403);
+        }
+
         $attendee->delete();
         return back()->withSuccess('Attendee deleted successfully.');
     }
 
     public function destroyMany(Request $request)
     {
+        if (! Auth::user()->can('delete_attendees')) {
+            abort(403);
+        }
+
         $request->validate([
             'ids' => 'required|Array'
         ]);
@@ -90,6 +109,10 @@ class AttendeeController extends Controller
 
     public function showInfo(String $id)
     {
+        if (! Auth::user()->can('view_attendees')) {
+            abort(403);
+        }
+
         $user = Attendee::find($id)->first();
         $attendee = FormSubmission::where('attendee_id', $id)->with('fieldValues', 'attendee', 'formFields')->get();
         return Inertia::render('Organizer/Events/Users/Attendees/AttendeeProfile/Profile', compact('attendee','user'));

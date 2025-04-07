@@ -20,6 +20,11 @@ class EventAppTicket extends Model
         'increment_type',
         'start_increment',
         'end_increment',
+        'show_on_attendee_side'
+    ];
+
+    protected $casts = [
+        'show_on_attendee_side' => 'boolean'
     ];
 
     //Being used by Select2 in Ticket Create/Edit Model

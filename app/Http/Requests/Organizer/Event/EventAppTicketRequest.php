@@ -39,6 +39,7 @@ class EventAppTicketRequest extends FormRequest
             'increment_type' => '',
             'start_increment' => '',
             'end_increment' => '',
+            'show_on_attendee_side' => ''
         ];
     }
 

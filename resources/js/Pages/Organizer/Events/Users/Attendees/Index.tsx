@@ -11,7 +11,8 @@ import ImportModal from '../../Components/ImportModal';
 import EditAttendee from './Component/EditAttendee';
 // import Profile from './AttendeeProfile/Profile';
 import AddAttendee from './Component/AddAttendee';
-import writeXlsxFile from 'write-excel-file'
+import HasPermission from '../../../../../Components/HasPermission';
+
 function Index({ attendees }: any) {
 
     const [deleteAttendee, setDeleteAttendee] = React.useState<any>(null);
@@ -130,11 +131,17 @@ function Index({ attendees }: any) {
             header: () => 'Actions',
             cell: (attendee) => (
                 <div className="hstack gap-3 fs-15">
-                    <span className="link-primary cursor-pointer" onClick={() => editAction(attendee)} ><i className="ri-edit-fill"></i></span>
-                    <span className="link-danger cursor-pointer" onClick={() => deleteAction(attendee)}>
-                        <i className="ri-delete-bin-5-line"></i>
-                    </span>
-                    <Link href={route('organizer.events.attendee.info', { id: attendee.id })} className="link-primary cursor-pointer"><i className="ri-information-line"></i></Link>
+                    <HasPermission permission="edit_attendees">
+                        <span className="link-primary cursor-pointer" onClick={() => editAction(attendee)} ><i className="ri-edit-fill"></i></span>
+                    </HasPermission>
+                    <HasPermission permission="delete_attendees">
+                        <span className="link-danger cursor-pointer" onClick={() => deleteAction(attendee)}>
+                            <i className="ri-delete-bin-5-line"></i>
+                        </span>
+                    </HasPermission>
+                    <HasPermission permission="view_attendees">
+                        <Link href={route('organizer.events.attendee.info', { id: attendee.id })} className="link-primary cursor-pointer"><i className="ri-information-line"></i></Link>
+                    </HasPermission>
                 </div>
             ),
         },
@@ -161,31 +168,45 @@ function Index({ attendees }: any) {
                     <BreadCrumb title="Attendees" pageTitle="Dashboard" />
                     <Row>
                         <Col xs={12}>
-                            <DataTable
-                                data={attendees}
-                                columns={columns}
-                                title="Attendees"
-                                actions={[
-                                    // Delete multiple
-                                    {
-                                        render: (dataTable) => <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>,
-                                        showOnRowSelection: true,
-                                    },
+                            <HasPermission permission="view_attendees">
+                                <DataTable
+                                    data={attendees}
+                                    columns={columns}
+                                    title="Attendees"
+                                    actions={[
+                                        // Delete multiple
+                                        {
+                                            render: (dataTable) => (
+                                                <HasPermission permission="delete_attendees">
+                                                    <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>
+                                                </HasPermission>
+                                            ),
+                                            showOnRowSelection: true,
+                                        },
 
-                                    // import Attendees
-                                    {
-                                        render: <Button className='btn btn-outline-primary' onClick={() => showImportModal()}><i className="ri-login-box-line"></i> Import</Button>
-                                    },
-                                    // // Export Attendees
-                                    // {
-                                    //     render: <Button className='btn btn-outline-primary' onClick={handleExport}><i className="ri-login-box-line"></i> Export</Button>
-                                    // },
-                                    // Add new Attendee
-                                    {
-                                        render: <Button onClick={() => setShowEddModal(true)}><i className="ri-add-fill"></i> Add New</Button>
-                                    },
-                                ]}
-                            />
+                                        // import Attendees
+                                        {
+                                            render: (
+                                                <HasPermission permission="create_attendees">
+                                                    <Button className='btn btn-outline-primary' onClick={() => showImportModal()}><i className="ri-login-box-line"></i> Import</Button>
+                                                </HasPermission>
+                                            )
+                                        },
+                                        // // Export Attendees
+                                        // {
+                                        //     render: <Button className='btn btn-outline-primary' onClick={handleExport}><i className="ri-login-box-line"></i> Export</Button>
+                                        // },
+                                        // Add new Attendee
+                                        {
+                                            render: (
+                                                <HasPermission permission="create_attendees">
+                                                    <Button onClick={() => setShowEddModal(true)}><i className="ri-add-fill"></i> Add New</Button>
+                                                </HasPermission>
+                                            )
+                                        },
+                                    ]}
+                                />
+                            </HasPermission>
                         </Col>
                     </Row>
                 </Container>

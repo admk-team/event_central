@@ -147,6 +147,11 @@ class EventApp extends Model
         return $this->hasMany(EventAppTicket::class);
     }
 
+    public function public_tickets()
+    {
+        return $this->hasMany(EventAppTicket::class)->where('show_on_attendee_side', '1');
+    }
+
     public function partners()
     {
         return $this->hasMany(EventPartner::class);

@@ -147,10 +147,14 @@ function Index({ promoCodes, tickets }: any) {
             header: () => 'Action',
             cell: (promoCode) => (
                 <div className="hstack gap-3 fs-15">
-                    <span className="link-primary cursor-pointer" onClick={() => editAction(promoCode)}><i className="ri-edit-fill"></i></span>
-                    <span className="link-danger cursor-pointer" onClick={() => deleteAction(promoCode)}>
-                        <i className="ri-delete-bin-5-line"></i>
-                    </span>
+                    <HasPermission permission="edit_tickets">
+                        <span className="link-primary cursor-pointer" onClick={() => editAction(promoCode)}><i className="ri-edit-fill"></i></span>
+                    </HasPermission>
+                    <HasPermission permission="delete_tickets">
+                        <span className="link-danger cursor-pointer" onClick={() => deleteAction(promoCode)}>
+                            <i className="ri-delete-bin-5-line"></i>
+                        </span>
+                    </HasPermission>
                 </div>
             ),
         },
@@ -163,27 +167,33 @@ function Index({ promoCodes, tickets }: any) {
                     <BreadCrumb title="Promo Codes" pageTitle="Promo Codes" />
                     <Row>
                         <Col xs={12}>
-                            <DataTable
-                                data={promoCodes}
-                                columns={columns}
-                                title="Codes"
-                                actions={[
-                                    // Delete multiple
-                                    {
-                                        render: (dataTable) => <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>,
-                                        showOnRowSelection: true,
-                                    },
+                            <HasPermission permission="view_tickets">
+                                <DataTable
+                                    data={promoCodes}
+                                    columns={columns}
+                                    title="Codes"
+                                    actions={[
+                                        // Delete multiple
+                                        {
+                                            render: (dataTable) => (
+                                                <HasPermission permission="delete_tickets">
+                                                    <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>
+                                                </HasPermission>
+                                            ),
+                                            showOnRowSelection: true,
+                                        },
 
-                                    // Add new
-                                    {
-                                        render: (
-                                            <HasPermission permission="create_schedule">
-                                                <Button onClick={() => setShowCreateEditModal(true)}><i className="ri-add-fill"></i> Add New</Button>
-                                            </HasPermission>
-                                        )
-                                    },
-                                ]}
-                            />
+                                        // Add new
+                                        {
+                                            render: (
+                                                <HasPermission permission="create_tickets">
+                                                    <Button onClick={() => setShowCreateEditModal(true)}><i className="ri-add-fill"></i> Add New</Button>
+                                                </HasPermission>
+                                            )
+                                        },
+                                    ]}
+                                />
+                            </HasPermission>
                         </Col>
                     </Row>
 

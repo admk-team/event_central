@@ -7,6 +7,7 @@ import Layout from '../../../../Layouts/Event';
 import DeleteModal from '../../../../Components/Common/DeleteModal';
 import DataTable, { ColumnDef } from '../../../../Components/DataTable';
 import DeleteManyModal from '../../../../Components/Common/DeleteManyModal';
+import HasPermission from '../../../../Components/HasPermission';
 
 function Index({ speakers }: any) {
     const [deletespeaker, setDeleteSpeaker] = React.useState<any>(null);
@@ -73,10 +74,14 @@ function Index({ speakers }: any) {
             header: () => 'Action',
             cell: (speaker) => (
                 <div className="hstack gap-3 fs-15">
-                    <span className="link-primary cursor-pointer" onClick={() => editAction(speaker)}><i className="ri-edit-fill"></i></span>
-                    <span className="link-danger cursor-pointer" onClick={() => deleteAction(speaker)}>
-                        <i className="ri-delete-bin-5-line"></i>
-                    </span>
+                    <HasPermission permission="edit_speakers">
+                        <span className="link-primary cursor-pointer" onClick={() => editAction(speaker)}><i className="ri-edit-fill"></i></span>
+                    </HasPermission>
+                    <HasPermission permission="delete_speakers">
+                        <span className="link-danger cursor-pointer" onClick={() => deleteAction(speaker)}>
+                            <i className="ri-delete-bin-5-line"></i>
+                        </span>
+                    </HasPermission>
                 </div>
             ),
         },
@@ -103,24 +108,34 @@ function Index({ speakers }: any) {
                     <BreadCrumb title="Speakers" pageTitle="Dashboard" />
                     <Row>
                         <Col xs={12}>
-                            <DataTable
-                                data={speakers}
-                                columns={columns}
-                                title="Speakers"
-                                actions={[
-                                    // Delete multiple
-                                    {
-                                        render: (dataTable) => <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>,
-                                        showOnRowSelection: true,
-                                    },
+                            <HasPermission permission="view_speakers">
+                                <DataTable
+                                    data={speakers}
+                                    columns={columns}
+                                    title="Speakers"
+                                    actions={[
+                                        // Delete multiple
+                                        {
+                                            render: (dataTable) => (
+                                                <HasPermission permission="delete_speakers">
+                                                    <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>
+                                                </HasPermission>
+                                            ),
+                                            showOnRowSelection: true,
+                                        },
 
-                                    // Add new
-                                    {
-                                        render: <Link href={route('organizer.events.speaker.create')}><Button><i className="ri-add-fill"></i> Add New</Button></Link>
-                                    },
+                                        // Add new
+                                        {
+                                            render: (
+                                                <HasPermission permission="create_speakers">
+                                                    <Link href={route('organizer.events.speaker.create')}><Button><i className="ri-add-fill"></i> Add New</Button></Link>
+                                                </HasPermission>
+                                            )
+                                        },
 
-                                ]}
-                            />
+                                    ]}
+                                />
+                            </HasPermission>
                         </Col>
                     </Row>
                 </Container>

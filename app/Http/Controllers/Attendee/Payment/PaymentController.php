@@ -43,34 +43,10 @@ class PaymentController extends Controller
     public function viewTickets()
     {
         $eventApp =  EventApp::find(auth()->user()->event_app_id);
-        $eventApp->load(['tickets.sessions', 'tickets.addons']);
+        $eventApp->load(['public_tickets.sessions', 'public_tickets.addons']);
+        // return $eventApp;
         return Inertia::render('Attendee/Tickets/Index', compact(['eventApp']));
     }
-
-    // public function postTickets(Request $request)
-    // {
-    //     // Log::info($request->all());
-    //     $eventApp =  EventApp::find(auth()->user()->event_app_id);
-    //     $amount = $request->get('grandTotalAmount');
-    //     $tickets = $request->get('tickets');
-    //     $stripe_pub_key = $this->stripe_service->StripKeys()->stripe_publishable_key;
-    //     $paypal_client_id = $this->paypal_service->payPalKeys()->paypal_pub;
-
-    //     // Check if organizer of current Event [attendee->event_app_id]
-    //     //have setup strip keys in setting
-
-    //     if ($stripe_pub_key && $this->stripe_service->StripKeys()->stripe_secret_key) {
-    //         return Inertia::render('Attendee/Payment/Index', compact([
-    //             'eventApp',
-    //             'amount',
-    //             'tickets',
-    //             'stripe_pub_key',
-    //             'paypal_client_id'
-    //         ]));
-    //     } else {
-    //         return Inertia::render('Attendee/Payment/NoPaymentKeys');
-    //     }
-    // }
 
     // PayPal Payment
     //==================================================================================

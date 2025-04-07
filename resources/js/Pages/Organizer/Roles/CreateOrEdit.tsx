@@ -5,7 +5,7 @@ import { Form, FormGroup, Modal, Spinner } from "react-bootstrap";
 import Layout from '../../../Layouts/Organizer';
 import BreadCrumb2 from '../../../Components/Common/BreadCrumb2';
 
-function CreateOrEdit({ role, permissions, roleSpecific }: { role: any | null, permissions: any[], roleSpecific: any[] }) {
+function CreateOrEdit({ role, allPermissions, roleSpecific }: { role: any | null, allPermissions: any[], roleSpecific: any[] }) {
     const isEdit = role != null;
 
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -25,10 +25,10 @@ function CreateOrEdit({ role, permissions, roleSpecific }: { role: any | null, p
 
     // Handle Select All toggle
     const handleSelectAll = () => {
-        if (data.permissions.length === permissions.length) {
+        if (data.permissions.length === allPermissions.length) {
             setData("permissions", []); // Deselect all
         } else {
-            setData("permissions", permissions.map(p => p.id)); // Select all
+            setData("permissions", allPermissions.map(p => p.id)); // Select all
         }
     };
 
@@ -86,12 +86,12 @@ function CreateOrEdit({ role, permissions, roleSpecific }: { role: any | null, p
                                             type="checkbox"
                                             id="select-all"
                                             label="Select All"
-                                            checked={data.permissions.length === permissions.length}
+                                            checked={data.permissions.length === allPermissions.length}
                                             onChange={handleSelectAll}
                                             className="mb-2"
                                         />
                                         <Row className="mt-4">
-                                            {permissions.map((permission: any) => (
+                                            {allPermissions.map((permission: any) => (
                                                 <Col key={permission.id} xs={6} md={4} lg={3}>
                                                     <Form.Check
                                                         type="checkbox"
