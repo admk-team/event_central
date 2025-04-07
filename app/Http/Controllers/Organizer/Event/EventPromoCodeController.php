@@ -7,6 +7,7 @@ use App\Http\Requests\Organizer\Event\PromoCodeRequest;
 use App\Models\EventAppTicket;
 use Illuminate\Http\Request;
 use App\Models\PromoCode;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
@@ -17,6 +18,10 @@ class EventPromoCodeController extends Controller
      */
     public function index()
     {
+        if (! Auth::user()->can('view_tickets')) {
+            abort(403);
+        }
+
         $tickets = EventAppTicket::currentEvent()->select(['id as value', 'name as label'])->get();
         $promoCodes = $this->datatable(PromoCode::currentEvent()->with(['tickets']));
         // $promoCodes = $this->datatable(PromoCode::currentEvent()->with(['event', 'tickets']));
@@ -30,6 +35,10 @@ class EventPromoCodeController extends Controller
      */
     public function store(PromoCodeRequest $request)
     {
+        if (! Auth::user()->can('create_tickets')) {
+            abort(403);
+        }
+
         $data = $request->validated();
         Log::info($data);
         $promoCode = PromoCode::create($request->validated());
@@ -43,6 +52,10 @@ class EventPromoCodeController extends Controller
      */
     public function update(PromoCodeRequest $request, PromoCode $promo_code)
     {
+        if (! Auth::user()->can('edit_tickets')) {
+            abort(403);
+        }
+
         $data = $request->validated();
         $promo_code->update($data);
         $promo_code->tickets()->sync($this->transformTickets($data));
@@ -54,6 +67,10 @@ class EventPromoCodeController extends Controller
      */
     public function destroy(PromoCode $promoCode)
     {
+        if (! Auth::user()->can('delete_tickets')) {
+            abort(403);
+        }
+
         $promoCode->delete();
         return back()->withSuccess('Promo Code Deleted Successfully');
     }
@@ -63,6 +80,10 @@ class EventPromoCodeController extends Controller
      */
     public function destroyMany(Request $request)
     {
+        if (! Auth::user()->can('delete_tickets')) {
+            abort(403);
+        }
+        
         $ids = $request->get('ids');
 
         $request->validate([

@@ -18,11 +18,11 @@ class EventSessionController extends Controller
 {
     public function index(Request $request)
     {
-        if (! Auth::user()->canAny(['view_event_sessions', 'create_event_sessions', 'edit_event_sessions', 'delete_event_sessions'])) {
+        if (! Auth::user()->can('view_event_sessions')) {
             abort(403);
         }
 
-        $eventSessions = EventSession::with(['eventDate', 'eventPlatform'])
+        $eventSessions = EventSession::with(['eventDate', 'eventPlatform', 'eventSpeakers'])
             ->currentEvent()
             ->whereCanBeAccessedBy(Auth::user())
             ->get();
@@ -37,34 +37,59 @@ class EventSessionController extends Controller
     public function store(EventSessionRequest $request)
     {
         if (! Auth::user()->can('create_event_sessions')) {
-            // abort(403);
-            return back()->withError("Invalid User Permissions to create session");
+            abort(403);
         }
 
         $data = $request->validated();
+        if ($data['type'] == "Break") {
+            $data['qa_status'] = false;
+            $data['posts'] = false;
+        }
         $data['event_app_id'] = session('event_id');
-        EventSession::create($data);
+        
+        // Remove event_speaker_id from main data since we'll handle it separately
+        $speakers = $data['event_speaker_id'] ?? [];
+        unset($data['event_speaker_id']);
+        
+        $session = EventSession::create($data);
+        if (!empty($speakers)) {
+            $session->eventSpeakers()->sync($speakers);
+        }
+
         return back()->withSuccess("Session Created Successfully");
     }
 
-    public function update(EventSessionRequest $request, EventSession $schedule)
+    public function update(EventSessionRequest $request, EventSession $eventSession)
     {
-        if (! Auth::user()->can('edit_event_sessions', $schedule)) {
+        if (! Auth::user()->can('edit_event_sessions', $eventSession)) {
             abort(403);
         }
 
         $data = $request->validated();
-        $schedule->update($data);
+        if ($data['type'] == "Break") {
+            $data['qa_status'] = false;
+            $data['posts'] = false;
+        }
+        
+        // Handle speakers separately
+        $speakers = $data['event_speaker_id'] ?? [];
+        unset($data['event_speaker_id']);
+        
+        $eventSession->update($data);
+        if (!empty($speakers)) {
+            $eventSession->eventSpeakers()->sync($speakers);
+        }
+
         return back()->withSuccess("Session Updated Successfully");
     }
 
-    public function destroy(EventSession $schedule)
+    public function destroy(EventSession $eventSession)
     {
-        if (! Auth::user()->can('delete_event_sessions', $schedule)) {
+        if (! Auth::user()->can('delete_event_sessions', $eventSession)) {
             abort(403);
         }
 
-        $schedule->delete();
+        $eventSession->delete();
         return back()->withSuccess("Session Deleted Successfully");
     }
 
@@ -75,13 +100,13 @@ class EventSessionController extends Controller
         ]);
 
         foreach ($request->ids as $id) {
-            $schedule = EventSession::find($id);
+            $eventSession = EventSession::find($id);
 
-            if (! Auth::user()->can('delete_event_sessions', $schedule)) {
+            if (! Auth::user()->can('delete_event_sessions', $eventSession)) {
                 abort(403);
             }
 
-            $schedule?->delete();
+            $eventSession?->delete();
         }
     }
 }

@@ -11,11 +11,9 @@ import {
     Form,
 } from "react-bootstrap";
 import Rating from "react-rating";
-
-import { Head, useForm, Link, router } from "@inertiajs/react";
+import { Head, useForm, Link } from "@inertiajs/react";
 import Layout from "../../Layouts/Attendee";
 import DateDifferenceFromToday from "./common/DateDifferenceFromToday";
-
 import moment from "moment";
 import attendeeEventBg from "../../../images/attendee-bg.jpg";
 import defaultEventImage from "../../../images/defaultEventImage.png";
@@ -61,7 +59,7 @@ const AttendeeSessionDetail = ({
         selectedSessionDetails ? true : false
     );
 
-    const [showModal, SetShowModal] = useState<boolean>(false);
+    const [selectedSpeaker, setSelectedSpeaker] = useState<any>(null);
 
     const selectSession = () => {
         // form.post(route("attendee.save.session", [eventSession.id, "select"]));
@@ -69,14 +67,20 @@ const AttendeeSessionDetail = ({
     };
 
     const unSelectSession = () => {
-        // form.post(
-        //     route("attendee.save.session", [eventSession.id, "un-select"])
-        // );
+        // form.post(route("attendee.save.session", [eventSession.id, "un-select"]));
         // SetSessionSelected(false);
     };
 
     const handleRatingChange = (v: any) => {
         setData("rating", v);
+    };
+
+    const openSpeakerModal = (speaker: any) => {
+        setSelectedSpeaker(speaker);
+    };
+
+    const closeSpeakerModal = () => {
+        setSelectedSpeaker(null);
     };
 
     return (
@@ -90,12 +94,8 @@ const AttendeeSessionDetail = ({
                                 <Col md={8} lg={8}>
                                     <div className="d-flex justify-content-between align-items-center mb-4">
                                         <div className="d-flex flex-row align-items-center">
-                                            {/* href = { route('attendee.event.detail.agenda', eventApp.id) */}
-
                                             <Link
-                                                href={route(
-                                                    "attendee.event.detail.agenda"
-                                                )}
+                                                href={route("attendee.event.detail.agenda")}
                                                 style={{ marginRight: "3px" }}
                                             >
                                                 <i className="bx bx-arrow-back fs-3 fw-bolder text-muted"></i>
@@ -146,36 +146,29 @@ const AttendeeSessionDetail = ({
 
                                             {sessionSelected ? (
                                                 <a
-                                                    style={{
-                                                        marginRight: "15px",
-                                                    }}
+                                                    style={{ marginRight: "15px" }}
                                                     href="#"
                                                     className="pe-auto"
                                                     onClick={unSelectSession}
                                                     title="Purchased Session"
                                                 >
-                                                    <i className="bx bxs-heart fs-3 fw-bolder text-danger"></i>{" "}
-                                                    {/* Filled Heart Icon */}
+                                                    <i className="bx bxs-heart fs-3 fw-bolder text-danger"></i>
                                                 </a>
                                             ) : (
                                                 <a
-                                                    style={{
-                                                        marginRight: "15px",
-                                                    }}
+                                                    style={{ marginRight: "15px" }}
                                                     href="#"
                                                     className="pe-auto"
                                                     onClick={selectSession}
                                                     title="Not Purchased Session"
                                                 >
-                                                    <i className="bx bx-heart fs-3 fw-bolder text-muted"></i>{" "}
-                                                    {/* Empty Heart Icon */}
+                                                    <i className="bx bx-heart fs-3 fw-bolder text-muted"></i>
                                                 </a>
                                             )}
                                         </div>
                                     </div>
                                     <div>
                                         <Card>
-                                            {/* <Card.Img src={defaultEventImage} style={{ height: '30rem' }} /> */}
                                             <figure className="event-image">
                                                 <img
                                                     className="card-full-image"
@@ -186,19 +179,12 @@ const AttendeeSessionDetail = ({
                                                 />
                                                 <figcaption>
                                                     <DateDifferenceFromToday
-                                                        date1={
-                                                            eventApp.start_date
-                                                        }
+                                                        date1={eventApp.start_date}
                                                     ></DateDifferenceFromToday>
                                                 </figcaption>
                                             </figure>
                                         </Card>
-                                        <div
-                                            style={{
-                                                position: "relative",
-                                                top: "-18rem",
-                                            }}
-                                        >
+                                        <div style={{ position: "relative", top: "-18rem" }}>
                                             <DateDifferenceFromToday
                                                 date1={eventSession.start_date}
                                                 top={"-18rem"}
@@ -211,35 +197,23 @@ const AttendeeSessionDetail = ({
                                             <h5 style={{ margin: "0" }}>
                                                 <Badge
                                                     bg="secondary"
-                                                    style={{
-                                                        marginRight: "5px",
-                                                    }}
+                                                    style={{ marginRight: "5px" }}
                                                 >
                                                     MAIN STAGE
                                                 </Badge>
                                                 <Badge bg="secondary">
-                                                    {moment(
-                                                        eventSession.event_date
-                                                            .date
-                                                    ).format("DD MMM ") +
+                                                    {moment(eventSession.event_date.date).format("DD MMM ") +
                                                         " - " +
-                                                        moment(
-                                                            eventSession.start_date_time
-                                                        ).format("hh:mm") +
+                                                        moment(eventSession.start_date_time).format("hh:mm") +
                                                         " - " +
-                                                        moment(
-                                                            eventSession.end_date_time
-                                                        ).format("hh:mm")}
+                                                        moment(eventSession.end_date_time).format("hh:mm")}
                                                 </Badge>
                                             </h5>
                                         </div>
                                         <div className="d-flex flex-row align-items-center">
                                             {prev_session_id && (
                                                 <Link
-                                                    href={route(
-                                                        "attendee.event.detail.session",
-                                                        [prev_session_id]
-                                                    )}
+                                                    href={route("attendee.event.detail.session", [prev_session_id])}
                                                     title="Previous Session"
                                                 >
                                                     <i className="bx bx-left-arrow-alt fs-3 fw-bolder text-muted"></i>
@@ -247,10 +221,7 @@ const AttendeeSessionDetail = ({
                                             )}
                                             {next_session_id && (
                                                 <Link
-                                                    href={route(
-                                                        "attendee.event.detail.session",
-                                                        [next_session_id]
-                                                    )}
+                                                    href={route("attendee.event.detail.session", [next_session_id])}
                                                     title="Next Session"
                                                 >
                                                     <i className="bx bx-right-arrow-alt fs-3 fw-bolder text-muted"></i>
@@ -258,34 +229,33 @@ const AttendeeSessionDetail = ({
                                             )}
                                         </div>
                                     </div>
-                                    <h4 className="mt-2">Speakers</h4>
-                                    {eventSession.event_speaker && (
-                                        <>
-                                            <Button
-                                                variant="outline-secondary"
-                                                onClick={() =>
-                                                    SetShowModal(true)
-                                                }
-                                            >
-                                                {
-                                                    eventSession.event_speaker
-                                                        .name
-                                                }
-                                            </Button>
 
-                                            <SpeakerModal
-                                                show={showModal}
-                                                hide={() => SetShowModal(false)}
-                                                onHide={() =>
-                                                    SetShowModal(false)
-                                                }
-                                                event={eventApp}
-                                                speaker={
-                                                    eventSession.event_speaker
-                                                }
-                                            ></SpeakerModal>
-                                        </>
+                                    <h4 className="mt-2">Speakers</h4>
+                                    {eventSession.event_speakers && eventSession.event_speakers.length > 0 ? (
+                                        <div className="d-flex flex-wrap gap-2">
+                                            {eventSession.event_speakers.map((speaker: any) => (
+                                                <Button
+                                                    key={speaker.id}
+                                                    variant="outline-secondary"
+                                                    onClick={() => openSpeakerModal(speaker)}
+                                                >
+                                                    {speaker.name}
+                                                </Button>
+                                            ))}
+                                            {selectedSpeaker && (
+                                                <SpeakerModal
+                                                    show={!!selectedSpeaker}
+                                                    hide={closeSpeakerModal}
+                                                    onHide={closeSpeakerModal}
+                                                    event={eventApp}
+                                                    speaker={selectedSpeaker}
+                                                />
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <p>No speakers assigned</p>
                                     )}
+
                                     <h4 className="mb-1 mt-4">Description</h4>
                                     <p>{eventSession.description}</p>
                                 </Col>
@@ -296,13 +266,9 @@ const AttendeeSessionDetail = ({
                                             <div className="d-flex justify-content-center align-items-center">
                                                 <i
                                                     className="fs-3 bx bx-star"
-                                                    style={{
-                                                        marginRight: "10px",
-                                                    }}
+                                                    style={{ marginRight: "10px" }}
                                                 ></i>
-                                                <span className="fs-3">
-                                                    Ratings
-                                                </span>
+                                                <span className="fs-3">Ratings</span>
                                             </div>
                                         </CardBody>
                                     </Card>
@@ -314,30 +280,18 @@ const AttendeeSessionDetail = ({
                                             <Accordion.Body>
                                                 {!sessionSelected && (
                                                     <p className="fs-5">
-                                                        Rating can be left for
-                                                        purchased session(s)
-                                                        only.
+                                                        Rating can be left for purchased session(s) only.
                                                     </p>
                                                 )}
                                                 {sessionSelected && (
-                                                    <form
-                                                        onSubmit={
-                                                            submitRatingChange
-                                                        }
-                                                    >
+                                                    <form onSubmit={submitRatingChange}>
                                                         <div className="mt-4">
                                                             <div className="rating-wraper d-flex justify-content-center w-100">
                                                                 <Rating
-                                                                    initialRating={
-                                                                        data.rating
-                                                                    }
-                                                                    onChange={
-                                                                        handleRatingChange
-                                                                    }
+                                                                    initialRating={data.rating}
+                                                                    onChange={handleRatingChange}
                                                                     emptySymbol="bx bx-star"
-                                                                    fullSymbol={[
-                                                                        "bx bxs-star",
-                                                                    ]}
+                                                                    fullSymbol={["bx bxs-star"]}
                                                                 />
                                                             </div>
                                                             <Form.Control.Feedback
@@ -356,45 +310,28 @@ const AttendeeSessionDetail = ({
                                                                 rows={4}
                                                                 name="rating_description"
                                                                 placeholder="Enter Rating Comments"
-                                                                value={
-                                                                    data.rating_description
-                                                                }
+                                                                value={data.rating_description}
                                                                 className={
                                                                     "mt-1 form-control" +
-                                                                    (errors.rating_description
-                                                                        ? "is-invalid"
-                                                                        : "")
+                                                                    (errors.rating_description ? "is-invalid" : "")
                                                                 }
-                                                                autoComplete="ratinrating_descriptiong_comments"
-                                                                onChange={(
-                                                                    e: any
-                                                                ) =>
-                                                                    setData(
-                                                                        "rating_description",
-                                                                        e.target
-                                                                            .value
-                                                                    )
+                                                                autoComplete="rating_description"
+                                                                onChange={(e: any) =>
+                                                                    setData("rating_description", e.target.value)
                                                                 }
                                                             />
-
                                                             <Form.Control.Feedback
                                                                 type="invalid"
                                                                 className="mt-2 d-block"
                                                             >
-                                                                {
-                                                                    errors.rating_description
-                                                                }
+                                                                {errors.rating_description}
                                                             </Form.Control.Feedback>
                                                         </div>
                                                         {!ratingEnabled && (
                                                             <p>
-                                                                * Ratings can be
-                                                                added only after
-                                                                the session has
+                                                                * Ratings can be added only after the session has
                                                                 started i.e{" "}
-                                                                {moment(
-                                                                    eventSession.start_date_time
-                                                                ).format(
+                                                                {moment(eventSession.start_date_time).format(
                                                                     "DD MMM, YYYY hh:mm"
                                                                 )}
                                                             </p>
@@ -405,9 +342,7 @@ const AttendeeSessionDetail = ({
                                                                 <Button
                                                                     type="submit"
                                                                     className="btn btn-success w-100 mt-4"
-                                                                    disabled={
-                                                                        processing
-                                                                    }
+                                                                    disabled={processing}
                                                                 >
                                                                     Save Rating
                                                                 </Button>
@@ -482,5 +417,6 @@ const AttendeeSessionDetail = ({
         </React.Fragment>
     );
 };
+
 AttendeeSessionDetail.layout = (page: any) => <Layout children={page} />;
 export default AttendeeSessionDetail;

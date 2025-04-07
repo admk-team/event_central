@@ -1,6 +1,7 @@
 import { Link as Link } from "@inertiajs/react"; // Use Inertia's Link
 import moment from "moment";
 import { Button, Col, Row } from "react-bootstrap";
+import HasPermission from "../../../../../Components/HasPermission";
 
 interface Session {
     id: number;
@@ -90,22 +91,26 @@ export default function SessionCard({
                                         {session.name}
                                     </h4>
                                     <div className="d-flex gap-1">
-                                        <Button
-                                            onClick={onEdit}
-                                            variant="primary"
-                                            size="sm"
-                                            className="btn-icon"
-                                        >
-                                            <i className="ri-edit-fill" />
-                                        </Button>
-                                        <Button
-                                            onClick={onDelete}
-                                            variant="danger"
-                                            size="sm"
-                                            className="btn-icon"
-                                        >
-                                            <i className="ri-delete-bin-5-line" />
-                                        </Button>
+                                        <HasPermission permission="edit_event_sessions">
+                                            <Button
+                                                onClick={onEdit}
+                                                variant="primary"
+                                                size="sm"
+                                                className="btn-icon"
+                                            >
+                                                <i className="ri-edit-fill" />
+                                            </Button>
+                                        </HasPermission>
+                                        <HasPermission permission="delete_event_sessions">
+                                            <Button
+                                                onClick={onDelete}
+                                                variant="danger"
+                                                size="sm"
+                                                className="btn-icon"
+                                            >
+                                                <i className="ri-delete-bin-5-line" />
+                                            </Button>
+                                        </HasPermission>
                                     </div>
                                 </div>
                                 <p className="text-muted mb-2">

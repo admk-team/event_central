@@ -10,6 +10,7 @@ import WebsitePages from './Components/WebsitePages';
 import WebsiteHeaders from './Components/WebsiteHeaders';
 import WebsiteFooters from './Components/WebsiteFooters';
 import Colors from './Components/Colors';
+import HasPermission from '../../../../../Components/HasPermission';
 
 function Website() {
 
@@ -28,10 +29,14 @@ function Website() {
                         <Col md={8}>
                             <Row>
                                 <Col xs={12}>
-                                    <WebsiteUrl />
+                                    <HasPermission permission="view_website">
+                                        <WebsiteUrl />
+                                    </HasPermission>
                                 </Col>
                                 <Col xs={12}>
-                                    <Colors />
+                                    <HasPermission permission="edit_website">
+                                        <Colors />
+                                    </HasPermission>
                                 </Col>
                                 {/* <Col xs={12}>
                                     <WebsitePages />
@@ -47,7 +52,9 @@ function Website() {
                         <Col md={4}>
                             <Row>
                                 <Col xs={12}>
-                                    <WebsiteStatus />
+                                    <HasPermission permission="edit_website">
+                                        <WebsiteStatus />
+                                    </HasPermission>
                                 </Col>
                             </Row>
                         </Col>

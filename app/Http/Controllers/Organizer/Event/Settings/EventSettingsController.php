@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Organizer\Event\Settings;
 use App\Http\Controllers\Controller;
 use App\Models\EventApp;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
@@ -14,12 +15,20 @@ class EventSettingsController extends Controller
 {
     public function index(): Response
     {
+        if (! Auth::user()->canAny(['edit_events', 'delete_events'])) {
+            abort(403);
+        }
+
         $event = EventApp::find(session('event_id'));
         return Inertia::render("Organizer/Events/Settings/Event/Index", compact('event'));
     }
 
     public function updateInfo(Request $request)
     {
+        if (! Auth::user()->can('edit_events')) {
+            abort(403);
+        }
+
         $input = $request->validate([
             'logo' => 'nullable',
             'name' => 'required',
@@ -53,6 +62,10 @@ class EventSettingsController extends Controller
 
     public function destroyEvent(Request $request)
     {
+        if (! Auth::user()->can('delete_events')) {
+            abort(403);
+        }
+
         $currentEvent = EventApp::find(session('event_id'));
 
         $request->validate([

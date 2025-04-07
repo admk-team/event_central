@@ -4,6 +4,8 @@ import { Button, Dropdown } from "react-bootstrap";
 import CreateEditEventPlatformModal from "./CreateEditEventPlatformModal";
 import { useForm, usePage } from "@inertiajs/react";
 import DeleteModal from "../../../../../Components/Common/DeleteModal";
+import HasPermission from "../../../../../Components/HasPermission";
+import HasAnyPermission from "../../../../../Components/HasAnyPermission";
 
 export default function Platforms({ onPlatformChange }: { onPlatformChange: (platform: any) => void }) {
     const eventPlatforms = usePage().props.eventPlatforms as any;
@@ -51,6 +53,8 @@ export default function Platforms({ onPlatformChange }: { onPlatformChange: (pla
             if (eventPlatforms.length > eventPlatformsCount.current) {
                 setSelectedPlatform(eventPlatforms[eventPlatforms.length - 1]);
                 eventPlatformsCount.current = eventPlatforms.length;
+            } else {
+                setSelectedPlatform(eventPlatforms[0]);
             }
         } else {
             setSelectedPlatform(null);
@@ -68,32 +72,40 @@ export default function Platforms({ onPlatformChange }: { onPlatformChange: (pla
                             onClick={() => setSelectedPlatform(platform)}
                         >
                             <div className="fw-semibold">{platform.name}</div>
-                            <Dropdown onClick={e => e.stopPropagation()}>
-                                <Dropdown.Toggle
-                                    variant="light"
-                                    size="sm"
-                                    className="btn-icon"
-                                >
-                                    <Ellipsis size={14} />
-                                </Dropdown.Toggle>
-                                <Dropdown.Menu>
-                                    <Dropdown.Item onClick={() => editAction(platform)}> Edit</Dropdown.Item>
-                                    <Dropdown.Item
-                                        className="text-danger fw-semibold"
-                                        onClick={() => deleteAction(platform)}
+                            <HasAnyPermission permission={['edit_platforms', 'delete_platforms']}>
+                                <Dropdown onClick={e => e.stopPropagation()}>
+                                    <Dropdown.Toggle
+                                        variant="light"
+                                        size="sm"
+                                        className="btn-icon"
                                     >
-                                        Delete
-                                    </Dropdown.Item>
-                                </Dropdown.Menu>
-                            </Dropdown>
+                                        <Ellipsis size={14} />
+                                    </Dropdown.Toggle>
+                                    <Dropdown.Menu>
+                                        <HasPermission permission="edit_platforms">
+                                            <Dropdown.Item onClick={() => editAction(platform)}> Edit</Dropdown.Item>
+                                        </HasPermission>
+                                        <HasPermission permission="delete_platforms">
+                                            <Dropdown.Item
+                                                className="text-danger fw-semibold"
+                                                onClick={() => deleteAction(platform)}
+                                            >
+                                                Delete
+                                            </Dropdown.Item>
+                                        </HasPermission>
+                                    </Dropdown.Menu>
+                                </Dropdown>
+                            </HasAnyPermission>
                         </div>
                     ))}
                 </div>
                 <div className="text-center py-3">
-                    <Button onClick={() => setShowCreateEditPlatformModal(true)}>
-                        <i className="ri-add-fill"></i>
-                        New Platform
-                    </Button>
+                    <HasPermission permission="create_platforms">
+                        <Button onClick={() => setShowCreateEditPlatformModal(true)}>
+                            <i className="ri-add-fill"></i>
+                            New Platform
+                        </Button>
+                    </HasPermission>
                 </div>
             </div>
 

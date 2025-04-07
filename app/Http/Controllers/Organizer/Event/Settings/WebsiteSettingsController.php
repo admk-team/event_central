@@ -8,6 +8,7 @@ use App\Models\Footer;
 use App\Models\Header;
 use App\Models\Page;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -15,6 +16,10 @@ class WebsiteSettingsController extends Controller
 {
     public function index(): Response
     {
+        if (! Auth::user()->can('view_website')) {
+            abort(403);
+        }
+
         $currentEvent = EventApp::find(session('event_id'));
 
         $this->createDefaults($currentEvent);
@@ -32,6 +37,10 @@ class WebsiteSettingsController extends Controller
 
     public function toggleStatus()
     {
+        if (! Auth::user()->can('edit_website')) {
+            abort(403);
+        }
+
         $value = eventSettings()->getValue('website_status', false);
         eventSettings()->set('website_status', !$value);
         return back()->withSuccess(!$value ? "Activated" : "Deactivated");
@@ -39,6 +48,10 @@ class WebsiteSettingsController extends Controller
 
     public function saveColors(Request $request)
     {
+        if (! Auth::user()->can('edit_website')) {
+            abort(403);
+        }
+        
         eventSettings()->set('website_colors', $request->colors);
         return back()->withSuccess("Saved");
     }

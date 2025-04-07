@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\EventApp;
 use App\Models\EventAppPayment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -14,6 +15,10 @@ class EventAppPaymentController extends Controller
 {
     public function index(): Response
     {
+        if (! Auth::user()->can('edit_payment_settings')) {
+            abort(403);
+        }
+
         $event = EventAppPayment::firstOrCreate(
             ['event_app_id' => session('event_id')],
             [
@@ -30,6 +35,10 @@ class EventAppPaymentController extends Controller
 
     public function update(Request $request)
     {
+        if (! Auth::user()->can('edit_payment_settings')) {
+            abort(403);
+        }
+        
         $input = $request->validate([
             'paypal_secret' => 'nullable|string',
             'paypal_pub' => 'nullable|string',

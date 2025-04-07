@@ -6,6 +6,7 @@ import BreadCrumb2 from '../../../../../Components/Common/BreadCrumb2';
 import Information from './Components/Information';
 import Contact from './Components/Contact';
 import Other from './Components/Other';
+import HasPermission from '../../../../../Components/HasPermission';
 
 function Event() {
     return (
@@ -21,7 +22,9 @@ function Event() {
                     />
                     <Row>
                         <Col md={8}>
-                            <Information />
+                            <HasPermission permission="edit_events">
+                                <Information />
+                            </HasPermission>
                         </Col>
                         <Col md={4}>
                             <Row>
@@ -29,7 +32,9 @@ function Event() {
                                     {/* <Contact /> */}
                                 </Col>
                                 <Col xs={12}>
-                                    <Other />
+                                    <HasPermission permission="delete_events">
+                                        <Other />
+                                    </HasPermission>
                                 </Col>
                             </Row>
                         </Col>
