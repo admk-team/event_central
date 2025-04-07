@@ -30,6 +30,7 @@ class EventResource extends JsonResource
             'event_sessions' => EventSessionResource::collection($this->whenLoaded('event_sessions')),
             'event_tickets' => EventTicketResource::collection($this->whenLoaded('tickets')),
             'event_organizer' => new UserResource($this->whenLoaded('organiser')),
+            'public_tickets' => PublicTicketResource::collection($this->whenLoaded('public_tickets')),
             // 'applicant_answer' => AnswerResource::collection($this->whenLoaded('applicantAnswer')),
         ];
     }
