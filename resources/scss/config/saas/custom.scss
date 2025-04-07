@@ -170,3 +170,33 @@ File: Custom Css File
 .form-field-option:focus-visible {
     background-color: rgba(17, 17, 17, 0.05);
 }
+
+/* rsuite timepicker */
+.rs-input-group {
+    border: var(--vz-border-width) solid var(--vz-input-border-custom) !important;
+}
+.rs-input-group:not(.rs-input-group-disabled):hover {
+    border-color: var(--vz-input-border-custom) !important;
+}
+.rs-input-group:not(.rs-input-group-disabled).rs-input-group-focus, .rs-input-group:focus-within {
+    border-color: var(--vz-primary-border-subtle) !important;
+    box-shadow: 0 0 1 0.25rem rgba(var(--vz-primary-rgb), 0.25) !important;
+}
+.rs-input-group:not(.rs-input-group-disabled).rs-input-group-focus, .rs-input-group:focus-within {
+    outline: none !important;
+}
+.rs-calendar-time-dropdown-cell.rs-calendar-time-dropdown-cell-active {
+    background-color: var(--vz-success) !important;
+}
+.rs-calendar-time-dropdown-cell:hover {
+    background-color: rgb(from var(--vz-success) r g b / 10%) !important;
+    // background-color: var(--rs-listbox-option-hover-bg);
+    color: var(--vz-success) !important;
+    // color: var(--rs-listbox-option-hover-text);
+}
+.rs-btn-link {
+    color: var(--vz-success) !important;
+}
+.rs-btn-primary {
+    background-color: var(--vz-success) !important;
+}

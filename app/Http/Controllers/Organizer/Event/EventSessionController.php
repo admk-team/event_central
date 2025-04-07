@@ -59,9 +59,9 @@ class EventSessionController extends Controller
         return back()->withSuccess("Session Created Successfully");
     }
 
-    public function update(EventSessionRequest $request, EventSession $eventSession)
+    public function update(EventSessionRequest $request, EventSession $schedule)
     {
-        if (! Auth::user()->can('edit_event_sessions', $eventSession)) {
+        if (! Auth::user()->can('edit_event_sessions', $schedule)) {
             abort(403);
         }
 
@@ -75,21 +75,21 @@ class EventSessionController extends Controller
         $speakers = $data['event_speaker_id'] ?? [];
         unset($data['event_speaker_id']);
         
-        $eventSession->update($data);
+        $schedule->update($data);
         if (!empty($speakers)) {
-            $eventSession->eventSpeakers()->sync($speakers);
+            $schedule->eventSpeakers()->sync($speakers);
         }
 
         return back()->withSuccess("Session Updated Successfully");
     }
 
-    public function destroy(EventSession $eventSession)
+    public function destroy(EventSession $schedule)
     {
-        if (! Auth::user()->can('delete_event_sessions', $eventSession)) {
+        if (! Auth::user()->can('delete_event_sessions', $schedule)) {
             abort(403);
         }
 
-        $eventSession->delete();
+        $schedule->delete();
         return back()->withSuccess("Session Deleted Successfully");
     }
 
