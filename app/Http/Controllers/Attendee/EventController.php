@@ -31,14 +31,14 @@ class EventController extends Controller
             'event_sessions.eventSpeakers', // Updated to plural 'eventSpeakers'
             'event_sessions.eventPlatform'
         ]);
-        
+
         return Inertia::render('Attendee/AttendeeAgenda', compact('eventApp'));
     }
 
     public function getEventSessionDetail(Request $request, EventSession $eventSession)
     {
         $eventApp = EventApp::find(Auth::user()->event_app_id);
-        
+
         // Finding previous and next session IDs with reference to current session
         $next_session_id = null;
         $prev_session_id = null;
@@ -75,7 +75,7 @@ class EventController extends Controller
     public function getEventSpeakerDetail(EventSpeaker $eventSpeaker)
     {
         $eventApp = EventApp::find(Auth::user()->event_app_id);
-        
+
         // Load all speakers and their sessions for the event
         $eventApp->load(['event_speakers' => function ($query) {
             $query->with('eventSessions'); // Load sessions for all speakers
