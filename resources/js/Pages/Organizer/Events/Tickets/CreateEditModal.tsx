@@ -4,25 +4,25 @@ import Flatpickr from "react-flatpickr";
 import { Spinner, Col, Form, FormGroup, Modal, Nav, Row, Tab, Table, Button } from 'react-bootstrap';
 import Select, { StylesConfig } from 'react-select';
 
-export default function CreateEditModal({ show, hide, onHide, ticket, sessions, addons }:
-    { show: boolean, hide: () => void, onHide: () => void, ticket: any, sessions: any | null, addons: any }) {
+export default function CreateEditModal({ show, hide, onHide, ticket, sessions, addons, fees }:
+    { show: boolean, hide: () => void, onHide: () => void, ticket: any, sessions: any | null, addons: any, fees: any }) {
 
+    // console.log(fees);
     // console.log(ticket);
-    const isEdit = ticket != null ? true : false;
 
+    const isEdit = ticket != null ? true : false;
 
     const { data, setData, post, put, processing, errors, reset, transform } = useForm({
         _method: isEdit ? "PUT" : "POST",
         event_app_id: ticket?.event_app_id ?? '',
         sessions: ticket?.selected_sessions ?? [],
         addons: ticket?.selected_addons ?? [],
+        fees: ticket?.fees ?? [],
         name: ticket?.name ?? '',
         description: ticket?.description ?? '',
         type: 'NORMAL',
 
         base_price: ticket?.base_price ?? '',
-        // addons_price: ticket?.addons_price ?? 0,
-        // total_price: ticket?.total_price ?? 0,
 
         increment_by: ticket?.increment_by ?? '',
         increment_rate: ticket?.increment_rate ?? '',
@@ -37,18 +37,19 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions, 
 
     const [selectMultiAddon, setselectMultiAddon] = useState<any>(ticket?.selected_addons ?? null);
     const [selectAllAddons, setSelectAllAddons] = useState<any>(false);
+    const [selectedFees, setSelectedFees] = useState<any>(ticket?.fees ?? []);
 
-    const [ticketFeatures, setTicketFeatures] = useState<any>([]);
-    const [eventLoading, setEventLoading] = useState<any>(false);
-
-    //const [basePrice, setBasePrice] = useState(ticket?.base_price ?? 0);
-    // const [addonsPrice, setAddonsPrice] = useState(ticket?.addons_price ?? 0);
-    // const [totalPrice, setTotalPrice] = useState(ticket?.total_price ?? 0);
+    console.log(selectedFees);
 
     const submit = (e: any) => {
         e.preventDefault();
 
-        // console.log(data);
+
+        transform((data) => ({
+            ...data,
+            fees: [...selectedFees]
+        }));
+        console.log(data);
         if (isEdit) {
             post(route('organizer.events.tickets.update', ticket.id), {
                 onSuccess: () => {
@@ -94,6 +95,40 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions, 
         } else {
             setData('show_on_attendee_side', false);
         }
+    }
+
+    const handleFeeCheckChanged = (e: any, fee: any) => {
+        // e.preventDefault();
+        let list = [...selectedFees];
+        if (e.target.checked) {
+            if (!list.some(f => f.id === fee.id)) {
+                list.push(fee);
+            }
+        } else {
+            list.splice(list.findIndex(f => f.id === fee.id), 1);
+        }
+        setSelectedFees([...list]);
+        setData('fees', [...list]);
+        console.log(list, fee.id);
+    }
+
+    const handleSelectAllFeesChecked = (e: any) => {
+        let list = Array<any>();
+        if (e.target.checked) {
+            fees.forEach((fee: any) => {
+                list.push(fee);
+            })
+
+        } else {
+            list = [];
+        }
+        setSelectedFees([...list]);
+        setData('fees', [...list]);
+    }
+
+    const checkFeeIsSelected = (fee: any) => {
+        let list = [...selectedFees];
+        return list.some(f => f.id === fee.id)
     }
 
     // Style for Select 2
@@ -215,7 +250,8 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions, 
                                             options={{
                                                 altInput: true,
                                                 enableTime: true,
-                                                altFormat: "d M, Y",
+                                                // altFormat: "M d, Y h:i K",
+                                                altFormat: "M d, Y",
                                                 dateFormat: "Y-m-d"
                                             }}
                                             value={data.start_increment}
@@ -237,7 +273,7 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions, 
                                             id="end_increment"
                                             options={{
                                                 altInput: true,
-                                                altFormat: "d M, Y",
+                                                altFormat: "M d, Y",
                                                 dateFormat: "Y-m-d",
                                                 enableTime: true,
                                                 minDate: data.start_increment
@@ -257,7 +293,7 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions, 
                             </Row>
                         </Col>
                     </Row>
-                    <Row>
+                    <Row className='mt-4'>
                         <Col md={3} lg={3} className='d-flex align-items-center'>
                             <FormGroup className="mb-3">
                                 <Form.Check
@@ -290,8 +326,8 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions, 
                         </Col>
                     </Row>
 
-                    <Row>
-                        <Col md={3} lg={3} className='d-flex align-items-center'>
+                    <Row className='mt-4'>
+                        <Col md={3} lg={3} className='d-flex align-items-start'>
                             <FormGroup className="mb-3">
                                 <Form.Check
                                     type='checkbox'
@@ -323,13 +359,57 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions, 
                             </FormGroup>
                         </Col>
                     </Row>
+                    <Row className='mt-4'>
+                        <Col md={3} lg={3} className='d-flex align-items-start'>
+                            <FormGroup className="mb-3">
+                                <Form.Check
+                                    type='checkbox'
+                                    label="Select All Ticket Fee(s)"
+                                    id="select-all-fee"
+                                    onChange={handleSelectAllFeesChecked}
+                                />
+                            </FormGroup>
+                        </Col>
+                        <Col md={9} lg={9}>
+                            <table className='table table-sm table-bordered'>
+                                <thead className="table-primary ">
+                                    <tr>
+                                        <th className='d-flex justify-content-center'>Select</th>
+                                        <th>Fee Name</th>
+                                        <th>Value</th>
+                                        <th>Type</th>
+                                    </tr>
+                                </thead>
+                                <tbody style={{ maxHeight: '100px', overflowY: 'auto' }}>
+                                    {fees && fees.map((fee: any) => (<tr key={fee.id}>
+                                        <td className='d-flex justify-content-center'><Form.Check
+                                            type='checkbox'
+                                            id={"select-all-fee-" + fee.id}
+                                            checked={checkFeeIsSelected(fee)}
+                                            onChange={(e) => handleFeeCheckChanged(e, fee)}
+                                        />
+                                        </td>
+                                        <td>
+                                            {fee.name}
+                                        </td>
+                                        <td>
+                                            {fee.fee_amount}
+                                        </td>
+                                        <td>
+                                            <span className='text-capitalize'>{fee.fee_type}</span>
+                                        </td>
+                                    </tr>))}
+                                </tbody>
+                            </table>
+                        </Col>
+                    </Row>
                     <Row>
                         <Col md={12} lg={12}>
                             <FormGroup className="mb-3">
                                 <Form.Check
-                                    type='switch'
+                                    // type='check'
                                     checked={data.show_on_attendee_side}
-                                    label="Show to Attendees"
+                                    label="Show to Attendees for Purchase"
                                     id="check-show-to-attendee"
                                     onChange={handleShowToAttendeeSwitchChange}
                                 />
@@ -338,21 +418,21 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions, 
                     </Row>
                 </Form>
 
-                </Modal.Body>
+            </Modal.Body>
 
-                <div className="modal-footer">
-                    <button type="button" className="btn btn-light" onClick={hide}>Close</button>
+            <div className="modal-footer">
+                <button type="button" className="btn btn-light" onClick={hide}>Close</button>
                 <button type="button" className="btn btn-success" disabled={processing} onClick={submit}>
-                        {processing ? (
-                            <span className="d-flex gap-1 align-items-center">
-                                <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
-                                {isEdit ? 'Updating' : 'Creating'}
-                            </span>
-                        ) : (
-                            <span>{isEdit ? 'Update' : 'Create'}</span>
-                        )}
-                    </button>
-                </div>
+                    {processing ? (
+                        <span className="d-flex gap-1 align-items-center">
+                            <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
+                            {isEdit ? 'Updating' : 'Creating'}
+                        </span>
+                    ) : (
+                        <span>{isEdit ? 'Update' : 'Create'}</span>
+                    )}
+                </button>
+            </div>
 
         </Modal>
     )
