@@ -109,7 +109,7 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                         )}
                     </FormGroup>
                     <FormGroup className="mb-3">
-                        <Form.Label className="form-label">Role {data.role_id}</Form.Label>
+                        <Form.Label className="form-label">Role</Form.Label>
                         <Form.Select
                             className="form-control"
                             value={data.role_id}

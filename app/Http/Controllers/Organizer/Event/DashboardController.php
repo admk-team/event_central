@@ -159,13 +159,13 @@ class DashboardController extends Controller
         $attendees = Attendee::whereHas('payments', fn($query) => $query->currentEvent())
             ->with(['payments' => fn($query) => $query->currentEvent()])
             ->get();
-    
+
         $totalAttendees = $attendees->count(); // Total number of attendees
-    
+
         // Calculate total revenue from all payments
         $totalRevenue = AttendeePayment::whereHas('attendee', fn($query) => $query->currentEvent())
             ->sum('amount_paid');
-    
+
         // Prepare data for top 10 attendees
         $attendeeData = $attendees->map(function ($attendee) {
             $amountPaid = $attendee->payments->sum('amount_paid');
@@ -178,7 +178,7 @@ class DashboardController extends Controller
         ->take(10) // Limit to top 10
         ->values()
         ->toArray();
-    
+
         return [
             'totalAttendees' => $totalAttendees, // Total number of attendees
             'totalRevenue' => $totalRevenue, // Total revenue from all payments
