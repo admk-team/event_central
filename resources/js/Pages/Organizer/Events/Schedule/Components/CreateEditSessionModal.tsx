@@ -377,7 +377,8 @@ export default function CreateEditSessionModal({
                         </FormGroup>
                     )}
 
-                    {(data.type === "Break" ||
+                    {(data.type === "Session" ||
+                        data.type === "Break" ||
                         data.type === "Lecture" ||
                         data.type === "Workshop") && (
                         <FormGroup className="mb-3">
