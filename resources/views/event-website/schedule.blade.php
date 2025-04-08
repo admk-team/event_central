@@ -27,9 +27,9 @@
                     @foreach ($date->eventSessions as $session)
                     <div class="timeline-item" type="button" data-bs-toggle="modal" data-bs-target="#sessionModal{{ $session->id }}">
                         <div class="timeline-time">
-                            <span>{{ Str::substr($session->start_time, 0, 5) }}</span>
+                            <span>{{ \Illuminate\Support\Carbon::createFromFormat('H:i:s', $session->start_time)->format('h:i A') }}</span>
                             <span>-</span>
-                            <span>{{ Str::substr($session->end_time, 0, 5) }}</span>
+                            <span>{{ \Illuminate\Support\Carbon::createFromFormat('H:i:s', $session->end_time)->format('h:i A') }}</span>
                         </div>
                         <div class="timeline-content">
                             <div class="session-card">
@@ -67,7 +67,7 @@
                                         <p>{{$session->capacity}}</p>
                                         <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
                                                 <path d="M12.25 2c-5.514 0-10 4.486-10 10s4.486 10 10 10 10-4.486 10-10-4.486-10-10-10zM18 13h-6.75V6h2v5H18v2z"></path>
-                                            </svg> {{$session->start_time}} - {{$session->end_time}}</p>
+                                            </svg> {{\Illuminate\Support\Carbon::createFromFormat('H:i:s', $session->start_time)->format('h:i A')}} - {{\Illuminate\Support\Carbon::createFromFormat('H:i:s', $session->end_time)->format('h:i A')}}</p>
                                         <p>{{$session->description}}</p>
                                     </div>
 
