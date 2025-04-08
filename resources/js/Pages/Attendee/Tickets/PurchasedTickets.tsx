@@ -192,35 +192,41 @@ const PaymentSuccess = ({ eventApp, attendee, image = [], hasTickets }) => {
                                         <p className="ticket-label">Ticket {img.purchased_id + 1}</p>
                                     </div>
 
-                                    <label htmlFor={`email-${index}`} className="form-label">
-                                        Transfer Ticket <span className="text-danger ms-1">*</span>
-                                    </label>
-                                    <input
-                                        id={`email-${img.purchased_id}`}
-                                        type="text"
-                                        name={`email-${img.purchased_id}`}
-                                        placeholder="Enter New Email"
-                                        value={emails[img.purchased_id]}
-                                        autoComplete="email"
-                                        onChange={(e) => {
-                                            const newEmails = [...emails];
-                                            newEmails[img.purchased_id] = e.target.value;
-                                            setEmails(newEmails);
-                                        }}
-                                    />
+                                    {/* Conditional: Only show input if transfer_check is false */}
+                                    {!img.transfer_check && (
+                                        <>
+                                            <label htmlFor={`email-${index}`} className="form-label">
+                                                Transfer Ticket <span className="text-danger ms-1">*</span>
+                                            </label>
+                                            <input
+                                                id={`email-${img.purchased_id}`}
+                                                type="text"
+                                                name={`email-${img.purchased_id}`}
+                                                placeholder="Enter New Email"
+                                                value={emails[img.purchased_id]}
+                                                autoComplete="email"
+                                                onChange={(e) => {
+                                                    const newEmails = [...emails];
+                                                    newEmails[img.purchased_id] = e.target.value;
+                                                    setEmails(newEmails);
+                                                }}
+                                            />
+                                        </>
+                                    )}
                                 </div>
                             ))}
-
-                            <button
-                                className="btn btn-primary mt-4 mb-4"
-                                onClick={() => {
-                                    router.post(route("attendee.tickets.transfer"), {
-                                        emails: emails,
-                                    });
-                                }}
-                            >
-                                Transfer Tickets
-                            </button>
+                            {images.some((img) => !img.transfer_check) && (
+                                <button
+                                    className="btn btn-primary mt-4 mb-4"
+                                    onClick={() => {
+                                        router.post(route("attendee.tickets.transfer"), {
+                                            emails: emails,
+                                        });
+                                    }}
+                                >
+                                    Transfer Tickets
+                                </button>
+                            )}
                         </>
                     )}
                 </div>

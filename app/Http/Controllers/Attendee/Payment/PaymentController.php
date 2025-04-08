@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Mail\AttendeeTicketPurchasedEmail;
-
+use App\Models\Attendee;
 use chillerlan\QRCode\Common\EccLevel;
 use Illuminate\Support\Facades\Storage;
 use App\Models\AttendeePurchasedTickets;
@@ -310,12 +310,13 @@ class PaymentController extends Controller
 
         $image = [];
         foreach ($payment->purchased_tickets as $purchasedTicket) {
+            $transferCheck = TransferTicket::where('attendee_payment_transfered', $purchasedTicket->id)->exists();
             $image[] = [
                 'qr_code' => asset('Storage/' . $purchasedTicket->qr_code),
                 'purchased_id' => $purchasedTicket->id,
+                'transfer_check' => $transferCheck,
             ];
         }
-
         return Inertia::render('Attendee/Tickets/PurchasedTickets', [
             'eventApp' => $eventApp,
             'attendee' => $attendee,
