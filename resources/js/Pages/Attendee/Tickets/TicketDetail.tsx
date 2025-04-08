@@ -7,14 +7,34 @@ const TicketDetail = ({ ticket_no, ticket, onAddonsUpdated }: any) => {
     const [selectedAddons, setSelectedAddons] = useState<any>([]);
     const [addonOptions, setAddonsOptions] = useState<any>([]);
     const [addons, setAddons] = useState<any>(ticket.addons);
+    const [fees, setFees] = useState<any>(ticket.fees);
+    const [feesOptions, setFeesOptions] = useState<any>([]);
 
     useEffect(() => {
         createAddonOptions();
+        createFeesList();
     }, [ticket]);
 
     useEffect(() => {
         onAddonsUpdated(selectedAddons, ticket_no);
     }, [selectedAddons]);
+
+    const createFeesList: any = () => {
+        const listItems: any = [];
+        fees.map((fee: any) => {
+            let id = ticket.id + "-" + ticket_no + "-fee-" + fee.id;
+            listItems.push(
+                <Col md={12} lg={12} key={"col-" + id} className="d-flex flex-row">
+                    <i className="ri-checkbox-circle-fill text-success fs-15 align-middle mr-2"></i>
+                    <p key={id} className="m-0">
+                        {fee.name}
+                        <i className="fw-bold">{fee.fee_type === 'flat' ? " (" + fee.fee_amount + "$)" : " (" + fee.fee_amount + "%)"}</i>
+                    </p>
+                </Col>
+            );
+        });
+        setFeesOptions(listItems);
+    };
 
     const createAddonOptions: any = () => {
         const listItems: any = [];
@@ -49,11 +69,13 @@ const TicketDetail = ({ ticket_no, ticket, onAddonsUpdated }: any) => {
             <p className="mb-1 fw-bold bg-light p-2 ">
                 Ticket # {ticket_no} Details
             </p>
-            <Row>
-                <Col md={4} lg={4}>
-                    <p className="p-2">{ticket.name + " "} Addons</p>
+            <Row className="p-2">
+                <Col md={6} lg={6} className="pt-2 pl-4">
+                    <p className="fw-bold">Fees applicable</p>
+                    <Row>{feesOptions}</Row>
                 </Col>
-                <Col md={8} lg={8}>
+                <Col md={6} lg={6} className="p-2">
+                    <p className="fw-bold">Ticket Addons</p>
                     <Row>{addonOptions}</Row>
                 </Col>
             </Row>
