@@ -38,7 +38,6 @@ class RegisteredUserController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            // 'email' => 'required|string|lowercase|email|max:255|unique:' . Attendee::class,
             'email' => [
                 'required',
                 'string',
@@ -54,6 +53,7 @@ class RegisteredUserController extends Controller
             'event_app_id' => $eventApp->id,
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
+            'position' => $request->position,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);

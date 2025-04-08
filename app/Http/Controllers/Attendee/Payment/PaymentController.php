@@ -130,7 +130,7 @@ class PaymentController extends Controller
             $data = $ticket['ticket'];
             $attendee_purchased_ticket = AttendeePurchasedTickets::create([
                 'attendee_payment_id' => $payment->id,
-                'event_app_ticket_id' => $user->event_app_id,
+                'event_app_ticket_id' => $data['id'],
                 'qty' => 1,
                 'discount_code' => null,
                 'price' => $data['base_price'],
@@ -191,6 +191,7 @@ class PaymentController extends Controller
                 }
                 //----------Update Attendee Sessions
                 $session_ids = $purchasedTicket->ticket->sessions()->pluck('id');
+
                 foreach ($session_ids as $id) {
                     // Session might be already attached to attendee from any other ticket
                     try {
