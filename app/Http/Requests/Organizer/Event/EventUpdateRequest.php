@@ -24,6 +24,7 @@ class EventUpdateRequest extends FormRequest
     {
         return [
             'name'          => ['required', 'string', 'max:255'],
+            'tagline'       => ['nullable', 'string'],
             'description'   => ['required', 'string'],
             'start_date'    => ['required', 'date'],
             'location_type' => ['required', 'string', 'max:255'],

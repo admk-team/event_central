@@ -73,6 +73,7 @@ function CreateEditModal({
             event_app_category_id: event?.event_app_category_id ?? "",
             recurring_type_id: event?.recurring_type_id ?? "",
             name: event?.name ?? "",
+            tagline: event?.tagline ?? "",
             start_date: event?.start_date ?? "",
             description: event?.description ?? "",
             location_type: event?.location_type ?? "test",
@@ -360,6 +361,29 @@ function CreateEditModal({
                                 <Form.Control.Feedback type="invalid">
                                     {" "}
                                     {errors.start_date}{" "}
+                                </Form.Control.Feedback>
+                            </FormGroup>
+                            <FormGroup className="mb-3">
+                                <Form.Label
+                                    htmlFor="tagline"
+                                    className="form-label text-start w-100"
+                                >
+                                    Tagline
+                                </Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    className="form-control"
+                                    id="tagline"
+                                    placeholder="Enter tagline"
+                                    value={data.tagline}
+                                    onChange={(e) =>
+                                        setData("tagline", e.target.value)
+                                    }
+                                    isInvalid={!!errors.tagline}
+                                />
+                                <Form.Control.Feedback type="invalid">
+                                    {" "}
+                                    {errors.tagline}{" "}
                                 </Form.Control.Feedback>
                             </FormGroup>
                             <FormGroup className="mb-3">
