@@ -40,6 +40,7 @@ Route::prefix('e/{uuid}')->name('organizer.events.website')->group(function () {
     Route::get('/', [WebsiteController::class, 'index']);
     Route::get('schedule', [WebsiteController::class, 'schedule'])->name('.schedule');
     Route::get('speakers', [WebsiteController::class, 'speakers'])->name('.speakers');
+    Route::get('sponsors', [WebsiteController::class, 'sponsors'])->name('.sponsors');
     Route::get('{slug}', [WebsiteController::class, 'page'])->name('.page');
 });
 
