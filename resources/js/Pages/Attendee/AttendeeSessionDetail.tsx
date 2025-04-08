@@ -33,12 +33,18 @@ const AttendeeSessionDetail = ({
         rating_description: selectedSessionDetails?.rating_description ?? "",
     });
 
-    const ratingEnabled = moment(eventSession.end_date_time) < moment();
+    // const ratingEnabled = moment(eventSession.end_date_time) < moment();
 
     const now = moment();
     const startTime = moment(eventSession.start_date_time);
-    const endTime = moment(eventSession.end_date_time);
-    const canCheckIn = now.isBetween(startTime, endTime);
+    const endTime = moment(eventSession.end_date_time).add(15, "minutes");
+    
+    const ratingEnabled = now.isBetween(startTime, endTime);
+    const [sessionSelected, SetSessionSelected] = useState<boolean>(
+        selectedSessionDetails ? true : false
+    );
+    
+    const canRate = sessionSelected && checkin && ratingEnabled;
 
     const submitRatingChange = (e: any) => {
         e.preventDefault();
@@ -55,9 +61,7 @@ const AttendeeSessionDetail = ({
         eventSessionId: eventSession.id,
     });
 
-    const [sessionSelected, SetSessionSelected] = useState<boolean>(
-        selectedSessionDetails ? true : false
-    );
+   
 
     const [selectedSpeaker, setSelectedSpeaker] = useState<any>(null);
 
@@ -317,32 +321,33 @@ const AttendeeSessionDetail = ({
                                                 <h6>Add Ratings</h6>
                                             </Accordion.Header>
                                             <Accordion.Body>
-                                                {!sessionSelected && (
-                                                    <p className="fs-5">
-                                                        Rating can be left for
-                                                        purchased session(s)
-                                                        only.
-                                                    </p>
+                                                {!canRate && (
+                                                    <div className="fs-5 text-danger">
+                                                        {!sessionSelected && (
+                                                            <p>You can leave a rating only for sessions you've purchased.</p>
+                                                        )}
+                                                        {sessionSelected && !checkin && (
+                                                            <p>Please check in to the session to leave a rating.</p>
+                                                        )}
+                                                        {sessionSelected && checkin && !ratingEnabled && (
+                                                            <p>
+                                                                Rating can only be added between the session start and 15 minutes after the session ends (
+                                                                {moment(startTime).format("DD MMM, YYYY hh:mm A")} to{" "}
+                                                                {moment(endTime).format("DD MMM, YYYY hh:mm A")}).
+                                                            </p>
+                                                        )}
+                                                    </div>
                                                 )}
-                                                {sessionSelected && (
-                                                    <form
-                                                        onSubmit={
-                                                            submitRatingChange
-                                                        }
-                                                    >
+
+                                                {canRate && (
+                                                    <form onSubmit={submitRatingChange}>
                                                         <div className="mt-4">
                                                             <div className="rating-wraper d-flex justify-content-center w-100">
                                                                 <Rating
-                                                                    initialRating={
-                                                                        data.rating
-                                                                    }
-                                                                    onChange={
-                                                                        handleRatingChange
-                                                                    }
+                                                                    initialRating={data.rating}
+                                                                    onChange={handleRatingChange}
                                                                     emptySymbol="bx bx-star"
-                                                                    fullSymbol={[
-                                                                        "bx bxs-star",
-                                                                    ]}
+                                                                    fullSymbol={["bx bxs-star"]}
                                                                 />
                                                             </div>
                                                             <Form.Control.Feedback
@@ -361,62 +366,33 @@ const AttendeeSessionDetail = ({
                                                                 rows={4}
                                                                 name="rating_description"
                                                                 placeholder="Enter Rating Comments"
-                                                                value={
-                                                                    data.rating_description
-                                                                }
+                                                                value={data.rating_description}
                                                                 className={
                                                                     "mt-1 form-control" +
-                                                                    (errors.rating_description
-                                                                        ? "is-invalid"
-                                                                        : "")
+                                                                    (errors.rating_description ? " is-invalid" : "")
                                                                 }
                                                                 autoComplete="rating_description"
-                                                                onChange={(
-                                                                    e: any
-                                                                ) =>
-                                                                    setData(
-                                                                        "rating_description",
-                                                                        e.target
-                                                                            .value
-                                                                    )
+                                                                onChange={(e: any) =>
+                                                                    setData("rating_description", e.target.value)
                                                                 }
                                                             />
                                                             <Form.Control.Feedback
                                                                 type="invalid"
                                                                 className="mt-2 d-block"
                                                             >
-                                                                {
-                                                                    errors.rating_description
-                                                                }
+                                                                {errors.rating_description}
                                                             </Form.Control.Feedback>
                                                         </div>
-                                                        {!ratingEnabled && (
-                                                            <p>
-                                                                * Ratings can be
-                                                                added only after
-                                                                the session has
-                                                                started i.e{" "}
-                                                                {moment(
-                                                                    eventSession.start_date_time
-                                                                ).format(
-                                                                    "DD MMM, YYYY hh:mm"
-                                                                )}
-                                                            </p>
-                                                        )}
 
-                                                        {ratingEnabled && (
-                                                            <div className="d-flex justify-content-between">
-                                                                <Button
-                                                                    type="submit"
-                                                                    className="btn btn-success w-100 mt-4"
-                                                                    disabled={
-                                                                        processing
-                                                                    }
-                                                                >
-                                                                    Save Rating
-                                                                </Button>
-                                                            </div>
-                                                        )}
+                                                        <div className="d-flex justify-content-between">
+                                                            <Button
+                                                                type="submit"
+                                                                className="btn btn-success w-100 mt-4"
+                                                                disabled={processing}
+                                                            >
+                                                                Save Rating
+                                                            </Button>
+                                                        </div>
                                                     </form>
                                                 )}
                                             </Accordion.Body>

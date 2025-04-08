@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Organizer\Event;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Attendee;
-use App\Models\AttendeeAttendance;
+use App\Models\SessionCheckIn;
 use App\Models\EventSession;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -21,10 +21,10 @@ class SessionAttendanceController extends Controller
         $eventSessions = EventSession::currentEvent() // Fetch all sessions for the current event
             ->whereCanBeAccessedBy(Auth::user())
             ->get();
-        $attendance = $this->datatable(AttendeeAttendance::with(['session', 'attendee']) // Eager load 
+        $attendance = $this->datatable(SessionCheckIn::with(['session', 'attendee']) // Eager load 
             ->currentEvent()); // Replace datatable with standard query
         if ($request->has('session_id') && !empty($request->session_id)) {
-            $attendance = $this->datatable(AttendeeAttendance::where('event_session_id', $request->session_id)->with(['session', 'attendee']) // Eager load 
+            $attendance = $this->datatable(SessionCheckIn::where('session_id', $request->session_id)->with(['session', 'attendee']) // Eager load 
                 ->currentEvent());
         }
         // If you want to support AJAX polling, ensure JSON response for non-Inertia requests
@@ -47,7 +47,7 @@ class SessionAttendanceController extends Controller
             abort(403);
         }
 
-        $speaker = AttendeeAttendance::findorFail($id);
+        $speaker = SessionCheckIn::findorFail($id);
         $speaker->delete();
         return back()->withSuccess('Deleted successfully');
     }
@@ -63,7 +63,7 @@ class SessionAttendanceController extends Controller
         ]);
         
         foreach ($request->ids as $id) {
-            AttendeeAttendance::find($id)->delete();
+            SessionCheckIn::find($id)->delete();
         }
     }
 }
