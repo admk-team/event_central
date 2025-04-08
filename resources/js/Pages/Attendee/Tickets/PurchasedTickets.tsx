@@ -1,8 +1,10 @@
 import { Head } from "@inertiajs/react"
 import React from "react"
 import Layout from "../../../Layouts/Attendee"
-import { Col, Container, Row, Card, CardBody } from "react-bootstrap"
 import "../../../css/passes.css"
+import { useState } from "react";
+import { Button, Form } from 'react-bootstrap';
+import { router } from '@inertiajs/react';
 
 interface AttendeePassProps {
     event: {
@@ -18,57 +20,213 @@ interface AttendeePassProps {
     }
 }
 
-const PaymentSuccess = ({ event, attendee }: AttendeePassProps) => {
-    // Format date similar to the Laravel Carbon format
-    const formatDate = (dateString: string) => {
-        const date = new Date(dateString)
-        return date.toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })
-    }
+const PaymentSuccess = ({ eventApp, attendee, image = [], hasTickets }) => {
+    const formatDate = (dateString) => {
+        if (!dateString) return "";
+        const date = new Date(dateString);
+        return date.toLocaleDateString("en-US", {
+            day: "numeric",
+            month: "short",
+            year: "numeric",
+        });
+    };
+
+    const images = Array.isArray(image) ? image : [image];
+    const [emails, setEmails] = useState(images.map(() => ""));
 
     return (
         <React.Fragment>
-            <Head title="Payment Successful" />
-            <section className="section bg-light mt-4" id="success">
-                <div className="bg-overlay bg-overlay-pattern"></div>
-                <Container>
-                    <Row className="justify-content-center">
-                        <Col lg={8}>
-                            <Card>
-                                <CardBody>
-                                    <div className="d-flex justify-content-center align-items-center">
-                                        <div className="passWrapper">
-                                            <div className="pass div-gradient">
-                                                <div className="heading-wraper">
-                                                    <img className="circle" src={event?.logo_img || "/placeholder.svg"} alt="event logo" />
-                                                    <p className="event-name">{event?.name}</p>
-                                                    <p className="event-desc">{event?.description}</p>
-                                                    <p className="event-date">{event?.start_date ? formatDate(event.start_date) : ""}</p>
-                                                </div>
-                                                <div className="qrWrapper">
-                                                    <div>
-                                                        <img
-                                                            className="qr-code-img"
-                                                            src={`${window.location.origin}/storage/qr-codes/${attendee?.id}.png`}
-                                                            alt="qr code"
-                                                        />
+            <Head title="Attendee Pass" />
+            <style>{`
+    .passWrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      font-family: 'Figtree', sans-serif;
+      overflow-x: hidden;
+      flex-direction: column;
+    }
 
-                                                    </div>
-                                                </div>
-                                                <div className="attendee-details">
-                                                    <p className="attendee-name">
-                                                        {attendee?.first_name} {attendee?.last_name}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
+    .passes-container {
+      width: 100%;
+      max-width: 100vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .pass {
+      width: 100%;
+      max-width: 400px;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      padding: 30px 20px;
+      text-align: center;
+      box-sizing: border-box;
+    }
+
+    .div-gradient {
+      background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      color: white;
+    }
+
+    .heading-wraper {
+      margin-bottom: 20px;
+    }
+
+    .circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid white;
+      margin-bottom: 15px;
+    }
+
+    .event-name {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .event-date {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 20px;
+    }
+
+    .qrWrapper {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      display: inline-block;
+      margin-bottom: 20px;
+    }
+
+    .qr-code-img {
+      width: 100%;
+      max-width: 200px;
+      height: auto;
+    }
+
+    .attendee-details {
+      margin-top: 15px;
+    }
+
+    .attendee-name {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .form-label {
+      color: white;
+      margin-top: 1rem;
+      display: block;
+      font-weight: 500;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 0.5rem;
+      border-radius: 8px;
+      border: none;
+      margin-top: 0.25rem;
+    }
+
+    .btn-primary {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    @media (max-width: 420px) {
+      .passWrapper {
+        padding: 10px;
+      }
+
+      .pass {
+        padding: 20px 15px;
+      }
+
+      .qr-code-img {
+        max-width: 150px;
+      }
+    }
+  `}</style>
+
+            <div className="passWrapper" style={{ marginTop: "100px" }}>
+                <div className="passes-container mb-4">
+                    {!hasTickets ? (
+                        <div className="text-center mt-5">
+                            <h4>No tickets purchased yet.</h4>
+                            <p>Please check back later or contact support.</p>
+                        </div>
+                    ) : (
+                        <>
+                            {images.map((img, index) => (
+                                <div key={index} className="pass div-gradient mt-4 mb-4">
+                                    <div className="heading-wraper">
+                                        <img
+                                            className="circle"
+                                            src={eventApp?.logo_img || "/placeholder.svg?height=80&width=80"}
+                                            alt="event logo"
+                                        />
+                                        <p className="event-name">{eventApp?.name}</p>
+                                        <p className="event-date">{formatDate(eventApp?.start_date)}</p>
                                     </div>
-                                </CardBody>
-                            </Card>
-                        </Col>
-                    </Row>
-                </Container>
-            </section>
+
+                                    <div className="qrWrapper">
+                                        <img
+                                            className="qr-code-img"
+                                            src={img.qr_code}
+                                            alt={`QR code ${index + 1}`}
+                                        />
+                                    </div>
+
+                                    <div className="attendee-details">
+                                        <p className="attendee-name">
+                                            {attendee?.first_name} {attendee?.last_name}
+                                        </p>
+                                        <p className="ticket-label">Ticket {img.purchased_id + 1}</p>
+                                    </div>
+
+                                    <label htmlFor={`email-${index}`} className="form-label">
+                                        Transfer Ticket <span className="text-danger ms-1">*</span>
+                                    </label>
+                                    <input
+                                        id={`email-${img.purchased_id}`}
+                                        type="text"
+                                        name={`email-${img.purchased_id}`}
+                                        placeholder="Enter New Email"
+                                        value={emails[img.purchased_id]}
+                                        autoComplete="email"
+                                        onChange={(e) => {
+                                            const newEmails = [...emails];
+                                            newEmails[img.purchased_id] = e.target.value;
+                                            setEmails(newEmails);
+                                        }}
+                                    />
+                                </div>
+                            ))}
+
+                            <button
+                                className="btn btn-primary mt-4 mb-4"
+                                onClick={() => {
+                                    router.post(route("attendee.tickets.transfer"), {
+                                        emails: emails,
+                                    });
+                                }}
+                            >
+                                Transfer Tickets
+                            </button>
+                        </>
+                    )}
+                </div>
+            </div>
         </React.Fragment>
+
     )
 }
 

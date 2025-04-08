@@ -19,6 +19,7 @@ class EventApp extends Model
         'organizer_id',
         'regis_page_id',
         'name',
+        'tagline',
         // 'logo',    Causing issue while updating event
         'description',
         'location_type',

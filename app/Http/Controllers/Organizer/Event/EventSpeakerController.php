@@ -44,6 +44,10 @@ class EventSpeakerController extends Controller
         }
 
         $input = $request->validated();
+        $input['event_app_id'] = session('event_id');
+        if ($input['avatar'] && Storage::disk('public')->exists($input['avatar'])) {
+            Storage::disk('public')->delete($input['avatar']);
+        }
         if ($input['avatar'] && $input['avatar'] != null) {
             $name = uniqid() . '.' . $input['avatar']->getClientOriginalExtension();
             $input['avatar'] = $input['avatar']->storeAs('organizer/organizer-avatars', $name, 'public');
@@ -73,6 +77,7 @@ class EventSpeakerController extends Controller
         }
 
         $input = $request->validated();
+        $input['event_app_id'] = session('event_id');
         if ($input['avatar']) {
             if (Storage::disk('public')->exists($input['avatar'])) {
                 Storage::disk('public')->delete($input['avatar']);

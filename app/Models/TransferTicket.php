@@ -5,18 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class SessionCheckIn extends Model
+class TransferTicket extends Model
 {
     use HasFactory;
+
     protected $fillable = [
         'attendee_id',
-        'session_id',
-        'checked_in',
-        'qr_code',
+        'attendee_payment_id',
+        'event_app_id',
+        'transfer_email',
     ];
-
-    public function attendee()
-    {
-        return $this->belongsTo(Attendee::class, 'attendee_id');
-    }
 }

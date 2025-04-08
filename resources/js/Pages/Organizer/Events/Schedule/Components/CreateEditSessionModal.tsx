@@ -1,5 +1,4 @@
 import { useForm, usePage } from "@inertiajs/react";
-import Flatpickr from "react-flatpickr";
 import {
     Spinner,
     Col,
@@ -12,6 +11,9 @@ import {
 } from "react-bootstrap";
 import { useState } from "react";
 import Select from "react-select";
+import TimePicker from 'rsuite/TimePicker';
+import 'rsuite/TimePicker/styles/index.css';
+import { createDateFromTime } from "../../../../../common/helpers";
 
 export default function CreateEditSessionModal({
     show,
@@ -30,7 +32,7 @@ export default function CreateEditSessionModal({
 }) {
     const eventSessions = (usePage().props.eventSessions as any)
         .filter((session: any) => {
-            return (session.event_date_id === selectedDate?.id) && (session.event_platform_id === selectedPlatform?.id);
+            return (session.event_date_id === selectedDate?.id) && (session.event_platform_id === selectedPlatform?.id) && (session.id !== eventSession?.id);
         });
 
     const isEdit = eventSession != null ? true : false;
@@ -94,7 +96,7 @@ export default function CreateEditSessionModal({
 
     const submit = (e: any) => {
         e.preventDefault();
-        console.log(data);
+
         if (isEdit) {
             post(route("organizer.events.schedule.update", eventSession.id), {
                 preserveScroll: true,
@@ -114,6 +116,30 @@ export default function CreateEditSessionModal({
         }
     };
 
+    let timeAlreadyTaken = false;
+    for (const session of eventSessions) {
+        if (!session.start_time || !session.end_time) continue;
+        
+        const startTime = createDateFromTime(session.start_time) as Date;
+        const endTime = createDateFromTime(session.end_time) as Date;
+
+        if (data.start_time) {
+            const selectedStartTime = createDateFromTime(data.start_time) as Date;
+            if (selectedStartTime >= startTime && selectedStartTime <= endTime) {
+                timeAlreadyTaken = true;
+            }
+        }
+
+        if (data.end_time) {
+            const selectedEndTime = createDateFromTime(data.end_time) as Date;
+            if (selectedEndTime >= startTime && selectedEndTime <= endTime) {
+                timeAlreadyTaken = true;
+            }
+        }
+
+        if (timeAlreadyTaken) break;
+    }
+
     return (
         <Modal show={show} onHide={onHide} centered>
             <Modal.Header className="bg-light p-3" closeButton>
@@ -123,7 +149,7 @@ export default function CreateEditSessionModal({
             </Modal.Header>
 
             <Form onSubmit={submit} className="tablelist-form">
-                <Modal.Body>
+                <Modal.Body id="createEditSessionModalBody">
                     <FormGroup className="mb-3">
                         <Form.Label>Name</Form.Label>
                         <Form.Control
@@ -227,37 +253,27 @@ export default function CreateEditSessionModal({
                                 <Form.Label className="form-label mb-0">
                                     Start Time
                                 </Form.Label>
-                                <Flatpickr
-                                    className="form-control"
-                                    options={{
-                                        enableTime: true,
-                                        noCalendar: true,
-                                        dateFormat: "H:i",
-                                        disable: eventSessions.map((session: any) => {
-                                            return {
-                                                from: session.start_time,
-                                                to: session.end_time,
-                                            }
-                                        }),
-                                    }}
-                                    value={data.start_time}
-                                    onChange={([selectedDate]: Date[]) => {
-                                        if (selectedDate) {
-                                            setData(
-                                                "start_time",
-                                                selectedDate.toLocaleTimeString(
-                                                    "en-GB",
-                                                    {
-                                                        hour: "2-digit",
-                                                        minute: "2-digit",
-                                                    }
-                                                )
-                                            );
-                                        }
+                                <TimePicker 
+                                    container={() => document.getElementById('createEditSessionModalBody') as HTMLElement}
+                                    format="hh:mm aa" 
+                                    showMeridiem
+                                    value={createDateFromTime(data.start_time)}
+                                    onChange={(value) => {
+                                        setData('start_time', value?.toLocaleTimeString('en-US', {
+                                            hour12: false,
+                                            hour: '2-digit',
+                                            minute: '2-digit',
+                                            second: '2-digit'
+                                        }))
                                     }}
                                 />
+                                {timeAlreadyTaken && (
+                                    <Form.Control.Feedback type="invalid" className="d-block">
+                                        This time is already booked
+                                    </Form.Control.Feedback>
+                                )}
                                 {errors.start_time && (
-                                    <Form.Control.Feedback type="invalid">
+                                    <Form.Control.Feedback type="invalid" className="d-block">
                                         {errors.start_time}
                                     </Form.Control.Feedback>
                                 )}
@@ -266,7 +282,21 @@ export default function CreateEditSessionModal({
                                 <Form.Label className="form-label mb-0">
                                     End Time
                                 </Form.Label>
-                                <Flatpickr
+                                <TimePicker 
+                                    container={() => document.getElementById('createEditSessionModalBody') as HTMLElement}
+                                    format="hh:mm aa" 
+                                    showMeridiem
+                                    value={createDateFromTime(data.end_time)}
+                                    onChange={(value) => {
+                                        setData('end_time', value?.toLocaleTimeString('en-US', {
+                                            hour12: false,
+                                            hour: '2-digit',
+                                            minute: '2-digit',
+                                            second: '2-digit'
+                                        }))
+                                    }}
+                                />
+                                {/* <Flatpickr
                                     className="form-control"
                                     options={{
                                         enableTime: true,
@@ -294,7 +324,7 @@ export default function CreateEditSessionModal({
                                             );
                                         }
                                     }}
-                                />
+                                /> */}
                                 {errors.end_time && (
                                     <Form.Control.Feedback type="invalid">
                                         {errors.end_time}
@@ -395,7 +425,7 @@ export default function CreateEditSessionModal({
                     <button
                         type="submit"
                         className="btn btn-success"
-                        disabled={processing}
+                        disabled={processing || timeAlreadyTaken}
                     >
                         {processing ? (
                             <span className="d-flex gap-1 align-items-center">

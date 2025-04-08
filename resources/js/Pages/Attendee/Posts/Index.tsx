@@ -1,11 +1,12 @@
-import { Head } from "@inertiajs/react";
+import { Head,Link } from "@inertiajs/react";
 import Layout from "../../../Layouts/Attendee";
 import React, { useState, useEffect } from "react";
 import {Button,Card,Col,Container,Row, Form,Image,ProgressBar} from "react-bootstrap";
 import { router } from '@inertiajs/react'
 import "./css/index.css";
 
-const Index = ({ eventApp, newsfeeds }: any) => {
+const Index = ({ eventApp, newsfeeds,attendee }: any) => {
+
     // send request to toggle the poll data 
     const getPollData = (e: any, postId: any) => {
         const optionNumber = e.target.value;
@@ -47,7 +48,22 @@ const Index = ({ eventApp, newsfeeds }: any) => {
             <Head title="Event Posts" />
             <div className="page-content">
                 <Container fluid>
+                    <div className="d-flex justify-content-between align-items-center mb-4">
+                        <div className="d-flex flex-row align-items-center">
+                            <Link
+                                href={route("attendee.event.detail.agenda", eventApp.id)}
+                                style={{ marginRight: "3px" }}
+                            >
+                                <i className="bx bx-arrow-back fs-3 fw-bolder text-muted"></i>
+                            </Link>
+                            <h5 className="m-0 fw-bolder">Back</h5>
+                            
+                        </div>
+                    </div>
                     <Row className="justify-content-center">
+                        <div className="text-center">
+                            <h2>Posts for {eventApp.name}</h2>
+                        </div>
                         <Col lg={6} className="mt-3">
                             {newsfeeds.length > 0 ? (
                                 newsfeeds.map((post: any) => (
@@ -168,7 +184,7 @@ const Index = ({ eventApp, newsfeeds }: any) => {
                                                     style={{ cursor: "pointer" }} 
                                                     className="d-flex align-items-center"
                                                 >
-                                                    <i className="bx bxs-like" style={{ fontSize: "18px", marginRight: "5px" , color: post.likes && JSON.parse(post.likes).includes(eventApp.id) ? "blue" : "black"}}></i>
+                                                    <i className="bx bxs-like" style={{ fontSize: "18px", marginRight: "5px" , color: post.likes && JSON.parse(post.likes).includes(attendee) ? "#4c49cc" : "black"}}></i>
                                                     <span style={{ fontSize: "15px" }}>
                                                         {post.likes && JSON.parse(post.likes).length > 0
                                                             ? `(${JSON.parse(post.likes).length})`
@@ -181,7 +197,7 @@ const Index = ({ eventApp, newsfeeds }: any) => {
                                                     style={{ cursor: "pointer" }} 
                                                     className="d-flex align-items-center"
                                                 >
-                                                    <i className="bx bxs-dislike" style={{ fontSize: "18px", marginRight: "5px" , color: post.dis_likes && JSON.parse(post.dis_likes).includes(eventApp.id) ? "blue" : "black"}}></i>
+                                                    <i className="bx bxs-dislike" style={{ fontSize: "18px", marginRight: "5px" , color: post.dis_likes && JSON.parse(post.dis_likes).includes(attendee) ? "#cc4949" : "black"}}></i>
                                                     <span style={{ fontSize: "15px" }}>
                                                         {post.dis_likes && JSON.parse(post.dis_likes).length > 0
                                                             ? `(${JSON.parse(post.dis_likes).length})`

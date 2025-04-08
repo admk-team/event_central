@@ -32,6 +32,7 @@ class EventSettingsController extends Controller
         $input = $request->validate([
             'logo' => 'nullable',
             'name' => 'required',
+            'tagline' => 'nullable',
             'description' => 'nullable',
             'location_base' => 'required',
             'registration_private' => 'required',
