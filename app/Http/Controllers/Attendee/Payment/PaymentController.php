@@ -164,7 +164,7 @@ class PaymentController extends Controller
         if (!$payment) {
             throw new Exception('Payment object not found with uuid ' . $paymentUuId);
         }
-
+        $this->purchasedTickets($paymentUuId);
         DB::beginTransaction();
         try {
             $payment->status = 'paid';
@@ -203,8 +203,7 @@ class PaymentController extends Controller
             }
             DB::commit();
 
-            //--- Generate QR Code  for each Purchased Ticket ---------------
-            $this->purchasedTickets();
+
 
             // --- Send confirmation Email to Attendee along with all Ticket QR Codes  -----
             $this->sendPurchasedTicketsEmailToAttendee();
@@ -251,16 +250,13 @@ class PaymentController extends Controller
         }
     }
 
-    public function purchasedTickets()
+    public function purchasedTickets($paymentUuId)
     {
 
-        $event = null;
-        $attendee = auth()->user();
-        $attendee->load('payments');
-        if (count($attendee->payments)) {
-            $payment = $attendee->payments[0];
-            $event = EventApp::find($payment->event_app_id);
-
+        $payment = AttendeePayment::where('uuid', $paymentUuId)
+            ->where('status', 'paid')
+            ->first();
+        if ($payment) {
             foreach ($payment->purchased_tickets as $ticket_purchased) {
                 $purchasedticket = AttendeePurchasedTickets::find($ticket_purchased->id);
                 $code = $purchasedticket->generateUniqueKey();
@@ -290,8 +286,6 @@ class PaymentController extends Controller
                     'code' => $code
                 ]);
             }
-
-            return $payment->purchased_tickets;
         }
     }
 

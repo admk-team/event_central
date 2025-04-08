@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\Organizer\Event\AddonController;
+use App\Http\Controllers\Organizer\Event\BadgePrintController;
 use App\Http\Controllers\Organizer\Event\CustomMenuController;
 use App\Http\Controllers\Organizer\Event\DashboardController;
 use App\Http\Controllers\Organizer\Event\Engagement\NewsfeedController;
@@ -175,6 +176,8 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             });
 
             Route::post('import/{importType}', [ImportController::class, 'import'])->name('import');
+
+            Route::get('badgeprint', [BadgePrintController::class, 'index'])->name('badge.print');
         });
 
         // Q&A
