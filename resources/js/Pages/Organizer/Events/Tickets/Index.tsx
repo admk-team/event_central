@@ -10,7 +10,7 @@ import HasPermission from "../../../../Components/HasPermission";
 import CreateEditModal from "./CreateEditModal";
 import moment from "moment";
 
-function Index({ tickets, sessions, addons }: any) {
+function Index({ tickets, sessions, addons, fees }: any) {
 
     // console.log('addons', addons);
 
@@ -69,22 +69,22 @@ function Index({ tickets, sessions, addons }: any) {
             cell: (ticket) => ticket.id,
             cellClass: "fw-medium",
         },
-        {
-            header: () => "Event Name",
-            cell: (ticket) => (
-                <span
-                    key={ticket.event.id}
-                    className="badge rounded-pill border border-success text-success text-uppercase fs-6"
-                    style={{
-                        marginRight: "3px",
-                        maxWidth: "300px",
-                        textWrap: "balance",
-                    }}
-                >
-                    {ticket.event.name}
-                </span>
-            ),
-        },
+        // {
+        //     header: () => "Event Name",
+        //     cell: (ticket) => (
+        //         <span
+        //             key={ticket.event.id}
+        //             className="badge rounded-pill border border-success text-success text-uppercase fs-6"
+        //             style={{
+        //                 marginRight: "3px",
+        //                 maxWidth: "300px",
+        //                 textWrap: "balance",
+        //             }}
+        //         >
+        //             {ticket.event.name}
+        //         </span>
+        //     ),
+        // },
         {
             header: () => "Name",
             cell: (ticket) => ticket.name,
@@ -239,6 +239,7 @@ function Index({ tickets, sessions, addons }: any) {
                     ticket={editTicket}
                     sessions={sessions}
                     addons={addons}
+                    fees={fees}
                 />
             )}
             <DeleteModal

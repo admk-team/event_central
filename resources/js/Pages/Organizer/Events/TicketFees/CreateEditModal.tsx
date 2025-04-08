@@ -20,7 +20,7 @@ export default function CreateEditModal({ show, hide, onHide, fee }: { show: boo
         fee_amount: fee?.fee_amount ?? '',
     });
 
-    const [amountLabel, setAmountLabel] = useState('Flate Value');
+    const [amountLabel, setAmountLabel] = useState(fee && fee.fee_type === 'flat' ? 'Flat Value' : 'Percentage Value');
 
     const submit = (e: any) => {
         e.preventDefault();

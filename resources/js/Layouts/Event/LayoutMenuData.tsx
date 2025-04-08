@@ -156,15 +156,6 @@ const Navdata = () => {
                     ],
                 },
                 {
-                    id: "ticket-addons",
-                    label: "Ticket Add-ons",
-                    link: route('organizer.events.addon.index'),
-                    parentId: "Content",
-                    hasPermissions: [
-                        'view_tickets',  //To be changed after permission added
-                    ],
-                },
-                {
                     id: "ticket-fees",
                     label: "Ticket Fees",
                     link: route('organizer.events.ticket-fees.index'),
@@ -173,6 +164,16 @@ const Navdata = () => {
                         'view_tickets', //To be changed after permission added
                     ],
                 },
+                {
+                    id: "ticket-addons",
+                    label: "Ticket Add-ons",
+                    link: route('organizer.events.addon.index'),
+                    parentId: "Content",
+                    hasPermissions: [
+                        'view_tickets',  //To be changed after permission added
+                    ],
+                },
+
                 {
                     id: "promo-codes",
                     label: "Promo Codes",
