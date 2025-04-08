@@ -31,7 +31,7 @@ class UserRequest extends FormRequest
             $rules['password'] = 'required|min:8';
         } else {
             $rules['email'] = 'required|email|unique:users,email,' . $this->user->id . '';
-            $rules['password'] = 'sometimes|required|min:8';
+            $rules['password'] = 'nullable|min:8';
         }
 
         return $rules;
