@@ -105,7 +105,7 @@ export default function Platforms({ onPlatformChange }: { onPlatformChange: (pla
                     <HasPermission permission="create_platforms">
                         <Button onClick={() => setShowCreateEditPlatformModal(true)}>
                             <i className="ri-add-fill"></i>
-                            New Platform
+                            New Location
                         </Button>
                     </HasPermission>
                 </div>

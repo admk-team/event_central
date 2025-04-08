@@ -42,21 +42,21 @@ export default function CreateEditEventPlatformModal({ show, hide, onHide, event
         <Modal show={show} onHide={onHide} centered>
             <Modal.Header className="bg-light p-3" closeButton>
                 <h5 className="modal-title">
-                    {isEdit ? 'Edit platform' : 'Add platform'}
+                    {isEdit ? 'Edit Location' : 'Add Location'}
                 </h5>
             </Modal.Header>
 
             <Form onSubmit={submit} className="tablelist-form">
                 <Modal.Body>
                     <FormGroup className="mb-3">
-                        <Form.Label className="form-label">Select Platform</Form.Label>
+                        <Form.Label className="form-label">Select Location</Form.Label>
                         <Form.Select
                             className="form-control"
                             value={data.type}
                             onChange={(e) => setData({ ...data, type: e.target.value })}
                             isInvalid={!!errors.type}
                         >
-                            <option>Select Platform</option>
+                            <option>Select Location</option>
                             {platforms?.map((platform: any, index: any) => (
                                 <option value={platform.name} key={index}>{platform.name}</option>
                             ))}
