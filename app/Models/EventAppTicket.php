@@ -50,6 +50,11 @@ class EventAppTicket extends Model
         return $this->belongsToMany(PromoCode::class, 'promo_code_ticket');
     }
 
+    public function fees()
+    {
+        return $this->belongsToMany(EventAppFee::class, 'event_app_ticket_fee');
+    }
+
     public function addons()
     {
         return $this->belongsToMany(Addon::class, 'addon_event_app_ticket');

@@ -119,59 +119,68 @@ const Navdata = () => {
                 'view_tickets',
             ],
             subItems: [
-                { 
-                    id: "schedule", 
-                    label: "Schedule", 
-                    link: route('organizer.events.schedule.index'), 
+                {
+                    id: "schedule",
+                    label: "Schedule",
+                    link: route('organizer.events.schedule.index'),
                     parentId: "Content",
                     hasPermissions: [
                         'view_event_sessions',
                     ],
                 },
-                { 
-                    id: "speakers", 
-                    label: "Speakers", 
-                    link: route('organizer.events.speaker.index'), 
+                {
+                    id: "speakers",
+                    label: "Speakers",
+                    link: route('organizer.events.speaker.index'),
                     parentId: "Content",
                     hasPermissions: [
                         'view_speakers',
                     ],
                 },
-                { 
-                    id: "partners", 
-                    label: "Partners", 
-                    link: route('organizer.events.partner.index'), 
+                {
+                    id: "partners",
+                    label: "Partners",
+                    link: route('organizer.events.partner.index'),
                     parentId: "Content",
                     hasPermissions: [
                         'view_partner',
                     ],
                 },
-                { 
-                    id: "tickets", 
-                    label: "Tickets", 
-                    link: route('organizer.events.tickets.index'), 
+                {
+                    id: "tickets",
+                    label: "Tickets",
+                    link: route('organizer.events.tickets.index'),
                     parentId: "Content",
                     hasPermissions: [
                         'view_tickets',
                     ],
                 },
-                { 
-                    id: "ticket-addons", 
-                    label: "Ticket Add-ons", 
-                    link: route('organizer.events.addon.index'), 
+                {
+                    id: "ticket-addons",
+                    label: "Ticket Add-ons",
+                    link: route('organizer.events.addon.index'),
                     parentId: "Content",
                     hasPermissions: [
-                        'view_tickets',
-                    ], 
+                        'view_tickets',  //To be changed after permission added
+                    ],
                 },
-                { 
-                    id: "promo-codes", 
-                    label: "Promo Codes", 
-                    link: route('organizer.events.promo-codes.index'), 
+                {
+                    id: "ticket-fees",
+                    label: "Ticket Fees",
+                    link: route('organizer.events.ticket-fees.index'),
+                    parentId: "Content",
+                    hasPermissions: [
+                        'view_tickets', //To be changed after permission added
+                    ],
+                },
+                {
+                    id: "promo-codes",
+                    label: "Promo Codes",
+                    link: route('organizer.events.promo-codes.index'),
                     parentId: "Content",
                     hasPermissions: [
                         'view_tickets',
-                    ], 
+                    ],
                 },
             ]
         },
@@ -191,10 +200,10 @@ const Navdata = () => {
             //     'view_posts',
             // ],
             // subItems: [
-            //     { 
-            //         id: "newsfeed", 
-            //         label: "Posts", 
-            //         link: route('organizer.events.engagement.newsfeed.index'), 
+            //     {
+            //         id: "newsfeed",
+            //         label: "Posts",
+            //         link: route('organizer.events.engagement.newsfeed.index'),
             //         parentId: "dashboard",
             //         hasPermissions: [
             //             'view_posts'

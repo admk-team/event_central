@@ -5,6 +5,7 @@ use App\Http\Controllers\Organizer\Event\AddonController;
 use App\Http\Controllers\Organizer\Event\CustomMenuController;
 use App\Http\Controllers\Organizer\Event\DashboardController;
 use App\Http\Controllers\Organizer\Event\Engagement\NewsfeedController;
+use App\Http\Controllers\Organizer\Event\EventAppFeeController;
 use App\Http\Controllers\Organizer\Event\EventController;
 use App\Http\Controllers\Organizer\Event\EventPartnerCategoryController;
 use App\Http\Controllers\Organizer\Event\EventPartnerController;
@@ -118,6 +119,10 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::resource('promo-codes', EventPromoCodeController::class)->only(['index', 'store', 'update', 'destroy']);
             Route::delete('promo-codes/delete/many', [EventPromoCodeController::class, 'destroyMany'])->name('promo-codes.destroy.many');
 
+            // Ticket Fees
+            Route::resource('ticket-fees', EventAppFeeController::class)->only(['index', 'store', 'update', 'destroy']);
+            Route::delete('ticket-fees/delete/many', [EventAppFeeController::class, 'destroyMany'])->name('ticket-fees.destroy.many');
+
             // Pages
             Route::resource('pages', PageController::class)->only(['store', 'update', 'destroy']);
             Route::delete('pages/delete/many', [PageController::class, 'destroyMany'])->name('pages.destroy.many');
@@ -185,7 +190,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
         Route::delete('/{post}', [NewsfeedController::class, 'destroy'])->name('destroy');
         Route::delete('/delete/many', [NewsfeedController::class, 'destroyMany'])->name('destroy.many');
     });
-    
+
     // Q&A
     Route::get('/events/qa/{session_id}', [QuestionController::class, 'index'])->name('events.qa.index');
     Route::post('/events/{event}/questions', [QuestionController::class, 'storeQuestion'])->name('events.qa.store');
