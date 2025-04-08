@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import GuestLayout from "../../../Layouts/Attendee/GuestLayout";
 import { Head, Link, useForm, usePage } from "@inertiajs/react";
-import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
+import { Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
 import logoLight from "../../../../images/logo-white.png";
 
 export default function Register() {
@@ -14,6 +14,7 @@ export default function Register() {
         last_name: "",
         email: "",
         password: "",
+        position: '',
         password_confirmation: "",
     });
 
@@ -37,7 +38,7 @@ export default function Register() {
                     <h5 className="text-primary">Create An Account</h5>
                     <p className="text-muted">Register and Join the Event</p>
                 </div>
-                <div className="p-2 mt-4">
+                <div className="p-2 mt-1">
                     <form onSubmit={submit}>
                         <Row>
                             <Col md={6} lg={6}>
@@ -108,7 +109,24 @@ export default function Register() {
                                 </Form.Control.Feedback>
                             </Col>
                         </Row>
-                        <div>
+                        <Row className="mt-1">
+                            <Col md={12} lg={12} >
+                                <Form.Label htmlFor="position" value="Position" className='form-label'> Position </Form.Label>
+                                <Form.Control
+                                    id="position"
+                                    type="text"
+                                    name="position"
+                                    placeholder="Enter Position"
+                                    value={data.position}
+                                    className={'mt-1 form-control' + (errors.position ? 'is-invalid' : '')}
+                                    autoComplete="position"
+                                    onChange={(e: any) => setData('position', e.target.value)}
+                                />
+
+                                <Form.Control.Feedback type="invalid" className='mt-2 d-block'>{errors.position}</Form.Control.Feedback>
+                            </Col>
+                        </Row>
+                        <div className="mt-1">
                             <Form.Label
                                 htmlFor="email"
                                 value="Email"
@@ -142,7 +160,7 @@ export default function Register() {
                             </Form.Control.Feedback>
                         </div>
 
-                        <div className="mt-4">
+                        <div className="mt-1">
                             <Form.Label
                                 htmlFor="password"
                                 value="Password"
@@ -177,7 +195,7 @@ export default function Register() {
                             </Form.Control.Feedback>
                         </div>
 
-                        <div className="mt-4">
+                        <div className="mt-1">
                             <Form.Label
                                 htmlFor="password_confirmation"
                                 value="Confirm Password"
@@ -223,7 +241,9 @@ export default function Register() {
                             className="btn btn-success w-100 mt-4"
                             disabled={processing}
                         >
-                            Sign Up
+                            {processing ? <Spinner size="sm" animation="border" role="status">
+                                <span className="visually-hidden">Loading...</span>
+                            </Spinner> : 'Sign Up'}
                         </Button>
 
                         <div className="mt-2 text-center">
