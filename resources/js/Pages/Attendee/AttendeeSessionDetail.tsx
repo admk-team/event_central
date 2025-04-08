@@ -340,8 +340,8 @@ const AttendeeSessionDetail = ({
                                                         {sessionSelected && checkin && !ratingEnabled && (
                                                             <p>
                                                                 Rating can only be added between the session start and 15 minutes after the session ends (
-                                                                {moment(startTime).format("DD MMM, YYYY hh:mm A")} to{" "}
-                                                                {moment(endTime).format("DD MMM, YYYY hh:mm A")}).
+                                                                {moment(startTime).format("MMM DD, YYYY hh:mm A")} to{" "}
+                                                                {moment(endTime).format("MMM DD, YYYY hh:mm A")}).
                                                             </p>
                                                         )}
                                                     </div>
