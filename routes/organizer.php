@@ -181,6 +181,24 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
 
             Route::post('import/{importType}', [ImportController::class, 'import'])->name('import');
         });
+
+        // Q&A
+        Route::get('/qa/{session_id}', [QuestionController::class, 'index'])->name('qa.index');
+        Route::post('/{event}/questions', [QuestionController::class, 'storeQuestion'])->name('qa.store');
+        Route::post('/questions/{questionId}/vote', [QuestionController::class, 'vote'])->name('qa.vote');
+        Route::post('/questions/{questionId}/answer', [QuestionController::class, 'storeAnswer'])->name('qa.answer');
+        Route::group(['prefix' => 'events/qa', 'as' => 'qa.'], function () {
+            Route::put('/question/{questionId}', [QuestionController::class, 'updateQuestion'])->name('updateQuestion');
+            Route::delete('/question/{questionId}', [QuestionController::class, 'destroyQuestion'])->name('destroyQuestion');
+            Route::put('/answer/{answerId}', [QuestionController::class, 'updateAnswer'])->name('updateAnswer');
+            Route::delete('/answer/{answerId}', [QuestionController::class, 'destroyAnswer'])->name('destroyAnswer');
+        });
+
+        //SessionAttendance
+        Route::get('/attendance', [SessionAttendanceController::class, 'index'])->name('attendance.index');
+        Route::delete('/attendance/{id}', [SessionAttendanceController::class, 'destroy'])->name('attendance.destroy');
+        Route::delete('/attendance/destroy/many', [SessionAttendanceController::class, 'destroyMany'])->name('attendance.destroy.many');
+        // Route::post('/attendance/destroy/many', [SessionAttendanceController::class, 'destroyMany'])->name('attendance.destroy.many');
     });
     // Event
     Route::prefix('posts')->name('posts.')->group(function () {

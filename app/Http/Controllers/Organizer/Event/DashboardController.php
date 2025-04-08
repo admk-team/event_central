@@ -6,7 +6,7 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Attendee;
-use App\Models\AttendeeAttendance;
+use App\Models\SessionCheckIn;
 use App\Models\AttendeePayment;
 use App\Models\AttendeePurchasedTickets;
 use App\Models\EventApp;
@@ -67,7 +67,7 @@ class DashboardController extends Controller
         // Prepare data for the chart
         $sessionNames = $eventSessions->pluck('name')->toArray(); // Array of session names
         $attendanceCounts = $eventSessions->map(function ($session) {
-            return AttendeeAttendance::where('event_session_id', $session->id)
+            return SessionCheckIn::where('session_id', $session->id)
                 ->whereHas('session', fn($query) => $query->currentEvent())
                 ->count(); // Count attendees per session
         })->toArray(); // Array of attendance counts
@@ -88,7 +88,7 @@ class DashboardController extends Controller
         // Fetch sessions for the current event with attendance counts in one go
         $eventSessions = EventSession::currentEvent()
             ->withCount(['attendances as joined_count' => function ($query) {
-                $query->whereNotNull('check_in'); // Count only checked-in attendees
+                $query->whereNotNull('checked_in'); // Count only checked-in attendees
             }])
             ->get();
 
