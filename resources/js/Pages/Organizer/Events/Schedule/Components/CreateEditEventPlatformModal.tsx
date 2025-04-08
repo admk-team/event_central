@@ -1,7 +1,7 @@
 import { useForm, usePage } from '@inertiajs/react';
 import { Form, FormGroup, Modal, Spinner } from "react-bootstrap";
 
-export default function CreateEditEventPlatformModal({ show, hide, onHide, eventPlatform }: { show: boolean, hide: () => void, onHide: () => void, eventPlatform: any | null }) {
+export default function CreateEditEventPlatformModal({ show, hide, onHide, eventPlatform, onCreate }: { show: boolean, hide: () => void, onHide: () => void, eventPlatform: any | null, onCreate?: () => void }) {
     const isEdit = eventPlatform != null ? true : false;
 
     const platforms = usePage().props.platforms as any;
@@ -28,6 +28,11 @@ export default function CreateEditEventPlatformModal({ show, hide, onHide, event
                 onSuccess: () => {
                     reset();
                     hide();
+                },
+                onFinish: () => {
+                    if (onCreate) {
+                        onCreate();
+                    }
                 }
             });
         }

@@ -27,6 +27,7 @@ use App\Http\Controllers\Organizer\Event\FormFieldController;
 use App\Http\Controllers\Organizer\Event\SessionAttendanceController;
 use App\Http\Controllers\Organizer\Event\Settings\RegistrationFormSettingsController;
 use App\Http\Controllers\Organizer\Event\Settings\WebsiteSettingsController;
+use App\Http\Controllers\Organizer\Event\TrackController;
 use App\Http\Controllers\Organizer\Event\WebsiteController;
 use App\Http\Controllers\Organizer\Event\WorkshopController;
 use App\Http\Controllers\Organizer\ProfileController;
@@ -41,6 +42,7 @@ Route::prefix('e/{uuid}')->name('organizer.events.website')->group(function () {
     Route::get('/', [WebsiteController::class, 'index']);
     Route::get('schedule', [WebsiteController::class, 'schedule'])->name('.schedule');
     Route::get('speakers', [WebsiteController::class, 'speakers'])->name('.speakers');
+    Route::get('sponsors', [WebsiteController::class, 'sponsors'])->name('.sponsors');
     Route::get('{slug}', [WebsiteController::class, 'page'])->name('.page');
 });
 
@@ -148,6 +150,9 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             // Form Fields
             Route::resource('form-fields', FormFieldController::class)->only(['store', 'update', 'destroy']);
 
+            // Tracks
+            Route::resource('tracks', TrackController::class)->only('store', 'update', 'destroy');
+
             // Settings
             Route::prefix('settings')->name('settings.')->group(function () {
                 // Event
@@ -156,6 +161,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                     Route::delete('/', [EventSettingsController::class, 'destroyEvent'])->name('destroy');
                     Route::put('info', [EventSettingsController::class, 'updateInfo'])->name('info');
                     Route::get('generate-link', [EventSettingsController::class, 'generateLink'])->name('link');
+                    Route::post('toggle-tracks', [EventSettingsController::class, 'toggleTracks'])->name('toggle-tracks');
                 });
 
                 // Payment

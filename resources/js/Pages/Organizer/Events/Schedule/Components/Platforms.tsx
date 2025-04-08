@@ -9,13 +9,13 @@ import HasAnyPermission from "../../../../../Components/HasAnyPermission";
 
 export default function Platforms({ onPlatformChange }: { onPlatformChange: (platform: any) => void }) {
     const eventPlatforms = usePage().props.eventPlatforms as any;
-    const eventPlatformsCount = React.useRef(eventPlatforms.length);
 
     const [selectedPlatform, _setSelectedPlatform] = React.useState<any>(null);
     const [showCreateEditPlatformModal, _setShowCreateEditPlatformModal] = React.useState(false);
     const [editPlatform, setEditPlatform] = React.useState<any>(null);
     const [deletePlatform, setDeletePlatform] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = React.useState(false);
+    const [platformCreated, setPlatformCreated] = React.useState(false);
 
     const setSelectedPlatform = (state: any) => {
         _setSelectedPlatform(state);
@@ -50,14 +50,16 @@ export default function Platforms({ onPlatformChange }: { onPlatformChange: (pla
 
     React.useEffect(() => {
         if (eventPlatforms.length > 0) {
-            if (eventPlatforms.length > eventPlatformsCount.current) {
-                setSelectedPlatform(eventPlatforms[eventPlatforms.length - 1]);
-                eventPlatformsCount.current = eventPlatforms.length;
-            } else {
-                setSelectedPlatform(eventPlatforms[0]);
-            }
+            setSelectedPlatform(eventPlatforms[0]);
         } else {
             setSelectedPlatform(null);
+        }
+    }, []);
+
+    React.useEffect(() => {
+        if (platformCreated) {
+            setSelectedPlatform(eventPlatforms[eventPlatforms.length - 1]);
+            setPlatformCreated(false);
         }
     }, [eventPlatforms]);
 
@@ -115,6 +117,9 @@ export default function Platforms({ onPlatformChange }: { onPlatformChange: (pla
                     hide={() => setShowCreateEditPlatformModal(false)}
                     onHide={() => setShowCreateEditPlatformModal(false)}
                     eventPlatform={editPlatform}
+                    onCreate={() => {
+                        setPlatformCreated(true);
+                    }}
                 />
             )}
 
