@@ -116,6 +116,10 @@ function Index({ attendees }: any) {
             cell: (attendee) => attendee.first_name,
         },
         {
+            header: () => 'Last Name',
+            cell: (attendee) => attendee.last_name,
+        },
+        {
             header: () => 'Email',
             cell: (attendee) => attendee.email,
         },
