@@ -28,4 +28,9 @@ class EventAppFee extends Model
     {
         return $this->belongsToMany(EventAppTicket::class, 'event_app_ticket_fee');
     }
+
+    public function scopeCurrentEvent($query)
+    {
+        $query->where('event_app_id', session('event_id'));
+    }
 }
