@@ -8,8 +8,8 @@
         background-color: var(--color-neutral-50);
     }
 </style>
-<section 
-    id="schedule" 
+<section
+    id="schedule"
     class="schedule"
     x-data="{ 
         selectedTracks: [],
@@ -61,8 +61,7 @@
 
             return this.selectedPlatforms.includes(id)
         }
-    }"
->
+    }">
     <div class="container">
         <div class="section-header">
             <span class="section-tag">Event Schedule</span>
@@ -76,44 +75,41 @@
             @endforeach
         </div>
         @if ($enableTracks)
-            <div class="tracks">
-                <h4>Tracks:</h4>
-                <div class="tracks-filter">
-                    @foreach ($tracks as $track)
-                        <button 
-                            @click="toggleTrackSelection({{ $track->id }})"
-                            :style="trackSelected({{ $track->id }}) ? {backgroundColor: '{{ $track->color }}', color: 'white'} : {border: '1px solid {{ $track->color }}'}"
-                            class="btn"
-                        >
-                            {{ $track->name }}
-                        </button>
-                    @endforeach
-                    <template x-if="selectedTracks.length">
-                        <button @click="clearTrackSelections" class="btn btn-secondary">&#10006;</button>
-                    </template>
-                </div>
+        <div class="tracks">
+            <h4>Tracks:</h4>
+            <div class="tracks-filter">
+                @foreach ($tracks as $track)
+                <button
+                    @click="toggleTrackSelection({{ $track->id }})"
+                    :style="trackSelected({{ $track->id }}) ? {backgroundColor: '{{ $track->color }}', color: 'white'} : {border: '1px solid {{ $track->color }}'}"
+                    class="btn">
+                    {{ $track->name }}
+                </button>
+                @endforeach
+                <template x-if="selectedTracks.length">
+                    <button @click="clearTrackSelections" class="btn btn-secondary">&#10006;</button>
+                </template>
             </div>
+        </div>
         @endif
         <div class="locations">
             <h4>Locations:</h4>
             <div class="locations-filter">
                 @foreach ($eventPlatforms as $platform)
-                    <button 
-                        @click="togglePlatformSelection({{ $platform->id }})"
-                        class="platform-btn"
-                        :class="platformSelected({{ $platform->id }}) && {active: true}"
-                    >
-                        {{ $platform->name }}
-                    </button>
+                <button
+                    @click="togglePlatformSelection({{ $platform->id }})"
+                    class="platform-btn"
+                    :class="platformSelected({{ $platform->id }}) && {active: true}">
+                    {{ $platform->name }}
+                </button>
                 @endforeach
                 <template x-if="selectedPlatforms.length">
                     <button @click="clearPlatformSelections" class="btn btn-secondary">&#10006;</button>
                 </template>
             </div>
         </div>
-        <div 
-            class="schedule-content"
-        >
+        <div
+            class="schedule-content">
             @foreach ($event->dates as $date)
             <div class="schedule-day {{ $loop->first ? 'active' : '' }}" id="day{{ $loop->index + 1 }}">
                 <div class="schedule-timeline">
@@ -127,11 +123,11 @@
                         <div class="timeline-content">
                             <div class="session-card">
                                 @if ($enableTracks && $session->tracks->count() > 0)
-                                    <div class="d-flex flex-wrap gap-2 mb-2">
-                                        @foreach ($session->tracks->slice(0, 3) as $track)
-                                            <div class="rounded" style="background-color: {{ $track->color }}; width: 30px; height: 8px;"></div>
-                                        @endforeach
-                                    </div>
+                                <div class="d-flex flex-wrap gap-2 mb-2">
+                                    @foreach ($session->tracks->slice(0, 3) as $track)
+                                    <div class="rounded" style="background-color: {{ $track->color }}; width: 30px; height: 8px;"></div>
+                                    @endforeach
+                                </div>
                                 @endif
                                 <h3 class="session-title">{{ $session->name }}</h3>
                                 <div class="session-details">
@@ -170,32 +166,31 @@
                             <div class="modal-content">
                                 <!-- {{$session}} -->
                                 <div class="modal-body px-4">
+
+                                    @if ($enableTracks && $session->tracks->count() > 0)
+                                    <div class="d-flex flex-wrap gap-2 mb-2 justify-content-center">
+                                        @foreach ($session->tracks as $track)
+                                        <div class="rounded p-1" style="border:1px solid {{ $track->color }}">{{$track->name}}</div>
+                                        @endforeach
+                                    </div>
+                                    @endif
+
                                     <h5 class="modal-title text-center" id="sessionModalLabel{{ $session->id }}">{{ $session->name }}</h5>
                                     <div class="text-center">
-                                        <p>{{$session->type}}</p>
-                                        <p>{{$session->capacity}}</p>
+                                        <p class="mb-0"><span class="text-muted">Type: </span>{{$session->type}}</p>
+                                        <p><span class="text-muted">Capacity: </span>{{$session->capacity}}</p>
                                         <p>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                                            <svg xmlns=" http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
                                                 <path d="M12.25 2c-5.514 0-10 4.486-10 10s4.486 10 10 10 10-4.486 10-10-4.486-10-10-10zM18 13h-6.75V6h2v5H18v2z"></path>
-                                            </svg>
-                                            {{\Illuminate\Support\Carbon::createFromFormat('H:i:s', $session->start_time)->format('h:i A')}} -
-                                            {{\Illuminate\Support\Carbon::createFromFormat('H:i:s', $session->end_time)->format('h:i A')}}
+                                                </svg>
+                                                {{\Illuminate\Support\Carbon::createFromFormat('H:i:s', $session->start_time)->format('h:i A')}} -
+                                                {{\Illuminate\Support\Carbon::createFromFormat('H:i:s', $session->end_time)->format('h:i A')}}
                                         </p>
-                                        <div class="">
-                                            @isset($session->eventSpeakers)
-                                            @foreach($session->eventSpeakers as $speaker)
-                                            <div class="text-center d-flex justify-content-center align-items-center gap-2">
-                                                <img src="{{ $speaker->avatar }}" alt="{{ $speaker->name }}" class="speaker-avatar">
-                                                <span>{{ $speaker->name }}</span>
-                                            </div>
-                                            @endforeach
-                                            @endisset
-                                        </div>
-                                       <!-- Description with Show More functionality -->
+                                        <!-- Description with Show More functionality -->
                                         <div class="description-container mt-1">
                                             @if (strlen($session->description) > 100)
                                             <p class="description-text short-description" id="shortDesc{{ $session->id }}">{{ substr($session->description, 0, 100) }}...</p>
-                                            <p class="description-text full-description d-none" id="fullDesc{{ $session->id }}">{{ $session->description }}</p>
+                                            <p class="description-text full-description text-muted d-none" id="fullDesc{{ $session->id }}">{{ $session->description }}</p>
                                             <button class="btn show-more-btn p-0" data-session-id="{{ $session->id }}">Show More</button>
                                             @else
                                             <p>{{ $session->description }}</p>
@@ -203,9 +198,16 @@
                                         </div>
                                     </div>
                                 </div>
-                                <!-- <div class="modal-footer">
-
-                                </div> -->
+                                <div class="modal-footer flex flex-wrap justify-content-center gap-3">
+                                    @isset($session->eventSpeakers)
+                                    @foreach($session->eventSpeakers as $speaker)
+                                    <div class="text-center d-flex justify-content-center align-items-center gap-1">
+                                        <img src="{{ $speaker->avatar }}" alt="{{ $speaker->name }}" class="speaker-avatar">
+                                        <span>{{ $speaker->name }}</span>
+                                    </div>
+                                    @endforeach
+                                    @endisset
+                                </div>
                             </div>
                         </div>
                     </div>
