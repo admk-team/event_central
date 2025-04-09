@@ -36,10 +36,19 @@
                                 <h3 class="session-title">{{ $session->name }}</h3>
                                 <div class="session-details">
                                     <div class="session-speaker">
-                                        @isset($session->eventSpeaker)
-                                        <img src="{{ $session->eventSpeaker->avatar }}"
-                                            alt="{{ $session->eventSpeaker->name }}" class="speaker-avatar">
-                                        <span>{{ $session->eventSpeaker->name }}</span>
+                                        @isset($session->eventSpeakers)
+                                        @if(count($session->eventSpeakers) === 1)
+                                        {{-- Show avatar and name for single speaker --}}
+                                        @foreach($session->eventSpeakers as $speaker)
+                                        <img src="{{ $speaker->avatar }}" alt="{{ $speaker->name }}" class="speaker-avatar">
+                                        <span>{{ $speaker->name }}</span>
+                                        @endforeach
+                                        @else
+                                        {{-- Show only avatars for multiple speakers --}}
+                                        @foreach($session->eventSpeakers as $speaker)
+                                        <img src="{{ $speaker->avatar }}" alt="{{ $speaker->name }}" class="speaker-avatar">
+                                        @endforeach
+                                        @endif
                                         @endisset
                                     </div>
                                     <div class="session-location">
@@ -60,17 +69,39 @@
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content">
                                 <!-- {{$session}} -->
-                                <div class="modal-body">
+                                <div class="modal-body px-4">
                                     <h5 class="modal-title text-center" id="sessionModalLabel{{ $session->id }}">{{ $session->name }}</h5>
                                     <div class="text-center">
                                         <p>{{$session->type}}</p>
                                         <p>{{$session->capacity}}</p>
-                                        <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
+                                        <p>
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
                                                 <path d="M12.25 2c-5.514 0-10 4.486-10 10s4.486 10 10 10 10-4.486 10-10-4.486-10-10-10zM18 13h-6.75V6h2v5H18v2z"></path>
-                                            </svg> {{\Illuminate\Support\Carbon::createFromFormat('H:i:s', $session->start_time)->format('h:i A')}} - {{\Illuminate\Support\Carbon::createFromFormat('H:i:s', $session->end_time)->format('h:i A')}}</p>
-                                        <p>{{$session->description}}</p>
+                                            </svg>
+                                            {{\Illuminate\Support\Carbon::createFromFormat('H:i:s', $session->start_time)->format('h:i A')}} -
+                                            {{\Illuminate\Support\Carbon::createFromFormat('H:i:s', $session->end_time)->format('h:i A')}}
+                                        </p>
+                                        <div class="">
+                                            @isset($session->eventSpeakers)
+                                            @foreach($session->eventSpeakers as $speaker)
+                                            <div class="text-center d-flex justify-content-center align-items-center gap-2">
+                                                <img src="{{ $speaker->avatar }}" alt="{{ $speaker->name }}" class="speaker-avatar">
+                                                <span>{{ $speaker->name }}</span>
+                                            </div>
+                                            @endforeach
+                                            @endisset
+                                        </div>
+                                       <!-- Description with Show More functionality -->
+                                        <div class="description-container mt-1">
+                                            @if (strlen($session->description) > 100)
+                                            <p class="description-text short-description" id="shortDesc{{ $session->id }}">{{ substr($session->description, 0, 100) }}...</p>
+                                            <p class="description-text full-description d-none" id="fullDesc{{ $session->id }}">{{ $session->description }}</p>
+                                            <button class="btn show-more-btn p-0" data-session-id="{{ $session->id }}">Show More</button>
+                                            @else
+                                            <p>{{ $session->description }}</p>
+                                            @endif
+                                        </div>
                                     </div>
-
                                 </div>
                                 <!-- <div class="modal-footer">
 
@@ -86,4 +117,29 @@
         </div>
     </div>
 </section>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const showMoreButtons = document.querySelectorAll('.show-more-btn');
+
+        showMoreButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const sessionId = this.getAttribute('data-session-id');
+                const shortDesc = document.getElementById(`shortDesc${sessionId}`);
+                const fullDesc = document.getElementById(`fullDesc${sessionId}`);
+
+                if (fullDesc.classList.contains('d-none')) {
+                    // Show full description
+                    shortDesc.classList.add('d-none');
+                    fullDesc.classList.remove('d-none');
+                    this.textContent = 'Show Less';
+                } else {
+                    // Show short description
+                    shortDesc.classList.remove('d-none');
+                    fullDesc.classList.add('d-none');
+                    this.textContent = 'Show More';
+                }
+            });
+        });
+    });
+</script>
 @endsection
