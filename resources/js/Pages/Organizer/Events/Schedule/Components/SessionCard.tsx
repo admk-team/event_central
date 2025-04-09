@@ -64,19 +64,17 @@ export default function SessionCard({
 
     return (
         <Row
-            className={`timeline-right ${
-                sessionStatus !== "passed" ? "scroll-to" : ""
-            }`}
+            className={`timeline-right ${sessionStatus !== "passed" ? "scroll-to" : ""
+                }`}
         >
             <Col xs={12}>
                 <p
-                    className={`timeline-date text-${
-                        sessionStatus === "upcoming"
+                    className={`timeline-date text-${sessionStatus === "upcoming"
                             ? "primary"
                             : sessionStatus === "passed"
-                            ? "light"
-                            : "success"
-                    }`}
+                                ? "light"
+                                : "success"
+                        }`}
                 >
                     {startDate.format("hh:mm A")}
                 </p>
@@ -114,8 +112,8 @@ export default function SessionCard({
                                     </div>
                                 </div>
                                 <p className="text-muted mb-2">
-                                    {startDate.format("hh:mm A")} -{" "}
-                                    {endDate.format("hh:mm A")}
+                                    {startDate.format("h:mm A")} -{" "}
+                                    {endDate.format("h:mm A")}
                                 </p>
                                 <div className="d-flex justify-content-between align-items-center mb-2">
                                     {badge}
@@ -141,9 +139,9 @@ export default function SessionCard({
                                         {session.posts == true && (
                                             <Link
                                                 href={route(
-                                                    "organizer.posts.index",{
-                                                        id: session.id,
-                                                    }
+                                                    "organizer.posts.index", {
+                                                    id: session.id,
+                                                }
                                                 )}
                                                 className="d-flex align-items-center text-decoration-none"
                                             >
