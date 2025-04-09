@@ -24,7 +24,7 @@
             @foreach ($event->dates as $date)
             <div class="schedule-day {{ $loop->first ? 'active' : '' }}" id="day{{ $loop->index + 1 }}">
                 <div class="schedule-timeline">
-                    @foreach ($date->eventSessions as $session)
+                    @foreach ($date->eventSessions()->orderBy('start_time')->get() as $session)
                     <div class="timeline-item" type="button" data-bs-toggle="modal" data-bs-target="#sessionModal{{ $session->id }}">
                         <div class="timeline-time">
                             <span>{{ \Illuminate\Support\Carbon::createFromFormat('H:i:s', $session->start_time)->format('h:i A') }}</span>
