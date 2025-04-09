@@ -70,6 +70,9 @@ class EventAppTicket extends Model
 
     public function getSelectedAddonsAttribute()
     {
-        return $this->addons()->select(['id as value', 'name as label'])->get();
+        $addons_collection = $this->addons()->orderBy('name')->get();
+        return $addons_collection->map(function ($addon) {
+            return ['value' => $addon->id, 'label' => $addon->full_name];
+        });
     }
 }

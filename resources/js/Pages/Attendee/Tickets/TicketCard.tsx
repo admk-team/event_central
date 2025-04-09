@@ -37,6 +37,8 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated }: any) => {
                     ticket_no: i + 1,
                     ticket: Object.assign({}, ticket),
                     addons: [],
+                    fees_sub_total: calculateFeesSubTotal(ticket),
+                    addons_sub_total: 0
                 });
                 newIds.push(id);
             }
@@ -50,6 +52,27 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated }: any) => {
 
         setTicketDetails([...list]);
     }, [ticketQty]);
+
+    const calculateFeesSubTotal = (ticket: any) => {
+        let subTotal = 0;
+        let ticket_base_price = ticket.base_price;
+        ticket.fees.forEach((fee: any) => {
+            if (fee.fee_type === 'flat') {
+                subTotal += parseFloat(fee.fee_amount);
+            } else {  //Percentage
+                subTotal += (parseFloat(ticket_base_price) * parseFloat(fee.fee_amount) / 100);
+            }
+        });
+        return subTotal;
+    }
+
+    const calculateAddonsSubTotal = (addons: any) => {
+        let subTotal = 0;
+        addons.forEach((addon: any) => {
+            subTotal += parseFloat(addon.price);
+        });
+        return subTotal;
+    }
 
     const createQtyOptions = (items: any, ticket: any) => {
         const listItems = [];
@@ -67,7 +90,11 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated }: any) => {
         setTicketDetails((prevItems: any) =>
             prevItems.map((item: any) =>
                 item.ticket_no === ticket_no
-                    ? { ...item, addons: addons }
+                    ? {
+                        ...item,
+                        addons: addons,
+                        addons_sub_total: calculateAddonsSubTotal(addons)
+                    }
                     : item
             )
         );
@@ -112,12 +139,12 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated }: any) => {
                                 </Form.Select>
                             </Col>
                         </Row>
-                        <Row className="mt-2">
+                        <Row className="mt-2 p-2  bg-light">
                             <Col md={12} lg={12}>
-                                <h5 className="mb-1 fw-bold bg-light p-2 ">
+                                <h5 className="mb-1 fw-bold ">
                                     Sessions
                                 </h5>
-                                <ul className="list-unstyled text-muted vstack gap-1">
+                                <ul className="list-unstyled text-muted vstack gap-1 m-0">
                                     {ticket.sessions.length > 0 &&
                                         ticket.sessions.map((session: any) => (
                                             <li key={session.id}>
@@ -139,6 +166,8 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated }: any) => {
                             <TicketDetail
                                 ticket={ticket}
                                 ticket_no={ticketDetail.ticket_no}
+                                fees_sub_total={ticketDetail.fees_sub_total}
+                                addons_sub_total={ticketDetail.addons_sub_total}
                                 key={
                                     "ticketDetail-" +
                                     ticket.id +

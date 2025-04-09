@@ -31,7 +31,13 @@ class EventAppTicketController extends Controller
 
         $tickets = $this->datatable(EventAppTicket::currentEvent()->with(['event', 'sessions', 'fees']));
         $sessions = EventSession::currentEvent()->select(['id as value', 'name as label'])->get();
-        $addons = Addon::currentEvent()->select(['id as value', 'name as label'])->get();
+
+        $addons_collection = Addon::currentEvent()->orderBy('name')->get();
+        $addons = $addons_collection->map(function ($addon) {
+            return ['value' => $addon->id, 'label' => $addon->full_name];
+        });
+
+
         $fees = EventAppFee::where('status', 'active')->orderBy('name')->get();
         return Inertia::render('Organizer/Events/Tickets/Index', compact([
             'tickets',
