@@ -31,6 +31,7 @@ class PublicTicketResource extends JsonResource
             'updated_at' => $this->updated_at,
             'sessions' => $this->sessions ? EventSessionResource::collection($this->whenLoaded('sessions')) : [],
             'addons' => $this->addons ? AddonResource::collection($this->whenLoaded('addons')) : [],
+            'fees' => $this->addons ? TicketFeeResource::collection($this->whenLoaded('fees')) : [],
         ];
     }
 }
