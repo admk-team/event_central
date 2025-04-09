@@ -95,7 +95,7 @@ export default function CreateEditTrack({ open, onClose, track }: { open: boolea
                     )}
                 </FormGroup>
             </Modal.Body>
-            <div className="modal-footer justify-content-between">
+            <div className={`modal-footer ${isEdit ? 'justify-content-between' : 'justify-content-end'}`}>
                 {isEdit && (
                     <Button 
                         type="button" 
