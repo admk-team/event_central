@@ -37,7 +37,6 @@ class EventAppTicketController extends Controller
             return ['value' => $addon->id, 'label' => $addon->full_name];
         });
 
-
         $fees = EventAppFee::where('status', 'active')->orderBy('name')->get();
         return Inertia::render('Organizer/Events/Tickets/Index', compact([
             'tickets',
