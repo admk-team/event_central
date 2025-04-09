@@ -63,6 +63,7 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated }: any) => {
                 subTotal += (parseFloat(ticket_base_price) * parseFloat(fee.fee_amount) / 100);
             }
         });
+        subTotal = parseFloat(subTotal.toFixed(2));
         return subTotal;
     }
 
@@ -71,6 +72,7 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated }: any) => {
         addons.forEach((addon: any) => {
             subTotal += parseFloat(addon.price);
         });
+        subTotal = parseFloat(subTotal.toFixed(2));
         return subTotal;
     }
 
