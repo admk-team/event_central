@@ -23,7 +23,8 @@ class EventTicketsController extends Controller
                 'attendee_purchased_tickets.total as total',
                 'attendee_payments.amount_paid as amount',
                 'attendee_payments.payment_method as type',
-                'attendee_purchased_tickets.discount as discount',
+            'attendee_purchased_tickets.fees_sub_total as fees_sub_total',
+            'attendee_purchased_tickets.addons_sub_total as addons_sub_total',
                 'attendee_purchased_tickets.qty as qty',
             )->get();
         return Inertia::render('Organizer/Events/Tickets/EventAppTickets', compact(['tickets']));

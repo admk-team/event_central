@@ -13,10 +13,9 @@ class AttendeePurchasedTickets extends Model
         'attendee_payment_id',
         'event_app_ticket_id',
         'qty',
-        'discount_code',
         'price',
-        'discount',
-        'subTotal',
+        'fees_sub_total',
+        'addons_sub_total',
         'total',
         'qr_code',
         'code'

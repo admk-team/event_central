@@ -14,5 +14,7 @@ class TransferTicket extends Model
         'attendee_payment_id',
         'event_app_id',
         'transfer_email',
+        'transfered',
+        'attendee_payment_transfered',
     ];
 }
