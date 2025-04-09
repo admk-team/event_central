@@ -20,7 +20,7 @@ class EventSettingsController extends Controller
             abort(403);
         }
 
-        $event = EventApp::find(session('event_id'));
+        $event = EventApp::with('images')->find(session('event_id'));
         $tracks = Track::where('event_app_id', session('event_id'))->latest()->get(); // For Track Manager
         
         return Inertia::render("Organizer/Events/Settings/Event/Index", [
