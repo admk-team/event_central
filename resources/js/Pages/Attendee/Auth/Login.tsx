@@ -16,8 +16,8 @@ export default function Login({
 
     const [passwordShow, setPasswordShow] = useState<boolean>(false);
     const { data, setData, post, processing, errors, reset } = useForm({
-        email: "ansar@gmail.com",
-        password: "12345678",
+        email: "",
+        password: "",
         remember: false,
     });
 
