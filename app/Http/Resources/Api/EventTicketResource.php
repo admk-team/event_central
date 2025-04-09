@@ -30,7 +30,8 @@ class EventTicketResource extends JsonResource
             'updated_at' => $this->updated_at,
             'selected_sessions' => $this->selected_sessions,
             'addons' => new EventTicketPromoCodeResource($this->whenLoaded('promoCodes')),
-            'promo_codes' => new EventTicketPromoCodeResource($this->whenLoaded('promoCodes'))
+            'promo_codes' => new EventTicketPromoCodeResource($this->whenLoaded('promoCodes')),
+            'fees' => new TicketFeeResource($this->whenLoaded('fees')),
         ];
     }
 }
