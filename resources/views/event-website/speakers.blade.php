@@ -52,7 +52,7 @@
                         <div class="d-flex justify-content-center">
                             <img class="rounded-circle" src="{{ $speaker->avatar ? $speaker->avatar: '$event->logo'}}" width="150px" height="150px" alt="{{ $speaker->name }}">
                         </div>
-                        <div class="px-2 text-center">
+                        <div class="px-4 text-center">
                             <h5>{{ $speaker->name }}</h5>
                             <p class="text-muted mb-0">{{$speaker->email}}</p>
                             <p class="text-muted ">{{$speaker->phone}}</p>
