@@ -32,6 +32,7 @@ const fourth = { lat: 19.076, lng: 72.8777 };
 type EventImage = {
     image_url: string | ArrayBuffer | null;
     id: string;
+    is_new?: boolean;
 };
 
 function CreateEditModal({
@@ -56,7 +57,7 @@ function CreateEditModal({
         event?.is_recurring ?? false
     );
     const [eventImageFiles, setEventImageFiles] = useState(Array<File>());
-    const [eventImagePreviews, setEventImagePreviews] = useState([]);
+    const [eventImagePreviews, setEventImagePreviews] = useState<EventImage[]>([]);
 
     const [imagePreview, setImagePreview] = useState<
         string | ArrayBuffer | null
@@ -87,7 +88,7 @@ function CreateEditModal({
 
     useEffect(() => {
         setEventImagePreviews(event?.images ?? []);
-    }, []);
+    }, [event]);
 
     const btnTitle = event ? "UPDATE" : "CREATE";
 
@@ -208,6 +209,7 @@ function CreateEditModal({
                 list.push({
                     image_url: reader.result,
                     id: new Date().toString(),
+                    is_new: true,
                 });
                 setEventImagePreviews(list);
 
@@ -232,14 +234,37 @@ function CreateEditModal({
         setData("image_files", list);
     }, [eventImageFiles]);
 
+    const removeImageForm = useForm();
+
+    const removeImage = (imageId: EventImage["id"]) => {
+        const eventImage = eventImagePreviews.find((item: EventImage) => item.id === imageId);
+        if (eventImage?.is_new ?? false) {
+            setEventImagePreviews(prev => prev.filter((item: EventImage) => item.id !== imageId));
+        } else {
+            removeImageForm.delete(route('organizer.events.images.destroy', {event_app: event.id, eventAppImage: imageId}), {
+                preserveScroll: true,
+            });
+        }
+    }
+
     const listImages = eventImagePreviews.map((image: EventImage) => (
-        <img
-            className="rounded img-fluid"
-            src={image.image_url}
-            alt="event image"
-            style={{ width: "100%", marginTop: "15px" }}
-            key={image.id}
-        />
+        <div className="position-relative" key={image.id}>
+            <img
+                className="rounded img-fluid"
+                src={image.image_url}
+                alt="event image"
+                style={{ width: "100%", marginTop: "15px" }}
+            />
+            <Button 
+                onClick={() => removeImage(image.id)} 
+                type="button" 
+                variant="danger"
+                className="position-absolute" 
+                style={{ top: '15px', left: '0px' }} 
+                disabled={removeImageForm.processing}>
+                Remove
+            </Button>
+        </div>
     ));
 
     return (

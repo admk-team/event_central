@@ -24,29 +24,34 @@
                     <!-- Modal -->
                     <div class="modal fade" id="partnerModal{{ $partner->id }}" tabindex="-1" aria-labelledby="modalLabel{{ $partner->id }}" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content pt-3">
+                            <div class="modal-content py-3 px-4">
                                 <div class="d-flex justify-content-center">
                                     <img class="rounded-circle" src="{{ $partner->exhibitor_logo}}" width="150px" height="150px" alt="{{ $partner->type }}" style="height: 150px;">
                                 </div>
-                                <!-- <div>
-                                    {{$partner}}
-                                </div> -->
-                                <div class="px-2 text-center">
+                                <div class=" text-center">
                                     <h5>{{ $partner->type }}</h5>
-                                    <p class=" text-muted mb-0">{{$partner->email}}</p>
-                                    <p class="text-muted ">{{$partner->phone}}</p>
+                                    <p class="text-muted mb-0">{{$partner->email}}</p>
+                                    <p class="text-muted">{{$partner->phone}}</p>
                                     <p class="mb-0">{{ $partner->company_name}}</p>
-                                    <p class="text-muted ">{{ $partner->exhibitor_booth_no }}</p>
+                                    <p class="text-muted">{{ $partner->exhibitor_booth_no }}</p>
                                     @if ($partner->web)
                                     <a target="_blank" href="{{ $partner->web }}">
-                                        <i class="bi bi-globe"></i> <!-- Replace with appropriate icon for website -->
+                                        <i class="bi bi-globe"></i>
                                     </a>
                                     @endif
-                                    <p class="text-muted ">{{$partner->address}}</p>
-                                    <p class="text-muted">{{ $partner->description }}</p>
+                                    <p class="text-muted">{{$partner->address}}</p>
+
+                                    <!-- Description with Show More functionality -->
+                                    <div class="description-container">
+                                        @if (strlen($partner->description) > 100)
+                                        <p class="description-text short-description" id="shortPartnerDesc{{ $partner->id }}">{{ substr($partner->description, 0, 100) }}...</p>
+                                        <p class="description-text full-description text-muted d-none" id="fullPartnerDesc{{ $partner->id }}">{{ $partner->description }}</p>
+                                        <button class="btn show-more-btn p-0" data-partner-id="{{ $partner->id }}">Show More</button>
+                                        @else
+                                        <p class="text-muted">{{ $partner->description }}</p>
+                                        @endif
+                                    </div>
                                 </div>
-
-
                             </div>
                         </div>
                     </div>
@@ -59,4 +64,29 @@
     </div>
 </section>
 @endif
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const showMoreButtons = document.querySelectorAll('.show-more-btn');
+
+        showMoreButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const partnerId = this.getAttribute('data-partner-id');
+                const shortDesc = document.getElementById(`shortPartnerDesc${partnerId}`);
+                const fullDesc = document.getElementById(`fullPartnerDesc${partnerId}`);
+
+                if (fullDesc.classList.contains('d-none')) {
+                    // Show full description
+                    shortDesc.classList.add('d-none');
+                    fullDesc.classList.remove('d-none');
+                    this.textContent = 'Show Less';
+                } else {
+                    // Show short description
+                    shortDesc.classList.remove('d-none');
+                    fullDesc.classList.add('d-none');
+                    this.textContent = 'Show More';
+                }
+            });
+        });
+    });
+</script>
 @endsection

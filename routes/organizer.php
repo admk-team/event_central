@@ -75,6 +75,10 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
         Route::delete('/delete/many', [EventController::class, 'destroyMany'])->name('destroy.many');
         Route::get('{id}/select', [EventController::class, 'selectEvent'])->name('select');
 
+        // Event Images
+        Route::post('{event_app}/images ', [EventController::class, 'storeImage'])->name('images.store');
+        Route::delete('{event_app}/images/{eventAppImage} ', [EventController::class, 'destroyImage'])->name('images.destroy');
+
         Route::middleware('event_is_selected')->group(function () {
             Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
