@@ -36,7 +36,6 @@ export default function TracksManager({ open, onOpen, onClose }: { open: boolean
                             variant="light"
                             className="w-100 fw-semibold mb-3"
                             onClick={() => {
-                                onClose();
                                 setShowCreateEditModal(true);
                             }}
                         >

@@ -33,17 +33,17 @@ const AttendeeSessionDetail = ({
         rating_description: selectedSessionDetails?.rating_description ?? "",
     });
 
-    // const ratingEnabled = moment(eventSession.end_date_time) < moment();
+
 
     const now = moment();
     const startTime = moment(eventSession.start_date_time);
     const endTime = moment(eventSession.end_date_time).add(15, "minutes");
-    
+
     const ratingEnabled = now.isBetween(startTime, endTime);
     const [sessionSelected, SetSessionSelected] = useState<boolean>(
         selectedSessionDetails ? true : false
     );
-    
+
     const canRate = sessionSelected && checkin && ratingEnabled;
 
     const submitRatingChange = (e: any) => {
@@ -61,7 +61,7 @@ const AttendeeSessionDetail = ({
         eventSessionId: eventSession.id,
     });
 
-   
+
 
     const [selectedSpeaker, setSelectedSpeaker] = useState<any>(null);
 
@@ -142,7 +142,7 @@ const AttendeeSessionDetail = ({
                                                         {/* Attractive text styling */}
                                                         </Link>
                                                     )}
-                                                  
+
                                                     {eventSession.posts == true && (
                                                         <Link
                                                         href={route("attendee.posts.index",{id:eventSession.id,})}

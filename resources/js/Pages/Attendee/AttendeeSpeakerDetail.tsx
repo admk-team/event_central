@@ -5,7 +5,7 @@ import Rating from "react-rating";
 //https://codesandbox.io/p/sandbox/react-drag-and-drop-sortablelist-g205n
 //import Components
 
-import { Head, useForm, Link, router } from '@inertiajs/react';
+import { Head, Link, } from '@inertiajs/react';
 import Layout from '../../Layouts/Attendee';
 
 import speakerAvatar from '../../../images/speaker_avatar.svg';
@@ -28,12 +28,19 @@ const AttendeeSpeakerDetail = ({ eventApp, eventSpeaker }: any) => {
 
     });
 
-    const speakerslist = eventApp.event_speakers.map((speaker: any) =>
+    const speakerslist = eventApp.event_speakers.map((speaker: any, index: any) =>
         <a href="#" key={speaker.id} onClick={(event) => handleSpeakerChange(event, speaker)}>
-            <ListGroup.Item className={"mb-1 " + (speaker.id === eventSpeaker.id ? 'active-list-item' : '')} >{speaker.name}</ListGroup.Item>
+            <ListGroup.Item className={"mb-1 " + ((!eventSpeaker.id && index === 0) || (eventSpeaker.id === speaker.id) ? 'active-list-item' : '')} >{speaker.name}</ListGroup.Item>
         </a>
     );
 
+    useEffect(() => {
+        if (!eventSpeaker.id) {
+            setCurrentSpeaker(eventApp.event_speakers[0]);
+        } else {
+            setCurrentSpeaker(eventSpeaker);
+        }
+    }, []);
 
     useEffect(() => {
         setSessions(currentSpeaker.event_sessions);
@@ -66,8 +73,8 @@ const AttendeeSpeakerDetail = ({ eventApp, eventSpeaker }: any) => {
                                     <Card >
                                         <CardBody>
                                             {currentSpeaker && <div className='p-4 flex-column d-flex justify-content-center align-items-center'>
-                                                <img src={speakerAvatar} alt="speaker Avatar" style={{ height: '150ps', borderRadius: '50%', marginBottom: '15px' }} />
-                                                <h5>{currentSpeaker.name}</h5>
+                                                <img src={currentSpeaker.avatar || speakerAvatar} alt="speaker Avatar" className='rounded-circle avatar-xl' width="150" />
+                                                <h5 className='m-3'>{currentSpeaker.name}</h5>
                                             </div>}
                                         </CardBody>
                                     </Card>

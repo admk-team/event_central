@@ -20,7 +20,7 @@ const Index = ({ eventApp }: any) => {
         e.preventDefault();
 
         const data = {
-            tickets: [...allTicketDetails],
+            ticketsDetails: [...allTicketDetails],
             discount: discount,
             discount_code: discountCode,
             subTotal: grandTotal,
@@ -69,7 +69,7 @@ const Index = ({ eventApp }: any) => {
     };
 
     useEffect(() => {
-        console.log("All Ticket Details", allTicketDetails);
+        console.log("Ticket Details", allTicketDetails);
         setDiscount(0);
         setDiscountCode('');
         updateGrandTotal();
@@ -85,19 +85,18 @@ const Index = ({ eventApp }: any) => {
     }
 
     const updateGrandTotal = () => {
-        console.log('updating total');
         let gTotal = 0;
         allTicketDetails.forEach((ticketDetail) => {
             gTotal += parseFloat(ticketDetail.ticket.base_price);
-            ticketDetail.addons.forEach((addon: any) => {
-                gTotal += parseFloat(addon.price);
-            })
+            gTotal += parseFloat(ticketDetail.fees_sub_total);
+            gTotal += parseFloat(ticketDetail.addons_sub_total);
         });
+        gTotal = parseFloat(gTotal.toFixed(2));
         setGrandTotal(gTotal);
         setTotalAmount(gTotal);
     }
 
-    const hadleTicketCardChanged = (ticketDetails: any, removedIds: any) => {
+    const handleTicketCardChanged = (ticketDetails: any, removedIds: any) => {
 
         setAllTicketsDetails((prev) => {
             const objectMap = new Map(prev.map((obj) => [obj.id, obj]));
@@ -136,7 +135,7 @@ const Index = ({ eventApp }: any) => {
                                     ticket={ticket}
                                     key={ticket.id}
                                     onTicketDetailsUpdated={
-                                        hadleTicketCardChanged
+                                        handleTicketCardChanged
                                     }
                                 ></TicketCard>
                             ))}
