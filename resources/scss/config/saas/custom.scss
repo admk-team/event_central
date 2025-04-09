@@ -208,6 +208,10 @@ File: Custom Css File
     display: none;
 }
 
+.print-only {
+    display: none;
+}
+
 @media print {
     body * {
         visibility: hidden;
@@ -237,5 +241,29 @@ File: Custom Css File
     body * {
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
+    }
+
+    #temp-print-badge,
+    #temp-print-badge * {
+        visibility: visible;
+    }
+
+    #temp-print-badge {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+
+    #print-container,
+    #print-container * {
+        visibility: visible !important;
+    }
+
+    #print-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
     }
 }
