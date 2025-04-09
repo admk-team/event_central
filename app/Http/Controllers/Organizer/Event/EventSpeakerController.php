@@ -54,6 +54,8 @@ class EventSpeakerController extends Controller
         }
         if (isset($input['language']) && $input['language'] != null) {
             $input['language'] = implode(",", $input['language']);
+        } else {
+            $input['language'] = null;
         }
         EventSpeaker::create($input);
 
@@ -89,6 +91,8 @@ class EventSpeakerController extends Controller
         }
         if (isset($input['language']) && $input['language'] != null) {
             $input['language'] = implode(",", $input['language']);
+        } else {
+            $input['language'] = null;
         }
 
         $speaker->update($input);
@@ -111,7 +115,7 @@ class EventSpeakerController extends Controller
         if (! Auth::user()->can('delete_speakers')) {
             abort(403);
         }
-        
+
         $request->validate([
             'ids' => 'required|Array'
         ]);

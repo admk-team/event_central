@@ -3,7 +3,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Col, Row, Form } from "react-bootstrap";
 
-const TicketDetail = ({ ticket_no, ticket, onAddonsUpdated }: any) => {
+const TicketDetail = ({ ticket_no, ticket, fees_sub_total, addons_sub_total, onAddonsUpdated }: any) => {
     const [selectedAddons, setSelectedAddons] = useState<any>([]);
     const [addonOptions, setAddonsOptions] = useState<any>([]);
     const [addons, setAddons] = useState<any>(ticket.addons);
@@ -41,15 +41,13 @@ const TicketDetail = ({ ticket_no, ticket, onAddonsUpdated }: any) => {
         addons.map((addon: any) => {
             let id = ticket.id + "-" + ticket_no + "-addon-" + addon.id;
             listItems.push(
-                <Col md={12} lg={12} key={"col-" + id}>
-                    <Form.Check
-                        id={id}
-                        type="checkbox"
-                        label={addon.full_name}
-                        key={id}
-                        onChange={(e) => handleCheckChanged(e, addon)}
-                    />
-                </Col>
+                <Form.Check
+                    id={id}
+                    type="checkbox"
+                    label={addon.full_name}
+                    key={id}
+                    onChange={(e) => handleCheckChanged(e, addon)}
+                />
             );
         });
         setAddonsOptions(listItems);
@@ -65,21 +63,29 @@ const TicketDetail = ({ ticket_no, ticket, onAddonsUpdated }: any) => {
     };
 
     return (
-        <div>
-            <p className="mb-1 fw-bold bg-light p-2 ">
+        <Row className="mt-2 p-2 bg-light">
+            <p className="mb-1 fs-4 fw-bold bg-light">
                 Ticket # {ticket_no} Details
             </p>
-            <Row className="p-2">
-                <Col md={6} lg={6} className="pt-2 pl-4">
-                    <p className="fw-bold">Fees applicable</p>
-                    <Row>{feesOptions}</Row>
-                </Col>
-                <Col md={6} lg={6} className="p-2">
-                    <p className="fw-bold">Ticket Addons</p>
-                    <Row>{addonOptions}</Row>
-                </Col>
-            </Row>
-        </div>
+            <hr className="mt-0 mb-1" />
+            <Col md={6} lg={6}>
+                <p className="fs-5 fw-bold mb-1">Fees applicable</p>
+                {feesOptions}
+                <span className="fs-5 fw-bold mt-1">
+                    Fees Sub Total :
+                    <sup><small>$</small></sup>
+                    {fees_sub_total}</span>
+            </Col>
+            <Col md={6} lg={6}>
+                <p className="fs-5 fw-bold mb-1">Ticket Addons</p>
+                {addonOptions}
+                <span className="fs-5 fw-bold mt-1">
+                    Addons Sub Total :
+                    <sup><small>$</small></sup>
+                    {addons_sub_total}
+                </span>
+            </Col>
+        </Row>
     );
 };
 
