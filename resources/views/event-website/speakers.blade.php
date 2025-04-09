@@ -41,9 +41,7 @@
                 </div>
                 <div class="speaker-info">
                     <h3>{{ $speaker->name }}</h3>
-                    <p class="speaker-role">{{ $speaker->position }}
-                        {{ $speaker->company ? ', ' . $speaker->company : '' }}
-                    </p>
+                    <p class="speaker-role">{{ implode(', ', array_filter([$speaker->position, $speaker->company])) }}</p>
                     <!-- <p class="speaker-bio">{{ $speaker->bio }}</p> -->
                 </div>
             </div>
