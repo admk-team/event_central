@@ -83,7 +83,7 @@ class EventPromoCodeController extends Controller
         if (! Auth::user()->can('delete_tickets')) {
             abort(403);
         }
-        
+
         $ids = $request->get('ids');
 
         $request->validate([

@@ -1,4 +1,4 @@
-import { Link as Link } from "@inertiajs/react"; // Use Inertia's Link
+import { Link as Link, usePage } from "@inertiajs/react"; // Use Inertia's Link
 import moment from "moment";
 import { Button, Col, Row } from "react-bootstrap";
 import HasPermission from "../../../../../Components/HasPermission";
@@ -11,6 +11,7 @@ interface Session {
     end_time: string;
     qa_status: boolean;
     posts: boolean;
+    tracks: any[];
 }
 
 export default function SessionCard({
@@ -22,6 +23,8 @@ export default function SessionCard({
     onEdit: () => void;
     onDelete: () => void;
 }) {
+    const enableTracks = usePage().props.enableTracks as boolean;
+
     const startDate = moment(
         `${session.event_date.date} ${session.start_time}`,
         "YYYY-MM-DD HH:mm:ss"
@@ -86,6 +89,13 @@ export default function SessionCard({
                     <div className="timeline-text w-100">
                         <div className="d-flex">
                             <div className="flex-grow-1">
+                                {(enableTracks && session.tracks.length > 0) && (
+                                    <div className="d-flex flex-wrap gap-2 mb-2">
+                                        {session.tracks.slice(0, 3).map((track: any) => (
+                                            <div key={track.id} className="rounded" style={{ backgroundColor: track.color, width: '30px', height: '8px' }}></div>
+                                        ))}
+                                    </div>
+                                )}
                                 <div className="d-flex justify-content-between align-items-center mb-2">
                                     <h4 className="fs-17 mb-0">
                                         {session.name}

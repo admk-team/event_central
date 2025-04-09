@@ -10,6 +10,7 @@ use App\Models\EventAppDate;
 use App\Models\EventSession;
 use App\Models\EventSpeaker;
 use App\Models\PlatForm;
+use App\Models\Track;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -22,16 +23,19 @@ class EventSessionController extends Controller
             abort(403);
         }
 
-        $eventSessions = EventSession::with(['eventDate', 'eventPlatform', 'eventSpeakers'])
+        $eventSessions = EventSession::with(['eventDate', 'eventPlatform', 'eventSpeakers', 'tracks'])
             ->currentEvent()
             ->whereCanBeAccessedBy(Auth::user())
             ->get();
+            
         $speakers = EventSpeaker::currentEvent()->get();
         $platforms = PlatForm::all();
         $eventPlatforms = EventPlatform::where('event_app_id', session('event_id'))->get();
         $eventDates = EventAppDate::where('event_app_id', session('event_id'))->orderBy('date')->get();
+        $tracks = Track::where('event_app_id', session('event_id'))->latest()->get();
+        $enableTracks = eventSettings()->getValue('enable_tracks', false);
 
-        return Inertia::render('Organizer/Events/Schedule/Index', compact('eventSessions', 'speakers', 'platforms', 'eventPlatforms', 'eventDates'));
+        return Inertia::render('Organizer/Events/Schedule/Index', compact('eventSessions', 'speakers', 'platforms', 'eventPlatforms', 'eventDates', 'tracks', 'enableTracks'));
     }
 
     public function store(EventSessionRequest $request)
@@ -50,11 +54,16 @@ class EventSessionController extends Controller
         // Remove event_speaker_id from main data since we'll handle it separately
         $speakers = $data['event_speaker_id'] ?? [];
         unset($data['event_speaker_id']);
+
+        $tracksIds = $data['tracks'] ?? [];
+        unset($data['tracks']);
         
         $session = EventSession::create($data);
         if (!empty($speakers)) {
             $session->eventSpeakers()->sync($speakers);
         }
+
+        $session->tracks()->sync($tracksIds);
 
         return back()->withSuccess("Session Created Successfully");
     }
@@ -74,11 +83,16 @@ class EventSessionController extends Controller
         // Handle speakers separately
         $speakers = $data['event_speaker_id'] ?? [];
         unset($data['event_speaker_id']);
+
+        $tracksIds = $data['tracks'] ?? [];
+        unset($data['tracks']);
         
         $schedule->update($data);
         if (!empty($speakers)) {
             $schedule->eventSpeakers()->sync($speakers);
         }
+
+        $schedule->tracks()->sync($tracksIds);
 
         return back()->withSuccess("Session Updated Successfully");
     }

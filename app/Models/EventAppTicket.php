@@ -28,7 +28,10 @@ class EventAppTicket extends Model
     ];
 
     //Being used by Select2 in Ticket Create/Edit Model
-    protected $appends = ['selected_sessions', 'selected_addons'];
+    protected $appends = [
+        'selected_sessions',
+        'selected_addons',
+    ];
 
     public function scopeCurrentEvent($query)
     {
@@ -50,6 +53,11 @@ class EventAppTicket extends Model
         return $this->belongsToMany(PromoCode::class, 'promo_code_ticket');
     }
 
+    public function fees()
+    {
+        return $this->belongsToMany(EventAppFee::class, 'event_app_ticket_fee');
+    }
+
     public function addons()
     {
         return $this->belongsToMany(Addon::class, 'addon_event_app_ticket');
@@ -62,6 +70,11 @@ class EventAppTicket extends Model
 
     public function getSelectedAddonsAttribute()
     {
-        return $this->addons()->select(['id as value', 'name as label'])->get();
+        //Ordering and selecting appended property of model
+        // and being used as preselected Select2 Options
+        $addons_collection = $this->addons()->orderBy('name')->get();
+        return $addons_collection->map(function ($addon) {
+            return ['value' => $addon->id, 'label' => $addon->full_name];
+        });
     }
 }

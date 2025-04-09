@@ -108,7 +108,7 @@ function Index({ attendees }: any) {
         {
             header: () => 'QR Code',
             cell: (attendee) => (
-                <img src={attendee.qr_code_img} alt="qr_code" width="50" height="50" />
+                <img src={attendee.qr_code} alt="qr_code" width="50" height="50" />
             ),
         },
         {
@@ -116,12 +116,24 @@ function Index({ attendees }: any) {
             cell: (attendee) => attendee.first_name,
         },
         {
+            header: () => 'Last Name',
+            cell: (attendee) => attendee.last_name,
+        },
+        {
             header: () => 'Email',
             cell: (attendee) => attendee.email,
         },
+        // {
+        //     header: () => 'Event Pass',
+        //     cell: (attendee) => attendee.event_pass,
+        // },
         {
-            header: () => 'Event Pass',
-            cell: (attendee) => attendee.event_pass,
+            header: () => 'Company',
+            cell: (attendee) => attendee.company,
+        },
+        {
+            header: () => 'Position',
+            cell: (attendee) => attendee.position,
         },
         {
             header: () => 'Phone',

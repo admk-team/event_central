@@ -35,7 +35,6 @@ class AttendeeController extends Controller
             abort(403);
         }
 
-        // dd($request->all(),Auth::user(),session('event_id'));
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -49,10 +48,13 @@ class AttendeeController extends Controller
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
+            'company' => $request->company,
+            'position' => $request->position,
             'phone' => $request->phone,
+            'bio' => $request->bio,
             'password' => Hash::make("12345678"),
         ]);
-        return redirect()->route('organizer.events.attendees.index')->with('success', 'attendee created successfully.');
+        return back()->withSuccess('attendee created successfully.');
     }
 
 
@@ -83,7 +85,7 @@ class AttendeeController extends Controller
         $user = Attendee::findOrFail($id);
         $user->update($request->all());
 
-        return back()->withSuccess('success', 'Attendee updated successfully');
+        return back()->withSuccess('Attendee updated successfully');
     }
 
     public function destroy(Attendee $attendee)
@@ -151,7 +153,7 @@ class AttendeeController extends Controller
                 'attendee_payments.payment_method as type',
                 'attendee_purchased_tickets.qty as qty'
             )->get();
-        
+
         if (! Auth::user()->can('view_attendees')) {
             abort(403);
         }

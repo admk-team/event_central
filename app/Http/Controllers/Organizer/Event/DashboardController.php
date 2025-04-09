@@ -6,7 +6,7 @@ use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Attendee;
-use App\Models\AttendeeAttendance;
+use App\Models\SessionCheckIn;
 use App\Models\AttendeePayment;
 use App\Models\AttendeePurchasedTickets;
 use App\Models\EventApp;
@@ -67,7 +67,7 @@ class DashboardController extends Controller
         // Prepare data for the chart
         $sessionNames = $eventSessions->pluck('name')->toArray(); // Array of session names
         $attendanceCounts = $eventSessions->map(function ($session) {
-            return AttendeeAttendance::where('event_session_id', $session->id)
+            return SessionCheckIn::where('session_id', $session->id)
                 ->whereHas('session', fn($query) => $query->currentEvent())
                 ->count(); // Count attendees per session
         })->toArray(); // Array of attendance counts
@@ -88,7 +88,7 @@ class DashboardController extends Controller
         // Fetch sessions for the current event with attendance counts in one go
         $eventSessions = EventSession::currentEvent()
             ->withCount(['attendances as joined_count' => function ($query) {
-                $query->whereNotNull('check_in'); // Count only checked-in attendees
+                $query->whereNotNull('checked_in'); // Count only checked-in attendees
             }])
             ->get();
 
@@ -159,13 +159,13 @@ class DashboardController extends Controller
         $attendees = Attendee::whereHas('payments', fn($query) => $query->currentEvent())
             ->with(['payments' => fn($query) => $query->currentEvent()])
             ->get();
-    
+
         $totalAttendees = $attendees->count(); // Total number of attendees
-    
+
         // Calculate total revenue from all payments
         $totalRevenue = AttendeePayment::whereHas('attendee', fn($query) => $query->currentEvent())
             ->sum('amount_paid');
-    
+
         // Prepare data for top 10 attendees
         $attendeeData = $attendees->map(function ($attendee) {
             $amountPaid = $attendee->payments->sum('amount_paid');
@@ -178,7 +178,7 @@ class DashboardController extends Controller
         ->take(10) // Limit to top 10
         ->values()
         ->toArray();
-    
+
         return [
             'totalAttendees' => $totalAttendees, // Total number of attendees
             'totalRevenue' => $totalRevenue, // Total revenue from all payments

@@ -2,12 +2,67 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 @section('content')
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <style>
     body {
         background-color: var(--color-neutral-50);
     }
 </style>
-<section id="schedule" class="schedule">
+<section 
+    id="schedule" 
+    class="schedule"
+    x-data="{ 
+        selectedTracks: [],
+        selectedPlatforms: [],
+        toggleTrackSelection(trackId) {
+            if (this.selectedTracks.includes(trackId)) {
+                this.selectedTracks = this.selectedTracks.filter(id => id !== trackId)
+            } else {
+                this.selectedTracks.push(trackId)
+            }
+        },
+        clearTrackSelections() {
+            this.selectedTracks = [];
+        },
+        trackSelected(trackId) {
+            return this.selectedTracks.includes(trackId)
+        },
+        hasSelectedTracks(ids) {
+            if (this.selectedTracks.length === 0) {
+                return true
+            }
+
+            for (const id of ids) {
+                if (this.selectedTracks.includes(id)) {
+                    return true
+                }
+            }
+
+            return false
+        },
+
+        togglePlatformSelection(platformId) {
+            if (this.selectedPlatforms.includes(platformId)) {
+                this.selectedPlatforms = this.selectedPlatforms.filter(id => id !== platformId)
+            } else {
+                this.selectedPlatforms.push(platformId)
+            }
+        },
+        clearPlatformSelections() {
+            this.selectedPlatforms = [];
+        },
+        platformSelected(platformId) {
+            return this.selectedPlatforms.includes(platformId)
+        },
+        hasSelectedPlatform(id) {
+            if (this.selectedPlatforms.length === 0) {
+                return true
+            }
+
+            return this.selectedPlatforms.includes(id)
+        }
+    }"
+>
     <div class="container">
         <div class="section-header">
             <span class="section-tag">Event Schedule</span>
@@ -20,19 +75,64 @@
                 {{ $loop->index + 1 }} <span>{{ date('M j', strtotime($date->date)) }}</span></button>
             @endforeach
         </div>
-        <div class="schedule-content">
+        @if ($enableTracks)
+            <div class="tracks">
+                <h4>Tracks:</h4>
+                <div class="tracks-filter">
+                    @foreach ($tracks as $track)
+                        <button 
+                            @click="toggleTrackSelection({{ $track->id }})"
+                            :style="trackSelected({{ $track->id }}) ? {backgroundColor: '{{ $track->color }}', color: 'white'} : {border: '1px solid {{ $track->color }}'}"
+                            class="btn"
+                        >
+                            {{ $track->name }}
+                        </button>
+                    @endforeach
+                    <template x-if="selectedTracks.length">
+                        <button @click="clearTrackSelections" class="btn btn-secondary">&#10006;</button>
+                    </template>
+                </div>
+            </div>
+        @endif
+        <div class="locations">
+            <h4>Locations:</h4>
+            <div class="locations-filter">
+                @foreach ($eventPlatforms as $platform)
+                    <button 
+                        @click="togglePlatformSelection({{ $platform->id }})"
+                        class="platform-btn"
+                        :class="platformSelected({{ $platform->id }}) && {active: true}"
+                    >
+                        {{ $platform->name }}
+                    </button>
+                @endforeach
+                <template x-if="selectedPlatforms.length">
+                    <button @click="clearPlatformSelections" class="btn btn-secondary">&#10006;</button>
+                </template>
+            </div>
+        </div>
+        <div 
+            class="schedule-content"
+        >
             @foreach ($event->dates as $date)
             <div class="schedule-day {{ $loop->first ? 'active' : '' }}" id="day{{ $loop->index + 1 }}">
                 <div class="schedule-timeline">
-                    @foreach ($date->eventSessions as $session)
-                    <div class="timeline-item" type="button" data-bs-toggle="modal" data-bs-target="#sessionModal{{ $session->id }}">
+                    @foreach ($date->eventSessions()->orderBy('start_time')->get() as $session)
+                    <div x-show="hasSelectedTracks({{ $session->tracks->pluck('id') }}) && hasSelectedPlatform({{ $session->event_platform_id }})" class="timeline-item" type="button" data-bs-toggle="modal" data-bs-target="#sessionModal{{ $session->id }}">
                         <div class="timeline-time">
-                            <span>{{ Str::substr($session->start_time, 0, 5) }}</span>
+                            <span>{{ \Illuminate\Support\Carbon::createFromFormat('H:i:s', $session->start_time)->format('h:i A') }}</span>
                             <span>-</span>
-                            <span>{{ Str::substr($session->end_time, 0, 5) }}</span>
+                            <span>{{ \Illuminate\Support\Carbon::createFromFormat('H:i:s', $session->end_time)->format('h:i A') }}</span>
                         </div>
                         <div class="timeline-content">
                             <div class="session-card">
+                                @if ($enableTracks && $session->tracks->count() > 0)
+                                    <div class="d-flex flex-wrap gap-2 mb-2">
+                                        @foreach ($session->tracks->slice(0, 3) as $track)
+                                            <div class="rounded" style="background-color: {{ $track->color }}; width: 30px; height: 8px;"></div>
+                                        @endforeach
+                                    </div>
+                                @endif
                                 <h3 class="session-title">{{ $session->name }}</h3>
                                 <div class="session-details">
                                     <div class="session-speaker">
@@ -67,14 +167,14 @@
                                         <p>{{$session->capacity}}</p>
                                         <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
                                                 <path d="M12.25 2c-5.514 0-10 4.486-10 10s4.486 10 10 10 10-4.486 10-10-4.486-10-10-10zM18 13h-6.75V6h2v5H18v2z"></path>
-                                            </svg> {{$session->start_time}} - {{$session->end_time}}</p>
+                                            </svg> {{\Illuminate\Support\Carbon::createFromFormat('H:i:s', $session->start_time)->format('h:i A')}} - {{\Illuminate\Support\Carbon::createFromFormat('H:i:s', $session->end_time)->format('h:i A')}}</p>
                                         <p>{{$session->description}}</p>
                                     </div>
 
                                 </div>
-                                <div class="modal-footer">
+                                <!-- <div class="modal-footer">
 
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>

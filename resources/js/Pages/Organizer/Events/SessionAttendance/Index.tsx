@@ -11,8 +11,8 @@ interface Attendance {
     id: number;
     session: { id: number; name: string }; // Added id for filtering
     attendee: { first_name: string; last_name: string; avatar?: string };
-    check_in: string | null;
-    check_out: string | null;
+    checked_in: string | null;
+    // check_out: string | null;
 }
 
 interface EventSession {
@@ -118,12 +118,12 @@ function Index({ attendance: initialAttendance, eventSession: initialSessions }:
         },
         {
             header: () => 'Check In',
-            cell: (attendance) => attendance.check_in || 'Not checked in',
+            cell: (attendance) => attendance.checked_in || 'Not checked in',
         },
-        {
-            header: () => 'Check Out',
-            cell: (attendance) => attendance.check_out || 'Not checked out',
-        },
+        // {
+        //     header: () => 'Check Out',
+        //     cell: (attendance) => attendance.check_out || 'Not checked out',
+        // },
         {
             header: () => 'Action',
             cell: (attendance) => (

@@ -28,11 +28,11 @@ class EventAppTicketRequest extends FormRequest
             'description' => 'required',
             'type' => 'required',
             'base_price' => 'required|numeric',
-            // 'addons_price' => 'required|numeric',
-            // 'total_price' => 'required|numeric',
+
             'sessions' => 'required|array',
             'sessions.*' => 'required|array|min:1',
             'addons' => 'array',
+            'fees' => 'array',
             'features' => '',
             'increment_by' => '',
             'increment_rate' => '',

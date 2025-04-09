@@ -82,11 +82,16 @@ class EventSession extends Model
 
     public function attendances()
     {
-        return $this->hasMany(AttendeeAttendance::class, 'event_session_id');
+        return $this->hasMany(SessionCheckIn::class, 'session_id');
     }
 
     public function tickets()
     {
         return $this->belongsToMany(EventAppTicket::class, 'session_ticket');
+    }
+
+    public function tracks()
+    {
+        return $this->belongsToMany(Track::class, 'event_session_tracks');
     }
 }

@@ -41,9 +41,7 @@
                 </div>
                 <div class="speaker-info">
                     <h3>{{ $speaker->name }}</h3>
-                    <p class="speaker-role">{{ $speaker->position }}
-                        {{ $speaker->company ? ', ' . $speaker->company : '' }}
-                    </p>
+                    <p class="speaker-role">{{ implode(', ', array_filter([$speaker->position, $speaker->company])) }}</p>
                     <!-- <p class="speaker-bio">{{ $speaker->bio }}</p> -->
                 </div>
             </div>
@@ -54,19 +52,29 @@
                         <div class="d-flex justify-content-center">
                             <img class="rounded-circle" src="{{ $speaker->avatar ? $speaker->avatar: '$event->logo'}}" width="150px" height="150px" alt="{{ $speaker->name }}">
                         </div>
-                        <div class=" text-center">
+                        <div class="px-2 text-center">
                             <h5>{{ $speaker->name }}</h5>
                             <p class="text-muted mb-0">{{$speaker->email}}</p>
                             <p class="text-muted ">{{$speaker->phone}}</p>
                             <p class="mb-0">{{ $speaker->company}}</p>
                             <p class="text-muted">{{ $speaker->position }}</p>
-                            <p class="text-muted">{{ $speaker->bio }}</p>
+
+                            <!-- Bio with Show More functionality -->
+                            <div class="bio-container">
+                                @if (strlen($speaker->bio) > 100)
+                                <p class="text-muted bio-text short-bio" id="shortBio{{ $speaker->id }}">{{ substr($speaker->bio, 0, 100) }}...</p>
+                                <p class="text-muted bio-text full-bio d-none" id="fullBio{{ $speaker->id }}">{{ $speaker->bio }}</p>
+                                <span class="btn show-more-btn p-0" data-speaker-id="{{ $speaker->id }}">Show More</span>
+                                @else
+                                <p class="text-muted">{{ $speaker->bio }}</p>
+                                @endif
+                            </div>
                         </div>
                         <div class="modal-footer text-center d-flex justify-content-center">
                             <!-- Speaker's website link -->
                             @if ($speaker->web)
                             <a target="_blank" href="{{ $speaker->web }}">
-                                <i class="bi bi-globe"></i> <!-- Replace with appropriate icon for website -->
+                                <i class="bi bi-globe"></i>
                             </a>
                             @endif
 
@@ -86,7 +94,7 @@
                             <!-- Twitter link -->
                             @if($speaker->twitter)
                             <a target="_blank" href="{{ $speaker->twitter }}">
-                                <i class="bi bi-twitter-x text-black"></i> <!-- Corrected 'bi-twitter-x' to 'bi-twitter' -->
+                                <i class="bi bi-twitter-x text-black"></i>
                             </a>
                             @endif
                             <!-- Instagram link -->
@@ -96,7 +104,6 @@
                             </a>
                             @endif
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -104,4 +111,30 @@
         </div>
     </div>
 </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const showMoreButtons = document.querySelectorAll('.show-more-btn');
+
+        showMoreButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const speakerId = this.getAttribute('data-speaker-id');
+                const shortBio = document.getElementById(`shortBio${speakerId}`);
+                const fullBio = document.getElementById(`fullBio${speakerId}`);
+
+                if (fullBio.classList.contains('d-none')) {
+                    // Show full bio
+                    shortBio.classList.add('d-none');
+                    fullBio.classList.remove('d-none');
+                    this.textContent = 'Show Less';
+                } else {
+                    // Show short bio
+                    shortBio.classList.remove('d-none');
+                    fullBio.classList.add('d-none');
+                    this.textContent = 'Show More';
+                }
+            });
+        });
+    });
+</script>
 @endsection

@@ -30,7 +30,7 @@ export default function Sessions({ selectedDate, selectedPlatform, onEdit, onDel
         return (
             <div className="h-100 d-flex justify-content-center align-items-center">
                 <div className="fw-semibold fs-5">
-                    {selectedDate === null ? 'No date selected, please select date' : 'No platform selected, please select platform'}
+                    {selectedDate === null ? 'No date selected, please select date' : 'No location selected, please select location'}
                 </div>
             </div>
         );

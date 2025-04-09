@@ -75,6 +75,10 @@ class UserController extends Controller
 
         $input['role'] = 'admin'; // User type
 
+        if (! $input['password']) {
+            unset($input['password']);
+        }
+
         $user->update($input);
 
         $user->syncRoles(Role::whereIn('id', [$role_id])->get());
