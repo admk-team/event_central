@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Attendee\Payment;
+namespace App\Http\Controllers\Api\v1\Attendee;
 
 use Exception;
 use Inertia\Inertia;
@@ -88,7 +88,6 @@ class PaymentController extends Controller
 
         return response()->json(['client_secret' => $client_secret, 'intent' => null]);
     }
-
 
     public function showCheckoutPage($paymentUuId)
     {
