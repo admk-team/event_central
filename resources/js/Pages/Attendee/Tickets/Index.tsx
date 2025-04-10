@@ -116,7 +116,7 @@ const Index = ({ eventApp }: any) => {
             <section className="section bg-light" id="tickets">
                 {/* <div className="bg-overlay bg-overlay-pattern"></div> */}
                 <Container>
-                    <Row className="justify-content-center">
+                    <Row className="justify-content-center mt-5 mt-md-0">
                         <Col lg={8}>
                             <div className="text-center mb-5">
                                 <h3 className="mb-3 fw-bold">

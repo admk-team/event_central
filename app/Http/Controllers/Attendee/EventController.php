@@ -56,7 +56,7 @@ class EventController extends Controller
         // $next_session_id = $sessions->after($eventSession->id);
         // $prev_session_id = $sessions->before($eventSession->id);
 
-        $eventSession->load(['eventSpeakers', 'attendees','eventDate']);
+        $eventSession->load(['eventSpeakers', 'attendees', 'eventDate', 'eventPlatform']);
         $selectedSessionDetails = DB::table('attendee_event_session')
             ->where(function ($query) use ($eventSession) {
                 $query->where('attendee_id', auth()->user()->id);
@@ -79,12 +79,12 @@ class EventController extends Controller
 
         // Load all speakers and their sessions for the event
         $eventApp->load(['event_speakers' => function ($query) {
-            $query->with('eventSessions'); // Load sessions for all speakers
+            $query->with('eventSessions.eventPlatform'); // Load sessions for all speakers
         }]);
 
         // Load sessions for the specific speaker
         if ($eventSpeaker) {
-            $eventSpeaker->load('eventSessions');
+            $eventSpeaker->load('eventSessions.eventPlatform');
         }
 
         return Inertia::render('Attendee/AttendeeSpeakerDetail', compact('eventApp', 'eventSpeaker'));

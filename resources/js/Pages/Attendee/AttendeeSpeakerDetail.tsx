@@ -14,6 +14,7 @@ import moment from 'moment';
 
 const AttendeeSpeakerDetail = ({ eventApp, eventSpeaker }: any) => {
 
+
     const [sessions, setSessions] = useState([]);
     const [currentSpeaker, setCurrentSpeaker] = useState(eventSpeaker);
 
@@ -40,10 +41,12 @@ const AttendeeSpeakerDetail = ({ eventApp, eventSpeaker }: any) => {
         } else {
             setCurrentSpeaker(eventSpeaker);
         }
+        console.log(eventApp);
     }, []);
 
     useEffect(() => {
         setSessions(currentSpeaker.event_sessions);
+        console.log(eventSpeaker.event_sessions);
     }, [currentSpeaker]);
 
     return (
@@ -86,16 +89,17 @@ const AttendeeSpeakerDetail = ({ eventApp, eventSpeaker }: any) => {
                                             <Card >
                                                 <CardBody>
                                                     <Row className='d-flex justify-content-between'>
-                                                        <Col md={3} lg={3} className='d-flex flex-column'>
+                                                        <Col className='d-flex flex-column'>
                                                             <span className='fs-5'>{session.name}</span>
-                                                            <span className='text-secondary'>MAIN STAGE</span>
-                                                            <span style={{ color: 'var(--vz-success)' }}>{moment(session.start_date).format('hh:mm') + ' - ' + moment(session.end_date).format('hh:mm')}</span>
-                                                            <span className='fs-5'>{currentSpeaker.name}</span>
+                                                            <span className='text-secondary'>{session.event_platform?.name ?? ''}</span>
+                                                            {/* <span className='fs-5'>{currentSpeaker.name}</span> */}
+                                                            <p>{session.description}</p>
                                                         </Col>
-                                                        <Col md={2} lg={2} className='d-flex flex-column align-items-end'>
+                                                        <Col className='d-flex flex-column align-items-end'>
                                                             {!session.selected_by_attendee && < i className='bx bx-heart fs-3 float-right'></i>}
                                                             {session.selected_by_attendee && < i className='bx bxs-heart fs-3 text-danger' style={{ float: 'right' }}></i>}
                                                             <span>{moment(session.start_date).format('MMM DD, YYYY')}</span>
+                                                            <span style={{ color: 'var(--vz-success)' }}>{moment(session.start_date).format('hh:mm') + ' - ' + moment(session.end_date).format('hh:mm')}</span>
                                                         </Col>
                                                     </Row>
                                                 </CardBody>
