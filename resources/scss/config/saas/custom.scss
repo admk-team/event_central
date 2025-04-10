@@ -267,3 +267,24 @@ File: Custom Css File
         width: 100%;
     }
 }
+
+/* For screens ≥ 1400px (xxl) */
+// @media (min-width: 1400px) {
+//   .lg-bottom-negative {
+//     bottom: -900px;
+//   }
+// }
+
+/* For screens between 1200px and 1399px (xl) */
+@media (min-width: 1500px) {
+  .lg-bottom-negative {
+    position: absolute;
+    bottom: -80px;
+  }
+}
+@media (min-width:1300px) and (max-width: 1499px) {
+  .lg-bottom-negative {
+    position: absolute;
+    bottom: -50px;
+  }
+}
