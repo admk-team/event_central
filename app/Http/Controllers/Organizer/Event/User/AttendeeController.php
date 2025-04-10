@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers\Organizer\Event\User;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Organizer\Event\User\AttendeeStoreRequest;
+use Carbon\Carbon;
+use Inertia\Inertia;
 use App\Models\Attendee;
-use App\Models\AttendeePayment;
+use App\Models\EventApp;
 use App\Models\EventSession;
+use Illuminate\Http\Request;
 use App\Models\FormSubmission;
 use App\Models\SessionCheckIn;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\TransferTicket;
+use App\Models\AttendeePayment;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Inertia\Inertia;
+use App\Http\Requests\Organizer\Event\User\AttendeeStoreRequest;
 
 class AttendeeController extends Controller
 {
@@ -180,5 +182,47 @@ class AttendeeController extends Controller
         ]);
 
         return back()->withSuccess("Check In Successfully");
+    }
+
+    public function qrCodeAttendee(Attendee $attendee)
+    {
+        $attendee->load('payments.purchased_tickets'); // eager load purchased_tickets too
+
+        // Filter only 'paid' payments
+        $paidPayments = $attendee->payments->filter(function ($payment) {
+            return $payment->status === 'paid';
+        });
+
+        if ($paidPayments->isEmpty()) {
+            return Inertia::render('Organizer/Events/Users/Attendees/QrCode', [
+                'hasTickets' => false,
+            ]);
+        }
+
+        $image = [];
+        $eventApp = null;
+
+        // Loop through all paid payments
+        foreach ($paidPayments as $payment) {
+            if (!$eventApp) {
+                $eventApp = EventApp::find($payment->event_app_id);
+            }
+
+            foreach ($payment->purchased_tickets as $purchasedTicket) {
+                $transferCheck = TransferTicket::where('attendee_payment_transfered', $purchasedTicket->id)->exists();
+                $image[] = [
+                    'qr_code' => asset('Storage/' . $purchasedTicket->qr_code),
+                    'purchased_id' => $purchasedTicket->id,
+                    'transfer_check' => $transferCheck,
+                ];
+            }
+        }
+
+        return Inertia::render('Organizer/Events/Users/Attendees/QrCode', [
+            'eventApp' => $eventApp,
+            'attendee' => $attendee,
+            'image' => $image,
+            'hasTickets' => true,
+        ]);
     }
 }

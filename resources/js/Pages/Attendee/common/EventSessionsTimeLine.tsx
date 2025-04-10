@@ -18,14 +18,14 @@ const EventSessionsTimeLine = ({ eventApp, sessions }: any) => {
                 <Card >
                     <CardBody >
                         <Row>
-                            <Col md={10} lg={10}>
+                            <Col>
                                 <div className="d-flex flex-column">
                                     <h5>{session.name}</h5>
                                     <span style={{ fontSize: '0.8rem', color: 'smokewhite' }}>{session.event_platform?.name ?? 'MAIN STAGE'}</span>
                                     <h5>speaker</h5>
                                 </div>
                             </Col>
-                            <Col md={2} lg={2}>
+                            <Col>
                                 {session.selected_by_attendee &&
                                     <div className="d-flex flex-column justify-content-end align-items-end">
                                         {session.selected_by_attendee && <i className='bx bxs-heart fs-4 text-danger fw-bolder'></i>}
