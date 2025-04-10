@@ -29,7 +29,7 @@ const PaymentSuccess = () => {
                                                 }}
                                             ></i>
                                             <span className="fs-3 text-green p-4 text-center">
-                                                Payment was processed
+                                                Checkout was processed
                                                 successfuly. Confirmation email with QR Codes have emailed to your provided Email address.
                                             </span>
                                         </div>

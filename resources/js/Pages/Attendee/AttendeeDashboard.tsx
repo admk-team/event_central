@@ -33,42 +33,7 @@ const AttendeeDashboard = ({ eventApp }: any) => {
                     <Row className="d-flex justify-content-center">
                         <Col lg={10} xl={10} sm={12}>
                             <Row>
-                                <Col md={6} xl={6}>
-                                    <Card>
-                                        <CardBody>
-                                            <div className="p-4 d-flex justify-content-between">
-                                                <h5>My Agenda</h5>
-                                                <h5>
-                                                    {moment(
-                                                        eventApp.start_date
-                                                    ).format("DD MMM YYYY")}
-                                                </h5>
-                                            </div>
-                                        </CardBody>
-                                    </Card>
-
-                                    <EventSessionsTimeLine
-                                        eventApp={eventApp}
-                                        sessions={selectedSessions}
-                                    ></EventSessionsTimeLine>
-
-                                    <div className="p-4 d-flex justify-content-center">
-                                        <Button
-                                            className="w-50"
-                                            onClick={() => {
-                                                router.visit(
-                                                    route(
-                                                        "attendee.event.detail.agenda"
-                                                    )
-                                                );
-                                            }}
-                                            variant="success"
-                                        >
-                                            Event Agenda
-                                        </Button>
-                                    </div>
-                                </Col>
-                                <Col md={6} xl={6}>
+                                <Col md={6} xl={6} className="order-md-2">
                                     <Card>
                                         <figure className="event-image">
                                             <img
@@ -121,6 +86,41 @@ const AttendeeDashboard = ({ eventApp }: any) => {
                                             </div>
                                         </CardBody>
                                     </Card>
+                                </Col>
+                                <Col md={6} xl={6} className="order-md-1">
+                                    <Card>
+                                        <CardBody>
+                                            <div className="p-4 d-flex justify-content-between">
+                                                <h5>My Agenda</h5>
+                                                <h5>
+                                                    {moment(
+                                                        eventApp.start_date
+                                                    ).format("DD MMM YYYY")}
+                                                </h5>
+                                            </div>
+                                        </CardBody>
+                                    </Card>
+
+                                    <EventSessionsTimeLine
+                                        eventApp={eventApp}
+                                        sessions={selectedSessions}
+                                    ></EventSessionsTimeLine>
+
+                                    <div className="p-4 d-flex justify-content-center">
+                                        <Button
+                                            className="w-50"
+                                            onClick={() => {
+                                                router.visit(
+                                                    route(
+                                                        "attendee.event.detail.agenda"
+                                                    )
+                                                );
+                                            }}
+                                            variant="success"
+                                        >
+                                            Event Agenda
+                                        </Button>
+                                    </div>
                                 </Col>
                             </Row>
                         </Col>

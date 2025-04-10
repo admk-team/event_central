@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Attendee\Payment;
+namespace App\Http\Controllers\Api\v1\Attendee;
 
 use Exception;
 use Inertia\Inertia;
@@ -88,7 +88,6 @@ class PaymentController extends Controller
 
         return response()->json(['client_secret' => $client_secret, 'intent' => null]);
     }
-
 
     public function showCheckoutPage($paymentUuId)
     {
@@ -333,38 +332,26 @@ class PaymentController extends Controller
     public function attendeeTickets()
     {
         $attendee = auth()->user();
-        $attendee->load('payments.purchased_tickets'); // eager load purchased_tickets too
+        $attendee->load('payments');
 
-        // Filter only 'paid' payments
-        $paidPayments = $attendee->payments->filter(function ($payment) {
-            return $payment->status === 'paid';
-        });
-
-        if ($paidPayments->isEmpty()) {
+        if ($attendee->payments->isEmpty()) {
             return Inertia::render('Attendee/Tickets/PurchasedTickets', [
                 'hasTickets' => false,
             ]);
         }
 
+        $payment = $attendee->payments[0];
+        $eventApp = EventApp::find($payment->event_app_id);
+
         $image = [];
-        $eventApp = null;
-
-        // Loop through all paid payments
-        foreach ($paidPayments as $payment) {
-            if (!$eventApp) {
-                $eventApp = EventApp::find($payment->event_app_id);
-            }
-
-            foreach ($payment->purchased_tickets as $purchasedTicket) {
-                $transferCheck = TransferTicket::where('attendee_payment_transfered', $purchasedTicket->id)->exists();
-                $image[] = [
-                    'qr_code' => asset('storage/' . $purchasedTicket->qr_code),
-                    'purchased_id' => $purchasedTicket->id,
-                    'transfer_check' => $transferCheck,
-                ];
-            }
+        foreach ($payment->purchased_tickets as $purchasedTicket) {
+            $transferCheck = TransferTicket::where('attendee_payment_transfered', $purchasedTicket->id)->exists();
+            $image[] = [
+                'qr_code' => asset('Storage/' . $purchasedTicket->qr_code),
+                'purchased_id' => $purchasedTicket->id,
+                'transfer_check' => $transferCheck,
+            ];
         }
-
         return Inertia::render('Attendee/Tickets/PurchasedTickets', [
             'eventApp' => $eventApp,
             'attendee' => $attendee,

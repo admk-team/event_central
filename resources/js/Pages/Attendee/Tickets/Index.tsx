@@ -28,15 +28,27 @@ const Index = ({ eventApp }: any) => {
         };
         // console.log(data);
         setProcessing(true);
-        axios.post(route("attendee.tickets.checkout"), data).then((response) => {
-            // console.log(response);
-            router.visit(route('attendee.tickets.checkout.page', response.data.uuid));
-        }).catch((error) => {
-            //
-            console.log(error);
-        }).finally(() => {
-            setProcessing(false);
-        })
+        if (totalAmount > 0) {
+            axios.post(route("attendee.tickets.checkout"), data).then((response) => {
+                // console.log(response);
+                router.visit(route('attendee.tickets.checkout.page', response.data.uuid));
+            }).catch((error) => {
+                //
+                console.log(error);
+            }).finally(() => {
+                setProcessing(false);
+            })
+        } else {
+            //Process free tickets
+            axios.post(route("attendee.tickets.checkout.free"), data).then((response) => {
+                console.log(response);
+                router.visit(route('attendee.payment.success', response.data.uuid));
+            }).catch((error) => {
+                console.log(error);
+            }).finally(() => {
+                setProcessing(false);
+            })
+        }
     };
 
     const validateCode = () => {
@@ -116,7 +128,7 @@ const Index = ({ eventApp }: any) => {
             <section className="section bg-light" id="tickets">
                 {/* <div className="bg-overlay bg-overlay-pattern"></div> */}
                 <Container>
-                    <Row className="justify-content-center">
+                    <Row className="justify-content-center mt-5 mt-md-0">
                         <Col lg={8}>
                             <div className="text-center mb-5">
                                 <h3 className="mb-3 fw-bold">
