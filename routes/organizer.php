@@ -196,6 +196,11 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::get('badgeprint', [BadgePrintController::class, 'index'])->name('badge.print');
 
             Route::get('assign-tickets', [AssignTicketController::class, 'assignTickets'])->name('attendee.tickets.assign');
+            Route::post('checkout/{attendee}/{paymnet_method}', [AssignTicketController::class, 'checkout'])->name('tickets.checkout');
+            Route::get('checkout/{paymentUuId}', [AssignTicketController::class, 'showCheckoutPage'])->name('tickets.checkout.page');
+            Route::get('/payment-success/{paymentUuId}', [AssignTicketController::class, 'paymentSuccess'])->name('payment.success');
+            Route::post('update-attendee-payment/{paymentUuId}', [AssignTicketController::class, 'updateAttendeePaymnet'])->name('update.payment');
+            // Route::post('validate-discount-code/{disCode}', [PaymentController::class, 'validateDiscCode'])->name('validateCode.post');
         });
 
         // Q&A

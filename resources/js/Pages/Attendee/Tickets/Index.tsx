@@ -12,11 +12,15 @@ const Index = ({ eventApp, organizerView, attendees }: any) => {
     //Set Page Layout as per User [Organizer, Attendee]
     const Layout = organizerView ? EventLayout : AttendeeLayout;
 
-    console.log(attendees);
+    // console.log(attendees);
+
+    //Options for Procession of Tickets from Organizer side
+    const [currentAttendee, setCurrentAttendee] = useState<any>(null);
+    const [paymentMethod, setPaymentMethod] = useState<any>('stripe');
 
     const [grandTotal, setGrandTotal] = useState(0);
     const [allTicketDetails, setAllTicketsDetails] = useState(Array<any>);
-    const [currentAttendee, setCurrentAttendee] = useState<any>(null);
+
     const [codeError, setCodeError] = useState<string | boolean | any>(null);
     const [discountCode, setDiscountCode] = useState('');
     const [discount, setDiscount] = useState(0);
@@ -34,27 +38,40 @@ const Index = ({ eventApp, organizerView, attendees }: any) => {
             totalAmount: totalAmount
         };
 
+        console.log(data);
+
         setProcessing(true);
-        if (totalAmount > 0) {
-            axios.post(route("attendee.tickets.checkout"), data).then((response) => {
-                // console.log(response);
-                router.visit(route('attendee.tickets.checkout.page', response.data.uuid));
+        if (organizerView && currentAttendee > 0) {
+            axios.post(route("organizer.events.tickets.checkout", [currentAttendee, paymentMethod]), data).then((response) => {
+                console.log(response);
+                router.visit(route('organizer.events.tickets.checkout.page', response.data.uuid));
             }).catch((error) => {
-                //
                 console.log(error);
             }).finally(() => {
                 setProcessing(false);
             })
         } else {
-            //Process free tickets
-            axios.post(route("attendee.tickets.checkout.free"), data).then((response) => {
-                console.log(response);
-                router.visit(route('attendee.payment.success', response.data.uuid));
-            }).catch((error) => {
-                console.log(error);
-            }).finally(() => {
-                setProcessing(false);
-            })
+            if (totalAmount > 0) {
+                axios.post(route("attendee.tickets.checkout"), data).then((response) => {
+                    // console.log(response);
+                    router.visit(route('attendee.tickets.checkout.page', response.data.uuid));
+                }).catch((error) => {
+                    //
+                    console.log(error);
+                }).finally(() => {
+                    setProcessing(false);
+                })
+            } else {
+                //Process free tickets
+                axios.post(route("attendee.tickets.checkout.free"), data).then((response) => {
+                    console.log(response);
+                    router.visit(route('attendee.payment.success', response.data.uuid));
+                }).catch((error) => {
+                    console.log(error);
+                }).finally(() => {
+                    setProcessing(false);
+                })
+            }
         }
     };
 
@@ -136,11 +153,11 @@ const Index = ({ eventApp, organizerView, attendees }: any) => {
                 <section className="section bg-light" id="tickets">
                     {/* <div className="bg-overlay bg-overlay-pattern"></div> */}
                     <Container>
-                        {organizerView && <Row className="justify-content-center mt-5 mb-5 mt-md-0">
+                        {organizerView && <Row className="justify-content-center mt-5 mb-2 mt-md-0">
                             <Col>
                                 <FormGroup className="mb-3">
                                     <Form.Label htmlFor="attendee" className="form-label fs-4 text-start w-100">Attendee</Form.Label>
-                                    <Form.Select aria-label="Default select example" className="form-control" id="attendee"
+                                    <Form.Select size="lg" aria-label="Default select example" className="form-control" id="attendee"
                                         onChange={(e) => setCurrentAttendee(e.target.value)}
                                     >
                                         <option key={11}>Select Fee Type</option>
@@ -153,7 +170,8 @@ const Index = ({ eventApp, organizerView, attendees }: any) => {
                             <Col>
                                 <FormGroup className="mb-3">
                                     <Form.Label htmlFor="payment_method" className="form-label fs-4 text-start w-100">Payment Method</Form.Label>
-                                    <Form.Select aria-label="Default select example" className="form-control" id="payment_method">
+                                    <Form.Select size="lg" aria-label="Default select example" className="form-control"
+                                        id="payment_method" onChange={(e) => setPaymentMethod(e.target.value)}>
                                         <option key={22} value="stripe">Stripe</option>
                                         <option key={23} value="cash">Cash</option>
                                     </Form.Select>

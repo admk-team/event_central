@@ -97,24 +97,26 @@ class PaymentController extends Controller
 
     public function createPaymentIntent(Request $request)
     {
-        $amount = $request->input('amount');
-        $client_secret = $this->stripe_service->createPaymentIntent($amount);
+        // $amount = $request->input('amount');
+        // $client_secret = $this->stripe_service->createPaymentIntent($amount);
 
-        return response()->json(['client_secret' => $client_secret, 'intent' => null]);
+        // return response()->json(['client_secret' => $client_secret, 'intent' => null]);
     }
 
 
-    public function showCheckoutPage($paymentUuId)
+    public function showCheckoutPage($paymentUuId, $organizerView = null)
     {
         $payment = AttendeePayment::where('uuid', $paymentUuId)->first();
         // return $payment;
         if ($payment->status === 'pending') {
-            $stripe_pub_key = $this->stripe_service->StripKeys()->stripe_publishable_key;
-            $paypal_client_id = $this->paypal_service->payPalKeys()->paypal_pub;
+            $stripe_pub_key = $this->stripe_service->StripKeys($payment->event_app_id)->stripe_publishable_key;
+            $paypal_client_id = null;
+            // $paypal_client_id = $this->paypal_service->payPalKeys()->paypal_pub;
             return Inertia::render('Attendee/Payment/Index', compact([
                 'payment',
                 'stripe_pub_key',
                 'paypal_client_id',
+                'organizerView'
             ]));
         } else {
             return redirect()->route('attendee.tickets.get')->withError("Payment has already been processed against this Payment ID");
@@ -123,12 +125,12 @@ class PaymentController extends Controller
 
     //Create Attendee Payment record and all tickets and addons includee
     // then create stripe paymnet intent and erturn to front end.
-    public function checkout(Request $request)
+    public function checkout(Request $request, $organizerView = false, $attendee = null, $payment_method = null)
     {
         $data = $request->all();
-        $user = auth()->user();
+        $user = $organizerView ? $attendee : auth()->user();
         $amount = $data['totalAmount'];
-        $client_secret = $this->stripe_service->createPaymentIntent($amount);
+        $client_secret = $this->stripe_service->createPaymentIntent($user->event_app_id, $amount);
 
         $payment = AttendeePayment::create([
             'uuid' => Str::uuid(),
@@ -140,7 +142,7 @@ class PaymentController extends Controller
             'amount_paid' => $data['totalAmount'],
             'stripe_intent' => $client_secret,
             'status' => 'pending',
-            'payment_method' => 'stripe',
+            'payment_method' => $organizerView ? $payment_method : 'stripe',
         ]);
 
         foreach ($data['ticketsDetails'] as $ticketsDetail) {
@@ -164,7 +166,7 @@ class PaymentController extends Controller
 
     //Create Attendee Payment record and all tickets and addons includee
     // then create stripe paymnet intent and erturn to front end.
-    public function checkoutFreeTicket(Request $request)
+    public function checkoutFreeTicket(Request $request, $organizerView = false, $attendee = null)
     {
         $data = $request->all();
         $user = auth()->user();
@@ -204,10 +206,11 @@ class PaymentController extends Controller
         return $payment;
     }
 
-    public function paymentSuccess($paymentUuId)
+    public function paymentSuccess($paymentUuId, $organizerView = false)
     {
         return Inertia::render(
-            'Attendee/Payment/PaymentSuccess'
+            'Attendee/Payment/PaymentSuccess',
+            compact(['organizerView'])
         );
     }
 
@@ -218,8 +221,8 @@ class PaymentController extends Controller
 
     public function updateAttendeePaymnet($paymentUuId)
     {
-        $attendee = auth()->user();
         $payment = AttendeePayment::where('uuid', $paymentUuId)->first();
+        $attendee = $payment->attendee;
 
         if (!$payment) {
             throw new Exception('Payment object not found with uuid ' . $paymentUuId);

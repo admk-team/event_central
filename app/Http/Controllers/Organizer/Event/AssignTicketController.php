@@ -4,26 +4,42 @@ namespace App\Http\Controllers\Organizer\Event;
 
 use App\Http\Controllers\Attendee\Payment\PaymentController;
 use App\Http\Controllers\Controller;
+use App\Models\Attendee;
 use Illuminate\Http\Request;
 use App\Services\PayPalService;
 use App\Services\StripeService;
 
-
 class AssignTicketController extends Controller
 {
-    protected $stripe_service;
-    protected $paypal_service;
+    protected $paymentController;
 
     public function __construct(StripeService $stripePaymentService, PayPalService $payPalService)
     {
-        $this->stripe_service = $stripePaymentService;
-        $this->paypal_service = $payPalService;
+        $this->paymentController = new PaymentController($stripePaymentService, $payPalService);
     }
 
     public function assignTickets()
     {
-        // dd(action([PaymentController::class, 'viewTickets']));
-        $paymentController = new PaymentController($this->stripe_service, $this->paypal_service);
-        return $paymentController->viewTickets(true);
+        return $this->paymentController->viewTickets(true);
+    }
+
+    public function checkout(Request $request, Attendee $attendee, $paymnet_method)
+    {
+        return $this->paymentController->checkout($request, true, $attendee, $paymnet_method);
+    }
+
+    public function showCheckoutPage($paymentUuId)
+    {
+        return $this->paymentController->showCheckoutPage($paymentUuId, true);
+    }
+
+    public function updateAttendeePaymnet($paymentUuId)
+    {
+        return $this->paymentController->updateAttendeePaymnet($paymentUuId);
+    }
+
+    public function paymentSuccess($paymentUuId)
+    {
+        return $this->paymentController->paymentSuccess($paymentUuId, true);
     }
 }
