@@ -77,25 +77,22 @@ const Index = ({ eventApp, organizerView, attendees }: any) => {
 
     const validateCode = () => {
         setCodeError(false);
-        axios
-            .post(
-                route("attendee.validateCode.post", discountCode)
-            )
-            .then((response) => {
-                let codeObj = response.data.code;
-                let newV = 0;
-                let disc = parseFloat(codeObj.discount_value);
-                switch (codeObj.discount_type) {
-                    case "fixed":
-                        disc = codeObj.discount_value;
-                        updateTotalAmount(disc);
-                        return;
-                    case "percentage":
-                        disc = grandTotal * (codeObj.discount_value / 100);
-                        updateTotalAmount(disc);
-                        return;
-                }
-            })
+        let url = organizerView ? route("organizer.events.validateCode.post", discountCode) : route("attendee.validateCode.post", discountCode)
+        axios.post(url).then((response) => {
+            let codeObj = response.data.code;
+            let newV = 0;
+            let disc = parseFloat(codeObj.discount_value);
+            switch (codeObj.discount_type) {
+                case "fixed":
+                    disc = codeObj.discount_value;
+                    updateTotalAmount(disc);
+                    return;
+                case "percentage":
+                    disc = grandTotal * (codeObj.discount_value / 100);
+                    updateTotalAmount(disc);
+                    return;
+            }
+        })
             .catch((error) => {
                 console.log(error);
                 setCodeError(error.response.data.message);
@@ -154,6 +151,10 @@ const Index = ({ eventApp, organizerView, attendees }: any) => {
                     {/* <div className="bg-overlay bg-overlay-pattern"></div> */}
                     <Container>
                         {organizerView && <Row className="justify-content-center mt-5 mb-2 mt-md-0">
+                            <Col md={12} className="text-center">
+                                <h2>Purchase Ticket For Attendees</h2>
+                                <hr />
+                            </Col>
                             <Col>
                                 <FormGroup className="mb-3">
                                     <Form.Label htmlFor="attendee" className="form-label fs-4 text-start w-100">Attendee</Form.Label>

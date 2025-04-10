@@ -42,4 +42,9 @@ class AssignTicketController extends Controller
     {
         return $this->paymentController->paymentSuccess($paymentUuId, true);
     }
+
+    public function validateDiscCode($disCode)
+    {
+        return $this->paymentController->validateDiscCode($disCode);
+    }
 }

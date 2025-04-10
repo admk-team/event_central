@@ -9,8 +9,7 @@ export default function CheckoutForm({ payment, organizerView }: any) {
     const stripe = useStripe();
     const elements = useElements();
 
-
-    console.log('view', organizerView);
+    // console.log('view', organizerView);
 
     const [message, setMessage] = useState("");
     const [isProcessing, setIsProcessing] = useState(false);
