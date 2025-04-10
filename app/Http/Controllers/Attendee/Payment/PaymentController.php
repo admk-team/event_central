@@ -44,16 +44,30 @@ class PaymentController extends Controller
         return $eventApp->organiser->payment_keys;
     }
 
-    public function viewTickets()
+    public function viewTickets($organizerView = false)
     {
-        $eventApp =  EventApp::find(auth()->user()->event_app_id);
+
+        $eventApp = null;
+        $attendees = [];
+        //If Page is being visited by Organizer
+        if ($organizerView) {
+            $eventApp = EventApp::find(session('event_id'));
+            $attendees = $eventApp->attendees()->select(['id as value', 'first_name as label'])->get();
+        } else {
+            $eventApp =  EventApp::find(auth()->user()->event_app_id);
+        }
+
         $eventApp->load([
             'public_tickets.sessions',
             'public_tickets.addons',
             'public_tickets.fees'
         ]);
         // return $eventApp;
-        return Inertia::render('Attendee/Tickets/Index', compact(['eventApp']));
+        return Inertia::render('Attendee/Tickets/Index', compact([
+            'eventApp',
+            'organizerView',
+            'attendees'
+        ]));
     }
 
     // PayPal Payment

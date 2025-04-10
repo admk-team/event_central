@@ -19,6 +19,7 @@ const Navdata = () => {
     const [IsSessionAttendance, setIsSessionAttendance] = useState<boolean>(false);
     const [IspayemntSettings, setIspayemntSettings] = useState<boolean>(false);
     const [isSettingsMenu, setIsSettingsMenu] = useState<boolean>(false);
+    const [isAssignTicket, setIsAssignTicket] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
 
@@ -49,6 +50,7 @@ const Navdata = () => {
         if (iscurrentState !== 'payemntSettings') setIspayemntSettings(false);
         if (iscurrentState !== 'sessionAttendance') setIsSessionAttendance(false);
         if (iscurrentState !== 'Tickets') setIsTickets(false);
+        if (iscurrentState !== 'assignTickets') setIsTickets(false);
     }, [
         iscurrentState,
         isDashboard,
@@ -60,6 +62,7 @@ const Navdata = () => {
         IspayemntSettings,
         IsSessionAttendance,
         isTickets,
+        isAssignTicket
     ]);
 
     // Dynamic current date
@@ -305,6 +308,19 @@ const Navdata = () => {
         //         'edit_payment_settings'
         //     ],
         // },
+        {
+            id: "assignTickets",
+            label: "Assign Tickets",
+            icon: "bx bx-cog",
+            link: route('organizer.events.attendee.tickets.assign'),
+            stateVariables: isAssignTicket,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsAssignTicket(!isAssignTicket);
+                setIscurrentState('assignTickets');
+                updateIconSidebar(e);
+            }
+        },
         {
             id: "badgePrinting",
             label: "Badge Printing",
