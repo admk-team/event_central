@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\Organizer\Event\AddonController;
+use App\Http\Controllers\Organizer\Event\AssignTicketController;
 use App\Http\Controllers\Organizer\Event\BadgePrintController;
 use App\Http\Controllers\Organizer\Event\CustomMenuController;
 use App\Http\Controllers\Organizer\Event\DashboardController;
@@ -194,6 +195,8 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::post('import/{importType}', [ImportController::class, 'import'])->name('import');
 
             Route::get('badgeprint', [BadgePrintController::class, 'index'])->name('badge.print');
+
+            Route::get('assign-tickets', [AssignTicketController::class, 'assignTickets'])->name('attendee.tickets.assign');
         });
 
         // Q&A
