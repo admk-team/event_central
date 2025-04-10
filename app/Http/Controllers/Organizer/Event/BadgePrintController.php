@@ -20,14 +20,21 @@ class BadgePrintController extends Controller
                     'name' => $attendee->first_name . ' ' . $attendee->last_name,
                     'position' => $attendee->position,
                     'qr_codes' => $attendee->payments
+                        ->filter(fn($payment) => $payment->status === 'paid') // filter only paid payments
                         ->flatMap(function ($payment) {
-                            return $payment->purchased_tickets->pluck('qr_code');
+                            return $payment->purchased_tickets->map(function ($ticket) {
+                                return [
+                                    'qr_code' => $ticket->qr_code !== 'EMPTY'
+                                        ? asset('storage/' . $ticket->qr_code)
+                                        : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s',
+                                    'ticket_name' => optional($ticket->ticket)->name,
+                                ];
+                            });
                         })
-                        ->filter()
-                        ->map(function ($qr) {
-                            return $qr !== 'EMPTY' ? asset('storage/' . $qr) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s';
+                        ->filter(function ($item) {
+                            return !empty($item['qr_code']); // filter out any truly empty ones
                         })
-                        ->values()
+                        ->values(),
                 ];
             })
             ->filter(function ($item) {
