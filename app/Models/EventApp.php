@@ -125,7 +125,11 @@ class EventApp extends Model
 
     public function form()
     {
-        return $this->hasOne(Form::class);
+        return $this->hasOne(Form::class)->where('type', 'registration');
+    }
+    public function questionnaireForm()
+    {
+        return $this->hasOne(Form::class)->where('type', 'questionnaire');
     }
 
     public function pages()

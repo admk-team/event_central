@@ -8,7 +8,7 @@ import { useForm, usePage } from "@inertiajs/react";
 import { fieldTypes } from "../../common/data/formBuilderFieldTypes";
 import { FormBuilderContext } from "../../hooks/useFormBuilder";
 
-export default function RenderForm({ form, preview = false }: any) {
+export default function RenderQuestionnaireResponse({ form, preview = false }: any) {
   const currentEvent = usePage().props.currentEvent as any;
 
   const { data, setData, post, processing, errors, reset } = useForm<Record<string, any>>(getDefaultFormData({}, form.fields));
@@ -20,7 +20,7 @@ export default function RenderForm({ form, preview = false }: any) {
   const submit = (e: any) => {
     e.preventDefault();
 
-    post(route('attendee.event-registration-form', {
+    post(route('attendee.event-questionnaire-form', {
       id: currentEvent.id,
     }), {
       preserveScroll: true,
