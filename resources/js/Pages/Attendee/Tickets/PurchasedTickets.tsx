@@ -179,7 +179,7 @@ const PaymentSuccess = ({ eventApp, attendee, image = [], hasTickets }) => {
                                     <div className="qrWrapper">
                                         <img
                                             className="qr-code-img"
-                                            src={{ uri: img.qr_code }}
+                                            src={img.qr_code}
                                             alt={`QR code ${index + 1}`}
                                         />
                                     </div>
