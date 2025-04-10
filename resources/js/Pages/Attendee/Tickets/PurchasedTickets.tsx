@@ -1,7 +1,6 @@
 import { Head } from "@inertiajs/react"
 import React from "react"
 import Layout from "../../../Layouts/Attendee"
-import "../../../css/passes.css"
 import { useState } from "react";
 import { Button, Form } from 'react-bootstrap';
 import { router } from '@inertiajs/react';

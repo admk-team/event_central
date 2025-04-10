@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Head } from "@inertiajs/react";
 import { Col, Container, Form, Row } from "react-bootstrap";
 import BreadCrumb from "../../../../Components/Common/BreadCrumb";
+import "../../../../css/passes.css";
 
 function Index({ attendees, eventApp }: { attendees: any; eventApp: any }) {
     const [search, setSearch] = useState("");
@@ -65,100 +66,13 @@ function Index({ attendees, eventApp }: { attendees: any; eventApp: any }) {
     return (
         <React.Fragment>
             <Head title="Badge Printing" />
-            <style>{`
-                .passWrapper {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    padding: 20px;
-                    font-family: 'Figtree', sans-serif;
-                    overflow-x: hidden;
-                    flex-direction: column;
-                }
-
-                .passes-container {
-                    width: 100%;
-                    max-width: 100vw;
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                }
-
-                .pass {
-                    width: 100%;
-                    max-width: 600px;
-                    border-radius: 16px;
-                    overflow: hidden;
-                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-                    padding: 30px 20px;
-                    text-align: center;
-                    box-sizing: border-box;
-                }
-
-                .heading-wraper {
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    flex-direction: column;
-                    margin-bottom: 20px;
-                }
-
-                .circle {
-                    width: 150px;
-                    object-fit: cover;
-                    margin-left:50%;
-                    margin-right:50%;
-                    margin-bottom: 15px;
-                }
-
-                .event-name {
-                    font-size: 24px;
-                    font-weight: 600;
-                    margin-bottom: 8px;
-                }
-
-                .event-date {
-                    font-size: 16px;
-                    font-weight: 500;
-                    margin-bottom: 20px;
-                }
-
-                .qrWrapper {
-                    background: white;
-                    padding: 20px;
-                    border-radius: 12px;
-                    display: inline-block;
-                    margin-bottom: 20px;
-                }
-
-                .qr-code-img {
-                    width: 100%;
-                    max-width: 600px;
-                    height: auto;
-                }
-
-                .attendee-details {
-                    margin-top: 15px;
-                }
-
-                .attendee-name {
-                    font-weight: 1000;
-                    letter-spacing: 0.5px;
-                }
-
-                .btn-print {
-                    margin-top: 10px;
-                    background-color: #28a745;
-                    color: white;
-                }
-            `}</style>
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb title="Badge Printing" pageTitle="Dashboard" />
 
                     <Row className="mb-4 justify-between">
                         <Col md={6}>
-                            <Form.Label>Search Attendee</Form.Label>
+                            <Form.Label className="text-black">Search Attendee</Form.Label>
                             <Form.Control
                                 type="text"
                                 placeholder="Search by name or position"
@@ -166,7 +80,7 @@ function Index({ attendees, eventApp }: { attendees: any; eventApp: any }) {
                                 onChange={(e) => setSearch(e.target.value)}
                             />
                         </Col>
-                        <Col md={4} className="mt-4">
+                        <Col md={4} className="text-end" style={{ marginTop: "42px" }}>
                             <button type="button" className="btn btn-success" onClick={() => window.print()}>
                                 🖨️ Print All Badges
                             </button>
