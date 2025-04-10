@@ -214,10 +214,10 @@ class AttendeeController extends Controller
                     'qr_code' => asset('storage/' . $purchasedTicket->qr_code),
                     'purchased_id' => $purchasedTicket->id,
                     'transfer_check' => $transferCheck,
+                    'ticket_name' => $purchasedTicket->ticket->name,
                 ];
             }
         }
-
         return Inertia::render('Organizer/Events/Users/Attendees/QrCode', [
             'eventApp' => $eventApp,
             'attendee' => $attendee,

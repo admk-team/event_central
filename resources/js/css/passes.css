@@ -32,6 +32,11 @@
     color: black;
 }
 
+.bg-white {
+    background-color: white !important;
+    color: black;
+}
+
 .heading-wraper {
     margin-left: 0;
     margin-right: 0;
@@ -47,8 +52,8 @@
 }
 
 .event-name {
-    font-size: 24px;
-    font-weight: 600;
+    font-size: 30px;
+    font-weight: 900;
     margin-bottom: 8px;
     color: black !important;
 }
@@ -76,10 +81,18 @@
 .attendee-details {
     margin-top: 15px;
 }
-
+.event-location {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 300px;
+    font-size: large;
+    font-weight: 800;
+}
 .attendee-name {
-    font-size: 20px;
-    font-weight: 600;
+    font-size: 30px;
+    font-weight: 900;
     letter-spacing: 0.5px;
     color: black !important;
 }

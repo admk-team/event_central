@@ -25,14 +25,14 @@ const QrCode = ({ eventApp, attendee, image = [], hasTickets }) => {
         if (!dateString) return "";
         const date = new Date(dateString);
         return date.toLocaleDateString("en-US", {
-            day: "numeric",
             month: "short",
             year: "numeric",
         });
     };
 
     const images = Array.isArray(image) ? image : [image];
-    const [emails, setEmails] = useState(images.map(() => ""));
+    const [showLogo, setShowLogo] = useState(true);
+    const [showGradient, setShowGradient] = useState(true);
 
     return (
         <React.Fragment>
@@ -65,6 +65,21 @@ const QrCode = ({ eventApp, attendee, image = [], hasTickets }) => {
                             <button type="button" className="btn btn-success" onClick={() => window.print()}>
                                 🖨️ Print All Badges
                             </button>
+                            <button
+                                type="button"
+                                className="btn btn-secondary me-2 ms-2"
+                                onClick={() => setShowLogo((prev) => !prev)}
+                            >
+                                {showLogo ? "🙈 Hide Logo" : "👁️ Show Logo"}
+                            </button>
+
+                            <button
+                                type="button"
+                                className="btn btn-secondary"
+                                onClick={() => setShowGradient((prev) => !prev)}
+                            >
+                                {showGradient ? "🧼 White Background" : "🌈 Gradient Background"}
+                            </button>
                         </Col>
                     </Row>
                     <div className="passWrapper">
@@ -85,7 +100,9 @@ const QrCode = ({ eventApp, attendee, image = [], hasTickets }) => {
                                                     alt="event logo"
                                                 />
                                                 <p className="event-name">{eventApp?.name}</p>
-                                                <p className="event-date">{formatDate(eventApp?.start_date)}</p>
+                                                <p className="event-location">{formatDate(eventApp?.start_date)} | {eventApp?.location_base}</p>
+                                                <h1 className="attendee-name">{attendee?.first_name + ' ' + attendee?.last_name}</h1>
+                                                <h3 className="attendee-name">{attendee?.position}</h3>
                                             </div>
 
                                             <div className="qrWrapper">
@@ -97,10 +114,7 @@ const QrCode = ({ eventApp, attendee, image = [], hasTickets }) => {
                                             </div>
 
                                             <div className="attendee-details">
-                                                <p className="attendee-name">
-                                                    {attendee?.first_name} {attendee?.last_name}
-                                                </p>
-                                                <p className="ticket-label">Ticket {img.purchased_id + 1}</p>
+                                                <p className="attendee-name">{img.ticket_name}</p>
                                             </div>
                                         </div>
                                     ))}
@@ -112,15 +126,17 @@ const QrCode = ({ eventApp, attendee, image = [], hasTickets }) => {
                         {images.map((img: any, index: number) => (
                             <div key={index} className="passWrapper print-page-break">
                                 <div className="passes-container">
-                                    <div className="pass div-gradient mt-4 mb-4">
+                                    <div className={`pass ${showGradient ? "div-gradient" : "bg-white"} mt-4 mb-4`}>
                                         <div className="heading-wraper">
-                                            <img
-                                                className="circle"
-                                                src={eventApp?.logo_img || "/placeholder.svg?height=80&width=80"}
-                                                alt="event logo"
-                                            />
+                                            {showLogo && (
+                                                <img
+                                                    className="circle"
+                                                    src={eventApp?.logo_img || "/placeholder.svg?height=80&width=80"}
+                                                    alt="event logo"
+                                                />
+                                            )}
                                             <p className="event-name">{eventApp?.name}</p>
-                                            <p className="event-date">{formatDate(eventApp?.start_date)}</p>
+                                            <p className="event-location">{formatDate(eventApp?.start_date)} | {eventApp?.location_base}</p>
                                             <h1 className="attendee-name">{attendee?.first_name + ' ' + attendee?.last_name}</h1>
                                             <h3 className="attendee-name">{attendee?.position}</h3>
                                         </div>
@@ -134,8 +150,7 @@ const QrCode = ({ eventApp, attendee, image = [], hasTickets }) => {
                                         </div>
 
                                         <div className="attendee-details">
-                                            <p className="attendee-name">{img?.name}</p>
-                                            <p className="ticket-label">Ticket {img.purchased_id}</p>
+                                            <p className="attendee-name">{img.ticket_name}</p>
                                         </div>
                                     </div>
                                 </div>
