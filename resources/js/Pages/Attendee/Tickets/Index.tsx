@@ -28,15 +28,27 @@ const Index = ({ eventApp }: any) => {
         };
         // console.log(data);
         setProcessing(true);
-        axios.post(route("attendee.tickets.checkout"), data).then((response) => {
-            // console.log(response);
-            router.visit(route('attendee.tickets.checkout.page', response.data.uuid));
-        }).catch((error) => {
-            //
-            console.log(error);
-        }).finally(() => {
-            setProcessing(false);
-        })
+        if (totalAmount > 0) {
+            axios.post(route("attendee.tickets.checkout"), data).then((response) => {
+                // console.log(response);
+                router.visit(route('attendee.tickets.checkout.page', response.data.uuid));
+            }).catch((error) => {
+                //
+                console.log(error);
+            }).finally(() => {
+                setProcessing(false);
+            })
+        } else {
+            //Process free tickets
+            axios.post(route("attendee.tickets.checkout.free"), data).then((response) => {
+                console.log(response);
+                router.visit(route('attendee.payment.success', response.data.uuid));
+            }).catch((error) => {
+                console.log(error);
+            }).finally(() => {
+                setProcessing(false);
+            })
+        }
     };
 
     const validateCode = () => {

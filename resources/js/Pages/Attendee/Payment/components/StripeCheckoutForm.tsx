@@ -32,11 +32,11 @@ export default function CheckoutForm({ payment }: any) {
             })
             .then((result) => {
                 if (!result.error) {
-                    //Update Purchased Tickets status in database
+                    console.log("Stripe checkout is complete. Attendee paymnet status is being updated.");
                     axios
                         .post(route("attendee.update.payment", payment.uuid))
                         .then((response) => {
-                            console.log(response);
+                            console.log("Attendee paymnet status updated. Redirecting to success page.");
                             router.visit(route("attendee.payment.success", payment.uuid));
                         })
                         .catch((errorPost) => {
@@ -44,7 +44,6 @@ export default function CheckoutForm({ payment }: any) {
                         }).finally(() => {
                             setIsProcessing(false);
                         });
-                    console.log("callback running");
                 } else {
                     if (
                         result.error.type === "card_error" ||

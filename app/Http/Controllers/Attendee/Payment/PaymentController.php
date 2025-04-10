@@ -148,6 +148,48 @@ class PaymentController extends Controller
         return $payment;
     }
 
+    //Create Attendee Payment record and all tickets and addons includee
+    // then create stripe paymnet intent and erturn to front end.
+    public function checkouFreeTicket(Request $request)
+    {
+        $data = $request->all();
+        $user = auth()->user();
+        $client_secret = null;
+
+        $payment = AttendeePayment::create([
+            'uuid' => Str::uuid(),
+            'event_app_id' => $user->event_app_id,
+            'attendee_id' => $user->id,
+            'discount_code' => $data['discount_code'],
+            'sub_total' => $data['subTotal'],
+            'discount' => $data['discount'],
+            'amount_paid' => $data['totalAmount'],
+            'stripe_intent' => $client_secret,
+            'status' => 'paid',
+            'payment_method' => 'free',
+        ]);
+
+        foreach ($data['ticketsDetails'] as $ticketsDetail) {
+            $addons = $ticketsDetail['addons'];
+            $ticket = $ticketsDetail['ticket'];
+
+            $attendee_purchased_ticket = AttendeePurchasedTickets::create([
+                'attendee_payment_id' => $payment->id,
+                'event_app_ticket_id' => $ticket['id'],
+                'qty' => 1,
+                'price' => $ticket['base_price'],
+                'fees_sub_total' => $ticketsDetail['fees_sub_total'],
+                'addons_sub_total' => $ticketsDetail['addons_sub_total'],
+                'total' => $ticket['base_price'] + $ticketsDetail['fees_sub_total'] + $ticketsDetail['addons_sub_total']
+            ]);
+            $addon_ids = $names = array_column($addons, "id");
+            $attendee_purchased_ticket->purchased_addons()->sync($addon_ids);
+        }
+        //Update Attendee Payment status and session etc
+        $this->updateAttendeePaymnet($payment->uuid);
+        return $payment;
+    }
+
     public function paymentSuccess($paymentUuId)
     {
         return Inertia::render(
