@@ -31,10 +31,16 @@ Route::prefix('user')->group(function () {
             return $request->user();
         });
 
+        // Events
         Route::get('events', [EventController::class, 'index']);
         Route::get('events/{event}', [EventController::class, 'show']);
+
+        // Event Sessions
         Route::get('events/{event}/sessions', [EventSessionController::class, 'index']);
         Route::get('events/{event}/sessions/{session}', [EventSessionController::class, 'show']);
+
+        // Scan QRcode
+        
 
         Route::post('/logout', [AuthController::class, 'logout']);
     });
