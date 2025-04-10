@@ -59,13 +59,11 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::get('view-tickets', [PaymentController::class, 'viewTickets'])->name('attendee.tickets.get');
         Route::get('purchased-tickets', [PaymentController::class, 'attendeeTickets'])->name('attendee.tickets.purchased');
         Route::post('submit-ticket-emails', [PaymentController::class, 'submitTicketTransfer'])->name('attendee.tickets.transfer');
-        // Route::get('view-tickets', [PaymentController::class, 'viewTickets'])->name('attendee.tickets.purchased');
-        // Route::post('tickets', [PaymentController::class, 'postTickets'])->name('attendee.tickets.post');
+
         Route::get('checkout/{paymentUuId}', [PaymentController::class, 'showCheckoutPage'])->name('attendee.tickets.checkout.page');
         Route::post('checkout', [PaymentController::class, 'checkout'])->name('attendee.tickets.checkout');
+        Route::post('checkout-free-ticket', [PaymentController::class, 'checkoutFreeTicket'])->name('attendee.tickets.checkout.free');
 
-        // Route::post('checkout', [PaymentController::class, 'checkoutPage'])->name('attendee.checkout.post');
-        // Route::post('create-payment-intent', [PaymentController::class, 'createPaymentIntent'])->name('attendee.payment.intent');
         Route::post('update-attendee-payment/{paymentUuId}', [PaymentController::class, 'updateAttendeePaymnet'])->name('attendee.update.payment');
 
         Route::get('{eventApp}/payment-success', [PaymentController::class, 'paymentSuccess'])->name('attendee.payment.success');

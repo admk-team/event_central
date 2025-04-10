@@ -19,7 +19,6 @@ function DateDifferenceFromToday({ date1, top = '-130px' }: any) {
             setHours(diff.hours);
             setMinutes(diff.minutes);
             setSeconds(diff.seconds);
-            // console.log(diff);
         }, 1000);
         return () => clearInterval(interval);
     }, []);
@@ -51,7 +50,6 @@ function DateDifferenceFromToday({ date1, top = '-130px' }: any) {
                     <span className='date-diff-label'>SECONDS</span>
                 </span>}
             </div>}
-
         </div>
     )
 }

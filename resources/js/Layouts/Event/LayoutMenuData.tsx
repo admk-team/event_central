@@ -289,22 +289,22 @@ const Navdata = () => {
                 'view_website'
             ],
         },
-        {
-            id: "payemntSettings",
-            label: "Payment Settings",
-            icon: "bx bx-cog",
-            link: route('organizer.events.settings.payment.index'),
-            stateVariables: IspayemntSettings,
-            click: function (e: any) {
-                e.preventDefault();
-                setIspayemntSettings(!IspayemntSettings);
-                setIscurrentState('payemntSettings');
-                updateIconSidebar(e);
-            },
-            hasPermissions: [
-                'edit_payment_settings'
-            ],
-        },
+        // {
+        //     id: "payemntSettings",
+        //     label: "Payment Settings",
+        //     icon: "bx bx-cog",
+        //     link: route('organizer.events.settings.payment.index'),
+        //     stateVariables: IspayemntSettings,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIspayemntSettings(!IspayemntSettings);
+        //         setIscurrentState('payemntSettings');
+        //         updateIconSidebar(e);
+        //     },
+        //     hasPermissions: [
+        //         'edit_payment_settings'
+        //     ],
+        // },
         {
             id: "badgePrinting",
             label: "Badge Printing",

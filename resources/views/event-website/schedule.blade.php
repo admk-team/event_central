@@ -170,7 +170,7 @@
                                     @if ($enableTracks && $session->tracks->count() > 0)
                                     <div class="d-flex flex-wrap gap-2 mb-2 justify-content-center">
                                         @foreach ($session->tracks as $track)
-                                        <div class="rounded p-1" style="border:1px solid {{ $track->color }}">{{$track->name}}</div>
+                                            <div class="rounded p-1" style="border:1px solid {{ $track->color }}">{{$track->name}}</div>
                                         @endforeach
                                     </div>
                                     @endif
@@ -178,7 +178,9 @@
                                     <h5 class="modal-title text-center" id="sessionModalLabel{{ $session->id }}">{{ $session->name }}</h5>
                                     <div class="text-center">
                                         <p class="mb-0"><span class="text-muted">Type: </span>{{$session->type}}</p>
-                                        <p><span class="text-muted">Capacity: </span>{{$session->capacity}}</p>
+                                        @if($session->capacity)
+                                            <p><span class="text-muted">Capacity: </span>{{$session->capacity}}</p>
+                                        @endif
                                         <p>
                                             <svg xmlns=" http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
                                                 <path d="M12.25 2c-5.514 0-10 4.486-10 10s4.486 10 10 10 10-4.486 10-10-4.486-10-10-10zM18 13h-6.75V6h2v5H18v2z"></path>
