@@ -211,7 +211,7 @@ class AttendeeController extends Controller
             foreach ($payment->purchased_tickets as $purchasedTicket) {
                 $transferCheck = TransferTicket::where('attendee_payment_transfered', $purchasedTicket->id)->exists();
                 $image[] = [
-                    'qr_code' => asset('Storage/' . $purchasedTicket->qr_code),
+                    'qr_code' => asset('storage/' . $purchasedTicket->qr_code),
                     'purchased_id' => $purchasedTicket->id,
                     'transfer_check' => $transferCheck,
                 ];
