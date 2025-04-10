@@ -107,16 +107,31 @@ function Index({ tickets, sessions, addons, fees }: any) {
         },
         {
             header: () => "Sessions",
-            cell: (ticket) =>
-                ticket.sessions.map((session: any) => (
-                    <span
-                        key={session.id}
-                        className="badge rounded-pill border border-secondary text-secondary text-uppercase fs-6"
-                        style={{ marginRight: "3px" }}
-                    >
-                        {session.name}
-                    </span>
-                )),
+            cell: (ticket) => (
+                <div className="d-flex flex-column" >
+                    {1 &&
+                        ticket.sessions.map((session: any, index: any) => {
+                            if (index < 2) {
+                                return <span
+                                    key={session.id}
+                                    className="badge bg-light rounded-pill border border-secondary text-secondary text-capitalize fs-6 mt-1"
+                                    style={{ marginRight: "3px" }}
+                                >
+                                    {session.name}
+                                </span>
+                            } else {
+                                return <span
+                                    key={'more-' + ticket.id}
+                                    className="badge rounded-pill bg-secondary border border-secondary text-white text-capitalize fs-6 mt-1"
+                                    style={{ marginRight: "3px" }}
+                                >
+                                    {"+" + (ticket.sessions.length - 2) + " more"}
+                                </span>
+                            }
+                        })
+                    }
+                </div>
+            )
         },
         {
             header: () => "Increment By",
