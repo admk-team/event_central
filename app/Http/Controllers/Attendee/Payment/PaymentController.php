@@ -44,7 +44,7 @@ class PaymentController extends Controller
         return $eventApp->organiser->payment_keys;
     }
 
-    public function viewTickets($organizerView = false)
+    public function viewTickets($organizerView = false, $attendee_id = null)
     {
 
         $eventApp = null;
@@ -57,16 +57,26 @@ class PaymentController extends Controller
             $eventApp =  EventApp::find(auth()->user()->event_app_id);
         }
 
-        $eventApp->load([
-            'public_tickets.sessions',
-            'public_tickets.addons',
-            'public_tickets.fees'
-        ]);
+        if ($organizerView) {     //For organizer show all tickets
+            $eventApp->load([
+                'tickets.sessions',
+                'tickets.addons',
+                'tickets.fees'
+            ]);
+        } else {                //For attendees show only public tickets
+            $eventApp->load([
+                'public_tickets.sessions',
+                'public_tickets.addons',
+                'public_tickets.fees'
+            ]);
+        }
+
         // return $eventApp;
         return Inertia::render('Attendee/Tickets/Index', compact([
             'eventApp',
             'organizerView',
-            'attendees'
+            'attendees',
+            'attendee_id'
         ]));
     }
 
@@ -164,12 +174,12 @@ class PaymentController extends Controller
         return $payment;
     }
 
-    //Create Attendee Payment record and all tickets and addons includee
+    // Create Attendee Payment record and all tickets and addons includee
     // then create stripe paymnet intent and erturn to front end.
-    public function checkoutFreeTicket(Request $request, $organizerView = false, $attendee = null)
+    public function checkoutFreeTicket(Request $request, $organizerView = false, $attendee = null, $payment_method = null)
     {
         $data = $request->all();
-        $user = auth()->user();
+        $user = $organizerView ? $attendee : auth()->user();
         $client_secret = null;
 
         $payment = AttendeePayment::create([
@@ -182,7 +192,7 @@ class PaymentController extends Controller
             'amount_paid' => $data['totalAmount'],
             'stripe_intent' => $client_secret,
             'status' => 'paid',
-            'payment_method' => 'free',
+            'payment_method' => $payment_method ?  $payment_method : 'free'
         ]);
 
         foreach ($data['ticketsDetails'] as $ticketsDetail) {

@@ -134,15 +134,18 @@ function Index({ attendees }: any) {
             cell: (attendee) => attendee.phone,
         },
         {
-            header: () => 'Actions',
+            header: () => "Actions",
             cell: (attendee) => (
-                <div className="hstack gap-3 fs-15">
-                    <Link href={route('organizer.events.attendee.info', { id: attendee.id })} className="link-primary cursor-pointer"><i className="ri-eye-fill"></i></Link>
-                    <Link href={route('organizer.events.attendee.qrcode', { id: attendee.id })} className="link-primary cursor-pointer"><i className="ri-qr-code-line"></i></Link>
-                    <span className="link-primary cursor-pointer" onClick={() => editAction(attendee)} ><i className="ri-edit-fill"></i></span>
-                    <span className="link-danger cursor-pointer" onClick={() => deleteAction(attendee)}>
+                <div className="hstack gap-4 fs-15 text-center">
+                    <Link title='View attendee details' href={route('organizer.events.attendee.info', { id: attendee.id })} className="link-primary cursor-pointer"><i className="ri-eye-fill"></i></Link>
+                    <Link title='View QR Code attendee' href={route('organizer.events.attendee.qrcode', { id: attendee.id })} className="link-primary cursor-pointer"><i className="ri-qr-code-line"></i></Link>
+                    <Link title='Purchase ticket for this attendee' href={route('organizer.events.attendee.tickets.assign', attendee.id)} className="link-primary cursor-pointer">
+                        <i className="bx bxs-coupon"></i>
+                    </Link>
+                    <a className="link-primary cursor-pointer" onClick={() => editAction(attendee)} ><i className="ri-edit-fill"></i></a>
+                    <a className="link-red cursor-pointer" onClick={() => deleteAction(attendee)}>
                         <i className="ri-delete-bin-5-line"></i>
-                    </span>
+                    </a>
                 </div>
             ),
         },
