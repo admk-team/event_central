@@ -18,6 +18,7 @@ const EditAttendee = ({ show, handleClose, user, isEdit }: any) => {
         twitter_link: user?.twitter_link ?? '',
         country: user?.country ?? '',
         phone: user?.phone ?? '',
+        location: user?.location ?? '',
         bio: user?.bio ?? '',
         avatar: user?.avatar ?? null,
     });
@@ -36,6 +37,7 @@ const EditAttendee = ({ show, handleClose, user, isEdit }: any) => {
                 twitter_link: user?.twitter_link ?? '',
                 country: user?.country ?? '',
                 phone: user?.phone ?? '',
+                location: user?.location ?? '',
                 bio: user?.bio ?? '',
                 avatar: user?.avatar ?? null,
             });
@@ -158,7 +160,15 @@ const EditAttendee = ({ show, handleClose, user, isEdit }: any) => {
                             onChange={handleChange}
                         />
                     </Form.Group>
-
+                    <Form.Group className="mb-3">
+                        <Form.Label>Location</Form.Label>
+                        <Form.Control
+                            type="text"
+                            name="location"
+                            value={data.location}
+                            onChange={handleChange}
+                        />
+                    </Form.Group>
                     <Form.Group className="mb-3">
                         <Form.Label>Bio</Form.Label>
                         <Form.Control

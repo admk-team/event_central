@@ -11,6 +11,7 @@ const AddAttendee = ({ show, handleClose }: any) => {
         company: '',
         position: '',
         phone: "",
+        location: "",
         bio: ''
     });
 
@@ -83,6 +84,13 @@ const AddAttendee = ({ show, handleClose }: any) => {
                         <Form.Control type="number" placeholder="Enter phone" onChange={(e) => setData('phone', e.target.value)} />
                         <Form.Control.Feedback type="invalid" className="d-block mt-2">
                             {" "} {errors.phone}{" "}
+                        </Form.Control.Feedback>
+                    </Form.Group>
+                    <Form.Group className="mb-3">
+                        <Form.Label>Location</Form.Label>
+                        <Form.Control type="text" placeholder="Enter location" onChange={(e) => setData('location', e.target.value)} />
+                        <Form.Control.Feedback type="invalid" className="d-block mt-2">
+                            {" "} {errors.location}{" "}
                         </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group className="mb-3">

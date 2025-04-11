@@ -113,7 +113,8 @@ class PaymentController extends Controller
         $data = $request->all();
         $user = auth()->user();
         $amount = $data['totalAmount'];
-        $client_secret = $this->stripe_service->createPaymentIntent($amount);
+        $event_app_id = $data['event_app_id'];
+        $client_secret = $this->stripe_service->createPaymentIntent($event_app_id, $amount);
 
         $payment = AttendeePayment::create([
             'uuid' => Str::uuid(),

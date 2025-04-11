@@ -29,7 +29,8 @@ class Attendee extends Authenticatable
         'bio',
         'type',
         'avatar',
-        'qr_code'
+        'qr_code',
+        'location'
     ];
 
     protected $appends = [
