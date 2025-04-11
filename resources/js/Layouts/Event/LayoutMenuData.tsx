@@ -316,7 +316,7 @@ const Navdata = () => {
             id: "assignTickets",
             label: "Assign Tickets",
             icon: "bx bxs-server",
-            link: route('organizer.events.attendee.tickets.assign'),
+            link: route('organizer.events.attendee.tickets.assign', null),
             stateVariables: isAssignTicket,
             click: function (e: any) {
                 e.preventDefault();

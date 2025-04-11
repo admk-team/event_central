@@ -44,7 +44,7 @@ class PaymentController extends Controller
         return $eventApp->organiser->payment_keys;
     }
 
-    public function viewTickets($organizerView = false)
+    public function viewTickets($organizerView = false, $attendee_id = null)
     {
 
         $eventApp = null;
@@ -75,7 +75,8 @@ class PaymentController extends Controller
         return Inertia::render('Attendee/Tickets/Index', compact([
             'eventApp',
             'organizerView',
-            'attendees'
+            'attendees',
+            'attendee_id'
         ]));
     }
 

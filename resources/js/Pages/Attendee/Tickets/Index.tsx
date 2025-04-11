@@ -7,14 +7,14 @@ import TicketCard from "./TicketCard";
 import axios from "axios";
 import toast from "react-hot-toast";
 
-const Index = ({ eventApp, organizerView, attendees }: any) => {
+const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
 
     //Set Page Layout as per User [Organizer, Attendee]
     const Layout = organizerView ? EventLayout : AttendeeLayout;
 
     // console.log(attendees);
     //Options for Procession of Tickets from Organizer side
-    const [currentAttendee, setCurrentAttendee] = useState<any>(null);
+    const [currentAttendee, setCurrentAttendee] = useState<any>(attendee_id);
     const [paymentMethod, setPaymentMethod] = useState<any>('stripe');
 
     const [grandTotal, setGrandTotal] = useState(0);
@@ -173,6 +173,7 @@ const Index = ({ eventApp, organizerView, attendees }: any) => {
                                     <Form.Label htmlFor="attendee" className="form-label fs-4 text-start w-100">Attendee</Form.Label>
                                     <Form.Select size="lg" aria-label="Default select example" className="form-control" id="attendee"
                                         onChange={(e) => setCurrentAttendee(e.target.value)}
+                                        defaultValue={attendee_id}
                                     >
                                         <option key={11}>Select Attendee</option>
                                         {attendees.map((attendee: any, index: any) => (
