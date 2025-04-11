@@ -46,14 +46,14 @@ function CreateOrEdit({ role, allPermissions, roleSpecific }: { role: any | null
             });
         }
     };
-    
+
     return (
         <React.Fragment>
             <Head title={`${isEdit ? 'Edit Role' : 'Create Role'}`} />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb2 
-                        title={isEdit ? 'Edit' : 'Create'} 
+                    <BreadCrumb2
+                        title={isEdit ? 'Edit' : 'Create'}
                         items={[
                             { title: "Roles", link: route('organizer.roles.index') }
                         ]}
@@ -80,6 +80,26 @@ function CreateOrEdit({ role, allPermissions, roleSpecific }: { role: any | null
                                             )}
                                         </FormGroup>
 
+                                        <div style={{
+                                            padding: '1rem',
+                                            borderLeft: '4px solid #f59e0b',
+                                            backgroundColor: '#fff7ed',
+                                            color: '#78350f',
+                                            fontFamily: 'Arial, sans-serif',
+                                            borderRadius: '8px',
+                                            marginBottom: '1rem'
+                                        }}>
+                                            <strong>Important Note:</strong>
+                                            <ul style={{ paddingLeft: '1.2rem', marginTop: '0.5rem' }}>
+                                                <li>
+                                                    All roles under <strong>Organizer</strong> must have the <strong>View Event</strong> permission.
+                                                </li>
+                                                <li>
+                                                    Every <strong>Create</strong> permission must be accompanied by the corresponding <strong>View</strong> permission,
+                                                    as users need visibility after creating items.
+                                                </li>
+                                            </ul>
+                                        </div>
 
                                         {/* Select All Checkbox */}
                                         <Form.Check
