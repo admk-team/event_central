@@ -94,13 +94,13 @@ function Index({ fees }: any) {
             },
         },
         {
-            header: () => <span className='d-block text-end' style={{ width: '150px' }}>Fee Value</span>,
+            header: () => <span className='d-block text-start' style={{ width: '50px' }}>Fee Value</span>,
             cell: (fee) => {
                 switch (fee.fee_type) {
                     case "flat":
-                        return <span className='d-block text-end' style={{ width: '150px' }}>{fee.fee_amount + " "}$</span>
+                        return <span className='d-block text-start' style={{ width: '50px' }}>$ {fee.fee_amount + " "}</span>
                     case "percentage":
-                        return <span className='d-block text-end' style={{ width: '150px' }}>{fee.fee_amount + " "}%</span>
+                        return <span className='d-block text-start' style={{ width: '50px' }}>{fee.fee_amount + " "}%</span>
                 }
             },
         },
