@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Organizer\Event;
 
 use App\Http\Controllers\Attendee\Payment\PaymentController;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Attendee\AttendeeCheckoutRequest;
 use App\Models\Attendee;
 use Illuminate\Http\Request;
 use App\Services\PayPalService;
@@ -23,12 +24,12 @@ class AssignTicketController extends Controller
         return $this->paymentController->viewTickets(true, $attendee_id);
     }
 
-    public function checkout(Request $request, Attendee $attendee, $paymnet_method)
+    public function checkout(AttendeeCheckoutRequest $request, Attendee $attendee, $paymnet_method)
     {
         return $this->paymentController->checkout($request, true, $attendee, $paymnet_method);
     }
 
-    public function checkoutFreeTicket(Request $request, Attendee $attendee, $paymnet_method)
+    public function checkoutFreeTicket(AttendeeCheckoutRequest $request, Attendee $attendee, $paymnet_method)
     {
         return $this->paymentController->checkoutFreeTicket($request, true, $attendee, $paymnet_method);
     }

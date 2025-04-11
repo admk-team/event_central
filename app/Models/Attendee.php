@@ -71,4 +71,9 @@ class Attendee extends Authenticatable
     {
         return $this->hasMany(AttendeePayment::class, 'attendee_id');
     }
+
+    public function attendeePayments()
+    {
+        return $this->morphMany(AttendeePayment::class, 'payer');
+    }
 }

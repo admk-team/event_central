@@ -37,7 +37,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
             totalAmount: totalAmount
         };
 
-        // console.log(data);
+        console.log(data);
 
         setProcessing(true);
         if (organizerView && currentAttendee > 0) {
@@ -237,7 +237,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
                                             <h5 className="fw-bold mb-0">Coupon Code</h5>
                                         </Col>
                                         <Col md={4} lg={4}>
-                                            <InputGroup>
+                                            <InputGroup >
                                                 <Form.Control
                                                     disabled={allTicketDetails.length === 0}
                                                     id="ticket-discount-code"

@@ -19,6 +19,7 @@ use chillerlan\QRCode\QROptions;
 
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Attendee\AttendeeCheckoutRequest;
 use App\Mail\AttendeeTicketPurchasedEmail;
 
 use chillerlan\QRCode\Common\EccLevel;
@@ -108,7 +109,7 @@ class PaymentController extends Controller
 
     //Create Attendee Payment record and all tickets and addons includee
     // then create stripe paymnet intent and erturn to front end.
-    public function checkout(Request $request)
+    public function checkout(AttendeeCheckoutRequest $request)
     {
         $data = $request->all();
         $user = auth()->user();
@@ -142,7 +143,7 @@ class PaymentController extends Controller
                 'addons_sub_total' => $ticketsDetail['addons_sub_total'],
                 'total' => $ticket['base_price'] + $ticketsDetail['fees_sub_total'] + $ticketsDetail['addons_sub_total']
             ]);
-            $addon_ids = $names = array_column($addons, "id");
+            $addon_ids = array_column($addons, "id");
             $attendee_purchased_ticket->purchased_addons()->sync($addon_ids);
         }
         return $payment;
@@ -150,7 +151,7 @@ class PaymentController extends Controller
 
     //Create Attendee Payment record and all tickets and addons includee
     // then create stripe paymnet intent and erturn to front end.
-    public function checkoutFreeTicket(Request $request)
+    public function checkoutFreeTicket(AttendeeCheckoutRequest $request)
     {
         $data = $request->all();
         $user = auth()->user();
@@ -182,7 +183,7 @@ class PaymentController extends Controller
                 'addons_sub_total' => $ticketsDetail['addons_sub_total'],
                 'total' => $ticket['base_price'] + $ticketsDetail['fees_sub_total'] + $ticketsDetail['addons_sub_total']
             ]);
-            $addon_ids = $names = array_column($addons, "id");
+            $addon_ids = array_column($addons, "id");
             $attendee_purchased_ticket->purchased_addons()->sync($addon_ids);
         }
         //Update Attendee Payment status and session etc

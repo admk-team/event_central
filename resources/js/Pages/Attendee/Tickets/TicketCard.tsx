@@ -35,7 +35,7 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated }: any) => {
                 list.push({
                     id: id,
                     ticket_no: i + 1,
-                    ticket: Object.assign({}, ticket),
+                    ticket: { id: ticket.id, base_price: ticket.base_price },
                     addons: [],
                     fees_sub_total: calculateFeesSubTotal(ticket),
                     addons_sub_total: 0
