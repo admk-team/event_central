@@ -42,7 +42,7 @@ Route::prefix('user')->group(function () {
         Route::get('events/{event}/sessions/{session}', [EventSessionController::class, 'show']);
 
         // Scan QRcode
-        
+
 
         Route::post('/logout', [AuthController::class, 'logout']);
     });
@@ -67,7 +67,6 @@ Route::prefix('attendee')->group(function () {
         Route::get('event/contact/{eventApp}', [AttendeeEventController::class, 'contact']);
 
 
-        Route::get('checkout/{paymentUuId}', [PaymentController::class, 'showCheckoutPage'])->name('attendee.tickets.checkout.page');
         Route::post('checkout', [PaymentController::class, 'checkout'])->name('attendee.tickets.checkout');
         Route::post('checkout-free-ticket', [PaymentController::class, 'checkoutFreeTicket'])->name('attendee.tickets.checkout.free');
         Route::post('update-attendee-payment/{paymentUuId}', [PaymentController::class, 'updateAttendeePaymnet'])->name('attendee.update.payment');
