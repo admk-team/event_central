@@ -4,24 +4,25 @@ import { Head, Link, router, useForm } from '@inertiajs/react';
 import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 import Layout from "../../../../Layouts/Event"
 import DataTable, { ColumnDef } from '../../../../Components/DataTable';
-import DeleteModal from '../../../../Components/Common/DeleteModalRefund';
+import RefundActionModal from '../../../../Components/Common/RefundActionModal';
 
 function Index({ refundPayments }: any) {
     console.log(refundPayments);
-    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+    const [showRefundActionModal, setShowRefundActionModal] = useState(false);
     const [deleteAttendee, setDeleteAttendee] = React.useState<any>(null);
+    const [refundAction, setRefundAction] = React.useState<any>(null);
 
     const deleteForm = useForm({
     });
 
     const deleteAction = (attendee: any) => {
-        setDeleteAttendee(attendee);
-        setShowDeleteConfirmation(true);
+        setRefundAction(attendee);
+        setShowRefundActionModal(true);
     }
-    const handleDelete = () => {
-        deleteForm.post(route('attendee.tickets.request', { id: deleteAttendee }));
-        setShowDeleteConfirmation(false);
-    }
+    // const handleDelete = () => {
+    //     deleteForm.post(route('attendee.tickets.request', { id: deleteAttendee }));
+    //     setShowRefundActionModal(false);
+    // }
 
     const columns: ColumnDef<typeof refundPayments.data[0]> = [
         {
@@ -45,7 +46,7 @@ function Index({ refundPayments }: any) {
             header: () => "Actions",
             cell: (payment) => (
                 <div className="hstack gap-4 fs-15 text-center">
-                    <a className="link-primary cursor-pointer" onClick={() => deleteAction(payment.id)} ><i className="ri-refund-2-line"></i></a>
+                    <a className="link-primary cursor-pointer" onClick={() => deleteAction(payment)} ><i className="ri-refund-2-line"></i></a>
                 </div>
             ),
         },
@@ -82,11 +83,11 @@ function Index({ refundPayments }: any) {
                 </Container>
             </div>
 
-            <DeleteModal
-                show={showDeleteConfirmation}
-                onDeleteClick={handleDelete}
-                onCloseClick={() => { setShowDeleteConfirmation(false) }}
-            />
+            {refundAction && (<RefundActionModal
+                show={showRefundActionModal}
+                onCloseClick={() => { setShowRefundActionModal(false) }}
+                refund={refundAction}
+            />)}
 
         </React.Fragment>
     )
