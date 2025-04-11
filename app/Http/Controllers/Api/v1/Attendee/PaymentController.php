@@ -148,7 +148,7 @@ class PaymentController extends Controller
             $addon_ids = array_column($addons, "id");
             $attendee_purchased_ticket->purchased_addons()->sync($addon_ids);
         }
-        return $payment;
+        return response()->json(['payment' => $payment]);
     }
 
     // Create Attendee Payment record and all tickets and addons includee
