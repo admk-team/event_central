@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Dropdown } from 'react-bootstrap';
 import { Offcanvas, Button, Card, Col, Container, Form, Row, Tabs, Tab } from 'react-bootstrap';
 
@@ -71,11 +71,7 @@ const RightSidebar = (props: any) => {
                                 <Tab eventKey="passowrd" title="Password">
                                     <ChangePassword></ChangePassword>
                                 </Tab>
-                                {/* <Tab eventKey="Email" title="Email">
-                                    <ChangeEmail></ChangeEmail>
-                                </Tab> */}
                             </Tabs>
-
                         </SimpleBar>
                     </Offcanvas.Body>
                 </Offcanvas>
