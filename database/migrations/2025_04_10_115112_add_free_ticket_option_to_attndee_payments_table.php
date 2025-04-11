@@ -12,7 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        DB::statement("ALTER TABLE attendee_payments MODIFY COLUMN payment_method ENUM('stripe', 'paypal', 'free')");
+        DB::statement("ALTER TABLE attendee_payments MODIFY COLUMN payment_method ENUM('stripe', 'paypal', 'free', 'cash')");
     }
 
     /**

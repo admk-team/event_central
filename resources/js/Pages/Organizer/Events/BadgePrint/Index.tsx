@@ -12,11 +12,13 @@ function Index({ attendees, eventApp }: { attendees: any; eventApp: any }) {
         (attendee.name + attendee.position).toLowerCase().includes(search.toLowerCase())
     );
 
+    const [showLogo, setShowLogo] = useState(true);
+    const [showGradient, setShowGradient] = useState(true);
+
     const formatDate = (dateString: any) => {
         if (!dateString) return "";
         const date = new Date(dateString);
         return date.toLocaleDateString("en-US", {
-            day: "numeric",
             month: "short",
             year: "numeric",
         });
@@ -80,9 +82,24 @@ function Index({ attendees, eventApp }: { attendees: any; eventApp: any }) {
                                 onChange={(e) => setSearch(e.target.value)}
                             />
                         </Col>
-                        <Col md={4} className="text-end" style={{ marginTop: "42px" }}>
+                        <Col md={6} className="text-end" style={{ marginTop: "42px" }}>
                             <button type="button" className="btn btn-success" onClick={() => window.print()}>
                                 🖨️ Print All Badges
+                            </button>
+                            <button
+                                type="button"
+                                className="btn btn-secondary me-2 ms-2"
+                                onClick={() => setShowLogo((prev) => !prev)}
+                            >
+                                {showLogo ? "🙈 Hide Logo" : "👁️ Show Logo"}
+                            </button>
+
+                            <button
+                                type="button"
+                                className="btn btn-secondary"
+                                onClick={() => setShowGradient((prev) => !prev)}
+                            >
+                                {showGradient ? "🧼 White Background" : "🌈 Gradient Background"}
                             </button>
                         </Col>
                     </Row>
@@ -106,7 +123,7 @@ function Index({ attendees, eventApp }: { attendees: any; eventApp: any }) {
                                                         <strong>QR Codes:</strong>
                                                         <div className="d-flex flex-wrap gap-2 mt-2">
                                                             {attendee.qr_codes.map((qr: string, idx: number) => (
-                                                                <img key={idx} src={qr} alt="QR Code" width="100" height="100" />
+                                                                <img key={idx} src={qr.qr_code} alt="QR Code" width="100" height="100" />
                                                             ))}
                                                         </div>
                                                     </Col>
@@ -163,34 +180,32 @@ function Index({ attendees, eventApp }: { attendees: any; eventApp: any }) {
                     attendee.qr_codes.map((qr: string, idx: number) => (
                         <div key={idx} className="passWrapper print-page-break">
                             <div className="passes-container">
-                                <div className="pass div-gradient mt-4 mb-4">
+                                <div
+                                    className={`pass ${showGradient ? "div-gradient" : "bg-white"} mt-4 mb-4`}
+                                >
                                     <div className="heading-wraper">
-                                        <img
-                                            className="circle"
-                                            src={eventApp?.logo_img || "/placeholder.svg?height=80&width=80"}
-                                            alt="event logo"
-                                        />
-                                        <p className="event-name">{eventApp?.name}</p>
-                                        <p className="event-date">{formatDate(eventApp?.start_date)}</p>
-                                        <h1 className="attendee-name">
-                                            {attendee?.name}
-                                        </h1>
+                                        {showLogo && (
+                                            <img
+                                                className="circle"
+                                                src={eventApp?.logo_img || "/placeholder.svg?height=80&width=80"}
+                                                alt="event logo"
+                                            />
+                                        )}
+                                        <p className="event-location">{eventApp?.location_base}</p>
+                                        <h1 className="attendee-name">{attendee?.name}</h1>
                                         <h3 className="attendee-name">{attendee?.position}</h3>
                                     </div>
 
                                     <div className="qrWrapper">
                                         <img
                                             className="qr-code-img"
-                                            src={qr}
+                                            src={qr.qr_code}
                                             alt={`QR code ${idx + 1}`}
                                         />
                                     </div>
 
                                     <div className="attendee-details">
-                                        <p className="attendee-name">
-                                            {attendee?.name}
-                                        </p>
-                                        <p className="ticket-label">Ticket {idx + 1}</p>
+                                        <p className="attendee-name">{qr.ticket_name}</p>
                                     </div>
                                 </div>
                             </div>
@@ -198,6 +213,7 @@ function Index({ attendees, eventApp }: { attendees: any; eventApp: any }) {
                     ))
                 )}
             </div>
+
 
         </React.Fragment>
     );

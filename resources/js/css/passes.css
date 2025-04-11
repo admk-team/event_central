@@ -21,7 +21,6 @@
     max-width: 400px;
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     padding: 30px 20px;
     text-align: center;
     box-sizing: border-box;
@@ -29,26 +28,32 @@
 
 .div-gradient {
     background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-    color: white;
+    color: black;
+}
+
+.bg-white {
+    background-color: transparent !important;
+    color: black;
 }
 
 .heading-wraper {
+    margin-left: 0;
+    margin-right: 0;
     margin-bottom: 20px;
 }
 
 .circle {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
+    width: 250px;
     object-fit: cover;
-    border: 3px solid white;
-    margin-bottom: 15px;
+    margin-left: 15%;
+    margin-right: 50%;
 }
 
 .event-name {
-    font-size: 24px;
-    font-weight: 600;
+    font-size: 30px;
+    font-weight: 900;
     margin-bottom: 8px;
+    color: black !important;
 }
 
 .event-date {
@@ -58,11 +63,12 @@
 }
 
 .qrWrapper {
-    background: white;
-    padding: 20px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    padding-left: 20px;
     border-radius: 12px;
     display: inline-block;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .qr-code-img {
@@ -74,21 +80,29 @@
 .attendee-details {
     margin-top: 15px;
 }
-
+.event-location {
+    margin-bottom: 20px;
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 300px;
+    font-size: medium;
+    font-weight: 800;
+}
 .attendee-name {
-    font-size: 20px;
-    font-weight: 600;
+    font-size: 25px;
+    font-weight: 900;
     letter-spacing: 0.5px;
+    color: black !important;
 }
 
 .form-label {
-    color: white;
+    color: black;
     margin-top: 1rem;
     display: block;
     font-weight: 500;
 }
 
-input[type="text"] {
+.input-email-qrcode {
     width: 100%;
     padding: 0.5rem;
     border-radius: 8px;
