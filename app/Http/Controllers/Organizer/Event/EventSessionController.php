@@ -93,9 +93,7 @@ class EventSessionController extends Controller
         unset($data['tracks']);
 
         $schedule->update($data);
-        if (!empty($speakers)) {
-            $schedule->eventSpeakers()->sync($speakers);
-        }
+        $schedule->eventSpeakers()->sync($speakers);
 
         $schedule->tracks()->sync($tracksIds);
 
