@@ -1,45 +1,49 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Button, Form, Alert, Row, Col } from "react-bootstrap";
 import { useForm } from "@inertiajs/react";
 
-
 const EditAttendee = ({ show, handleClose, user, isEdit }: any) => {
     const [preview, setPreview] = useState<any>(user?.avatar ?? null);
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [error, setError] = useState("");
 
     const { data, setData, put, processing, errors, reset } = useForm({
-        first_name: user?.first_name ?? '',
-        last_name: user?.last_name ?? '',
-        email: user?.email ?? '',
-        company: user?.company ?? '',
-        position: user?.position ?? '',
-        other_link: user?.other_link ?? '',
-        facebook_link: user?.facebook_link ?? '',
-        linkedin_link: user?.linkedin_link ?? '',
-        twitter_link: user?.twitter_link ?? '',
-        country: user?.country ?? '',
-        phone: user?.phone ?? '',
-        location: user?.location ?? '',
-        bio: user?.bio ?? '',
+        first_name: user?.first_name ?? "",
+        last_name: user?.last_name ?? "",
+        email: user?.email ?? "",
+        company: user?.company ?? "",
+        position: user?.position ?? "",
+        other_link: user?.other_link ?? "",
+        facebook_link: user?.facebook_link ?? "",
+        linkedin_link: user?.linkedin_link ?? "",
+        twitter_link: user?.twitter_link ?? "",
+        country: user?.country ?? "",
+        phone: user?.phone ?? "",
+        location: user?.location ?? "",
+        bio: user?.bio ?? "",
         avatar: user?.avatar ?? null,
+        password: "",
     });
 
     useEffect(() => {
         if (user) {
             setData({
-                first_name: user?.first_name ?? '',
-                last_name: user?.last_name ?? '',
-                email: user?.email ?? '',
-                company: user?.company ?? '',
-                position: user?.position ?? '',
-                other_link: user?.other_link ?? '',
-                facebook_link: user?.facebook_link ?? '',
-                linkedin_link: user?.linkedin_link ?? '',
-                twitter_link: user?.twitter_link ?? '',
-                country: user?.country ?? '',
-                phone: user?.phone ?? '',
-                location: user?.location ?? '',
-                bio: user?.bio ?? '',
+                first_name: user?.first_name ?? "",
+                last_name: user?.last_name ?? "",
+                email: user?.email ?? "",
+                company: user?.company ?? "",
+                position: user?.position ?? "",
+                other_link: user?.other_link ?? "",
+                facebook_link: user?.facebook_link ?? "",
+                linkedin_link: user?.linkedin_link ?? "",
+                twitter_link: user?.twitter_link ?? "",
+                country: user?.country ?? "",
+                phone: user?.phone ?? "",
+                location: user?.location ?? "",
+                bio: user?.bio ?? "",
                 avatar: user?.avatar ?? null,
+                password: "",
             });
         }
     }, [user]);
@@ -64,11 +68,20 @@ const EditAttendee = ({ show, handleClose, user, isEdit }: any) => {
     // Handle Form Submission
     const handleSubmit = (e: any) => {
         e.preventDefault();
-        put(route('organizer.events.attendee.profile.update', user.id), {
+        if (password.trim() != "" || confirmPassword.trim() != "") {
+            if (password !== confirmPassword) {
+                setError("Passwords do not match");
+                return;
+            }
+        }
+        setError("");
+        put(route("organizer.events.attendee.profile.update", user.id), {
             onSuccess: () => {
                 handleClose();
                 reset();
-            }
+                setPassword("");
+                setConfirmPassword("");
+            },
         });
     };
 
@@ -179,12 +192,46 @@ const EditAttendee = ({ show, handleClose, user, isEdit }: any) => {
                             onChange={handleChange}
                         />
                     </Form.Group>
+                    <Row>
+                        <Col md={6} lg={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Password</Form.Label>
+                                <Form.Control
+                                    type="password"
+                                    value={password}
+                                    onChange={(e) =>
+                                        setPassword(e.target.value)
+                                    }
+                                    name="password"
+                                />
+                            </Form.Group>
+                        </Col>
+                        <Col md={6} lg={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Confirm Password</Form.Label>
+                                <Form.Control
+                                    type="password"
+                                    value={confirmPassword}
+                                    onChange={(e) => {
+                                        setConfirmPassword(e.target.value);
+                                        setData("password", e.target.value);
+                                    }}
+                                    name="confirmPassword"
+                                />
+                            </Form.Group>
+                        </Col>
+                        {error && <Alert variant="danger">{error}</Alert>}
+                    </Row>
 
                     <div className="hstack gap-2 justify-content-center mt-4">
                         <Button className="btn btn-light" onClick={handleClose}>
                             Close
                         </Button>
-                        <Button variant="primary" type="submit" disabled={processing}>
+                        <Button
+                            variant="primary"
+                            type="submit"
+                            disabled={processing}
+                        >
                             {processing ? "Updating..." : "Update"}
                         </Button>
                     </div>
