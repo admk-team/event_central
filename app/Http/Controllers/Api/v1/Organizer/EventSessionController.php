@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api\v1\Organizer;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\EventSessionResource;
+use App\Models\AttendeePurchasedTickets;
 use App\Models\EventApp;
 use App\Models\EventSession;
+use App\Models\SessionCheckIn;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,5 +36,101 @@ class EventSessionController extends Controller
         $session->load(['eventPlatform', 'eventDate']);
 
         return $this->successResponse(new EventSessionResource($session));
+    }
+
+    public function scan(Request $request, EventApp $event, EventSession $session)
+    {
+        if (! Auth::user()->can('scan_event_sessions', $session)) {
+            return $this->errorResponse("Unauthorized", 403);
+        }
+
+        $purchasedTicket = AttendeePurchasedTickets::where('code', $request->code)->first();
+
+        if (! $purchasedTicket) {
+            return $this->errorResponse("Invalid ticket", 404);
+        }
+
+        $ticketEvent = $purchasedTicket->ticket?->event;
+
+        if (! $ticketEvent) {
+            return $this->errorResponse("Invalid ticket", 404);
+        }
+
+        if ($ticketEvent->id !== $event->id) {
+            return $this->errorResponse("Invalid ticket", 404);
+        }
+
+        $ticket = $purchasedTicket->ticket;
+        $attendee = $purchasedTicket->payment->attendee;
+
+        if (! $ticket->sessions()->where('id', $session->id)->exists()) {
+            return $this->errorResponse("Invalid ticket", 404);
+        }
+
+        // Check if attendee has already checked in
+        $isCheckedin = false;
+        $lastCheckin = $session->attendances()->where('attendee_id', $attendee->id)->latest()->first();
+        if ($lastCheckin && $lastCheckin->checked_out === null) {
+            $isCheckedin = true;
+        }
+
+        return $this->successResponse([
+            'message' => "Ticket is valid",
+            'attendee' => [
+                'first_name' => $attendee->first_name,
+                'last_name' => $attendee->last_name,
+                'email' => $attendee->email,
+                'company' => $attendee->company,
+                'position' => $attendee->position,
+                'phone' => $attendee->phone,
+            ],
+            'ticket' => [
+                'name' => $ticket->name,
+                'description' => $ticket->description,
+                'type' => $ticket->type,
+            ],
+            'is_checked_in' => $isCheckedin,
+            'last_check_in' => $lastCheckin,
+        ]);
+    }
+
+    public function checkin(Request $request, EventApp $event, EventSession $session)
+    {
+        if (! Auth::user()->can('scan_event_sessions', $session)) {
+            return $this->errorResponse("Unauthorized", 403);
+        }
+
+        $purchasedTicket = AttendeePurchasedTickets::where('code', $request->code)->first();
+
+        $checkin = $session->attendances()->create([
+            'attendee_id' => $request->attendee_id,
+            'checked_in' => now(),
+            'event_app_id' => $event->id,
+            'qr_code' => $purchasedTicket->qr_code,
+        ]);
+
+        if (! $checkin) {
+            return $this->errorResponse("Failed to check in", 500);
+        }
+
+        return $this->successMessageResponse("Checkin successfull", 200);
+    }
+
+    public function checkout(Request $request, EventApp $event, EventSession $session)
+    {
+        if (! Auth::user()->can('scan_event_sessions', $session)) {
+            return $this->errorResponse("Unauthorized", 403);
+        }
+
+        $checkin = $session->attendances()->where('id', $request->check_in_id)->first();
+
+        if (! $checkin) {
+            return $this->errorResponse("Attendee has not checked in", 500);
+        }
+
+        $checkin->checked_out = now();
+        $checkin->save();
+
+        return $this->successMessageResponse("Checkout successfull", 200);
     }
 }

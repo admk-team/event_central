@@ -59,6 +59,24 @@ class EventController extends Controller
             return $this->errorResponse("Invalid ticket", 404);
         }
 
-        return $this->successResponse(new EventScanResource($purchasedTicket->ticket));
+        $ticket = $purchasedTicket->ticket;
+        $attendee = $purchasedTicket->payment->attendee;
+
+        return $this->successResponse([
+            'message' => "Ticket is valid",
+            'attendee' => [
+                'first_name' => $attendee->first_name,
+                'last_name' => $attendee->last_name,
+                'email' => $attendee->email,
+                'company' => $attendee->company,
+                'position' => $attendee->position,
+                'phone' => $attendee->phone,
+            ],
+            'ticket' => [
+                'name' => $ticket->name,
+                'description' => $ticket->description,
+                'type' => $ticket->type,
+            ]
+        ]);
     }
 }
