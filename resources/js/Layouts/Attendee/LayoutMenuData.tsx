@@ -151,6 +151,19 @@ const Navdata = () => {
             },
         },
         {
+            id: "refundtickets",
+            label: "Refund Tickets",
+            icon: "bx bx-qr",
+            link: route("attendee.tickets.refund"),
+            stateVariables: isMore,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsMore(!isMore);
+                setIscurrentState("More");
+                updateIconSidebar(e);
+            },
+        },
+        {
             id: "tickets",
             label: "Post Event Questionnaire",
             icon: "bx bxs-notepad",

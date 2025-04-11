@@ -17,6 +17,7 @@ interface AttendeePassProps {
         id: string
         first_name: string
         last_name: string
+        location:string
     }
 }
 
@@ -113,6 +114,7 @@ const QrCode = ({ eventApp, attendee, image = [], hasTickets }) => {
                                             </div>
 
                                             <div className="attendee-details">
+                                            <span className="location">{attendee?.location}</span>
                                                 <p className="attendee-name">{img.ticket_name}</p>
                                             </div>
                                         </div>
@@ -148,6 +150,7 @@ const QrCode = ({ eventApp, attendee, image = [], hasTickets }) => {
                                         </div>
 
                                         <div className="attendee-details">
+                                        <span className="location">{attendee?.location}</span>
                                             <p className="attendee-name">{img.ticket_name}</p>
                                         </div>
                                     </div>

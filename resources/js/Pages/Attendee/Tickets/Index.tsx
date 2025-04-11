@@ -1,16 +1,22 @@
 import { Head, Link, router, useForm } from "@inertiajs/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, CSSProperties } from "react";
 import AttendeeLayout from "../../../Layouts/Attendee";
 import EventLayout from "../../../Layouts/Event";
-import { Button, Col, Container, Row, InputGroup, Form, Card, CardBody, Spinner, FormGroup, Select } from "react-bootstrap";
+import { Button, Col, Container, Row, InputGroup, Form, Card, CardBody, Spinner, FormGroup } from "react-bootstrap";
 import TicketCard from "./TicketCard";
 import axios from "axios";
 import toast from "react-hot-toast";
+import Select, { StylesConfig } from 'react-select';
+
 
 const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
 
     //Set Page Layout as per User [Organizer, Attendee]
     const Layout = organizerView ? EventLayout : AttendeeLayout;
+
+    const foundAttendee = attendees.find(attendee => attendee.value === parseInt(attendee_id));
+
+    // console.log(attendees, attendee_id, foundAttendee);
 
     //Options for Procession of Tickets from Organizer side
     const [currentAttendee, setCurrentAttendee] = useState<any>(attendee_id);
@@ -156,6 +162,26 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
             return newList;
         });
     };
+
+
+    const customSelect2Styles = {
+        control: (base: any) => ({
+            ...base,
+            fontWeight: '400',
+            fontSize: '1.03125rem', // increase text size
+            border: 'var(--vz- primary - border - subtle)'
+        }),
+        valueContainer: (base: any) => ({
+            ...base,
+            padding: '0 8px',
+        }),
+        indicatorsContainer: (base: any) => ({
+            ...base,
+            height: 49,
+        }),
+    };
+
+
     return (
         <Layout>
             <React.Fragment>
@@ -171,15 +197,14 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
                             <Col>
                                 <FormGroup className="mb-3">
                                     <Form.Label htmlFor="attendee" className="form-label fs-4 text-start w-100">Attendee</Form.Label>
-                                    <Form.Select size="lg" aria-label="Default select example" className="form-control" id="attendee"
-                                        onChange={(e) => setCurrentAttendee(e.target.value)}
-                                        defaultValue={attendee_id}
-                                    >
-                                        <option key={11}>Select Attendee</option>
-                                        {attendees.map((attendee: any, index: any) => (
-                                            <option key={1 + index} value={attendee.value}>{attendee.label}</option>
-                                        ))}
-                                    </Form.Select>
+                                    <Select
+                                        styles={customSelect2Styles}
+                                        className="react-select-container15"
+                                        value={foundAttendee}
+                                        options={attendees} onChange={(option: any) => {
+                                            setCurrentAttendee(option.value)
+                                        }}>
+                                    </Select>
                                 </FormGroup>
                             </Col>
                             <Col>
@@ -196,9 +221,9 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
                         {!organizerView && <Row className="justify-content-center mt-5 mt-md-0">
                             <Col lg={8}>
                                 <div className="text-center mb-5">
-                                    <h3 className="mb-3 fw-bold">
-                                        Choose the Ticket that's right for you
-                                    </h3>
+                                   <h1 className="mb-3 fw-bold" style={{ fontSize: '30px' }}>
+                                     Choose the Ticket that's right for you
+                                    </h1>
                                     <p className="text-muted mb-4">
                                         Simple pricing. No hidden fees.
                                     </p>

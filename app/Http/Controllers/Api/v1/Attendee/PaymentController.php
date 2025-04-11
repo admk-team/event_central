@@ -84,18 +84,18 @@ class PaymentController extends Controller
 
     public function createPaymentIntent(Request $request)
     {
-        $amount = $request->input('amount');
-        $client_secret = $this->stripe_service->createPaymentIntent($amount);
+        // $amount = $request->input('amount');
+        // $client_secret = $this->stripe_service->createPaymentIntent($amount);
 
-        return response()->json(['client_secret' => $client_secret, 'intent' => null]);
+        // return response()->json(['client_secret' => $client_secret, 'intent' => null]);
     }
 
-    public function showCheckoutPage($paymentUuId)
+    public function showCheckoutPage($paymentUuId, $organizerView = null)
     {
         $payment = AttendeePayment::where('uuid', $paymentUuId)->first();
         // return $payment;
         if ($payment->status === 'pending') {
-            $stripe_pub_key = $this->stripe_service->StripKeys()->stripe_publishable_key;
+            $stripe_pub_key = $this->stripe_service->StripKeys($payment->event_app_id)->stripe_publishable_key;
             $paypal_client_id = $this->paypal_service->payPalKeys()->paypal_pub;
             return Inertia::render('Attendee/Payment/Index', compact([
                 'payment',
@@ -109,25 +109,27 @@ class PaymentController extends Controller
 
     //Create Attendee Payment record and all tickets and addons includee
     // then create stripe paymnet intent and erturn to front end.
-    public function checkout(AttendeeCheckoutRequest $request)
+    public function checkout(AttendeeCheckoutRequest $request, $organizerView = false, $attendee = null, $payment_method = null)
     {
         $data = $request->all();
         $user = auth()->user();
+        $attendee = $organizerView ? $attendee : auth()->user();
         $amount = $data['totalAmount'];
-        $event_app_id = $data['event_app_id'];
-        $client_secret = $this->stripe_service->createPaymentIntent($event_app_id, $amount);
+        $client_secret = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount);
 
-        $payment = AttendeePayment::create([
+        //There is morphic relationship in AtttendeePayment regarding Payer
+        // Payer can be Organizer or Attendee
+        $payment = $user->attendeePayments()->create([
             'uuid' => Str::uuid(),
-            'event_app_id' => $user->event_app_id,
-            'attendee_id' => $user->id,
+            'event_app_id' => $attendee->event_app_id,
+            'attendee_id' => $attendee->id,
             'discount_code' => $data['discount_code'],
             'sub_total' => $data['subTotal'],
             'discount' => $data['discount'],
             'amount_paid' => $data['totalAmount'],
             'stripe_intent' => $client_secret,
             'status' => 'pending',
-            'payment_method' => 'stripe',
+            'payment_method' => $organizerView ? $payment_method : 'stripe',
         ]);
 
         foreach ($data['ticketsDetails'] as $ticketsDetail) {
@@ -146,28 +148,32 @@ class PaymentController extends Controller
             $addon_ids = array_column($addons, "id");
             $attendee_purchased_ticket->purchased_addons()->sync($addon_ids);
         }
-        return $payment;
+        return response()->json(['payment' => $payment]);
     }
 
-    //Create Attendee Payment record and all tickets and addons includee
+    // Create Attendee Payment record and all tickets and addons includee
     // then create stripe paymnet intent and erturn to front end.
-    public function checkoutFreeTicket(AttendeeCheckoutRequest $request)
+    public function checkoutFreeTicket(AttendeeCheckoutRequest $request, $organizerView = false, $attendee = null, $payment_method = null)
     {
         $data = $request->all();
         $user = auth()->user();
-        $client_secret = null;
+        $attendee = $organizerView ? $attendee : auth()->user();
+        $amount = $data['totalAmount'];
+        $client_secret = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount);
 
-        $payment = AttendeePayment::create([
+        //There is morphic relationship in AtttendeePayment regarding Payer
+        // Payer can be Organizer or Attendee
+        $payment = $user->attendeePayments()->create([
             'uuid' => Str::uuid(),
-            'event_app_id' => $user->event_app_id,
-            'attendee_id' => $user->id,
+            'event_app_id' => $attendee->event_app_id,
+            'attendee_id' => $attendee->id,
             'discount_code' => $data['discount_code'],
             'sub_total' => $data['subTotal'],
             'discount' => $data['discount'],
             'amount_paid' => $data['totalAmount'],
             'stripe_intent' => $client_secret,
-            'status' => 'paid',
-            'payment_method' => 'free',
+            'status' => 'pending',
+            'payment_method' => $organizerView ? $payment_method : 'stripe',
         ]);
 
         foreach ($data['ticketsDetails'] as $ticketsDetail) {
@@ -183,7 +189,7 @@ class PaymentController extends Controller
                 'addons_sub_total' => $ticketsDetail['addons_sub_total'],
                 'total' => $ticket['base_price'] + $ticketsDetail['fees_sub_total'] + $ticketsDetail['addons_sub_total']
             ]);
-            $addon_ids = array_column($addons, "id");
+            $addon_ids = $names = array_column($addons, "id");
             $attendee_purchased_ticket->purchased_addons()->sync($addon_ids);
         }
         //Update Attendee Payment status and session etc

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useForm, usePage } from '@inertiajs/react';
 import { Spinner, Col, Form, FormGroup, Modal, Nav, Row, Tab } from 'react-bootstrap';
 
@@ -20,7 +20,16 @@ export default function CreateEditModal({ show, hide, onHide, fee }: { show: boo
         fee_amount: fee?.fee_amount ?? '',
     });
 
-    const [amountLabel, setAmountLabel] = useState(fee && fee.fee_type === 'flat' ? 'Flat Value' : 'Percentage Value');
+    // console.log(fee, fee.fee_type);
+    const [amountLabel, setAmountLabel] = useState('');
+
+    useEffect(() => {
+        if (!fee || fee.fee_type === 'flat') {
+            setAmountLabel('Flat Value');
+        } else {
+            setAmountLabel('Percentage Value');
+        }
+    }, [fee]);
 
     const submit = (e: any) => {
         e.preventDefault();

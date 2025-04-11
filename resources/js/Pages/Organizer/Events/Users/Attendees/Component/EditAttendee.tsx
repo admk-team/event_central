@@ -179,6 +179,7 @@ const EditAttendee = ({ show, handleClose, user, isEdit }: any) => {
                             type="text"
                             name="location"
                             value={data.location}
+                            placeholder="Enter City, State/Province, Country"
                             onChange={handleChange}
                         />
                     </Form.Group>
