@@ -5,7 +5,7 @@ import { Col, Container, Row } from 'react-bootstrap';
 import BreadCrumb2 from '../../../../../Components/Common/BreadCrumb2';
 import FormStatus from './Components/FormStatus';
 import FormFields from './Components/FormFields';
-import RenderQuestionnaireForm from '../../../../../Components/FormBuilder/RenderQuestionnaireForm';
+import RenderForm from '../../../../../Components/FormBuilder/RenderForm';
 import FormUrl from './Components/FormUrl';
 
 
@@ -39,7 +39,7 @@ function Index({ form }: any) {
               <Row>
                 <Col xs={12}>
                   <Container>
-                    <RenderQuestionnaireForm form={form} preview={true} />
+                    <RenderForm form={form} preview={true} />
                   </Container>
                 </Col>
               </Row>

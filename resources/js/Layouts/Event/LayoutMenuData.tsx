@@ -338,7 +338,7 @@ const Navdata = () => {
         // ...(isEventStarted ? [{
             {
             id: "Questionnaire",
-            label: "Post Event Questionnaire Form",
+            label: "Questionnaire Form",
             icon: "bx bxs-notepad",
             link: route('organizer.events.settings.questionnaire-form.index'),
             stateVariables: isForm,
@@ -365,7 +365,7 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
             hasPermissions: [
-                'edit_questionnaire_form'
+                'questionnaire_response'
             ],
         },
         // }] : []),

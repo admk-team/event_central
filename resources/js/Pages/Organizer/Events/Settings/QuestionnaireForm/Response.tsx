@@ -9,6 +9,7 @@ import DeleteModal from "../../../../../Components/Common/DeleteModal";
 import DeleteManyModal from "../../../../../Components/Common/DeleteManyModal";
 import RenderQuestionnaireForm from "../../../../../Components/FormBuilder/RenderQuestionnaireForm";
 import RenderQuestionnaireResponse from "../../../../../Components/FormBuilder/RenderQuestionnaireResponse";
+import moment from "moment";
 
 
 function Response({ form, submissions }: any) {
@@ -71,6 +72,10 @@ function Response({ form, submissions }: any) {
             cell: (submission) => submission.attendee?.email ?? "N/A",
         },
         {
+            header: () => "Responsed At",
+            cell: (submission) => moment(submission.created_at).format("MMM DD, YYYY") ?? "N/A",
+        },
+        {
             header: () => "Action",
             cell: (submission) => (
                 <div className="hstack gap-3 fs-15">
@@ -100,11 +105,11 @@ function Response({ form, submissions }: any) {
 
     return (
         <React.Fragment>
-            <Head title="Event Form Submissions" />
+            <Head title="Event Questionnaire Response" />
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb
-                        title="Event Submissions"
+                        title="Event Questionnaire Response"
                         pageTitle="Dashboard"
                     />
                     <Row>
@@ -113,7 +118,7 @@ function Response({ form, submissions }: any) {
                                 <DataTable
                                     data={submissions}
                                     columns={columns}
-                                    title="Form Submissions"
+                                    title="Questionnaire Response"
                                     actions={[
                                         {
                                             render: (dataTable) => (
@@ -176,10 +181,9 @@ function Response({ form, submissions }: any) {
                     </Modal.Header>
                     <Modal.Body>
                         <Card className="p-4">
-
                                 <RenderQuestionnaireResponse
                                     form={form}
-                                    submission={submissions}
+                                    submission={viewSubmission}
                                 />
                         </Card>
                     </Modal.Body>
