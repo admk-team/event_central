@@ -41,8 +41,12 @@ class EventSessionController extends Controller
     public function scan(Request $request, EventApp $event, EventSession $session)
     {
         if (! Auth::user()->can('scan_event_sessions', $session)) {
-            return $this->errorResponse("Unauthorized", 403);
+            return $this->errorResponse("You don't have permission to scan", 403);
         }
+
+        $request->validate([
+            'code' => 'required',
+        ]);
 
         $purchasedTicket = AttendeePurchasedTickets::where('code', $request->code)->first();
 
@@ -77,6 +81,7 @@ class EventSessionController extends Controller
         return $this->successResponse([
             'message' => "Ticket is valid",
             'attendee' => [
+                'id' => $attendee->id,
                 'first_name' => $attendee->first_name,
                 'last_name' => $attendee->last_name,
                 'email' => $attendee->email,
@@ -97,10 +102,21 @@ class EventSessionController extends Controller
     public function checkin(Request $request, EventApp $event, EventSession $session)
     {
         if (! Auth::user()->can('scan_event_sessions', $session)) {
-            return $this->errorResponse("Unauthorized", 403);
+            return $this->errorResponse("You don't have permission to scan", 403);
         }
 
+        $request->validate([
+            'attendee_id' => 'required',
+            'code' => 'required',
+        ]);
+
         $purchasedTicket = AttendeePurchasedTickets::where('code', $request->code)->first();
+        
+        $lastCheckin = $session->attendances()->where('attendee_id', $request->attendee_id)->latest()->first();
+
+        if ($lastCheckin && $lastCheckin->checked_out === null) {
+            return $this->errorResponse("Attendee has already checked in", 422);
+        }
 
         $checkin = $session->attendances()->create([
             'attendee_id' => $request->attendee_id,
@@ -118,18 +134,22 @@ class EventSessionController extends Controller
 
     public function checkout(Request $request, EventApp $event, EventSession $session)
     {
+        $request->validate([
+            'attendee_id' => 'required',
+        ]);
+
         if (! Auth::user()->can('scan_event_sessions', $session)) {
-            return $this->errorResponse("Unauthorized", 403);
+            return $this->errorResponse("You don't have permission to scan", 403);
         }
 
-        $checkin = $session->attendances()->where('id', $request->check_in_id)->first();
+        $lastCheckin = $session->attendances()->where('attendee_id', $request->attendee_id)->latest()->first();
 
-        if (! $checkin) {
+        if (!$lastCheckin || $lastCheckin->checked_out !== null) {
             return $this->errorResponse("Attendee has not checked in", 422);
         }
 
-        $checkin->checked_out = now();
-        $checkin->save();
+        $lastCheckin->checked_out = now();
+        $lastCheckin->save();
 
         return $this->successMessageResponse("Checkout successfull", 200);
     }

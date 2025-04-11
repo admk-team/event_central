@@ -40,8 +40,12 @@ class EventController extends Controller
     public function scan(Request $request, EventApp $event)
     {
         if (! Auth::user()->can('scan_events', $event)) {
-            return $this->errorResponse("Unauthorized", 403);
+            return $this->errorResponse("You don't have permission to scan", 403);
         }
+
+        $request->validate([
+            'code' => 'required',
+        ]);
 
         $purchasedTicket = AttendeePurchasedTickets::where('code', $request->code)->first();
 
