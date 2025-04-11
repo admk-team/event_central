@@ -6,6 +6,7 @@
     font-family: "Figtree", sans-serif;
     overflow-x: hidden;
     flex-direction: column;
+    transform: rotate(180deg);
 }
 
 .passes-container {
@@ -119,6 +120,10 @@
 .btn-primary-pass {
     width: 100%;
     max-width: 400px;
+}
+
+.eventlogodiv {
+    margin-bottom: 80px;
 }
 
 @media (max-width: 420px) {
