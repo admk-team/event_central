@@ -73,7 +73,7 @@ function Index({ country }: any) {
         //     header: () => 'Action',
         //     cell: (country) => (
         //         <div className="hstack gap-3 fs-15">
-        //             {/* <HasPermission permission="delete_platforms"> */}
+        //             {/* <HasPermission permission="delete_locations"> */}
         //                 <span className="link-danger cursor-pointer" onClick={() => deleteAction(country)}>
         //                     <i className="ri-delete-bin-5-line"></i>
         //                 </span>

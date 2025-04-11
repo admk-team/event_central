@@ -46,10 +46,10 @@ class OrganizerPermissionsSeeder extends Seeder
         'scan_event_sessions',
 
         // Event Platforms
-        'view_platforms',
-        'create_platforms',
-        'edit_platforms',
-        'delete_platforms',
+        'view_locations',
+        'create_locations',
+        'edit_locations',
+        'delete_locations',
 
         // Speakers
         'view_speakers',
@@ -68,6 +68,7 @@ class OrganizerPermissionsSeeder extends Seeder
         'create_tickets',
         'edit_tickets',
         'delete_tickets',
+        'assign_tickets',
 
         // Posts
         'view_posts',
@@ -91,11 +92,17 @@ class OrganizerPermissionsSeeder extends Seeder
         // Website
         'view_website',
         'edit_website',
+        
         // Questionnaire Form
         'edit_questionnaire_form',
-        // Questionnaire Form
         'questionnaire_response',
         'delete_questionnaire_response',
+
+        // Payments
+        'view_payments',
+
+        // Badges
+        'print_badges',
     ];
 
     public function run(): void

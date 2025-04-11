@@ -221,9 +221,9 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
                         {!organizerView && <Row className="justify-content-center mt-5 mt-md-0">
                             <Col lg={8}>
                                 <div className="text-center mb-5">
-                                    <h3 className="mb-3 fw-bold">
-                                        Choose the Ticket that's right for you
-                                    </h3>
+                                   <h1 className="mb-3 fw-bold" style={{ fontSize: '30px' }}>
+                                     Choose the Ticket that's right for you
+                                    </h1>
                                     <p className="text-muted mb-4">
                                         Simple pricing. No hidden fees.
                                     </p>

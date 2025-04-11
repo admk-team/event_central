@@ -77,10 +77,10 @@ function Index({ platforms }: any) {
             header: () => 'Action',
             cell: (platform) => (
                 <div className="hstack gap-3 fs-15">
-                    {/* <HasPermission permission="edit_platforms"> */}
+                    {/* <HasPermission permission="edit_locations"> */}
                         <span className="link-primary cursor-pointer" onClick={() => editAction(platform)}><i className="ri-edit-fill"></i></span>
                     {/* </HasPermission> */}
-                    {/* <HasPermission permission="delete_platforms"> */}
+                    {/* <HasPermission permission="delete_locations"> */}
                         <span className="link-danger cursor-pointer" onClick={() => deleteAction(platform)}>
                             <i className="ri-delete-bin-5-line"></i>
                         </span>
@@ -114,7 +114,7 @@ function Index({ platforms }: any) {
                                     // Add new
                                     {
                                         render: (
-                                            // <HasPermission permission="create_platforms">
+                                            // <HasPermission permission="create_locations">
                                                 <Button onClick={() => setShowCreateEditModal(true)}><i className="ri-add-fill"></i> Add New</Button>
                                             // </HasPermission>
                                         )

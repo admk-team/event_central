@@ -162,6 +162,11 @@ class EventApp extends Model
         return $this->hasMany(EventPartner::class);
     }
 
+    public function attendances()
+    {
+        return $this->hasMany(EventCheckIns::class);
+    }
+
     public function getFeaturedImageAttribute()
     {
         $images = $this->images;
@@ -209,9 +214,5 @@ class EventApp extends Model
                 }
             }
         });
-    }
-    public function attendances()
-    {
-        return $this->hasMany(AttendeeAttendance::class, 'event_app_id');
     }
 }
