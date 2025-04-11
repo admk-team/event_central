@@ -9,6 +9,7 @@ use App\Models\Attendee;
 use Illuminate\Http\Request;
 use App\Services\PayPalService;
 use App\Services\StripeService;
+use Illuminate\Support\Facades\Auth;
 
 class AssignTicketController extends Controller
 {
@@ -21,6 +22,10 @@ class AssignTicketController extends Controller
 
     public function assignTickets($attendee_id = null)
     {
+        if (! Auth::user()->can('assign_tickets')) {
+            abort(403);
+        }
+
         return $this->paymentController->viewTickets(true, $attendee_id);
     }
 

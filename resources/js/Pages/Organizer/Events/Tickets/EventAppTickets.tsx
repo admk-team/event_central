@@ -13,12 +13,14 @@ const EventAppTickets = ({ tickets }: any) => {
                         <Col lg={12}>
                             <Card>
                                 <Card.Body>
-                                    <h5 className="card-title mb-3">Tickets</h5>
+                                    <h5 className="card-title mb-3">Payments</h5>
                                     <div className="table-responsive">
                                         <Table className="table-striped table-nowrap align-middle mb-0">
                                             <thead>
                                                 <tr>
-                                                    <th scope="col">Name</th>
+                                                    <th scope="col">Attendee Name</th>
+                                                    <th scope="col">Attendee Email</th>
+                                                    <th scope="col">Ticket Name</th>
                                                     <th scope="col">Total</th>
                                                     <th scope="col">Paid</th>
                                                     <th scope="col">Discount</th>
@@ -31,6 +33,16 @@ const EventAppTickets = ({ tickets }: any) => {
                                                 {tickets && tickets.length > 0 ? (
                                                     tickets.map((ticket: any, index: number) => (
                                                         <tr key={index}>
+                                                            <td>
+                                                                <Link href={route('organizer.events.attendee.info', ticket.attendee_id)}>
+                                                                    {`${ticket.attendee_first_name} ${ticket.attendee_last_name}`}
+                                                                </Link>
+                                                            </td>
+                                                            <td>
+                                                                <Link href={route('organizer.events.attendee.info', ticket.attendee_id)}>
+                                                                    {ticket.attendee_email}
+                                                                </Link>
+                                                            </td>
                                                             <td>{ticket.ticket_name}</td>
                                                             <td>{ticket.total}</td>
                                                             <td>{ticket.amount}</td>

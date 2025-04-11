@@ -1,7 +1,5 @@
 import { usePage } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
-import HasAnyPermission from "../../Components/HasAnyPermission";
-import HasPermission from "../../Components/HasPermission";
 
 const Navdata = () => {
     const currentEvent = usePage().props.currentEvent as any;
@@ -119,7 +117,7 @@ const Navdata = () => {
                 setIscurrentState('Content');
                 updateIconSidebar(e);
             },
-            HasAnyPermission: [
+            hasAnyPermission: [
                 'view_event_sessions',
                 'view_speakers',
                 'view_partner',
@@ -193,33 +191,6 @@ const Navdata = () => {
             ]
         },
         {
-            id: "engagement",
-            label: "Engagement",
-            icon: "bx bx-share-alt",
-            link: "/#",
-            stateVariables: isEngagement,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsEngagement(!isEngagement);
-                setIscurrentState('engagement');
-                updateIconSidebar(e);
-            },
-            // hasAnyPermission: [
-            //     'view_posts',
-            // ],
-            // subItems: [
-            //     {
-            //         id: "newsfeed",
-            //         label: "Posts",
-            //         link: route('organizer.events.engagement.newsfeed.index'),
-            //         parentId: "dashboard",
-            //         hasPermissions: [
-            //             'view_posts'
-            //         ],
-            //     }
-            // ]
-        },
-        {
             id: "attendees",
             label: "Attendees",
             icon: "bx bxs-user-account",
@@ -237,7 +208,7 @@ const Navdata = () => {
         },
         {
             id: "tickets",
-            label: "Tickets",
+            label: "Payments",
             icon: "bx bxs-credit-card",
             link: route('organizer.events.event.tickets'),
             stateVariables: isAttendees,
@@ -247,6 +218,9 @@ const Navdata = () => {
                 setIscurrentState('tickets');
                 updateIconSidebar(e);
             },
+            hasPermissions: [
+                'view_payments'
+            ],
         },
         {
             id: "registrationForm",
@@ -323,7 +297,10 @@ const Navdata = () => {
                 setIsAssignTicket(!isAssignTicket);
                 setIscurrentState('assignTickets');
                 updateIconSidebar(e);
-            }
+            },
+            hasPermissions: [
+                'assign_tickets',
+            ],
         },
         {
             id: "badgePrinting",
@@ -334,6 +311,9 @@ const Navdata = () => {
                 e.preventDefault();
                 updateIconSidebar(e);
             },
+            hasPermissions: [
+                'print_badges',
+            ],
         },
         // ...(isEventStarted ? [{
             {

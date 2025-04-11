@@ -74,7 +74,7 @@ export default function Platforms({ onPlatformChange }: { onPlatformChange: (pla
                             onClick={() => setSelectedPlatform(platform)}
                         >
                             <div className="fw-semibold">{platform.name}</div>
-                            <HasAnyPermission permission={['edit_platforms', 'delete_platforms']}>
+                            <HasAnyPermission permission={['edit_locations', 'delete_locations']}>
                                 <Dropdown onClick={e => e.stopPropagation()}>
                                     <Dropdown.Toggle
                                         variant="light"
@@ -84,10 +84,10 @@ export default function Platforms({ onPlatformChange }: { onPlatformChange: (pla
                                         <Ellipsis size={14} />
                                     </Dropdown.Toggle>
                                     <Dropdown.Menu>
-                                        <HasPermission permission="edit_platforms">
+                                        <HasPermission permission="edit_locations">
                                             <Dropdown.Item onClick={() => editAction(platform)}> Edit</Dropdown.Item>
                                         </HasPermission>
-                                        <HasPermission permission="delete_platforms">
+                                        <HasPermission permission="delete_locations">
                                             <Dropdown.Item
                                                 className="text-danger fw-semibold"
                                                 onClick={() => deleteAction(platform)}
@@ -102,7 +102,7 @@ export default function Platforms({ onPlatformChange }: { onPlatformChange: (pla
                     ))}
                 </div>
                 <div className="text-center py-3">
-                    <HasPermission permission="create_platforms">
+                    <HasPermission permission="create_locations">
                         <Button onClick={() => setShowCreateEditPlatformModal(true)}>
                             <i className="ri-add-fill"></i>
                             New Location

@@ -6,12 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Models\Attendee;
 use App\Models\EventApp;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class BadgePrintController extends Controller
 {
     public function index(Request $request)
     {
+        if (! Auth::user()->can('print_badges')) {
+            abort(403);
+        }
+
         $attendees = Attendee::currentEvent()
             ->with(['payments.purchased_tickets'])
             ->get()
