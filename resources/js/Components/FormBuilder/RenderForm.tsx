@@ -6,12 +6,7 @@ import Choice from "./Fields/Choice";
 import Dropdown from "./Fields/Dropdown";
 import { useForm, usePage } from "@inertiajs/react";
 import { fieldTypes } from "../../common/data/formBuilderFieldTypes";
-
-const FormBuilderContext = createContext<any>({});
-
-export const useFormBuilder = () => {
-  return useContext(FormBuilderContext);
-}
+import { FormBuilderContext } from "../../hooks/useFormBuilder";
 
 export default function RenderForm({ form, preview = false }: any) {
   const currentEvent = usePage().props.currentEvent as any;

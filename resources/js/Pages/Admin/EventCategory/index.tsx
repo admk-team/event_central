@@ -77,10 +77,10 @@ function Index({ eventcategory }: any) {
             header: () => 'Action',
             cell: (eventcategory) => (
                 <div className="hstack gap-3 fs-15">
-                    {/* <HasPermission permission="edit_platforms"> */}
+                    {/* <HasPermission permission="edit_locations"> */}
                         <span className="link-primary cursor-pointer" onClick={() => editAction(eventcategory)}><i className="ri-edit-fill"></i></span>
                     {/* </HasPermission> */}
-                    {/* <HasPermission permission="delete_platforms"> */}
+                    {/* <HasPermission permission="delete_locations"> */}
                         <span className="link-danger cursor-pointer" onClick={() => deleteAction(eventcategory)}>
                             <i className="ri-delete-bin-5-line"></i>
                         </span>
@@ -114,7 +114,7 @@ function Index({ eventcategory }: any) {
                                     // Add new
                                     {
                                         render: (
-                                            // <HasPermission permission="create_platforms">
+                                            // <HasPermission permission="create_locations">
                                                 <Button onClick={() => setShowCreateEditModal(true)}><i className="ri-add-fill"></i> Add New</Button>
                                             // </HasPermission>
                                         )

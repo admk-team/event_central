@@ -55,6 +55,10 @@ class EventController extends Controller
         // Create Event
         $event = EventApp::create($data);
 
+        if (! Auth::user()->hasRole('owner')) { // Give access to creator
+            $event->giveAccessTo(Auth::user());
+        }
+
         // Save event start date in separate table
         EventAppDate::create(['event_app_id' => $event->id, 'date' => $data['start_date']]);
 
@@ -165,10 +169,6 @@ class EventController extends Controller
 
     private function SaveLogoImage(EventApp $event, Request $request)
     {
-        if (! Auth::user()->can('edit_events', $event)) {
-            abort(403);
-        }
-
         if ($request->hasFile('logo_file')) {
             $imageFileName = 'event-logo-' . $event->id . '.' . $request->logo_file->extension();
             $path = storage_path('app/public/events-avatars');
@@ -183,10 +183,6 @@ class EventController extends Controller
 
     private function SaveOtherImages(EventApp $event, Request $request)
     {
-        if (! Auth::user()->can('edit_events', $event)) {
-            abort(403);
-        }
-        
         if ($request->hasFile('image_files')) {
             $images = $request->file('image_files');
             foreach ($images as $image) {
@@ -217,6 +213,6 @@ class EventController extends Controller
     public function destroyImage(EventApp $event_app, EventAppImage $eventAppImage)
     {
         $eventAppImage->delete();
-        return back();
+        return back()->withSuccess('Deleted successfully.');
     }
 }

@@ -10,7 +10,6 @@ use App\Http\Controllers\Api\v1\Organizer\EventController;
 use App\Http\Controllers\Api\v1\Organizer\EventSessionController;
 use App\Http\Controllers\Api\v1\Attendee\PaymentController;
 
-
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -36,13 +35,16 @@ Route::prefix('user')->group(function () {
         // Events
         Route::get('events', [EventController::class, 'index']);
         Route::get('events/{event}', [EventController::class, 'show']);
+        Route::post('events/{event}/scan', [EventController::class, 'scan']);
+        Route::post('events/{event}/checkin', [EventController::class, 'checkin']);
+        Route::post('events/{event}/checkout', [EventController::class, 'checkout']);
 
         // Event Sessions
         Route::get('events/{event}/sessions', [EventSessionController::class, 'index']);
         Route::get('events/{event}/sessions/{session}', [EventSessionController::class, 'show']);
-
-        // Scan QRcode
-        
+        Route::post('events/{event}/sessions/{session}/scan', [EventSessionController::class, 'scan']);
+        Route::post('events/{event}/sessions/{session}/checkin', [EventSessionController::class, 'checkin']);
+        Route::post('events/{event}/sessions/{session}/checkout', [EventSessionController::class, 'checkout']);
 
         Route::post('/logout', [AuthController::class, 'logout']);
     });
@@ -67,7 +69,6 @@ Route::prefix('attendee')->group(function () {
         Route::get('event/contact/{eventApp}', [AttendeeEventController::class, 'contact']);
 
 
-        Route::get('checkout/{paymentUuId}', [PaymentController::class, 'showCheckoutPage'])->name('attendee.tickets.checkout.page');
         Route::post('checkout', [PaymentController::class, 'checkout'])->name('attendee.tickets.checkout');
         Route::post('checkout-free-ticket', [PaymentController::class, 'checkoutFreeTicket'])->name('attendee.tickets.checkout.free');
         Route::post('update-attendee-payment/{paymentUuId}', [PaymentController::class, 'updateAttendeePaymnet'])->name('attendee.update.payment');

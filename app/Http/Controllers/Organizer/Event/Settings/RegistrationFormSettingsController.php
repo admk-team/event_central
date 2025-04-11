@@ -24,6 +24,7 @@ class RegistrationFormSettingsController extends Controller
                 'title' => '',
                 'description' => '',
                 'status' => false,
+                'type' => 'registration',
             ]);
             $currentEvent->load('form');
         }

@@ -125,7 +125,11 @@ class EventApp extends Model
 
     public function form()
     {
-        return $this->hasOne(Form::class);
+        return $this->hasOne(Form::class)->where('type', 'registration');
+    }
+    public function questionnaireForm()
+    {
+        return $this->hasOne(Form::class)->where('type', 'questionnaire');
     }
 
     public function pages()
@@ -156,6 +160,11 @@ class EventApp extends Model
     public function partners()
     {
         return $this->hasMany(EventPartner::class);
+    }
+
+    public function attendances()
+    {
+        return $this->hasMany(EventCheckIns::class);
     }
 
     public function getFeaturedImageAttribute()
@@ -205,9 +214,5 @@ class EventApp extends Model
                 }
             }
         });
-    }
-    public function attendances()
-    {
-        return $this->hasMany(AttendeeAttendance::class, 'event_app_id');
     }
 }

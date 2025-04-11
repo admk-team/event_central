@@ -60,6 +60,17 @@ trait HasModelPermissions
     }
 
     /**
+     * Give access to provided authorizable for the model
+     */
+    public function giveAccessTo(mixed $authorizable)
+    {
+        $this->modelPermissions()->updateOrCreate([
+            'authorizable_type' => $authorizable::class,
+            'authorizable_id' => $authorizable->id,
+        ]);
+    }
+
+    /**
      * Sync model permission for specified authorizable
      */
     public static function syncModelPermissions(array $ids = [], mixed $authorizable)

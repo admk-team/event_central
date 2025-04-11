@@ -8,6 +8,7 @@ use App\Http\Controllers\Attendee\EventController;
 use App\Http\Controllers\Attendee\EventSessionController;
 use App\Http\Controllers\Attendee\Payment\PaymentController;
 use App\Http\Controllers\Attendee\EventPostController;
+use App\Http\Controllers\Attendee\EventQuestionnaireFormController;
 use App\Http\Controllers\Attendee\EventRegistrationFormController;
 use App\Http\Controllers\Attendee\ProfileController;
 use App\Http\Controllers\Attendee\QrCodeController;
@@ -77,6 +78,12 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::post('validate-discount-code/{disCode}', [PaymentController::class, 'validateDiscCode'])->name('attendee.validateCode.post');
         Route::get('/payment-success/{paymentUuId}', [PaymentController::class, 'paymentSuccess'])->name('attendee.payment.success');
         Route::get('/event-posts', [EventController::class, 'getPostsMore'])->name('attendee.posts.index');
+
+        // Event questionnaire Form
+        Route::prefix('event-questionnaire-form')->name('attendee.event-questionnaire-form')->group(function () {
+            Route::get('/', [EventQuestionnaireFormController::class, 'index']);
+            Route::post('/', [EventQuestionnaireFormController::class, 'submit'])->name('.submit');
+        });
     });
 
     Route::put('/attendee-profile-update/{attendee}', [ProfileController::class, 'update'])->name('attendee.profile.update');

@@ -26,7 +26,7 @@ const Index = ({
     organizerView
 }: any) => {
 
-    // console.log(payment);
+    console.log(payment, stripe_pub_key, organizerView);
 
     const Layout = organizerView ? EventLayout : AttendeeLayout;
 

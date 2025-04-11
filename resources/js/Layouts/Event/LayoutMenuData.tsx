@@ -1,7 +1,5 @@
 import { usePage } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
-import HasAnyPermission from "../../Components/HasAnyPermission";
-import HasPermission from "../../Components/HasPermission";
 
 const Navdata = () => {
     const currentEvent = usePage().props.currentEvent as any;
@@ -15,10 +13,12 @@ const Navdata = () => {
     const [isTickets, setIsTickets] = useState<boolean>(false);
     const [isEvent, setIsEvent] = useState<boolean>(false);
     const [isForm, setIsForm] = useState<boolean>(false);
+    const [IsQuestionnaireForm, setIsQuestionnaireForm] = useState<boolean>(false);
     const [IsWebsite, setIsWebsite] = useState<boolean>(false);
     const [IsSessionAttendance, setIsSessionAttendance] = useState<boolean>(false);
     const [IspayemntSettings, setIspayemntSettings] = useState<boolean>(false);
     const [isSettingsMenu, setIsSettingsMenu] = useState<boolean>(false);
+    const [IsQuestionnaireResponse, setIsQuestionnaireResponse] = useState<boolean>(false);
     const [isAssignTicket, setIsAssignTicket] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
@@ -50,6 +50,8 @@ const Navdata = () => {
         if (iscurrentState !== 'payemntSettings') setIspayemntSettings(false);
         if (iscurrentState !== 'sessionAttendance') setIsSessionAttendance(false);
         if (iscurrentState !== 'Tickets') setIsTickets(false);
+        if (iscurrentState !== 'Questionnaire') setIsQuestionnaireForm(false);
+        if (iscurrentState !== 'Questionnaire_response') setIsQuestionnaireResponse(false);
         if (iscurrentState !== 'assignTickets') setIsTickets(false);
     }, [
         iscurrentState,
@@ -115,7 +117,7 @@ const Navdata = () => {
                 setIscurrentState('Content');
                 updateIconSidebar(e);
             },
-            HasAnyPermission: [
+            hasAnyPermission: [
                 'view_event_sessions',
                 'view_speakers',
                 'view_partner',
@@ -189,33 +191,6 @@ const Navdata = () => {
             ]
         },
         {
-            id: "engagement",
-            label: "Engagement",
-            icon: "bx bx-share-alt",
-            link: "/#",
-            stateVariables: isEngagement,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsEngagement(!isEngagement);
-                setIscurrentState('engagement');
-                updateIconSidebar(e);
-            },
-            // hasAnyPermission: [
-            //     'view_posts',
-            // ],
-            // subItems: [
-            //     {
-            //         id: "newsfeed",
-            //         label: "Posts",
-            //         link: route('organizer.events.engagement.newsfeed.index'),
-            //         parentId: "dashboard",
-            //         hasPermissions: [
-            //             'view_posts'
-            //         ],
-            //     }
-            // ]
-        },
-        {
             id: "attendees",
             label: "Attendees",
             icon: "bx bxs-user-account",
@@ -233,7 +208,7 @@ const Navdata = () => {
         },
         {
             id: "tickets",
-            label: "Tickets",
+            label: "Payments",
             icon: "bx bxs-credit-card",
             link: route('organizer.events.event.tickets'),
             stateVariables: isAttendees,
@@ -243,6 +218,9 @@ const Navdata = () => {
                 setIscurrentState('tickets');
                 updateIconSidebar(e);
             },
+            hasPermissions: [
+                'view_payments'
+            ],
         },
         {
             id: "registrationForm",
@@ -311,15 +289,18 @@ const Navdata = () => {
         {
             id: "assignTickets",
             label: "Assign Tickets",
-            icon: "bx bx-cog",
-            link: route('organizer.events.attendee.tickets.assign'),
+            icon: "bx bxs-server",
+            link: route('organizer.events.attendee.tickets.assign', null),
             stateVariables: isAssignTicket,
             click: function (e: any) {
                 e.preventDefault();
                 setIsAssignTicket(!isAssignTicket);
                 setIscurrentState('assignTickets');
                 updateIconSidebar(e);
-            }
+            },
+            hasPermissions: [
+                'assign_tickets',
+            ],
         },
         {
             id: "badgePrinting",
@@ -330,7 +311,44 @@ const Navdata = () => {
                 e.preventDefault();
                 updateIconSidebar(e);
             },
+            hasPermissions: [
+                'print_badges',
+            ],
         },
+        // ...(isEventStarted ? [{
+            {
+            id: "Questionnaire",
+            label: "Questionnaire Form",
+            icon: "bx bxs-notepad",
+            link: route('organizer.events.settings.questionnaire-form.index'),
+            stateVariables: isForm,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsQuestionnaireForm(!isForm);
+                setIscurrentState('Questionnaire');
+                updateIconSidebar(e);
+            },
+            hasPermissions: [
+                'edit_questionnaire_form'
+            ],
+        },
+        {
+            id: "Questionnaire_response",
+            label: "Questionnaire Response",
+            icon: "bx bxs-notepad",
+            link: route('organizer.events.settings.questionnaire-form.response'),
+            stateVariables: isForm,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsQuestionnaireResponse(!isForm);
+                setIscurrentState('Questionnaire_response');
+                updateIconSidebar(e);
+            },
+            hasPermissions: [
+                'questionnaire_response'
+            ],
+        },
+        // }] : []),
     ];
 
     return <React.Fragment>{menuItems}</React.Fragment>;

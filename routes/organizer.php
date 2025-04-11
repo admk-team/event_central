@@ -26,7 +26,9 @@ use App\Http\Controllers\Organizer\Event\EventAppTicketController;
 use App\Http\Controllers\Organizer\Event\EventDateController;
 use App\Http\Controllers\Organizer\Event\EventPromoCodeController;
 use App\Http\Controllers\Organizer\Event\FormFieldController;
+use App\Http\Controllers\Organizer\Event\QuestionnaireFormFieldController;
 use App\Http\Controllers\Organizer\Event\SessionAttendanceController;
+use App\Http\Controllers\Organizer\Event\Settings\QuestionnaireFormSettingsController;
 use App\Http\Controllers\Organizer\Event\Settings\RegistrationFormSettingsController;
 use App\Http\Controllers\Organizer\Event\Settings\WebsiteSettingsController;
 use App\Http\Controllers\Organizer\Event\TrackController;
@@ -183,6 +185,16 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                     Route::post('/toggle-status', [RegistrationFormSettingsController::class, 'toggleStatus'])->name('toggle-status');
                     Route::post('/website', [RegistrationFormSettingsController::class, 'toggleStatus'])->name('toggle-status');
                 });
+                 // Questionnaire Form
+                 Route::resource('questionnaire-form-fields', QuestionnaireFormFieldController::class)->only(['store', 'update', 'destroy']);
+                 Route::prefix('questionnaire-form')->name('questionnaire-form.')->group(function () {
+                    Route::get('/', [QuestionnaireFormSettingsController::class, 'index'])->name('index');
+                    Route::post('/toggle-status', [QuestionnaireFormSettingsController::class, 'toggleStatus'])->name('toggle-status');
+                    Route::post('/website', [QuestionnaireFormSettingsController::class, 'toggleStatus'])->name('toggle-status');
+                    Route::get('/response', [QuestionnaireFormSettingsController::class, 'response'])->name('response');
+                    Route::delete('/many', [QuestionnaireFormSettingsController::class, 'destroyMany'])->name('many');
+                    Route::delete('/{destroy}', [QuestionnaireFormSettingsController::class, 'destroy'])->name('destroy'); // ✅ Added
+                });
 
                 // Website
                 Route::prefix('website')->name('website.')->group(function () {
@@ -196,8 +208,10 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
 
             Route::get('badgeprint', [BadgePrintController::class, 'index'])->name('badge.print');
 
-            Route::get('assign-tickets', [AssignTicketController::class, 'assignTickets'])->name('attendee.tickets.assign');
+            // Assign Ticket by Organizer Routes
+            Route::get('assign-tickets/{attendee_id?}', [AssignTicketController::class, 'assignTickets'])->name('attendee.tickets.assign');
             Route::post('checkout/{attendee}/{paymnet_method}', [AssignTicketController::class, 'checkout'])->name('tickets.checkout');
+            Route::post('checkout-free/{attendee}/{paymnet_method}', [AssignTicketController::class, 'checkoutFreeTicket'])->name('tickets.checkout.free');
             Route::get('checkout/{paymentUuId}', [AssignTicketController::class, 'showCheckoutPage'])->name('tickets.checkout.page');
             Route::get('/payment-success/{paymentUuId}', [AssignTicketController::class, 'paymentSuccess'])->name('payment.success');
             Route::post('update-attendee-payment/{paymentUuId}', [AssignTicketController::class, 'updateAttendeePaymnet'])->name('update.payment');

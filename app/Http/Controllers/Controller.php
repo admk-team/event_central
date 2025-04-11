@@ -38,7 +38,7 @@ class Controller extends BaseController
      * @param  bool  $resourceCreated
      * @return JsonResponse
      */
-    protected function successResponse(JsonResource $data, bool $resourceCreated = false): JsonResponse
+    protected function successResponse(array|JsonResource $data, bool $resourceCreated = false): JsonResponse
     {
         return response()
             ->json(

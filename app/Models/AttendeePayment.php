@@ -36,4 +36,9 @@ class AttendeePayment extends Model
     {
         return $this->belongsTo(Attendee::class, 'attendee_id');
     }
+
+    public function payer()
+    {
+        return $this->morphTo();
+    }
 }

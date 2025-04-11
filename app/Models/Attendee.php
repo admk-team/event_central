@@ -29,7 +29,8 @@ class Attendee extends Authenticatable
         'bio',
         'type',
         'avatar',
-        'qr_code'
+        'qr_code',
+        'location'
     ];
 
     protected $appends = [
@@ -69,5 +70,10 @@ class Attendee extends Authenticatable
     public function payments()
     {
         return $this->hasMany(AttendeePayment::class, 'attendee_id');
+    }
+
+    public function attendeePayments()
+    {
+        return $this->morphMany(AttendeePayment::class, 'payer');
     }
 }

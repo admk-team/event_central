@@ -24,11 +24,11 @@ class FormFieldController extends Controller
             'is_required' => 'required|boolean',
         ]);
 
-        $form = Form::where('event_app_id', session('event_id'))->first();
+        $form = Form::where('event_app_id', session('event_id'))->where('type', 'registration')->first();
         
         $form->fields()->create($request->input());
 
-        return back();
+        return back()->withSuccess('Created successfully.');
     }
 
     /**
@@ -66,6 +66,6 @@ class FormFieldController extends Controller
             $form->save();
         }
 
-        return back();
+        return back()->withSuccess('Deleted successfully.');
     }
 }

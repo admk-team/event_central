@@ -107,7 +107,7 @@ class EventSpeakerController extends Controller
         }
 
         $speaker->delete();
-        return back();
+        return back()->withSuccess('Deleted successfully.');
     }
 
     public function destroyMany(Request $request)
