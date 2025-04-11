@@ -4,10 +4,13 @@ namespace App\Http\Controllers\Attendee;
 
 use App\Http\Controllers\Controller;
 use App\Models\EventApp;
+use App\Models\EventAppDate;
+use App\Models\EventPlatform;
 use App\Models\EventSession;
 use App\Models\EventPost;
 use App\Models\EventSpeaker;
 use App\Models\SessionCheckIn;
+use App\Models\Track;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -28,12 +31,16 @@ class EventController extends Controller
     public function getEventDetailAgenda()
     {
         $eventApp = EventApp::find(Auth::user()->event_app_id);
+
+        $eventdates = EventAppDate::where('event_app_id', $eventApp->id)->get();
+        $tracks = Track::where('event_app_id', $eventApp->id)->get();
+        $enableTracks = eventSettings($eventApp->id)->getValue('enable_tracks', false);
+        $eventPlatforms = EventPlatform::where('event_app_id', $eventApp->id )->get();
         $eventApp->load([
             'event_sessions.eventSpeakers',
             'event_sessions.eventPlatform'
         ]);
-
-        return Inertia::render('Attendee/AttendeeAgenda', compact('eventApp'));
+        return Inertia::render('Attendee/AttendeeAgenda', compact('eventApp', 'eventdates','tracks', 'enableTracks', 'eventPlatforms'));
     }
 
     public function getEventSessionDetail(Request $request, EventSession $eventSession)
