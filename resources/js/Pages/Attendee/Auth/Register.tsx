@@ -134,7 +134,7 @@ export default function Register() {
                                     id="location"
                                     type="text"
                                     name="location"
-                                    placeholder="Enter location"
+                                    placeholder="Enter City, State/Province, Country"
                                     value={data.location}
                                     className={'mt-1 form-control' + (errors.location ? 'is-invalid' : '')}
                                     autoComplete="location"
