@@ -94,6 +94,12 @@
     letter-spacing: 0.5px;
     color: black !important;
 }
+.location {
+    font-size: 15px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    color: black !important;
+}
 
 .form-label {
     color: black;
