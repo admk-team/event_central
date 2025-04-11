@@ -332,7 +332,7 @@ class PaymentController extends Controller
             foreach ($payment->purchased_tickets as $ticket_purchased) {
                 $purchasedticket = AttendeePurchasedTickets::find($ticket_purchased->id);
                 $code = $purchasedticket->generateUniqueKey();
-                $qrData = env('APP_URL') . '/attendee-pass/' . $code;
+                $qrData = $code;
 
                 $options = new QROptions([
                     // 'version' => 5,

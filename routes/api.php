@@ -9,8 +9,6 @@ use App\Http\Controllers\Api\v1\Attendee\EventController as AttendeeEventControl
 use App\Http\Controllers\Api\v1\Organizer\EventController;
 use App\Http\Controllers\Api\v1\Organizer\EventSessionController;
 use App\Http\Controllers\Api\v1\Attendee\PaymentController;
-use App\Http\Controllers\Api\v1\Organizer\CheckinController;
-use App\Http\Controllers\Api\v1\Organizer\QrCodeController;
 
 /*
 |--------------------------------------------------------------------------
