@@ -9,7 +9,8 @@ use App\Http\Controllers\Api\v1\Attendee\EventController as AttendeeEventControl
 use App\Http\Controllers\Api\v1\Organizer\EventController;
 use App\Http\Controllers\Api\v1\Organizer\EventSessionController;
 use App\Http\Controllers\Api\v1\Attendee\PaymentController;
-
+use App\Http\Controllers\Api\v1\Organizer\CheckinController;
+use App\Http\Controllers\Api\v1\Organizer\QrCodeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,13 +37,14 @@ Route::prefix('user')->group(function () {
         // Events
         Route::get('events', [EventController::class, 'index']);
         Route::get('events/{event}', [EventController::class, 'show']);
+        Route::post('events/{event}/scan', [EventController::class, 'scan']);
 
         // Event Sessions
         Route::get('events/{event}/sessions', [EventSessionController::class, 'index']);
         Route::get('events/{event}/sessions/{session}', [EventSessionController::class, 'show']);
-
-        // Scan QRcode
-
+        Route::post('events/{event}/sessions/{session}/scan', [EventSessionController::class, 'scan']);
+        Route::post('events/{event}/sessions/{session}/checkin', [EventSessionController::class, 'checkin']);
+        Route::post('events/{event}/sessions/{session}/checkout', [EventSessionController::class, 'checkout']);
 
         Route::post('/logout', [AuthController::class, 'logout']);
     });

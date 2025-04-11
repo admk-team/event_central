@@ -49,11 +49,12 @@ const DashboardAnalytics = ({ totalAttendee,totalSession,totalSpeakers,totalPart
                                 totalRevenue = {totalRevenue}
                             />
                         </Col>
-                        <LiveUsers sessionAttendance = {sessionAttendance} topSession = {topSession} />
+                        <LiveUsers sessionAttendance = {sessionAttendance} top10Attendee = {top10Attendee} />
                     </Row>
                     <Row>
+                    <TopPages topSession={topSession}  />
                         <AudiencesMetrics ticketsMetrics = {ticketsMetrics} />
-                        <TopReferrals top10Attendee = {top10Attendee}/>
+                        
                         {/* <AudiencesSessions /> */}
                     </Row>
                     <Row>

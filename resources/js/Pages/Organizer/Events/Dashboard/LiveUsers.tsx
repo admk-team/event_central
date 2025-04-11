@@ -9,8 +9,9 @@ import world from '../../../../common/world.svg.json';
 import { createSelector } from 'reselect';
 import { ongetAllData } from '../../../../slices/thunk';
 import TopPages from './TopPages';
+import TopReferrals from './TopReferrals';
 
-const LiveUsers  = ({sessionAttendance,topSession}: any) => {
+const LiveUsers  = ({sessionAttendance,top10Attendee}: any) => {
     const dispatch: any = useDispatch();
 
     const [countryData, setcountryData] = useState<any>([]);
@@ -40,7 +41,7 @@ const LiveUsers  = ({sessionAttendance,topSession}: any) => {
         <React.Fragment>
             <Col xxl={7}>
                 <Row className="h-100">
-                      <TopPages topSession={topSession}  />
+                <TopReferrals top10Attendee = {top10Attendee}/>
                     {/* <Col xl={6}>
                         <Card className="card-height-100">
                             <div className="card-header align-items-center d-flex">

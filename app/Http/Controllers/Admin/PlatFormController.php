@@ -20,17 +20,17 @@ class PlatFormController extends Controller
     public function store(PlatFormRequest $request){
         $data=$request->validated();
         PlatForm::create($data);
-        return back();
+        return back()->withSuccess('Created successfully.');
     }
     public function update (PlatFormRequest $request,PlatForm $platform){
         $data=$request->validated();
         $platform->update($data);
-        return back();
+        return back()->withSuccess('Updated successfully.');
     }
 
     public function destroy(PlatForm $platform){
         $platform->delete();
-        return back();
+        return back()->withSuccess('Deleted successfully.');
     }
 
     public function destroyMany(Request $request){
@@ -40,5 +40,6 @@ class PlatFormController extends Controller
         foreach($request->ids as $id ){
             PlatForm::destroy($id);
         }
+        return back()->withSuccess('Deleted successfully.');
     }
 }

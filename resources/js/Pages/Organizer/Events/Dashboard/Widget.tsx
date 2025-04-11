@@ -48,13 +48,13 @@ const Widget = ({
                                             /> $
                                         </span>
                                     </h2>
-                                    <p className="mb-0 text-muted text-truncate ">
+                                    {/* <p className="mb-0 text-muted text-truncate ">
                                         <span className="badge bg-light text-danger mb-0">
                                             <i className="ri-arrow-down-line align-middle"></i>{" "}
                                             3.96 %
                                         </span>{" "}
                                         vs. previous month
-                                    </p>
+                                    </p> */}
                                 </div>
                                 <div>
                                     <div className="avatar-sm flex-shrink-0">
@@ -101,13 +101,13 @@ const Widget = ({
                                             0$
                                         </span>
                                     </h2>
-                                    <p className="mb-0 text-muted text-truncate ">
+                                    {/* <p className="mb-0 text-muted text-truncate ">
                                         <span className="badge bg-light text-success mb-0">
                                             <i className="ri-arrow-up-line align-middle"></i>{" "}
                                             16.24 %
                                         </span>{" "}
                                         vs. previous month
-                                    </p>
+                                    </p> */}
                                 </div>
                                 <div>
                                     <div className="avatar-sm flex-shrink-0">
@@ -156,13 +156,13 @@ const Widget = ({
                                             />
                                         </span>
                                     </h2>
-                                    <p className="mb-0 text-muted text-truncate ">
+                                    {/* <p className="mb-0 text-muted text-truncate ">
                                         <span className="badge bg-light text-success mb-0">
                                             <i className="ri-arrow-up-line align-middle"></i>{" "}
                                             16.24 %
                                         </span>{" "}
                                         vs. previous month
-                                    </p>
+                                    </p> */}
                                 </div>
                                 <div>
                                     <div className="avatar-sm flex-shrink-0">
@@ -209,13 +209,13 @@ const Widget = ({
                                             />
                                         </span>
                                     </h2>
-                                    <p className="mb-0 text-muted text-truncate ">
+                                    {/* <p className="mb-0 text-muted text-truncate ">
                                         <span className="badge bg-light text-danger mb-0">
                                             <i className="ri-arrow-down-line align-middle"></i>{" "}
                                             3.96 %
                                         </span>{" "}
                                         vs. previous month
-                                    </p>
+                                    </p> */}
                                 </div>
                                 <div>
                                     <div className="avatar-sm flex-shrink-0">
@@ -263,13 +263,13 @@ const Widget = ({
                                             />
                                         </span>
                                     </h2>
-                                    <p className="mb-0 text-muted text-truncate ">
+                                    {/* <p className="mb-0 text-muted text-truncate ">
                                         <span className="badge bg-light text-success mb-0">
                                             <i className="ri-arrow-up-line align-middle"></i>{" "}
                                             16.24 %
                                         </span>{" "}
                                         vs. previous month
-                                    </p>
+                                    </p> */}
                                 </div>
                                 <div>
                                     <div className="avatar-sm flex-shrink-0">
@@ -313,13 +313,13 @@ const Widget = ({
                                             />
                                         </span>
                                     </h2>
-                                    <p className="mb-0 text-muted text-truncate ">
+                                    {/* <p className="mb-0 text-muted text-truncate ">
                                         <span className="badge bg-light text-success mb-0">
                                             <i className="ri-arrow-up-line align-middle"></i>{" "}
                                             16.24 %
                                         </span>{" "}
                                         vs. previous month
-                                    </p>
+                                    </p> */}
                                 </div>
                                 <div>
                                     <div className="avatar-sm flex-shrink-0">

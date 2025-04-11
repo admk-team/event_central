@@ -72,7 +72,7 @@ class ColorSchemeController extends Controller
     public function destroy(ColorScheme $color_theme)
     {
         $color_theme->delete();
-        return back();
+        return back()->withSuccess('Deleted successfully.');
     }
 
     public function destroyMany(Request $request)
@@ -85,6 +85,6 @@ class ColorSchemeController extends Controller
             ColorScheme::find($id)?->delete();
         }
 
-        return back();
+        return back()->withSuccess('Deleted successfully.');
     }
 }

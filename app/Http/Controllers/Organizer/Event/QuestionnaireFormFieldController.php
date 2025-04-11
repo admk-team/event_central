@@ -28,7 +28,7 @@ class QuestionnaireFormFieldController extends Controller
         
         $form->fields()->create($request->input());
 
-        return back();
+        return back()->withSuccess('Created successfully.');
     }
 
     /**
@@ -67,6 +67,6 @@ class QuestionnaireFormFieldController extends Controller
             $form->save();
         }
 
-        return back();
+        return back()->withSuccess('Deleted successfully.');
     }
 }

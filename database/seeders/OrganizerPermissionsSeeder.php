@@ -18,6 +18,7 @@ class OrganizerPermissionsSeeder extends Seeder
         'create_events',
         'edit_events',
         'delete_events',
+        'scan_events',
 
         // Users
         'view_users',
@@ -42,6 +43,7 @@ class OrganizerPermissionsSeeder extends Seeder
         'create_event_sessions',
         'edit_event_sessions',
         'delete_event_sessions',
+        'scan_event_sessions',
 
         // Event Platforms
         'view_platforms',

@@ -15,17 +15,17 @@ class EventPartnerCategoryController extends Controller
         $data['event_app_id'] = session('event_id');
         $data['order'] = 1;
         EventPartnerCategory::create($data);
-        return back();
+        return back()->withSuccess('Created successfully.');
     }
     public function update(EventPartnerCategoryRequest $request, EventPartnerCategory $partner_category)
     {
         $data = $request->validated();
         $partner_category->update($data);
-        return back();
+        return back()->withSuccess('Updated successfully.');
         
     }
     public function destroy(EventPartnerCategory $partner_category){
         $partner_category->delete();
-        return back();
+        return back()->withSuccess('Deleted successfully.');
     }
 }
