@@ -143,13 +143,11 @@ function Index({ tickets, sessions, addons, fees }: any) {
         },
         {
             header: () => "Start Increment",
-            cell: (ticket) =>
-                moment(ticket.start_increment).format("DD, MMM, YYYY"),
+            cell: (ticket) => ticket.start_increment ? moment(ticket.start_increment).format("MMM DD, YYYY") : "N/A",
         },
         {
             header: () => "End Increment",
-            cell: (ticket) =>
-                moment(ticket.end_increment).format("DD MMM, YYYY"),
+            cell: (ticket) => ticket.end_increment ? moment(ticket.end_increment).format("MMM DD, YYYY"): "N/A",
         },
         {
             header: () => "Show To Attendee",

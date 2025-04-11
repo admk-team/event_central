@@ -106,12 +106,12 @@ class EventPartnerController extends Controller
             abort(403);
         }
         
-        dd('tsign');
-        // $request->validate([
-        //     'ids' => 'required|array'
-        // ]);
-        // foreach ($request->ids as $id) {
-        //     EventPartner::find($id)?->delete();
-        // }
+        // dd('tsign');
+        $request->validate([
+            'ids' => 'required|array'
+        ]);
+        foreach ($request->ids as $id) {
+            EventPartner::find($id)?->delete();
+        }
     }
 }
