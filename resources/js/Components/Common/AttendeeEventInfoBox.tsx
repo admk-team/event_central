@@ -30,6 +30,7 @@ const AttendeeEventInfoBox = () => {
                                 <img
                                     src={eventInfo.logo_img}
                                     alt="attendee event bg"
+                                    width={'350px'}
                                 />
                             </div>
                         )}
