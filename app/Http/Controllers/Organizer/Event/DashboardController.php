@@ -155,33 +155,48 @@ class DashboardController extends Controller
     }
     public function top10Attendee()
     {
-        // Fetch attendees with their payments for the current event, ordered by amount paid
+        // Fetch attendees with their payments for the current event
         $attendees = Attendee::whereHas('payments', fn($query) => $query->currentEvent())
             ->with(['payments' => fn($query) => $query->currentEvent()])
             ->get();
-
-        $totalAttendees = $attendees->count(); // Total number of attendees
-
-        // Calculate total revenue from all payments
-        $totalRevenue = AttendeePayment::whereHas('attendee', fn($query) => $query->currentEvent())
-            ->sum('amount_paid');
-
+    
+        // Total number of attendees
+        $totalAttendees = $attendees->count();
+    
+        // Fetch ticket purchases for the current event to calculate total revenue and ticket metrics
+        $ticketPurchases = AttendeePurchasedTickets::whereHas('payment', fn($query) => $query->currentEvent())
+            ->with(['payment']) // Eager load payment to avoid N+1 queries
+            ->get();
+    
+        // Total tickets sold (event-wide)
+        $totalTicketsSold = $ticketPurchases->sum('qty');
+    
+        // Extract payment IDs from ticket purchases and calculate total revenue
+        $paymentIds = $ticketPurchases->pluck('attendee_payment_id')->unique()->values();
+        $totalRevenue = AttendeePayment::whereIn('id', $paymentIds)->sum('amount_paid');
+    
+        // Fetch all ticket types for the current event
+        $allTickets = EventAppTicket::currentEvent()->get();
+        $totalTicketTypes = $allTickets->count();
+    
         // Prepare data for top 10 attendees
         $attendeeData = $attendees->map(function ($attendee) {
             $amountPaid = $attendee->payments->sum('amount_paid');
             return [
-                'first_name' => $attendee->first_name, // Assuming Attendee has a 'name' field
-                'email' => $attendee->email, // Assuming Attendee has an 'email' field
-                'amountPaid' => $amountPaid, // Total amount paid by this attendee
+                'first_name' => $attendee->first_name,
+                'email' => $attendee->email,
+                'amountPaid' => $amountPaid,
             ];
-        })->sortByDesc('amountPaid') // Sort by amount paid in descending order
-        ->take(10) // Limit to top 10
-        ->values()
-        ->toArray();
-
+        })->sortByDesc('amountPaid')
+          ->take(10)
+          ->values()
+          ->toArray();
+    
         return [
             'totalAttendees' => $totalAttendees, // Total number of attendees
             'totalRevenue' => $totalRevenue, // Total revenue from all payments
+            'totalTicketsSold' => $totalTicketsSold, // Total tickets sold
+            'totalTicketTypes' => $totalTicketTypes, // Total number of ticket types
             'attendeeData' => $attendeeData, // Top 10 attendees with their metrics
         ];
     }
