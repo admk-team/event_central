@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Dropdown } from "react-bootstrap";
 import { Link, usePage } from "@inertiajs/react";
 //import images
@@ -9,15 +9,35 @@ const AttendeeProfileDropdown = () => {
     const user: any = usePage().props.auth.user;
     const eventApp: any = usePage().props.eventApp;
 
+    const dropdownRef = useRef(null);
     //Dropdown Toggle
     const [isProfileDropdown, setIsProfileDropdown] = useState<boolean>(false);
     const toggleProfileDropdown = () => {
         setIsProfileDropdown(!isProfileDropdown);
     };
+    // Close dropdown on outside click
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(event.target)
+            ) {
+                // setShow(false);
+                setIsProfileDropdown(false);
+                console.log('clicked outside');
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+
     return (
         <React.Fragment>
             {user && (
                 <Dropdown
+                    ref={dropdownRef}
                     show={isProfileDropdown}
                     onClick={toggleProfileDropdown}
                     className="ms-sm-3 header-item topbar-user"

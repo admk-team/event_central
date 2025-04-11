@@ -50,5 +50,19 @@ class EventTicketsController extends Controller
         return Inertia::render('Organizer/Events/RefundTickets/Index', compact('refundPayments'));
     }
 
-    public function attendeeRefund(Request $request) {}
+    public function attendeeRefund(Request $request)
+    {
+        $status = $request->status;
+        $refund = AttendeeRefundTicket::findOrFail($request->refundId);
+        if (!$refund) {
+            return redirect()->back()->with('error', 'Invalid Refund ID');
+        }
+        if ($status == 'rejected') {
+            $refund->update(['status' => 'rejected']);
+
+            return redirect()->back()->with('success', 'Refund status updated successfully!');
+        } elseif ($status == 'approved') {
+            // $attendee = Attendee::findOrFail($refund->)
+        }
+    }
 }
