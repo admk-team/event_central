@@ -68,7 +68,7 @@ const HeaderAttendee = ({ onChangeLayoutMode, layoutModeType, headerClass }: any
         <React.Fragment>
             <header id="page-topbar" className={headerClass}>
                 <div className="layout-width">
-                    <div className="navbar-header">
+                    <div className="navbar-header p-0">
                         <div className="d-flex">
                             <div className="navbar-brand-box horizontal-logo">
                                 <Link href="/" className="logo logo-dark">
