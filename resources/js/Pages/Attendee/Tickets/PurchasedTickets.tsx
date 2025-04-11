@@ -76,7 +76,7 @@ const PaymentSuccess = ({ eventApp, attendee, image = [], hasTickets }) => {
                                     {/* Conditional: Only show input if transfer_check is false */}
                                     {!img.transfer_check && (
                                         <>
-                                            <label htmlFor={`email-${index}`} className="form-label">
+                                            <label htmlFor={`email-${index}`} className="form-label-pass">
                                                 Transfer Ticket <span className="text-danger ms-1">*</span>
                                             </label>
                                             <input
@@ -99,7 +99,7 @@ const PaymentSuccess = ({ eventApp, attendee, image = [], hasTickets }) => {
                             ))}
                             {images.some((img) => !img.transfer_check) && (
                                 <button
-                                    className="btn btn-primary mt-4 mb-4"
+                                        className="btn btn-primary btn-primary-pass mt-4 mb-4"
                                     onClick={() => {
                                         router.post(route("attendee.tickets.transfer"), {
                                             emails: emails,
