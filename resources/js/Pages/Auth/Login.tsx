@@ -155,9 +155,9 @@ export default function Login({ status, canResetPassword }: any) {
                                         </div>
                                     </Card.Body>
                                 </Card>
-                                <div className="mt-4 text-center">
+                                {/* <div className="mt-4 text-center">
                                     <p className="mb-0">Don't have an account ? <Link href={route('register')} className="fw-semibold text-primary text-decoration-underline"> Signup </Link> </p>
-                                </div>
+                                </div> */}
                             </Col>
                         </Row>
                     </Container>

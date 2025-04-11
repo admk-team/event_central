@@ -134,7 +134,7 @@ class SampleEventDataSeeder extends Seeder
     
             $this->command->info('Sample Event Data Seeded Successfully');
         } catch(\Exception $e) {
-            $this->command->error('Error while seeding sample event data, ' . $e->getMessage());
+            $this->command->error('Error while seeding sample event data, ');
         }
     }
 }

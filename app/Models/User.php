@@ -163,5 +163,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(EventAppFee::class);
     }
-    
+
+    public function attendeePayments()
+    {
+        return $this->morphMany(AttendeePayment::class, 'payer');
+    }
 }

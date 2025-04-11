@@ -138,9 +138,11 @@ function Index({ promoCodes, tickets }: any) {
         {
             header: () => 'Tickets',
             cell: (promoCode) => (
-                promoCode.tickets.map((ticket: any) =>
-                    <span key={ticket.id} className="badge rounded-pill border border-secondary text-secondary fs-7" style={{ marginRight: '3px' }}>{ticket.name}</span>
-                )
+                <div className='d-flex flex-column w-100 align-items-baseline'>
+                    {promoCode.tickets.map((ticket: any) =>
+                        <span key={ticket.id} className="badge rounded-pill border border-secondary mt-1 text-secondary fs-7" style={{ marginRight: '3px' }}>{ticket.name}</span>
+                    )}
+                </div>
             ),
         },
         {

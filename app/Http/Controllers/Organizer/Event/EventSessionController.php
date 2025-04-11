@@ -59,6 +59,11 @@ class EventSessionController extends Controller
         unset($data['tracks']);
 
         $session = EventSession::create($data);
+
+        if (! Auth::user()->hasRole('owner')) { // Give access to creator
+            $session->giveAccessTo(Auth::user());
+        }
+
         if (!empty($speakers)) {
             $session->eventSpeakers()->sync($speakers);
         }
@@ -88,9 +93,7 @@ class EventSessionController extends Controller
         unset($data['tracks']);
 
         $schedule->update($data);
-        if (!empty($speakers)) {
-            $schedule->eventSpeakers()->sync($speakers);
-        }
+        $schedule->eventSpeakers()->sync($speakers);
 
         $schedule->tracks()->sync($tracksIds);
 

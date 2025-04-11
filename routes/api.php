@@ -9,8 +9,6 @@ use App\Http\Controllers\Api\v1\Attendee\EventController as AttendeeEventControl
 use App\Http\Controllers\Api\v1\Organizer\EventController;
 use App\Http\Controllers\Api\v1\Organizer\EventSessionController;
 use App\Http\Controllers\Api\v1\Attendee\PaymentController;
-use App\Http\Controllers\Api\v1\Organizer\CheckinController;
-use App\Http\Controllers\Api\v1\Organizer\QrCodeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +36,8 @@ Route::prefix('user')->group(function () {
         Route::get('events', [EventController::class, 'index']);
         Route::get('events/{event}', [EventController::class, 'show']);
         Route::post('events/{event}/scan', [EventController::class, 'scan']);
+        Route::post('events/{event}/checkin', [EventController::class, 'checkin']);
+        Route::post('events/{event}/checkout', [EventController::class, 'checkout']);
 
         // Event Sessions
         Route::get('events/{event}/sessions', [EventSessionController::class, 'index']);

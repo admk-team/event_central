@@ -19,6 +19,7 @@ use chillerlan\QRCode\QROptions;
 
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Attendee\AttendeeCheckoutRequest;
 use App\Mail\AttendeeTicketPurchasedEmail;
 use App\Models\Attendee;
 use chillerlan\QRCode\Common\EccLevel;
@@ -136,17 +137,18 @@ class PaymentController extends Controller
 
     //Create Attendee Payment record and all tickets and addons includee
     // then create stripe paymnet intent and erturn to front end.
-    public function checkout(Request $request, $organizerView = false, $attendee = null, $payment_method = null)
+    public function checkout(AttendeeCheckoutRequest $request, $organizerView = false, $attendee = null, $payment_method = null)
     {
         $data = $request->all();
-        $user = $organizerView ? $attendee : auth()->user();
+        $user = auth()->user();
+        $attendee = $organizerView ? $attendee : auth()->user();
         $amount = $data['totalAmount'];
-        $client_secret = $this->stripe_service->createPaymentIntent($user->event_app_id, $amount);
+        $client_secret = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount);
 
-        $payment = AttendeePayment::create([
+        $payment = $user->attendeePayments()->create([
             'uuid' => Str::uuid(),
-            'event_app_id' => $user->event_app_id,
-            'attendee_id' => $user->id,
+            'event_app_id' => $attendee->event_app_id,
+            'attendee_id' => $attendee->id,
             'discount_code' => $data['discount_code'],
             'sub_total' => $data['subTotal'],
             'discount' => $data['discount'],
@@ -169,7 +171,7 @@ class PaymentController extends Controller
                 'addons_sub_total' => $ticketsDetail['addons_sub_total'],
                 'total' => $ticket['base_price'] + $ticketsDetail['fees_sub_total'] + $ticketsDetail['addons_sub_total']
             ]);
-            $addon_ids = $names = array_column($addons, "id");
+            $addon_ids = array_column($addons, "id");
             $attendee_purchased_ticket->purchased_addons()->sync($addon_ids);
         }
         return $payment;
@@ -177,23 +179,25 @@ class PaymentController extends Controller
 
     // Create Attendee Payment record and all tickets and addons includee
     // then create stripe paymnet intent and erturn to front end.
-    public function checkoutFreeTicket(Request $request, $organizerView = false, $attendee = null, $payment_method = null)
+    public function checkoutFreeTicket(AttendeeCheckoutRequest $request, $organizerView = false, $attendee = null, $payment_method = null)
     {
         $data = $request->all();
-        $user = $organizerView ? $attendee : auth()->user();
-        $client_secret = null;
+        $user = auth()->user();
+        $attendee = $organizerView ? $attendee : auth()->user();
+        $amount = $data['totalAmount'];
+        $client_secret = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount);
 
-        $payment = AttendeePayment::create([
+        $payment = $user->attendeePayments()->create([
             'uuid' => Str::uuid(),
-            'event_app_id' => $user->event_app_id,
-            'attendee_id' => $user->id,
+            'event_app_id' => $attendee->event_app_id,
+            'attendee_id' => $attendee->id,
             'discount_code' => $data['discount_code'],
             'sub_total' => $data['subTotal'],
             'discount' => $data['discount'],
             'amount_paid' => $data['totalAmount'],
             'stripe_intent' => $client_secret,
-            'status' => 'paid',
-            'payment_method' => $payment_method ?  $payment_method : 'free'
+            'status' => 'pending',
+            'payment_method' => $organizerView ? $payment_method : 'stripe',
         ]);
 
         foreach ($data['ticketsDetails'] as $ticketsDetail) {
@@ -329,7 +333,7 @@ class PaymentController extends Controller
             foreach ($payment->purchased_tickets as $ticket_purchased) {
                 $purchasedticket = AttendeePurchasedTickets::find($ticket_purchased->id);
                 $code = $purchasedticket->generateUniqueKey();
-                $qrData = env('APP_URL') . '/attendee-pass/' . $code;
+                $qrData = $code;
 
                 $options = new QROptions([
                     // 'version' => 5,
@@ -389,7 +393,7 @@ class PaymentController extends Controller
                     'qr_code' => asset('storage/' . $purchasedTicket->qr_code),
                     'purchased_id' => $purchasedTicket->id,
                     'transfer_check' => $transferCheck,
-                    'ticket_name' => $purchasedTicket->ticket->name,
+                    'ticket_name' => $purchasedTicket->ticket?->name ?? '',
                 ];
             }
         }

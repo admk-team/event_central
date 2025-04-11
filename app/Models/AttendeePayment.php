@@ -42,4 +42,9 @@ class AttendeePayment extends Model
     {
         return $this->hasOne(AttendeeRefundTicket::class);
     }
+
+    public function payer()
+    {
+        return $this->morphTo();
+    }
 }
