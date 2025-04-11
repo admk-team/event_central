@@ -109,7 +109,7 @@ function Index({ tickets, sessions, addons, fees }: any) {
             header: () => "Sessions",
             cell: (ticket) => (
                 <div className="d-flex flex-column" >
-                    {1 &&
+                    {
                         ticket.sessions.map((session: any, index: any) => {
                             if (index < 2) {
                                 return <span
@@ -119,7 +119,7 @@ function Index({ tickets, sessions, addons, fees }: any) {
                                 >
                                     {session.name}
                                 </span>
-                            } else {
+                            } else if (index === 2) {
                                 return <span
                                     key={'more-' + ticket.id}
                                     className="badge rounded-pill bg-secondary border border-secondary text-white text-capitalize fs-6 mt-1"
