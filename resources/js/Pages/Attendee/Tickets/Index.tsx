@@ -12,7 +12,6 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
     //Set Page Layout as per User [Organizer, Attendee]
     const Layout = organizerView ? EventLayout : AttendeeLayout;
 
-    // console.log(attendees);
     //Options for Procession of Tickets from Organizer side
     const [currentAttendee, setCurrentAttendee] = useState<any>(attendee_id);
     const [paymentMethod, setPaymentMethod] = useState<any>('stripe');
@@ -22,6 +21,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
 
     const [codeError, setCodeError] = useState<string | boolean | any>(null);
     const [discountCode, setDiscountCode] = useState('');
+    const [discountCodeApplied, setDiscountCodeApplied] = useState('');
     const [discount, setDiscount] = useState(0);
     const [totalAmount, setTotalAmount] = useState(0);
     const [processing, setProcessing] = useState(false);
@@ -32,7 +32,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
         const data = {
             ticketsDetails: [...allTicketDetails],
             discount: discount,
-            discount_code: discountCode,
+            discount_code: discountCodeApplied,
             subTotal: grandTotal,
             totalAmount: totalAmount
         };
@@ -93,7 +93,6 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
         let url = organizerView ? route("organizer.events.validateCode.post", discountCode) : route("attendee.validateCode.post", discountCode)
         axios.post(url).then((response) => {
             let codeObj = response.data.code;
-            let newV = 0;
             let disc = parseFloat(codeObj.discount_value);
             switch (codeObj.discount_type) {
                 case "fixed":
@@ -126,6 +125,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
         console.log(grandTotal, disc, newV);
         setDiscount(disc);
         setTotalAmount(newV);
+        setDiscountCodeApplied(discountCode);
         setDiscountCode('');
         toast.success("Coupon Code applied successfuly");
     }
