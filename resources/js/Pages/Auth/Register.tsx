@@ -132,9 +132,9 @@ export default function Register() {
                                                         <Link href="#" className="text-primary text-decoration-underline fst-normal fw-medium ms-2"> Terms of Use</Link></p>
                                                 </div>
 
-                                                <Button type="submit" className="btn btn-success w-100" disabled={processing}>
+                                                {/* <Button type="submit" className="btn btn-success w-100" disabled={processing}>
                                                     Sign Up
-                                                </Button>
+                                                </Button> */}
 
                                                 <div className="mt-4 text-center">
                                                     <div className="signin-other-title">
