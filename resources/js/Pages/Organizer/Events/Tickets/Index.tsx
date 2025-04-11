@@ -9,6 +9,7 @@ import DeleteManyModal from "../../../../Components/Common/DeleteManyModal";
 import HasPermission from "../../../../Components/HasPermission";
 import CreateEditModal from "./CreateEditModal";
 import moment from "moment";
+import { DialogBackdrop } from "@headlessui/react";
 
 function Index({ tickets, sessions, addons, fees }: any) {
 
@@ -143,17 +144,22 @@ function Index({ tickets, sessions, addons, fees }: any) {
         },
         {
             header: () => "Start Increment",
-            cell: (ticket) =>
-                moment(ticket.start_increment).format("DD, MMM, YYYY"),
+            cell: (ticket) => ticket.start_increment ? moment(ticket.start_increment).format("MMM DD, YYYY") : "N/A",
         },
         {
             header: () => "End Increment",
-            cell: (ticket) =>
-                moment(ticket.end_increment).format("DD MMM, YYYY"),
+            cell: (ticket) => ticket.end_increment ? moment(ticket.end_increment).format("MMM DD, YYYY") : "N/A",
         },
         {
             header: () => "Show To Attendee",
-            cell: (ticket) => ticket.show_on_attendee_side ? 'Yes' : 'No',
+            cell: (ticket) => (
+                <div className="w-100 text-center">
+                    {ticket.show_on_attendee_side && <span className="w-50 badge rounded-pill bg-secondary border border-secondary text-white text-capitalize fs-6 mt-1">Yes</span >
+                    }
+                    {!ticket.show_on_attendee_side && <span className="w-50 badge rounded-pill bg-light border border-secondary text-black text-capitalize fs-6 mt-1">No</span >
+                    }
+                </div>
+            )
         },
         {
             header: () => "Action",

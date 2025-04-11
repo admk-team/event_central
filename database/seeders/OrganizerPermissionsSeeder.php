@@ -56,7 +56,7 @@ class OrganizerPermissionsSeeder extends Seeder
         'create_speakers',
         'edit_speakers',
         'delete_speakers',
-        
+
         // Partner
         'view_partner',
         'create_partner',
@@ -91,6 +91,11 @@ class OrganizerPermissionsSeeder extends Seeder
         // Website
         'view_website',
         'edit_website',
+        // Questionnaire Form
+        'edit_questionnaire_form',
+        // Questionnaire Form
+        'questionnaire_response',
+        'delete_questionnaire_response',
     ];
 
     public function run(): void

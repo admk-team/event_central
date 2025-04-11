@@ -7,7 +7,7 @@ use App\Models\Form;
 use App\Models\FormField;
 use Illuminate\Http\Request;
 
-class FormFieldController extends Controller
+class QuestionnaireFormFieldController extends Controller
 {
     /**
      * Store a newly created resource in storage.
@@ -24,7 +24,7 @@ class FormFieldController extends Controller
             'is_required' => 'required|boolean',
         ]);
 
-        $form = Form::where('event_app_id', session('event_id'))->where('type', 'registration')->first();
+        $form = Form::where('event_app_id', session('event_id'))->where('type', 'questionnaire')->first();
         
         $form->fields()->create($request->input());
 
@@ -34,8 +34,9 @@ class FormFieldController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, FormField $form_field)
+    public function update(Request $request, $id)
     {
+        $questionnaire_form_fields = FormField::find($id);
         $request->validate([
             'type' => 'required',
             'label' => 'required',
@@ -46,7 +47,7 @@ class FormFieldController extends Controller
             'is_required' => 'required|boolean',
         ]);
         
-        $form_field->update($request->input());
+        $questionnaire_form_fields->update($request->input());
 
         return back()->withSuccess("Updated");
     }

@@ -209,6 +209,6 @@ class EventController extends Controller
     public function destroyImage(EventApp $event_app, EventAppImage $eventAppImage)
     {
         $eventAppImage->delete();
-        return back();
+        return back()->withSuccess('Deleted successfully.');
     }
 }

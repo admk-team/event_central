@@ -15,10 +15,12 @@ const Navdata = () => {
     const [isTickets, setIsTickets] = useState<boolean>(false);
     const [isEvent, setIsEvent] = useState<boolean>(false);
     const [isForm, setIsForm] = useState<boolean>(false);
+    const [IsQuestionnaireForm, setIsQuestionnaireForm] = useState<boolean>(false);
     const [IsWebsite, setIsWebsite] = useState<boolean>(false);
     const [IsSessionAttendance, setIsSessionAttendance] = useState<boolean>(false);
     const [IspayemntSettings, setIspayemntSettings] = useState<boolean>(false);
     const [isSettingsMenu, setIsSettingsMenu] = useState<boolean>(false);
+    const [IsQuestionnaireResponse, setIsQuestionnaireResponse] = useState<boolean>(false);
     const [isAssignTicket, setIsAssignTicket] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
@@ -50,6 +52,8 @@ const Navdata = () => {
         if (iscurrentState !== 'payemntSettings') setIspayemntSettings(false);
         if (iscurrentState !== 'sessionAttendance') setIsSessionAttendance(false);
         if (iscurrentState !== 'Tickets') setIsTickets(false);
+        if (iscurrentState !== 'Questionnaire') setIsQuestionnaireForm(false);
+        if (iscurrentState !== 'Questionnaire_response') setIsQuestionnaireResponse(false);
         if (iscurrentState !== 'assignTickets') setIsTickets(false);
     }, [
         iscurrentState,
@@ -311,8 +315,8 @@ const Navdata = () => {
         {
             id: "assignTickets",
             label: "Assign Tickets",
-            icon: "bx bx-cog",
-            link: route('organizer.events.attendee.tickets.assign'),
+            icon: "bx bxs-server",
+            link: route('organizer.events.attendee.tickets.assign', null),
             stateVariables: isAssignTicket,
             click: function (e: any) {
                 e.preventDefault();
@@ -331,6 +335,40 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
+        // ...(isEventStarted ? [{
+            {
+            id: "Questionnaire",
+            label: "Questionnaire Form",
+            icon: "bx bxs-notepad",
+            link: route('organizer.events.settings.questionnaire-form.index'),
+            stateVariables: isForm,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsQuestionnaireForm(!isForm);
+                setIscurrentState('Questionnaire');
+                updateIconSidebar(e);
+            },
+            hasPermissions: [
+                'edit_questionnaire_form'
+            ],
+        },
+        {
+            id: "Questionnaire_response",
+            label: "Questionnaire Response",
+            icon: "bx bxs-notepad",
+            link: route('organizer.events.settings.questionnaire-form.response'),
+            stateVariables: isForm,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsQuestionnaireResponse(!isForm);
+                setIscurrentState('Questionnaire_response');
+                updateIconSidebar(e);
+            },
+            hasPermissions: [
+                'questionnaire_response'
+            ],
+        },
+        // }] : []),
     ];
 
     return <React.Fragment>{menuItems}</React.Fragment>;

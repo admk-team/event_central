@@ -62,16 +62,19 @@ class DashboardController extends Controller
 
     public function sessionAttendance()
     {
-        $eventSessions = EventSession::currentEvent()->get();
-
+        // Fetch the top 10 sessions for the current event based on attendance counts
+        $eventSessions = EventSession::currentEvent()
+            ->withCount(['attendances as attendance_count' => function ($query) {
+                $query->whereNotNull('checked_in'); // Assuming checked_in indicates attendance
+            }])
+            ->orderBy('attendance_count', 'desc') // Sort by attendance count in descending order
+            ->take(5) // Limit to top 5 sessions
+            ->get();
+    
         // Prepare data for the chart
-        $sessionNames = $eventSessions->pluck('name')->toArray(); // Array of session names
-        $attendanceCounts = $eventSessions->map(function ($session) {
-            return SessionCheckIn::where('session_id', $session->id)
-                ->whereHas('session', fn($query) => $query->currentEvent())
-                ->count(); // Count attendees per session
-        })->toArray(); // Array of attendance counts
-
+        $sessionNames = $eventSessions->pluck('name')->toArray(); // Array of top 10 session names
+        $attendanceCounts = $eventSessions->pluck('attendance_count')->toArray(); // Array of top 10 attendance counts
+    
         // Return in ApexCharts series format
         return [
             'sessionNames' => $sessionNames,
@@ -85,20 +88,22 @@ class DashboardController extends Controller
     }
     public function topSession()
     {
-        // Fetch sessions for the current event with attendance counts in one go
+        // Fetch the top 10 sessions for the current event with attendance counts
         $eventSessions = EventSession::currentEvent()
             ->withCount(['attendances as joined_count' => function ($query) {
                 $query->whereNotNull('checked_in'); // Count only checked-in attendees
             }])
+            ->orderBy('joined_count', 'desc') // Sort by joined_count in descending order
+            ->take(10) // Limit to top 10 sessions
             ->get();
-
+    
         // Get total registered attendees for the event
         $totalAttendee = EventApp::where('organizer_id', Auth::user()->id)
             ->where('id', session('event_id'))
             ->withCount('attendees')
             ->get()
             ->sum('attendees_count');
-
+    
         // Prepare data for the table
         $sessionsData = $eventSessions->map(function ($session) use ($totalAttendee) {
             return [
@@ -107,12 +112,7 @@ class DashboardController extends Controller
                 'joinedAttendees' => $session->joined_count ?? 0, // Attendees who joined this session
             ];
         })->toArray();
-
-        // Sort by joinedAttendees in descending order (highest first)
-        usort($sessionsData, function ($a, $b) {
-            return $b['joinedAttendees'] <=> $a['joinedAttendees'];
-        });
-
+    
         return $sessionsData;
     }
     public function ticketsMetrics()

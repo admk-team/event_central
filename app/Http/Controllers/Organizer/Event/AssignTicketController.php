@@ -18,14 +18,19 @@ class AssignTicketController extends Controller
         $this->paymentController = new PaymentController($stripePaymentService, $payPalService);
     }
 
-    public function assignTickets()
+    public function assignTickets($attendee_id = null)
     {
-        return $this->paymentController->viewTickets(true);
+        return $this->paymentController->viewTickets(true, $attendee_id);
     }
 
     public function checkout(Request $request, Attendee $attendee, $paymnet_method)
     {
         return $this->paymentController->checkout($request, true, $attendee, $paymnet_method);
+    }
+
+    public function checkoutFreeTicket(Request $request, Attendee $attendee, $paymnet_method)
+    {
+        return $this->paymentController->checkoutFreeTicket($request, true, $attendee, $paymnet_method);
     }
 
     public function showCheckoutPage($paymentUuId)

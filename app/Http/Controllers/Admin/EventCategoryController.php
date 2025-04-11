@@ -36,7 +36,7 @@ class EventCategoryController extends Controller
     {
         $data = $request->validated();
         EventAppCategory::create($data);
-        return back();
+        return back()->withSuccess('Created successfully.');
     }
 
     /**
@@ -64,7 +64,7 @@ class EventCategoryController extends Controller
         $editEvent = EventAppCategory::find($eventcategory);
         $editEvent->name = $request->name;
         $editEvent->save();
-        return back();
+        return back()->withSuccess('Updated successfully.');
     }
 
     /**
@@ -73,7 +73,7 @@ class EventCategoryController extends Controller
     public function destroy(string $eventcategory)
     {
         EventAppCategory::destroy($eventcategory);
-        return back();
+        return back()->withSuccess('Deleted successfully.');
     }
 
     public function destroyMany(Request $request)

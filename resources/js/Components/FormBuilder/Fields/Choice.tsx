@@ -1,5 +1,5 @@
 import { Form, FormGroup } from "react-bootstrap";
-import { useFormBuilder } from "../RenderForm";
+import { useFormBuilder } from "../../../hooks/useFormBuilder";
 
 export default function Choice({ name, field }: any) {
     const { data, setData, errors } = useFormBuilder();

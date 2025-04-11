@@ -54,6 +54,7 @@ class AttendeeController extends Controller
             'position' => $request->position,
             'phone' => $request->phone,
             'bio' => $request->bio,
+            'location' => $request->location,
             'password' => Hash::make("12345678"),
         ]);
         return back()->withSuccess('attendee created successfully.');
@@ -70,7 +71,7 @@ class AttendeeController extends Controller
 
         $attendee->update($input);
 
-        return back();
+        return back()->withSuccess('attendee updated successfully.');
     }
 
     public function updateAttendee(Request $request, $id)
