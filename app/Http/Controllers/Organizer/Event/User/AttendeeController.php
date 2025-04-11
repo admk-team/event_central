@@ -41,6 +41,7 @@ class AttendeeController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:attendees,email',
+            'password' => 'required|email|max:255|unique:attendees,email',
         ]);
         if (!session()->has('event_id')) {
             return redirect()->back()->withErrors(['error' => 'Event ID not found in session.']);
@@ -80,13 +81,22 @@ class AttendeeController extends Controller
             abort(403);
         }
 
+        $data = $request->all();
+
+        // Remove password if it's null or empty
+        if ($data['password'] == null) {
+            unset($data['password']);
+        } else {
+            $data['password'] = Hash::make($data['password']);
+        }
+
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
         ]);
 
         $user = Attendee::findOrFail($id);
-        $user->update($request->all());
+        $user->update($data);
 
         return back()->withSuccess('Attendee updated successfully');
     }
