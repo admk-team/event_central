@@ -101,8 +101,6 @@ const HeaderAttendee = ({ onChangeLayoutMode, layoutModeType, headerClass }: any
                                     <span></span>
                                 </span>
                             </button>
-
-
                             {/* <SearchOption /> */}
                         </div>
 

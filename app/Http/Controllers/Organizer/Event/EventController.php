@@ -104,7 +104,7 @@ class EventController extends Controller
             abort(403);
         }
 
-        // Log::info($request->all());
+        Log::info($request->all());
 
         $data = $request->validated();
 
@@ -137,7 +137,7 @@ class EventController extends Controller
         if (! Auth::user()->can('delete_events', $event_app)) {
             abort(403);
         }
-        
+
         try {
             $event_app->delete();
             return back()->withMessage('Event Removed Successfully');
