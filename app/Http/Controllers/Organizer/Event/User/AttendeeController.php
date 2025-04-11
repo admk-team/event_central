@@ -41,7 +41,6 @@ class AttendeeController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:attendees,email',
-            'password' => 'required|email|max:255|unique:attendees,email',
         ]);
         if (!session()->has('event_id')) {
             return redirect()->back()->withErrors(['error' => 'Event ID not found in session.']);
