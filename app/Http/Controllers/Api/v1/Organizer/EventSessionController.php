@@ -125,7 +125,7 @@ class EventSessionController extends Controller
         $checkin = $session->attendances()->where('id', $request->check_in_id)->first();
 
         if (! $checkin) {
-            return $this->errorResponse("Attendee has not checked in", 500);
+            return $this->errorResponse("Attendee has not checked in", 422);
         }
 
         $checkin->checked_out = now();

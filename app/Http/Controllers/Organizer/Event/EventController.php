@@ -55,6 +55,10 @@ class EventController extends Controller
         // Create Event
         $event = EventApp::create($data);
 
+        if (! Auth::user()->hasRole('owner')) { // Give access to creator
+            $event->giveAccessTo(Auth::user());
+        }
+
         // Save event start date in separate table
         EventAppDate::create(['event_app_id' => $event->id, 'date' => $data['start_date']]);
 
