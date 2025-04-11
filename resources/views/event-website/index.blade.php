@@ -185,27 +185,29 @@
         </div>
         <div class="pricing-tiers">
             @foreach ($event->tickets ?? [] as $ticket)
-            <div class="pricing-card">
-                <div class="pricing-header">
-                    <h3>{{ $ticket->name }}</h3>
-                    <div class="pricing">
-                        <span class="price">${{ $ticket->base_price }}</span>
+                @if($ticket->show_on_attendee_side)
+                <div class="pricing-card">
+                    <div class="pricing-header">
+                        <h3>{{ $ticket->name }}</h3>
+                        <div class="pricing">
+                            <span class="price">${{ $ticket->base_price }}</span>
+                        </div>
                     </div>
+                    <ul class="pricing-features">
+                        @foreach ($ticket->sessions ?? [] as $session)
+                        <li type="button" data-bs-toggle="modal" data-bs-target="#sessionModal{{ $session->id }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <span>{{ $session->name }}</span>
+                        </li>
+                        @endforeach
+                    </ul>
+                    <a href="{{ route('attendee.register', $event) }}" class="btn btn-primary btn-block">Register Now</a>
                 </div>
-                <ul class="pricing-features">
-                    @foreach ($ticket->sessions ?? [] as $session)
-                    <li type="button" data-bs-toggle="modal" data-bs-target="#sessionModal{{ $session->id }}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                            stroke-linecap="round" stroke-linejoin="round">
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                        <span>{{ $session->name }}</span>
-                    </li>
-                    @endforeach
-                </ul>
-                <a href="{{ route('attendee.register', $event) }}" class="btn btn-primary btn-block">Register Now</a>
-            </div>
+                @endif
             @endforeach
 
 

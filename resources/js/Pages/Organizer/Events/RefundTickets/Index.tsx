@@ -31,6 +31,10 @@ function Index({ refundPayments }: any) {
             cellClass: "fw-medium"
         },
         {
+            header: () => 'Attendee Name',
+            cell: (payment) => payment?.attendee ? payment?.attendee?.first_name + ' ' + payment?.attendee?.last_name : '',
+        },
+        {
             header: () => 'Total',
             cell: (payment) => payment?.attendee_payment ? payment?.attendee_payment?.amount_paid : '',
         },

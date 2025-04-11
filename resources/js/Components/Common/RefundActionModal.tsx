@@ -58,7 +58,7 @@ const RefundActionModal: React.FC<RefundActionModalProps> = ({ show, onCloseClic
                         type="button"
                         className="btn w-sm btn-danger "
                         id="delete-record"
-                        onClick={() => handleRefundAction('approve')}
+                        onClick={() => handleRefundAction('approved')}
                         disabled={processing}
                     >
                         Approve
@@ -67,7 +67,7 @@ const RefundActionModal: React.FC<RefundActionModalProps> = ({ show, onCloseClic
                         type="button"
                         className="btn w-sm btn-danger "
                         id="delete-record"
-                        onClick={() => handleRefundAction('reject')}
+                        onClick={() => handleRefundAction('rejected')}
                         disabled={processing}
                     >
                         Reject
