@@ -28,4 +28,9 @@ class AttendeeRefundTicket extends Model
     {
         return $this->belongsTo(EventApp::class);
     }
+
+    public function scopeCurrentEvent($query)
+    {
+        $query->where('event_app_id', session('event_id'));
+    }
 }
