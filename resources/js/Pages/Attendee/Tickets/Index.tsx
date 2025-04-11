@@ -167,9 +167,8 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
     const customSelect2Styles = {
         control: (base: any) => ({
             ...base,
-            // minHeight: 50,       // increase height
-            // fontSize: '1.1rem',  // increase text size
-            // padding: '0.7rem 0.7rem 1.2rem'
+            fontWeight: '400',
+            fontSize: '1.03125rem', // increase text size
             border: 'var(--vz- primary - border - subtle)'
         }),
         valueContainer: (base: any) => ({
