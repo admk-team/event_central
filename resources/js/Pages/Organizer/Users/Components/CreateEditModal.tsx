@@ -132,10 +132,10 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                                 <div>Events</div>
                                 <div className="form-check form-switch mb-0">
                                     <Form.Check.Input
-                                        className="form-check-input" 
-                                        type="checkbox" 
-                                        role="switch" 
-                                        id="selectAllEvents" 
+                                        className="form-check-input"
+                                        type="checkbox"
+                                        role="switch"
+                                        id="selectAllEvents"
                                         checked={data.accessible_events.length === events.length}
                                         onChange={(e) => {
                                             if (e.target.checked) {
@@ -174,10 +174,10 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                                 <div>Event Sessions</div>
                                 <div className="form-check form-switch mb-0">
                                     <Form.Check.Input
-                                        className="form-check-input" 
-                                        type="checkbox" 
-                                        role="switch" 
-                                        id="selectAllEventSessions" 
+                                        className="form-check-input"
+                                        type="checkbox"
+                                        role="switch"
+                                        id="selectAllEventSessions"
                                         checked={data.accessible_event_sessions.length === eventSessions.length}
                                         onChange={(e) => {
                                             if (e.target.checked) {

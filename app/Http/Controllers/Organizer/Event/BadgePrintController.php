@@ -24,6 +24,7 @@ class BadgePrintController extends Controller
                 return [
                     'name' => $attendee->first_name . ' ' . $attendee->last_name,
                     'position' => $attendee->position,
+                    'location' => $attendee->location,
                     'qr_codes' => $attendee->payments
                         ->filter(fn($payment) => $payment->status === 'paid') // filter only paid payments
                         ->flatMap(function ($payment) {

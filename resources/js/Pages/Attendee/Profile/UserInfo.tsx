@@ -40,7 +40,7 @@ const UserInfo = (props: any) => {
         facebook_link: user?.facebook_link ?? '',
         linkedin_link: user?.linkedin_link ?? '',
         twitter_link: user?.twitter_link ?? '',
-        country: user?.country ?? '',
+        location: user?.location ?? '',
         phone: user?.phone ?? '',
         bio: user?.bio ?? '',
         email: user?.email ?? '',
@@ -149,21 +149,21 @@ const UserInfo = (props: any) => {
                         </Col>
                     </Row>
                     <Row>
-                        <Col md={6} lg={6}>
-                            {/* <Form.Label htmlFor="country" value="Country" className='form-label'> Country </Form.Label> */}
+                        <Col md={6} lg={12}>
+                            {/* <Form.Label htmlFor="location" value="location" className='form-label'> location </Form.Label> */}
                             <Form.Control
-                                id="country"
+                                id="location"
                                 type="text"
-                                name="country"
-                                placeholder="Enter country"
-                                value={data.country}
-                                className={'mt-1 form-control' + (errors.country ? 'is-invalid' : '')}
+                                name="location"
+                                placeholder="Enter City, State/Province, Country"
+                                value={data.location}
+                                className={'mt-1 form-control' + (errors.location ? 'is-invalid' : '')}
                                 autoComplete="company"
-                                onChange={(e: any) => setData('country', e.target.value)}
+                                onChange={(e: any) => setData('location', e.target.value)}
                             />
-                            <Form.Control.Feedback type="invalid" className='mt-2 d-block'>{errors.country}</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid" className='mt-2 d-block'>{errors.location}</Form.Control.Feedback>
                         </Col>
-                        <Col md={6} lg={6}>
+                        <Col md={6} lg={12}>
                             {/* <Form.Label htmlFor="phone" value="Phone" className='form-label'> Phone </Form.Label> */}
                             {/* <span className="text-danger ms-1">*</span> */}
                             <Form.Control
