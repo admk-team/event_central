@@ -113,7 +113,7 @@ function Index({ attendees, eventApp }: { attendees: any; eventApp: any }) {
                                 ) : (
                                     filteredAttendees.map((attendee: any, index: number) => (
                                         <React.Fragment key={index}>
-                                            <div key={index} className="mb-4 p-3 border rounded bg-white shadow-sm">
+                                            <div key={index} className="mb-4 p-3 border rounded bg-transparent shadow-sm">
                                                 <Row>
                                                     <Col md={4}>
                                                         <strong>Name:</strong> {attendee.name} <br />
@@ -181,7 +181,7 @@ function Index({ attendees, eventApp }: { attendees: any; eventApp: any }) {
                         <div key={idx} className="passWrapper print-page-break">
                             <div className="passes-container">
                                 <div
-                                    className={`pass ${showGradient ? "div-gradient" : "bg-white"} mt-4 mb-4`}
+                                    className={`pass ${showGradient ? "div-gradient" : "bg-transparent"} mt-4 mb-4`}
                                 >
                                     <div className="heading-wraper">
                                         {showLogo && (
