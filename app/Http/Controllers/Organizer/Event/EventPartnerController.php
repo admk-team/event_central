@@ -99,7 +99,7 @@ class EventPartnerController extends Controller
         }
 
         $partner->delete();
-        return back();
+        return back()->withSuccess('Deleted successfully.');
     }
 
     public function destroyMany(Request $request)
@@ -115,5 +115,6 @@ class EventPartnerController extends Controller
         foreach ($request->ids as $id) {
             EventPartner::find($id)?->delete();
         }
+        return back()->withSuccess('Deleted successfully.');
     }
 }

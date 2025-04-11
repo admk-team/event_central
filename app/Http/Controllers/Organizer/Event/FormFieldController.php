@@ -28,7 +28,7 @@ class FormFieldController extends Controller
         
         $form->fields()->create($request->input());
 
-        return back();
+        return back()->withSuccess('Created successfully.');
     }
 
     /**
@@ -66,6 +66,6 @@ class FormFieldController extends Controller
             $form->save();
         }
 
-        return back();
+        return back()->withSuccess('Deleted successfully.');
     }
 }
