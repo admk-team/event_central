@@ -202,4 +202,21 @@ class EventController extends Controller
             }
         }
     }
+
+    public function storeImage(Request $request, EventApp $event_app)
+    {
+        if (! Auth::user()->can('edit_events', $event_app)) {
+            abort(403);
+        }
+
+        $this->SaveOtherImages($event_app, $request);
+
+        return back()->withSuccess('Image uploaded');
+    }
+
+    public function destroyImage(EventApp $event_app, EventAppImage $eventAppImage)
+    {
+        $eventAppImage->delete();
+        return back();
+    }
 }

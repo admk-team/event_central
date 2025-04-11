@@ -106,14 +106,12 @@ function Index({ attendees }: any) {
             ),
         },
         {
-            header: () => 'QR Code',
-            cell: (attendee) => (
-                <img src={attendee.qr_code} alt="qr_code" width="50" height="50" />
-            ),
-        },
-        {
             header: () => 'First Name',
             cell: (attendee) => attendee.first_name,
+        },
+        {
+            header: () => 'Last Name',
+            cell: (attendee) => attendee.last_name,
         },
         {
             header: () => 'Email',
@@ -140,6 +138,7 @@ function Index({ attendees }: any) {
             cell: (attendee) => (
                 <div className="hstack gap-3 fs-15">
                     <Link href={route('organizer.events.attendee.info', { id: attendee.id })} className="link-primary cursor-pointer"><i className="ri-eye-fill"></i></Link>
+                    <Link href={route('organizer.events.attendee.qrcode', { id: attendee.id })} className="link-primary cursor-pointer"><i className="ri-qr-code-line"></i></Link>
                     <span className="link-primary cursor-pointer" onClick={() => editAction(attendee)} ><i className="ri-edit-fill"></i></span>
                     <span className="link-danger cursor-pointer" onClick={() => deleteAction(attendee)}>
                         <i className="ri-delete-bin-5-line"></i>

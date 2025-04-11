@@ -158,4 +158,10 @@ class User extends Authenticatable
         return $this->morphedByMany(EventSession::class, 'model', 'model_permissions', 'authorizable_id')
             ->where('authorizable_type', User::class);
     }
+
+    public function fees()
+    {
+        return $this->hasMany(EventAppFee::class);
+    }
+    
 }

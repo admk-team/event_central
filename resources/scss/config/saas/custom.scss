@@ -53,7 +53,7 @@ File: Custom Css File
     .schedule .show-platform-sidebar .sidebar {
         display: block;
     }
-    
+
     .schedule .show-platform-sidebar .sessions {
         display: none;
     }
@@ -199,4 +199,71 @@ File: Custom Css File
 }
 .rs-btn-primary {
     background-color: var(--vz-success) !important;
+}
+
+.printable{
+    display: none;
+}
+.printable-single{
+    display: none;
+}
+
+.print-only {
+    display: none;
+}
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    .printable,
+    .printable * {
+        display: block;
+        visibility: visible;
+    }
+
+    .printable {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+
+    .print-page-break {
+        page-break-after: always;
+    }
+
+    .no-print {
+        display: none !important;
+    }
+
+    body * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+
+    #temp-print-badge,
+    #temp-print-badge * {
+        visibility: visible;
+    }
+
+    #temp-print-badge {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+    }
+
+    #print-container,
+    #print-container * {
+        visibility: visible !important;
+    }
+
+    #print-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+    }
 }

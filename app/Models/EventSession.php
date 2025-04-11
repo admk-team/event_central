@@ -89,4 +89,9 @@ class EventSession extends Model
     {
         return $this->belongsToMany(EventAppTicket::class, 'session_ticket');
     }
+
+    public function tracks()
+    {
+        return $this->belongsToMany(Track::class, 'event_session_tracks');
+    }
 }

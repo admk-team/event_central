@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Organizer\Event;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organizer\Event\EventAppTicketRequest;
 use App\Models\Addon;
+use App\Models\EventAppFee;
 use App\Models\EventAppTicket;
 use App\Models\EventSession;
 use App\Models\TicketFeature;
@@ -28,11 +29,21 @@ class EventAppTicketController extends Controller
 
         $speakers = null;
 
-        $tickets = $this->datatable(EventAppTicket::currentEvent()->with(['event', 'sessions']));
+        $tickets = $this->datatable(EventAppTicket::currentEvent()->with(['event', 'sessions', 'fees']));
         $sessions = EventSession::currentEvent()->select(['id as value', 'name as label'])->get();
-        $addons = Addon::currentEvent()->select(['id as value', 'name as label'])->get();
 
-        return Inertia::render('Organizer/Events/Tickets/Index', compact(['tickets', 'sessions', 'addons']));
+        $addons_collection = Addon::currentEvent()->orderBy('name')->get();
+        $addons = $addons_collection->map(function ($addon) {
+            return ['value' => $addon->id, 'label' => $addon->full_name];
+        });
+
+        $fees = EventAppFee::where('status', 'active')->currentEvent()->orderBy('name')->get();
+        return Inertia::render('Organizer/Events/Tickets/Index', compact([
+            'tickets',
+            'sessions',
+            'addons',
+            'fees'
+        ]));
     }
 
     /**
@@ -49,12 +60,14 @@ class EventAppTicketController extends Controller
         $data['event_app_id'] = session('event_id');
         $data['sessions'] = $this->transformSessions($data);
         $data['addons'] = $this->transformAddons($data);
+        $data['fees'] = $this->transformFees($data);
 
         // Log::info($data['sessions']);
         $ticket = EventAppTicket::create($data);
 
         $ticket->sessions()->sync($data['sessions']);
         $ticket->addons()->sync($data['addons']);
+        $ticket->fees()->sync($data['fees']);
 
         return back()->withSuccess('Ticket created successfully');
     }
@@ -72,10 +85,13 @@ class EventAppTicketController extends Controller
 
         $data['sessions'] = $this->transformSessions($data);
         $data['addons'] = $this->transformAddons($data);
+        $data['fees'] = $this->transformFees($data);
+
         $ticket->update($data);
 
         $ticket->sessions()->sync($data['sessions']);
         $ticket->addons()->sync($data['addons']);
+        $ticket->fees()->sync($data['fees']);
 
         return back()->withSuccess('Ticket Updated successfully');
     }
@@ -125,6 +141,15 @@ class EventAppTicketController extends Controller
         $temp = [];
         foreach ($sessions as $session) {
             array_push($temp, $session['value']);
+        }
+        return $temp;
+    }
+    private function transformFees($data)
+    {
+        $fees = array_values($data['fees']);
+        $temp = [];
+        foreach ($fees as $fee) {
+            array_push($temp, $fee['id']);
         }
         return $temp;
     }

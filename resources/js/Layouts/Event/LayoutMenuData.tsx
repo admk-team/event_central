@@ -21,6 +21,7 @@ const Navdata = () => {
     const [IspayemntSettings, setIspayemntSettings] = useState<boolean>(false);
     const [isSettingsMenu, setIsSettingsMenu] = useState<boolean>(false);
     const [IsQuestionnaireResponse, setIsQuestionnaireResponse] = useState<boolean>(false);
+    const [isAssignTicket, setIsAssignTicket] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
 
@@ -53,6 +54,7 @@ const Navdata = () => {
         if (iscurrentState !== 'Tickets') setIsTickets(false);
         if (iscurrentState !== 'Questionnaire') setIsQuestionnaireForm(false);
         if (iscurrentState !== 'Questionnaire_response') setIsQuestionnaireResponse(false);
+        if (iscurrentState !== 'assignTickets') setIsTickets(false);
     }, [
         iscurrentState,
         isDashboard,
@@ -64,6 +66,7 @@ const Navdata = () => {
         IspayemntSettings,
         IsSessionAttendance,
         isTickets,
+        isAssignTicket
     ]);
 
     // Dynamic current date
@@ -123,59 +126,69 @@ const Navdata = () => {
                 'view_tickets',
             ],
             subItems: [
-                { 
-                    id: "schedule", 
-                    label: "Schedule", 
-                    link: route('organizer.events.schedule.index'), 
+                {
+                    id: "schedule",
+                    label: "Schedule",
+                    link: route('organizer.events.schedule.index'),
                     parentId: "Content",
                     hasPermissions: [
                         'view_event_sessions',
                     ],
                 },
-                { 
-                    id: "speakers", 
-                    label: "Speakers", 
-                    link: route('organizer.events.speaker.index'), 
+                {
+                    id: "speakers",
+                    label: "Speakers",
+                    link: route('organizer.events.speaker.index'),
                     parentId: "Content",
                     hasPermissions: [
                         'view_speakers',
                     ],
                 },
-                { 
-                    id: "partners", 
-                    label: "Partners", 
-                    link: route('organizer.events.partner.index'), 
+                {
+                    id: "partners",
+                    label: "Partners",
+                    link: route('organizer.events.partner.index'),
                     parentId: "Content",
                     hasPermissions: [
                         'view_partner',
                     ],
                 },
-                { 
-                    id: "tickets", 
-                    label: "Tickets", 
-                    link: route('organizer.events.tickets.index'), 
+                {
+                    id: "tickets",
+                    label: "Tickets",
+                    link: route('organizer.events.tickets.index'),
                     parentId: "Content",
                     hasPermissions: [
                         'view_tickets',
                     ],
                 },
-                { 
-                    id: "ticket-addons", 
-                    label: "Ticket Add-ons", 
-                    link: route('organizer.events.addon.index'), 
+                {
+                    id: "ticket-fees",
+                    label: "Ticket Fees",
+                    link: route('organizer.events.ticket-fees.index'),
                     parentId: "Content",
                     hasPermissions: [
-                        'view_tickets',
-                    ], 
+                        'view_tickets', //To be changed after permission added
+                    ],
                 },
-                { 
-                    id: "promo-codes", 
-                    label: "Promo Codes", 
-                    link: route('organizer.events.promo-codes.index'), 
+                {
+                    id: "ticket-addons",
+                    label: "Ticket Add-ons",
+                    link: route('organizer.events.addon.index'),
+                    parentId: "Content",
+                    hasPermissions: [
+                        'view_tickets',  //To be changed after permission added
+                    ],
+                },
+
+                {
+                    id: "promo-codes",
+                    label: "Promo Codes",
+                    link: route('organizer.events.promo-codes.index'),
                     parentId: "Content",
                     hasPermissions: [
                         'view_tickets',
-                    ], 
+                    ],
                 },
             ]
         },
@@ -195,10 +208,10 @@ const Navdata = () => {
             //     'view_posts',
             // ],
             // subItems: [
-            //     { 
-            //         id: "newsfeed", 
-            //         label: "Posts", 
-            //         link: route('organizer.events.engagement.newsfeed.index'), 
+            //     {
+            //         id: "newsfeed",
+            //         label: "Posts",
+            //         link: route('organizer.events.engagement.newsfeed.index'),
             //         parentId: "dashboard",
             //         hasPermissions: [
             //             'view_posts'
@@ -283,21 +296,44 @@ const Navdata = () => {
                 'view_website'
             ],
         },
+        // {
+        //     id: "payemntSettings",
+        //     label: "Payment Settings",
+        //     icon: "bx bx-cog",
+        //     link: route('organizer.events.settings.payment.index'),
+        //     stateVariables: IspayemntSettings,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIspayemntSettings(!IspayemntSettings);
+        //         setIscurrentState('payemntSettings');
+        //         updateIconSidebar(e);
+        //     },
+        //     hasPermissions: [
+        //         'edit_payment_settings'
+        //     ],
+        // },
         {
-            id: "payemntSettings",
-            label: "Payment Settings",
+            id: "assignTickets",
+            label: "Assign Tickets",
             icon: "bx bx-cog",
-            link: route('organizer.events.settings.payment.index'),
-            stateVariables: IspayemntSettings,
+            link: route('organizer.events.attendee.tickets.assign'),
+            stateVariables: isAssignTicket,
             click: function (e: any) {
                 e.preventDefault();
-                setIspayemntSettings(!IspayemntSettings);
-                setIscurrentState('payemntSettings');
+                setIsAssignTicket(!isAssignTicket);
+                setIscurrentState('assignTickets');
+                updateIconSidebar(e);
+            }
+        },
+        {
+            id: "badgePrinting",
+            label: "Badge Printing",
+            icon: "bx bxs-printer",
+            link: route('organizer.events.badge.print'),
+            click: function (e: any) {
+                e.preventDefault();
                 updateIconSidebar(e);
             },
-            hasPermissions: [
-                'edit_payment_settings'
-            ],
         },
         // ...(isEventStarted ? [{
             {

@@ -28,7 +28,8 @@ class EventController extends Controller
 
     public function ticket(EventApp $eventApp)
     {
-        $eventApp->load(['public_tickets.sessions', 'public_tickets.addons']);
+
+        $eventApp->load(['public_tickets.sessions', 'public_tickets.addons', 'public_tickets.fees']);
         return $this->successResponse(new EventResource($eventApp));
     }
 

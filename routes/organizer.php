@@ -2,9 +2,12 @@
 
 use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\Organizer\Event\AddonController;
+use App\Http\Controllers\Organizer\Event\AssignTicketController;
+use App\Http\Controllers\Organizer\Event\BadgePrintController;
 use App\Http\Controllers\Organizer\Event\CustomMenuController;
 use App\Http\Controllers\Organizer\Event\DashboardController;
 use App\Http\Controllers\Organizer\Event\Engagement\NewsfeedController;
+use App\Http\Controllers\Organizer\Event\EventAppFeeController;
 use App\Http\Controllers\Organizer\Event\EventController;
 use App\Http\Controllers\Organizer\Event\EventPartnerCategoryController;
 use App\Http\Controllers\Organizer\Event\EventPartnerController;
@@ -28,6 +31,7 @@ use App\Http\Controllers\Organizer\Event\SessionAttendanceController;
 use App\Http\Controllers\Organizer\Event\Settings\QuestionnaireFormSettingsController;
 use App\Http\Controllers\Organizer\Event\Settings\RegistrationFormSettingsController;
 use App\Http\Controllers\Organizer\Event\Settings\WebsiteSettingsController;
+use App\Http\Controllers\Organizer\Event\TrackController;
 use App\Http\Controllers\Organizer\Event\WebsiteController;
 use App\Http\Controllers\Organizer\Event\WorkshopController;
 use App\Http\Controllers\Organizer\ProfileController;
@@ -42,6 +46,7 @@ Route::prefix('e/{uuid}')->name('organizer.events.website')->group(function () {
     Route::get('/', [WebsiteController::class, 'index']);
     Route::get('schedule', [WebsiteController::class, 'schedule'])->name('.schedule');
     Route::get('speakers', [WebsiteController::class, 'speakers'])->name('.speakers');
+    Route::get('sponsors', [WebsiteController::class, 'sponsors'])->name('.sponsors');
     Route::get('{slug}', [WebsiteController::class, 'page'])->name('.page');
 });
 
@@ -73,6 +78,10 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
         Route::delete('/delete/many', [EventController::class, 'destroyMany'])->name('destroy.many');
         Route::get('{id}/select', [EventController::class, 'selectEvent'])->name('select');
 
+        // Event Images
+        Route::post('{event_app}/images ', [EventController::class, 'storeImage'])->name('images.store');
+        Route::delete('{event_app}/images/{eventAppImage} ', [EventController::class, 'destroyImage'])->name('images.destroy');
+
         Route::middleware('event_is_selected')->group(function () {
             Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -88,6 +97,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::resource('attendees', AttendeeController::class);
             Route::delete('attendees/delete/many', [AttendeeController::class, 'destroyMany'])->name('attendees.destroy.many');
             Route::get('attendee/info/{id}', [AttendeeController::class, 'showInfo'])->name('attendee.info');
+            Route::get('attendee/qrcode/{attendee}', [AttendeeController::class, 'qrCodeAttendee'])->name('attendee.qrcode');
             Route::put('/attendee/profile/update/{id}', [AttendeeController::class, 'updateAttendee'])->name('attendee.profile.update');
             Route::post('/attendee/checkin', [AttendeeController::class, 'chechIn'])->name('attendee.checkin');
 
@@ -120,6 +130,10 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::resource('promo-codes', EventPromoCodeController::class)->only(['index', 'store', 'update', 'destroy']);
             Route::delete('promo-codes/delete/many', [EventPromoCodeController::class, 'destroyMany'])->name('promo-codes.destroy.many');
 
+            // Ticket Fees
+            Route::resource('ticket-fees', EventAppFeeController::class)->only(['index', 'store', 'update', 'destroy']);
+            Route::delete('ticket-fees/delete/many', [EventAppFeeController::class, 'destroyMany'])->name('ticket-fees.destroy.many');
+
             // Pages
             Route::resource('pages', PageController::class)->only(['store', 'update', 'destroy']);
             Route::delete('pages/delete/many', [PageController::class, 'destroyMany'])->name('pages.destroy.many');
@@ -145,6 +159,9 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             // Form Fields
             Route::resource('form-fields', FormFieldController::class)->only(['store', 'update', 'destroy']);
 
+            // Tracks
+            Route::resource('tracks', TrackController::class)->only('store', 'update', 'destroy');
+
             // Settings
             Route::prefix('settings')->name('settings.')->group(function () {
                 // Event
@@ -153,6 +170,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                     Route::delete('/', [EventSettingsController::class, 'destroyEvent'])->name('destroy');
                     Route::put('info', [EventSettingsController::class, 'updateInfo'])->name('info');
                     Route::get('generate-link', [EventSettingsController::class, 'generateLink'])->name('link');
+                    Route::post('toggle-tracks', [EventSettingsController::class, 'toggleTracks'])->name('toggle-tracks');
                 });
 
                 // Payment
@@ -187,6 +205,15 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             });
 
             Route::post('import/{importType}', [ImportController::class, 'import'])->name('import');
+
+            Route::get('badgeprint', [BadgePrintController::class, 'index'])->name('badge.print');
+
+            Route::get('assign-tickets', [AssignTicketController::class, 'assignTickets'])->name('attendee.tickets.assign');
+            Route::post('checkout/{attendee}/{paymnet_method}', [AssignTicketController::class, 'checkout'])->name('tickets.checkout');
+            Route::get('checkout/{paymentUuId}', [AssignTicketController::class, 'showCheckoutPage'])->name('tickets.checkout.page');
+            Route::get('/payment-success/{paymentUuId}', [AssignTicketController::class, 'paymentSuccess'])->name('payment.success');
+            Route::post('update-attendee-payment/{paymentUuId}', [AssignTicketController::class, 'updateAttendeePaymnet'])->name('update.payment');
+            Route::post('validate-discount-code/{disCode}', [AssignTicketController::class, 'validateDiscCode'])->name('validateCode.post');
         });
 
         // Q&A
@@ -215,4 +242,22 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
         Route::delete('/{post}', [NewsfeedController::class, 'destroy'])->name('destroy');
         Route::delete('/delete/many', [NewsfeedController::class, 'destroyMany'])->name('destroy.many');
     });
+
+    // Q&A
+    Route::get('/events/qa/{session_id}', [QuestionController::class, 'index'])->name('events.qa.index');
+    Route::post('/events/{event}/questions', [QuestionController::class, 'storeQuestion'])->name('events.qa.store');
+    Route::post('/events/questions/{questionId}/vote', [QuestionController::class, 'vote'])->name('events.qa.vote');
+    Route::post('/events/questions/{questionId}/answer', [QuestionController::class, 'storeAnswer'])->name('events.qa.answer');
+    Route::group(['prefix' => 'events/qa', 'as' => 'events.qa.'], function () {
+        Route::put('/question/{questionId}', [QuestionController::class, 'updateQuestion'])->name('updateQuestion');
+        Route::delete('/question/{questionId}', [QuestionController::class, 'destroyQuestion'])->name('destroyQuestion');
+        Route::put('/answer/{answerId}', [QuestionController::class, 'updateAnswer'])->name('updateAnswer');
+        Route::delete('/answer/{answerId}', [QuestionController::class, 'destroyAnswer'])->name('destroyAnswer');
+    });
+
+    //SessionAttendance
+    Route::get('/events/attendance', [SessionAttendanceController::class, 'index'])->name('events.attendance.index');
+    Route::delete('/events/attendance/{id}', [SessionAttendanceController::class, 'destroy'])->name('events.attendance.destroy');
+    Route::delete('/events/attendance/destroy/many', [SessionAttendanceController::class, 'destroyMany'])->name('events.attendance.destroy.many');
+    // Route::post('/events/attendance/destroy/many', [SessionAttendanceController::class, 'destroyMany'])->name('events.attendance.destroy.many');
 });

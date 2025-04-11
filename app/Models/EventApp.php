@@ -105,7 +105,7 @@ class EventApp extends Model
 
     public function attendees()
     {
-        return $this->hasMany(Attendee::class, 'event_app_id', 'id');
+        return $this->hasMany(Attendee::class, 'event_app_id', 'id')->orderBy('first_name');
     }
 
     public function category()

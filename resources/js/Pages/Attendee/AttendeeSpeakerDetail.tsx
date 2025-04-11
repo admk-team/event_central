@@ -5,7 +5,7 @@ import Rating from "react-rating";
 //https://codesandbox.io/p/sandbox/react-drag-and-drop-sortablelist-g205n
 //import Components
 
-import { Head, useForm, Link, router } from '@inertiajs/react';
+import { Head, Link, } from '@inertiajs/react';
 import Layout from '../../Layouts/Attendee';
 
 import speakerAvatar from '../../../images/speaker_avatar.svg';
@@ -13,6 +13,7 @@ import moment from 'moment';
 
 
 const AttendeeSpeakerDetail = ({ eventApp, eventSpeaker }: any) => {
+
 
     const [sessions, setSessions] = useState([]);
     const [currentSpeaker, setCurrentSpeaker] = useState(eventSpeaker);
@@ -28,12 +29,19 @@ const AttendeeSpeakerDetail = ({ eventApp, eventSpeaker }: any) => {
 
     });
 
-    const speakerslist = eventApp.event_speakers.map((speaker: any) =>
+    const speakerslist = eventApp.event_speakers.map((speaker: any, index: any) =>
         <a href="#" key={speaker.id} onClick={(event) => handleSpeakerChange(event, speaker)}>
-            <ListGroup.Item className={"mb-1 " + (speaker.id === eventSpeaker.id ? 'active-list-item' : '')} >{speaker.name}</ListGroup.Item>
+            <ListGroup.Item className={"mb-1 " + ((!eventSpeaker.id && index === 0) || (eventSpeaker.id === speaker.id) ? 'active-list-item' : '')} >{speaker.name}</ListGroup.Item>
         </a>
     );
 
+    useEffect(() => {
+        if (!eventSpeaker.id) {
+            setCurrentSpeaker(eventApp.event_speakers[0]);
+        } else {
+            setCurrentSpeaker(eventSpeaker);
+        }
+    }, []);
 
     useEffect(() => {
         setSessions(currentSpeaker.event_sessions);
@@ -66,8 +74,8 @@ const AttendeeSpeakerDetail = ({ eventApp, eventSpeaker }: any) => {
                                     <Card >
                                         <CardBody>
                                             {currentSpeaker && <div className='p-4 flex-column d-flex justify-content-center align-items-center'>
-                                                <img src={speakerAvatar} alt="speaker Avatar" style={{ height: '150ps', borderRadius: '50%', marginBottom: '15px' }} />
-                                                <h5>{currentSpeaker.name}</h5>
+                                                <img src={currentSpeaker.avatar || speakerAvatar} alt="speaker Avatar" className='rounded-circle avatar-xl' width="150" />
+                                                <h5 className='m-3'>{currentSpeaker.name}</h5>
                                             </div>}
                                         </CardBody>
                                     </Card>
@@ -78,18 +86,21 @@ const AttendeeSpeakerDetail = ({ eventApp, eventSpeaker }: any) => {
                                         <Link href={route('attendee.event.detail.session', [session.id])} key={session.id}>
                                             <Card >
                                                 <CardBody>
-                                                    <Row className='d-flex justify-content-between'>
-                                                        <Col md={3} lg={3} className='d-flex flex-column'>
-                                                            <span className='fs-5'>{session.name}</span>
-                                                            <span className='text-secondary'>MAIN STAGE</span>
-                                                            <span style={{ color: 'var(--vz-success)' }}>{moment(session.start_date).format('hh:mm') + ' - ' + moment(session.end_date).format('hh:mm')}</span>
-                                                            <span className='fs-5'>{currentSpeaker.name}</span>
+                                                    <Row>
+                                                        <Col className='d-flex flex-column'>
+                                                            <span className='fs-4'>{session.name}</span>
+                                                            <span className='text-secondary'>{session.event_platform?.name ?? ''}</span>
+
                                                         </Col>
-                                                        <Col md={2} lg={2} className='d-flex flex-column align-items-end'>
+                                                        <Col className='d-flex flex-column align-items-end'>
                                                             {!session.selected_by_attendee && < i className='bx bx-heart fs-3 float-right'></i>}
                                                             {session.selected_by_attendee && < i className='bx bxs-heart fs-3 text-danger' style={{ float: 'right' }}></i>}
                                                             <span>{moment(session.start_date).format('MMM DD, YYYY')}</span>
+                                                            <span style={{ color: 'var(--vz-success)' }}>{moment(session.start_date_time).format('h:mm A') + ' - ' + moment(session.end_date_time).format('h:mm A')}</span>
                                                         </Col>
+                                                    </Row>
+                                                    <Row>
+                                                        <Col><p>{session.description}</p></Col>
                                                     </Row>
                                                 </CardBody>
                                             </Card>

@@ -59,6 +59,18 @@ function Index({ events, recurring_types, event_category_types }: any) {
         return desc.length > 25 ? desc.substring(0, 25) + "..." : desc;
     };
 
+    // Update current event if the events changes
+    React.useEffect(() => {
+        if (currentEvent) {
+            for (const event of events.data) {
+                if (event.id === currentEvent.id) {
+                    setCurrentEvent(event);
+                    break;
+                }
+            }
+        }
+    }, [events])
+
     const columns: ColumnDef<(typeof events.data)[0]> = [
         {
             accessorKey: "id",

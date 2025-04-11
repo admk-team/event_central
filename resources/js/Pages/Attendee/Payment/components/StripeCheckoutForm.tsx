@@ -5,9 +5,11 @@ import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import axios from "axios";
 import { router } from "@inertiajs/react";
 
-export default function CheckoutForm({ payment }: any) {
+export default function CheckoutForm({ payment, organizerView }: any) {
     const stripe = useStripe();
     const elements = useElements();
+
+    // console.log('view', organizerView);
 
     const [message, setMessage] = useState("");
     const [isProcessing, setIsProcessing] = useState(false);
@@ -32,19 +34,21 @@ export default function CheckoutForm({ payment }: any) {
             })
             .then((result) => {
                 if (!result.error) {
-                    //Update Purchased Tickets status in database
+                    console.log("Stripe checkout is complete. Attendee paymnet status is being updated.");
+                    let payment_update_url = organizerView ? route('organizer.events.update.payment', payment.uuid) : route("attendee.update.payment", payment.uuid);
+                    let payment_success_url = organizerView ? route('organizer.events.payment.success', payment.uuid) : route("attendee.payment.success", payment.uuid);
+
                     axios
-                        .post(route("attendee.update.payment", payment.uuid))
+                        .post(payment_update_url)
                         .then((response) => {
-                            console.log(response);
-                            router.visit(route("attendee.payment.success", payment.uuid));
+                            console.log("Attendee paymnet status updated. Redirecting to success page.");
+                            router.visit(payment_success_url);
                         })
                         .catch((errorPost) => {
                             console.log(errorPost);
                         }).finally(() => {
                             setIsProcessing(false);
                         });
-                    console.log("callback running");
                 } else {
                     if (
                         result.error.type === "card_error" ||

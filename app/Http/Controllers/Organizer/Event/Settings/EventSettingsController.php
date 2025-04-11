@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Organizer\Event\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Models\EventApp;
+use App\Models\Track;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -19,8 +20,14 @@ class EventSettingsController extends Controller
             abort(403);
         }
 
-        $event = EventApp::find(session('event_id'));
-        return Inertia::render("Organizer/Events/Settings/Event/Index", compact('event'));
+        $event = EventApp::with('images')->find(session('event_id'));
+        $tracks = Track::where('event_app_id', session('event_id'))->latest()->get(); // For Track Manager
+        
+        return Inertia::render("Organizer/Events/Settings/Event/Index", [
+            'event' => $event,
+            'enableTracks' => eventSettings()->getValue('enable_tracks', false),
+            'tracks' => $tracks,
+        ]);
     }
 
     public function updateInfo(Request $request)
@@ -86,5 +93,11 @@ class EventSettingsController extends Controller
         // $url = URL::signedRoute('attendee.register', session('event_id'), absolute: false); Regisration URL without domain name
 
         return response()->json(['link' => URL::signedRoute('attendee.register', session('event_id'))]);
+    }
+
+    public function toggleTracks()
+    {
+        $enableTracks = eventSettings()->getValue('enable_tracks', false);
+        eventSettings()->set('enable_tracks', !$enableTracks);
     }
 }

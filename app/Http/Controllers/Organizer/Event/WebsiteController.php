@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Organizer\Event;
 use App\Http\Controllers\Controller;
 use App\Models\EventApp;
 use App\Models\EventPartnerCategory;
+use App\Models\EventPlatform;
 use App\Models\Page;
+use App\Models\Track;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -35,8 +37,11 @@ class WebsiteController extends Controller
 
         $colors = eventSettings($event->id)->getValue('website_colors', config('event_website.colors'));
         $partnerCategories = EventPartnerCategory::where('event_app_id', $event->id)->with(['partners'])->get();
+        $tracks = Track::where('event_app_id', $event->id)->get();
+        $enableTracks = eventSettings($event->id)->getValue('enable_tracks', false);
+        $eventPlatforms = EventPlatform::where('event_app_id', session('event_id'))->get();
 
-        return view('event-website.schedule', compact('event', 'colors', 'partnerCategories'));
+        return view('event-website.schedule', compact('event', 'colors', 'partnerCategories', 'tracks', 'enableTracks', 'eventPlatforms'));
     }
 
     public function speakers($uuid)
@@ -51,6 +56,17 @@ class WebsiteController extends Controller
         $partnerCategories = EventPartnerCategory::where('event_app_id', $event->id)->with(['partners'])->get();
 
         return view('event-website.speakers', compact('event', 'colors', 'partnerCategories'));
+    }
+
+    public function sponsors($uuid){
+        $event=EventApp::where('uuid',$uuid)->first();
+        if (! $event || !eventSettings($event->id)->getValue('website_status', false)) {
+            abort(404);
+        }
+
+        $colors = eventSettings($event->id)->getValue('website_colors', config('event_website.colors'));
+        $partnerCategories = EventPartnerCategory::where('event_app_id', $event->id)->with(['partners'])->get();
+        return view('event-website.sponsors', compact('event', 'colors', 'partnerCategories'));
     }
 
     // public function index($uuid)

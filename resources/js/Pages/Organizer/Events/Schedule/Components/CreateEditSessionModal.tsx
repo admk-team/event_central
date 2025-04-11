@@ -14,6 +14,7 @@ import Select from "react-select";
 import TimePicker from 'rsuite/TimePicker';
 import 'rsuite/TimePicker/styles/index.css';
 import { createDateFromTime } from "../../../../../common/helpers";
+import TracksSelector from "./TracksSelector";
 
 export default function CreateEditSessionModal({
     show,
@@ -34,6 +35,8 @@ export default function CreateEditSessionModal({
         .filter((session: any) => {
             return (session.event_date_id === selectedDate?.id) && (session.event_platform_id === selectedPlatform?.id) && (session.id !== eventSession?.id);
         });
+    
+    const enableTracks = usePage().props.enableTracks as boolean;
 
     const isEdit = eventSession != null ? true : false;
     const [enablePost, setEnablePost] = useState<boolean>(false);
@@ -92,6 +95,7 @@ export default function CreateEditSessionModal({
         end_time: eventSession?.end_time ?? "00:00",
         qa_status: eventSession?.qa_status ?? 0,
         posts: eventSession?.posts ?? false,
+        tracks: eventSession?.tracks.map((track: any) => track.id) ?? [],
     });
 
     const submit = (e: any) => {
@@ -296,35 +300,6 @@ export default function CreateEditSessionModal({
                                         }))
                                     }}
                                 />
-                                {/* <Flatpickr
-                                    className="form-control"
-                                    options={{
-                                        enableTime: true,
-                                        noCalendar: true,
-                                        dateFormat: "H:i",
-                                        disable: eventSessions.map((session: any) => {
-                                            return {
-                                                from: session.start_time,
-                                                to: session.end_time,
-                                            }
-                                        }),
-                                    }}
-                                    value={data.end_time}
-                                    onChange={([selectedDate]: Date[]) => {
-                                        if (selectedDate) {
-                                            setData(
-                                                "end_time",
-                                                selectedDate.toLocaleTimeString(
-                                                    "en-GB",
-                                                    {
-                                                        hour: "2-digit",
-                                                        minute: "2-digit",
-                                                    }
-                                                )
-                                            );
-                                        }
-                                    }}
-                                /> */}
                                 {errors.end_time && (
                                     <Form.Control.Feedback type="invalid">
                                         {errors.end_time}
@@ -333,6 +308,16 @@ export default function CreateEditSessionModal({
                             </Col>
                         </Row>
                     </FormGroup>
+                    
+                    {enableTracks && (
+                        <FormGroup className="mb-3">
+                            <Form.Label>Tracks</Form.Label>
+                            <TracksSelector 
+                                value={data.tracks}
+                                onChange={(value) => setData('tracks', value)}
+                            />
+                        </FormGroup>
+                    )}
 
                     {(data.type === "Session" || data.type === "Workshop") && (
                         <>
@@ -392,7 +377,8 @@ export default function CreateEditSessionModal({
                         </FormGroup>
                     )}
 
-                    {(data.type === "Break" ||
+                    {(data.type === "Session" ||
+                        data.type === "Break" ||
                         data.type === "Lecture" ||
                         data.type === "Workshop") && (
                         <FormGroup className="mb-3">

@@ -7,6 +7,8 @@ import Information from './Components/Information';
 import Contact from './Components/Contact';
 import Other from './Components/Other';
 import HasPermission from '../../../../../Components/HasPermission';
+import Features from './Components/Features';
+import Images from './Components/Images';
 
 function Event() {
     return (
@@ -34,6 +36,16 @@ function Event() {
                                 <Col xs={12}>
                                     <HasPermission permission="delete_events">
                                         <Other />
+                                    </HasPermission>
+                                </Col>
+                                <Col xs={12}>
+                                    <HasPermission permission="edit_events">
+                                        <Features />
+                                    </HasPermission>
+                                </Col>
+                                <Col xs={12}>
+                                    <HasPermission permission="edit_events">
+                                        <Images />
                                     </HasPermission>
                                 </Col>
                             </Row>

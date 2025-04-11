@@ -130,23 +130,22 @@
         </div>
     </div>
 </section>
-
 @isset($event->description)
-    <section id="about" class="about">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-tag">About the Event</span>
-                <h2 class="section-title">{{ $event->name }}</h2>
-                {{-- <p class="section-subtitle">Join us for three days of learning, networking, and inspiration</p> --}}
+<section id="about" class="about">
+    <div class="container">
+        <div class="section-header">
+            <span class="section-tag">About the Event</span>
+            <h2 class="section-title">{{ $event->name }}</h2>
+            {{-- <p class="section-subtitle">Join us for three days of learning, networking, and inspiration</p> --}}
+        </div>
+        <div class="about-content">
+            <div class="about-text">
+                {{ $event->description }}
             </div>
-            <div class="about-content">
-                <div class="about-text">
-                    {{ $event->description }}
-                </div>
-                <div class="about-video">
-                    <div class="video-wrapper">
-                        <img src="{{ $event->images[0]->image_url ?? '' }}" alt="{{ $event->name }}">
-                        {{-- <button class="play-button" aria-label="Play video">
+            <div class="about-video">
+                <div class="video-wrapper">
+                    <img src="{{ $event->images[0]->image_url ?? '' }}" alt="{{ $event->name }}">
+                    {{-- <button class="play-button" aria-label="Play video">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                                 stroke-linecap="round" stroke-linejoin="round">
@@ -154,19 +153,19 @@
                                                 <polygon points="10 8 16 12 10 16 10 8"></polygon>
                                             </svg>
                                         </button> --}}
-                    </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 @endif
 
 <section id="venue" class="venue">
     <div class="container">
         <div class="section-header">
             <span class="section-tag">Event Location</span>
-            <h2 class="section-title">Austin Convention Center</h2>
-            <p class="section-subtitle">500 E Cesar Chavez St, Austin, TX 78701</p>
+            <h2 class="section-title">{{$event->location_base}}</h2>
+            <!-- <p class="section-subtitle">500 E Cesar Chavez St, Austin, TX 78701</p> -->
         </div>
         {{-- <div class="venue-content">
                         <div class="venue-map">
@@ -176,32 +175,6 @@
     </div>
 </section>
 
-@if ($partnerCategories->count() > 0 && $event->partners->count() > 0)
-<section id="sponsors" class="sponsors">
-    <div class="container">
-        <div class="section-header">
-            <span class="section-tag">Our Sponsors</span>
-        </div>
-        <div class="sponsors-tiers">
-            @foreach ($partnerCategories ?? [] as $category)
-            @if ($category->partners->count() > 0)
-            <div class="sponsors-tier">
-                <h3 class="tier-title">{{ $category->name }}</h3>
-                <div class="sponsors-grid gold">
-                    @foreach ($category->partners ?? [] as $partner)
-                    <div class="sponsor-logo">
-                        <img src="{{ url("storage/{$partner->exhibitor_logo}") }}"
-                            alt="{{ $partner->name }}">
-                    </div>
-                    @endforeach
-                </div>
-            </div>
-            @endif
-            @endforeach
-        </div>
-    </div>
-</section>
-@endif
 
 <section id="register" class="register">
     <div class="container">
@@ -255,9 +228,9 @@
                             </div>
 
                         </div>
-                        <div class="modal-footer">
+                        <!-- <div class="modal-footer">
 
-                        </div>
+                        </div> -->
                     </div>
                 </div>
             </div>
