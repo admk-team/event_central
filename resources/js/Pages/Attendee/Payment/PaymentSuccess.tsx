@@ -35,7 +35,7 @@ const PaymentSuccess = ({ organizerView }: any) => {
                                                 ></i>
                                                 <span className="fs-3 text-green p-4 text-center">
                                                     Checkout was processed
-                                                    successfuly. Confirmation email with QR Codes have emailed to your provided Email address.
+                                                    successfuly. Confirmation email with QR Codes have emailed to Attendee's email address.
                                                 </span>
                                             </div>
                                         </div>

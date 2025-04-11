@@ -28,6 +28,11 @@ class AssignTicketController extends Controller
         return $this->paymentController->checkout($request, true, $attendee, $paymnet_method);
     }
 
+    public function checkoutFreeTicket(Request $request, Attendee $attendee, $paymnet_method)
+    {
+        return $this->paymentController->checkoutFreeTicket($request, true, $attendee, $paymnet_method);
+    }
+
     public function showCheckoutPage($paymentUuId)
     {
         return $this->paymentController->showCheckoutPage($paymentUuId, true);

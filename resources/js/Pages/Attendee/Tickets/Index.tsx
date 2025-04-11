@@ -13,7 +13,6 @@ const Index = ({ eventApp, organizerView, attendees }: any) => {
     const Layout = organizerView ? EventLayout : AttendeeLayout;
 
     // console.log(attendees);
-
     //Options for Procession of Tickets from Organizer side
     const [currentAttendee, setCurrentAttendee] = useState<any>(null);
     const [paymentMethod, setPaymentMethod] = useState<any>('stripe');
@@ -38,20 +37,32 @@ const Index = ({ eventApp, organizerView, attendees }: any) => {
             totalAmount: totalAmount
         };
 
-        console.log(data);
+        // console.log(data);
 
         setProcessing(true);
         if (organizerView && currentAttendee > 0) {
-            axios.post(route("organizer.events.tickets.checkout", [currentAttendee, paymentMethod]), data).then((response) => {
-                console.log(response);
-                router.visit(route('organizer.events.tickets.checkout.page', response.data.uuid));
-            }).catch((error) => {
-                console.log(error);
-            }).finally(() => {
-                setProcessing(false);
-            })
+            if (totalAmount > 0 && paymentMethod === 'stripe') {
+                axios.post(route("organizer.events.tickets.checkout", [currentAttendee, paymentMethod]), data).then((response) => {
+                    // console.log(response);
+                    router.visit(route('organizer.events.tickets.checkout.page', response.data.uuid));
+                }).catch((error) => {
+                    console.log(error);
+                }).finally(() => {
+                    setProcessing(false);
+                })
+            } else if (totalAmount === 0 || paymentMethod === 'cash') {
+                axios.post(route("organizer.events.tickets.checkout.free", [currentAttendee, paymentMethod]), data).then((response) => {
+                    // console.log(response);
+                    router.visit(route('organizer.events.payment.success', response.data.uuid));
+                }).catch((error) => {
+                    console.log(error);
+                }).finally(() => {
+                    setProcessing(false);
+                })
+            }
         } else {
             if (totalAmount > 0) {
+                //Process Stripe payment for Attendee
                 axios.post(route("attendee.tickets.checkout"), data).then((response) => {
                     // console.log(response);
                     router.visit(route('attendee.tickets.checkout.page', response.data.uuid));
@@ -62,7 +73,7 @@ const Index = ({ eventApp, organizerView, attendees }: any) => {
                     setProcessing(false);
                 })
             } else {
-                //Process free tickets
+                //Process free tickets for Attendee
                 axios.post(route("attendee.tickets.checkout.free"), data).then((response) => {
                     console.log(response);
                     router.visit(route('attendee.payment.success', response.data.uuid));
@@ -74,6 +85,8 @@ const Index = ({ eventApp, organizerView, attendees }: any) => {
             }
         }
     };
+
+
 
     const validateCode = () => {
         setCodeError(false);
@@ -161,7 +174,7 @@ const Index = ({ eventApp, organizerView, attendees }: any) => {
                                     <Form.Select size="lg" aria-label="Default select example" className="form-control" id="attendee"
                                         onChange={(e) => setCurrentAttendee(e.target.value)}
                                     >
-                                        <option key={11}>Select Fee Type</option>
+                                        <option key={11}>Select Attendee</option>
                                         {attendees.map((attendee: any, index: any) => (
                                             <option key={1 + index} value={attendee.value}>{attendee.label}</option>
                                         ))}
@@ -194,16 +207,26 @@ const Index = ({ eventApp, organizerView, attendees }: any) => {
                         {(!organizerView || currentAttendee > 0) &&
                             <>
                                 <Row className=" justify-content-center gy-4">
-                                    {eventApp.public_tickets.length > 0 &&
-                                        eventApp.public_tickets.map((ticket: any) => (
-                                            <TicketCard
-                                                ticket={ticket}
-                                                key={ticket.id}
-                                                onTicketDetailsUpdated={
-                                                    handleTicketCardChanged
-                                                }
-                                            ></TicketCard>
-                                        ))}
+                                {organizerView && eventApp.tickets.length > 0 &&
+                                    eventApp.tickets.map((ticket: any) => (
+                                        <TicketCard
+                                            ticket={ticket}
+                                            key={ticket.id}
+                                            onTicketDetailsUpdated={
+                                                handleTicketCardChanged
+                                            }
+                                        ></TicketCard>
+                                    ))}
+                                {!organizerView && eventApp.public_tickets.length > 0 &&
+                                    eventApp.public_tickets.map((ticket: any) => (
+                                        <TicketCard
+                                            ticket={ticket}
+                                            key={ticket.id}
+                                            onTicketDetailsUpdated={
+                                                handleTicketCardChanged
+                                            }
+                                        ></TicketCard>
+                                    ))}
                                 </Row>
 
                             <Card className="mt-4">
@@ -285,9 +308,4 @@ const Index = ({ eventApp, organizerView, attendees }: any) => {
         </Layout >
     );
 };
-
-// if (organizerView) {
-
-// }
-// Index.layout = (page: any) => <Layout children={page} />;
 export default Index;

@@ -311,7 +311,7 @@ const Navdata = () => {
         {
             id: "assignTickets",
             label: "Assign Tickets",
-            icon: "bx bx-cog",
+            icon: "bx bxs-server",
             link: route('organizer.events.attendee.tickets.assign'),
             stateVariables: isAssignTicket,
             click: function (e: any) {
