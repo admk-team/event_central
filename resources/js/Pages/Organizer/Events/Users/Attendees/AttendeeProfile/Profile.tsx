@@ -111,7 +111,7 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                                                                 Location :
                                                             </th>
                                                             <td className="text-muted">
-                                                                {user.country ?? 'N/A'}
+                                                                {user.location ?? 'N/A'}
                                                             </td>
                                                         </tr>
                                                         <tr>

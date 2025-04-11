@@ -15,6 +15,7 @@ export default function Register() {
         email: "",
         password: "",
         position: '',
+        location: '',
         password_confirmation: "",
     });
 
@@ -124,6 +125,22 @@ export default function Register() {
                                 />
 
                                 <Form.Control.Feedback type="invalid" className='mt-2 d-block'>{errors.position}</Form.Control.Feedback>
+                            </Col>
+                        </Row>
+                        <Row className="mt-1">
+                            <Col md={12} lg={12} >
+                                <Form.Label htmlFor="location" value="location" className='form-label'> Location </Form.Label>
+                                <Form.Control
+                                    id="location"
+                                    type="text"
+                                    name="location"
+                                    placeholder="Enter location"
+                                    value={data.location}
+                                    className={'mt-1 form-control' + (errors.location ? 'is-invalid' : '')}
+                                    autoComplete="location"
+                                    onChange={(e: any) => setData('location', e.target.value)}
+                                />
+                                <Form.Control.Feedback type="invalid" className='mt-2 d-block'>{errors.location}</Form.Control.Feedback>
                             </Col>
                         </Row>
                         <div className="mt-1">
