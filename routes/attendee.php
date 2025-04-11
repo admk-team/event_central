@@ -59,7 +59,10 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         //Payment Processing
         Route::get('view-tickets', [PaymentController::class, 'viewTickets'])->name('attendee.tickets.get');
         Route::get('purchased-tickets', [PaymentController::class, 'attendeeTickets'])->name('attendee.tickets.purchased');
+        Route::get('refund-tickets', [PaymentController::class, 'refundAttendeeTicket'])->name('attendee.tickets.refund');
+        Route::post('refund-request', [PaymentController::class, 'refundAttendeeRequest'])->name('attendee.tickets.request');
         Route::post('submit-ticket-emails', [PaymentController::class, 'submitTicketTransfer'])->name('attendee.tickets.transfer');
+
 
         Route::get('checkout/{paymentUuId}', [PaymentController::class, 'showCheckoutPage'])->name('attendee.tickets.checkout.page');
         Route::post('checkout', [PaymentController::class, 'checkout'])->name('attendee.tickets.checkout');
