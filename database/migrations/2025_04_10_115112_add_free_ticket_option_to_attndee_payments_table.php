@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -11,9 +12,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('attendee_payments', function (Blueprint $table) {
-            $table->enum('payment_method', ['stripe', 'paypal', 'free'])->change();
-        });
+        DB::statement("ALTER TABLE attendee_payments MODIFY COLUMN payment_method ENUM('stripe', 'paypal', 'free', 'cash')");
     }
 
     /**
@@ -21,8 +20,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('attendee_payments', function (Blueprint $table) {
-            $table->enum('payment_method', ['stripe', 'paypal'])->change();
-        });
+        DB::statement("ALTER TABLE attendee_payments MODIFY COLUMN payment_method ENUM('stripe', 'paypal')");
     }
 };

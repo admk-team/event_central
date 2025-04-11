@@ -191,8 +191,7 @@ function Index({ attendees, eventApp }: { attendees: any; eventApp: any }) {
                                                 alt="event logo"
                                             />
                                         )}
-                                        <p className="event-name">{eventApp?.name}</p>
-                                        <p className="event-location">{formatDate(eventApp?.start_date)} | {eventApp?.location_base}</p>
+                                        <p className="event-location">{eventApp?.location_base}</p>
                                         <h1 className="attendee-name">{attendee?.name}</h1>
                                         <h3 className="attendee-name">{attendee?.position}</h3>
                                     </div>

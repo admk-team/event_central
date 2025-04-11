@@ -6,25 +6,28 @@ use Exception;
 use Stripe\Stripe;
 use Illuminate\Support\Facades\Log;
 use App\Models\EventApp;
+use App\Models\AttendeePayment;
+
+
 
 class StripeService
 {
 
-    public function StripKeys()
+    public function StripKeys($event_app_id)
     {
-        $eventApp = EventApp::find(auth()->user()->event_app_id);
+        $eventApp = EventApp::find($event_app_id);
         return $eventApp->organiser->payment_keys;
     }
 
     public function getPublishableKey()
     {
-        return $this->StripKeys()->stripe_publishable_key;
+        return $this->StripKeys(null)->stripe_publishable_key;
     }
 
-    public function createPaymentIntent($amount, $currency = 'USD')
+    public function createPaymentIntent($event_app_id, $amount, $currency = 'USD')
     {
         try {
-            $stripe = new \Stripe\StripeClient($this->StripKeys()->stripe_secret_key);
+            $stripe = new \Stripe\StripeClient($this->StripKeys($event_app_id)->stripe_secret_key);
 
             $paymentIntent = $stripe->paymentIntents->create([
                 'amount' => $amount * 100,

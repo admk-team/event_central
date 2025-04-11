@@ -21,7 +21,6 @@
     max-width: 400px;
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     padding: 30px 20px;
     text-align: center;
     box-sizing: border-box;
@@ -33,7 +32,7 @@
 }
 
 .bg-white {
-    background-color: white !important;
+    background-color: transparent !important;
     color: black;
 }
 
@@ -44,10 +43,9 @@
 }
 
 .circle {
-    width: 100px;
+    width: 250px;
     object-fit: cover;
-    margin-bottom: 15px;
-    margin-left: 37%;
+    margin-left: 15%;
     margin-right: 50%;
 }
 
@@ -65,11 +63,12 @@
 }
 
 .qrWrapper {
-    background: white;
-    padding: 20px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    padding-left: 20px;
     border-radius: 12px;
     display: inline-block;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .qr-code-img {
@@ -82,16 +81,15 @@
     margin-top: 15px;
 }
 .event-location {
-    margin-top: 20px;
     margin-bottom: 20px;
     margin-right: auto;
     margin-left: auto;
     max-width: 300px;
-    font-size: large;
+    font-size: medium;
     font-weight: 800;
 }
 .attendee-name {
-    font-size: 30px;
+    font-size: 25px;
     font-weight: 900;
     letter-spacing: 0.5px;
     color: black !important;
@@ -104,7 +102,7 @@
     font-weight: 500;
 }
 
-input[type="text"] {
+.input-email-qrcode {
     width: 100%;
     padding: 0.5rem;
     border-radius: 8px;
