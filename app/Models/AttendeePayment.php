@@ -32,9 +32,15 @@ class AttendeePayment extends Model
     {
         $query->where('event_app_id', session('event_id'));
     }
+
     public function attendee()
     {
         return $this->belongsTo(Attendee::class, 'attendee_id');
+    }
+
+    public function refund_tickets()
+    {
+        return $this->hasOne(AttendeeRefundTicket::class);
     }
 
     public function payer()

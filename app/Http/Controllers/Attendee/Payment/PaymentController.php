@@ -21,10 +21,11 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Attendee\AttendeeCheckoutRequest;
 use App\Mail\AttendeeTicketPurchasedEmail;
-
+use App\Models\Attendee;
 use chillerlan\QRCode\Common\EccLevel;
 use Illuminate\Support\Facades\Storage;
 use App\Models\AttendeePurchasedTickets;
+use App\Models\AttendeeRefundTicket;
 use Illuminate\Support\Facades\Mail;
 
 class PaymentController extends Controller
@@ -421,5 +422,44 @@ class PaymentController extends Controller
         }
 
         return redirect()->back()->with('success', 'Emails submitted successfully!');
+    }
+
+    public function refundAttendeeTicket()
+    {
+        $attendee = auth()->user();
+        $payments = $this->datatable(AttendeePayment::where('attendee_id', $attendee->id)
+            ->where('status', 'paid')->with('refund_tickets'));
+        return Inertia::render('Attendee/Tickets/RefundTickets', [
+            'payments' => $payments,
+        ]);
+    }
+
+    public function refundAttendeeRequest(Request $request)
+    {
+        $paymentId = $request->id;
+        $attendeePayment = AttendeePayment::where('id', $paymentId)
+            ->where('status', 'paid')
+            ->first();
+        if (!$attendeePayment) {
+            return redirect()->back()->with('error', 'Invalid Payment ID or Payment not found!');
+        }
+
+        $attendee = auth()->user();
+        $checkRefund = AttendeeRefundTicket::where('attendee_payment_id', $attendeePayment->id)
+            ->where('attendee_id', $attendee->id)
+            ->exists();
+
+        if ($checkRefund) {
+            return redirect()->back()->with('error', 'Refund request already submitted!');
+        } else {
+            AttendeeRefundTicket::create([
+                'attendee_payment_id' => $attendeePayment->id,
+                'attendee_id' => $attendee->id,
+                'event_app_id' => $attendeePayment->event_app_id,
+                'status' => 'pending',
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Refund request submitted successfully!');
     }
 }
