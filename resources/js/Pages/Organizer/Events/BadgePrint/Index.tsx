@@ -7,6 +7,7 @@ import "../../../../css/passes.css";
 
 function Index({ attendees, eventApp }: { attendees: any; eventApp: any }) {
     const [search, setSearch] = useState("");
+    const [isFlipped, setIsFlipped] = useState(false);
 
     const filteredAttendees = attendees.filter((attendee: any) =>
         (attendee.name + attendee.position).toLowerCase().includes(search.toLowerCase())
@@ -14,56 +15,6 @@ function Index({ attendees, eventApp }: { attendees: any; eventApp: any }) {
 
     const [showLogo, setShowLogo] = useState(true);
     const [showGradient, setShowGradient] = useState(true);
-
-    const formatDate = (dateString: any) => {
-        if (!dateString) return "";
-        const date = new Date(dateString);
-        return date.toLocaleDateString("en-US", {
-            month: "short",
-            year: "numeric",
-        });
-    };
-
-
-
-    // const printSingleBadge = (id: string) => {
-    //     const badge = document.getElementById(id);
-    //     if (!badge) {
-    //         console.error('Badge not found');
-    //         return;
-    //     }
-
-    //     console.log('Original badge content:', badge.innerHTML);  // Check the content
-
-    //     // Clone the element deeply
-    //     const clone = badge.cloneNode(true) as HTMLElement;
-    //     console.log('Cloned content:', clone.innerHTML);  // Check the cloned content
-
-    //     if (!clone.innerHTML) {
-    //         console.error('Cloning failed: The clone is empty!');
-    //         return;
-    //     }
-
-    //     const cloneWrapper = document.createElement('div');
-    //     cloneWrapper.style.display = "block";
-    //     cloneWrapper.appendChild(clone);
-
-    //     const printContainer = document.createElement('div');
-    //     printContainer.id = 'print-container';
-    //     printContainer.appendChild(cloneWrapper);
-
-    //     document.body.appendChild(printContainer);
-
-    //     window.print();
-
-    //     setTimeout(() => {
-    //         printContainer.remove();
-    //     }, 1000);
-    // };
-
-
-
-
 
     return (
         <React.Fragment>
@@ -82,26 +33,38 @@ function Index({ attendees, eventApp }: { attendees: any; eventApp: any }) {
                                 onChange={(e) => setSearch(e.target.value)}
                             />
                         </Col>
-                        <Col md={6} className="text-end" style={{ marginTop: "42px" }}>
-                            <button type="button" className="btn btn-success" onClick={() => window.print()}>
-                                🖨️ Print All Badges
-                            </button>
-                            <button
-                                type="button"
-                                className="btn btn-secondary me-2 ms-2"
-                                onClick={() => setShowLogo((prev) => !prev)}
-                            >
-                                {showLogo ? "🙈 Hide Logo" : "👁️ Show Logo"}
-                            </button>
+                        <Col md={6} className="mt-4">
+                            <div className="d-flex flex-column flex-md-row justify-content-md-end align-items-stretch gap-2">
+                                <button type="button" className="btn btn-success w-100 w-md-auto" onClick={() => window.print()}>
+                                    🖨️ Print All Badges
+                                </button>
 
-                            <button
-                                type="button"
-                                className="btn btn-secondary"
-                                onClick={() => setShowGradient((prev) => !prev)}
-                            >
-                                {showGradient ? "🧼 White Background" : "🌈 Gradient Background"}
-                            </button>
+                                <button
+                                    type="button"
+                                    className="btn btn-secondary w-100 w-md-auto"
+                                    onClick={() => setShowLogo((prev) => !prev)}
+                                >
+                                    {showLogo ? "🙈 Hide Logo" : "👁️ Show Logo"}
+                                </button>
+
+                                <button
+                                    type="button"
+                                    className="btn btn-secondary w-100 w-md-auto"
+                                    onClick={() => setShowGradient((prev) => !prev)}
+                                >
+                                    {showGradient ? "🧼 White Background" : "🌈 Gradient Background"}
+                                </button>
+
+                                <button
+                                    type="button"
+                                    className="btn btn-info w-100 w-md-auto"
+                                    onClick={() => setIsFlipped((prev) => !prev)}
+                                >
+                                    {isFlipped ? "↩️ Unflip" : "🔄 Flip"}
+                                </button>
+                            </div>
                         </Col>
+
                     </Row>
 
                     <Row>
@@ -128,43 +91,8 @@ function Index({ attendees, eventApp }: { attendees: any; eventApp: any }) {
                                                         </div>
                                                     </Col>
                                                 </Row>
-                                                {/* Print Button for Solo Badge */}
-                                                {/* <div className="d-flex justify-content-end">
-                                                    <button
-                                                        type="button"
-                                                        className="btn btn-print"
-                                                        onClick={() => printSingleBadge(`badge-${index}`)}
-                                                    >
-                                                        🖨️ Print Badge
-                                                    </button>
-                                                </div> */}
+
                                             </div>
-                                            {/* <div id={`badge-${index}`} style={{ display: "none" }}>
-                                                <div className="passWrapper print-page-break">
-                                                    <div className="passes-container">
-                                                        <div className="pass div-gradient mt-4 mb-4">
-                                                            <div className="heading-wraper">
-                                                                <img
-                                                                    className="circle"
-                                                                    src={eventApp?.logo_img || "/placeholder.svg?height=80&width=80"}
-                                                                    alt="event logo"
-                                                                />
-                                                                <p className="event-name">{eventApp?.name}</p>
-                                                                <p className="event-date">{formatDate(eventApp?.start_date)}</p>
-                                                                <h1 className="attendee-name">{attendee?.name}</h1>
-                                                                <h3 className="attendee-name">{attendee?.position}</h3>
-                                                            </div>
-                                                            <div className="qrWrapper">
-                                                                <img className="qr-code-img" src={attendee.qr_codes[0]} alt={`QR code`} />
-                                                            </div>
-                                                            <div className="attendee-details">
-                                                                <p className="attendee-name">{attendee?.name}</p>
-                                                                <p className="ticket-label">Ticket 1</p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div> */}
                                         </React.Fragment>
                                     ))
                                 )}
@@ -178,7 +106,11 @@ function Index({ attendees, eventApp }: { attendees: any; eventApp: any }) {
             <div className="printable">
                 {filteredAttendees.map((attendee: any, index: number) =>
                     attendee.qr_codes.map((qr: string, idx: number) => (
-                        <div key={idx} className="passWrapper print-page-break">
+                        <div
+                            key={idx}
+                            className="passWrapper print-page-break"
+                            style={{ transform: isFlipped ? "rotate(180deg)" : "none" }}
+                        >
                             <div className="passes-container">
                                 <div
                                     className={`pass ${showGradient ? "div-gradient" : "bg-transparent"} mt-4 mb-4`}
