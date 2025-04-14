@@ -95,7 +95,7 @@ const AttendeeSpeakerDetail = ({ eventApp, eventSpeaker }: any) => {
                                                         <Col className='d-flex flex-column align-items-end'>
                                                             {!session.selected_by_attendee && < i className='bx bx-heart fs-3 float-right'></i>}
                                                             {session.selected_by_attendee && < i className='bx bxs-heart fs-3 text-danger' style={{ float: 'right' }}></i>}
-                                                            <span>{moment(session.start_date).format('MMM DD, YYYY')}</span>
+                                                            <span>{moment(session.start_date_time).format('MMM DD, YYYY')}</span>
                                                             <span style={{ color: 'var(--vz-success)' }}>{moment(session.start_date_time).format('h:mm A') + ' - ' + moment(session.end_date_time).format('h:mm A')}</span>
                                                         </Col>
                                                     </Row>
