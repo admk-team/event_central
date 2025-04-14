@@ -34,6 +34,7 @@ const QrCode = ({ eventApp, attendee, image = [], hasTickets }) => {
     const images = Array.isArray(image) ? image : [image];
     const [showLogo, setShowLogo] = useState(true);
     const [showGradient, setShowGradient] = useState(true);
+    const [isFlipped, setIsFlipped] = useState(false);
 
     return (
         <React.Fragment>
@@ -62,25 +63,36 @@ const QrCode = ({ eventApp, attendee, image = [], hasTickets }) => {
                         <Col sm={8}>
                             <h1>Attendee Qr Codes</h1>
                         </Col>
-                        <Col xl={4} className="text-end">
-                            <button type="button" className="btn btn-success" onClick={() => window.print()}>
-                                🖨️ Print All Badges
-                            </button>
-                            <button
-                                type="button"
-                                className="btn btn-secondary me-2 ms-2"
-                                onClick={() => setShowLogo((prev) => !prev)}
-                            >
-                                {showLogo ? "🙈 Hide Logo" : "👁️ Show Logo"}
-                            </button>
+                        <Col md={6} className="mt-4">
+                            <div className="d-flex flex-column flex-md-row justify-content-md-end align-items-stretch gap-2">
+                                <button type="button" className="btn btn-success w-100 w-md-auto" onClick={() => window.print()}>
+                                    🖨️ Print All Badges
+                                </button>
 
-                            <button
-                                type="button"
-                                className="btn btn-secondary"
-                                onClick={() => setShowGradient((prev) => !prev)}
-                            >
-                                {showGradient ? "🧼 White Background" : "🌈 Gradient Background"}
-                            </button>
+                                <button
+                                    type="button"
+                                    className="btn btn-secondary w-100 w-md-auto"
+                                    onClick={() => setShowLogo((prev) => !prev)}
+                                >
+                                    {showLogo ? "🙈 Hide Logo" : "👁️ Show Logo"}
+                                </button>
+
+                                <button
+                                    type="button"
+                                    className="btn btn-secondary w-100 w-md-auto"
+                                    onClick={() => setShowGradient((prev) => !prev)}
+                                >
+                                    {showGradient ? "🧼 White Background" : "🌈 Gradient Background"}
+                                </button>
+
+                                <button
+                                    type="button"
+                                    className="btn btn-info w-100 w-md-auto"
+                                    onClick={() => setIsFlipped((prev) => !prev)}
+                                >
+                                    {isFlipped ? "↩️ Unflip" : "🔄 Flip"}
+                                </button>
+                            </div>
                         </Col>
                     </Row>
                     <div className="passWrapper">
@@ -125,7 +137,7 @@ const QrCode = ({ eventApp, attendee, image = [], hasTickets }) => {
                     </div>
                     <div className="printable">
                         {images.map((img: any, index: number) => (
-                            <div key={index} className="passWrapper print-page-break">
+                            <div key={index} className="passWrapper print-page-break" style={{ transform: isFlipped ? "rotate(180deg)" : "none" }}>
                                 <div className="passes-container">
                                     <div className={`pass ${showGradient ? "div-gradient" : "bg-white"} mt-4 mb-4`}>
                                         <div className="heading-wraper">
