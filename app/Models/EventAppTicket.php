@@ -77,4 +77,8 @@ class EventAppTicket extends Model
             return ['value' => $addon->id, 'label' => $addon->full_name];
         });
     }
+    public function ticketType()
+{
+    return $this->belongsTo(EventTicketType::class, 'type');
+}
 }

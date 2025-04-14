@@ -8,6 +8,7 @@ use App\Models\Addon;
 use App\Models\EventAppFee;
 use App\Models\EventAppTicket;
 use App\Models\EventSession;
+use App\Models\EventTicketType;
 use App\Models\TicketFeature;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -29,9 +30,9 @@ class EventAppTicketController extends Controller
 
         $speakers = null;
 
-        $tickets = $this->datatable(EventAppTicket::currentEvent()->with(['event', 'sessions', 'fees']));
+        $tickets = $this->datatable(EventAppTicket::currentEvent()->with(['event', 'sessions', 'fees','ticketType']));
         $sessions = EventSession::currentEvent()->select(['id as value', 'name as label'])->get();
-
+        $event_ticket_type = EventTicketType::where('event_app_id', session('event_id'))->latest()->get();
         $addons_collection = Addon::currentEvent()->orderBy('name')->get();
         $addons = $addons_collection->map(function ($addon) {
             return ['value' => $addon->id, 'label' => $addon->full_name];
@@ -42,7 +43,8 @@ class EventAppTicketController extends Controller
             'tickets',
             'sessions',
             'addons',
-            'fees'
+            'fees',
+            'event_ticket_type'
         ]));
     }
 

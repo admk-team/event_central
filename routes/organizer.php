@@ -25,6 +25,7 @@ use App\Http\Controllers\Organizer\Event\User\AttendeeController;
 use App\Http\Controllers\Organizer\Event\EventAppTicketController;
 use App\Http\Controllers\Organizer\Event\EventDateController;
 use App\Http\Controllers\Organizer\Event\EventPromoCodeController;
+use App\Http\Controllers\Organizer\Event\EventTicketTypeController;
 use App\Http\Controllers\Organizer\Event\FormFieldController;
 use App\Http\Controllers\Organizer\Event\QuestionnaireFormFieldController;
 use App\Http\Controllers\Organizer\Event\SessionAttendanceController;
@@ -119,6 +120,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             // Tickets
             Route::resource('tickets', EventAppTicketController::class)->only(['index', 'store', 'update', 'destroy']);
             Route::delete('tickets/delete/many', [EventAppTicketController::class, 'destroyMany'])->name('tickets.destroy.many');
+            Route::resource('tickets-type', EventTicketTypeController::class);
 
             // Ticket-Features
             Route::resource('addon', AddonController::class)->only(['index', 'store', 'update', 'destroy']);
