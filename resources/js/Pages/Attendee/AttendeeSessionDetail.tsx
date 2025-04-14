@@ -226,7 +226,7 @@ const AttendeeSessionDetail = ({
                                                         marginRight: "5px",
                                                     }}
                                                 >
-                                                    MAIN STAGE
+                                                    {eventSession.event_platform.name}
                                                 </Badge>
                                                 <Badge bg="secondary">
                                                     {moment(

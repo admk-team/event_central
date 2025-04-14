@@ -77,7 +77,7 @@ const TicketDetail = ({ ticket_no, ticket, fees_sub_total, addons_sub_total, onA
                     {fees_sub_total}</span>
             </Col>
             <Col md={6} lg={6}>
-                <p className="fs-5 fw-bold mb-1">Ticket Addons</p>
+                <p className="fs-5 fw-bold mb-1">Ticket Add-ons</p>
                 {addonOptions}
                 <span className="fs-5 fw-bold mt-1">
                     Addons Sub Total :

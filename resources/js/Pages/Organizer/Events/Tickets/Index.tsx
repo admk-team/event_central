@@ -11,9 +11,9 @@ import CreateEditModal from "./CreateEditModal";
 import moment from "moment";
 import { DialogBackdrop } from "@headlessui/react";
 
-function Index({ tickets, sessions, addons, fees }: any) {
+function Index({ tickets, sessions, addons, fees, event_ticket_type }: any) {
 
-    // console.log('addons', addons);
+    console.log('tickets', tickets);
 
     const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
     const [editTicket, setEditTicket] = React.useState<any>(null);
@@ -100,7 +100,7 @@ function Index({ tickets, sessions, addons, fees }: any) {
         },
         {
             header: () => "Type",
-            cell: (ticket) => ticket.type,
+            cell: (ticket) => ticket.ticket_type?.name || "No Type",
         },
         {
             header: () => "Base Price",
@@ -261,6 +261,7 @@ function Index({ tickets, sessions, addons, fees }: any) {
                     sessions={sessions}
                     addons={addons}
                     fees={fees}
+                    event_ticket_type={event_ticket_type}
                 />
             )}
             <DeleteModal

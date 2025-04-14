@@ -71,7 +71,7 @@ function Index({ addons }: any) {
             cellClass: "fw-medium",
         },
         {
-            header: () => "Addon Name",
+            header: () => "Add-ons Name",
             cell: (addon) => (
                 <div style={{ minWidth: '200px' }} dangerouslySetInnerHTML={{ __html: addon.name }} />
             ),
@@ -118,17 +118,17 @@ function Index({ addons }: any) {
     ];
     return (
         <React.Fragment>
-            <Head title="Ticket Addons" />
+            <Head title="Ticket Add-ons" />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Ticket Addons" pageTitle="Dashboard" />
+                    <BreadCrumb title="Ticket Add-ons" pageTitle="Dashboard" />
                     <Row>
                         <Col xs={12} id="TicketFeatureTable">
                             <HasPermission permission="view_tickets">
                                 <DataTable
                                     data={addons}
                                     columns={columns}
-                                    title="Addons"
+                                    title="Add-ons"
                                     actions={[
                                         // Delete multiple
                                         {
