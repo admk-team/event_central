@@ -13,7 +13,7 @@ import Images from './Components/Images';
 function Event() {
     return (
         <React.Fragment>
-            <Head title='Starter | Velzon - React Admin & Dashboard Template' />
+            <Head title='Event Settings' />
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb2
