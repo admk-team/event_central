@@ -11,6 +11,7 @@ const Navdata = () => {
     const [isEngagement, setIsEngagement] = useState<boolean>(false);
     const [isAttendees, setIsAttendees] = useState<boolean>(false);
     const [isTickets, setIsTickets] = useState<boolean>(false);
+    const [isRefundTicket, setIsRefundTicket] = useState<boolean>(false);
     const [isEvent, setIsEvent] = useState<boolean>(false);
     const [isForm, setIsForm] = useState<boolean>(false);
     const [IsQuestionnaireForm, setIsQuestionnaireForm] = useState<boolean>(false);
@@ -50,6 +51,7 @@ const Navdata = () => {
         if (iscurrentState !== 'payemntSettings') setIspayemntSettings(false);
         if (iscurrentState !== 'sessionAttendance') setIsSessionAttendance(false);
         if (iscurrentState !== 'Tickets') setIsTickets(false);
+        if (iscurrentState !== 'refundTicket') setIsRefundTicket(false);
         if (iscurrentState !== 'Questionnaire') setIsQuestionnaireForm(false);
         if (iscurrentState !== 'Questionnaire_response') setIsQuestionnaireResponse(false);
         if (iscurrentState !== 'assignTickets') setIsTickets(false);
@@ -63,6 +65,7 @@ const Navdata = () => {
         IsWebsite,
         IspayemntSettings,
         IsSessionAttendance,
+        isRefundTicket,
         isTickets,
         isAssignTicket
     ]);
@@ -223,6 +226,19 @@ const Navdata = () => {
             ],
         },
         {
+            id: "refundTicket",
+            label: "Refund Tickets",
+            icon: "bx bxs-credit-card",
+            link: route('organizer.events.refund.tickets'),
+            stateVariables: isRefundTicket,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsTickets(!isRefundTicket);
+                setIscurrentState('refundTicket');
+                updateIconSidebar(e);
+            },
+        },
+        {
             id: "registrationForm",
             label: "Registration Form",
             icon: "bx bxs-user-plus",
@@ -316,7 +332,7 @@ const Navdata = () => {
             ],
         },
         // ...(isEventStarted ? [{
-            {
+        {
             id: "Questionnaire",
             label: "Questionnaire Form",
             icon: "bx bxs-notepad",

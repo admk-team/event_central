@@ -184,12 +184,14 @@ function Index({ attendees, eventApp }: { attendees: any; eventApp: any }) {
                                     className={`pass ${showGradient ? "div-gradient" : "bg-transparent"} mt-4 mb-4`}
                                 >
                                     <div className="heading-wraper">
-                                        {showLogo && (
+                                        {showLogo ? (
                                             <img
                                                 className="circle"
                                                 src={eventApp?.logo_img || "/placeholder.svg?height=80&width=80"}
                                                 alt="event logo"
                                             />
+                                        ) : (
+                                            <div className="eventlogodiv"></div>
                                         )}
                                         <p className="event-location">{eventApp?.location_base}</p>
                                         <h1 className="attendee-name">{attendee?.name}</h1>
@@ -205,7 +207,7 @@ function Index({ attendees, eventApp }: { attendees: any; eventApp: any }) {
                                     </div>
 
                                     <div className="attendee-details">
-                                       <span className="location">{attendee?.location}</span>
+                                        <span className="location">{attendee?.location}</span>
                                         <p className="attendee-name">{qr.ticket_name}</p>
                                     </div>
                                 </div>

@@ -255,12 +255,12 @@ function CreateEditModal({
                 alt="event image"
                 style={{ width: "100%", marginTop: "15px" }}
             />
-            <Button 
-                onClick={() => removeImage(image.id)} 
-                type="button" 
+            <Button
+                onClick={() => removeImage(image.id)}
+                type="button"
                 variant="danger"
-                className="position-absolute" 
-                style={{ top: '15px', left: '0px' }} 
+                className="position-absolute"
+                style={{ top: '15px', left: '0px' }}
                 disabled={removeImageForm.processing}>
                 Remove
             </Button>

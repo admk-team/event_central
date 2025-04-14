@@ -76,6 +76,7 @@ class EventController extends Controller
         return $this->successResponse([
             'message' => "Ticket is valid",
             'attendee' => [
+                'id' => $attendee->id,
                 'first_name' => $attendee->first_name,
                 'last_name' => $attendee->last_name,
                 'email' => $attendee->email,

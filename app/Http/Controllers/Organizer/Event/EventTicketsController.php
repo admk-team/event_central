@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Organizer\Event;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use App\Models\Attendee;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Models\AttendeeRefundTicket;
+use Illuminate\Support\Facades\Auth;
 
 class EventTicketsController extends Controller
 {
@@ -42,51 +44,33 @@ class EventTicketsController extends Controller
         return Inertia::render('Organizer/Events/Tickets/EventAppTickets', compact(['tickets']));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function refundTickets()
     {
-        //
+        $refundPayments = $this->datatable(AttendeeRefundTicket::currentEvent()->with('attendee', 'attendeePayment'));
+        // dd($refundPayments);
+        return Inertia::render('Organizer/Events/RefundTickets/Index', compact('refundPayments'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function attendeeRefund(Request $request)
     {
-        //
-    }
+        $status = $request->status;
+        $refund = AttendeeRefundTicket::findOrFail($request->refundId);
+        if (!$refund) {
+            return redirect()->back()->with('error', 'Invalid Refund ID');
+        }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+        $paymentId = $refund->attendee_payment_id;
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+        if ($status == 'rejected') {
+            $refund->update(['status' => 'rejected']);
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+            return redirect()->back()->with('success', 'Refund status updated successfully!');
+        } elseif ($status == 'approved') {
+            $attendee = Attendee::findOrFail($refund->attendee_id);
+            $attendee->load(['payments' => function ($query) use ($paymentId) {
+                $query->where('id', $paymentId);
+            }, 'payments.purchased_tickets.purchased_addons']);
+            dd($attendee);
+        }
     }
 }

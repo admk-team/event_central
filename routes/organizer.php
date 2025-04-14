@@ -126,6 +126,9 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::delete('addon/delete/many', [AddonController::class, 'destroyMany'])->name('addon.destroy.many');
             Route::get('event/tickets', [EventTicketsController::class, 'index'])->name('event.tickets');
 
+            //refund payments
+            Route::get('refund/tickets', [EventTicketsController::class, 'refundTickets'])->name('refund.tickets');
+            Route::post('attendee/refundticket', [EventTicketsController::class, 'attendeeRefund'])->name('attendee.refund');
             // Promo Codes
             Route::resource('promo-codes', EventPromoCodeController::class)->only(['index', 'store', 'update', 'destroy']);
             Route::delete('promo-codes/delete/many', [EventPromoCodeController::class, 'destroyMany'])->name('promo-codes.destroy.many');
@@ -185,9 +188,9 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                     Route::post('/toggle-status', [RegistrationFormSettingsController::class, 'toggleStatus'])->name('toggle-status');
                     Route::post('/website', [RegistrationFormSettingsController::class, 'toggleStatus'])->name('toggle-status');
                 });
-                 // Questionnaire Form
-                 Route::resource('questionnaire-form-fields', QuestionnaireFormFieldController::class)->only(['store', 'update', 'destroy']);
-                 Route::prefix('questionnaire-form')->name('questionnaire-form.')->group(function () {
+                // Questionnaire Form
+                Route::resource('questionnaire-form-fields', QuestionnaireFormFieldController::class)->only(['store', 'update', 'destroy']);
+                Route::prefix('questionnaire-form')->name('questionnaire-form.')->group(function () {
                     Route::get('/', [QuestionnaireFormSettingsController::class, 'index'])->name('index');
                     Route::post('/toggle-status', [QuestionnaireFormSettingsController::class, 'toggleStatus'])->name('toggle-status');
                     Route::post('/website', [QuestionnaireFormSettingsController::class, 'toggleStatus'])->name('toggle-status');
