@@ -331,7 +331,7 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions, 
                             <FormGroup className="mb-3">
                                 <Form.Check
                                     type='checkbox'
-                                    label="Select All Addons"
+                                    label="Select All Add-ons"
                                     id="select-all-addons"
                                     onChange={handleCheckChangeAddon}
                                 />
@@ -341,7 +341,7 @@ export default function CreateEditModal({ show, hide, onHide, ticket, sessions, 
                             <FormGroup className="mb-3">
                                 {/* <Form.Label>Sessions</Form.Label> */}
                                 <Select
-                                    placeholder="Select Event Sessions"
+                                    placeholder="Select Add-ons"
                                     isDisabled={selectAllAddons}
                                     className={errors.addons && 'is-invalid'}
                                     value={selectMultiAddon}

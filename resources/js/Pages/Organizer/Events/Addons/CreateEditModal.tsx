@@ -71,7 +71,7 @@ export default function CreateEditModal({
         <Modal show={show} onHide={onHide} centered size="lg">
             <Modal.Header className="bg-light p-3" closeButton>
                 <h5 className="modal-title">
-                    {isEdit ? "Edit Addon" : "Create Addon"}
+                    {isEdit ? "Edit Add-ons" : "Create Add-ons"}
                 </h5>
             </Modal.Header>
 
