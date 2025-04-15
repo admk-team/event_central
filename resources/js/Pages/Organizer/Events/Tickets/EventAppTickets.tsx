@@ -23,7 +23,9 @@ const EventAppTickets = ({ tickets }: any) => {
                                                     <th scope="col">Ticket Name</th>
                                                     <th scope="col">Total</th>
                                                     <th scope="col">Paid</th>
-                                                    <th scope="col">Discount</th>
+                                                    <th scope="col">Discount Amount</th>
+                                                    <th scope="col">Promo Code</th>
+                                                    <th scope="col">Discount Percentage</th>
                                                     <th scope="col">Quantity</th>
                                                     <th scope="col">Type</th>
                                                     <th scope="col">Status</th>
@@ -47,6 +49,12 @@ const EventAppTickets = ({ tickets }: any) => {
                                                             <td>{ticket.total}</td>
                                                             <td>{ticket.amount}</td>
                                                             <td>{ticket.discount}</td>
+                                                            <td>{ticket.promo_code ?? 'N/A'}</td>
+                                                            <td>
+                                                                {ticket.discount && ticket.total
+                                                                    ? `${((ticket.discount / ticket.total) * 100)}%`
+                                                                    : '0%'}
+                                                            </td>
                                                             <td>{ticket.qty}</td>
                                                             <td>{ticket.type}</td>
                                                             <td style={{ color: "#0d6efd" }}><i className="ri-checkbox-circle-line fs-17 align-middle"></i> Paid</td>
