@@ -70,7 +70,9 @@ class HandleInertiaRequests extends Middleware
     protected function attendeeData(): array
     {
         return [
-            'currentEvent' => EventApp::find(Auth::guard('attendee')->user()?->event_app_id) ?? null,
+            'currentEvent' => EventApp::with(['dates' => function ($query) {
+                $query->orderBy('date', 'asc');
+            }])->find(Auth::guard('attendee')->user()?->event_app_id) ?? null,
         ];
     }
 

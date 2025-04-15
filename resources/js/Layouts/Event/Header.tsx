@@ -18,6 +18,7 @@ import ProfileDropdown from "../../Components/Common/ProfileDropdown";
 import LightDark from "../../Components/Common/LightDark";
 // import NotificationDropdown from "../../Components/Common/NotificationDropdown";
 import OrganizerProfileDropdown from "../../Components/Common/OrganizerProfileDropdown";
+import moment from "moment";
 
 const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
     const dispatch: any = useDispatch();
@@ -60,32 +61,32 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
             (document.documentElement.getAttribute("data-layout") ===
                 "vertical" ||
                 document.documentElement.getAttribute("data-layout") ===
-                "semibox")
+                    "semibox")
         ) {
             if (windowSize < 1025 && windowSize > 767) {
                 document.body.classList.remove("vertical-sidebar-enable");
                 document.documentElement.getAttribute("data-sidebar-size") ===
-                    "sm"
+                "sm"
                     ? document.documentElement.setAttribute(
-                        "data-sidebar-size",
-                        ""
-                    )
+                          "data-sidebar-size",
+                          ""
+                      )
                     : document.documentElement.setAttribute(
-                        "data-sidebar-size",
-                        "sm"
-                    );
+                          "data-sidebar-size",
+                          "sm"
+                      );
             } else if (windowSize > 1025) {
                 document.body.classList.remove("vertical-sidebar-enable");
                 document.documentElement.getAttribute("data-sidebar-size") ===
-                    "lg"
+                "lg"
                     ? document.documentElement.setAttribute(
-                        "data-sidebar-size",
-                        "sm"
-                    )
+                          "data-sidebar-size",
+                          "sm"
+                      )
                     : document.documentElement.setAttribute(
-                        "data-sidebar-size",
-                        "lg"
-                    );
+                          "data-sidebar-size",
+                          "lg"
+                      );
             } else if (windowSize <= 767) {
                 document.body.classList.add("vertical-sidebar-enable");
                 document.documentElement.setAttribute(
@@ -150,9 +151,15 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
                                                     {currentEvent.name}
                                                 </span>
                                                 <span className="d-block fw-normal text-muted">
-                                                    {
-                                                        currentEvent.created_at_date
-                                                    }
+                                                    {currentEvent.dates &&
+                                                    currentEvent.dates[0]?.date
+                                                        ? moment(
+                                                              currentEvent
+                                                                  .dates[0].date
+                                                          ).format(
+                                                              "MMM DD, YYYY"
+                                                          )
+                                                        : ""}
                                                 </span>
                                             </div>
                                         </div>

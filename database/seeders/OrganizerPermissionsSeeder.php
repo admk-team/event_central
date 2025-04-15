@@ -103,6 +103,7 @@ class OrganizerPermissionsSeeder extends Seeder
 
         // Badges
         'print_badges',
+        'refund_ticket',
     ];
 
     public function run(): void
