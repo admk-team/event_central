@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use chillerlan\QRCode\QRCode;
 
-use App\Models\TransferTicket;
+use App\Models\AttendeeTransferedTicket;
 use App\Models\AttendeePayment;
 use App\Services\PayPalService;
 use App\Services\StripeService;
@@ -328,7 +328,7 @@ class PaymentController extends Controller
         $payment = AttendeePayment::where('uuid', $paymentUuId)
             ->where('status', 'paid')
             ->first();
-        Log::info($payment);
+
         if ($payment) {
             foreach ($payment->purchased_tickets as $ticket_purchased) {
                 $purchasedticket = AttendeePurchasedTickets::find($ticket_purchased->id);
@@ -362,7 +362,7 @@ class PaymentController extends Controller
         }
     }
 
-    public function attendeeTickets()
+    public function attendeepurchasedTickets()
     {
         $attendee = auth()->user();
         $attendee->load('payments.purchased_tickets.ticket.ticketType'); // eager load purchased_tickets too
@@ -388,13 +388,15 @@ class PaymentController extends Controller
             }
 
             foreach ($payment->purchased_tickets as $purchasedTicket) {
-                $transferCheck = TransferTicket::where('attendee_payment_transfered', $purchasedTicket->id)->exists();
+                //TODO: To hide button if ticket is already transfered
+                $transferCheck = AttendeeTransferedTicket::where('bt_attendee_payment_id', $purchasedTicket->id)->exists();
                 $image[] = [
                     'qr_code' => asset('storage/' . $purchasedTicket->qr_code),
                     'purchased_id' => $purchasedTicket->id,
+                    'event_app_ticket_id' => $purchasedTicket->event_app_ticket_id,
                     'transfer_check' => $transferCheck,
                     'ticket_name' => $purchasedTicket->ticket?->name ?? '',
-                    'ticket_type_name' => optional($purchasedTicket->ticket->ticketType)->name, // <-- added line
+                    'ticket_type_name' => optional($purchasedTicket->ticket)->ticketType?->name ?? '', // <-- added line
                 ];
             }
         }
@@ -411,18 +413,27 @@ class PaymentController extends Controller
     public function submitTicketTransfer(Request $request)
     {
         $emails = $request->input('emails');
+        //dd($emails);
         foreach ($emails as $index => $email) {
             if ($email) {
-                $transferTicket = TransferTicket::create([
-                    'attendee_id' => auth()->user()->id,
-                    'attendee_payment_id' => $index,
-                    'event_app_id' => auth()->user()->event_app_id,
-                    'transfer_email' => $email,
+                $ticket = AttendeePurchasedTickets::find($index)->load('payment');
+                AttendeeTransferedTicket::create([
+                    'event_app_id' => $ticket->payment->event_app_id,
+                    'email' => $email,
+                    'payment_method' => $ticket->payment->payment_method,
+                    'stripe_intent' => $ticket->payment->stripe_intent,
+                    'attendee_purchased_ticket_id' => $ticket->id,
+                    'event_app_ticket_id' => $ticket->event_app_ticket_id,
+                    'bt_attendee_payment_id' => $ticket->attendee_payment_id,
+                    'at_attendee_payment_id' => null,
+                    'bt_attendee_id' => auth()->user()->id,
+                    'at_attendee_id' => null,
+                    'transfer_status' => 'pending',
                 ]);
             }
         }
 
-        return redirect()->back()->with('success', 'Emails submitted successfully!');
+        return redirect()->back()->withSuccess('Emails submitted successfully!');
     }
 
     public function refundAttendeeTicket()
@@ -461,6 +472,6 @@ class PaymentController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', 'Refund request submitted successfully!');
+        return redirect()->back()->withSuccess('Refund request submitted successfully!');
     }
 }

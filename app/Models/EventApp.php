@@ -170,7 +170,7 @@ class EventApp extends Model
 
     public function getFeaturedImageAttribute()
     {
-        $event_image = Cache::remember('event_image', now()->addMinutes(10), function () {
+        Cache::remember('event_image_' . $this->id, now()->addMinutes(5), function () {
             $images = $this->images;
             if (count($images) > 0) {
                 return $images[0]->image_url;

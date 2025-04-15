@@ -23,7 +23,7 @@ const AttendeeDashboard = ({ eventApp }: any) => {
         (session: any) => session.selected_by_attendee
     );
 
-    // console.log(selectedSessions);
+    console.log(eventApp);
 
     return (
         <React.Fragment>

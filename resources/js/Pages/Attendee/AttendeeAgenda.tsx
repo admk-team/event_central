@@ -9,8 +9,10 @@ import EventSessionsTimeLine from './common/EventSessionsTimeLine';
 
 
 const AttendeeAgenda = ({ eventApp, eventdates, enableTracks, tracks, eventPlatforms }: any) => {
+
     console.log(eventApp.event_sessions);
-    
+    console.log(eventApp);
+
     // Initialize the state variables
     const [selectedTracks, setSelectedTracks] = useState([]);
     const [selectedPlatforms, setSelectedPlatforms] = useState([]);
@@ -22,17 +24,17 @@ const AttendeeAgenda = ({ eventApp, eventdates, enableTracks, tracks, eventPlatf
             } else {
                 return [...prevTracks, platformId]; // Add the trackId to the array if it's not already in
             }
-            
+
         });
     }
     const toggleTrackSelection = (trackId) => {
         setSelectedTracks((prevTracks) => {
             if (prevTracks.includes(trackId)) {
-                return prevTracks.filter(id => id !== trackId); 
+                return prevTracks.filter(id => id !== trackId);
             } else {
-                return [...prevTracks, trackId]; 
+                return [...prevTracks, trackId];
             }
-            
+
         });
     }
 

@@ -87,7 +87,7 @@ const PaymentSuccess = ({ eventApp, attendee, image = [], hasTickets }) => {
                                                 placeholder="Enter New Email"
                                                 value={emails[img.purchased_id]}
                                                 autoComplete="email"
-                                                onChange={(e) => {
+                                                onBlur={(e) => {
                                                     const newEmails = [...emails];
                                                     newEmails[img.purchased_id] = e.target.value;
                                                     setEmails(newEmails);

@@ -20,6 +20,9 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Auth\Events\Registered;
 use App\Providers\RouteServiceProvider;
 use App\Models\AttendeePurchasedTickets;
+use App\Models\AttendeeTransferedTicket;
+use Illuminate\Support\Facades\DB;
+use Nette\Schema\Expect;
 
 class RegisteredUserController extends Controller
 {
@@ -63,57 +66,102 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $transferCheck = TransferTicket::where('transfer_email', $request->email)
-            ->where('event_app_id', $eventApp->id)
-            ->first();
-
-        if ($transferCheck) {
-            $payment = AttendeePurchasedTickets::whereId($transferCheck->attendee_payment_id)->with('purchased_addons')->first();
-            if ($payment) {
-                $baseTotal = $payment->total;
-
-                $addonsTotal = $payment->purchased_addons->sum('price');
-
-                $finalTotal = $baseTotal + $addonsTotal;
-
-                $recipient = AttendeePayment::findOrFail($payment->attendee_payment_id);
-                if ($recipient) {
-                    $recipient->update([
-                        'sub_total' => $recipient->sub_total - $finalTotal,
-                        'amount_paid' => $recipient->sub_total - $finalTotal,
-                    ]);
-                }
-
-                $transferedTicket = AttendeePayment::create([
-                    'uuid' => Str::uuid(),
-                    'event_app_id' => $eventApp->id,
-                    'attendee_id' => $user->id,
-                    'discount_code' => $recipient->discount_code ? $recipient->discount_code : null,
-                    'sub_total' => $finalTotal,
-                    'discount' => $recipient->discount ? $recipient->discount : null,
-                    'amount_paid' => $finalTotal,
-                    'stripe_intent' => $recipient->stripe_intent ? $recipient->stripe_intent : null,
-                    'status' => $recipient->status ? $recipient->status : null,
-                    'payment_method' => $recipient->payment_method ? $recipient->payment_method : null,
-                ]);
-
-                //Session Access Needed
-
-                AttendeePurchasedTickets::whereId($transferCheck->attendee_payment_id)->update([
-                    'attendee_payment_id' => $transferedTicket->id,
-                ]);
-
-                $transferCheck->update([
-                    'attendee_payment_transfered' => $transferedTicket->id,
-                    'transfered' => true,
-                ]);
-            }
-        }
+        $this->checkIfTicketTransferCase($request->email, $eventApp, $user);
 
         event(new Registered($user));
 
         Auth::guard('attendee')->login($user);
 
         return redirect(route('attendee.event.detail.dashboard'));
+    }
+
+    private function checkIfTicketTransferCase($email, $eventApp, $user)
+    {
+        $transferedTicket = AttendeeTransferedTicket::where('email', $email)
+            ->where('event_app_id', $eventApp->id)
+            ->first();
+
+        if ($transferedTicket) {
+            $purchasedTicket = AttendeePurchasedTickets::whereId($transferedTicket->attendee_purchased_ticket_id)->first();
+            $bt_payment = $purchasedTicket->payment;
+
+            if ($purchasedTicket) {
+                DB::beginTransaction();
+                try {
+                    // Update Original Payment values
+                    $bt_payment->update([
+                        'sub_total' => $bt_payment->sub_total - $purchasedTicket->total,
+                        'amount_paid' => $bt_payment->sub_total - $purchasedTicket->total,
+                    ]);
+                    $bt_payment->save();
+                    //Create new Paymnet values
+                    $newattendeePayment = AttendeePayment::create([
+                    'uuid' => Str::uuid(),
+                    'event_app_id' => $eventApp->id,
+                    'attendee_id' => $user->id,
+                        'discount_code' => null,
+                        'sub_total' => $purchasedTicket->total,
+                        'discount' => 0,
+                        'amount_paid' => $purchasedTicket->total,
+                        'stripe_intent' => $transferedTicket->stripe_intent,
+                        'status' => $bt_payment->status,
+                        'payment_method' => $bt_payment->payment_method,
+                ]);
+
+                    //Session Access Needed
+                    $purchasedTicket->update([
+                        'attendee_payment_id' => $newattendeePayment->id,
+                    ]);
+
+                    $transferedTicket->update([
+                        'at_attendee_id' => $user->id,
+                        'at_attendee_payment_id' => $newattendeePayment->id,
+                        'transfer_status' => 'done',
+                ]);
+
+                    // update sessions of newly created attendee
+                    $this->updateAttendeeSession($newattendeePayment, $user);
+
+                    //update sessions of previous attendee who transfered this ticket
+                    $bt_attendee = Attendee::find($transferedTicket->bt_attendee_id);
+                    if ($bt_attendee) {
+
+                        $this->updateAttendeeSession($bt_payment, $bt_attendee);
+                    }
+
+                    DB::commit();
+                } catch (\Exception $ex) {
+                    DB::rollBack();
+                    Log::error($ex->getMessage());
+                }
+            }
+        }
+    }
+
+    private function updateAttendeeSession($payment, $user)
+    {
+
+        $payment->load('purchased_tickets.ticket.sessions');
+        $sessions = $payment->purchased_tickets->flatMap(function ($item) {
+            return $item->ticket->sessions;
+        });
+        $sessions_ids = $sessions->pluck('id');
+        try {
+            $user->eventSelectedSessions()->sync($sessions_ids);
+        } catch (\Exception $ex) {
+            Log::error($ex->getMessage());
+        }
+
+        // foreach ($payment->purchased_tickets as $purchasedTicket) {
+        //     $session_ids = $purchasedTicket->ticket->sessions()->pluck('id');
+        //     foreach ($session_ids as $id) {
+        //         // Session might be already attached to attendee from any other ticket
+        //         try {
+        //             $user->eventSelectedSessions()->attach($id);
+        //         } catch (\Exception $ex) {
+        //             Log::error($ex->getMessage());
+        //         }
+        //     }
+        // }
     }
 }
