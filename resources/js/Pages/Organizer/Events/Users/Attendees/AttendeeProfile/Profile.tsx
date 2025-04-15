@@ -5,11 +5,12 @@ import Layout from "../../../../../../Layouts/Event";
 import CheckInModal from "./Component/CheckInModal";
 
 const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
+// console.log(sessionsPurchased);
 
     const [showModal, setShowModal] = useState(false);
     return (
         <React.Fragment>
-            <Head title="Profile | Velzon - React Admin & Dashboard Template" />
+            <Head title="Attendee Profile" />
             <div className="page-content">
                 <Container fluid>
                     <div className="profile-foreground position-relative mx-n4 mt-n4">
@@ -192,7 +193,7 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                                                         </span>
                                                     </a>
                                                 </div>
-                                                
+
                                             </div>
                                         </Card.Body>
                                     </Card>
@@ -205,7 +206,7 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                                                     attendee[0]?.form_fields.map((field:any, index:any) => (
                                                         <div className="row p-2">
                                                             <div className="col">
-                                                                <h6 className="mb-0">{field.label}: 
+                                                                <h6 className="mb-0">{field.label}:
                                                                     <span className="text-secondary">{" "}{attendee[0]?.field_values[index].value}
                                                                         </span></h6>
                                                             </div>
@@ -299,7 +300,7 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                 show={showModal}
                 onHide={() => setShowModal(false)}
                 attendee={user}
-                puchaseSession= {sessionsPurchased}
+                purchasedSession= {sessionsPurchased}
             />
         </React.Fragment>
     );

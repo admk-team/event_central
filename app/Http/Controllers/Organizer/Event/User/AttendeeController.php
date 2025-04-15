@@ -139,7 +139,11 @@ class AttendeeController extends Controller
             ->unique('id') // remove duplicates
             ->values();
         // dd($sessionsPurchased->toArray());
-
+        //Group By all Dates of Session
+        $sessionsPurchased = $sessionsPurchased->groupBy(function ($item) {
+            return Carbon::parse($item->eventDate->date)->format('M d, Y');
+        })->toArray();
+//        return $sessionsPurchased;
         // attendee sessions
         $sessions = DB::table('attendee_event_session')
             ->join('event_sessions', 'attendee_event_session.event_session_id', '=', 'event_sessions.id')
@@ -153,7 +157,8 @@ class AttendeeController extends Controller
                 'event_sessions.end_time',
                 'session_check_ins.checked_in as check_in_time',
                 DB::raw("CASE WHEN session_check_ins.id IS NOT NULL THEN 'Checked In' ELSE 'Not Checked In' END as status")
-            )->get();
+            )->get()->toArray();
+
         // attendee tickets
         $tickets = DB::table('attendee_payments')
             ->join('attendee_purchased_tickets', 'attendee_payments.id', '=', 'attendee_purchased_tickets.attendee_payment_id')
