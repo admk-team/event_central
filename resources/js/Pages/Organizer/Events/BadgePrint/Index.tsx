@@ -140,7 +140,7 @@ function Index({ attendees, eventApp }: { attendees: any; eventApp: any }) {
 
                                     <div className="attendee-details">
                                         <span className="location">{attendee?.location}</span>
-                                        <p className="attendee-name">{qr.ticket_name}</p>
+                                        <p className="attendee-name">{qr.ticket_type_name}</p>
                                     </div>
                                 </div>
                             </div>

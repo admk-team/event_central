@@ -209,57 +209,63 @@ class PaymentController extends Controller
         return Inertia::render('Attendee/Payment/PaymentCancel');
     }
 
-    public function updateAttendeePaymnet($paymentUuId)
+    public function updateAttendeePaymnet($paymentUuId, Request $request)
     {
         $attendee = auth()->user();
         $payment = AttendeePayment::where('uuid', $paymentUuId)->first();
-
+        $status = null;
         if (!$payment) {
             throw new Exception('Payment object not found with uuid ' . $paymentUuId);
         }
-
-        //1 Update Payment status to paid
-        $payment->status = 'paid';
-        $payment->save();
-
-        //2. Generate Ticket QR Code
-        $this->purchasedTickets($paymentUuId);
-
-        //3. Send confirmation Email to Attendee along with Ticket QR Codes  -----
-        $this->sendPurchasedTicketsEmailToAttendee();
-
-        //4. Increment discount code used count
-        if ($payment->discount_code) {
-            $code = PromoCode::where('code', $payment->discount_code)->first();
-            if ($code) {
-                $code->increment('used_count');
-                $code->save();
-            }
+        if ($request->status) {
+            $status = $request->status;
         }
+        if ($status == 'success') {
+            //1 Update Payment status to paid
+            $payment->status = 'paid';
+            $payment->save();
 
-        //5. Increment Addon Sold Qty
-        $payment->load('purchased_tickets.purchased_addons'); //Load Tickets and Addons
-        foreach ($payment->purchased_tickets as $purchasedTicket) {
-            foreach ($purchasedTicket->purchased_addons as $addon) {
-                $addonObject = Addon::find($addon->id);
-                $addonObject->increment('qty_sold');
-                $addonObject->save();
-            }
-        }
+            //2. Generate Ticket QR Code
+            $this->purchasedTickets($paymentUuId);
 
-        //6. Update Attendee Sessions
-        foreach ($payment->purchased_tickets as $purchasedTicket) {
-            $session_ids = $purchasedTicket->ticket->sessions()->pluck('id');
-            foreach ($session_ids as $id) {
-                // Session might be already attached to attendee from any other ticket
-                try {
-                    $attendee->eventSelectedSessions()->attach($id);
-                } catch (Exception $ex) {
-                    Log::error($ex->getMessage());
+            //3. Send confirmation Email to Attendee along with Ticket QR Codes  -----
+            $this->sendPurchasedTicketsEmailToAttendee();
+
+            //4. Increment discount code used count
+            if ($payment->discount_code) {
+                $code = PromoCode::where('code', $payment->discount_code)->first();
+                if ($code) {
+                    $code->increment('used_count');
+                    $code->save();
                 }
             }
+
+            //5. Increment Addon Sold Qty
+            $payment->load('purchased_tickets.purchased_addons'); //Load Tickets and Addons
+            foreach ($payment->purchased_tickets as $purchasedTicket) {
+                foreach ($purchasedTicket->purchased_addons as $addon) {
+                    $addonObject = Addon::find($addon->id);
+                    $addonObject->increment('qty_sold');
+                    $addonObject->save();
+                }
+            }
+
+            //6. Update Attendee Sessions
+            foreach ($payment->purchased_tickets as $purchasedTicket) {
+                $session_ids = $purchasedTicket->ticket->sessions()->pluck('id');
+                foreach ($session_ids as $id) {
+                    // Session might be already attached to attendee from any other ticket
+                    try {
+                        $attendee->eventSelectedSessions()->attach($id);
+                    } catch (Exception $ex) {
+                        Log::error($ex->getMessage());
+                    }
+                }
+            }
+            return response()->json(['message' => 'Attendee payment status has been updated to success']);
+        } elseif ($status == 'error') {
+            return response()->json(['message' => 'Attendee payment status has been updated to failure']);
         }
-        return response()->json(['message' => 'Attendee payment status has been updated']);
     }
 
 

@@ -97,7 +97,7 @@ function ManageTypes({ manageTypesModal, showModal, partnerCategories }: CreateM
                                             type="text"
                                             className="form-control"
                                             id="exhibitor_booth_no"
-                                            placeholder="Enter Category Name"
+                                            placeholder="Enter Type Name"
                                             value={data.name}
                                             onChange={(e) => setData('name', e.target.value)}
                                         />

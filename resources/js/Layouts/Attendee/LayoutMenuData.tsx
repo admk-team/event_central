@@ -74,7 +74,7 @@ const Navdata = () => {
         },
         {
             id: "dashboard",
-            label: "Dashboards",
+            label: "Dashboard",
             icon: "bx bxs-dashboard",
             link: route("attendee.event.detail.dashboard"),
             stateVariables: isDashboard,
@@ -100,7 +100,7 @@ const Navdata = () => {
         },
         {
             id: "speaker",
-            label: "Speaker",
+            label: "Speakers",
             icon: "bx bx-group",
             link: route("attendee.event.detail.speakers"),
             stateVariables: isSpeakers,
