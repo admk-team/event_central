@@ -80,5 +80,8 @@ Route::prefix('attendee')->group(function () {
         // //PayPal
         // Route::post('/paypal/create-order', [PaymentController::class, 'createPayPalOrder'])->name('attendee.paypal.create-order');
         // Route::post('/paypal/capture-order', [PaymentController::class, 'capturePayPalOrder'])->name('attendee.paypal.capture-order');
+
+        //purchased tickets
+        Route::get('purchased-tickets', [PaymentController::class, 'attendeeTickets']);
     });
 });

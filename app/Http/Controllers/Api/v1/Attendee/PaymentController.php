@@ -346,27 +346,41 @@ class PaymentController extends Controller
     public function attendeeTickets()
     {
         $attendee = auth()->user();
-        $attendee->load('payments');
+        $attendee->load('payments.purchased_tickets.ticket.ticketType'); // eager load purchased_tickets too
 
-        if ($attendee->payments->isEmpty()) {
+        // Filter only 'paid' payments
+        $paidPayments = $attendee->payments->filter(function ($payment) {
+            return $payment->status === 'paid';
+        });
+
+        if ($paidPayments->isEmpty()) {
             return Inertia::render('Attendee/Tickets/PurchasedTickets', [
                 'hasTickets' => false,
             ]);
         }
 
-        $payment = $attendee->payments[0];
-        $eventApp = EventApp::find($payment->event_app_id);
-
         $image = [];
-        foreach ($payment->purchased_tickets as $purchasedTicket) {
-            $transferCheck = TransferTicket::where('attendee_payment_transfered', $purchasedTicket->id)->exists();
-            $image[] = [
-                'qr_code' => asset('Storage/' . $purchasedTicket->qr_code),
-                'purchased_id' => $purchasedTicket->id,
-                'transfer_check' => $transferCheck,
-            ];
+        $eventApp = null;
+
+        // Loop through all paid payments
+        foreach ($paidPayments as $payment) {
+            if (!$eventApp) {
+                $eventApp = EventApp::find($payment->event_app_id);
+            }
+
+            foreach ($payment->purchased_tickets as $purchasedTicket) {
+                $transferCheck = TransferTicket::where('attendee_payment_transfered', $purchasedTicket->id)->exists();
+                $image[] = [
+                    'qr_code' => asset('storage/' . $purchasedTicket->qr_code),
+                    'purchased_id' => $purchasedTicket->id,
+                    'transfer_check' => $transferCheck,
+                    'ticket_name' => $purchasedTicket->ticket?->name ?? '',
+                    'ticket_type_name' => optional($purchasedTicket->ticket->ticketType)->name, // <-- added line
+                ];
+            }
         }
-        return Inertia::render('Attendee/Tickets/PurchasedTickets', [
+
+        return response()->json([
             'eventApp' => $eventApp,
             'attendee' => $attendee,
             'image' => $image,
