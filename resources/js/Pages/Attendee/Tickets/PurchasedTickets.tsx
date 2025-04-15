@@ -70,7 +70,7 @@ const PaymentSuccess = ({ eventApp, attendee, image = [], hasTickets }) => {
 
                                     <div className="attendee-details">
                                         <span className="location">{attendee?.location}</span>
-                                        <p className="attendee-name">{img.ticket_name}</p>
+                                        <p className="attendee-name">{img.ticket_type_name}</p>
                                     </div>
 
                                     {/* Conditional: Only show input if transfer_check is false */}
