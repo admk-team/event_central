@@ -97,6 +97,8 @@ class RegisteredUserController extends Controller
                     'payment_method' => $recipient->payment_method ? $recipient->payment_method : null,
                 ]);
 
+                //Session Access Needed
+
                 AttendeePurchasedTickets::whereId($transferCheck->attendee_payment_id)->update([
                     'attendee_payment_id' => $transferedTicket->id,
                 ]);
