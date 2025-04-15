@@ -32,7 +32,7 @@ class EventController extends Controller
     {
         $eventApp = EventApp::find(Auth::user()->event_app_id);
 
-        $eventdates = EventAppDate::where('event_app_id', $eventApp->id)->get();
+        $eventdates = EventAppDate::where('event_app_id', $eventApp->id)->with('eventSessions')->get();
         $tracks = Track::where('event_app_id', $eventApp->id)->get();
         $enableTracks = eventSettings($eventApp->id)->getValue('enable_tracks', false);
         $eventPlatforms = EventPlatform::where('event_app_id', $eventApp->id )->get();
