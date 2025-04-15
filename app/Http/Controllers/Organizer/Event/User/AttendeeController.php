@@ -143,7 +143,7 @@ class AttendeeController extends Controller
         $sessionsPurchased = $sessionsPurchased->groupBy(function ($item) {
             return Carbon::parse($item->eventDate->date)->format('M d, Y');
         })->toArray();
-//        return $sessionsPurchased;
+        //        return $sessionsPurchased;
         // attendee sessions
         $sessions = DB::table('attendee_event_session')
             ->join('event_sessions', 'attendee_event_session.event_session_id', '=', 'event_sessions.id')
@@ -229,7 +229,8 @@ class AttendeeController extends Controller
                     'purchased_id' => $purchasedTicket->id,
                     'transfer_check' => $transferCheck,
                     'ticket_name' => $purchasedTicket->ticket->name,
-                    'ticket_type_name' => optional($purchasedTicket->ticket->ticketType)->name, // <-- added line
+                    'ticket_type_name' => isset($purchasedTicket->ticket->ticketType->name) ?
+                        $purchasedTicket->ticket->ticketType->name : '', // <-- added line
                 ];
             }
         }
