@@ -2,15 +2,15 @@
     font-size: 2.5rem;
     font-weight: bolder;
     /* color: white; */
-    color: white;
+    /* color: white; */
       /* text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); */
-      text-shadow: 2px 2px #FF0000;
+      /* text-shadow: 2px 2px #FF0000; */
 }
 .date-diff-label{
     text-transform: uppercase;
     font-weight: 600;
     /* color: white; */
-        color: white;
+        /* color: white; */
 
 }
 .dropdown-menu-item-style{
