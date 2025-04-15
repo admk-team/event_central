@@ -28,6 +28,7 @@ class EventTicketsController extends Controller
             ->where('attendee_payments.event_app_id', session('event_id'))
             ->where('attendee_payments.status', 'paid')
             ->select(
+                
                 'event_app_tickets.name as ticket_name',
                 'attendee_purchased_tickets.total as total',
                 'attendee_payments.amount_paid as amount',
@@ -39,6 +40,8 @@ class EventTicketsController extends Controller
                 'attendees.first_name as attendee_first_name',
                 'attendees.last_name as attendee_last_name',
                 'attendees.email as attendee_email',
+                'attendee_payments.discount as discount',
+                'attendee_payments.discount_code as promo_code',
             )
             ->get();
         return Inertia::render('Organizer/Events/Tickets/EventAppTickets', compact(['tickets']));
