@@ -201,8 +201,7 @@ class AttendeeController extends Controller
 
     public function qrCodeAttendee(Attendee $attendee)
     {
-        $attendee->load('payments.purchased_tickets'); // eager load purchased_tickets too
-
+        $attendee->load('payments.purchased_tickets.ticket.ticketType'); // eager load purchased_tickets too
         // Filter only 'paid' payments
         $paidPayments = $attendee->payments->filter(function ($payment) {
             return $payment->status === 'paid';
@@ -230,6 +229,7 @@ class AttendeeController extends Controller
                     'purchased_id' => $purchasedTicket->id,
                     'transfer_check' => $transferCheck,
                     'ticket_name' => $purchasedTicket->ticket->name,
+                    'ticket_type_name' => optional($purchasedTicket->ticket->ticketType)->name, // <-- added line
                 ];
             }
         }

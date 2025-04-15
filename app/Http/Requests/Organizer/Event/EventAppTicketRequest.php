@@ -26,7 +26,7 @@ class EventAppTicketRequest extends FormRequest
             'event_app_id' => '',
             'name' => 'required',
             'description' => 'required',
-            'type' => 'required',
+            'type' => 'nullable',
             'base_price' => 'required|numeric',
 
             'sessions' => 'required|array',

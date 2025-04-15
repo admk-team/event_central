@@ -127,7 +127,7 @@ const QrCode = ({ eventApp, attendee, image = [], hasTickets }) => {
 
                                             <div className="attendee-details">
                                                 <span className="location">{attendee?.location}</span>
-                                                <p className="attendee-name">{img.ticket_name}</p>
+                                                <p className="attendee-name">{img.ticket_type_name}</p>
                                             </div>
                                         </div>
                                     ))}
@@ -165,7 +165,7 @@ const QrCode = ({ eventApp, attendee, image = [], hasTickets }) => {
 
                                         <div className="attendee-details">
                                             <span className="location">{attendee?.location}</span>
-                                            <p className="attendee-name">{img.ticket_name}</p>
+                                            <p className="attendee-name">{img.ticket_type_name}</p>
                                         </div>
                                     </div>
                                 </div>
