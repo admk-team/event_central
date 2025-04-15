@@ -22,7 +22,7 @@ const EventSessionsTimeLine = ({ eventApp, sessions }: any) => {
                                 <div className="d-flex flex-column">
                                     <h5>{session.name}</h5>
                                     <span style={{ fontSize: '0.8rem', color: 'smokewhite' }}>{session.event_platform?.name ?? 'MAIN STAGE'}</span>
-                                    <h5>speaker</h5>
+                                    {/* <h5>speaker</h5> */}
                                 </div>
                             </Col>
                             <Col>
