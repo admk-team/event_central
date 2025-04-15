@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Cache;
 
 class EventSession extends Model
 {
@@ -55,6 +56,8 @@ class EventSession extends Model
     public function eventDate()
     {
         return $this->belongsTo(EventAppDate::class, 'event_date_id');
+
+        // $event_dates = Cache::remember('event_dates', now()->addMinutes(10), function () {});
     }
 
     public function getSelectedByAttendeeAttribute()
@@ -72,12 +75,21 @@ class EventSession extends Model
 
     public function getStartDateTimeAttribute()
     {
-        return $this->eventDate ? $this->eventDate->date . ' ' . $this->attributes['start_time'] : '';
+
+        return $this->cahchedEventDate() ? $this->cahchedEventDate() . ' ' . $this->attributes['start_time'] : '';
+    }
+
+    // Internally being used for computed attributes
+    private function cahchedEventDate()
+    {
+        Cache::remember('event_date', now()->addMinutes(5), function () {
+            return $this->eventDate;
+        });
     }
 
     public function getEndDateTimeAttribute()
     {
-        return $this->eventDate ? $this->eventDate->date . ' ' . $this->attributes['end_time'] : '';
+        return  $this->cahchedEventDate() ?  $this->cahchedEventDate() . ' ' . $this->attributes['end_time'] : '';
     }
 
     public function attendances()

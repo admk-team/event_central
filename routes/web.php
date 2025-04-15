@@ -75,6 +75,10 @@ Route::middleware('auth:attendee')->group(function () {
     Route::get('/test-attendee-qr', [AnswerController::class, 'generate']);
 });
 
+// Route::get('react-playground', function () {
+//     return Inertia::render('Test');
+// });
+
 
 
 require __DIR__ . '/auth.php';
