@@ -9,6 +9,7 @@ use App\Models\EventApp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class AttendeeController extends Controller
 {
@@ -56,6 +57,34 @@ class AttendeeController extends Controller
         if (! Auth::user()->can('view_attendees')) {
             return $this->errorResponse("Unauthorized", 403);
         }
+
+        return $this->successResponse(new AttendeeResource($attendee));
+    }
+
+    public function update(Request $request, EventApp $event, Attendee $attendee)
+    {
+        if (! Auth::user()->can('edit_attendees')) {
+            return $this->errorResponse("Unauthorized", 403);
+        }
+
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('attendees')->ignore($attendee->id),
+                'email'
+            ],
+            'company' => 'nullable',
+            'position' => 'nullable',
+            'phone' => 'nullable',
+            'bio' => 'nullable',
+            'location' => 'nullable',
+        ]);
+
+        $attendee->update($request->input());
 
         return $this->successResponse(new AttendeeResource($attendee));
     }
