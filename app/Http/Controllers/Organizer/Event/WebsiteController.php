@@ -39,7 +39,7 @@ class WebsiteController extends Controller
         $partnerCategories = EventPartnerCategory::where('event_app_id', $event->id)->with(['partners'])->get();
         $tracks = Track::where('event_app_id', $event->id)->get();
         $enableTracks = eventSettings($event->id)->getValue('enable_tracks', false);
-        $eventPlatforms = EventPlatform::where('event_app_id', session('event_id'))->get();
+        $eventPlatforms = EventPlatform::where('event_app_id', $event->id)->get();
 
         return view('event-website.schedule', compact('event', 'colors', 'partnerCategories', 'tracks', 'enableTracks', 'eventPlatforms'));
     }
