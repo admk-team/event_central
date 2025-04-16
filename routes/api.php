@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\v1\Attendee\RegisterController;
 use App\Http\Controllers\Api\v1\Organizer\EventSessionController;
 use App\Http\Controllers\Api\v1\Attendee\EventController as AttendeeEventController;
 use App\Http\Controllers\Api\v1\Attendee\QuestionAttendeeController as AttendeeQuestionAttendeeController;
+use App\Http\Controllers\Api\v1\Organizer\AttendeeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +48,12 @@ Route::prefix('user')->group(function () {
         Route::post('events/{event}/sessions/{session}/scan', [EventSessionController::class, 'scan']);
         Route::post('events/{event}/sessions/{session}/checkin', [EventSessionController::class, 'checkin']);
         Route::post('events/{event}/sessions/{session}/checkout', [EventSessionController::class, 'checkout']);
+
+        // Event Attendees
+        Route::get('events/{event}/attendees', [AttendeeController::class, 'index']);
+        Route::get('events/{event}/attendees/{attendee}', [AttendeeController::class, 'show']);
+        Route::post('events/{event}/attendees', [AttendeeController::class, 'create']);
+        Route::put('events/{event}/attendees/{attendee}', [AttendeeController::class, 'update']);
 
         Route::post('/logout', [AuthController::class, 'logout']);
     });
