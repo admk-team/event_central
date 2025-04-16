@@ -86,10 +86,10 @@ Route::prefix('attendee')->group(function () {
         Route::get('purchased-tickets', [PaymentController::class, 'attendeeTickets']);
 
         //Question Answer
-        Route::get('/events/qa/{session_id}', [AttendeeQuestionAttendeeController::class, 'index'])->name('attendee.events.qa.index');
-        Route::post('/events/{event}/questions', [AttendeeQuestionAttendeeController::class, 'storeQuestion'])->name('attendee.events.qa.store');
-        Route::post('/events/questions/{questionId}/vote', [AttendeeQuestionAttendeeController::class, 'vote'])->name('attendee.events.qa.vote');
-        Route::post('/events/questions/{questionId}/answer', [AttendeeQuestionAttendeeController::class, 'storeAnswer'])->name('attendee.events.qa.answer');
+        Route::get('/events/qa/{session_id}', [AttendeeQuestionAttendeeController::class, 'index'])->name('attendee.api.qa.index');
+        Route::post('/events/{session_id}/questions', [AttendeeQuestionAttendeeController::class, 'storeQuestion'])->name('attendee.api.qa.store');
+        Route::post('/events/questions/{questionId}/vote', [AttendeeQuestionAttendeeController::class, 'vote'])->name('attendee.api.qa.vote');
+        Route::post('/events/questions/{questionId}/answer', [AttendeeQuestionAttendeeController::class, 'storeAnswer'])->name('attendee.api.qa.answer');
         Route::group(['prefix' => 'events/qa', 'as' => 'attendee.events.qa.'], function () {
             Route::put('/question/{questionId}', [AttendeeQuestionAttendeeController::class, 'updateQuestion'])->name('updateQuestion');
             Route::delete('/question/{questionId}', [AttendeeQuestionAttendeeController::class, 'destroyQuestion'])->name('destroyQuestion');
