@@ -10,6 +10,12 @@ class AttendeePurchasedTickets extends Model
     use HasFactory;
 
     protected $fillable = [
+        'attendee_id',
+        'transfered_to_attendee_id',
+        'event_app_id',
+        'is_transfered',
+        'transfered_to_email',
+
         'attendee_payment_id',
         'event_app_ticket_id',
         'qty',

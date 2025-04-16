@@ -76,4 +76,16 @@ class Attendee extends Authenticatable
     {
         return $this->morphMany(AttendeePayment::class, 'payer');
     }
+
+    public function purchased_tickets()
+    {
+        $tickets =  AttendeePurchasedTickets::where(function ($subQuery) {
+            $subQuery->where(function ($subSubQuery) {
+                $subSubQuery->where('attendee_id', $this->id);
+                $subSubQuery->where('is_transfered', 0);
+            });
+            $subQuery->orWhere('transfered_to_attendee_id', $this->id);
+        })->get();
+        return $tickets;
+    }
 }

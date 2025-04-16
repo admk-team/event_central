@@ -83,52 +83,31 @@ class RegisteredUserController extends Controller
 
         if ($transferedTicket) {
             $purchasedTicket = AttendeePurchasedTickets::whereId($transferedTicket->attendee_purchased_ticket_id)->first();
-            $bt_payment = $purchasedTicket->payment;
 
             if ($purchasedTicket) {
                 DB::beginTransaction();
                 try {
-                    // Update Original Payment values
-                    $bt_payment->update([
-                        'sub_total' => $bt_payment->sub_total - $purchasedTicket->total,
-                        'amount_paid' => $bt_payment->sub_total - $purchasedTicket->total,
-                    ]);
-                    $bt_payment->save();
-                    //Create new Paymnet values
-                    $newattendeePayment = AttendeePayment::create([
-                    'uuid' => Str::uuid(),
-                    'event_app_id' => $eventApp->id,
-                    'attendee_id' => $user->id,
-                        'discount_code' => null,
-                        'sub_total' => $purchasedTicket->total,
-                        'discount' => 0,
-                        'amount_paid' => $purchasedTicket->total,
-                        'stripe_intent' => $transferedTicket->stripe_intent,
-                        'status' => $bt_payment->status,
-                        'payment_method' => $bt_payment->payment_method,
-                ]);
-
                     //Session Access Needed
                     $purchasedTicket->update([
-                        'attendee_payment_id' => $newattendeePayment->id,
+                        'transfered_to_attendee_id' => $user->id,
+                        'is_transfered' => true,
                     ]);
 
                     $transferedTicket->update([
                         'at_attendee_id' => $user->id,
-                        'at_attendee_payment_id' => $newattendeePayment->id,
+                        'at_attendee_payment_id' => null,
                         'transfer_status' => 'done',
-                ]);
+                    ]);
 
                     // update sessions of newly created attendee
-                    $this->updateAttendeeSession($newattendeePayment, $user);
+                    $this->updateAttendeeSession($user);
 
                     //update sessions of previous attendee who transfered this ticket
                     $bt_attendee = Attendee::find($transferedTicket->bt_attendee_id);
                     if ($bt_attendee) {
 
-                        $this->updateAttendeeSession($bt_payment, $bt_attendee);
+                        $this->updateAttendeeSession($bt_attendee);
                     }
-
                     DB::commit();
                 } catch (\Exception $ex) {
                     DB::rollBack();
@@ -138,11 +117,9 @@ class RegisteredUserController extends Controller
         }
     }
 
-    private function updateAttendeeSession($payment, $user)
+    private function updateAttendeeSession($user)
     {
-
-        $payment->load('purchased_tickets.ticket.sessions');
-        $sessions = $payment->purchased_tickets->flatMap(function ($item) {
+        $sessions = $user->purchased_tickets()->flatMap(function ($item) {
             return $item->ticket->sessions;
         });
         $sessions_ids = $sessions->pluck('id');
@@ -151,17 +128,5 @@ class RegisteredUserController extends Controller
         } catch (\Exception $ex) {
             Log::error($ex->getMessage());
         }
-
-        // foreach ($payment->purchased_tickets as $purchasedTicket) {
-        //     $session_ids = $purchasedTicket->ticket->sessions()->pluck('id');
-        //     foreach ($session_ids as $id) {
-        //         // Session might be already attached to attendee from any other ticket
-        //         try {
-        //             $user->eventSelectedSessions()->attach($id);
-        //         } catch (\Exception $ex) {
-        //             Log::error($ex->getMessage());
-        //         }
-        //     }
-        // }
     }
 }

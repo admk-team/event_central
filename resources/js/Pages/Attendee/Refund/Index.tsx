@@ -4,22 +4,23 @@ import { Head, Link, router, useForm } from '@inertiajs/react';
 import BreadCrumb from '../../../Components/Common/BreadCrumb';
 import Layout from "../../../Layouts/Attendee"
 import DataTable, { ColumnDef } from '../../../Components/DataTable';
-import DeleteModal from '../../../Components/Common/DeleteModalRefund';
+import RefundTicketModal from './RefundTicketModal';
+import moment from 'moment';
 
 function RefundTickets({ payments }: any) {
-    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-    const [deleteAttendee, setDeleteAttendee] = React.useState<any>(null);
+    const [showRefundModal, setShowRefundModal] = useState(false);
+    const [currentPaymentId, setCurrentPaymentId] = useState<any>(null);
 
-    const deleteForm = useForm({
-    });
-
-    const deleteAction = (attendee: any) => {
-        setDeleteAttendee(attendee);
-        setShowDeleteConfirmation(true);
+    const refundAction = (paymentId: any) => {
+        console.log(paymentId);
+        setCurrentPaymentId(paymentId);
+        setShowRefundModal(true);
     }
-    const handleDelete = () => {
-        deleteForm.post(route('attendee.tickets.request', { id: deleteAttendee }));
-        setShowDeleteConfirmation(false);
+
+    const handleRefundProcessed = () => {
+
+        setShowRefundModal(false);
+        console.log('refund processed successfully');
     }
 
     const columns: ColumnDef<typeof payments.data[0]> = [
@@ -29,22 +30,50 @@ function RefundTickets({ payments }: any) {
             cellClass: "fw-medium"
         },
         {
-            header: () => 'Total',
-            cell: (payment) => payment.amount_paid,
+            header: () => 'Total Amount',
+            cell: (payment) => '$' + payment.amount_paid,
+        },
+        {
+            header: () => 'Payment Status',
+            cell: (payment) => payment.status,
         },
         {
             header: () => 'Payment Method',
             cell: (payment) => payment.payment_method,
         },
         {
-            header: () => 'Status',
-            cell: (payment) => payment.refund_tickets?.status ? payment.refund_tickets?.status : "",
+            header: () => 'Refund Type',
+            cell: (payment) => payment.refund_tickets?.refund_type ?? '',
+        },
+        {
+            header: () => 'Refund Reason',
+            cell: (payment) => payment.refund_tickets?.refund_reason ?? '',
+        },
+
+        {
+            header: () => 'Requested On',
+            cell: (payment) => payment.refund_tickets ? moment(payment.refund_tickets.refund_requested_on).format('MMM DD, YYYY') : '',
+        },
+
+        {
+            header: () => 'Refund Status',
+            cell: (payment) => payment.refund_tickets?.refund_status ?? '',
+        },
+
+        {
+            header: () => 'Refund Status Date',
+            cell: (payment) => payment.refund_tickets?.refund_status_date ?? '',
+        },
+
+        {
+            header: () => 'Organizer Remarks',
+            cell: (payment) => payment.refund_tickets?.organizer_remarks ?? '',
         },
         {
             header: () => "Actions",
             cell: (payment) => (
                 <div className="hstack gap-4 fs-15 text-center">
-                    <a className="link-primary cursor-pointer" onClick={() => deleteAction(payment.id)} ><i className="ri-refund-2-line"></i></a>
+                    <a className="link-primary cursor-pointer" onClick={() => refundAction(payment.id)} ><i className="ri-refund-2-line"></i></a>
                 </div>
             ),
         },
@@ -80,13 +109,14 @@ function RefundTickets({ payments }: any) {
                     </Row>
                 </Container>
             </div>
-
-            <DeleteModal
-                show={showDeleteConfirmation}
-                onDeleteClick={handleDelete}
-                onCloseClick={() => { setShowDeleteConfirmation(false) }}
+            {showRefundModal && <RefundTicketModal
+                show={showRefundModal}
+                onRefundProcessed={handleRefundProcessed}
+                onCloseClick={() => { setShowRefundModal(false) }}
+                paymentId={currentPaymentId}
             />
 
+            }
         </React.Fragment>
     )
 }

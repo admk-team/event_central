@@ -8,7 +8,7 @@ interface RefundActionModalProps {
     refund: any;
 }
 
-const RefundActionModal: React.FC<RefundActionModalProps> = ({ show, onCloseClick, refund }) => {
+const OrganizerRefundModal: React.FC<RefundActionModalProps> = ({ show, onCloseClick, refund }) => {
     const [processing, setProcessing] = React.useState(false);
 
     const handleRefundAction = (status: string) => {
@@ -78,4 +78,4 @@ const RefundActionModal: React.FC<RefundActionModalProps> = ({ show, onCloseClic
     ) as unknown as JSX.Element;
 };
 
-export default RefundActionModal;
+export default OrganizerRefundModal;

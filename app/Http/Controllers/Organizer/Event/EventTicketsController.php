@@ -28,8 +28,8 @@ class EventTicketsController extends Controller
             ->where('attendee_payments.event_app_id', session('event_id'))
             ->where('attendee_payments.status', 'paid')
             ->select(
-                
-                'event_app_tickets.name as ticket_name',
+
+            'event_app_tickets.name as ticket_name',
                 'attendee_purchased_tickets.total as total',
                 'attendee_payments.amount_paid as amount',
                 'attendee_payments.payment_method as type',
@@ -59,7 +59,7 @@ class EventTicketsController extends Controller
         $status = $request->status;
         $refund = AttendeeRefundTicket::findOrFail($request->refundId);
         if (!$refund) {
-            return redirect()->back()->with('error', 'Invalid Refund ID');
+            return redirect()->back()->withError('Invalid Refund ID');
         }
 
         $paymentId = $refund->attendee_payment_id;
