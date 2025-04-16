@@ -3,12 +3,13 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\v1\AuthController;
+use App\Http\Controllers\Api\v1\Attendee\EventPostController;
+use App\Http\Controllers\Api\v1\Organizer\EventController;
+use App\Http\Controllers\Api\v1\Attendee\PaymentController;
 use App\Http\Controllers\Api\v1\Attendee\ProfileController;
 use App\Http\Controllers\Api\v1\Attendee\RegisterController;
-use App\Http\Controllers\Api\v1\Attendee\EventController as AttendeeEventController;
-use App\Http\Controllers\Api\v1\Organizer\EventController;
 use App\Http\Controllers\Api\v1\Organizer\EventSessionController;
-use App\Http\Controllers\Api\v1\Attendee\PaymentController;
+use App\Http\Controllers\Api\v1\Attendee\EventController as AttendeeEventController;
 use App\Http\Controllers\Api\v1\Attendee\QuestionAttendeeController as AttendeeQuestionAttendeeController;
 use App\Http\Controllers\Api\v1\Organizer\AttendeeController;
 
@@ -71,7 +72,6 @@ Route::prefix('attendee')->group(function () {
 
         Route::get('event/{eventApp}', [AttendeeEventController::class, 'getEventDetailDashboard']);
         Route::get('event/{eventApp}/session/{eventSession}', [AttendeeEventController::class, 'eventsessions']);
-        // Route::get('event/{eventApp}/session', [AttendeeEventController::class, 'eventsessions']);
         Route::get('event/ticket/{eventApp}', [AttendeeEventController::class, 'ticket']);
         Route::get('event/speaker/{eventApp}', [AttendeeEventController::class, 'speaker']);
         Route::get('event/contact/{eventApp}', [AttendeeEventController::class, 'contact']);
@@ -103,5 +103,11 @@ Route::prefix('attendee')->group(function () {
             Route::put('/answer/{answerId}', [AttendeeQuestionAttendeeController::class, 'updateAnswer'])->name('updateAnswer');
             Route::delete('/answer/{answerId}', [AttendeeQuestionAttendeeController::class, 'destroyAnswer'])->name('destroyAnswer');
         });
+
+        //post
+        Route::get('/event-posts/{id}', [EventPostController::class, 'getPostsMore'])->name('attendee.posts.index');
+        Route::post('/attendee-poll-rating', [EventPostController::class, 'pollToggle'])->name('attendee.poll.rating');
+        Route::post('/attendee-post-likes', [EventPostController::class, 'toggleLike'])->name('attendee.like.rating');
+        Route::post('/attendee-post-dislikes', [EventPostController::class, 'toggleDislike'])->name('attendee.dislike.rating');
     });
 });
