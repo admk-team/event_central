@@ -3,13 +3,15 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\v1\AuthController;
+use App\Http\Controllers\Api\v1\Attendee\EventPostController;
+use App\Http\Controllers\Api\v1\Organizer\EventController;
+use App\Http\Controllers\Api\v1\Attendee\PaymentController;
 use App\Http\Controllers\Api\v1\Attendee\ProfileController;
 use App\Http\Controllers\Api\v1\Attendee\RegisterController;
-use App\Http\Controllers\Api\v1\Attendee\EventController as AttendeeEventController;
-use App\Http\Controllers\Api\v1\Organizer\EventController;
 use App\Http\Controllers\Api\v1\Organizer\EventSessionController;
-use App\Http\Controllers\Api\v1\Attendee\PaymentController;
+use App\Http\Controllers\Api\v1\Attendee\EventController as AttendeeEventController;
 use App\Http\Controllers\Api\v1\Attendee\QuestionAttendeeController as AttendeeQuestionAttendeeController;
+use App\Http\Controllers\Api\v1\Organizer\AttendeeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +49,12 @@ Route::prefix('user')->group(function () {
         Route::post('events/{event}/sessions/{session}/checkin', [EventSessionController::class, 'checkin']);
         Route::post('events/{event}/sessions/{session}/checkout', [EventSessionController::class, 'checkout']);
 
+        // Event Attendees
+        Route::get('events/{event}/attendees', [AttendeeController::class, 'index']);
+        Route::get('events/{event}/attendees/{attendee}', [AttendeeController::class, 'show']);
+        Route::post('events/{event}/attendees', [AttendeeController::class, 'create']);
+        Route::put('events/{event}/attendees/{attendee}', [AttendeeController::class, 'update']);
+
         Route::post('/logout', [AuthController::class, 'logout']);
     });
 });
@@ -64,7 +72,6 @@ Route::prefix('attendee')->group(function () {
 
         Route::get('event/{eventApp}', [AttendeeEventController::class, 'getEventDetailDashboard']);
         Route::get('event/{eventApp}/session/{eventSession}', [AttendeeEventController::class, 'eventsessions']);
-        // Route::get('event/{eventApp}/session', [AttendeeEventController::class, 'eventsessions']);
         Route::get('event/ticket/{eventApp}', [AttendeeEventController::class, 'ticket']);
         Route::get('event/speaker/{eventApp}', [AttendeeEventController::class, 'speaker']);
         Route::get('event/contact/{eventApp}', [AttendeeEventController::class, 'contact']);
@@ -86,15 +93,21 @@ Route::prefix('attendee')->group(function () {
         Route::get('purchased-tickets', [PaymentController::class, 'attendeeTickets']);
 
         //Question Answer
-        Route::get('/events/qa/{session_id}', [AttendeeQuestionAttendeeController::class, 'index'])->name('attendee.events.qa.index');
-        Route::post('/events/{event}/questions', [AttendeeQuestionAttendeeController::class, 'storeQuestion'])->name('attendee.events.qa.store');
-        Route::post('/events/questions/{questionId}/vote', [AttendeeQuestionAttendeeController::class, 'vote'])->name('attendee.events.qa.vote');
-        Route::post('/events/questions/{questionId}/answer', [AttendeeQuestionAttendeeController::class, 'storeAnswer'])->name('attendee.events.qa.answer');
+        Route::get('/events/qa/{session_id}', [AttendeeQuestionAttendeeController::class, 'index'])->name('attendee.api.qa.index');
+        Route::post('/events/{session_id}/questions', [AttendeeQuestionAttendeeController::class, 'storeQuestion'])->name('attendee.api.qa.store');
+        Route::post('/events/questions/{questionId}/vote', [AttendeeQuestionAttendeeController::class, 'vote'])->name('attendee.api.qa.vote');
+        Route::post('/events/questions/{questionId}/answer', [AttendeeQuestionAttendeeController::class, 'storeAnswer'])->name('attendee.api.qa.answer');
         Route::group(['prefix' => 'events/qa', 'as' => 'attendee.events.qa.'], function () {
             Route::put('/question/{questionId}', [AttendeeQuestionAttendeeController::class, 'updateQuestion'])->name('updateQuestion');
             Route::delete('/question/{questionId}', [AttendeeQuestionAttendeeController::class, 'destroyQuestion'])->name('destroyQuestion');
             Route::put('/answer/{answerId}', [AttendeeQuestionAttendeeController::class, 'updateAnswer'])->name('updateAnswer');
             Route::delete('/answer/{answerId}', [AttendeeQuestionAttendeeController::class, 'destroyAnswer'])->name('destroyAnswer');
         });
+
+        //post
+        Route::get('/event-posts/{id}', [EventPostController::class, 'getPostsMore'])->name('attendee.posts.index');
+        Route::post('/attendee-poll-rating', [EventPostController::class, 'pollToggle'])->name('attendee.poll.rating');
+        Route::post('/attendee-post-likes', [EventPostController::class, 'toggleLike'])->name('attendee.like.rating');
+        Route::post('/attendee-post-dislikes', [EventPostController::class, 'toggleDislike'])->name('attendee.dislike.rating');
     });
 });

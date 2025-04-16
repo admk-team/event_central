@@ -31,7 +31,7 @@ class EventTicketsController extends Controller
             ->where('attendee_payments.status', 'paid')
             ->select(
 
-            'event_app_tickets.name as ticket_name',
+                'event_app_tickets.name as ticket_name',
                 'attendee_purchased_tickets.total as total',
                 'attendee_payments.amount_paid as amount',
                 'attendee_payments.payment_method as type',
