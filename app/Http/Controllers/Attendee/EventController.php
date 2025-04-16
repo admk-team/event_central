@@ -107,6 +107,7 @@ class EventController extends Controller
 
     public function getPostsMore(String $id)
     {
+        dd($id);
         $attendee= Auth::user()->id;
         $eventApp = EventApp::find(Auth::user()->event_app_id);
         $newsfeeds = EventPost::where('event_app_id', $eventApp->id)->where('session_id',$id)->get();

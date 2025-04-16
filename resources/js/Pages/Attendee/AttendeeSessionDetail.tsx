@@ -34,7 +34,7 @@ const AttendeeSessionDetail = ({
     });
 
 
-
+    console.log(eventSession.id);
     const now = moment();
     const startTime = moment(eventSession.start_date_time);
     const endTime = moment(eventSession.end_date_time).add(15, "minutes");
