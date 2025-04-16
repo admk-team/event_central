@@ -237,6 +237,9 @@ const Navdata = () => {
                 setIscurrentState('refundTicket');
                 updateIconSidebar(e);
             },
+            hasPermissions: [
+                'refund_ticket'
+            ],
         },
         {
             id: "registrationForm",

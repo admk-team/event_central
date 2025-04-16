@@ -369,7 +369,7 @@ class PaymentController extends Controller
 
         // Filter only 'paid' payments
         $paidPayments = $attendee->payments->filter(function ($payment) {
-            return $payment->status === 'paid';
+            return $payment->status == 'paid';
         });
 
         if ($paidPayments->isEmpty()) {
@@ -396,7 +396,8 @@ class PaymentController extends Controller
                     'event_app_ticket_id' => $purchasedTicket->event_app_ticket_id,
                     'transfer_check' => $transferCheck,
                     'ticket_name' => $purchasedTicket->ticket?->name ?? '',
-                    'ticket_type_name' => optional($purchasedTicket->ticket)->ticketType?->name ?? '', // <-- added line
+                    'ticket_type_name' => isset($purchasedTicket->ticket->ticketType->name) ?
+                        $purchasedTicket->ticket->ticketType->name : '', // <-- added line
                 ];
             }
         }

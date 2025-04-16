@@ -27,7 +27,7 @@
         <div class="container">
             <a href="{{ route('organizer.events.website', $event->uuid) }}">
                 <div class="logo">
-                    <img src="{{ $event->logo_img }}" alt="{{ $event->name }}" />
+                    <img src="{{ $event->logo_img }}" alt="logo" />
                 </div>
             </a>
             <nav class="main-nav">
@@ -36,8 +36,10 @@
                     <li><a href="{{ route('organizer.events.website.speakers', $event->uuid) }}">Speakers</a></li>
                     <li><a href="#venue">Venue</a></li>
                     <li><a href="{{route('organizer.events.website.sponsors',$event->uuid) }}">Sponsors</a></li>
+                    <li><a href="{{route('organizer.events.website.tickets',$event->uuid) }}">Tickets</a></li>
                     <li class="header-actions-mobile">
-                        <a href="{{ route('organizer.events.website.schedule', $event->uuid) }}" class="btn btn-primary">Check Schedule</a>
+                        <a href="{{ route('organizer.events.website.schedule', $event->uuid) }}" class="btn btn-primary">Schedule</a>
+                        <a href="{{ route('attendee.login', $event) }}" class="btn btn-primary">Login</a>
                         <a href="{{ route('attendee.register', $event) }}" class="btn btn-primary">Register Now</a>
                     </li>
                 </ul>
@@ -63,7 +65,8 @@
                         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                     </svg>
                 </button> --}}
-                <a href="{{ route('organizer.events.website.schedule', $event->uuid) }}" class="btn btn-primary">Check Schedule</a>
+                <a href="{{ route('organizer.events.website.schedule', $event->uuid) }}" class="btn btn-primary">Schedule</a>
+                <a href="{{ route('attendee.login', $event) }}" class="btn btn-primary">Login</a>
                 <a href="{{ route('attendee.register', $event) }}" class="btn btn-primary">Register Now</a>
             </div>
             <button class="menu-toggle" aria-label="Toggle menu">

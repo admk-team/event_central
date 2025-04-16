@@ -71,7 +71,7 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::post('update-attendee-payment/{paymentUuId}', [PaymentController::class, 'updateAttendeePaymnet'])->name('attendee.update.payment');
 
         Route::get('{eventApp}/payment-success', [PaymentController::class, 'paymentSuccess'])->name('attendee.payment.success');
-        Route::get('{eventApp}/event-posts', [EventController::class, 'getPostsMore'])->name('attendee.posts.index');
+        Route::get('/event-posts/{id}', [EventController::class, 'getPostsMore'])->name('attendee.posts.index');
 
         //PayPal
         Route::post('/paypal/create-order', [PaymentController::class, 'createPayPalOrder'])->name('attendee.paypal.create-order');
@@ -80,7 +80,6 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::get('/payment/cancel', [PaymentController::class, 'paymentCancel'])->name('attendee.payment.cancel');
         Route::post('validate-discount-code/{disCode}', [PaymentController::class, 'validateDiscCode'])->name('attendee.validateCode.post');
         Route::get('/payment-success/{paymentUuId}', [PaymentController::class, 'paymentSuccess'])->name('attendee.payment.success');
-        Route::get('/event-posts', [EventController::class, 'getPostsMore'])->name('attendee.posts.index');
 
         // Event questionnaire Form
         Route::prefix('event-questionnaire-form')->name('attendee.event-questionnaire-form')->group(function () {

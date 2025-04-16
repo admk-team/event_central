@@ -11,7 +11,7 @@ import {
 } from "react-bootstrap";
 import Flatpickr from "react-flatpickr";
 
-function AddPost({ events, editPost , session_id }: any) {
+function AddPost({ events, editPost, session_id }: any) {
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [preview, setPreview] = useState<any>();
     const [schedulePost, setSchedulePost] = useState<any>(false);
@@ -29,11 +29,11 @@ function AddPost({ events, editPost , session_id }: any) {
         session_id: session_id,
     });
 
-    useEffect(()=>{
-        if(session_id){
-            setData('session_id',session_id)
+    useEffect(() => {
+        if (session_id) {
+            setData("session_id", session_id);
         }
-    },[session_id])
+    }, [session_id]);
 
     const updateFormData = (key: string, value: string) => {
         setData((prevData) => ({
@@ -47,7 +47,6 @@ function AddPost({ events, editPost , session_id }: any) {
         console.log(data);
         post(route("organizer.posts.store", data), {
             onSuccess: () => {
-                reset();
                 Clearfields();
             },
         });
@@ -55,6 +54,16 @@ function AddPost({ events, editPost , session_id }: any) {
 
     const Clearfields = () => {
         clearPoll();
+        setData({
+            title: "",
+            content: "",
+            image: null,
+            send_notification: false,
+            sending_date: null,
+            sending_time: null,
+            session_id: session_id
+        });
+        setSchedulePost(false)
         setPreview("");
     };
 
@@ -346,11 +355,32 @@ function AddPost({ events, editPost , session_id }: any) {
                                         </Form.Group>
                                     ))}
 
-                                    {options.length < 4 ? (<Button variant="outline-primary"
-                                        onClick={addOption} className="mt-2">+ Add Option</Button>):
-                                        <Button variant="outline-primary"
-                                        disabled className="mt-2">+ Add Option</Button>}
-                                    {options.length > 0 ? (<Button variant="outline-primary" onClick={clearPoll} className="mt-2 ms-2">Remove</Button>) : null}
+                                    {options.length < 4 ? (
+                                        <Button
+                                            variant="outline-primary"
+                                            onClick={addOption}
+                                            className="mt-2"
+                                        >
+                                            + Add Option
+                                        </Button>
+                                    ) : (
+                                        <Button
+                                            variant="outline-primary"
+                                            disabled
+                                            className="mt-2"
+                                        >
+                                            + Add Option
+                                        </Button>
+                                    )}
+                                    {options.length > 0 ? (
+                                        <Button
+                                            variant="outline-primary"
+                                            onClick={clearPoll}
+                                            className="mt-2 ms-2"
+                                        >
+                                            Remove
+                                        </Button>
+                                    ) : null}
                                 </FormGroup>
                             )}
                             <Row className="mt-2 align-items-center">
