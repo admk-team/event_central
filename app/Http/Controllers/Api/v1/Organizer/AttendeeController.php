@@ -84,7 +84,7 @@ class AttendeeController extends Controller
             'location' => 'nullable',
         ]);
 
-        $attendee->update($request->input());
+        $attendee->update($validated);
 
         return $this->successResponse(new AttendeeResource($attendee));
     }
