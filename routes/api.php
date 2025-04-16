@@ -51,6 +51,8 @@ Route::prefix('user')->group(function () {
         // Event Attendees
         Route::get('events/{event}/attendees', [AttendeeController::class, 'index']);
         Route::get('events/{event}/attendees/{attendee}', [AttendeeController::class, 'show']);
+        Route::post('events/{event}/attendees', [AttendeeController::class, 'create']);
+        Route::put('events/{event}/attendees/{attendee}', [AttendeeController::class, 'update']);
 
         Route::post('/logout', [AuthController::class, 'logout']);
     });
