@@ -9,12 +9,17 @@ import moment from 'moment';
 
 function RefundTickets({ payments }: any) {
     const [showRefundModal, setShowRefundModal] = useState(false);
-    const [currentPaymentId, setCurrentPaymentId] = useState<any>(null);
+    const [currentPayment, setCurrentPayment] = useState<any>(null);
 
-    const refundAction = (paymentId: any) => {
-        console.log(paymentId);
-        setCurrentPaymentId(paymentId);
-        setShowRefundModal(true);
+    const refundAction = (payment: any) => {
+        console.log(payment);
+
+        if (payment.refund_tickets && payment.refund_tickets.status.length > 0) {
+            alert('Refund has already been processed');
+        } else {
+            setCurrentPayment(payment);
+            setShowRefundModal(true);
+        }
     }
 
     const handleRefundProcessed = () => {
@@ -35,36 +40,40 @@ function RefundTickets({ payments }: any) {
         },
         {
             header: () => 'Payment Status',
-            cell: (payment) => payment.status,
+            cell: (payment) => <span className='badge bg-secondary text-capitalize p-2 w-100'>{payment.status}</span>,
         },
         {
             header: () => 'Payment Method',
             cell: (payment) => payment.payment_method,
         },
         {
+            header: () => 'Payment Date',
+            cell: (payment) => payment.created_at ? moment(payment.created_at).format('MMM DD, YYYY') : '',
+        },
+        {
             header: () => 'Refund Type',
             cell: (payment) => payment.refund_tickets?.refund_type ?? '',
+        },
+        {
+            header: () => 'Amount Requested',
+            cell: (payment) => (payment.refund_tickets && payment.refund_tickets.refund_requested_amount > 0 ? "$" : "") + (payment.refund_tickets?.refund_requested_amount ?? ''),
         },
         {
             header: () => 'Refund Reason',
             cell: (payment) => payment.refund_tickets?.refund_reason ?? '',
         },
-
         {
             header: () => 'Requested On',
             cell: (payment) => payment.refund_tickets ? moment(payment.refund_tickets.refund_requested_on).format('MMM DD, YYYY') : '',
         },
-
         {
             header: () => 'Refund Status',
-            cell: (payment) => payment.refund_tickets?.refund_status ?? '',
+            cell: (payment) => <span className='badge bg-secondary text-capitalize p-2 w-100'>{payment.refund_tickets?.status ?? ''}</span>,
         },
-
         {
             header: () => 'Refund Status Date',
-            cell: (payment) => payment.refund_tickets?.refund_status_date ?? '',
+            cell: (payment) => payment.refund_tickets && payment.refund_tickets.refund_status_date ? moment(payment.refund_tickets.refund_status_date).format('MMM DD, YYYY') : '',
         },
-
         {
             header: () => 'Organizer Remarks',
             cell: (payment) => payment.refund_tickets?.organizer_remarks ?? '',
@@ -73,9 +82,11 @@ function RefundTickets({ payments }: any) {
             header: () => "Actions",
             cell: (payment) => (
                 <div className="hstack gap-4 fs-15 text-center">
-                    <a className="link-primary cursor-pointer" onClick={() => refundAction(payment.id)} ><i className="ri-refund-2-line"></i></a>
+                    <Button size="sm" className="link-primary cursor-pointer" onClick={() => refundAction(payment)} >
+                        <i className="text-white ri-refund-2-line"></i>
+                    </Button>
                 </div>
-            ),
+            )
         },
     ];
 
@@ -113,7 +124,8 @@ function RefundTickets({ payments }: any) {
                 show={showRefundModal}
                 onRefundProcessed={handleRefundProcessed}
                 onCloseClick={() => { setShowRefundModal(false) }}
-                paymentId={currentPaymentId}
+                paymentId={currentPayment.id}
+                refundRequestedAmount={currentPayment.amount_paid}
             />
 
             }

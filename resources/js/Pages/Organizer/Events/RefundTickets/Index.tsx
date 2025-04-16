@@ -12,14 +12,13 @@ function Index({ refundPayments }: any) {
 
 
     const [showRefundActionModal, setShowRefundActionModal] = useState(false);
-    const [deleteAttendee, setDeleteAttendee] = React.useState<any>(null);
-    const [refundAction, setRefundAction] = React.useState<any>(null);
+    const [currentRefund, setCurrentRefund] = React.useState<any>(null);
 
-    const deleteForm = useForm({
-    });
 
-    const deleteAction = (attendee: any) => {
-        setRefundAction(attendee);
+    const handleShowRefundModal = (refund: any) => {
+
+        console.log(refund);
+        setCurrentRefund(refund);
         setShowRefundActionModal(true);
     }
 
@@ -34,20 +33,21 @@ function Index({ refundPayments }: any) {
             cell: (refund) => refund?.attendee ? refund?.attendee?.first_name + ' ' + refund?.attendee?.last_name : '',
         },
         {
-            header: () => 'Total',
+            header: () => 'Total Amount',
             cell: (refund) => refund?.attendee_payment ? refund?.attendee_payment?.amount_paid : '',
         },
         {
             header: () => 'Payment Method',
             cell: (refund) => refund?.attendee_payment ? refund?.attendee_payment?.payment_method : '',
         },
-        {
-            header: () => 'Status',
-            cell: (refund) => <span className='badge bg-secondary text-capitalize p-2'>{refund?.status ? refund.status : ""}</span>,
-        },
+
         {
             header: () => 'Refund Type',
             cell: (refund) => refund.refund_type ?? '',
+        },
+        {
+            header: () => 'Amount Requested',
+            cell: (refund) => "$" + refund.refund_requested_amount,
         },
         {
             header: () => 'Refund Reason',
@@ -64,10 +64,24 @@ function Index({ refundPayments }: any) {
             cell: (refund) => refund.organizer_remarks ?? '',
         },
         {
+            header: () => 'Refund Approved',
+            cell: (refund) => refund.refund_approved_amount > 0 ? refund.refund_approved_amount : '',
+        },
+        {
+            header: () => 'Status',
+            cell: (refund) => <span className='badge bg-secondary text-capitalize p-2'>{refund?.status ? refund.status : ""}</span>,
+        },
+        {
+            header: () => 'Status Date',
+            cell: (refund) => refund.refund_status_date ? moment(refund.refund_status_date).format('MMM DD, YYYY') : '',
+        },
+        {
             header: () => "Actions",
-            cell: (payment) => (
+            cell: (refund) => (
                 <div className="hstack gap-4 fs-15 text-center">
-                    <a className="link-primary cursor-pointer" onClick={() => deleteAction(payment)} ><i className="ri-refund-2-line"></i></a>
+                    <Button size="sm" className="link-primary  cursor-pointer" onClick={() => handleShowRefundModal(refund)} >
+                        <i className="text-white ri-refund-2-line"></i>
+                    </Button>
                 </div>
             ),
         },
@@ -103,10 +117,10 @@ function Index({ refundPayments }: any) {
                 </Container>
             </div>
 
-            {refundAction && (<OrganizerRefundModal
+            {currentRefund && (<OrganizerRefundModal
                 show={showRefundActionModal}
                 onCloseClick={() => { setShowRefundActionModal(false) }}
-                refund={refundAction}
+                refund={currentRefund}
             />)}
 
         </React.Fragment>

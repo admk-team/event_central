@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Http\Requests\Attendee;
+namespace App\Http\Requests\Organizer\Event;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RefundTicketRequest extends FormRequest
+class OrganizerRefundRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return auth('attendee')->check();
+        return auth()->check();
     }
 
     /**
@@ -22,10 +22,10 @@ class RefundTicketRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'payment_id' => 'required',
-            'refund_type' => 'required',
-            'refund_reason' => 'required|max:255',
-            'refund_requested_amount' => 'required|numeric',
+            'refund_id' => 'required',
+            'organizer_remarks' => 'required_if:action,rejected|max:255',
+            'refund_approved_amount' => 'required_if:action,approved|min:1',
+            'action' => 'required',
         ];
     }
 
@@ -37,11 +37,9 @@ class RefundTicketRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'payment_id.required' => 'Payment ID is required',
-            'refund_type.required' => 'Refund Type is required',
-            'refund_reason.required' => 'Brief Reason of refund is required',
-            'refund_requested_amount.required' => 'Refund amount is required',
-            'refund_requested_amount.numeric' => 'Refund amount must be numeric',
+            'refund_id.required' => 'Payment ID is required',
+            'organizer_remarks.max:255' => 'Organizer remarks maximum 255 characters are allowed',
+            'action.required' => 'Refund action is required',
         ];
     }
 }

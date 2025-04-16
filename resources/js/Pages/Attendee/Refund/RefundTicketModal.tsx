@@ -7,9 +7,10 @@ interface RefundModalProps {
     onRefundProcessed: () => void;
     onCloseClick?: () => void;
     paymentId?: string | number | null;
+    refundRequestedAmount?: number
 }
 
-const RefundTicketModal: React.FC<RefundModalProps> = ({ show, onRefundProcessed, onCloseClick, paymentId }) => {
+const RefundTicketModal: React.FC<RefundModalProps> = ({ show, onRefundProcessed, onCloseClick, paymentId, refundRequestedAmount }) => {
 
     console.log(paymentId);
 
@@ -17,7 +18,8 @@ const RefundTicketModal: React.FC<RefundModalProps> = ({ show, onRefundProcessed
         _method: "POST",
         payment_id: paymentId,
         refund_type: '',
-        refund_reason: ''
+        refund_reason: '',
+        refund_requested_amount: refundRequestedAmount
     });
 
     const submit = (e: any) => {
@@ -67,10 +69,16 @@ const RefundTicketModal: React.FC<RefundModalProps> = ({ show, onRefundProcessed
                     />
                     {errors.refund_reason && <Form.Control.Feedback type="invalid">{errors.refund_reason}</Form.Control.Feedback>}
                 </FormGroup>
-                {/* {errors && errors.map((error: any) => (
-                    <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>
-                ))} */}
-
+                <FormGroup className="mb-3">
+                    <Form.Label>Refund Amount</Form.Label>
+                    <Form.Control
+                        type="text"
+                        value={data.refund_requested_amount}
+                        onChange={(e) => setData('refund_requested_amount', e.target.value.length > 0 ? parseFloat(e.target.value) : 0)}
+                        isInvalid={!!errors.refund_requested_amount}
+                    />
+                    {errors.refund_requested_amount && <Form.Control.Feedback type="invalid">{errors.refund_requested_amount}</Form.Control.Feedback>}
+                </FormGroup>
                 <div className="d-flex gap-2 justify-content-between mt-4 mb-2">
                     <button
                         type="button"

@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Attendee\RefundTicketRequest;
 use App\Models\AttendeePayment;
 use App\Models\AttendeeRefundTicket;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 
@@ -51,6 +49,7 @@ class RefundPaymentController extends Controller
                 'refund_requested_on' => now(),
                 'refund_reason' => $request->refund_reason,
                 'refund_type' => $request->refund_type,
+                'refund_requested_amount' => $request->refund_requested_amount,
             ]);
         }
 

@@ -19,6 +19,8 @@ class AttendeeRefundTicket extends Model
         'organizer_remarks',
         'refund_status_date',
         'refund_requested_on',
+        'refund_approved_amount',
+        'refund_requested_amount',
     ];
 
     public function attendee()
