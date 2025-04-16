@@ -120,14 +120,15 @@ const EventSessionsTimeLine: React.FC<EventSessionsTimeLineProps> = ({ eventApp,
             {enableTracks && tracks.length > 0 && (
                 <div className="tracks text-center mt-4">
                     <h4>Tracks:</h4>
-                    <div className="tracks-filter d-flex justify-content-center gap-2">
+                    <div className="tracks-filter d-flex flex-wrap justify-content-center gap-2">
                         {tracks.map((track: Track) => (
                             <button
                                 key={track.id}
                                 onClick={() => toggleTrackSelection(track.id)}
                                 className="px-3 py-2 rounded"
                                 style={{
-                                    border: '1px solid #d1d5db',
+                                    fontWeight:'500',
+                                    border: '1px solid'+ track.color,
                                     backgroundColor: selectedTracks.includes(track.id) ? track.color : '',
                                     color: selectedTracks.includes(track.id) ? 'white' : 'black',
                                 }}
@@ -150,21 +151,21 @@ const EventSessionsTimeLine: React.FC<EventSessionsTimeLineProps> = ({ eventApp,
             {/* Platforms Filter */}
             <div className="locations text-center mt-4">
                 <h4>Locations:</h4>
-                <div className="locations-filter d-flex justify-content-center gap-2">
+                <div className="locations-filter d-flex flex-wrap justify-content-center gap-2">
                     {eventPlatforms?.map((platform: object) => (
                         <button
                             key={platform.id}
                             onClick={() => togglePlatformSelection(platform.id)}
-                            className={`p-3 rounded ${selectedPlatforms.includes(platform.id) ? 'bg-primary text-white' : ''
+                            className={`px-3 py-2 rounded ${selectedPlatforms.includes(platform.id) ? 'bg-primary text-white' : ''
                                 }`}
-                            style={{ border: '1px solid #d1d5db' }}
+                            style={{ border: '1px solid #d1d5db', fontWeight:'500' }}
                         >
                             {platform.name}
                         </button>
                     ))}
                     {selectedPlatforms.length > 0 && (
                         <button
-                            className="p-3 bg-secondary text-white rounded"
+                            className="px-3 bg-secondary text-white rounded"
                             onClick={clearPlatforms}
                         >
                             ✖
