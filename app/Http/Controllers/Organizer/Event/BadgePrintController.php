@@ -16,7 +16,7 @@ class BadgePrintController extends Controller
         if (! Auth::user()->can('print_badges')) {
             abort(403);
         }
-       
+
         $attendees = Attendee::currentEvent()
             ->with(['payments.purchased_tickets.ticket.ticketType'])
             ->get()
@@ -34,7 +34,7 @@ class BadgePrintController extends Controller
                                         ? asset('storage/' . $ticket->qr_code)
                                         : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s',
                                     'ticket_name' => optional($ticket->ticket)->name,
-                                    'ticket_type_name' => optional($ticket->ticket->ticketType)->name, // <-- added line
+                                    'ticket_type_name' => isset($ticket->ticket->ticketType->name) ? $ticket->ticket->ticketType->name : '', // <-- added line
                                 ];
                             });
                         })

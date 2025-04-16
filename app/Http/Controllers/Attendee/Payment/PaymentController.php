@@ -369,7 +369,7 @@ class PaymentController extends Controller
 
         // Filter only 'paid' payments
         $paidPayments = $attendee->payments->filter(function ($payment) {
-            return $payment->status === 'paid';
+            return $payment->status == 'paid';
         });
 
         if ($paidPayments->isEmpty()) {

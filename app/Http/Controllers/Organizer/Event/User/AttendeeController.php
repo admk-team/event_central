@@ -228,7 +228,7 @@ class AttendeeController extends Controller
                     'qr_code' => asset('storage/' . $purchasedTicket->qr_code),
                     'purchased_id' => $purchasedTicket->id,
                     'transfer_check' => $transferCheck,
-                    'ticket_name' => $purchasedTicket->ticket->name,
+                    'ticket_name' => $purchasedTicket->ticket?->name,
                     'ticket_type_name' => isset($purchasedTicket->ticket->ticketType->name) ?
                         $purchasedTicket->ticket->ticketType->name : '', // <-- added line
                 ];
