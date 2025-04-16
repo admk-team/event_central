@@ -19,7 +19,7 @@ import DeleteModal from "../../../../../Components/Common/DeleteModal";
 import EditModal from "./Component/EditModal";
 import HasPermission from "../../../../../Components/HasPermission";
 
-function Index({ newsfeeds, events, id }: any) {
+function Index({ newsfeeds, events, session_id }: any) {
     const [deletePost, setDeletePost] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showEditPost, setshowEditPost] = React.useState<any>(null);
@@ -73,7 +73,7 @@ function Index({ newsfeeds, events, id }: any) {
                 <meta
                     property="og:url"
                     content={route(
-                        "organizer.posts.index",{id:id}
+                        "organizer.posts.index",{id:session_id}
                     )}
                 />
             </Head>
@@ -87,6 +87,7 @@ function Index({ newsfeeds, events, id }: any) {
                                 <AddPost
                                     events={events[0]}
                                     editPostData={showEditPost}
+                                    session_id = {session_id}
                                 />
                             </HasPermission>
                         </Col>

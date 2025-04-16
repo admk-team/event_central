@@ -13,15 +13,15 @@ use Inertia\Inertia;
 
 class NewsfeedController extends Controller
 {
-    public function index(String $id)
+    public function index(String $session_id)
     {
         if (! Auth::user()->can('view_posts')) {
             abort(403);
         }
 
         $events = EventApp::ofOwner()->get();
-        $newsfeeds = EventPost::where('event_app_id', session('event_id'))->where('session_id', $id)->get();
-        return Inertia::render('Organizer/Events/Engagment/Newsfeed/Index', compact('newsfeeds', 'events','id'));
+        $newsfeeds = EventPost::where('event_app_id', session('event_id'))->where('session_id', $session_id)->get();
+        return Inertia::render('Organizer/Events/Engagment/Newsfeed/Index', compact('newsfeeds', 'events','session_id'));
     }
 
     public function store(EventPostRequest $request)
@@ -29,7 +29,7 @@ class NewsfeedController extends Controller
         if (! Auth::user()->can('create_posts')) {
             abort(403);
         }
-
+        
         $data = $request->validated();
         $data['event_app_id'] = session('event_id');
         $data['post_poll'] = $request->post_poll;

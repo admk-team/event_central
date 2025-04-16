@@ -133,7 +133,10 @@ class AttendeeController extends Controller
             ->get()
             ->flatMap(function ($payment) {
                 return $payment->purchased_tickets->flatMap(function ($ticket) {
-                    return $ticket->ticket->sessions;
+                    if ($ticket->ticket && $ticket->ticket->sessions) {
+                        return $ticket->ticket->sessions;
+                    }
+                    return collect();
                 });
             })
             ->unique('id') // remove duplicates
