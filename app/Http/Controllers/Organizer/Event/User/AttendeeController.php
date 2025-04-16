@@ -143,7 +143,7 @@ class AttendeeController extends Controller
         $sessionsPurchased = $sessionsPurchased->groupBy(function ($item) {
             return Carbon::parse($item->eventDate->date)->format('M d, Y');
         })->toArray();
-//        return $sessionsPurchased;
+        //        return $sessionsPurchased;
         // attendee sessions
         $sessions = DB::table('attendee_event_session')
             ->join('event_sessions', 'attendee_event_session.event_session_id', '=', 'event_sessions.id')
@@ -201,8 +201,7 @@ class AttendeeController extends Controller
 
     public function qrCodeAttendee(Attendee $attendee)
     {
-        $attendee->load('payments.purchased_tickets'); // eager load purchased_tickets too
-
+        $attendee->load('payments.purchased_tickets.ticket.ticketType'); // eager load purchased_tickets too
         // Filter only 'paid' payments
         $paidPayments = $attendee->payments->filter(function ($payment) {
             return $payment->status === 'paid';
@@ -229,7 +228,9 @@ class AttendeeController extends Controller
                     'qr_code' => asset('storage/' . $purchasedTicket->qr_code),
                     'purchased_id' => $purchasedTicket->id,
                     'transfer_check' => $transferCheck,
-                    'ticket_name' => $purchasedTicket->ticket->name,
+                    'ticket_name' => $purchasedTicket->ticket?->name,
+                    'ticket_type_name' => isset($purchasedTicket->ticket->ticketType->name) ?
+                        $purchasedTicket->ticket->ticketType->name : '', // <-- added line
                 ];
             }
         }

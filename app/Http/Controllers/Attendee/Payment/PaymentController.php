@@ -365,11 +365,11 @@ class PaymentController extends Controller
     public function attendeeTickets()
     {
         $attendee = auth()->user();
-        $attendee->load('payments.purchased_tickets'); // eager load purchased_tickets too
+        $attendee->load('payments.purchased_tickets.ticket.ticketType'); // eager load purchased_tickets too
 
         // Filter only 'paid' payments
         $paidPayments = $attendee->payments->filter(function ($payment) {
-            return $payment->status === 'paid';
+            return $payment->status == 'paid';
         });
 
         if ($paidPayments->isEmpty()) {
@@ -394,6 +394,8 @@ class PaymentController extends Controller
                     'purchased_id' => $purchasedTicket->id,
                     'transfer_check' => $transferCheck,
                     'ticket_name' => $purchasedTicket->ticket?->name ?? '',
+                    'ticket_type_name' => isset($purchasedTicket->ticket->ticketType->name) ?
+                        $purchasedTicket->ticket->ticketType->name : '', // <-- added line
                 ];
             }
         }

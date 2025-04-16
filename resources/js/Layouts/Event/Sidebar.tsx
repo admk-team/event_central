@@ -14,6 +14,7 @@ import HorizontalLayout from "../Event/HorizontalLayout";
 import TwoColumnLayout from "../Event/TwoColumnLayout";
 import { Label, MenuSeparator } from "@headlessui/react";
 import { current } from "@reduxjs/toolkit";
+import moment from "moment";
 
 const Sidebar = ({ layoutType }: any) => {
     useEffect(() => {
@@ -85,7 +86,12 @@ const Sidebar = ({ layoutType }: any) => {
                                     {truncateAppName(currentEvent.name)}
                                 </span>
                                 <span className="d-block fw-normal text-muted">
-                                    {currentEvent.created_at_date}
+                                    {currentEvent.dates &&
+                                    currentEvent.dates[0]?.date
+                                        ? moment(
+                                              currentEvent.dates[0].date
+                                          ).format("MMM DD, YYYY")
+                                        : ""}
                                 </span>
                             </div>
                         </div>

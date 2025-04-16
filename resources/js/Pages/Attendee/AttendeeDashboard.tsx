@@ -41,14 +41,14 @@ const AttendeeDashboard = ({ eventApp }: any) => {
                                                 src={eventApp.featured_image}
                                                 alt="event default image"
                                             />
-                                            <figcaption>
+                                        </figure>
+                                          
                                                 <DateDifferenceFromToday
                                                     date1={eventApp.start_date}
                                                 ></DateDifferenceFromToday>
-                                            </figcaption>
-                                        </figure>
+                                          
                                         <CardBody>
-                                            <div className="p-4">
+                                            <div className="p-4 pt-0">
                                                 <div className="d-flex align-items-center">
                                                     <img
                                                         className="img-fluid

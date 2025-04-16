@@ -23,31 +23,31 @@ function DateDifferenceFromToday({ date1, top = '-130px' }: any) {
         return () => clearInterval(interval);
     }, []);
     return (
-        <div className='d-flex justify-content-center lg-bottom-negative w-100 h-100 lg:mt-5 lg:pt-5 text-white'>
+        <div className='d-flex justify-content-center text-black w-100 h-100 lg:mt-5 lg:pt-5'>
             {moment(date1).diff(moment()) > 0 && <div className='d-flex flex-row justify-content-between w-50'>
                 {years > 0 && < span className="d-flex flex-column align-items-center" >
                     <span className='date-diff-value'>{years}</span>
-                    <span className='date-diff-label'>YEARS</span>
+                    <span className='date-diff-label'>Y</span>
                 </span>}
                 {months > 0 && <span className="d-flex flex-column align-items-center" >
                     <span className='date-diff-value'>{months}</span>
-                    <span className='date-diff-label'>MONTHS</span>
+                    <span className='date-diff-label'>M</span>
                 </span>}
                 {days > 0 && <span className="d-flex flex-column align-items-center" >
                     <span className='date-diff-value'>{days}</span>
-                    <span className='date-diff-label'>DAYS</span>
+                    <span className='date-diff-label'>D</span>
                 </span>}
                 {hours >= 0 && <span className="d-flex flex-column align-items-center" >
                     <span className='date-diff-value'>{hours}</span>
-                    <span className='date-diff-label'>HOURS</span>
+                    <span className='date-diff-label'>H</span>
                 </span>}
                 {minutes >= 0 && <span className="d-flex flex-column align-items-center" >
                     <span className='date-diff-value'>{minutes}</span>
-                    <span className='date-diff-label'>MINUTES </span>
+                    <span className='date-diff-label'>M </span>
                 </span>}
                 {seconds >= 0 && <span className="d-flex flex-column align-items-center" >
                     <span className='date-diff-value'>{seconds}</span>
-                    <span className='date-diff-label'>SECONDS</span>
+                    <span className='date-diff-label'>S</span>
                 </span>}
             </div>}
         </div>

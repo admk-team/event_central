@@ -1652,3 +1652,6 @@
     color: var(--color-primary-foreground);
     border-color: var(--color-primary);
 }
+.color_primary{
+  color: var(--color-primary);
+};
