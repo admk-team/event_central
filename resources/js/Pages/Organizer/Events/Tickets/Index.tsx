@@ -90,14 +90,14 @@ function Index({ tickets, sessions, addons, fees, event_ticket_type }: any) {
             header: () => "Name",
             cell: (ticket) => ticket.name,
         },
-        {
-            header: () => "Description",
-            cell: (ticket) => (
-                <div style={{ maxWidth: "300px", textWrap: "balance" }}>
-                    <p className="mb-0">{ticket.description}</p>
-                </div>
-            ),
-        },
+        // {
+        //     header: () => "Description",
+        //     cell: (ticket) => (
+        //         <div style={{ maxWidth: "300px", textWrap: "balance" }}>
+        //             <p className="mb-0">{ticket.description}</p>
+        //         </div>
+        //     ),
+        // },
         {
             header: () => "Type",
             cell: (ticket) => ticket.ticket_type?.name || "No Type",

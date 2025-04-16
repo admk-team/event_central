@@ -11,6 +11,7 @@ import { Container } from "react-bootstrap";
 import HorizontalLayout from "./HorizontalLayout";
 import TwoColumnLayout from "./TwoColumnLayout";
 import { Link, usePage } from "@inertiajs/react";
+import moment from "moment";
 
 const Sidebar = ({ layoutType }: any) => {
     const eventApp: any = usePage().props.currentEvent;
@@ -79,7 +80,12 @@ const Sidebar = ({ layoutType }: any) => {
                                     {truncateAppName(currentEvent.name)}
                                 </span>
                                 <span className="d-block fw-normal text-muted">
-                                    {currentEvent.created_at_date}
+                                    {currentEvent.dates &&
+                                    currentEvent.dates[0]?.date
+                                        ? moment(
+                                              currentEvent.dates[0].date
+                                          ).format("MMM DD, YYYY")
+                                        : ""}
                                 </span>
                             </div>
                         </div>

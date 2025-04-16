@@ -195,15 +195,16 @@ const AttendeeSessionDetail = ({
                                                     }
                                                     alt="event default image"
                                                 />
-                                                <figcaption>
-                                                    <DateDifferenceFromToday
-                                                        date1={
-                                                            eventApp.start_date
-                                                        }
-                                                    ></DateDifferenceFromToday>
-                                                </figcaption>
+                                             
                                             </figure>
                                         </Card>
+                                        <figcaption>
+                                            <DateDifferenceFromToday
+                                                date1={
+                                                    eventApp.start_date
+                                                }
+                                            ></DateDifferenceFromToday>
+                                        </figcaption>
                                         <div
                                             style={{
                                                 position: "relative",
@@ -217,7 +218,7 @@ const AttendeeSessionDetail = ({
                                         </div>
                                     </div>
 
-                                    <div className="d-flex flex-row justify-content-between align-items-center">
+                                    <div className="d-flex flex-row justify-content-between align-items-center mt-2">
                                         <div className="d-flex flex-row align-items-center">
                                             <h5 style={{ margin: "0" }}>
                                                 <Badge
