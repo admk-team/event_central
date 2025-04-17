@@ -270,8 +270,11 @@ class PaymentController extends Controller
 
 
     // Validate Promo Codes
-    public function  validateDiscCode($disCode)
+    public function  validateDiscCode(Request $request)
     {
+        $input = $request->validate(['code' => 'required|string|max:30']);
+        $disCode = $input['code'];
+
         $code = PromoCode::where(function ($subQuery) use ($disCode) {
             $subQuery->where('code', $disCode);
             $subQuery->where('status', 'active');
@@ -281,7 +284,7 @@ class PaymentController extends Controller
         if ($code) {
             return response()->json(['code' => $code]);
         } else {
-            throw new Exception('Invalid Code');
+            return response()->json(['message' => 'Promo Code Invalid', 404]);
         }
     }
 

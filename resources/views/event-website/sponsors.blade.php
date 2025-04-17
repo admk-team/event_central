@@ -26,7 +26,7 @@
                         <div class="modal-dialog modal-dialog-centered">
                             <div class="modal-content py-3 px-4">
                                 <div class="d-flex justify-content-center">
-                                    <img class="rounded-circle" src="{{ $partner->exhibitor_logo}}" width="150px" height="150px" alt="{{ $partner->type }}" style="height: 150px;">
+                                    <img  src="{{ $partner->exhibitor_logo}}" alt="{{ $partner->type }}" style="height: 120px;">
                                 </div>
                                 <div class=" text-center">
                                     <h5>{{ $partner->type }}</h5>

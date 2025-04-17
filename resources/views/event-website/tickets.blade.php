@@ -39,9 +39,11 @@
                                 @endphp
 
                                 @if ($remaining > 0)
-                                    <li class="color_primary">
-                                        {{ $remaining }}+ More
-                                    </li>
+                                    <a href="{{ route('attendee.login', $event) }}">
+                                        <li class="color_primary">
+                                            {{ $remaining }}+ More
+                                        </li>
+                                    </a>
                                 @endif
                             </ul>
 
@@ -81,7 +83,7 @@
                                     </div>
                                     <!-- <div class="modal-footer">
 
-                                    </div> -->
+                                        </div> -->
                                 </div>
                             </div>
                         </div>
