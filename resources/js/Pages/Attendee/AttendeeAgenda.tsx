@@ -9,7 +9,7 @@ import EventSessionsTimeLine from './common/EventSessionsTimeLine';
 
 
 const AttendeeAgenda = ({ eventApp, enableTracks, tracks, eventPlatforms }: any) => {
-     
+
     return (
         <React.Fragment>
             <Head title="Event Program" />
@@ -20,7 +20,7 @@ const AttendeeAgenda = ({ eventApp, enableTracks, tracks, eventPlatforms }: any)
                             <h5>Event Agenda</h5>
                         </div>
                     </div>
-             
+
 
                     <section>
                         <Row className='d-flex justify-content-center'>

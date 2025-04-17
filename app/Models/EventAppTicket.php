@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class EventAppTicket extends Model
@@ -65,14 +66,20 @@ class EventAppTicket extends Model
 
     public function getSelectedSessionsAttribute()
     {
-        return $this->sessions()->select(['id as value', 'name as label'])->get();
+        Cache::remember('selected_sessions', now()->addMinutes(5), function () {
+            return $this->sessions()->select(['id as value', 'name as label'])->get();
+        });
     }
 
     public function getSelectedAddonsAttribute()
     {
-        //Ordering and selecting appended property of model
+        // Ordering and selecting appended property of model
         // and being used as preselected Select2 Options
-        $addons_collection = $this->addons()->orderBy('name')->get();
+
+        $addons_collection = Cache::remember('addons_collection_' . $this->id, now()->addMinutes(5), function () {
+            return $this->addons()->orderBy('name')->get();
+        });
+
         return $addons_collection->map(function ($addon) {
             return ['value' => $addon->id, 'label' => $addon->full_name];
         });

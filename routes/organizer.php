@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AnswerController;
+use App\Http\Controllers\Organizer\Event\RefundPaymentController;
 use App\Http\Controllers\Organizer\Event\AddonController;
 use App\Http\Controllers\Organizer\Event\AssignTicketController;
 use App\Http\Controllers\Organizer\Event\BadgePrintController;
@@ -130,8 +131,8 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::get('event/tickets', [EventTicketsController::class, 'index'])->name('event.tickets');
 
             //refund payments
-            Route::get('refund/tickets', [EventTicketsController::class, 'refundTickets'])->name('refund.tickets');
-            Route::post('attendee/refundticket', [EventTicketsController::class, 'attendeeRefund'])->name('attendee.refund');
+            Route::get('refund/tickets', [RefundPaymentController::class, 'refundTickets'])->name('refund.tickets');
+            Route::post('attendee/refundticket', [RefundPaymentController::class, 'attendeeRefund'])->name('attendee.refund');
             // Promo Codes
             Route::resource('promo-codes', EventPromoCodeController::class)->only(['index', 'store', 'update', 'destroy']);
             Route::delete('promo-codes/delete/many', [EventPromoCodeController::class, 'destroyMany'])->name('promo-codes.destroy.many');

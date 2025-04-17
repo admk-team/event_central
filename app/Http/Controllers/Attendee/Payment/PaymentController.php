@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use chillerlan\QRCode\QRCode;
 
-use App\Models\TransferTicket;
+use App\Models\AttendeeTransferedTicket;
 use App\Models\AttendeePayment;
 use App\Services\PayPalService;
 use App\Services\StripeService;
@@ -135,15 +135,17 @@ class PaymentController extends Controller
         }
     }
 
-    //Create Attendee Payment record and all tickets and addons includee
-    // then create stripe paymnet intent and erturn to front end.
+    //Create Attendee Payment record and all tickets and addons included
+    // then create stripe paymnet intent and return to front end.
     public function checkout(AttendeeCheckoutRequest $request, $organizerView = false, $attendee = null, $payment_method = null)
     {
         $data = $request->all();
         $user = auth()->user();
         $attendee = $organizerView ? $attendee : auth()->user();
         $amount = $data['totalAmount'];
-        $client_secret = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount);
+        $stripe_response = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount);
+        $client_secret = $stripe_response['client_secret'];
+        $payment_id = $stripe_response['payment_id'];
 
         $payment = $user->attendeePayments()->create([
             'uuid' => Str::uuid(),
@@ -154,6 +156,7 @@ class PaymentController extends Controller
             'discount' => $data['discount'],
             'amount_paid' => $data['totalAmount'],
             'stripe_intent' => $client_secret,
+            'stripe_id' => $payment_id,
             'status' => 'pending',
             'payment_method' => $organizerView ? $payment_method : 'stripe',
         ]);
@@ -164,6 +167,8 @@ class PaymentController extends Controller
 
             $attendee_purchased_ticket = AttendeePurchasedTickets::create([
                 'attendee_payment_id' => $payment->id,
+                'attendee_id' => $user->id,
+                'event_app_id' => $payment->event_app_id,
                 'event_app_ticket_id' => $ticket['id'],
                 'qty' => 1,
                 'price' => $ticket['base_price'],
@@ -177,8 +182,8 @@ class PaymentController extends Controller
         return $payment;
     }
 
-    // Create Attendee Payment record and all tickets and addons includee
-    // then create stripe paymnet intent and erturn to front end.
+    // Create Attendee Payment record and all tickets and addons included
+    // then create stripe paymnet intent and return to front end.
     public function checkoutFreeTicket(AttendeeCheckoutRequest $request, $organizerView = false, $attendee = null, $payment_method = null)
     {
         $data = $request->all();
@@ -206,6 +211,7 @@ class PaymentController extends Controller
 
             $attendee_purchased_ticket = AttendeePurchasedTickets::create([
                 'attendee_payment_id' => $payment->id,
+                'bt_attendee_payment_id' => $payment->id,    //Added to handle transfer logic
                 'event_app_ticket_id' => $ticket['id'],
                 'qty' => 1,
                 'price' => $ticket['base_price'],
@@ -277,11 +283,11 @@ class PaymentController extends Controller
             $session_ids = $purchasedTicket->ticket->sessions()->pluck('id');
             foreach ($session_ids as $id) {
                 // Session might be already attached to attendee from any other ticket
-                try {
-                    $attendee->eventSelectedSessions()->attach($id);
-                } catch (Exception $ex) {
-                    Log::error($ex->getMessage());
-                }
+                // try {
+                $attendee->eventSelectedSessions()->attach($id, ['attendee_purchased_ticket_id' => $purchasedTicket->id]);
+                // } catch (Exception $ex) {
+                //     Log::error($ex->getMessage());
+                // }
             }
         }
         return response()->json(['message' => 'Attendee payment status has been updated']);
@@ -328,7 +334,7 @@ class PaymentController extends Controller
         $payment = AttendeePayment::where('uuid', $paymentUuId)
             ->where('status', 'paid')
             ->first();
-        Log::info($payment);
+
         if ($payment) {
             foreach ($payment->purchased_tickets as $ticket_purchased) {
                 $purchasedticket = AttendeePurchasedTickets::find($ticket_purchased->id);
@@ -362,42 +368,22 @@ class PaymentController extends Controller
         }
     }
 
-    public function attendeeTickets()
+    public function attendeepurchasedTickets()
     {
         $attendee = auth()->user();
-        $attendee->load('payments.purchased_tickets.ticket.ticketType'); // eager load purchased_tickets too
-
-        // Filter only 'paid' payments
-        $paidPayments = $attendee->payments->filter(function ($payment) {
-            return $payment->status == 'paid';
-        });
-
-        if ($paidPayments->isEmpty()) {
-            return Inertia::render('Attendee/Tickets/PurchasedTickets', [
-                'hasTickets' => false,
-            ]);
-        }
-
+        $eventApp = EventApp::find($attendee->event_app_id);
+        $purchased_tickets =  $attendee->purchased_tickets();
         $image = [];
-        $eventApp = null;
-
-        // Loop through all paid payments
-        foreach ($paidPayments as $payment) {
-            if (!$eventApp) {
-                $eventApp = EventApp::find($payment->event_app_id);
-            }
-
-            foreach ($payment->purchased_tickets as $purchasedTicket) {
-                $transferCheck = TransferTicket::where('attendee_payment_transfered', $purchasedTicket->id)->exists();
-                $image[] = [
-                    'qr_code' => asset('storage/' . $purchasedTicket->qr_code),
-                    'purchased_id' => $purchasedTicket->id,
-                    'transfer_check' => $transferCheck,
-                    'ticket_name' => $purchasedTicket->ticket?->name ?? '',
-                    'ticket_type_name' => isset($purchasedTicket->ticket->ticketType->name) ?
-                        $purchasedTicket->ticket->ticketType->name : '', // <-- added line
-                ];
-            }
+        foreach ($purchased_tickets as $purchasedTicket) {
+            $image[] = [
+                'qr_code' => asset('storage/' . $purchasedTicket->qr_code),
+                'purchased_id' => $purchasedTicket->id,
+                'event_app_ticket_id' => $purchasedTicket->event_app_ticket_id,
+                'transfer_check' => $purchasedTicket->is_transfered,
+                'ticket_name' => $purchasedTicket->ticket?->name ?? '',
+                'ticket_type_name' => isset($purchasedTicket->ticket->ticketType->name) ?
+                    $purchasedTicket->ticket->ticketType->name : '', // <-- added line
+            ];
         }
 
         return Inertia::render('Attendee/Tickets/PurchasedTickets', [
@@ -412,56 +398,29 @@ class PaymentController extends Controller
     public function submitTicketTransfer(Request $request)
     {
         $emails = $request->input('emails');
+        //dd($emails);
         foreach ($emails as $index => $email) {
             if ($email) {
-                $transferTicket = TransferTicket::create([
-                    'attendee_id' => auth()->user()->id,
-                    'attendee_payment_id' => $index,
-                    'event_app_id' => auth()->user()->event_app_id,
-                    'transfer_email' => $email,
+
+                $ticket = AttendeePurchasedTickets::find($index)->load('payment');
+                $ticket->update(['is_transfered' => true, 'transfered_to_email' => $email]);
+
+                AttendeeTransferedTicket::create([
+                    'event_app_id' => $ticket->payment->event_app_id,
+                    'email' => $email,
+                    'payment_method' => $ticket->payment->payment_method,
+                    'stripe_intent' => $ticket->payment->stripe_intent,
+                    'attendee_purchased_ticket_id' => $ticket->id,
+                    'event_app_ticket_id' => $ticket->event_app_ticket_id,
+                    'bt_attendee_payment_id' => $ticket->attendee_payment_id,
+                    'at_attendee_payment_id' => null,
+                    'bt_attendee_id' => auth()->user()->id,
+                    'at_attendee_id' => null,
+                    'transfer_status' => 'pending',
                 ]);
             }
         }
 
-        return redirect()->back()->with('success', 'Emails submitted successfully!');
-    }
-
-    public function refundAttendeeTicket()
-    {
-        $attendee = auth()->user();
-        $payments = $this->datatable(AttendeePayment::where('attendee_id', $attendee->id)
-            ->where('status', 'paid')->with('refund_tickets'));
-        return Inertia::render('Attendee/Tickets/RefundTickets', [
-            'payments' => $payments,
-        ]);
-    }
-
-    public function refundAttendeeRequest(Request $request)
-    {
-        $paymentId = $request->id;
-        $attendeePayment = AttendeePayment::where('id', $paymentId)
-            ->where('status', 'paid')
-            ->first();
-        if (!$attendeePayment) {
-            return redirect()->back()->with('error', 'Invalid Payment ID or Payment not found!');
-        }
-
-        $attendee = auth()->user();
-        $checkRefund = AttendeeRefundTicket::where('attendee_payment_id', $attendeePayment->id)
-            ->where('attendee_id', $attendee->id)
-            ->exists();
-
-        if ($checkRefund) {
-            return redirect()->back()->with('error', 'Refund request already submitted!');
-        } else {
-            AttendeeRefundTicket::create([
-                'attendee_payment_id' => $attendeePayment->id,
-                'attendee_id' => $attendee->id,
-                'event_app_id' => $attendeePayment->event_app_id,
-                'status' => 'pending',
-            ]);
-        }
-
-        return redirect()->back()->with('success', 'Refund request submitted successfully!');
+        return redirect()->back()->withSuccess('Emails submitted successfully!');
     }
 }

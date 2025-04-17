@@ -59,8 +59,11 @@ class EventSession extends Model
 
     public function getSelectedByAttendeeAttribute()
     {
+        $user = auth()->user();
         if (auth('attendee')->check()) {
             return $this->attendees()->where('attendee_id', auth('attendee')->user()->id)->first() ? true : false;
+        } elseif ($user && $user->tokenCan('role:attendee')) {
+            return $this->attendees()->where('attendee_id', $user->id)->exists();
         }
         return null;
     }

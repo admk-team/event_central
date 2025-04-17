@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Mail\AttendeeTicketPurchased;
 use App\Mail\AttendeeTicketPurchasedEmail;
 use App\Models\Attendee;
+use App\Models\AttendeePayment;
 use App\Models\AttendeePurchasedTickets;
 use Illuminate\Support\Facades\Route;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
@@ -73,6 +74,19 @@ Route::middleware('auth')->group(function () {
 Route::middleware('auth:attendee')->group(function () {
 
     Route::get('/test-attendee-qr', [AnswerController::class, 'generate']);
+});
+
+Route::get('test', function () {
+    $payment = AttendeePayment::find(213);
+    $payment->load('purchased_tickets.ticket.sessions');
+    $sessions = $payment->purchased_tickets->flatMap(function ($item) {
+        return $item->ticket->sessions;
+    });
+
+    // return $payment;
+    return $sessions->pluck('id');
+    dd($payment);
+    // return Inertia::render('Test');
 });
 
 

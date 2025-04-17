@@ -17,6 +17,7 @@ use Spatie\Permission\Contracts\Permission;
 use Spatie\Permission\Exceptions\PermissionDoesNotExist;
 use Spatie\Permission\PermissionRegistrar;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Spatie\Permission\Models\Permission as ModelsPermission;
 
 class User extends Authenticatable
@@ -144,7 +145,10 @@ class User extends Authenticatable
             $permissions = $permissions->merge($this->getPermissionsViaRoles());
         }
 
-        return $permissions->sort()->values();
+        //Caching each user permissions with dynamic key
+        $permissions = Cache::remember('user_permissions_' . $this->id, now()->addMinutes(5), function () use ($permissions) {
+            return $permissions->sort()->values();
+        });
     }
 
     public function accessibleEvents(): MorphToMany

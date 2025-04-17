@@ -4,58 +4,91 @@ import { Head, Link, router, useForm } from '@inertiajs/react';
 import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 import Layout from "../../../../Layouts/Event"
 import DataTable, { ColumnDef } from '../../../../Components/DataTable';
-import RefundActionModal from '../../../../Components/Common/RefundActionModal';
+import OrganizerRefundModal from './OrganizerRefundModal';
+import moment from 'moment';
+import toast from 'react-hot-toast';
+
 
 function Index({ refundPayments }: any) {
-    console.log(refundPayments);
+    // console.log(refundPayments);
+
     const [showRefundActionModal, setShowRefundActionModal] = useState(false);
-    const [deleteAttendee, setDeleteAttendee] = React.useState<any>(null);
-    const [refundAction, setRefundAction] = React.useState<any>(null);
+    const [currentRefund, setCurrentRefund] = React.useState<any>(null);
 
-    const deleteForm = useForm({
-    });
 
-    const deleteAction = (attendee: any) => {
-        setRefundAction(attendee);
-        setShowRefundActionModal(true);
+    const handleShowRefundModal = (refund: any) => {
+        if (refund.status === 'approved' || refund.status === 'rejected') {
+            toast.error('Request has already been processed');
+        } else {
+            setCurrentRefund(refund);
+            setShowRefundActionModal(true);
+        }
     }
-    // const handleDelete = () => {
-    //     deleteForm.post(route('attendee.tickets.request', { id: deleteAttendee }));
-    //     setShowRefundActionModal(false);
-    // }
 
     const columns: ColumnDef<typeof refundPayments.data[0]> = [
         {
             header: () => 'ID',
-            cell: (payment) => payment.id,
+            cell: (refund) => refund.id,
             cellClass: "fw-medium"
         },
         {
             header: () => 'Attendee Name',
-            cell: (payment) => payment?.attendee ? payment?.attendee?.first_name + ' ' + payment?.attendee?.last_name : '',
+            cell: (refund) => refund?.attendee ? refund?.attendee?.first_name + ' ' + refund?.attendee?.last_name : '',
         },
         {
-            header: () => 'Total',
-            cell: (payment) => payment?.attendee_payment ? payment?.attendee_payment?.amount_paid : '',
+            header: () => 'Total Amount',
+            cell: (refund) => refund?.attendee_payment ? refund?.attendee_payment?.amount_paid : '',
         },
         {
             header: () => 'Payment Method',
-            cell: (payment) => payment?.attendee_payment ? payment?.attendee_payment?.payment_method : '',
+            cell: (refund) => refund?.attendee_payment ? refund?.attendee_payment?.payment_method : '',
+        },
+
+        {
+            header: () => 'Refund Type',
+            cell: (refund) => refund.refund_type ?? '',
+        },
+        {
+            header: () => 'Amount Requested',
+            cell: (refund) => "$" + refund.refund_requested_amount,
+        },
+        {
+            header: () => 'Refund Reason',
+            cell: (refund) => refund.refund_reason ?? '',
+        },
+
+        {
+            header: () => 'Requested On',
+            cell: (refund) => refund.refund_requested_on ? moment(refund.refund_requested_on).format('MMM DD, YYYY') : '',
+        },
+
+        {
+            header: () => 'Organizer Remarks',
+            cell: (refund) => refund.organizer_remarks ?? '',
+        },
+        {
+            header: () => 'Refund Approved',
+            cell: (refund) => refund.refund_approved_amount > 0 ? refund.refund_approved_amount : '',
         },
         {
             header: () => 'Status',
-            cell: (payment) => payment?.status ? payment.status : "",
+            cell: (refund) => <span className='badge bg-secondary text-capitalize p-2'>{refund?.status ? refund.status : ""}</span>,
+        },
+        {
+            header: () => 'Status Date',
+            cell: (refund) => refund.refund_status_date ? moment(refund.refund_status_date).format('MMM DD, YYYY') : '',
         },
         {
             header: () => "Actions",
-            cell: (payment) => (
+            cell: (refund) => (
                 <div className="hstack gap-4 fs-15 text-center">
-                    <a className="link-primary cursor-pointer" onClick={() => deleteAction(payment)} ><i className="ri-refund-2-line"></i></a>
+                    <Button size="sm" className="link-primary  cursor-pointer" onClick={() => handleShowRefundModal(refund)} >
+                        <i className="text-white ri-refund-2-line"></i>
+                    </Button>
                 </div>
             ),
         },
     ];
-
 
     return (
         <React.Fragment>
@@ -87,10 +120,10 @@ function Index({ refundPayments }: any) {
                 </Container>
             </div>
 
-            {refundAction && (<RefundActionModal
+            {currentRefund && (<OrganizerRefundModal
                 show={showRefundActionModal}
                 onCloseClick={() => { setShowRefundActionModal(false) }}
-                refund={refundAction}
+                refund={currentRefund}
             />)}
 
         </React.Fragment>

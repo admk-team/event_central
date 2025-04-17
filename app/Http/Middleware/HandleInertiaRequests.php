@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Models\EventApp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Inertia\Middleware;
 use Tightenco\Ziggy\Ziggy;
@@ -60,7 +61,9 @@ class HandleInertiaRequests extends Middleware
     {
         return [
             'events' => EventApp::ofOwner()->select('id', 'name', 'logo', 'created_at')->latest()->take(5)->get(),
-            'currentEvent' => EventApp::with('dates')->find(session('event_id')) ?? null,
+            'currentEvent' => Cache::remember('current_event', now()->addMinutes(10), function () {
+                return EventApp::with('dates')->find(session('event_id')) ?? null;
+            }),
             'permissions' => function () {
                 return Auth::user()?->getAllPermissions()->pluck('name') ?? [];
             }
