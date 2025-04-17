@@ -110,9 +110,9 @@ class QAController extends Controller
         if ($question) {
 
             // Authorization check (uncomment if needed)
-            if ($question->user_id !== auth()->id() || $question->user_type !== get_class(auth()->user())) {
-                return response()->json(['error' => 'You are not authorized to update this question'], 403);
-            }
+            // if ($question->user_id !== auth()->id() || $question->user_type !== get_class(auth()->user())) {
+            //     return response()->json(['error' => 'You are not authorized to update this question'], 403);
+            // }
 
             $question->update(['content' => $request->content]);
 
@@ -132,9 +132,9 @@ class QAController extends Controller
         if ($question) {
 
             // Authorization check (uncomment if needed)
-            if ($question->user_id !== auth()->id() || $question->user_type !== get_class(auth()->user())) {
-                return response()->json(['error' => 'You are not authorized to delete this question'], 403);
-            }
+            // if ($question->user_id !== auth()->id() || $question->user_type !== get_class(auth()->user())) {
+            //     return response()->json(['error' => 'You are not authorized to delete this question'], 403);
+            // }
 
             $question->delete();
 
@@ -154,9 +154,9 @@ class QAController extends Controller
         if ($answer) {
 
             // Authorization check (uncomment if needed)
-            if ($answer->user_id !== auth()->id() || $answer->user_type !== get_class(auth()->user())) {
-                return response()->json(['error' => 'You are not authorized to update this answer'], 403);
-            }
+            // if ($answer->user_id !== auth()->id() || $answer->user_type !== get_class(auth()->user())) {
+            //     return response()->json(['error' => 'You are not authorized to update this answer'], 403);
+            // }
 
             $answer->update(['content' => $request->content]);
 
@@ -175,9 +175,9 @@ class QAController extends Controller
         $answer = Answer::whereId($answerId)->first();
         if ($answer) {
             // Authorization check (uncomment if needed)
-            if ($answer->user_id !== auth()->id() || $answer->user_type !== get_class(auth()->user())) {
-                return response()->json(['error' => 'You are not authorized to delete this answer'], 403);
-            }
+            // if ($answer->user_id !== auth()->id() || $answer->user_type !== get_class(auth()->user())) {
+            //     return response()->json(['error' => 'You are not authorized to delete this answer'], 403);
+            // }
 
             $answer->delete();
 
