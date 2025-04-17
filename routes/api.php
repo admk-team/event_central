@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\v1\Attendee\RegisterController;
 use App\Http\Controllers\Api\v1\Organizer\EventSessionController;
 use App\Http\Controllers\Api\v1\Attendee\EventController as AttendeeEventController;
 use App\Http\Controllers\Api\v1\Attendee\QuestionAttendeeController as AttendeeQuestionAttendeeController;
+use App\Http\Controllers\Api\v1\Organizer\AssignTicketApiController;
 use App\Http\Controllers\Api\v1\Organizer\QAController;
 use App\Http\Controllers\Api\v1\Organizer\AttendeeController;
 
@@ -49,7 +50,7 @@ Route::prefix('user')->group(function () {
         Route::post('events/{event}/sessions/{session}/scan', [EventSessionController::class, 'scan']);
         Route::post('events/{event}/sessions/{session}/checkin', [EventSessionController::class, 'checkin']);
         Route::post('events/{event}/sessions/{session}/checkout', [EventSessionController::class, 'checkout']);
-        //Q&A  start
+        //Organizer Q&A  start
         Route::get('/events/organizer/qa/{session_id}', [QAController::class, 'organizerQA'])->name('api.events.qa.index');
         Route::get('/events/attendee/qa/{session_id}', [QAController::class, 'attendeeQA'])->name('api.events.qa.index');
         Route::post('/events/{session_id}/questions', [QAController::class, 'storeQuestion'])->name('api.events.qa.store');
@@ -71,6 +72,15 @@ Route::prefix('user')->group(function () {
         Route::put('events/{event}/attendees/{attendee}', [AttendeeController::class, 'update']);
 
         Route::post('/logout', [AuthController::class, 'logout']);
+        // Event Organizer Assign Ticket Api Start
+        Route::get('events/{event}/assign-tickets', [AssignTicketApiController::class, 'assignTickets'])->name('api.attendee.tickets.assign');
+        Route::post('validate-discount-code/{disCode}', [AssignTicketApiController::class, 'validateDiscCode'])->name('api.validateCode.post');
+        Route::post('checkout/{attendee}/{payment_method}', [AssignTicketApiController::class, 'checkout'])->name('api.tickets.checkout');
+        Route::post('checkout-free/{attendee}/{payment_method}', [AssignTicketApiController::class, 'checkoutFreeTicket'])->name('api.tickets.checkout.free');
+        Route::get('checkout/{paymentUuId}', [AssignTicketApiController::class, 'showCheckoutPage'])->name('api.tickets.checkout.page');
+        Route::post('update-attendee-payment/{paymentUuId}', [AssignTicketApiController::class, 'updateAttendeePayment'])->name('api.update.payment');
+        Route::get('payment-success/{paymentUuId}', [AssignTicketApiController::class, 'paymentSuccess'])->name('api.payment.success');
+          // Event Organizer Assign Ticket Api End
     });
 });
 
