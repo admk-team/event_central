@@ -50,7 +50,8 @@ Route::prefix('user')->group(function () {
         Route::post('events/{event}/sessions/{session}/checkin', [EventSessionController::class, 'checkin']);
         Route::post('events/{event}/sessions/{session}/checkout', [EventSessionController::class, 'checkout']);
         //Q&A  start
-        Route::get('/events/qa/{session_id}', [QAController::class, 'index'])->name('api.events.qa.index');
+        Route::get('/events/organizer/qa/{session_id}', [QAController::class, 'organizerQA'])->name('api.events.qa.index');
+        Route::get('/events/attendee/qa/{session_id}', [QAController::class, 'attendeeQA'])->name('api.events.qa.index');
         Route::post('/events/{session_id}/questions', [QAController::class, 'storeQuestion'])->name('api.events.qa.store');
         Route::post('/events/questions/{questionId}/vote', [QAController::class, 'vote'])->name('api.events.qa.vote');
         Route::post('/events/questions/{questionId}/answer', [QAController::class, 'storeAnswer'])->name('api.events.qa.answer');
