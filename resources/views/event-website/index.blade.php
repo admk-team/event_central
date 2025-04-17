@@ -216,9 +216,11 @@
                                 @endphp
                 
                                 @if ($remaining > 0)
+                                <a href="{{ route('attendee.login', $event) }}">
                                     <li class="color_primary">
                                         {{ $remaining }}+ More
                                     </li>
+                                </a>
                                 @endif
                             </ul>
                 
