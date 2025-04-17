@@ -23,7 +23,7 @@ class RefundTicketRequest extends FormRequest
     {
         return [
             'payment_id' => 'required',
-            'refund_type' => 'required',
+            'refund_type' => 'required|in:all_tickets,held_with_me,transfered',
             'refund_reason' => 'required|max:255',
             'refund_requested_amount' => 'required|numeric',
         ];

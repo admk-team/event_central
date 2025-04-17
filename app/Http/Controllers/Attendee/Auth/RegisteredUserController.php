@@ -99,15 +99,22 @@ class RegisteredUserController extends Controller
                         'transfer_status' => 'done',
                     ]);
 
-                    // update sessions of newly created attendee
-                    $this->updateAttendeeSession($user);
-
-                    //update sessions of previous attendee who transfered this ticket
+                    // // update sessions of previous attendee who transfered this ticket
                     $bt_attendee = Attendee::find($transferedTicket->bt_attendee_id);
-                    if ($bt_attendee) {
+                    $purchasedTickets = $bt_attendee->purchased_tickets();
 
-                        $this->updateAttendeeSession($bt_attendee);
+
+                    foreach ($purchasedTickets as $purchasedTicketNew) {
+                        DB::table('attendee_event_session')->where('attendee_id', $bt_attendee->id)
+                            ->where('attendee_purchased_ticket_id', $purchasedTicketNew->id)->delete();
+                        $this->updateAttendeeSession($bt_attendee, $purchasedTicketNew);
                     }
+
+
+                    // update sessions of newly created attendee
+                    DB::table('attendee_event_session')->where('attendee_purchased_ticket_id', $purchasedTicket->id)->delete();
+                    $this->updateAttendeeSession($user, $purchasedTicket);
+
                     DB::commit();
                 } catch (\Exception $ex) {
                     DB::rollBack();
@@ -117,16 +124,22 @@ class RegisteredUserController extends Controller
         }
     }
 
-    private function updateAttendeeSession($user)
+    private function updateAttendeeSession($user, $purchasedTicket)
     {
-        $sessions = $user->purchased_tickets()->flatMap(function ($item) {
-            return $item->ticket->sessions;
-        });
-        $sessions_ids = $sessions->pluck('id');
-        try {
-            $user->eventSelectedSessions()->sync($sessions_ids);
-        } catch (\Exception $ex) {
-            Log::error($ex->getMessage());
+        //Delete all sessions from table of said attendee
+
+        $sessions = $purchasedTicket->ticket->sessions;
+        $ids = $sessions->pluck('id');
+        Log::info($ids);
+        //Recreate all sessions for current urchased tickets
+        foreach ($ids as $id) {
+            $data = [
+                'attendee_id' => $user->id,
+                'event_session_id' => $id,
+                'attendee_purchased_ticket_id' => $purchasedTicket->id
+            ];
+            Log::info($data);
+            DB::table('attendee_event_session')->insert($data);
         }
     }
 }

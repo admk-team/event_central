@@ -17,7 +17,7 @@ const RefundTicketModal: React.FC<RefundModalProps> = ({ show, onRefundProcessed
     const { data, setData, post, processing, errors, reset, transform, clearErrors } = useForm({
         _method: "POST",
         payment_id: paymentId,
-        refund_type: '',
+        refund_type: 'all_tickets',
         refund_reason: '',
         refund_requested_amount: refundRequestedAmount
     });
@@ -43,19 +43,18 @@ const RefundTicketModal: React.FC<RefundModalProps> = ({ show, onRefundProcessed
                 <div className="mt-2 mb-4">
                     <h4>Ticket Refund</h4>
                 </div>
-                <FormGroup className="mb-3">
+                {/* <FormGroup className="mb-3">
                     <Form.Label htmlFor="fee_type" className="form-label text-start w-100">Ticket Option</Form.Label>
                     <Form.Select aria-label="Default select example" className="form-control" id="transfer_type"
                         defaultValue={data.refund_type} onChange={(e) => setData('refund_type', e.target.value)}
                         isInvalid={!!errors.refund_type}
                     >
-                        <option key={1}>Select Ticket Option</option>
+                        <option key={1} value={''}>Select Ticket Option</option>
                         <option key={2} value='all_tickets'>All Tickets (Including Transfered)</option>
-                        <option key={3} value='held_with_me'>Held with me</option>
-                        <option key={4} value='transfered'>Only Transfered</option>
+
                     </Form.Select>
                     {errors.refund_type && <Form.Control.Feedback type="invalid"> {errors.refund_type} </Form.Control.Feedback>}
-                </FormGroup>
+                </FormGroup> */}
 
                 <FormGroup className="mb-3">
                     <Form.Label>Brief Reason</Form.Label>
@@ -69,7 +68,7 @@ const RefundTicketModal: React.FC<RefundModalProps> = ({ show, onRefundProcessed
                     />
                     {errors.refund_reason && <Form.Control.Feedback type="invalid">{errors.refund_reason}</Form.Control.Feedback>}
                 </FormGroup>
-                <FormGroup className="mb-3">
+                {/* <FormGroup className="mb-3">
                     <Form.Label>Refund Amount</Form.Label>
                     <Form.Control
                         type="text"
@@ -78,7 +77,7 @@ const RefundTicketModal: React.FC<RefundModalProps> = ({ show, onRefundProcessed
                         isInvalid={!!errors.refund_requested_amount}
                     />
                     {errors.refund_requested_amount && <Form.Control.Feedback type="invalid">{errors.refund_requested_amount}</Form.Control.Feedback>}
-                </FormGroup>
+                </FormGroup> */}
                 <div className="d-flex gap-2 justify-content-between mt-4 mb-2">
                     <button
                         type="button"

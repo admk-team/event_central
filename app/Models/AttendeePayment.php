@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class AttendeePayment extends Model
 {
@@ -19,9 +20,17 @@ class AttendeePayment extends Model
         'stripe_intent',
         'status',
         'payment_method',
+        'stripe_id'
     ];
 
-    protected $with = ['purchased_tickets'];
+    protected $with = [
+        'purchased_tickets',
+    ];
+    protected $appends = [
+        'total_amount',
+        'with_me_amount',
+        'transfered_amount'
+    ];
 
     public function purchased_tickets()
     {
@@ -46,5 +55,18 @@ class AttendeePayment extends Model
     public function payer()
     {
         return $this->morphTo();
+    }
+
+    public function getTotalAmountAttribute()
+    {
+        return $this->purchased_tickets->sum('total');
+    }
+    public function getWithMeAmountAttribute()
+    {
+        return $this->purchased_tickets->whereNull('transfered_to_attendee_id')->sum('total');
+    }
+    public function getTransferedAmountAttribute()
+    {
+        return $this->purchased_tickets->whereNotNull('transfered_to_attendee_id')->sum('total');
     }
 }

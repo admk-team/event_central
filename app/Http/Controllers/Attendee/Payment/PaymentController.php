@@ -143,7 +143,9 @@ class PaymentController extends Controller
         $user = auth()->user();
         $attendee = $organizerView ? $attendee : auth()->user();
         $amount = $data['totalAmount'];
-        $client_secret = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount);
+        $stripe_response = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount);
+        $client_secret = $stripe_response['client_secret'];
+        $payment_id = $stripe_response['payment_id'];
 
         $payment = $user->attendeePayments()->create([
             'uuid' => Str::uuid(),
@@ -154,6 +156,7 @@ class PaymentController extends Controller
             'discount' => $data['discount'],
             'amount_paid' => $data['totalAmount'],
             'stripe_intent' => $client_secret,
+            'stripe_id' => $payment_id,
             'status' => 'pending',
             'payment_method' => $organizerView ? $payment_method : 'stripe',
         ]);
@@ -280,11 +283,11 @@ class PaymentController extends Controller
             $session_ids = $purchasedTicket->ticket->sessions()->pluck('id');
             foreach ($session_ids as $id) {
                 // Session might be already attached to attendee from any other ticket
-                try {
-                    $attendee->eventSelectedSessions()->attach($id);
-                } catch (Exception $ex) {
-                    Log::error($ex->getMessage());
-                }
+                // try {
+                $attendee->eventSelectedSessions()->attach($id, ['attendee_purchased_ticket_id' => $purchasedTicket->id]);
+                // } catch (Exception $ex) {
+                //     Log::error($ex->getMessage());
+                // }
             }
         }
         return response()->json(['message' => 'Attendee payment status has been updated']);
@@ -370,7 +373,7 @@ class PaymentController extends Controller
         $attendee = auth()->user();
         $eventApp = EventApp::find($attendee->event_app_id);
         $purchased_tickets =  $attendee->purchased_tickets();
-
+        $image = [];
         foreach ($purchased_tickets as $purchasedTicket) {
             $image[] = [
                 'qr_code' => asset('storage/' . $purchasedTicket->qr_code),
