@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\v1\Organizer\EventSessionController;
 use App\Http\Controllers\Api\v1\Attendee\EventController as AttendeeEventController;
 use App\Http\Controllers\Api\v1\Attendee\QuestionAttendeeController as AttendeeQuestionAttendeeController;
 use App\Http\Controllers\Api\v1\Organizer\AttendeeController;
+use App\Http\Controllers\Api\v1\Organizer\EventPostsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,8 +24,6 @@ use App\Http\Controllers\Api\v1\Organizer\AttendeeController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
-
 
 Route::prefix('user')->group(function () {
 
@@ -55,6 +54,14 @@ Route::prefix('user')->group(function () {
         Route::post('events/{event}/attendees', [AttendeeController::class, 'create']);
         Route::put('events/{event}/attendees/{attendee}', [AttendeeController::class, 'update']);
 
+        // Event Session Posts 
+        Route::get('/posts/{id}', [EventPostsController::class, 'getPosts'])->name('create.post');
+        Route::post('/create-post', [EventPostsController::class, 'createPost'])->name('create.post');
+        Route::delete('/delete-post/{id}', [EventPostsController::class, 'destroy'])->name('destroy');
+        Route::get('/edit-post/{id}', [EventPostsController::class, 'editPost'])->name('post.edit');
+        Route::post('/update-post/{id}', [EventPostsController::class, 'updatePost'])->name('post.update');
+
+        // logout 
         Route::post('/logout', [AuthController::class, 'logout']);
     });
 });
