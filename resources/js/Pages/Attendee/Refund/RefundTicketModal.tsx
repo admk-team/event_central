@@ -14,7 +14,7 @@ const RefundTicketModal: React.FC<RefundModalProps> = ({ show, onRefundProcessed
 
     console.log(paymentId);
 
-    const { data, setData, post, processing, errors, reset, transform } = useForm({
+    const { data, setData, post, processing, errors, reset, transform, clearErrors } = useForm({
         _method: "POST",
         payment_id: paymentId,
         refund_type: '',
@@ -24,7 +24,7 @@ const RefundTicketModal: React.FC<RefundModalProps> = ({ show, onRefundProcessed
 
     const submit = (e: any) => {
         e.preventDefault();
-
+        clearErrors();
         console.log(data);
         post(route('attendee.tickets.refund.save'), {
             onSuccess: () => {

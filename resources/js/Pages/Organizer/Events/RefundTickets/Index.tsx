@@ -6,20 +6,23 @@ import Layout from "../../../../Layouts/Event"
 import DataTable, { ColumnDef } from '../../../../Components/DataTable';
 import OrganizerRefundModal from './OrganizerRefundModal';
 import moment from 'moment';
+import toast from 'react-hot-toast';
+
 
 function Index({ refundPayments }: any) {
     // console.log(refundPayments);
-
 
     const [showRefundActionModal, setShowRefundActionModal] = useState(false);
     const [currentRefund, setCurrentRefund] = React.useState<any>(null);
 
 
     const handleShowRefundModal = (refund: any) => {
-
-        console.log(refund);
-        setCurrentRefund(refund);
-        setShowRefundActionModal(true);
+        if (refund.status === 'approved' || refund.status === 'rejected') {
+            toast.error('Request has already been processed');
+        } else {
+            setCurrentRefund(refund);
+            setShowRefundActionModal(true);
+        }
     }
 
     const columns: ColumnDef<typeof refundPayments.data[0]> = [

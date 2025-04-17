@@ -6,8 +6,11 @@ import Layout from "../../../Layouts/Attendee"
 import DataTable, { ColumnDef } from '../../../Components/DataTable';
 import RefundTicketModal from './RefundTicketModal';
 import moment from 'moment';
-
+import toast from 'react-hot-toast';
 function RefundTickets({ payments }: any) {
+
+    console.log(payments);
+
     const [showRefundModal, setShowRefundModal] = useState(false);
     const [currentPayment, setCurrentPayment] = useState<any>(null);
 
@@ -15,7 +18,7 @@ function RefundTickets({ payments }: any) {
         console.log(payment);
 
         if (payment.refund_tickets && payment.refund_tickets.status.length > 0) {
-            alert('Refund has already been processed');
+            toast.error('Refund request has already been submitted to event organizer');
         } else {
             setCurrentPayment(payment);
             setShowRefundModal(true);

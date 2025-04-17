@@ -17,6 +17,7 @@ class RefundPaymentController extends Controller
         $payments = $this->datatable(AttendeePayment::where('attendee_id', $attendee->id)
             ->where('status', 'paid')->with('refund_tickets'));
 
+        // return $payments;
         return Inertia::render('Attendee/Refund/Index', [
             'payments' => $payments,
         ]);
@@ -24,6 +25,7 @@ class RefundPaymentController extends Controller
 
     public function refundAttendeeRequest(RefundTicketRequest $request)
     {
+        // return $request->all();
         $paymentId = $request->payment_id;
         $attendeePayment = AttendeePayment::where('id', $paymentId)
             ->where('status', 'paid')

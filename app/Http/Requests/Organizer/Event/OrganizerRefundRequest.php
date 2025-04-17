@@ -23,8 +23,9 @@ class OrganizerRefundRequest extends FormRequest
     {
         return [
             'refund_id' => 'required',
+            'requested_amount' => 'required',
             'organizer_remarks' => 'required_if:action,rejected|max:255',
-            'refund_approved_amount' => 'required_if:action,approved|min:1',
+            'refund_approved_amount' => 'required_if:action,approved|lte:requested_amount',
             'action' => 'required',
         ];
     }
@@ -37,6 +38,7 @@ class OrganizerRefundRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'requested_amount.required' => 'Requested amount is required',
             'refund_id.required' => 'Payment ID is required',
             'organizer_remarks.max:255' => 'Organizer remarks maximum 255 characters are allowed',
             'action.required' => 'Refund action is required',

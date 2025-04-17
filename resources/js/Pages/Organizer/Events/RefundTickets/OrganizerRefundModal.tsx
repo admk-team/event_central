@@ -1,5 +1,5 @@
 import { router, useForm } from "@inertiajs/react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, Form, FormGroup, Row, Col } from "react-bootstrap";
 import { number } from "yup";
 
@@ -13,24 +13,22 @@ interface RefundActionModalProps {
 const OrganizerRefundModal: React.FC<RefundActionModalProps> = ({ show, onCloseClick, refund }) => {
 
     // console.log(refund);
-
     const { data, setData, post, processing, errors, reset, transform, clearErrors } = useForm({
         _method: "POST",
         refund_id: refund.id,
+        requested_amount: refund.refund_requested_amount,
         organizer_remarks: refund.organizer_remarks,
         refund_approved_amount: refund.refund_approved_amount > 0 ? refund.refund_approved_amount : '',
         action: '',
     });
 
-    const submit = (e: any, action: string) => {
+
+    const submit = async (e: any) => {
         e.preventDefault();
 
         clearErrors();
-        transform((prev) => ({
-            ...prev,
-            action: action
-        }));
 
+        console.log(data);
         post(route('organizer.events.attendee.refund'), {
             onSuccess: () => {
                 onCloseClick();
@@ -51,25 +49,30 @@ const OrganizerRefundModal: React.FC<RefundActionModalProps> = ({ show, onCloseC
                 <Row>
                     <Col>
                         <FormGroup className="mb-3">
-                            <Form.Label>Organizer Remarks</Form.Label>
+                            <Form.Label>Attendee Remarks</Form.Label>
                             <Form.Control
                                 as='textarea'
                                 type="text"
-                                rows={4}
+                                rows={8}
                                 value={refund.refund_reason}
                                 readOnly
                             />
                         </FormGroup>
-                        <FormGroup className="mb-3">
-                            <Form.Label>Refund Requested Amount</Form.Label>
-                            <Form.Control
-                                type="number"
-                                readOnly
-                                value={refund.refund_requested_amount}
-                            />
-                        </FormGroup>
+
                     </Col>
                     <Col>
+                        <FormGroup className="mb-3">
+                            <Form.Label htmlFor="action" className="form-label text-start w-100">Action</Form.Label>
+                            <Form.Select aria-label="Default select example" className="form-control" id="transfer_type"
+                                defaultValue={data.action} onChange={(e) => setData('action', e.target.value)}
+                                isInvalid={!!errors.action}
+                            >
+                                <option key={1}>Select Action</option>
+                                <option key={2} value='approved'>Approved</option>
+                                <option key={3} value='rejected'>Rejected</option>
+                            </Form.Select>
+                            {errors.action && <Form.Control.Feedback type="invalid"> {errors.action} </Form.Control.Feedback>}
+                        </FormGroup>
                         <FormGroup className="mb-3">
                             <Form.Label>Organizer Remarks</Form.Label>
                             <Form.Control
@@ -82,6 +85,22 @@ const OrganizerRefundModal: React.FC<RefundActionModalProps> = ({ show, onCloseC
                             />
                             {errors.organizer_remarks && <Form.Control.Feedback type="invalid">{errors.organizer_remarks}</Form.Control.Feedback>}
                         </FormGroup>
+
+
+                    </Col>
+                </Row>
+                <Row>
+                    <Col>
+                        <FormGroup className="mb-3">
+                            <Form.Label>Refund Requested Amount</Form.Label>
+                            <Form.Control
+                                type="number"
+                                readOnly
+                                value={refund.refund_requested_amount}
+                            />
+                        </FormGroup>
+                    </Col>
+                    <Col>
                         <FormGroup className="mb-3">
                             <Form.Label>Refund Approved Amount</Form.Label>
                             <Form.Control
@@ -105,26 +124,15 @@ const OrganizerRefundModal: React.FC<RefundActionModalProps> = ({ show, onCloseC
                     >
                         Close
                     </button>
-                    <div className="d-flex gap-2 justify-content-end">
-                        <button
-                            type="button"
-                            className="btn w-sm btn-danger "
-                            id="delete-record"
-                            onClick={(e) => submit(e, 'approved')}
-                            disabled={processing}
-                        >
-                            Approve
-                        </button>
-                        <button
-                            type="button"
-                            className="btn w-sm btn-danger "
-                            id="delete-record"
-                            onClick={(e) => submit(e, 'rejected')}
-                            disabled={processing}
-                        >
-                            Reject
-                        </button>
-                    </div>
+                    <button
+                        type="button"
+                        className="btn w-sm btn-danger "
+                        id="delete-record"
+                        onClick={submit}
+                        disabled={processing}
+                    >
+                        Update Status
+                    </button>
                 </div>
             </Modal.Body>
         </Modal>
