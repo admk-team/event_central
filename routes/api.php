@@ -63,7 +63,7 @@ Route::prefix('user')->group(function () {
             Route::put('/answer/{answerId}', [QAController::class, 'updateAnswer'])->name('api.events.qa.updateAnswer');
             Route::delete('/answer/{answerId}', [QAController::class, 'destroyAnswer'])->name('api.events.qa.destroyAnswer');
         });
-         //Q&A  End
+        //Q&A  End
 
         // Event Attendees
         Route::get('events/{event}/attendees', [AttendeeController::class, 'index']);
@@ -107,7 +107,7 @@ Route::prefix('attendee')->group(function () {
         Route::post('update-attendee-payment/{paymentUuId}', [PaymentController::class, 'updateAttendeePaymnet'])->name('attendee.update.payment');
 
         Route::get('payment/cancel', [PaymentController::class, 'paymentCancel'])->name('attendee.payment.cancel');
-        Route::post('validate-discount-code/{disCode}', [PaymentController::class, 'validateDiscCode'])->name('attendee.validateCode.post');
+        Route::post('validate-discount-code', [PaymentController::class, 'validateDiscCode'])->name('attendee.validateCode.post');
         Route::get('payment-success/{paymentUuId}', [PaymentController::class, 'paymentSuccess'])->name('attendee.payment.success');
 
         // //PayPal

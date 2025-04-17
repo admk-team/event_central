@@ -3,20 +3,22 @@
 namespace App\Http\Controllers\Api\v1\Attendee;
 
 use App\Models\EventApp;
+use App\Models\EventSession;
+use App\Models\EventSpeaker;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\Api\EventResource;
 use App\Http\Resources\Api\EventSessionResource;
 use App\Http\Resources\Api\EventSpeakerResource;
-use App\Models\EventSession;
-use App\Models\EventSpeaker;
 
 class EventController extends Controller
 {
-    public function getEventDetailDashboard(EventApp $eventApp)
+    public function getEventDetailDashboard(String $eventApp)
     {
+        // dd(Auth::user());
+        $eventApp = EventApp::find(Auth::user()->event_app_id);
         $eventApp->load(['event_sessions.eventSpeakers', 'event_sessions.eventPlatform']);
-        // dd($eventApp->toArray());
         return $this->successResponse(new EventResource($eventApp));
     }
 
