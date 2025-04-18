@@ -1,14 +1,33 @@
 "use client"
 
-import { Head } from "@inertiajs/react"
-import React from "react"
-// import Layout from "../../../Layouts/Attendee"
-import AttendeeLayout from "../../../Layouts/Attendee";
-import EventLayout from "../../../Layouts/Event";
+import { Head, router } from "@inertiajs/react"
+import React, { useEffect, useState } from "react"
+import AttendeeLayout from "../../../Layouts/Attendee"
+import EventLayout from "../../../Layouts/Event"
 import { Card, CardBody, Col, Container, Row } from "react-bootstrap"
 
 const PaymentSuccess = ({ organizerView }: any) => {
-    const Layout = organizerView ? EventLayout : AttendeeLayout;
+    const Layout = organizerView ? EventLayout : AttendeeLayout
+    const [secondsLeft, setSecondsLeft] = useState(5)
+
+    useEffect(() => {
+        const countdown = setInterval(() => {
+            setSecondsLeft((prev) => prev - 1)
+        }, 1000)
+
+        const redirect = setTimeout(() => {
+            if (organizerView) {
+                router.visit(route("organizer.events.attendee.tickets.assign"))
+            } else {
+                router.visit(route("attendee.tickets.get"))
+            }
+        }, 5000)
+
+        return () => {
+            clearInterval(countdown)
+            clearTimeout(redirect)
+        }
+    }, [organizerView])
 
     return (
         <Layout>
@@ -34,9 +53,11 @@ const PaymentSuccess = ({ organizerView }: any) => {
                                                     }}
                                                 ></i>
                                                 <span className="fs-3 text-green p-4 text-center">
-                                                    Checkout was processed
-                                                    successfuly. Confirmation email with QR Codes have emailed to Attendee's email address.
+                                                    Checkout was processed successfully. Confirmation email with QR Codes has been sent to the Attendee's email address.
                                                 </span>
+                                                <p className="text-muted text-center">
+                                                    Redirecting in <strong>{secondsLeft}</strong> second{secondsLeft !== 1 && 's'}...
+                                                </p>
                                             </div>
                                         </div>
                                     </CardBody>
@@ -50,6 +71,4 @@ const PaymentSuccess = ({ organizerView }: any) => {
     )
 }
 
-// PaymentSuccess.layout = (page) => <Layout children={page} />
 export default PaymentSuccess
-

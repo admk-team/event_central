@@ -20,7 +20,8 @@ class AttendeePayment extends Model
         'stripe_intent',
         'status',
         'payment_method',
-        'stripe_id'
+        'stripe_id',
+        'organizer_payment_note'
     ];
 
     protected $with = [

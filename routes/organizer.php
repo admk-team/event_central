@@ -130,7 +130,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::resource('addon', AddonController::class)->only(['index', 'store', 'update', 'destroy']);
             // Route::get('addon/{event_app_ticket_id?}', [AddonController::class, 'getAllAddons'])->name('fetch');
             Route::delete('addon/delete/many', [AddonController::class, 'destroyMany'])->name('addon.destroy.many');
-            Route::get('event/tickets', [EventTicketsController::class, 'index'])->name('event.tickets');
+            Route::get('payments', [EventTicketsController::class, 'index'])->name('payments');
 
             //refund payments
             Route::get('refund/tickets', [RefundPaymentController::class, 'refundTickets'])->name('refund.tickets');

@@ -36,21 +36,25 @@ function Index({ refundPayments }: any) {
             cell: (refund) => refund?.attendee ? refund?.attendee?.first_name + ' ' + refund?.attendee?.last_name : '',
         },
         {
-            header: () => 'Total Amount',
-            cell: (refund) => refund?.attendee_payment ? refund?.attendee_payment?.amount_paid : '',
+            header: () => <span className='w-100 d-block text-end'>{'Total Amount'}</span>,
+            cell: (refund) => <span className='w-100 d-block text-end fw-bold'>{refund?.attendee_payment ? '$' + refund?.attendee_payment?.amount_paid : ''}</span>,
         },
         {
             header: () => 'Payment Method',
-            cell: (refund) => refund?.attendee_payment ? refund?.attendee_payment?.payment_method : '',
+            cell: (refund) => <span className='text-capitalize'>{refund?.attendee_payment ? refund?.attendee_payment?.payment_method : ''}</span>,
         },
 
         {
             header: () => 'Refund Type',
-            cell: (refund) => refund.refund_type ?? '',
+            cell: (refund) => (
+                <>
+                    {refund.refund_type === 'all_tickets' && 'All Tickets'}
+                </>
+            )
         },
         {
-            header: () => 'Amount Requested',
-            cell: (refund) => "$" + refund.refund_requested_amount,
+            header: () => <span className='d-block w-100 text-end'>{'Amount Requested'}</span>,
+            cell: (refund) => <span className='d-block w-100 fw-bold text-end'>{"$" + refund.refund_requested_amount}</span>,
         },
         {
             header: () => 'Refund Reason',
@@ -67,12 +71,17 @@ function Index({ refundPayments }: any) {
             cell: (refund) => refund.organizer_remarks ?? '',
         },
         {
-            header: () => 'Refund Approved',
-            cell: (refund) => refund.refund_approved_amount > 0 ? refund.refund_approved_amount : '',
+            header: () => <span className='d-block text-end w-100'>{'Refund Approved'}</span>,
+            cell: (refund) => <span className='d-block text-end w-100 fw-bold'>{refund.refund_approved_amount > 0 ? '$' + refund.refund_approved_amount : ''}</span>,
         },
         {
-            header: () => 'Status',
-            cell: (refund) => <span className='badge bg-secondary text-capitalize p-2'>{refund?.status ? refund.status : ""}</span>,
+            header: () => <span className='d-block w-100 text-center'>Status</span>,
+            cell: (refund) => (
+                <>
+                    {refund.status === 'approved' && <span className='w-100 rounded-pill badge bg-secondary  text-capitalize p-2'>{refund?.status ? refund.status : ""}</span>}
+                    {refund.status === 'rejected' && <span className='w-100 rounded-pill badge bg-warning text-dark text-capitalize p-2'>{refund?.status ? refund.status : ""}</span>}
+                </>
+            ),
         },
         {
             header: () => 'Status Date',

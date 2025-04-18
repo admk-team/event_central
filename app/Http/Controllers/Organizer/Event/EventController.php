@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Organizer\Event\EventStoreRequest;
 use App\Http\Requests\Organizer\Event\EventUpdateRequest;
 use App\Models\EventAppImage;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
@@ -84,6 +85,8 @@ class EventController extends Controller
         }
 
         session()->put('event_id', $id);
+
+        Cache::forget("current_event_" . Auth::id());
 
         $back = (bool) ($request->back ?? true);
 
