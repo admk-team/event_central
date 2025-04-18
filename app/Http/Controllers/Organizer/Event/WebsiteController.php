@@ -58,8 +58,9 @@ class WebsiteController extends Controller
         return view('event-website.speakers', compact('event', 'colors', 'partnerCategories'));
     }
 
-    public function sponsors($uuid){
-        $event=EventApp::where('uuid',$uuid)->first();
+    public function sponsors($uuid)
+    {
+        $event = EventApp::where('uuid', $uuid)->first();
         if (! $event || !eventSettings($event->id)->getValue('website_status', false)) {
             abort(404);
         }
@@ -80,6 +81,32 @@ class WebsiteController extends Controller
         $partnerCategories = EventPartnerCategory::where('event_app_id', $event->id)->with(['partners'])->get();
 
         return view('event-website.tickets', compact('event', 'colors', 'partnerCategories'));
+    }
+
+    public function privacypolicy($uuid)
+    {
+        $event = EventApp::where('uuid', $uuid)->first();
+
+        if (! $event || !eventSettings($event->id)->getValue('website_status', false)) {
+            abort(404);
+        }
+
+        $colors = eventSettings($event->id)->getValue('website_colors', config('event_website.colors'));
+
+        return view('event-website.privacy', compact('event', 'colors'));
+    }
+
+    public function contactus($uuid)
+    {
+        $event = EventApp::where('uuid', $uuid)->first();
+
+        if (! $event || !eventSettings($event->id)->getValue('website_status', false)) {
+            abort(404);
+        }
+
+        $colors = eventSettings($event->id)->getValue('website_colors', config('event_website.colors'));
+
+        return view('event-website.contactus', compact('event', 'colors'));
     }
 
     // public function index($uuid)
