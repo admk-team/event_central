@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Api\v1\Attendee;
 
+use App\Models\Track;
 use App\Models\EventApp;
+use App\Models\EventAppDate;
 use App\Models\EventSession;
 use App\Models\EventSpeaker;
 use Illuminate\Http\Request;
+use App\Models\EventPlatform;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\Api\EventResource;
@@ -24,8 +27,21 @@ class EventController extends Controller
 
     public function getEventDetailAgenda(EventApp $eventApp)
     {
-        $eventApp->load(['event_sessions.eventSpeakers', 'event_sessions.event_platform']);
-        return $this->successResponse(new EventResource($eventApp));
+        $eventdates = EventAppDate::where('event_app_id', $eventApp->id)->with('eventSessions')->get();
+        $tracks = Track::where('event_app_id', $eventApp->id)->get();
+        $enableTracks = eventSettings($eventApp->id)->getValue('enable_tracks', false);
+        $eventPlatforms = EventPlatform::where('event_app_id', $eventApp->id)->get();
+        $eventApp->load([
+            'event_sessions.eventSpeakers',
+            'event_sessions.eventPlatform'
+        ]);
+        return response()->json([
+            'eventapp' => new EventResource($eventApp),
+            'eventdates' => $eventdates,
+            'tracks' => $tracks,
+            'enableTracks' => $enableTracks,
+            'eventPlatforms' => $eventPlatforms
+        ], 200);
     }
 
     public function ticket(EventApp $eventApp)
