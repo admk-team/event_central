@@ -159,6 +159,7 @@ class PaymentController extends Controller
             'stripe_intent' => $client_secret,
             'stripe_id' => $payment_id,
             'status' => 'pending',
+            'organizer_payment_note' => $data['organizer_payment_note'],
             'payment_method' => $organizerView ? $payment_method : 'stripe',
         ]);
 
@@ -191,7 +192,9 @@ class PaymentController extends Controller
         $user = auth()->user();
         $attendee = $organizerView ? $attendee : auth()->user();
         $amount = $data['totalAmount'];
-        $client_secret = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount);
+        $stripe_response = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount);
+        $client_secret = $stripe_response['client_secret'];
+        $payment_id = $stripe_response['payment_id'];
 
         $payment = $user->attendeePayments()->create([
             'uuid' => Str::uuid(),
@@ -202,7 +205,9 @@ class PaymentController extends Controller
             'discount' => $data['discount'],
             'amount_paid' => $data['totalAmount'],
             'stripe_intent' => $client_secret,
+            'stripe_id' => null,
             'status' => 'pending',
+            'organizer_payment_note' => $data['organizer_payment_note'],
             'payment_method' => $organizerView ? $payment_method : 'stripe',
         ]);
 

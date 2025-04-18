@@ -210,15 +210,15 @@ const Navdata = () => {
             ],
         },
         {
-            id: "tickets",
+            id: "payments",
             label: "Payments",
             icon: "bx bxs-credit-card",
-            link: route('organizer.events.event.tickets'),
+            link: route('organizer.events.payments'),
             stateVariables: isAttendees,
             click: function (e: any) {
                 e.preventDefault();
                 setIsTickets(!isTickets);
-                setIscurrentState('tickets');
+                setIscurrentState('payments');
                 updateIconSidebar(e);
             },
             hasPermissions: [

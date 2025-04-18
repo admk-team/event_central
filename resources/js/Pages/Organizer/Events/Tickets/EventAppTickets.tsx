@@ -1,11 +1,18 @@
 import React from "react";
-import { Card, Col, Container, Row, Table } from "react-bootstrap";
+import { Card, Col, Container, Row, Table, Button, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { Head, Link } from "@inertiajs/react";
 import Layout from "../../../../Layouts/Event";
+import moment from "moment";
 
 const EventAppTickets = ({ tickets }: any) => {
+    console.log(tickets);
     return (
         <React.Fragment>
+            {/* <style>
+                .tooltip-justify{
+                    text - align: justify;
+                }
+            </style> */}
             <Head title="Event Tickets | Velzon - React Admin & Dashboard Template" />
             <div className="page-content">
                 <Container fluid>
@@ -28,6 +35,8 @@ const EventAppTickets = ({ tickets }: any) => {
                                                     <th scope="col">Discount Percentage</th>
                                                     <th scope="col">Quantity</th>
                                                     <th scope="col">Type</th>
+                                                    <th scope="col">Payment Note</th>
+                                                    <th scope="col">Create On</th>
                                                     <th scope="col">Status</th>
                                                 </tr>
                                             </thead>
@@ -51,12 +60,31 @@ const EventAppTickets = ({ tickets }: any) => {
                                                             <td>{ticket.discount}</td>
                                                             <td>{ticket.promo_code ?? 'N/A'}</td>
                                                             <td>
-                                                                {ticket.discount  && ticket.total !='0.00'
+                                                                {ticket.discount && ticket.total != '0.00'
                                                                     ? `${((ticket.discount / ticket.total) * 100)}%`
                                                                     : '0%'}
                                                             </td>
                                                             <td>{ticket.qty}</td>
                                                             <td>{ticket.type}</td>
+                                                            <td>{
+                                                                ticket.payment_note.length > 15 ?
+                                                                    <>
+                                                                        <OverlayTrigger
+                                                                            placement="left"
+                                                                            overlay={
+                                                                                <Tooltip className="text-justify" id="button-tooltip" style={{ textAlign: 'justify' }}>
+                                                                                    {ticket.payment_note}
+                                                                                </Tooltip>
+                                                                            }
+                                                                        >
+                                                                            <a className="cursor-pointer">{ticket.payment_note.substring(0, 15) + '...'}</a>
+                                                                        </OverlayTrigger>
+                                                                    </>
+
+                                                                    : ticket.payment_note
+                                                            }
+                                                            </td>
+                                                            <td>{ticket.created_at ? moment(ticket.created_at).format('MMM DD, YYYY') : ''}</td>
                                                             <td style={{ color: "#0d6efd" }}><i className="ri-checkbox-circle-line fs-17 align-middle"></i> Paid</td>
                                                         </tr>
                                                     ))
