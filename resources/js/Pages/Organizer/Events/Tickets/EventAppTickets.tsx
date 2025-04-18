@@ -51,7 +51,7 @@ const EventAppTickets = ({ tickets }: any) => {
                                                             <td>{ticket.discount}</td>
                                                             <td>{ticket.promo_code ?? 'N/A'}</td>
                                                             <td>
-                                                                {ticket.discount && ticket.total
+                                                                {ticket.discount  && ticket.total !='0.00'
                                                                     ? `${((ticket.discount / ticket.total) * 100)}%`
                                                                     : '0%'}
                                                             </td>

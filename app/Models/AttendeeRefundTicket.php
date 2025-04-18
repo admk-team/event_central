@@ -21,6 +21,7 @@ class AttendeeRefundTicket extends Model
         'refund_requested_on',
         'refund_approved_amount',
         'refund_requested_amount',
+        'stripe_refund_id'
     ];
 
     public function attendee()

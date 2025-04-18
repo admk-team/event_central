@@ -26,6 +26,7 @@ use chillerlan\QRCode\Common\EccLevel;
 use Illuminate\Support\Facades\Storage;
 use App\Models\AttendeePurchasedTickets;
 use App\Models\AttendeeRefundTicket;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
 class PaymentController extends Controller
@@ -54,7 +55,7 @@ class PaymentController extends Controller
         //If Page is being visited by Organizer
         if ($organizerView) {
             $eventApp = EventApp::find(session('event_id'));
-            $attendees = $eventApp->attendees()->select(['id as value', 'first_name as label'])->get();
+            $attendees = $eventApp->attendees()->select(['id as value',DB::raw("CONCAT(first_name, ' ', last_name) as label")])->get();
         } else {
             $eventApp =  EventApp::find(auth()->user()->event_app_id);
         }
