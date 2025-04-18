@@ -51,51 +51,52 @@ class EventSessionController extends Controller
         $purchasedTicket = AttendeePurchasedTickets::where('code', $request->code)->first();
 
         if (! $purchasedTicket) {
-            return $this->errorResponse("Invalid ticket", 404);
+            return response()->json([
+                'status' => 0,
+            ]);
         }
 
         $ticketEvent = $purchasedTicket->ticket?->event;
 
         if (! $ticketEvent) {
-            return $this->errorResponse("Invalid ticket", 404);
+            return response()->json([
+                'status' => 0,
+            ]);
         }
 
         if ($ticketEvent->id !== $event->id) {
-            return $this->errorResponse("Invalid ticket", 404);
+            return response()->json([
+                'status' => 0,
+            ]);
         }
 
         $ticket = $purchasedTicket->ticket;
         $attendee = $purchasedTicket->payment->attendee;
 
         if (! $ticket->sessions()->where('id', $session->id)->exists()) {
-            return $this->errorResponse("Invalid ticket", 404);
+            return response()->json([
+                'status' => 0,
+            ]);
         }
 
         // Check if attendee has already checked in
-        $isCheckedin = false;
-        $lastCheckin = $session->attendances()->where('attendee_id', $attendee->id)->latest()->first();
-        if ($lastCheckin && $lastCheckin->checked_out === null) {
-            $isCheckedin = true;
+        $checkin = $session->attendances()->where('attendee_id', $attendee->id)->latest()->first();
+        
+        if ($checkin) {
+            return response()->json([
+                'status' => 2,
+            ]);
         }
 
-        return $this->successResponse([
-            'message' => "Ticket is valid",
-            'attendee' => [
-                'id' => $attendee->id,
-                'first_name' => $attendee->first_name,
-                'last_name' => $attendee->last_name,
-                'email' => $attendee->email,
-                'company' => $attendee->company,
-                'position' => $attendee->position,
-                'phone' => $attendee->phone,
-            ],
-            'ticket' => [
-                'name' => $ticket->name,
-                'description' => $ticket->description,
-                'type' => $ticket->type,
-            ],
-            'is_checked_in' => $isCheckedin,
-            'last_check_in' => $lastCheckin,
+        $session->attendances()->create([
+            'attendee_id' => $attendee->id,
+            'checked_in' => now(),
+            'event_app_id' => $event->id,
+            'qr_code' => $purchasedTicket->qr_code,
+        ]);
+
+        return response()->json([
+            'status' => 1,
         ]);
     }
 
