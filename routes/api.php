@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\v1\Organizer\EventSessionController;
 use App\Http\Controllers\Api\v1\Attendee\PaymentController;
 use App\Http\Controllers\Api\v1\Attendee\QuestionAttendeeController as AttendeeQuestionAttendeeController;
 use App\Http\Controllers\Api\v1\Organizer\AttendeeController;
+use App\Http\Controllers\Api\v1\Organizer\TicketController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,9 +51,12 @@ Route::prefix('user')->group(function () {
 
         // Event Attendees
         Route::get('events/{event}/attendees', [AttendeeController::class, 'index']);
-        Route::get('events/{event}/attendees/{attendee}', [AttendeeController::class, 'show']);
         Route::post('events/{event}/attendees', [AttendeeController::class, 'create']);
+        Route::get('events/{event}/attendees/{attendee}', [AttendeeController::class, 'show']);
         Route::put('events/{event}/attendees/{attendee}', [AttendeeController::class, 'update']);
+
+        // Event Tickets
+        Route::get('events/{event}/tickets', [TicketController::class, 'index']);
 
         Route::post('/logout', [AuthController::class, 'logout']);
     });
