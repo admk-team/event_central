@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Organizer\Event;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class OrganizerRefundRequest extends FormRequest
 {
@@ -25,10 +26,21 @@ class OrganizerRefundRequest extends FormRequest
             'refund_id' => 'required',
             'requested_amount' => 'required',
             'organizer_remarks' => 'required_if:action,rejected|max:255',
-            'refund_approved_amount' => 'required_if:action,approved|lte:requested_amount',
+            // 'refund_approved_amount' => 'required_if:action,approved|lte:requested_amount',
+            'refund_approved_amount' => [
+                Rule::when(
+                    $this->input('action') === 'approved',
+                    ['required', 'lte:requested_amount'],
+                    ['nullable']
+                )
+            ],
             'action' => 'required',
         ];
     }
+
+    // 'discount' => $this->type === 'promo'
+    //     ? ['required', 'lte:100']
+    //     : ['nullable'],
 
     /**
      * Get the validation rules that apply to the request.
