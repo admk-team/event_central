@@ -74,14 +74,14 @@ Route::prefix('user')->group(function () {
         // Event Tickets
         Route::get('events/{event}/tickets', [TicketController::class, 'index']);
 
-        // Event Session Posts 
+        // Event Session Posts
         Route::get('/posts/{id}', [EventPostsController::class, 'getPosts'])->name('create.post');
         Route::post('/create-post', [EventPostsController::class, 'createPost'])->name('create.post');
         Route::delete('/delete-post/{id}', [EventPostsController::class, 'destroy'])->name('destroy');
         Route::get('/edit-post/{id}', [EventPostsController::class, 'editPost'])->name('post.edit');
         Route::post('/update-post/{id}', [EventPostsController::class, 'updatePost'])->name('post.update');
 
-        // logout 
+        // logout
         Route::post('/logout', [AuthController::class, 'logout']);
         // Event Organizer Assign Ticket Api Start
         Route::get('events/{event}/assign-tickets', [AssignTicketApiController::class, 'assignTickets'])->name('api.attendee.tickets.assign');
@@ -91,7 +91,7 @@ Route::prefix('user')->group(function () {
         Route::get('checkout/{paymentUuId}', [AssignTicketApiController::class, 'showCheckoutPage'])->name('api.tickets.checkout.page');
         Route::post('update-attendee-payment/{paymentUuId}', [AssignTicketApiController::class, 'updateAttendeePayment'])->name('api.update.payment');
         Route::get('payment-success/{paymentUuId}', [AssignTicketApiController::class, 'paymentSuccess'])->name('api.payment.success');
-          // Event Organizer Assign Ticket Api End
+        // Event Organizer Assign Ticket Api End
     });
 });
 
@@ -107,6 +107,7 @@ Route::prefix('attendee')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
 
         Route::get('event/{eventApp}', [AttendeeEventController::class, 'getEventDetailDashboard']);
+        Route::get('event/{eventApp}/session', [AttendeeEventController::class, 'getEventDetailAgenda']);
         Route::get('event/{eventApp}/session/{eventSession}', [AttendeeEventController::class, 'eventsessions']);
         Route::get('event/ticket/{eventApp}', [AttendeeEventController::class, 'ticket']);
         Route::get('event/speaker/{eventApp}', [AttendeeEventController::class, 'speaker']);
