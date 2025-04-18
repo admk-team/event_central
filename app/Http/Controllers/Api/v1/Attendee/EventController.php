@@ -37,7 +37,7 @@ class EventController extends Controller
 
     public function speaker(string $id)
     {
-        $speakers = EventSpeaker::where('event_app_id', $id)->with('eventSessions')->get();
+        $speakers = EventSpeaker::where('event_app_id', $id)->with('eventSessions')->orderBy('name', 'ASC')->get();
         return $this->successResponse(EventSpeakerResource::collection($speakers));
     }
 
