@@ -35,8 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::create('attendee_event_session', function (Blueprint $table) {
-            $table->dropConstrainedForeignId('attendee_purchased_ticket_id');
-        });
+        Schema::dropIfExists('attendee_event_session');
     }
 };
