@@ -19,6 +19,20 @@ class Controller extends BaseController
 
         $appendParams = [];
 
+        $search = $request->search ? json_decode($request->search, true) : null;
+
+        if ($search && $search['query']) {
+            foreach ($search['columns'] as $i => $column) {
+                if ($i === 0) {
+                    $query->where($column, 'like', "%{$search['query']}%");
+                } else {
+                    $query->orWhere($column, 'like', "%{$search['query']}%");
+                }
+            }
+
+            $appendParams['search'] = $request->search;
+        }
+
         $sort = $request->sort ? json_decode($request->sort, true) : null;
 
         if ($sort) {

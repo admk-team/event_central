@@ -11,7 +11,7 @@ class EventSettingsService
     {
 
         //Cache Event Setting queries
-        $setting = Cache::remember('event_settings', now()->addMinutes(10), function () use ($event_id, $key) {
+        $setting = Cache::remember("{$event_id}_{$key}", now()->addMinutes(10), function () use ($event_id, $key) {
             return EventAppSetting::where('event_app_id', $event_id)->where('key', $key)->first();
         });
 
@@ -64,6 +64,8 @@ class EventSettingsService
                 'description' => $description !== null ? $description : $setting->description,
             ]);
         }
+
+        Cache::forget("{$event_id}_{$key}");
 
         return $setting;
     }

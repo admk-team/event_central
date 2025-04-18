@@ -106,16 +106,22 @@ function Index({ attendees }: any) {
             ),
         },
         {
+            accessorKey: 'first_name',
             header: () => 'First Name',
             cell: (attendee) => attendee.first_name,
+            searchable: true,
         },
         {
+            accessorKey: 'last_name',
             header: () => 'Last Name',
             cell: (attendee) => attendee.last_name,
+            searchable: true,
         },
         {
+            accessorKey: 'email',
             header: () => 'Email',
             cell: (attendee) => attendee.email,
+            searchable: true,
         },
         // {
         //     header: () => 'Event Pass',

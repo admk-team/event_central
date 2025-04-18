@@ -115,7 +115,11 @@ class PaymentController extends Controller
         $user = auth()->user();
         $attendee = $organizerView ? $attendee : auth()->user();
         $amount = $data['totalAmount'];
-        $client_secret = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount);
+        $stripe_response = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount);
+        $client_secret = $stripe_response['client_secret'];
+        $payment_id = $stripe_response['payment_id'];
+
+
 
         //There is morphic relationship in AtttendeePayment regarding Payer
         // Payer can be Organizer or Attendee
@@ -128,6 +132,7 @@ class PaymentController extends Controller
             'discount' => $data['discount'],
             'amount_paid' => $data['totalAmount'],
             'stripe_intent' => $client_secret,
+            'stripe_id' => $payment_id,
             'status' => 'pending',
             'payment_method' => $organizerView ? $payment_method : 'stripe',
         ]);
@@ -372,11 +377,10 @@ class PaymentController extends Controller
             }
 
             foreach ($payment->purchased_tickets as $purchasedTicket) {
-                $transferCheck = TransferTicket::where('attendee_payment_transfered', $purchasedTicket->id)->exists();
                 $image[] = [
                     'qr_code' => asset('storage/' . $purchasedTicket->qr_code),
                     'purchased_id' => $purchasedTicket->id,
-                    'transfer_check' => $transferCheck,
+                    'transfer_check' => $purchasedTicket->is_transfered,
                     'ticket_name' => $purchasedTicket->ticket?->name ?? '',
                     'ticket_type_name' => isset($purchasedTicket->ticket->ticketType->name) ?
                         $purchasedTicket->ticket->ticketType->name : '', // <-- added line

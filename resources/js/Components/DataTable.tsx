@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
-import { Form, Table } from 'react-bootstrap'
+import { Button, Form, Spinner, Table } from 'react-bootstrap'
 import Pagination from './Common/Pagination'
 import { router } from '@inertiajs/react'
-import { ArrowDown, ArrowUp, ChevronDown, ChevronsUpDown, ChevronUp } from 'lucide-react'
+import { ArrowDown, ArrowUp, ChevronDown, ChevronsUpDown, ChevronUp, Search, X } from 'lucide-react'
 
 type Column<T> = {
     accessorKey?: string
@@ -11,6 +11,7 @@ type Column<T> = {
     cell: (row: T) => React.ReactNode
     cellClass?: string
     enableSorting?: boolean
+    searchable?: boolean
 }
 
 export type ColumnDef<T> = Column<T>[]
@@ -49,6 +50,8 @@ export default function DataTable<T>({
 
     const [sort, setSort] = useSort();
 
+    const { hasSearch, searchQuery, setSearchQuery, search, searchProcessing } = useSearch(columns);
+
     const dataTable: DataTable<T> = {
         data: data.data,
         getSelectedRows: rowSelector.getSelectedRows,
@@ -56,12 +59,55 @@ export default function DataTable<T>({
 
     return (
         <div className="card">
-            <div className="card-header d-flex justify-content-between align-items-center">
+            <div className="card-header d-flex justify-content-between align-items-center flex-wrap">
                 {/* Title and Description */}
                 <div>
                     {title && <h5 className="card-title mb-0">{title}</h5>}
                     {description && <div className="card-description">{description}</div>}
                 </div>
+
+                {/* Search */}
+                {hasSearch && (
+                    <form onSubmit={(e) => {
+                        e.preventDefault();
+                        search();
+                    }}>
+                        <div className="input-group w-auto position-relative">
+                            <Form.Control
+                                type="text" 
+                                placeholder="Search"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                style={{
+                                    paddingRight: '25px',
+                                }}
+                            />
+                            {searchQuery && (
+                                <X 
+                                    className="position-absolute cursor-pointer" 
+                                    size={20} 
+                                    style={{ top: '8px', right: '38px' }} 
+                                    onClick={() => {
+                                        search('');
+                                    }}
+                                />
+                            )}
+                            <Button type="submit" size="sm">
+                                {searchProcessing ? (
+                                    <Spinner
+                                        as="span"
+                                        animation="border"
+                                        size="sm"
+                                        role="status"
+                                        aria-hidden="true"
+                                    />
+                                ) : (
+                                    <Search size={16} />
+                                )}
+                            </Button>
+                        </div>
+                    </form>
+                )}
 
                 {/* Actions */}
                 <div className="d-flex justify-content-end align-items-center gap-2">
@@ -238,4 +284,43 @@ function useSort(): [{ column: string, desc: boolean } | null, (column: string) 
     }
 
     return [sort, setSort]
+}
+
+type Search = { query: string, columns: string[] } | null
+type setSearchQuery = (query?: string) => void 
+
+function useSearch<T>(columns: ColumnDef<T>) {
+    const searchableColumns = columns.filter(col => col.searchable === true && col.accessorKey);
+
+    const url = new URL(window.location.href);
+    const searchParam = url.searchParams.get('search');
+
+    const search: Search = searchParam ? JSON.parse(searchParam): null;
+
+    
+    const [searchQuery, setSearchQuery] = React.useState(search?.query ?? '');
+    const [searchProcessing, setSearchProcessing] = React.useState(false);
+    
+    const doSearch: setSearchQuery = (query) => {
+        if (query !== undefined) setSearchQuery(query);
+
+        url.searchParams.set('search', JSON.stringify({
+            query: query !== undefined ? query : searchQuery,
+            columns: searchableColumns.map(column => column.accessorKey),
+        }));
+
+        setSearchProcessing(true);
+
+        router.visit(url.toString(), {
+            onFinish: () => setSearchProcessing(false),
+        });
+    }
+
+    return {
+        hasSearch: searchableColumns.length > 0,
+        searchQuery,
+        setSearchQuery,
+        search: doSearch,
+        searchProcessing,
+    };
 }

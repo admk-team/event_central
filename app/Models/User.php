@@ -149,6 +149,8 @@ class User extends Authenticatable
         $permissions = Cache::remember('user_permissions_' . $this->id, now()->addMinutes(5), function () use ($permissions) {
             return $permissions->sort()->values();
         });
+
+        return $permissions;
     }
 
     public function accessibleEvents(): MorphToMany
