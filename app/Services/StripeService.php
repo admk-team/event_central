@@ -45,7 +45,7 @@ class StripeService
         }
     }
 
-    public function refund($event_app_id, $payment_intent, $amount)
+    public function refund($event_app_id, $payment_intent, $amount, array $metadata = [])
     {
         try {
             $stripe = new \Stripe\StripeClient($this->StripKeys($event_app_id)->stripe_secret_key);
@@ -53,6 +53,8 @@ class StripeService
             $refund = $stripe->refunds->create([
                 'payment_intent' => $payment_intent,
                 'amount' => $amount, // amount in cents
+                'reason' => 'requested_by_customer',
+                'metadata' => $metadata
             ]);
             return $refund;
         } catch (Exception $ex) {
