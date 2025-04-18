@@ -3,12 +3,17 @@
 namespace App\Services;
 
 use App\Models\EventAppSetting;
+use Illuminate\Support\Facades\Cache;
 
 class EventSettingsService
 {
     public function get(int $event_id, string $key, mixed $default = null)
     {
-        $setting = EventAppSetting::where('event_app_id', $event_id)->where('key', $key)->first();
+
+        //Cache Event Setting queries
+        $setting = Cache::remember("{$event_id}_{$key}", now()->addMinutes(10), function () use ($event_id, $key) {
+            return EventAppSetting::where('event_app_id', $event_id)->where('key', $key)->first();
+        });
 
         if (! $setting) {
             return $default;

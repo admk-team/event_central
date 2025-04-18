@@ -36,7 +36,27 @@ class StripeService
                 "description" => 'Event Central Ticket Purchasing',
                 'automatic_payment_methods' => ['enabled' => true],
             ]);
-            return $paymentIntent->client_secret;
+            return [
+                'client_secret' => $paymentIntent->client_secret,
+                'payment_id' => $paymentIntent->id
+            ];
+        } catch (Exception $ex) {
+            Log::info($ex->getMessage());
+        }
+    }
+
+    public function refund($event_app_id, $payment_intent, $amount, array $metadata = [])
+    {
+        try {
+            $stripe = new \Stripe\StripeClient($this->StripKeys($event_app_id)->stripe_secret_key);
+
+            $refund = $stripe->refunds->create([
+                'payment_intent' => $payment_intent,
+                'amount' => $amount, // amount in cents
+                'reason' => 'requested_by_customer',
+                'metadata' => $metadata
+            ]);
+            return $refund;
         } catch (Exception $ex) {
             Log::info($ex->getMessage());
         }

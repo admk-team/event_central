@@ -10,6 +10,7 @@ use App\Http\Controllers\Attendee\Payment\PaymentController;
 use App\Http\Controllers\Attendee\EventPostController;
 use App\Http\Controllers\Attendee\EventQuestionnaireFormController;
 use App\Http\Controllers\Attendee\EventRegistrationFormController;
+use App\Http\Controllers\Attendee\Payment\RefundPaymentController;
 use App\Http\Controllers\Attendee\ProfileController;
 use App\Http\Controllers\Attendee\QrCodeController;
 use App\Http\Controllers\Attendee\QuestionAttendeeController as AttendeeQuestionAttendeeController;
@@ -58,12 +59,14 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
 
         //Payment Processing
         Route::get('view-tickets', [PaymentController::class, 'viewTickets'])->name('attendee.tickets.get');
-        Route::get('purchased-tickets', [PaymentController::class, 'attendeeTickets'])->name('attendee.tickets.purchased');
-        Route::get('refund-tickets', [PaymentController::class, 'refundAttendeeTicket'])->name('attendee.tickets.refund');
-        Route::post('refund-request', [PaymentController::class, 'refundAttendeeRequest'])->name('attendee.tickets.request');
+        Route::get('purchased-tickets', [PaymentController::class, 'attendeepurchasedTickets'])->name('attendee.tickets.purchased');
         Route::post('submit-ticket-emails', [PaymentController::class, 'submitTicketTransfer'])->name('attendee.tickets.transfer');
 
+        //Refund of Tickets
+        Route::get('refund-tickets', [RefundPaymentController::class, 'refundAttendeeTicket'])->name('attendee.tickets.refund');
+        Route::post('refund-request', [RefundPaymentController::class, 'refundAttendeeRequest'])->name('attendee.tickets.refund.save');
 
+        //checkout processing
         Route::get('checkout/{paymentUuId}', [PaymentController::class, 'showCheckoutPage'])->name('attendee.tickets.checkout.page');
         Route::post('checkout', [PaymentController::class, 'checkout'])->name('attendee.tickets.checkout');
         Route::post('checkout-free-ticket', [PaymentController::class, 'checkoutFreeTicket'])->name('attendee.tickets.checkout.free');

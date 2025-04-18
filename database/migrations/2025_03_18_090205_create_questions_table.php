@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('event_session_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            // $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->bigInteger('user_id')->nullable();
             $table->text('content')->nullable();
             $table->integer('likes_count')->default(0);
             $table->integer('dislikes_count')->default(0);

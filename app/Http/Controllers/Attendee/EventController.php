@@ -84,17 +84,17 @@ class EventController extends Controller
     public function getEventSpeakerDetail(EventSpeaker $eventSpeaker)
     {
         $eventApp = EventApp::find(Auth::user()->event_app_id);
-    
+
         // Load all speakers and their sessions for the event, sorted by name
         $eventApp->load(['event_speakers' => function ($query) {
             $query->with('eventSessions.eventPlatform')->orderBy('name'); // Sort speakers alphabetically
         }]);
-    
+
         // Load sessions for the specific speaker
         if ($eventSpeaker) {
             $eventSpeaker->load('eventSessions.eventPlatform');
         }
-    
+
         return Inertia::render('Attendee/AttendeeSpeakerDetail', compact('eventApp', 'eventSpeaker'));
     }
 

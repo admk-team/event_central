@@ -3,15 +3,19 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\v1\AuthController;
+use App\Http\Controllers\Api\v1\Attendee\EventPostController;
+use App\Http\Controllers\Api\v1\Organizer\EventController;
+use App\Http\Controllers\Api\v1\Attendee\PaymentController;
 use App\Http\Controllers\Api\v1\Attendee\ProfileController;
 use App\Http\Controllers\Api\v1\Attendee\RegisterController;
-use App\Http\Controllers\Api\v1\Attendee\EventController as AttendeeEventController;
-use App\Http\Controllers\Api\v1\Organizer\EventController;
 use App\Http\Controllers\Api\v1\Organizer\EventSessionController;
-use App\Http\Controllers\Api\v1\Attendee\PaymentController;
+use App\Http\Controllers\Api\v1\Attendee\EventController as AttendeeEventController;
 use App\Http\Controllers\Api\v1\Attendee\QuestionAttendeeController as AttendeeQuestionAttendeeController;
+use App\Http\Controllers\Api\v1\Organizer\AssignTicketApiController;
+use App\Http\Controllers\Api\v1\Organizer\QAController;
 use App\Http\Controllers\Api\v1\Organizer\AttendeeController;
 use App\Http\Controllers\Api\v1\Organizer\TicketController;
+use App\Http\Controllers\Api\v1\Organizer\EventPostsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,8 +27,6 @@ use App\Http\Controllers\Api\v1\Organizer\TicketController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
-
 
 Route::prefix('user')->group(function () {
 
@@ -48,6 +50,20 @@ Route::prefix('user')->group(function () {
         Route::post('events/{event}/sessions/{session}/scan', [EventSessionController::class, 'scan']);
         Route::post('events/{event}/sessions/{session}/checkin', [EventSessionController::class, 'checkin']);
         Route::post('events/{event}/sessions/{session}/checkout', [EventSessionController::class, 'checkout']);
+        //Organizer Q&A  start
+        Route::get('/events/organizer/qa/{session_id}', [QAController::class, 'organizerQA'])->name('api.events.qa.index');
+        Route::get('/events/attendee/qa/{session_id}', [QAController::class, 'attendeeQA'])->name('api.events.qa.index');
+        Route::post('/events/{session_id}/questions', [QAController::class, 'storeQuestion'])->name('api.events.qa.store');
+        Route::post('/events/questions/{questionId}/vote', [QAController::class, 'vote'])->name('api.events.qa.vote');
+        Route::post('/events/questions/{questionId}/answer', [QAController::class, 'storeAnswer'])->name('api.events.qa.answer');
+
+        Route::prefix('events/qa')->group(function () {
+            Route::put('/question/{questionId}', [QAController::class, 'updateQuestion'])->name('api.events.qa.updateQuestion');
+            Route::delete('/question/{questionId}', [QAController::class, 'destroyQuestion'])->name('api.events.qa.destroyQuestion');
+            Route::put('/answer/{answerId}', [QAController::class, 'updateAnswer'])->name('api.events.qa.updateAnswer');
+            Route::delete('/answer/{answerId}', [QAController::class, 'destroyAnswer'])->name('api.events.qa.destroyAnswer');
+        });
+        //Q&A  End
 
         // Event Attendees
         Route::get('events/{event}/attendees', [AttendeeController::class, 'index']);
@@ -58,7 +74,24 @@ Route::prefix('user')->group(function () {
         // Event Tickets
         Route::get('events/{event}/tickets', [TicketController::class, 'index']);
 
+        // Event Session Posts 
+        Route::get('/posts/{id}', [EventPostsController::class, 'getPosts'])->name('create.post');
+        Route::post('/create-post', [EventPostsController::class, 'createPost'])->name('create.post');
+        Route::delete('/delete-post/{id}', [EventPostsController::class, 'destroy'])->name('destroy');
+        Route::get('/edit-post/{id}', [EventPostsController::class, 'editPost'])->name('post.edit');
+        Route::post('/update-post/{id}', [EventPostsController::class, 'updatePost'])->name('post.update');
+
+        // logout 
         Route::post('/logout', [AuthController::class, 'logout']);
+        // Event Organizer Assign Ticket Api Start
+        Route::get('events/{event}/assign-tickets', [AssignTicketApiController::class, 'assignTickets'])->name('api.attendee.tickets.assign');
+        Route::post('validate-discount-code/{disCode}', [AssignTicketApiController::class, 'validateDiscCode'])->name('api.validateCode.post');
+        Route::post('checkout/{attendee}/{payment_method}', [AssignTicketApiController::class, 'checkout'])->name('api.tickets.checkout');
+        Route::post('checkout-free/{attendee}/{payment_method}', [AssignTicketApiController::class, 'checkoutFreeTicket'])->name('api.tickets.checkout.free');
+        Route::get('checkout/{paymentUuId}', [AssignTicketApiController::class, 'showCheckoutPage'])->name('api.tickets.checkout.page');
+        Route::post('update-attendee-payment/{paymentUuId}', [AssignTicketApiController::class, 'updateAttendeePayment'])->name('api.update.payment');
+        Route::get('payment-success/{paymentUuId}', [AssignTicketApiController::class, 'paymentSuccess'])->name('api.payment.success');
+          // Event Organizer Assign Ticket Api End
     });
 });
 
@@ -75,7 +108,6 @@ Route::prefix('attendee')->group(function () {
 
         Route::get('event/{eventApp}', [AttendeeEventController::class, 'getEventDetailDashboard']);
         Route::get('event/{eventApp}/session/{eventSession}', [AttendeeEventController::class, 'eventsessions']);
-        // Route::get('event/{eventApp}/session', [AttendeeEventController::class, 'eventsessions']);
         Route::get('event/ticket/{eventApp}', [AttendeeEventController::class, 'ticket']);
         Route::get('event/speaker/{eventApp}', [AttendeeEventController::class, 'speaker']);
         Route::get('event/contact/{eventApp}', [AttendeeEventController::class, 'contact']);
@@ -86,7 +118,7 @@ Route::prefix('attendee')->group(function () {
         Route::post('update-attendee-payment/{paymentUuId}', [PaymentController::class, 'updateAttendeePaymnet'])->name('attendee.update.payment');
 
         Route::get('payment/cancel', [PaymentController::class, 'paymentCancel'])->name('attendee.payment.cancel');
-        Route::post('validate-discount-code/{disCode}', [PaymentController::class, 'validateDiscCode'])->name('attendee.validateCode.post');
+        Route::post('validate-discount-code', [PaymentController::class, 'validateDiscCode'])->name('attendee.validateCode.post');
         Route::get('payment-success/{paymentUuId}', [PaymentController::class, 'paymentSuccess'])->name('attendee.payment.success');
 
         // //PayPal
@@ -107,5 +139,11 @@ Route::prefix('attendee')->group(function () {
             Route::put('/answer/{answerId}', [AttendeeQuestionAttendeeController::class, 'updateAnswer'])->name('updateAnswer');
             Route::delete('/answer/{answerId}', [AttendeeQuestionAttendeeController::class, 'destroyAnswer'])->name('destroyAnswer');
         });
+
+        //post
+        Route::get('/event-posts/{id}', [EventPostController::class, 'getPostsMore'])->name('attendee.posts.index');
+        Route::post('/attendee-poll-rating', [EventPostController::class, 'pollToggle'])->name('attendee.poll.rating');
+        Route::post('/attendee-post-likes', [EventPostController::class, 'toggleLike'])->name('attendee.like.rating');
+        Route::post('/attendee-post-dislikes', [EventPostController::class, 'toggleDislike'])->name('attendee.dislike.rating');
     });
 });

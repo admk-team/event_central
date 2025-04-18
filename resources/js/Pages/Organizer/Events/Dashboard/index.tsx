@@ -19,7 +19,7 @@ import Widget1 from "./Widget1";
 const DashboardAnalytics = ({ totalAttendee,totalSession,totalSpeakers,totalPartners,totalTickets,totalPosts,totalRevenue,sessionAttendance,topSession,ticketsMetrics ,top10Attendee}: any) => {
     return (
         <React.Fragment>
-            <Head title="Analytics | Velzon - React Admin & Dashboard Template" />
+            <Head title="Analytics " />
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb title="Analytics" pageTitle="Dashboards" />
@@ -39,7 +39,7 @@ const DashboardAnalytics = ({ totalAttendee,totalSession,totalSpeakers,totalPart
                     <Row>
                         <Col xxl={5}>
                             {/* <UpgradeAccountNotise /> */}
-                            <Widget 
+                            <Widget
                                 totaluser = {totalAttendee}
                                 totalSession = {totalSession}
                                 totalPosts = {totalPosts}
@@ -54,7 +54,7 @@ const DashboardAnalytics = ({ totalAttendee,totalSession,totalSpeakers,totalPart
                     <Row>
                     <TopPages topSession={topSession}  />
                         <AudiencesMetrics ticketsMetrics = {ticketsMetrics} />
-                        
+
                         {/* <AudiencesSessions /> */}
                     </Row>
                     <Row>

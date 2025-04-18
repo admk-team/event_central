@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
 class EventApp extends Model
@@ -169,18 +170,22 @@ class EventApp extends Model
 
     public function getFeaturedImageAttribute()
     {
-        $images = $this->images;
-        if (count($images) > 0) {
-            return $images[0]->image_url;
-        } else {
-            return url('/default-event-feature-image.png');
-        }
+        Cache::remember('event_image_' . $this->id, now()->addMinutes(5), function () {
+            $images = $this->images;
+            if (count($images) > 0) {
+                return $images[0]->image_url;
+            } else {
+                return url('/default-event-feature-image.png');
+            }
+        });
     }
 
     public function getStartDateAttribute()
     {
-        $temp = $this->dates()->first();
-        return $temp ? $temp->date : null;
+        $event_dates = Cache::remember('event_dates', now()->addMinutes(10), function () {
+            $temp = $this->dates()->first();
+            return $temp ? $temp->date : null;
+        });
     }
 
     public function getRegistrationPrivateAttribute()
