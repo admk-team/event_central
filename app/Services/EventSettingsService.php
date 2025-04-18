@@ -65,6 +65,8 @@ class EventSettingsService
             ]);
         }
 
+        Cache::forget("{$event_id}_{$key}");
+
         return $setting;
     }
 }
