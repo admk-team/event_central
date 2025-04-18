@@ -116,7 +116,7 @@ function CreateOrEdit({ partner, partnerCategories }: any) {
                                                 <div className="">
                                                     <Form.Label htmlFor="name" className="form-label">Phone</Form.Label>
                                                     <Form.Control
-                                                        type="number"
+                                                        type="text"
                                                         className="form-control"
                                                         id="phone"
                                                         placeholder="Enter phone"
