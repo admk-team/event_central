@@ -8,6 +8,8 @@ use App\Models\Attendee;
 use App\Models\AttendeePayment;
 use App\Models\AttendeeRefundTicket;
 use App\Services\StripeService;
+use Error;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
@@ -38,14 +40,28 @@ class RefundPaymentController extends Controller
             return redirect()->back()->withError('Invalid Refund ID');
         }
 
+        //Process Refund on Transfer
         if ($refund->attendeePayment->payment_method === 'stripe') {
             $payment_intent = $refund->attendeePayment->stripe_id;
             $amount = $request->refund_approved_amount * 100;  //Converting to cents
-            $result = $this->stripe->refund($refund->event_app_id, $payment_intent, $amount);
-            Log::info($result);
-            // Log::info($amount);
-        }
+            $result = $this->stripe->refund($refund->event_app_id, $payment_intent, $amount, [
+                'refund_reason' => $refund->refund_reason,
+                'organizer_remarks' => $request->organizer_remarks,
+                'refund_requested_amount' => $refund->refund_requested_amount,
+                'refund_id' => $refund->id,
+                'organizer_id' => auth()->user()->id,
+                'attendee_payment_id' => $refund->attendee_payment_id
+            ]);
 
+            if ($result->status === 'succeeded') {
+                $refund->update([
+                    'stripe_refund_id' => $result->id,
+                ]);
+            } else {
+                Log::info($result);
+                throw new Exception('Error encounterd while processing stripe refund');
+            }
+        }
 
         // If organizer has approved refund request then remove all sessions
         // subscripted by each purchased tickets of payment
@@ -57,6 +73,7 @@ class RefundPaymentController extends Controller
             }
         }
 
+        //Either appoved or rejected update status of refund as selected by Organizer
         $refund->update([
             'organizer_remarks' => $request->organizer_remarks,
             'refund_status_date' => $request->refund_status_date,
