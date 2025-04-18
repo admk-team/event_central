@@ -272,7 +272,7 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
                         <div className="container">
                             <div className="row">
                                 {sessions && sessions.map((s) => (
-                                    <div className="col">
+                                    <div className="col ">
                                         <Form.Check
                                             key={s.id}
                                             type={'checkbox'}

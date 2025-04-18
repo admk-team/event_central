@@ -13,7 +13,7 @@ import { DialogBackdrop } from "@headlessui/react";
 
 function Index({ tickets, sessions, addons, fees, event_ticket_type }: any) {
 
-    console.log('tickets', tickets);
+    // console.log('tickets', tickets);
 
     const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
     const [editTicket, setEditTicket] = React.useState<any>(null);
