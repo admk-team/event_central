@@ -43,11 +43,11 @@ function RefundTickets({ payments }: any) {
         },
         {
             header: () => 'Payment Status',
-            cell: (payment) => <span className='badge bg-secondary text-capitalize p-2 w-100'>{payment.status}</span>,
+            cell: (payment) => <span className='rounded-pill badge bg-secondary text-capitalize p-2 w-100'>{payment.status}</span>,
         },
         {
             header: () => 'Payment Method',
-            cell: (payment) => payment.payment_method,
+            cell: (payment) => <span className='text-capitalize p-20'>{payment.payment_method}</span>,
         },
         {
             header: () => 'Payment Date',
@@ -55,7 +55,11 @@ function RefundTickets({ payments }: any) {
         },
         {
             header: () => 'Refund Type',
-            cell: (payment) => payment.refund_tickets?.refund_type ?? '',
+            cell: (payment) => (
+                <>
+                    {payment.refund_tickets.refund_type === 'all_tickets' && <span>{'All Tickets'}</span>}
+                </>
+            ),
         },
         {
             header: () => 'Amount Requested',
@@ -71,7 +75,12 @@ function RefundTickets({ payments }: any) {
         },
         {
             header: () => 'Refund Status',
-            cell: (payment) => <span className='badge bg-secondary text-capitalize p-2 w-100'>{payment.refund_tickets?.status ?? ''}</span>,
+            cell: (payment) => (
+                <>
+                    {payment.refund_tickets && payment.refund_tickets.status === 'approved' && <span className='rounded-pill badge bg-secondary text-capitalize p-2 w-100'>{payment.refund_tickets?.status ?? ''}</span>}
+                    {payment.refund_tickets && payment.refund_tickets.status === 'rejected' && <span className='rounded-pill badge bg-warning text-dark text-capitalize p-2 w-100'>{payment.refund_tickets?.status ?? ''}</span>}
+                </>
+            ),
         },
         {
             header: () => 'Refund Status Date',

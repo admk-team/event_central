@@ -41,7 +41,7 @@ class RefundPaymentController extends Controller
         }
 
         //Process Refund on Transfer
-        if ($refund->attendeePayment->payment_method === 'stripe') {
+        if ($refund->attendeePayment->payment_method === 'stripe' && $request->action === 'approved') {
             $payment_intent = $refund->attendeePayment->stripe_id;
             $amount = $request->refund_approved_amount * 100;  //Converting to cents
             $result = $this->stripe->refund($refund->event_app_id, $payment_intent, $amount, [
@@ -53,7 +53,7 @@ class RefundPaymentController extends Controller
                 'attendee_payment_id' => $refund->attendee_payment_id
             ]);
 
-            if ($result->status === 'succeeded') {
+            if ($result && $result->status === 'succeeded') {
                 $refund->update([
                     'stripe_refund_id' => $result->id,
                 ]);

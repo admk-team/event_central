@@ -1,5 +1,5 @@
 import { Head, Link, router, useForm } from "@inertiajs/react";
-import React, { useEffect, useState, CSSProperties } from "react";
+import React, { useEffect, useState, CSSProperties, useRef } from "react";
 import AttendeeLayout from "../../../Layouts/Attendee";
 import EventLayout from "../../../Layouts/Event";
 import { Button, Col, Container, Row, InputGroup, Form, Card, CardBody, Spinner, FormGroup } from "react-bootstrap";
@@ -13,14 +13,12 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
 
     //Set Page Layout as per User [Organizer, Attendee]
     const Layout = organizerView ? EventLayout : AttendeeLayout;
-
     const foundAttendee = attendees.find(attendee => attendee.value === parseInt(attendee_id));
-
-    // console.log(attendees, attendee_id, foundAttendee);
 
     //Options for Procession of Tickets from Organizer side
     const [currentAttendee, setCurrentAttendee] = useState<any>(attendee_id);
     const [paymentMethod, setPaymentMethod] = useState<any>('stripe');
+    const [paymnetNote, setPaymentNote] = useState<any>('');
 
     const [grandTotal, setGrandTotal] = useState(0);
     const [allTicketDetails, setAllTicketsDetails] = useState(Array<any>);
@@ -31,16 +29,32 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
     const [discount, setDiscount] = useState(0);
     const [totalAmount, setTotalAmount] = useState(0);
     const [processing, setProcessing] = useState(false);
+    const paymentNoteRef = useRef(null);
+
+    const scrollToNoteField = () => {
+        const offset = 120; // your custom offset
+        const element = paymentNoteRef.current;
+        const y = element.getBoundingClientRect().top + window.pageYOffset - offset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+        paymentNoteRef.current?.focus();
+    }
 
     const submitCheckOut = (e: any) => {
         e.preventDefault();
+
+        if ((paymentMethod === 'cash' || paymentMethod === 'other') && paymnetNote.length <= 0) {
+            toast.error('Payment Note is mandaory when paymnet method is cash or other, Enter Payment Note please');
+            scrollToNoteField();
+            return;
+        }
 
         const data = {
             ticketsDetails: [...allTicketDetails],
             discount: discount,
             discount_code: discountCodeApplied,
             subTotal: grandTotal,
-            totalAmount: totalAmount
+            totalAmount: totalAmount,
+            organizer_payment_note: paymnetNote,
         };
 
         console.log(data);
@@ -56,7 +70,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
                 }).finally(() => {
                     setProcessing(false);
                 })
-            } else if (totalAmount === 0 || paymentMethod === 'cash') {
+            } else if (totalAmount === 0 || paymentMethod !== 'stripe') {
                 axios.post(route("organizer.events.tickets.checkout.free", [currentAttendee, paymentMethod]), data).then((response) => {
                     // console.log(response);
                     router.visit(route('organizer.events.payment.success', response.data.uuid));
@@ -214,7 +228,23 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
                                         id="payment_method" onChange={(e) => setPaymentMethod(e.target.value)}>
                                         <option key={22} value="stripe">Stripe</option>
                                         <option key={23} value="cash">Cash</option>
+                                        <option key={24} value="other">Other</option>
                                     </Form.Select>
+                                </FormGroup>
+                            </Col>
+                        </Row>}
+                        {organizerView && (paymentMethod === 'cash' || paymentMethod === 'other') && < Row >
+                            <Col>
+                                <FormGroup className="mb-3">
+                                    <Form.Label className="fs-4">Paymnet Note</Form.Label>
+                                    <Form.Control
+                                        ref={paymentNoteRef}
+                                        as='textarea'
+                                        type="text"
+                                        rows={4}
+                                        maxLength={255}
+                                        onChange={(e) => setPaymentNote(e.target.value)}
+                                    />
                                 </FormGroup>
                             </Col>
                         </Row>}

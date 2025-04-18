@@ -22,6 +22,9 @@ interface AttendeePassProps {
 }
 
 const QrCode = ({ eventApp, attendee, image = [], hasTickets }) => {
+
+    console.log(image);
+
     const formatDate = (dateString) => {
         if (!dateString) return "";
         const date = new Date(dateString);

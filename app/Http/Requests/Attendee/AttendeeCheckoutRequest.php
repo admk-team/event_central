@@ -26,6 +26,7 @@ class AttendeeCheckoutRequest extends FormRequest
             'discount_code' => 'nullable',
             'subTotal' => 'numeric',
             'totalAmount' => 'numeric',
+            'organizer_payment_note' => 'nullable',
             'ticketsDetails' => 'array',
             'ticketsDetails.*.addons' => 'array',
             'ticketsDetails.*.addons_sub_total' => 'numeric',
