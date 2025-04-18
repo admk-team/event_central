@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Organizer\Event;
 
 use App\Http\Controllers\Controller;
 use App\Models\EventApp;
+use App\Models\EventPartner;
 use App\Models\EventPartnerCategory;
 use App\Models\EventPlatform;
 use App\Models\Page;
@@ -66,7 +67,9 @@ class WebsiteController extends Controller
 
         $colors = eventSettings($event->id)->getValue('website_colors', config('event_website.colors'));
         $partnerCategories = EventPartnerCategory::where('event_app_id', $event->id)->with(['partners'])->get();
-        return view('event-website.sponsors', compact('event', 'colors', 'partnerCategories'));
+        $exhibitors = EventPartner::where('event_app_id', session('event_id'))->where('type', 'exhibitor')->orderBy('company_name', 'asc')->get();
+        
+        return view('event-website.sponsors', compact('event', 'colors', 'partnerCategories', 'exhibitors'));
     }
     public function tickets($uuid)
     {
