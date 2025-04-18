@@ -21,6 +21,7 @@ const Navdata = () => {
     const [isSettingsMenu, setIsSettingsMenu] = useState<boolean>(false);
     const [IsQuestionnaireResponse, setIsQuestionnaireResponse] = useState<boolean>(false);
     const [isAssignTicket, setIsAssignTicket] = useState<boolean>(false);
+    const [isUpgradeTicket, setUpgradeTicket] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
 
@@ -55,6 +56,7 @@ const Navdata = () => {
         if (iscurrentState !== 'Questionnaire') setIsQuestionnaireForm(false);
         if (iscurrentState !== 'Questionnaire_response') setIsQuestionnaireResponse(false);
         if (iscurrentState !== 'assignTickets') setIsTickets(false);
+        if (iscurrentState !== 'upgradeTicket') setIsTickets(false);
     }, [
         iscurrentState,
         isDashboard,
@@ -67,7 +69,8 @@ const Navdata = () => {
         IsSessionAttendance,
         isRefundTicket,
         isTickets,
-        isAssignTicket
+        isAssignTicket,
+        isUpgradeTicket
     ]);
 
     // Dynamic current date
@@ -235,6 +238,22 @@ const Navdata = () => {
                 e.preventDefault();
                 setIsTickets(!isRefundTicket);
                 setIscurrentState('refundTicket');
+                updateIconSidebar(e);
+            },
+            hasPermissions: [
+                'refund_ticket'
+            ],
+        },
+        {
+            id: "upgradeTicket",
+            label: "Upgrade Tickets",
+            icon: "bx bxs-credit-card",
+            link: route('organizer.events.tickets.upgrade'),
+            stateVariables: isUpgradeTicket,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsTickets(!isUpgradeTicket);
+                setIscurrentState('upgradeTicket');
                 updateIconSidebar(e);
             },
             hasPermissions: [

@@ -67,6 +67,11 @@ class EventApp extends Model
         return $this->hasMany(ColorScheme::class, 'event_id');
     }
 
+    public function sessions()
+    {
+        return $this->hasMany(EventSession::class);
+    }
+
     // getters
 
     public function getCreatedAtDateAttribute()

@@ -85,7 +85,7 @@ class Attendee extends Authenticatable
                 $subSubQuery->where('is_transfered', 0);
             });
             $subQuery->orWhere('transfered_to_attendee_id', $this->id);
-        })->get();
+        })->with(['ticket'])->get();
         return $tickets;
     }
 }

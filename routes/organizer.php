@@ -34,6 +34,7 @@ use App\Http\Controllers\Organizer\Event\Settings\QuestionnaireFormSettingsContr
 use App\Http\Controllers\Organizer\Event\Settings\RegistrationFormSettingsController;
 use App\Http\Controllers\Organizer\Event\Settings\WebsiteSettingsController;
 use App\Http\Controllers\Organizer\Event\TrackController;
+use App\Http\Controllers\Organizer\Event\UpgradeTicketController;
 use App\Http\Controllers\Organizer\Event\WebsiteController;
 use App\Http\Controllers\Organizer\Event\WorkshopController;
 use App\Http\Controllers\Organizer\ProfileController;
@@ -133,6 +134,12 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             //refund payments
             Route::get('refund/tickets', [RefundPaymentController::class, 'refundTickets'])->name('refund.tickets');
             Route::post('attendee/refundticket', [RefundPaymentController::class, 'attendeeRefund'])->name('attendee.refund');
+
+            //Upgrade payments
+            Route::get('upgrade/tickets', [UpgradeTicketController::class, 'upgradeTickets'])->name('tickets.upgrade');
+            Route::post('upgrade/tickets', [UpgradeTicketController::class, 'saveTicketUpgrade'])->name('save.ticket.upgrade');
+
+
             // Promo Codes
             Route::resource('promo-codes', EventPromoCodeController::class)->only(['index', 'store', 'update', 'destroy']);
             Route::delete('promo-codes/delete/many', [EventPromoCodeController::class, 'destroyMany'])->name('promo-codes.destroy.many');
