@@ -12,6 +12,7 @@ use App\Services\PayPalService;
 use App\Services\StripeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AssignTicketApiController extends Controller
 {
@@ -40,7 +41,7 @@ class AssignTicketApiController extends Controller
             return response()->json(['error' => 'Event not found'], 404);
         }
 
-        $attendees = $eventApp->attendees()->select(['id as value', 'first_name as label'])->get();
+        $attendees = $eventApp->attendees()->select(['id as value',DB::raw("CONCAT(first_name, ' ', last_name) as label")])->get();
         $eventApp->load([
             'tickets.sessions',
             'tickets.addons',
