@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\v1\Attendee\QuestionAttendeeController as AttendeeQ
 use App\Http\Controllers\Api\v1\Organizer\AssignTicketApiController;
 use App\Http\Controllers\Api\v1\Organizer\QAController;
 use App\Http\Controllers\Api\v1\Organizer\AttendeeController;
+use App\Http\Controllers\Api\v1\Organizer\TicketController;
 use App\Http\Controllers\Api\v1\Organizer\EventPostsController;
 
 /*
@@ -66,9 +67,12 @@ Route::prefix('user')->group(function () {
 
         // Event Attendees
         Route::get('events/{event}/attendees', [AttendeeController::class, 'index']);
-        Route::get('events/{event}/attendees/{attendee}', [AttendeeController::class, 'show']);
         Route::post('events/{event}/attendees', [AttendeeController::class, 'create']);
+        Route::get('events/{event}/attendees/{attendee}', [AttendeeController::class, 'show']);
         Route::put('events/{event}/attendees/{attendee}', [AttendeeController::class, 'update']);
+
+        // Event Tickets
+        Route::get('events/{event}/tickets', [TicketController::class, 'index']);
 
         // Event Session Posts 
         Route::get('/posts/{id}', [EventPostsController::class, 'getPosts'])->name('create.post');
