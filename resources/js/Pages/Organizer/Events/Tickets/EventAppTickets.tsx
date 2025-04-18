@@ -35,7 +35,7 @@ const EventAppTickets = ({ tickets }: any) => {
                                                     <th scope="col">Discount Percentage</th>
                                                     <th scope="col">Quantity</th>
                                                     <th scope="col">Type</th>
-                                                    <th scope="col">Payment Note</th>
+                                                    {/* <th scope="col">Payment Note</th> */}
                                                     <th scope="col">Create On</th>
                                                     <th scope="col">Status</th>
                                                 </tr>
@@ -66,7 +66,7 @@ const EventAppTickets = ({ tickets }: any) => {
                                                             </td>
                                                             <td>{ticket.qty}</td>
                                                             <td>{ticket.type}</td>
-                                                            <td>{
+                                                            {/* <td>{
                                                                 ticket.payment_note.length > 15 ?
                                                                     <>
                                                                         <OverlayTrigger
@@ -83,7 +83,7 @@ const EventAppTickets = ({ tickets }: any) => {
 
                                                                     : ticket.payment_note
                                                             }
-                                                            </td>
+                                                            </td> */}
                                                             <td>{ticket.created_at ? moment(ticket.created_at).format('MMM DD, YYYY') : ''}</td>
                                                             <td style={{ color: "#0d6efd" }}><i className="ri-checkbox-circle-line fs-17 align-middle"></i> Paid</td>
                                                         </tr>
