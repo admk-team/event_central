@@ -390,7 +390,7 @@ class PaymentController extends Controller
             'eventApp' => $eventApp,
             'attendee' => $attendee,
             'image' => $image,
-            'hasTickets' => true,
+            'hasTickets' => count($purchased_tickets) > 0 ? true : false,
         ]);
     }
 
