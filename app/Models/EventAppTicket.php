@@ -66,9 +66,7 @@ class EventAppTicket extends Model
 
     public function getSelectedSessionsAttribute()
     {
-        Cache::remember('selected_sessions', now()->addMinutes(5), function () {
-            return $this->sessions()->select(['id as value', 'name as label'])->get();
-        });
+        return $this->sessions()->select(['id as value', 'name as label'])->get();
     }
 
     public function getSelectedAddonsAttribute()

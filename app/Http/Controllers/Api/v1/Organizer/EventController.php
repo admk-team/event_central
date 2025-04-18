@@ -69,6 +69,7 @@ class EventController extends Controller
             ]);
         }
 
+        $ticket = $purchasedTicket->ticket;
         $attendee = $purchasedTicket->payment->attendee;
 
         // Check if attendee has already checked in
@@ -77,10 +78,25 @@ class EventController extends Controller
         if ($checkin) {
             return response()->json([
                 'status' => 2,
+                'attendee' => [
+                    'id' => $attendee->id,
+                    'first_name' => $attendee->first_name,
+                    'last_name' => $attendee->last_name,
+                    'email' => $attendee->email,
+                    'company' => $attendee->company,
+                    'position' => $attendee->position,
+                    'phone' => $attendee->phone,
+                ],
+                'ticket' => [
+                    'name' => $ticket->name,
+                    'description' => $ticket->description,
+                    'type' => $ticket->type,
+                ],
+                'checkin' => $checkin,
             ]);
         }
 
-        $event->attendances()->create([
+        $checkin = $event->attendances()->create([
             'attendee_id' => $attendee->id,
             'checked_in' => now(),
             'qr_code' => $purchasedTicket->qr_code,
@@ -88,6 +104,21 @@ class EventController extends Controller
 
         return response()->json([
             'status' => 1,
+            'attendee' => [
+                'id' => $attendee->id,
+                'first_name' => $attendee->first_name,
+                'last_name' => $attendee->last_name,
+                'email' => $attendee->email,
+                'company' => $attendee->company,
+                'position' => $attendee->position,
+                'phone' => $attendee->phone,
+            ],
+            'ticket' => [
+                'name' => $ticket->name,
+                'description' => $ticket->description,
+                'type' => $ticket->type,
+            ],
+            'checkin' => $checkin,
         ]);
     }
 

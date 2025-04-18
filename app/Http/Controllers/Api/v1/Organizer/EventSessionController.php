@@ -85,10 +85,25 @@ class EventSessionController extends Controller
         if ($checkin) {
             return response()->json([
                 'status' => 2,
+                'attendee' => [
+                    'id' => $attendee->id,
+                    'first_name' => $attendee->first_name,
+                    'last_name' => $attendee->last_name,
+                    'email' => $attendee->email,
+                    'company' => $attendee->company,
+                    'position' => $attendee->position,
+                    'phone' => $attendee->phone,
+                ],
+                'ticket' => [
+                    'name' => $ticket->name,
+                    'description' => $ticket->description,
+                    'type' => $ticket->type,
+                ],
+                'checkin' => $checkin,
             ]);
         }
 
-        $session->attendances()->create([
+        $checkin = $session->attendances()->create([
             'attendee_id' => $attendee->id,
             'checked_in' => now(),
             'event_app_id' => $event->id,
@@ -97,6 +112,21 @@ class EventSessionController extends Controller
 
         return response()->json([
             'status' => 1,
+            'attendee' => [
+                'id' => $attendee->id,
+                'first_name' => $attendee->first_name,
+                'last_name' => $attendee->last_name,
+                'email' => $attendee->email,
+                'company' => $attendee->company,
+                'position' => $attendee->position,
+                'phone' => $attendee->phone,
+            ],
+            'ticket' => [
+                'name' => $ticket->name,
+                'description' => $ticket->description,
+                'type' => $ticket->type,
+            ],
+            'checkin' => $checkin,
         ]);
     }
 

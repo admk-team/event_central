@@ -67,6 +67,11 @@ class EventApp extends Model
         return $this->hasMany(ColorScheme::class, 'event_id');
     }
 
+    public function sessions()
+    {
+        return $this->hasMany(EventSession::class);
+    }
+
     // getters
 
     public function getCreatedAtDateAttribute()
@@ -170,7 +175,7 @@ class EventApp extends Model
 
     public function getFeaturedImageAttribute()
     {
-        Cache::remember('event_image_' . $this->id, now()->addMinutes(5), function () {
+        return Cache::remember('event_image_' . $this->id, now()->addMinutes(5), function () {
             $images = $this->images;
             if (count($images) > 0) {
                 return $images[0]->image_url;
