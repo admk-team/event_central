@@ -108,6 +108,7 @@ Route::prefix('user')->group(function () {
 Route::prefix('attendee')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->defaults('type', 'attendee');
     Route::post('register/{eventId}', [RegisterController::class, 'register']);
+    Route::get('allevents', [AttendeeEventController::class, 'allevents']);
     Route::middleware(['auth:sanctum', 'ability:role:attendee'])->group(function () {
 
         Route::get('/me', function (Request $request) {

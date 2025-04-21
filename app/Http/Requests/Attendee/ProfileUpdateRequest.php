@@ -33,6 +33,7 @@ class ProfileUpdateRequest extends FormRequest
             'country' => 'nullable|max:100',
             'phone' => 'nullable|regex:/^([0-9\s\-\+\(\)]*)$/|min:10',
             'bio' => 'nullable|max:250',
+            'image' => 'nullable|image'
         ];
     }
 
