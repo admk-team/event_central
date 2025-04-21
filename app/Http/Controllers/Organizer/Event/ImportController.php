@@ -21,6 +21,8 @@ class ImportController extends Controller
                         'first_name' => $a['name'],
                         'email' => $a['email'],
                         'phone' => $a['phone'],
+                        'position' => $a['position'],
+                        'location' => $a['location'],
                         'qr_code' => 'EMPTY',
                         'password' => Hash::make('12345678')  // Set Default Password
                     ]);
