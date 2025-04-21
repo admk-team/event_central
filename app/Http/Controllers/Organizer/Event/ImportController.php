@@ -18,11 +18,12 @@ class ImportController extends Controller
                 foreach ($request->data as $a) {
                     Attendee::create([
                         'event_app_id' => session('event_id'),
-                        'first_name' => $a['name'],
+                        'first_name' => $a['first_name'],
+                        'last_name' => $a['last_name'],
                         'email' => $a['email'],
-                        'phone' => $a['phone'],
-                        'position' => $a['position'],
-                        'location' => $a['location'],
+                        'phone' => $a['phone'] ?? null,
+                        'position' => $a['position'] ?? null,
+                        'location' => $a['location'] ?? null,
                         'qr_code' => 'EMPTY',
                         'password' => Hash::make('12345678')  // Set Default Password
                     ]);
@@ -30,6 +31,7 @@ class ImportController extends Controller
                 return redirect()->route('organizer.events.attendees.index')->withSuccess('Attendees imported successfully. Default password of each attendee is [12345678]');
             }
         } catch (\Exception $e) {
+            dd("dsdsfdsf", $e->getMessage());
             return redirect()->back()->with('error', 'Invalid data format.');
         }
     }

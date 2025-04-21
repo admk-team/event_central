@@ -246,7 +246,7 @@ function Index({ attendees }: any) {
                 onCloseClick={() => { setShowDeleteManyConfirmation(false) }}
             />
 
-            <ImportModal importAttendeesModal={importAttendeesModal} availableAttributes={['name', 'email', 'phone', 'position', 'location']} importType='attendees' showModal={showImportModal} />
+            <ImportModal importAttendeesModal={importAttendeesModal} availableAttributes={['first_name', 'last_name', 'email', 'phone', 'position', 'location']} importType='attendees' showModal={showImportModal} />
 
         </React.Fragment>
     )
