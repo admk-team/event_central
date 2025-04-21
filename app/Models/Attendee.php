@@ -88,4 +88,8 @@ class Attendee extends Authenticatable
         })->with(['ticket'])->get();
         return $tickets;
     }
+    public function sessionRatings()
+    {
+        return $this->belongsToMany(EventSession::class, 'session_ratings')->withPivot('rating', 'rating_description')->withTimestamps();
+    }
 }

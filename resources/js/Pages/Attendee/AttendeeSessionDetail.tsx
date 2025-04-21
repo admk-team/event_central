@@ -26,15 +26,16 @@ const AttendeeSessionDetail = ({
     prev_session_id,
     next_session_id,
     checkin,
+    attendeeRating,
 }: any) => {
     const { data, setData, post, processing, errors, reset } = useForm({
         _method: "POST",
-        rating: selectedSessionDetails?.rating ?? "",
-        rating_description: selectedSessionDetails?.rating_description ?? "",
+        rating: attendeeRating?.rating ?? "",
+        rating_description: attendeeRating?.rating_description ?? "",
     });
 
 
-    console.log(eventSession.id);
+    console.log(data);
     const now = moment();
     const startTime = moment(eventSession.start_date_time);
     const endTime = moment(eventSession.end_date_time).add(15, "minutes");
@@ -87,13 +88,14 @@ const AttendeeSessionDetail = ({
         setSelectedSpeaker(null);
     };
     // Filter attendees who have provided a rating (non-null rating)
-  const ratedAttendees = eventSession.attendees?.filter((attendee: any) => attendee.pivot.rating !== null) || [];
-
+  const ratedAttendees = eventSession.attendees_rating?.filter((attendee: any) => attendee.pivot.rating !== null) || [];
+  console.log(eventSession.attendees_rating);
   // Calculate the average rating only for attendees with ratings
   const averageRating =
     ratedAttendees.length > 0
       ? ratedAttendees.reduce((acc: any, attendee: any) => acc + (attendee.pivot.rating || 0), 0) / ratedAttendees.length
       : 0;
+    
 
     return (
         <React.Fragment>

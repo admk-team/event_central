@@ -10,6 +10,7 @@ use App\Models\EventSession;
 use App\Models\EventPost;
 use App\Models\EventSpeaker;
 use App\Models\SessionCheckIn;
+use App\Models\SessionRating;
 use App\Models\Track;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -63,14 +64,15 @@ class EventController extends Controller
         // $next_session_id = $sessions->after($eventSession->id);
         // $prev_session_id = $sessions->before($eventSession->id);
 
-        $eventSession->load(['eventSpeakers', 'attendees', 'eventDate', 'eventPlatform']);
+        $eventSession->load(['eventSpeakers', 'attendees', 'eventDate', 'eventPlatform','attendeesRating']);
         $selectedSessionDetails = DB::table('attendee_event_session')
             ->where(function ($query) use ($eventSession) {
                 $query->where('attendee_id', auth()->user()->id);
                 $query->where('event_session_id', $eventSession->id);
             })
             ->first();
-            // dd($eventSession->eventPlatform->name);
+            $attendeeRating = SessionRating::where('attendee_id', auth()->user()->id)
+            ->where('event_session_id', $eventSession->id)->first();
         return Inertia::render('Attendee/AttendeeSessionDetail', compact([
             'eventApp',
             'eventSession',
@@ -78,6 +80,7 @@ class EventController extends Controller
             'prev_session_id',
             'next_session_id',
             'checkin',
+            'attendeeRating',
         ]));
     }
 
