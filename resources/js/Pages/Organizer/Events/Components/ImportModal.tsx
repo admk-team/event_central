@@ -316,7 +316,7 @@ function ImportModal({
                                             // Convert filteredAttributes to react-select format
                                             const filteredOptions = availableAttributes
                                                 .filter((attr) => !usedAttributes.includes(attr))
-                                                .map((attr) => ({ label: attr, value: attr }));
+                                                .map((attr) => ({ label: attr.replace('_', ' '), value: attr }));
 
                                             return (
                                                 <div key={header} className="d-flex align-items-center mb-3">
