@@ -37,7 +37,7 @@ const OrganizerProfileDropdown = () => {
                         <span className="align-middle">Edit Profile</span>
                     </Link>
 
-                    <Dropdown.Item href="/apps-chat" className="dropdown-item">
+                    {/* <Dropdown.Item href="/apps-chat" className="dropdown-item">
                             <i className="mdi mdi-message-text-outline text-muted fs-16 align-middle me-1"></i> <span
                                 className="align-middle">Messages</span>
                     </Dropdown.Item>
@@ -50,11 +50,11 @@ const OrganizerProfileDropdown = () => {
                         <i
                             className="mdi mdi-lifebuoy text-muted fs-16 align-middle me-1"></i> <span
                                 className="align-middle">Help</span>
-                    </Dropdown.Item>
+                    </Dropdown.Item> */}
 
                     <div className="dropdown-divider"></div>
 
-                    <Dropdown.Item href="/pages-profile" className="dropdown-item">
+                    {/* <Dropdown.Item href="/pages-profile" className="dropdown-item">
                         <i
                             className="mdi mdi-wallet text-muted fs-16 align-middle me-1"></i> <span
                                 className="align-middle">Balance : <b>$5971.67</b></span>
@@ -65,11 +65,11 @@ const OrganizerProfileDropdown = () => {
                             className="badge bg-success-subtle text-success mt-1 float-end">New</span><i
                                 className="mdi mdi-cog-outline text-muted fs-16 align-middle me-1"></i> <span
                                     className="align-middle">Settings</span>
-                    </Dropdown.Item>
+                    </Dropdown.Item> */}
 
-                    <Dropdown.Item href="/auth-lockscreen-basic" className="dropdown-item">
+                    {/* <Dropdown.Item href="/auth-lockscreen-basic" className="dropdown-item">
                         <i className="mdi mdi-lock text-muted fs-16 align-middle me-1"></i> <span className="align-middle">Lock screen</span>
-                    </Dropdown.Item>
+                    </Dropdown.Item> */}
                     <Link className="dropdown-item" as="button" method="post" href={route('logout')}><i
                             className="mdi mdi-logout text-muted fs-16 align-middle me-1"></i> <span
                                 className="align-middle" data-key="t-logout">Logout</span></Link>
