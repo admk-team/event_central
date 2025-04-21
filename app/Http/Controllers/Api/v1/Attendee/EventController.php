@@ -53,7 +53,7 @@ class EventController extends Controller
 
     public function speaker(string $id)
     {
-        $speakers = EventSpeaker::where('event_app_id', $id)->with('eventSessions')->orderBy('name', 'ASC')->get();
+        $speakers = EventSpeaker::where('event_app_id', $id)->with(['eventSessions.eventPlatform', 'eventSessions.eventDate'])->orderBy('name', 'ASC')->get();
         return $this->successResponse(EventSpeakerResource::collection($speakers));
     }
 
@@ -73,5 +73,12 @@ class EventController extends Controller
             $eventApp->load(['event_sessions.eventSpeakers', 'event_sessions.eventPlatform']);
             return $this->successResponse(new EventResource($eventApp));
         }
+    }
+
+    public function allevents()
+    {
+        $allevent = EventApp::select('id', 'name')->get();
+
+        return response()->json(['events' => $allevent], 200);
     }
 }

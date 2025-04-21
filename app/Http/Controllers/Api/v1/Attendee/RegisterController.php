@@ -16,6 +16,8 @@ class RegisterController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:attendees',
+            'position' => 'nullable|string|max:255',
+            'location' => 'nullable|string|max:255',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
@@ -23,6 +25,8 @@ class RegisterController extends Controller
         $attendee = new Attendee();
         $attendee->first_name = $request->first_name;
         $attendee->last_name = $request->last_name;
+        $attendee->location = $request->location;
+        $attendee->position = $request->position;
         $attendee->email = $request->email;
         $attendee->password = Hash::make($request->password);
         $attendee->event_app_id  = $event->id;

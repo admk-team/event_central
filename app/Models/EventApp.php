@@ -76,7 +76,7 @@ class EventApp extends Model
 
     public function getCreatedAtDateAttribute()
     {
-        return $this->created_at->format('d M, Y');
+        return $this->created_at ? $this->created_at->format('d M, Y') : null;
     }
     public function getLogoImgAttribute()
     {
