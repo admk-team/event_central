@@ -16,6 +16,9 @@ use App\Http\Controllers\Api\v1\Organizer\QAController;
 use App\Http\Controllers\Api\v1\Organizer\AttendeeController;
 use App\Http\Controllers\Api\v1\Organizer\TicketController;
 use App\Http\Controllers\Api\v1\Organizer\EventPostsController;
+use App\Http\Controllers\Api\v1\Organizer\PasswordController;
+use App\Http\Controllers\Api\v1\Organizer\PaymentController as OrganizerPaymentController;
+use App\Http\Controllers\Api\v1\Organizer\ProfileController as OrganizerProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +39,8 @@ Route::prefix('user')->group(function () {
         Route::get('/me', function (Request $request) {
             return $request->user();
         });
+        Route::post('profile/update', [OrganizerProfileController::class, 'update']);
+        Route::post('password/update', [PasswordController::class, 'update']);
 
         // Events
         Route::get('events', [EventController::class, 'index']);
@@ -50,6 +55,8 @@ Route::prefix('user')->group(function () {
         Route::post('events/{event}/sessions/{session}/scan', [EventSessionController::class, 'scan']);
         Route::post('events/{event}/sessions/{session}/checkin', [EventSessionController::class, 'checkin']);
         Route::post('events/{event}/sessions/{session}/checkout', [EventSessionController::class, 'checkout']);
+        Route::get('events/{event}/sessions/{session}/attendance', [EventSessionController::class, 'attendance']);
+
         //Organizer Q&A  start
         Route::get('/events/organizer/qa/{session_id}', [QAController::class, 'organizerQA'])->name('api.events.qa.index');
         Route::get('/events/attendee/qa/{session_id}', [QAController::class, 'attendeeQA'])->name('api.events.qa.index');
@@ -92,6 +99,9 @@ Route::prefix('user')->group(function () {
         Route::post('update-attendee-payment/{paymentUuId}', [AssignTicketApiController::class, 'updateAttendeePayment'])->name('api.update.payment');
         Route::get('payment-success/{paymentUuId}', [AssignTicketApiController::class, 'paymentSuccess'])->name('api.payment.success');
         // Event Organizer Assign Ticket Api End
+
+        // Payments
+        Route::get('events/{event}/payments', [OrganizerPaymentController::class, 'index']);
     });
 });
 

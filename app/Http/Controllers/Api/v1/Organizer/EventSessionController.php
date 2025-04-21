@@ -184,4 +184,15 @@ class EventSessionController extends Controller
 
         return $this->successMessageResponse("Checkout successfull", 200);
     }
+
+    public function attendance(EventApp $event, EventSession $session)
+    {
+        if (! Auth::user()->can('view_session_attendence')) {
+            return $this->errorResponse("You don't have permission to view attendance", 403);
+        }
+
+        $attendance = SessionCheckIn::where('session_id', $session->id)->with(['attendee'])->orderBy('checked_in', 'desc')->get();
+
+        return $this->successResponse($attendance->toArray());
+    }
 }

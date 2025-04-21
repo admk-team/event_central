@@ -11,10 +11,18 @@ const PaymentSuccess = ({ organizerView }: any) => {
     const [secondsLeft, setSecondsLeft] = useState(5)
 
     useEffect(() => {
+        // Set up the countdown interval
         const countdown = setInterval(() => {
-            setSecondsLeft((prev) => prev - 1)
+            setSecondsLeft((prev) => {
+                if (prev <= 1) {
+                    clearInterval(countdown) // Stop the interval when reaching 0
+                    return 0
+                }
+                return prev - 1
+            })
         }, 1000)
 
+        // Set up the redirect timeout
         const redirect = setTimeout(() => {
             if (organizerView) {
                 router.visit(route("organizer.events.attendee.tickets.assign"))
@@ -23,6 +31,7 @@ const PaymentSuccess = ({ organizerView }: any) => {
             }
         }, 5000)
 
+        // Cleanup on component unmount
         return () => {
             clearInterval(countdown)
             clearTimeout(redirect)

@@ -18,7 +18,7 @@ class EventDateController extends Controller
             'date' => $request->date,
         ]);
 
-        return back()->withSuccess('Created successfully.');
+        return back();
     }
 
     /**
@@ -35,6 +35,6 @@ class EventDateController extends Controller
     public function destroy(EventAppDate $event_date)
     {
         $event_date->delete();
-        return back()->withSuccess('Deleted successfully.');
+        return back();
     }
 }
