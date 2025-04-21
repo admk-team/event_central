@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\v1\Organizer\AttendeeController;
 use App\Http\Controllers\Api\v1\Organizer\TicketController;
 use App\Http\Controllers\Api\v1\Organizer\EventPostsController;
 use App\Http\Controllers\Api\v1\Organizer\PasswordController;
+use App\Http\Controllers\Api\v1\Organizer\PaymentController as OrganizerPaymentController;
 use App\Http\Controllers\Api\v1\Organizer\ProfileController as OrganizerProfileController;
 
 /*
@@ -96,6 +97,9 @@ Route::prefix('user')->group(function () {
         Route::post('update-attendee-payment/{paymentUuId}', [AssignTicketApiController::class, 'updateAttendeePayment'])->name('api.update.payment');
         Route::get('payment-success/{paymentUuId}', [AssignTicketApiController::class, 'paymentSuccess'])->name('api.payment.success');
         // Event Organizer Assign Ticket Api End
+
+        // Payments
+        Route::get('events/{event}/payments', [OrganizerPaymentController::class, 'index']);
     });
 });
 
