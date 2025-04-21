@@ -16,6 +16,8 @@ use App\Http\Controllers\Api\v1\Organizer\QAController;
 use App\Http\Controllers\Api\v1\Organizer\AttendeeController;
 use App\Http\Controllers\Api\v1\Organizer\TicketController;
 use App\Http\Controllers\Api\v1\Organizer\EventPostsController;
+use App\Http\Controllers\Api\v1\Organizer\PasswordController;
+use App\Http\Controllers\Api\v1\Organizer\ProfileController as OrganizerProfileController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,6 +38,8 @@ Route::prefix('user')->group(function () {
         Route::get('/me', function (Request $request) {
             return $request->user();
         });
+        Route::post('profile/update', [OrganizerProfileController::class, 'update']);
+        Route::post('password/update', [PasswordController::class, 'update']);
 
         // Events
         Route::get('events', [EventController::class, 'index']);
