@@ -159,7 +159,7 @@ class PaymentController extends Controller
             'stripe_intent' => $client_secret,
             'stripe_id' => $payment_id,
             'status' => 'pending',
-            'organizer_payment_note' => $data['organizer_payment_note'],
+            'organizer_payment_note' => $data['organizer_payment_note'] ?? null,
             'payment_method' => $organizerView ? $payment_method : 'stripe',
         ]);
 
@@ -207,7 +207,7 @@ class PaymentController extends Controller
             'stripe_intent' => null,
             'stripe_id' => null,
             'status' => 'pending',
-            'organizer_payment_note' => $data['organizer_payment_note'],
+            'organizer_payment_note' => $data['organizer_payment_note'] ?? null,
             'payment_method' => $organizerView ? $payment_method : 'stripe',
         ]);
 
