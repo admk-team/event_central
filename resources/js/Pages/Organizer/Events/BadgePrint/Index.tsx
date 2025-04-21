@@ -9,9 +9,11 @@ function Index({ attendees, eventApp }: { attendees: any; eventApp: any }) {
     const [search, setSearch] = useState("");
     const [isFlipped, setIsFlipped] = useState(false);
 
-    const filteredAttendees = attendees.filter((attendee: any) =>
-        (attendee.name + attendee.position).toLowerCase().includes(search.toLowerCase())
-    );
+    const filteredAttendees = attendees.filter((attendee: any) => {
+        const ticketTypes = attendee.qr_codes.map((qr: any) => qr.ticket_type_name).join(" ");
+        const searchString = (attendee.name + attendee.position + ticketTypes).toLowerCase();
+        return searchString.includes(search.toLowerCase());
+    });
 
     const [showLogo, setShowLogo] = useState(true);
     const [showGradient, setShowGradient] = useState(true);
@@ -81,6 +83,7 @@ function Index({ attendees, eventApp }: { attendees: any; eventApp: any }) {
                                                     <Col md={4}>
                                                         <strong>Name:</strong> {attendee.name} <br />
                                                         <strong>Position:</strong> {attendee.position}
+                                                        <strong>Ticket Type:</strong> {attendee.qr_codes[0]?.ticket_type_name ?? "N/A"}
                                                     </Col>
                                                     <Col md={8}>
                                                         <strong>QR Codes:</strong>
