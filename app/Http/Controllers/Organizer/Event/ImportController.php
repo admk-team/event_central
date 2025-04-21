@@ -15,7 +15,10 @@ class ImportController extends Controller
         Log::info($request->all());
         try {
             if ($request->importType == 'attendees') {
-                foreach ($request->data as $a) {
+                dd($request->data);
+                foreach ($request->data as $i => $a) {
+                    if ($i === 0) continue; // Skip header
+                    
                     Attendee::create([
                         'event_app_id' => session('event_id'),
                         'first_name' => $a['first_name'],
