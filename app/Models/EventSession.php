@@ -97,9 +97,9 @@ class EventSession extends Model
     {
         return $this->belongsToMany(Track::class, 'event_session_tracks');
     }
-    public function attendeesRating(): BelongsToMany
+    public function attendeesRating()
     {
-        return $this->belongsToMany(Attendee::class, 'session_ratings')
+        return $this->belongsToMany(Attendee::class, 'session_ratings', 'event_session_id', 'attendee_id')
             ->withPivot('rating', 'rating_description')
             ->withTimestamps();
     }

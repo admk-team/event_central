@@ -89,51 +89,71 @@ class EventController extends Controller
     {
         // Load the event session with attendees and their ratings
         $eventSession->load(['attendeesRating']);
-
+    
         // Filter attendees who have provided a rating (non-null rating)
-        $ratedAttendees = $eventSession->attendees_rating
-            ->filter(fn($attendee) => !is_null($attendee->pivot->rating))
-            ->map(function ($attendee) {
-                return [
-                    'id' => $attendee->id,
-                    'first_name' => $attendee->first_name,
-                    'avatar' => $attendee->avatar ?? '/default-avatar.png',
-                    'rating' => $attendee->pivot->rating,
-                    'rating_description' => $attendee->pivot->rating_description ?? 'No description provided',
-                ];
-            })
-            ->values()
-            ->toArray();
-
+        $ratedAttendees = $eventSession->attendeesRating
+            ? $eventSession->attendeesRating
+                ->filter(fn($attendee) => !is_null($attendee->pivot->rating))
+                ->map(function ($attendee) {
+                    return [
+                        'id' => $attendee->id,
+                        'first_name' => $attendee->first_name,
+                        'avatar' => $attendee->avatar ?? '/default-avatar.png',
+                        'rating' => $attendee->pivot->rating,
+                        'rating_description' => $attendee->pivot->rating_description ?? 'No description provided',
+                    ];
+                })
+                ->values()
+                ->toArray()
+            : [];
+    
         // Calculate the average rating only for attendees with ratings
         $averageRating = count($ratedAttendees) > 0
             ? array_sum(array_column($ratedAttendees, 'rating')) / count($ratedAttendees)
             : 0;
-
+    
         // Fetch the current attendee's rating (if any)
         $currentAttendeeRating = SessionRating::where('attendee_id', auth()->id())
             ->where('event_session_id', $eventSession->id)
             ->first(['rating', 'rating_description']);
-
+    
         // Check rating conditions
         $checkin = SessionCheckIn::where('attendee_id', auth()->id())
             ->where('session_id', $eventSession->id)
             ->exists();
-
+    
         $selectedSessionDetails = DB::table('attendee_event_session')
             ->where('attendee_id', auth()->id())
             ->where('event_session_id', $eventSession->id)
             ->first();
-
+    
         $sessionSelected = !is_null($selectedSessionDetails);
-
+    
         $now = now();
-        $startTime = $eventSession->start_date_time;
-        $endTime = (clone $startTime)->addMinutes(15); // 15 minutes after session end
-        $ratingEnabled = $now->isBetween($startTime, $endTime);
-
+        $startTimeRaw = $eventSession->start_date_time;
+    
+        // Convert startTime to a Carbon instance if it's a string, or handle invalid cases
+        try {
+            $startTime = $startTimeRaw ? \Carbon\Carbon::parse($startTimeRaw) : null;
+        } catch (\Exception $e) {
+            $startTime = null;
+        }
+    
+        // Handle the case where startTime is valid
+        if ($startTime instanceof \Carbon\Carbon) {
+            $endTime = (clone $startTime)->addMinutes(15); // 15 minutes after session end
+            $ratingEnabled = $now->isBetween($startTime, $endTime);
+            $startTimeFormatted = $startTime->format('M d, Y h:i A');
+            $endTimeFormatted = $endTime->format('M d, Y h:i A');
+        } else {
+            // Fallback: Assume rating is disabled if start_date_time is invalid
+            $ratingEnabled = false;
+            $startTimeFormatted = 'N/A';
+            $endTimeFormatted = 'N/A';
+        }
+    
         $canRate = $sessionSelected && $checkin && $ratingEnabled;
-
+    
         $ratingConditions = [
             'canRate' => $canRate,
             'conditions' => [
@@ -147,11 +167,11 @@ class EventController extends Controller
                 ],
                 'ratingEnabled' => [
                     'status' => $ratingEnabled,
-                    'message' => $ratingEnabled ? null : "Rating can only be added between the session start and 15 minutes after the session ends (" . $startTime->format('M d, Y h:i A') . " to " . $endTime->format('M d, Y h:i A') . ")."
+                    'message' => $ratingEnabled ? null : "Rating can only be added between the session start and 15 minutes after the session ends (" . $startTimeFormatted . " to " . $endTimeFormatted . ")."
                 ],
             ],
         ];
-
+    
         return response()->json([
             'averageRating' => round($averageRating, 1),
             'ratedAttendees' => $ratedAttendees,

@@ -92,7 +92,7 @@ function CreateOrEdit({ role, allPermissions, roleSpecific }: { role: any | null
                                             <strong>Important Note:</strong>
                                             <ul style={{ paddingLeft: '1.2rem', marginTop: '0.5rem' }}>
                                                 <li>
-                                                    All roles under <strong>Organizer</strong> must have the <strong>View Event</strong> permission.
+                                                    All roles under <strong>Organizer</strong> must have the <strong>View Event & View Event Dashboard</strong> permission.
                                                 </li>
                                                 <li>
                                                     Every <strong>Create</strong> permission must be accompanied by the corresponding <strong>View</strong> permission,
