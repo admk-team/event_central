@@ -12,6 +12,7 @@ import EditAttendee from './Component/EditAttendee';
 // import Profile from './AttendeeProfile/Profile';
 import AddAttendee from './Component/AddAttendee';
 import HasPermission from '../../../../../Components/HasPermission';
+import { Check, CircleCheck, CircleX } from 'lucide-react';
 
 function Index({ attendees }: any) {
 
@@ -138,6 +139,11 @@ function Index({ attendees }: any) {
         {
             header: () => 'Phone',
             cell: (attendee) => attendee.phone,
+        },
+        {
+            header: () => 'Checked In',
+            cell: (attendee) => attendee.event_checkin ? <CircleCheck color='green' /> : <CircleX color='red' />,
+            cellClass: 'ps-4',
         },
         {
             header: () => "Actions",

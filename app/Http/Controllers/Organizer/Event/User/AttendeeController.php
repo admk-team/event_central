@@ -26,7 +26,7 @@ class AttendeeController extends Controller
             abort(403);
         }
 
-        $attendees = $this->datatable(Attendee::currentEvent());
+        $attendees = $this->datatable(Attendee::currentEvent()->with('eventCheckin'));
         return Inertia::render('Organizer/Events/Users/Attendees/Index', compact('attendees'));
     }
 
