@@ -158,7 +158,7 @@ function Index({ events, recurring_types, event_category_types }: any) {
             header: () => "Action",
             cell: (event) => (
                 <div className="hstack gap-3 fs-15 ">
-                    <HasPermission permission="edit_events">
+                    <HasPermission permission="view_events">
                         <Link
                             title="Click to select this Event"
                             href={route("organizer.events.select", {

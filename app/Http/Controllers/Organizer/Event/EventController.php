@@ -76,7 +76,7 @@ class EventController extends Controller
     {
         $event = EventApp::ofOwner()->find($id);
 
-        if (! Auth::user()->can('edit_events', $event)) {
+        if (! Auth::user()->can('view_events', $event)) {
             abort(403);
         }
 
