@@ -184,15 +184,29 @@ class AttendeeController extends Controller
         return Inertia::render('Organizer/Events/Users/Attendees/AttendeeProfile/Profile', compact('attendee', 'user', 'sessions', 'tickets', 'sessionsPurchased'));
     }
 
-    public function chechInEvent(Attendee $attendee)
+    public function eventChechIn(Attendee $attendee)
     {
-        $checkedIn = EventCheckIns::where('event_app_id', session('event_id'))
+        $event = EventApp::find(session('event_id'));
+
+        if (! Auth::user()->can('scan_events', $event)) {
+            abort(403);
+        }
+
+        $checkedIn = EventCheckIns::where('event_app_id', $event->id)
             ->where('attendee_id', $attendee->id)
             ->exists();
 
         if ($checkedIn) {
-            return back()->withError("Already checked");
+            return back()->withError("Already checked in");
         }
+
+        EventCheckIns::create([
+            'attendee_id' => $attendee->id,
+            'event_app_id' => $event->id,
+            'checked_in' => now(),
+        ]);
+
+        return back()->withSuccess("Checked in successfully");
     }
 
     public function chechIn(Request $request)
