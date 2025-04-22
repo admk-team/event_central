@@ -448,7 +448,7 @@ export default function CreateEditModal({
                                             setselectMulti(list);
                                             setData("sessions", list);
                                         }}
-                                        options={sessions.map((session: any) => ({ value: session.id, label: `${session.name} ${session.tracks.length > 0 ? ` | ${session.tracks[0].name}` : ''}` }))}
+                                        options={sessions}
                                         classNamePrefix={
                                             errors.sessions &&
                                             "multi-select is-invalid "

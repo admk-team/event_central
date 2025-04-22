@@ -31,7 +31,12 @@ class EventAppTicketController extends Controller
         $speakers = null;
 
         $tickets = $this->datatable(EventAppTicket::currentEvent()->with(['event', 'sessions', 'fees','ticketType']));
-        $sessions = EventSession::currentEvent()->with('tracks')->get();
+        $sessions = EventSession::currentEvent()->with('tracks')->get()->map(function ($session) {
+            return [
+                'value' => $session->id,
+                'label' => $session->name . ($session->tracks->count() > 0 ? " | {$session->tracks[0]->name}" : ''),
+            ];
+        });
         $event_ticket_type = EventTicketType::where('event_app_id', session('event_id'))->latest()->get();
         $addons_collection = Addon::currentEvent()->orderBy('name')->get();
         $addons = $addons_collection->map(function ($addon) {
