@@ -74,9 +74,11 @@
         <ul class="list-group">
             @foreach ($exhibitors ?? [] as $exhibitor)
                 <li class="list-group-item">
-                    <div class="mb-3">
-                        <img src="{{ $exhibitor->exhibitor_logo }}" alt="{{ $exhibitor->company_name }} Logo" height="60px" style="height: 60px;" />
-                    </div>
+                    @if ($exhibitor->exhibitor_logo)
+                        <div class="mb-3">
+                            <img src="{{ $exhibitor->exhibitor_logo }}" alt="{{ $exhibitor->company_name }} Logo" height="60px" style="height: 60px;" />
+                        </div>
+                    @endif
                     <div>
                         <b>Name: </b> {{ $exhibitor->company_name }}
                     </div>
