@@ -82,7 +82,7 @@ function Index({ attendees, eventApp }: { attendees: any; eventApp: any }) {
                                                 <Row>
                                                     <Col md={4}>
                                                         <strong>Name:</strong> {attendee.name} <br />
-                                                        <strong>Position:</strong> {attendee.position}
+                                                        <strong>Position:</strong> {attendee.position} <br />
                                                         <strong>Ticket Type:</strong> {attendee.qr_codes[0]?.ticket_type_name ?? "N/A"}
                                                     </Col>
                                                     <Col md={8}>
