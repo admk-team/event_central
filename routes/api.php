@@ -51,6 +51,8 @@ Route::prefix('user')->group(function () {
 
         // Event Sessions
         Route::get('events/{event}/sessions', [EventSessionController::class, 'index']);
+        Route::get('events/{event}/sessions/search', [EventSessionController::class, 'searchSessions'])
+            ->name('api.event.sessions.search');
         Route::get('events/{event}/sessions/{session}', [EventSessionController::class, 'show']);
         Route::post('events/{event}/sessions/{session}/scan', [EventSessionController::class, 'scan']);
         Route::post('events/{event}/sessions/{session}/checkin', [EventSessionController::class, 'checkin']);
@@ -92,6 +94,8 @@ Route::prefix('user')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         // Event Organizer Assign Ticket Api Start
         Route::get('events/{event}/assign-tickets', [AssignTicketApiController::class, 'assignTickets'])->name('api.attendee.tickets.assign');
+        Route::get('events/{event}/search-attendees', [AssignTicketApiController::class, 'searchAttendees'])
+            ->name('api.attendee.tickets.search');
         Route::post('validate-discount-code/{disCode}', [AssignTicketApiController::class, 'validateDiscCode'])->name('api.validateCode.post');
         Route::post('checkout/{attendee}/{payment_method}', [AssignTicketApiController::class, 'checkout'])->name('api.tickets.checkout');
         Route::post('checkout-free/{attendee}/{payment_method}', [AssignTicketApiController::class, 'checkoutFreeTicket'])->name('api.tickets.checkout.free');
@@ -158,8 +162,7 @@ Route::prefix('attendee')->group(function () {
         Route::post('/attendee-post-likes', [EventPostController::class, 'toggleLike'])->name('attendee.like.rating');
         Route::post('/attendee-post-dislikes', [EventPostController::class, 'toggleDislike'])->name('attendee.dislike.rating');
         Route::get('/session/{eventSession}/ratings', [AttendeeEventController::class, 'getSessionRatings'])
-        ->name('attendee.session.ratings');
+            ->name('attendee.session.ratings');
         Route::post('/attendee-save-rating/{eventSession}', [AttendeeEventController::class, 'saveRating'])->name('attendee.save.rating');
     });
-  
 });

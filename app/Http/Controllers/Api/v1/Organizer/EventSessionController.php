@@ -23,7 +23,26 @@ class EventSessionController extends Controller
             ->whereCanBeAccessedBy($request->user())
             ->with(['eventPlatform', 'eventDate'])
             ->get();
-        
+
+        return $this->successResponse(EventSessionResource::collection($sessions));
+    }
+    public function searchSessions(Request $request, EventApp $event)
+    {
+        if (! Auth::user()->can('view_events', $event)) {
+            return $this->errorResponse("Unauthorized", 403);
+        }
+
+        $searchQuery = $request->query('search', '');
+
+        $sessions = EventSession::where('event_app_id', $event->id)
+            ->whereCanBeAccessedBy($request->user())
+            ->where(function ($query) use ($searchQuery) {
+                $query->where('name', 'LIKE', "%{$searchQuery}%")
+                    ->orWhere('description', 'LIKE', "%{$searchQuery}%");
+            })
+            ->with(['eventPlatform', 'eventDate'])
+            ->get();
+
         return $this->successResponse(EventSessionResource::collection($sessions));
     }
 
@@ -81,7 +100,7 @@ class EventSessionController extends Controller
 
         // Check if attendee has already checked in
         $checkin = $session->attendances()->where('attendee_id', $attendee->id)->latest()->first();
-        
+
         if ($checkin) {
             return response()->json([
                 'status' => 2,
@@ -142,7 +161,7 @@ class EventSessionController extends Controller
         ]);
 
         $purchasedTicket = AttendeePurchasedTickets::where('code', $request->code)->first();
-        
+
         $lastCheckin = $session->attendances()->where('attendee_id', $request->attendee_id)->latest()->first();
 
         if ($lastCheckin && $lastCheckin->checked_out === null) {
