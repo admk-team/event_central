@@ -115,7 +115,7 @@ const QrCode = ({ eventApp, attendee, image = [], hasTickets }) => {
                                                     src={eventApp?.logo_img || "/placeholder.svg?height=80&width=80"}
                                                     alt="event logo"
                                                 />
-                                                <p className="event-location">{formatDate(eventApp?.start_date)} | {eventApp?.location_base}</p>
+                                                <p className="event-location">{formatDate(eventApp?.start_date)} {eventApp?.start_date && eventApp?.location_base ? ' | ' : ''} {eventApp?.location_base}</p>
                                                 <h1 className="attendee-name">{attendee?.first_name + ' ' + attendee?.last_name}</h1>
                                                 <h3 className="attendee-name">{attendee?.position}</h3>
                                             </div>
