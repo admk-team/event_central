@@ -97,4 +97,11 @@ class Attendee extends Authenticatable
     {
         return $this->hasOne(EventCheckIns::class, 'attendee_id');
     }
+
+    public function ratedSessions()
+    {
+        return $this->belongsToMany(EventSession::class, 'session_ratings', 'attendee_id', 'event_session_id')
+            ->withPivot('rating', 'rating_description')
+            ->withTimestamps();
+    }
 }
