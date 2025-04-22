@@ -189,6 +189,10 @@ class AttendeeController extends Controller
         $checkedIn = EventCheckIns::where('event_app_id', session('event_id'))
             ->where('attendee_id', $attendee->id)
             ->exists();
+
+        if ($checkedIn) {
+            return back()->withError("Already checked");
+        }
     }
 
     public function chechIn(Request $request)
