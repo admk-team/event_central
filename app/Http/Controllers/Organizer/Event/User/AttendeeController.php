@@ -17,6 +17,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\Organizer\Event\User\AttendeeStoreRequest;
+use App\Models\EventCheckIns;
 
 class AttendeeController extends Controller
 {
@@ -181,6 +182,13 @@ class AttendeeController extends Controller
         $user = Attendee::where('id', $id)->first();
         $attendee = FormSubmission::where('attendee_id', $id)->with('fieldValues', 'attendee', 'formFields')->get();
         return Inertia::render('Organizer/Events/Users/Attendees/AttendeeProfile/Profile', compact('attendee', 'user', 'sessions', 'tickets', 'sessionsPurchased'));
+    }
+
+    public function chechInEvent(Attendee $attendee)
+    {
+        $checkedIn = EventCheckIns::where('event_app_id', session('event_id'))
+            ->where('attendee_id', $attendee->id)
+            ->exists();
     }
 
     public function chechIn(Request $request)
