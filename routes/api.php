@@ -157,5 +157,9 @@ Route::prefix('attendee')->group(function () {
         Route::post('/attendee-poll-rating', [EventPostController::class, 'pollToggle'])->name('attendee.poll.rating');
         Route::post('/attendee-post-likes', [EventPostController::class, 'toggleLike'])->name('attendee.like.rating');
         Route::post('/attendee-post-dislikes', [EventPostController::class, 'toggleDislike'])->name('attendee.dislike.rating');
+        Route::get('/session/{eventSession}/ratings', [AttendeeEventController::class, 'getSessionRatings'])
+        ->name('attendee.session.ratings');
+        Route::post('/attendee-save-rating/{eventSession}', [AttendeeEventController::class, 'saveRating'])->name('attendee.save.rating');
     });
+  
 });
