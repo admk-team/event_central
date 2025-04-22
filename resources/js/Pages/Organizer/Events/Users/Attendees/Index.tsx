@@ -150,7 +150,9 @@ function Index({ attendees }: any) {
             header: () => "Actions",
             cell: (attendee) => (
                 <div className="hstack gap-4 fs-15 text-center">
-                    {/* <EventCheckinButton attendee={attendee} /> */}
+                    <HasPermission permission="scan_events">
+                        <EventCheckinButton attendee={attendee} />
+                    </HasPermission>
                     <Link title='View attendee details' href={route('organizer.events.attendee.info', { id: attendee.id })} className="link-primary cursor-pointer"><i className="ri-eye-fill"></i></Link>
                     <Link title='View QR Code attendee' href={route('organizer.events.attendee.qrcode', { id: attendee.id })} className="link-primary cursor-pointer"><i className="ri-qr-code-line"></i></Link>
                     <Link title='Purchase ticket for this attendee' href={route('organizer.events.attendee.tickets.assign', attendee.id)} className="link-primary cursor-pointer">

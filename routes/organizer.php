@@ -105,6 +105,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::get('attendee/info/{id}', [AttendeeController::class, 'showInfo'])->name('attendee.info');
             Route::get('attendee/qrcode/{attendee}', [AttendeeController::class, 'qrCodeAttendee'])->name('attendee.qrcode');
             Route::put('/attendee/profile/update/{id}', [AttendeeController::class, 'updateAttendee'])->name('attendee.profile.update');
+            Route::post('/attendee/event-checkin/{attendee}', [AttendeeController::class, 'eventChechIn'])->name('attendee.event-checkin');
             Route::post('/attendee/checkin', [AttendeeController::class, 'chechIn'])->name('attendee.checkin');
 
             // Wordshop
