@@ -44,7 +44,7 @@ const AttendeeDashboard = ({ eventApp }: any) => {
                                         </figure>
                                           
                                                 <DateDifferenceFromToday
-                                                    date1={eventApp.start_date}
+                                                    date1={ eventApp?.dates[0].date}
                                                 ></DateDifferenceFromToday>
                                           
                                         <CardBody>
@@ -67,7 +67,7 @@ const AttendeeDashboard = ({ eventApp }: any) => {
                                                         <p className="text-dark-gray p-0 m-0">
                                                             {" "}
                                                             {moment(
-                                                                eventApp.start_date
+                                                                eventApp?.dates[0].date
                                                             ).format(
                                                                 "DD MMM YYYY"
                                                             )}{" "}
@@ -93,9 +93,7 @@ const AttendeeDashboard = ({ eventApp }: any) => {
                                             <div className="p-4 d-flex justify-content-between">
                                                 <h5>My Agenda</h5>
                                                 <h5>
-                                                    {moment(
-                                                        eventApp.start_date
-                                                    ).format("DD MMM YYYY")}
+                                                {" "}{moment(eventApp?.dates[0].date).format("DD MMM YYYY")}{" "}
                                                 </h5>
                                             </div>
                                         </CardBody>

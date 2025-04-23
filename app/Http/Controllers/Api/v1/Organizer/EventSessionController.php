@@ -6,8 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\EventSessionResource;
 use App\Models\AttendeePurchasedTickets;
 use App\Models\EventApp;
+use App\Models\EventAppDate;
+use App\Models\EventPlatform;
 use App\Models\EventSession;
 use App\Models\SessionCheckIn;
+use App\Models\Track;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,12 +22,23 @@ class EventSessionController extends Controller
             return $this->errorResponse("Unauthorized", 403);
         }
 
+        $eventdates = EventAppDate::where('event_app_id', $event->id)->with('eventSessions')->get();
+        $tracks = Track::where('event_app_id', $event->id)->get();
+        $enableTracks = eventSettings($event->id)->getValue('enable_tracks', false);
+        $eventPlatforms = EventPlatform::where('event_app_id', $event->id)->get();
+
         $sessions = EventSession::where('event_app_id', $event->id)
             ->whereCanBeAccessedBy($request->user())
-            ->with(['eventPlatform', 'eventDate'])
+            ->with(['eventPlatform', 'eventDate', 'tracks'])
             ->get();
 
-        return $this->successResponse(EventSessionResource::collection($sessions));
+        return response()->json([
+            'sessions' => EventSessionResource::collection($sessions),
+            'eventdates' => $eventdates,
+            'tracks' => $tracks,
+            'enableTracks' => $enableTracks,
+            'eventPlatforms' => $eventPlatforms
+        ], 200);
     }
     public function searchSessions(Request $request, EventApp $event)
     {

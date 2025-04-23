@@ -15,8 +15,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\Api\EventResource;
 use App\Http\Resources\Api\EventSessionResource;
 use App\Http\Resources\Api\EventSpeakerResource;
-use App\Models\Attendee;
 use App\Models\AttendeeFavSession;
+use App\Models\EventPartner;
+use App\Models\EventPartnerCategory;
 use App\Models\SessionCheckIn;
 use App\Models\SessionRating;
 use Illuminate\Support\Facades\DB;
@@ -41,12 +42,16 @@ class EventController extends Controller
             'event_sessions.eventSpeakers',
             'event_sessions.eventPlatform'
         ]);
+        $partnerCategories = EventPartnerCategory::where('event_app_id', $eventApp->id)->with(['partners'])->get();
+        $exhibitors = EventPartner::where('event_app_id', $eventApp->id)->where('type', 'exhibitor')->orderBy('company_name', 'asc')->get();
         return response()->json([
             'eventapp' => new EventResource($eventApp),
             'eventdates' => $eventdates,
             'tracks' => $tracks,
             'enableTracks' => $enableTracks,
-            'eventPlatforms' => $eventPlatforms
+            'eventPlatforms' => $eventPlatforms,
+            'partnerCategories' => $partnerCategories,
+            'exhibitors' => $exhibitors
         ], 200);
     }
 

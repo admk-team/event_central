@@ -440,7 +440,6 @@ export default function CreateEditModal({
                                     {/* <Form.Label>Sessions</Form.Label> */}
                                     <Select
                                         placeholder="Select Event Sessions"
-                                        isDisabled={selectAllSession}
                                         className={errors.sessions && "is-invalid"}
                                         value={selectMulti}
                                         isMulti={true}
