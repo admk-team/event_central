@@ -94,6 +94,7 @@ export default function CreateEditSessionModal({
         start_time: eventSession?.start_time ?? "00:00",
         end_time: eventSession?.end_time ?? "00:00",
         qa_status: eventSession?.qa_status ?? 0,
+        price: eventSession?.price ?? '',
         posts: eventSession?.posts ?? false,
         tracks: eventSession?.tracks.map((track: any) => track.id) ?? [],
     });
@@ -394,6 +395,24 @@ export default function CreateEditSessionModal({
                             {errors.description && (
                                 <Form.Control.Feedback type="invalid">
                                     {errors.description}
+                                </Form.Control.Feedback>
+                            )}
+                        </FormGroup>
+                    )}
+                    {(data.type === "Session" || data.type === "Workshop") && (
+                        <FormGroup className="mb-3">
+                            <Form.Label>Price</Form.Label>
+                            <Form.Control
+                                type="number"
+                                value={data.price}
+                                onChange={(e) =>
+                                    setData("price", e.target.value)
+                                }
+                                isInvalid={!!errors.price}
+                            />
+                            {errors.price && (
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.price}
                                 </Form.Control.Feedback>
                             )}
                         </FormGroup>
