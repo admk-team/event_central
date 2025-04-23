@@ -31,6 +31,7 @@ class RegisteredUserController extends Controller
      */
     public function create(EventApp $eventApp): Response
     {
+        $eventApp->load(['dates']);
         return Inertia::render('Attendee/Auth/Register', compact('eventApp'));
     }
 
