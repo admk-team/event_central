@@ -10,10 +10,13 @@ use App\Models\EventSpeaker;
 use Illuminate\Http\Request;
 use App\Models\EventPlatform;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\AttendeeFavSessionResource;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\Api\EventResource;
 use App\Http\Resources\Api\EventSessionResource;
 use App\Http\Resources\Api\EventSpeakerResource;
+use App\Models\Attendee;
+use App\Models\AttendeeFavSession;
 use App\Models\SessionCheckIn;
 use App\Models\SessionRating;
 use Illuminate\Support\Facades\DB;
@@ -89,56 +92,56 @@ class EventController extends Controller
     {
         // Load the event session with attendees and their ratings
         $eventSession->load(['attendeesRating']);
-    
+
         // Filter attendees who have provided a rating (non-null rating)
         $ratedAttendees = $eventSession->attendeesRating
             ? $eventSession->attendeesRating
-                ->filter(fn($attendee) => !is_null($attendee->pivot->rating))
-                ->map(function ($attendee) {
-                    return [
-                        'id' => $attendee->id,
-                        'first_name' => $attendee->first_name,
-                        'avatar' => $attendee->avatar ?? '/default-avatar.png',
-                        'rating' => $attendee->pivot->rating,
-                        'rating_description' => $attendee->pivot->rating_description ?? 'No description provided',
-                    ];
-                })
-                ->values()
-                ->toArray()
+            ->filter(fn($attendee) => !is_null($attendee->pivot->rating))
+            ->map(function ($attendee) {
+                return [
+                    'id' => $attendee->id,
+                    'first_name' => $attendee->first_name,
+                    'avatar' => $attendee->avatar ?? '/default-avatar.png',
+                    'rating' => $attendee->pivot->rating,
+                    'rating_description' => $attendee->pivot->rating_description ?? 'No description provided',
+                ];
+            })
+            ->values()
+            ->toArray()
             : [];
-    
+
         // Calculate the average rating only for attendees with ratings
         $averageRating = count($ratedAttendees) > 0
             ? array_sum(array_column($ratedAttendees, 'rating')) / count($ratedAttendees)
             : 0;
-    
+
         // Fetch the current attendee's rating (if any)
         $currentAttendeeRating = SessionRating::where('attendee_id', auth()->id())
             ->where('event_session_id', $eventSession->id)
             ->first(['rating', 'rating_description']);
-    
+
         // Check rating conditions
         $checkin = SessionCheckIn::where('attendee_id', auth()->id())
             ->where('session_id', $eventSession->id)
             ->exists();
-    
+
         $selectedSessionDetails = DB::table('attendee_event_session')
             ->where('attendee_id', auth()->id())
             ->where('event_session_id', $eventSession->id)
             ->first();
-    
+
         $sessionSelected = !is_null($selectedSessionDetails);
-    
+
         $now = now();
         $startTimeRaw = $eventSession->start_date_time;
-    
+
         // Convert startTime to a Carbon instance if it's a string, or handle invalid cases
         try {
             $startTime = $startTimeRaw ? \Carbon\Carbon::parse($startTimeRaw) : null;
         } catch (\Exception $e) {
             $startTime = null;
         }
-    
+
         // Handle the case where startTime is valid
         if ($startTime instanceof \Carbon\Carbon) {
             $endTime = (clone $startTime)->addMinutes(15); // 15 minutes after session end
@@ -151,9 +154,9 @@ class EventController extends Controller
             $startTimeFormatted = 'N/A';
             $endTimeFormatted = 'N/A';
         }
-    
+
         $canRate = $sessionSelected && $checkin && $ratingEnabled;
-    
+
         $ratingConditions = [
             'canRate' => $canRate,
             'conditions' => [
@@ -171,7 +174,7 @@ class EventController extends Controller
                 ],
             ],
         ];
-    
+
         return response()->json([
             'averageRating' => round($averageRating, 1),
             'ratedAttendees' => $ratedAttendees,
@@ -182,6 +185,7 @@ class EventController extends Controller
             'ratingConditions' => $ratingConditions,
         ]);
     }
+
     public function saveRating(Request $request, EventSession $eventSession)
     {
         $request->validate([
@@ -196,6 +200,41 @@ class EventController extends Controller
             ],
             $data
         );
-        return response()->json([ 'message' => "Saved"]);
+        return response()->json(['message' => "Saved"]);
+    }
+
+    public function favsession($sessionid)
+    {
+        $attendee = auth()->user();
+
+        $alreadyfav = AttendeeFavSession::where('attendee_id', $attendee->id)->where('event_session_id', $sessionid)->first();
+
+        if ($alreadyfav) {
+            $toggelAlreadyFav = $alreadyfav->fav;
+            if ($toggelAlreadyFav == 1) {
+                $toggelAlreadyFav = 0;
+                $alreadyfav->update(['fav' => $toggelAlreadyFav]);
+            } else {
+                $toggelAlreadyFav = 1;
+                $alreadyfav->update(['fav' => $toggelAlreadyFav]);
+            }
+        } else {
+            $alreadyfav = AttendeeFavSession::create([
+                'attendee_id' => $attendee->id,
+                'event_app_id' => $attendee->event_app_id,
+                'event_session_id' => $sessionid,
+                'fav' => 1,
+            ]);
+        }
+
+        return $this->successResponse(new AttendeeFavSessionResource($alreadyfav));
+    }
+
+    public function allfav()
+    {
+        $attendee = auth()->user();
+        $allfav = AttendeeFavSession::where('attendee_id', $attendee->id)->where('fav', 1)->with(['session'])->get();
+
+        return $this->successResponse(AttendeeFavSessionResource::collection($allfav));
     }
 }

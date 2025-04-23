@@ -30,6 +30,7 @@ class EventSessionResource extends JsonResource
             'start_time' => $this->start_time,
             'end_time' => $this->end_time,
             'selected_by_attendee' => $this->selected_by_attendee,
+            'is_favourite' => $this->is_favourite,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
