@@ -7,6 +7,7 @@ use App\Models\EventApp;
 use App\Models\Track;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 use Inertia\Inertia;
@@ -55,12 +56,15 @@ class EventSettingsController extends Controller
         } else {
             eventSettings()->set('registration_link', '');
         }
-
+  
         if($request->hasFile('logo')) {
             $name = uniqid() . '.' . $request->file('logo')->getClientOriginalExtension();
-            $input['logo'] = $request->file('logo')->storeAs('events-avatars', $name, 'public');
+            $event->logo = $request->file('logo')->storeAs('events-avatars', $name, 'public');
+            $event->save();
         }
         $event->update($input);
+
+        Cache::forget("current_event_" . Auth::id());
 
         return back()->withSuccess('Saved');
     }

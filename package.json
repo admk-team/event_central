@@ -88,6 +88,7 @@
         "react-responsive-carousel": "^3.2.23",
         "react-scrollspy": "^3.4.3",
         "react-select": "^5.8.1",
+        "react-social-icons": "^6.24.0",
         "react-table": "^7.8.0",
         "react-toastify": "^10.0.6",
         "read-excel-file": "^5.8.7",

@@ -17,7 +17,7 @@ function RefundTickets({ payments }: any) {
     const refundAction = (payment: any) => {
         console.log(payment);
 
-        if (payment.refund_tickets && payment.refund_tickets.status.length > 0) {
+        if (payment.refund_tickets && payment.refund_tickets?.status.length > 0) {
             toast.error('Refund request has already been submitted to event organizer');
         } else {
             setCurrentPayment(payment);
@@ -57,13 +57,13 @@ function RefundTickets({ payments }: any) {
             header: () => 'Refund Type',
             cell: (payment) => (
                 <>
-                    {payment.refund_tickets.refund_type === 'all_tickets' && <span>{'All Tickets'}</span>}
+                    {payment.refund_tickets?.refund_type === 'all_tickets' && <span>{'All Tickets'}</span>}
                 </>
             ),
         },
         {
             header: () => 'Amount Requested',
-            cell: (payment) => (payment.refund_tickets && payment.refund_tickets.refund_requested_amount > 0 ? "$" : "") + (payment.refund_tickets?.refund_requested_amount ?? ''),
+            cell: (payment) => (payment.refund_tickets && payment.refund_tickets?.refund_requested_amount > 0 ? "$" : "") + (payment.refund_tickets?.refund_requested_amount ?? ''),
         },
         {
             header: () => 'Refund Reason',
@@ -71,20 +71,20 @@ function RefundTickets({ payments }: any) {
         },
         {
             header: () => 'Requested On',
-            cell: (payment) => payment.refund_tickets ? moment(payment.refund_tickets.refund_requested_on).format('MMM DD, YYYY') : '',
+            cell: (payment) => payment.refund_tickets ? moment(payment.refund_tickets?.refund_requested_on).format('MMM DD, YYYY') : '',
         },
         {
             header: () => 'Refund Status',
             cell: (payment) => (
                 <>
-                    {payment.refund_tickets && payment.refund_tickets.status === 'approved' && <span className='rounded-pill badge bg-secondary text-capitalize p-2 w-100'>{payment.refund_tickets?.status ?? ''}</span>}
-                    {payment.refund_tickets && payment.refund_tickets.status === 'rejected' && <span className='rounded-pill badge bg-warning text-dark text-capitalize p-2 w-100'>{payment.refund_tickets?.status ?? ''}</span>}
+                    {payment.refund_tickets && payment.refund_tickets?.status === 'approved' && <span className='rounded-pill badge bg-secondary text-capitalize p-2 w-100'>{payment.refund_tickets?.status ?? ''}</span>}
+                    {payment.refund_tickets && payment.refund_tickets?.status === 'rejected' && <span className='rounded-pill badge bg-warning text-dark text-capitalize p-2 w-100'>{payment.refund_tickets?.status ?? ''}</span>}
                 </>
             ),
         },
         {
             header: () => 'Refund Status Date',
-            cell: (payment) => payment.refund_tickets && payment.refund_tickets.refund_status_date ? moment(payment.refund_tickets.refund_status_date).format('MMM DD, YYYY') : '',
+            cell: (payment) => payment.refund_tickets && payment.refund_tickets?.refund_status_date ? moment(payment.refund_tickets?.refund_status_date).format('MMM DD, YYYY') : '',
         },
         {
             header: () => 'Organizer Remarks',

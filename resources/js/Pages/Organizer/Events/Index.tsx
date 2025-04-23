@@ -9,6 +9,8 @@ import BreadCrumb2 from "../../../Components/Common/BreadCrumb2";
 import DeleteManyModal from "../../../Components/Common/DeleteManyModal";
 import HasPermission from "../../../Components/HasPermission";
 import moment from "moment";
+import ShareEventButton from "../../../Components/ShareEventButton";
+import { Share2 } from "lucide-react";
 
 function Index({ events, recurring_types, event_category_types }: any) {
     const [showCreateEditModal, setShowCreateEditModal] = React.useState(false);
@@ -158,6 +160,9 @@ function Index({ events, recurring_types, event_category_types }: any) {
             header: () => "Action",
             cell: (event) => (
                 <div className="hstack gap-3 fs-15 ">
+                    <ShareEventButton event={event} size="sm" variant="link" className="p-0">
+                        <Share2 size={16} />
+                    </ShareEventButton>
                     <HasPermission permission="view_events">
                         <Link
                             title="Click to select this Event"
