@@ -129,18 +129,18 @@ function Index({ attendees }: any) {
         //     header: () => 'Event Pass',
         //     cell: (attendee) => attendee.event_pass,
         // },
-        {
-            header: () => 'Company',
-            cell: (attendee) => attendee.company,
-        },
+        // {
+        //     header: () => 'Company',
+        //     cell: (attendee) => attendee.company,
+        // },
         {
             header: () => 'Position',
             cell: (attendee) => attendee.position,
         },
-        {
-            header: () => 'Phone',
-            cell: (attendee) => attendee.phone,
-        },
+        // {
+        //     header: () => 'Phone',
+        //     cell: (attendee) => attendee.phone,
+        // },
         {
             header: () => 'Checked In',
             cell: (attendee) => attendee.event_checkin ? <CircleCheck color='green' /> : <CircleX color='red' />,
