@@ -77,6 +77,11 @@ class Attendee extends Authenticatable
         return $this->morphMany(AttendeePayment::class, 'payer');
     }
 
+    public function attendeeFavSession()
+    {
+        return $this->hasMany(AttendeeFavSession::class);
+    }
+
     public function purchased_tickets()
     {
         $tickets =  AttendeePurchasedTickets::where(function ($subQuery) {

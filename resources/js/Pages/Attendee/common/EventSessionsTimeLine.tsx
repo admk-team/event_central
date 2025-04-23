@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Col, Row, Card, CardBody } from 'react-bootstrap';
-import { Link, usePage } from '@inertiajs/react';
+import { Link, usePage, useForm } from '@inertiajs/react';
 import moment from 'moment';
 
 
@@ -16,6 +16,7 @@ const EventSessionsTimeLine: React.FC<EventSessionsTimeLineProps> = ({ eventApp,
     const [selectedTracks, setSelectedTracks] = useState<number[]>([]);
     const [selectedPlatforms, setSelectedPlatforms] = useState<number[]>([]);
 
+    const { data, setData, get, processing, errors, reset, transform, clearErrors } = useForm({});
     // Toggle track selection
     const toggleTrackSelection = (trackId: number) => {
         setSelectedTracks((prevTracks) =>
@@ -40,7 +41,7 @@ const EventSessionsTimeLine: React.FC<EventSessionsTimeLineProps> = ({ eventApp,
 
     // Filter sessions by active day, tracks, and platforms
     const filteredSessions = useMemo(() => {
-        return sessions.filter((session:any) => {
+        return sessions.filter((session: any) => {
             // Date filter: Match session's start_date_time with active day
             const sessionDate = moment(session.start_date_time).format('YYYY-MM-DD');
             const isDateMatch = activeDay ? sessionDate === moment(activeDay).format('YYYY-MM-DD') : true;
@@ -48,7 +49,7 @@ const EventSessionsTimeLine: React.FC<EventSessionsTimeLineProps> = ({ eventApp,
             // Track filter: Show session if it has any selected track or no tracks are selected
             const isTrackMatch =
                 selectedTracks.length === 0 ||
-                session.tracks?.some((track:boolean) => selectedTracks.includes(track.id));
+                session.tracks?.some((track: boolean) => selectedTracks.includes(track.id));
 
             // Platform filter: Show session if it matches selected platform or no platforms are selected
             const isPlatformMatch =
@@ -59,8 +60,21 @@ const EventSessionsTimeLine: React.FC<EventSessionsTimeLineProps> = ({ eventApp,
         });
     }, [sessions, activeDay, selectedTracks, selectedPlatforms]);
 
+    const sessionFav = (sessionId: any) => {
+        console.log(sessionId);
+        get(route('fav.sessions', sessionId), {
+            onSuccess: (data) => {
+                console.log(data)
+            },
+            onError: (error) => {
+                console.log(error);
+                console.log(errors);
+            }
+        });
+    };
+
     // Session list rendering (unchanged from your code)
-    const sessionLists = filteredSessions.map((session:any) => (
+    const sessionLists = filteredSessions.map((session: any) => (
         <li key={session.id}>
             <Link href={route('attendee.event.detail.session', { eventSession: session.id })}>
                 <div className="d-flex justify-content-between">
@@ -85,9 +99,21 @@ const EventSessionsTimeLine: React.FC<EventSessionsTimeLineProps> = ({ eventApp,
                                 </div>
                             </Col>
                             <Col>
-                                {session.selected_by_attendee && (
-                                    <div className="d-flex flex-column justify-content-end align-items-end">
+                                {session.is_favourite ? (
+                                    <div className="d-flex flex-column justify-content-end align-items-end" onClick={(e) => {
+                                        e.stopPropagation();
+                                        e.preventDefault();
+                                        sessionFav(session.id)
+                                    }} >
                                         <i className="bx bxs-heart fs-4 text-danger fw-bolder"></i>
+                                    </div>
+                                ) : (
+                                    <div className="d-flex flex-column justify-content-end align-items-end" onClick={(e) => {
+                                        e.stopPropagation();
+                                        e.preventDefault();
+                                        sessionFav(session.id)
+                                    }} >
+                                        <i className="bx bx-heart fs-4 text-danger fw-bolder"></i>
                                     </div>
                                 )}
                             </Col>
@@ -127,8 +153,8 @@ const EventSessionsTimeLine: React.FC<EventSessionsTimeLineProps> = ({ eventApp,
                                 onClick={() => toggleTrackSelection(track.id)}
                                 className="px-3 py-2 rounded"
                                 style={{
-                                    fontWeight:'500',
-                                    border: '1px solid'+ track.color,
+                                    fontWeight: '500',
+                                    border: '1px solid' + track.color,
                                     backgroundColor: selectedTracks.includes(track.id) ? track.color : '',
                                     color: selectedTracks.includes(track.id) ? 'white' : 'black',
                                 }}
@@ -158,7 +184,7 @@ const EventSessionsTimeLine: React.FC<EventSessionsTimeLineProps> = ({ eventApp,
                             onClick={() => togglePlatformSelection(platform.id)}
                             className={`px-3 py-2 rounded ${selectedPlatforms.includes(platform.id) ? 'bg-primary text-white' : ''
                                 }`}
-                            style={{ border: '1px solid #d1d5db', fontWeight:'500' }}
+                            style={{ border: '1px solid #d1d5db', fontWeight: '500' }}
                         >
                             {platform.name}
                         </button>

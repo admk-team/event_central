@@ -12,7 +12,7 @@ class EventSession extends Model
 {
     use HasFactory, HasModelPermissions;
 
-    protected $appends = ['selected_by_attendee', 'start_date_time', 'end_date_time'];
+    protected $appends = ['selected_by_attendee', 'start_date_time', 'end_date_time', 'is_favourite'];
 
     protected $fillable = [
         'name',
@@ -68,6 +68,26 @@ class EventSession extends Model
         return null;
     }
 
+    public function getIsFavouriteAttribute()
+    {
+        $user = auth()->user();
+
+        if (auth('attendee')->check()) {
+            return $this->favSessions()
+                ->where('attendee_id', auth('attendee')->user()->id)
+                ->where('fav', true)
+                ->exists();
+        } elseif ($user && $user->tokenCan('role:attendee')) {
+            return $this->favSessions()
+                ->where('attendee_id', $user->id)
+                ->where('fav', true)
+                ->exists();
+        }
+
+        return false;
+    }
+
+
     public function questions()
     {
         return $this->hasMany(Question::class, 'event_session_id');
@@ -97,10 +117,16 @@ class EventSession extends Model
     {
         return $this->belongsToMany(Track::class, 'event_session_tracks');
     }
+
     public function attendeesRating()
     {
         return $this->belongsToMany(Attendee::class, 'session_ratings', 'event_session_id', 'attendee_id')
             ->withPivot('rating', 'rating_description')
             ->withTimestamps();
+    }
+
+    public function favSessions()
+    {
+        return $this->hasMany(AttendeeFavSession::class, 'event_session_id');
     }
 }
