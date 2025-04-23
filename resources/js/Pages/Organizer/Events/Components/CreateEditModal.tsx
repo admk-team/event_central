@@ -75,7 +75,7 @@ function CreateEditModal({
             recurring_type_id: event?.recurring_type_id ?? "",
             name: event?.name ?? "",
             tagline: event?.tagline ?? "",
-            start_date: event?.start_date ?? "",
+            start_date: event?.dates[0].date ?? "",
             description: event?.description ?? "",
             location_type: event?.location_type ?? "test",
             location_base: event?.location_base ?? "test",

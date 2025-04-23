@@ -125,7 +125,7 @@ function Index({ events, recurring_types, event_category_types }: any) {
         {
             accessorKey: "start_date",
             header: () => "Start Date",
-            cell: (event) => moment(event.start_date).format("MMM DD, YYYY"),
+            cell: (event) => moment(event?.dates[0].date).format("MMM DD, YYYY"),
             enableSorting: false,
         },
         {

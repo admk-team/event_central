@@ -23,7 +23,7 @@ class EventController extends Controller
     public function getEventDetailDashboard()
     {
         $eventApp = EventApp::find(Auth::user()->event_app_id);
-        $eventApp->load(['event_sessions.eventSpeakers', 'event_sessions.eventPlatform']);
+        $eventApp->load(['event_sessions.eventSpeakers', 'event_sessions.eventPlatform','dates']);
         return Inertia::render('Attendee/AttendeeDashboard', compact([
             'eventApp',
         ]));

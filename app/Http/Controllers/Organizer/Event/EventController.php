@@ -31,7 +31,7 @@ class EventController extends Controller
         $recurring_types = RecurringType::get();
         $event_category_types = EventAppCategory::get();
         $events = $this->datatable(
-            EventApp::ofOwner()->with('images')->whereCanBeAccessedBy(Auth::user())
+            EventApp::ofOwner()->with(['images','dates'])->whereCanBeAccessedBy(Auth::user())
         );
 
         return Inertia::render('Organizer/Events/Index', [
