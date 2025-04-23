@@ -98,11 +98,13 @@ function Index({ attendees }: any) {
     const columns: ColumnDef<typeof attendees.data[0]> = [
         {
             header: () => 'ID',
+            headerStyle: { width: '70px' },
             cell: (attendee) => attendee.id,
             cellClass: "fw-medium"
         },
         {
             header: () => 'Avatar',
+            headerStyle: { width: '90px' },
             cell: (attendee) => (
                 <img src={attendee.avatar_img} alt={attendee.name} width="50" height="50" className="rounded-circle" />
             ),
@@ -110,19 +112,25 @@ function Index({ attendees }: any) {
         {
             accessorKey: 'first_name',
             header: () => 'First Name',
+            headerStyle: { width: '100px', textWrap: 'wrap' },
             cell: (attendee) => attendee.first_name,
+            cellStyle: { width: '100px', textWrap: 'wrap' },
             searchable: true,
         },
         {
             accessorKey: 'last_name',
             header: () => 'Last Name',
+            headerStyle: { width: '100px', textWrap: 'wrap' },
             cell: (attendee) => attendee.last_name,
+            cellStyle: { width: '100px', textWrap: 'wrap' },
             searchable: true,
         },
         {
             accessorKey: 'email',
             header: () => 'Email',
+            headerStyle: { width: '150px', textWrap: 'wrap' },
             cell: (attendee) => attendee.email,
+            cellStyle: { width: '150px', textWrap: 'wrap' },
             searchable: true,
         },
         // {
@@ -135,7 +143,9 @@ function Index({ attendees }: any) {
         // },
         {
             header: () => 'Position',
+            headerStyle: { width: '200px', textWrap: 'wrap' },
             cell: (attendee) => attendee.position,
+            cellStyle: { width: '200px', textWrap: 'wrap' },
         },
         // {
         //     header: () => 'Phone',
@@ -143,8 +153,10 @@ function Index({ attendees }: any) {
         // },
         {
             header: () => 'Checked In',
+            headerStyle: { width: '100px', textWrap: 'wrap' },
             cell: (attendee) => attendee.event_checkin ? <CircleCheck color='green' /> : <CircleX color='red' />,
             cellClass: 'ps-4',
+            cellStyle: { width: '100px', textWrap: 'wrap' },
         },
         {
             header: () => "Actions",
@@ -193,6 +205,7 @@ function Index({ attendees }: any) {
                                     data={attendees}
                                     columns={columns}
                                     title="Attendees"
+                                    tableLayoutFixed={true}
                                     actions={[
                                         // Delete multiple
                                         {

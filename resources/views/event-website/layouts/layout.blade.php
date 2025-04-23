@@ -5,6 +5,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $event->name }}</title>
+    <meta name="description" content={{ $event->tagline }} />
+    <meta name="keywords" content="{{ $event->category?->name }}">
+
+    {{-- Open Graph --}}
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ route('organizer.events.website', $event->uuid) }}" />
+    <meta property="og:title" content="{{ $event->name }}" />
+    <meta property="og:description" content="{{ $event->tagline }}" />
+    <meta property="og:image" content="{{ $event->logo_img }}" />
+
+    {{-- Twitter Card --}}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="{{ $event->name }}" />
+    <meta name="twitter:description" content="{{ $event->tagline }}" />
+    <meta name="twitter:image" content="{{ $event->logo_img }}" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"

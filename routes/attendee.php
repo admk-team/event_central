@@ -121,4 +121,7 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::put('/answer/{answerId}', [AttendeeQuestionAttendeeController::class, 'updateAnswer'])->name('updateAnswer');
         Route::delete('/answer/{answerId}', [AttendeeQuestionAttendeeController::class, 'destroyAnswer'])->name('destroyAnswer');
     });
+    //fav session
+    Route::get('/favsession/{sessionid}', [EventController::class, 'favsession'])->name('fav.sessions');
+    Route::get('/allfav', [EventController::class, 'allfavouriteSession'])->name('all.fav.sessions');
 });

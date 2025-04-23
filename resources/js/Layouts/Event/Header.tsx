@@ -19,6 +19,8 @@ import LightDark from "../../Components/Common/LightDark";
 // import NotificationDropdown from "../../Components/Common/NotificationDropdown";
 import OrganizerProfileDropdown from "../../Components/Common/OrganizerProfileDropdown";
 import moment from "moment";
+import { Share2 } from "lucide-react";
+import ShareEventButton from "../../Components/ShareEventButton";
 
 const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
     const dispatch: any = useDispatch();
@@ -279,6 +281,10 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
                                     </Form>
                                 </Dropdown.Menu>
                             </Dropdown>
+
+                            <ShareEventButton event={currentEvent} className="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle light-dark-mode">
+                                <Share2 size={20} />
+                            </ShareEventButton>
 
                             {/* LanguageDropdown */}
                             <LanguageDropdown />

@@ -135,7 +135,6 @@ const EditAttendee = ({ show, handleClose, user, isEdit }: any) => {
                         <Form.Control
                             type="text"
                             name="email"
-                            disabled
                             value={data.email}
                             onChange={handleChange}
                         />
