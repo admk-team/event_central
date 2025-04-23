@@ -59,6 +59,7 @@ class PaymentController extends Controller
             ->join('event_app_tickets', 'attendee_purchased_tickets.event_app_ticket_id', '=', 'event_app_tickets.id')
             ->join('attendees', 'attendees.id', '=', 'attendee_payments.attendee_id')
             ->where('attendee_payments.event_app_id', $event->id)
+            ->where('attendee_payments.status', 'paid')
             ->select(
                 'event_app_tickets.name as ticket_name',
                 'attendee_purchased_tickets.total as total',
