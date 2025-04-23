@@ -41,7 +41,14 @@ class AttendeeUpgradeTicketController extends Controller
 
     public function getAttendeePurchasedTickets(Attendee $attendee)
     {
-        Log::info($attendee);
-        return response()->json(['tickets' => $attendee->purchased_tickets()]);
+        $tickets =  $attendee->purchased_tickets();
+        
+        $attendee->load('attendeeEventSessions');
+
+        $sessions = $attendee->attendeeEventSessions->pluck('event_session_id')->toArray();
+        return response()->json([
+            'tickets' => $tickets ,
+            'sessions' => $sessions
+        ]);
     }
 }
