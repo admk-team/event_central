@@ -167,5 +167,9 @@ Route::prefix('attendee')->group(function () {
         Route::get('/session/{eventSession}/ratings', [AttendeeEventController::class, 'getSessionRatings'])
             ->name('attendee.session.ratings');
         Route::post('/attendee-save-rating/{eventSession}', [AttendeeEventController::class, 'saveRating'])->name('attendee.save.rating');
+
+        //fav session
+        Route::get('/favsession/{sessionid}', [AttendeeEventController::class, 'favsession']);
+        Route::get('/allfav', [AttendeeEventController::class, 'allfav']);
     });
 });
