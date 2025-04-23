@@ -76,9 +76,11 @@ Route::prefix('user')->group(function () {
 
         // Event Attendees
         Route::get('events/{event}/attendees', [AttendeeController::class, 'index']);
+        Route::get('events/{event}/attendees/search', [AttendeeController::class, 'search']);
         Route::post('events/{event}/attendees', [AttendeeController::class, 'create']);
         Route::get('events/{event}/attendees/{attendee}', [AttendeeController::class, 'show']);
         Route::put('events/{event}/attendees/{attendee}', [AttendeeController::class, 'update']);
+        Route::get('purchased-tickets/attendees/{attendee}', [AttendeeController::class, 'attendeeTickets']);
 
         // Event Tickets
         Route::get('events/{event}/tickets', [TicketController::class, 'index']);
@@ -106,6 +108,7 @@ Route::prefix('user')->group(function () {
 
         // Payments
         Route::get('events/{event}/payments', [OrganizerPaymentController::class, 'index']);
+        Route::get('/events/{event}/payments/search', [OrganizerPaymentController::class, 'search']);
     });
 });
 
