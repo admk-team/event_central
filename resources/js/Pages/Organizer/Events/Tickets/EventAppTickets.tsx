@@ -1,11 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import { Card, Col, Container, Row, Table, Button, OverlayTrigger, Tooltip } from "react-bootstrap";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, useForm } from "@inertiajs/react";
 import Layout from "../../../../Layouts/Event";
 import moment from "moment";
+import DeleteModal from "../../../../Components/Common/DeleteModal";
+
 
 const EventAppTickets = ({ tickets }: any) => {
-    console.log(tickets);
+    const [deleteTicket, setDeleteTicket] = React.useState<any>(null);
+    const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+
+    const deleteForm = useForm({
+        _method: "DELETE",
+    });
+
+    const deleteAction = (ticket: any) => {
+        console.log(ticket);
+        setDeleteTicket(ticket);
+        setShowDeleteConfirmation(true);
+    };
+
+    const handleDelete = () => {
+        console.log(deleteTicket.ticketId)
+        deleteForm.post(
+            route("organizer.events.delete.payment", deleteTicket.ticketId)
+        );
+        setShowDeleteConfirmation(false);
+    };
     return (
         <React.Fragment>
             {/* <style>
@@ -38,6 +59,7 @@ const EventAppTickets = ({ tickets }: any) => {
                                                     {/* <th scope="col">Payment Note</th> */}
                                                     <th scope="col">Create On</th>
                                                     <th scope="col">Status</th>
+                                                    <th scope="col">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -86,6 +108,7 @@ const EventAppTickets = ({ tickets }: any) => {
                                                             </td> */}
                                                             <td>{ticket.created_at ? moment(ticket.created_at).format('MMM DD, YYYY') : ''}</td>
                                                             <td style={{ color: "#0d6efd" }}><i className="ri-checkbox-circle-line fs-17 align-middle"></i> Paid</td>
+                                                            <td className="text-center"><i className="ri-delete-bin-5-line text-danger fs-17 align-middle" onClick={() => deleteAction(ticket)}></i></td>
                                                         </tr>
                                                     ))
                                                 ) : (
@@ -102,6 +125,13 @@ const EventAppTickets = ({ tickets }: any) => {
                     </Row>
                 </Container>
             </div>
+            <DeleteModal
+                show={showDeleteConfirmation}
+                onDeleteClick={handleDelete}
+                onCloseClick={() => {
+                    setShowDeleteConfirmation(false);
+                }}
+            />
         </React.Fragment>
     );
 };
