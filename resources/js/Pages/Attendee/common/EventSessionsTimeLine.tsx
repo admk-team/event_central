@@ -41,22 +41,24 @@ const EventSessionsTimeLine: React.FC<EventSessionsTimeLineProps> = ({ eventApp,
 
     // Filter sessions by active day, tracks, and platforms
     const filteredSessions = useMemo(() => {
-        return sessions.filter((session: any) => {
-            // Date filter: Match session's start_date_time with active day
+        const filtered = sessions.filter((session: any) => {
             const sessionDate = moment(session.start_date_time).format('YYYY-MM-DD');
             const isDateMatch = activeDay ? sessionDate === moment(activeDay).format('YYYY-MM-DD') : true;
 
-            // Track filter: Show session if it has any selected track or no tracks are selected
             const isTrackMatch =
                 selectedTracks.length === 0 ||
                 session.tracks?.some((track: boolean) => selectedTracks.includes(track.id));
 
-            // Platform filter: Show session if it matches selected platform or no platforms are selected
             const isPlatformMatch =
                 selectedPlatforms.length === 0 ||
                 selectedPlatforms.includes(session.event_platform?.id);
 
             return isDateMatch && isTrackMatch && isPlatformMatch;
+        });
+
+        // ✅ Sort filtered sessions by start_date_time ASC
+        return filtered.sort((a: any, b: any) => {
+            return moment(a.start_date_time).diff(moment(b.start_date_time));
         });
     }, [sessions, activeDay, selectedTracks, selectedPlatforms]);
 
@@ -79,7 +81,7 @@ const EventSessionsTimeLine: React.FC<EventSessionsTimeLineProps> = ({ eventApp,
             <Link href={route('attendee.event.detail.session', { eventSession: session.id })}>
                 <div className="d-flex justify-content-between">
                     <span style={{ color: 'var(--vz-success)' }}>
-                        {moment(session.start_date_time).format('DD MMM YYYY')} (
+                        {moment(session.start_date_time).format('MMM DD YYYY')} (
                         {moment(session.start_date_time).format('hh:mm')}-
                         {moment(session.end_date_time).format('hh:mm')})
                     </span>
