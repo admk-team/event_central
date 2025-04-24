@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\Api\AttendeeFavSessionResource;
+use Carbon\Carbon;
 
 class EventController extends Controller
 {
@@ -34,7 +35,18 @@ class EventController extends Controller
     public function allfavouriteSession()
     {
         $eventApp = EventApp::find(Auth::user()->event_app_id);
+
         $eventApp->load(['event_sessions.eventSpeakers', 'event_sessions.eventPlatform', 'dates']);
+        // dump($eventApp->event_sessions->pluck('id')->toArray());
+        $eventApp->event_sessions = $eventApp->event_sessions->sort(function ($a, $b) {
+
+            $startA = Carbon::parse($a->start_date_time);
+            $startB = Carbon::parse($b->start_date_time);
+
+            return $startA->greaterThan($startB) ? 1 : ($startA->lessThan($startB) ? -1 : 0);
+        });
+        // dd($eventApp->event_sessions->pluck('id')->toArray());
+
         return Inertia::render('Attendee/Favourite/Index', compact([
             'eventApp',
         ]));
