@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\v1\Attendee\RegisterController;
 use App\Http\Controllers\Api\v1\Organizer\EventSessionController;
 use App\Http\Controllers\Api\v1\Attendee\EventController as AttendeeEventController;
 use App\Http\Controllers\Api\v1\Attendee\QuestionAttendeeController as AttendeeQuestionAttendeeController;
+use App\Http\Controllers\Api\v1\Organizer\AddonController;
 use App\Http\Controllers\Api\v1\Organizer\AssignTicketApiController;
 use App\Http\Controllers\Api\v1\Organizer\QAController;
 use App\Http\Controllers\Api\v1\Organizer\AttendeeController;
@@ -58,6 +59,10 @@ Route::prefix('user')->group(function () {
         Route::post('events/{event}/sessions/{session}/checkin', [EventSessionController::class, 'checkin']);
         Route::post('events/{event}/sessions/{session}/checkout', [EventSessionController::class, 'checkout']);
         Route::get('events/{event}/sessions/{session}/attendance', [EventSessionController::class, 'attendance']);
+
+        // Addons
+        Route::get('events/{event}/addons', [AddonController::class, 'index']);
+        Route::post('events/{event}/addons/{addon}/scan', [AddonController::class, 'scan']);
 
         //Organizer Q&A  start
         Route::get('/events/organizer/qa/{session_id}', [QAController::class, 'organizerQA'])->name('api.events.qa.index');
