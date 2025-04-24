@@ -5,13 +5,15 @@ import { router } from '@inertiajs/react'
 import { ArrowDown, ArrowUp, ChevronDown, ChevronsUpDown, ChevronUp, Search, X } from 'lucide-react'
 
 type Column<T> = {
-    accessorKey?: string
-    header: () => React.ReactNode
-    headerClass?: string
-    cell: (row: T) => React.ReactNode
-    cellClass?: string
-    enableSorting?: boolean
-    searchable?: boolean
+    accessorKey?: string;
+    header: () => React.ReactNode;
+    headerClass?: string;
+    headerStyle?: React.CSSProperties;
+    cell: (row: T) => React.ReactNode;
+    cellClass?: string;
+    cellStyle?: React.CSSProperties;
+    enableSorting?: boolean;
+    searchable?: boolean;
 }
 
 export type ColumnDef<T> = Column<T>[]
@@ -36,6 +38,7 @@ type DataTableProps<T> = {
     description?: string | React.ReactNode
     actions?: DataTableAction<T>[]
     disableRowSelection?: boolean
+    tableLayoutFixed?: boolean
 }
 
 export default function DataTable<T>({
@@ -44,7 +47,8 @@ export default function DataTable<T>({
     title,
     description,
     actions,
-    disableRowSelection
+    disableRowSelection,
+    tableLayoutFixed
 }: DataTableProps<T>) {
     const rowSelector = useRowSelector(data.data);
 
@@ -128,16 +132,16 @@ export default function DataTable<T>({
             {/* Table */}
             <div className="card-body p-0">
                 <div className="table-responsive">
-                    <Table className="table-borderless align-middle table-nowrap mb-0">
+                    <Table className="table-borderless align-middle table-nowrap mb-0" style={tableLayoutFixed ? { tableLayout: 'fixed' } : undefined}>
                         <thead className="table-light">
                             <tr>
                                 {!disableRowSelection && (
-                                    <th>
+                                    <th style={tableLayoutFixed ? { width: '40px' } : undefined}>
                                         <Form.Check.Input onChange={(e) => rowSelector.handleAllRowSelection(e.target.checked)} checked={data.data.length > 0 && rowSelector.isAllRowSelected()} />
                                     </th>
                                 )}
                                 {columns.map((col, colIndex) => (
-                                    <th scope="col" className={col.headerClass || ''} key={colIndex}>
+                                    <th scope="col" className={col.headerClass || ''} key={colIndex} style={col.headerStyle}>
                                         {col.enableSorting && col.accessorKey ? (
                                             <div
                                                 onClick={() => setSort(col.accessorKey as string)} 
@@ -171,7 +175,7 @@ export default function DataTable<T>({
                                             </td>
                                         )}
                                         {columns.map((col, colIndex) => (
-                                            <td className={col.cellClass || ''} key={colIndex}>{col.cell(row)}</td>
+                                            <td className={col.cellClass || ''} key={colIndex} style={col.cellStyle}>{col.cell(row)}</td>
                                         ))}
                                     </tr>
                                 ))

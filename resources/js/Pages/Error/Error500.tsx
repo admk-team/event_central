@@ -1,7 +1,6 @@
 import { Head, Link } from "@inertiajs/react";
-import GuestLayout from "../../../../Layouts/Theme/GuestLayout";
 import { Col, Container, Row } from 'react-bootstrap';
-import error500 from '../../../../../images/error500.png';
+import error500 from '../../../images/error500.png';
 import React from "react";
 
 export default function Error500(){
