@@ -1,16 +1,19 @@
 import React, { useEffect } from 'react'
-import { Form, Table } from 'react-bootstrap'
+import { Button, Form, Spinner, Table } from 'react-bootstrap'
 import Pagination from './Common/Pagination'
 import { router } from '@inertiajs/react'
-import { ArrowDown, ArrowUp, ChevronDown, ChevronsUpDown, ChevronUp } from 'lucide-react'
+import { ArrowDown, ArrowUp, ChevronDown, ChevronsUpDown, ChevronUp, Search, X } from 'lucide-react'
 
 type Column<T> = {
-    accessorKey?: string
-    header: () => React.ReactNode
-    headerClass?: string
-    cell: (row: T) => React.ReactNode
-    cellClass?: string
-    enableSorting?: boolean
+    accessorKey?: string;
+    header: () => React.ReactNode;
+    headerClass?: string;
+    headerStyle?: React.CSSProperties;
+    cell: (row: T) => React.ReactNode;
+    cellClass?: string;
+    cellStyle?: React.CSSProperties;
+    enableSorting?: boolean;
+    searchable?: boolean;
 }
 
 export type ColumnDef<T> = Column<T>[]
@@ -35,6 +38,7 @@ type DataTableProps<T> = {
     description?: string | React.ReactNode
     actions?: DataTableAction<T>[]
     disableRowSelection?: boolean
+    tableLayoutFixed?: boolean
 }
 
 export default function DataTable<T>({
@@ -43,11 +47,14 @@ export default function DataTable<T>({
     title,
     description,
     actions,
-    disableRowSelection
+    disableRowSelection,
+    tableLayoutFixed
 }: DataTableProps<T>) {
     const rowSelector = useRowSelector(data.data);
 
     const [sort, setSort] = useSort();
+
+    const { hasSearch, searchQuery, setSearchQuery, search, searchProcessing } = useSearch(columns);
 
     const dataTable: DataTable<T> = {
         data: data.data,
@@ -56,12 +63,55 @@ export default function DataTable<T>({
 
     return (
         <div className="card">
-            <div className="card-header d-flex justify-content-between align-items-center">
+            <div className="card-header d-flex justify-content-between align-items-center flex-wrap">
                 {/* Title and Description */}
                 <div>
                     {title && <h5 className="card-title mb-0">{title}</h5>}
                     {description && <div className="card-description">{description}</div>}
                 </div>
+
+                {/* Search */}
+                {hasSearch && (
+                    <form onSubmit={(e) => {
+                        e.preventDefault();
+                        search();
+                    }}>
+                        <div className="input-group w-auto position-relative">
+                            <Form.Control
+                                type="text" 
+                                placeholder="Search"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                style={{
+                                    paddingRight: '25px',
+                                }}
+                            />
+                            {searchQuery && (
+                                <X 
+                                    className="position-absolute cursor-pointer" 
+                                    size={20} 
+                                    style={{ top: '8px', right: '38px' }} 
+                                    onClick={() => {
+                                        search('');
+                                    }}
+                                />
+                            )}
+                            <Button type="submit" size="sm">
+                                {searchProcessing ? (
+                                    <Spinner
+                                        as="span"
+                                        animation="border"
+                                        size="sm"
+                                        role="status"
+                                        aria-hidden="true"
+                                    />
+                                ) : (
+                                    <Search size={16} />
+                                )}
+                            </Button>
+                        </div>
+                    </form>
+                )}
 
                 {/* Actions */}
                 <div className="d-flex justify-content-end align-items-center gap-2">
@@ -82,16 +132,16 @@ export default function DataTable<T>({
             {/* Table */}
             <div className="card-body p-0">
                 <div className="table-responsive">
-                    <Table className="table-borderless align-middle table-nowrap mb-0">
+                    <Table className="table-borderless align-middle table-nowrap mb-0" style={tableLayoutFixed ? { tableLayout: 'fixed' } : undefined}>
                         <thead className="table-light">
                             <tr>
                                 {!disableRowSelection && (
-                                    <th>
+                                    <th style={tableLayoutFixed ? { width: '40px' } : undefined}>
                                         <Form.Check.Input onChange={(e) => rowSelector.handleAllRowSelection(e.target.checked)} checked={data.data.length > 0 && rowSelector.isAllRowSelected()} />
                                     </th>
                                 )}
                                 {columns.map((col, colIndex) => (
-                                    <th scope="col" className={col.headerClass || ''} key={colIndex}>
+                                    <th scope="col" className={col.headerClass || ''} key={colIndex} style={col.headerStyle}>
                                         {col.enableSorting && col.accessorKey ? (
                                             <div
                                                 onClick={() => setSort(col.accessorKey as string)} 
@@ -125,7 +175,7 @@ export default function DataTable<T>({
                                             </td>
                                         )}
                                         {columns.map((col, colIndex) => (
-                                            <td className={col.cellClass || ''} key={colIndex}>{col.cell(row)}</td>
+                                            <td className={col.cellClass || ''} key={colIndex} style={col.cellStyle}>{col.cell(row)}</td>
                                         ))}
                                     </tr>
                                 ))
@@ -238,4 +288,43 @@ function useSort(): [{ column: string, desc: boolean } | null, (column: string) 
     }
 
     return [sort, setSort]
+}
+
+type Search = { query: string, columns: string[] } | null
+type setSearchQuery = (query?: string) => void 
+
+function useSearch<T>(columns: ColumnDef<T>) {
+    const searchableColumns = columns.filter(col => col.searchable === true && col.accessorKey);
+
+    const url = new URL(window.location.href);
+    const searchParam = url.searchParams.get('search');
+
+    const search: Search = searchParam ? JSON.parse(searchParam): null;
+
+    
+    const [searchQuery, setSearchQuery] = React.useState(search?.query ?? '');
+    const [searchProcessing, setSearchProcessing] = React.useState(false);
+    
+    const doSearch: setSearchQuery = (query) => {
+        if (query !== undefined) setSearchQuery(query);
+
+        url.searchParams.set('search', JSON.stringify({
+            query: query !== undefined ? query : searchQuery,
+            columns: searchableColumns.map(column => column.accessorKey),
+        }));
+
+        setSearchProcessing(true);
+
+        router.visit(url.toString(), {
+            onFinish: () => setSearchProcessing(false),
+        });
+    }
+
+    return {
+        hasSearch: searchableColumns.length > 0,
+        searchQuery,
+        setSearchQuery,
+        search: doSearch,
+        searchProcessing,
+    };
 }

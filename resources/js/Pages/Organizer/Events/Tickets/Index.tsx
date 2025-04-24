@@ -12,10 +12,10 @@ import moment from "moment";
 import { DialogBackdrop } from "@headlessui/react";
 
 function Index({ tickets, sessions, addons, fees, event_ticket_type }: any) {
+    // console.log('tickets', tickets);
 
-    console.log('tickets', tickets);
-
-    const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
+    const [showCreateEditModal, _setShowCreateEditModal] =
+        React.useState(false);
     const [editTicket, setEditTicket] = React.useState<any>(null);
 
     const [deleteschedule, setDeleteSchedule] = React.useState<any>(null);
@@ -109,57 +109,88 @@ function Index({ tickets, sessions, addons, fees, event_ticket_type }: any) {
         {
             header: () => "Sessions",
             cell: (ticket) => (
-                <div className="d-flex flex-column" >
-                    {
-                        ticket.sessions.map((session: any, index: any) => {
-                            if (index < 2) {
-                                return <span
+                <div className="d-flex flex-column">
+                    {ticket.sessions.map((session, index) => {
+                        if (index < 2) {
+                            return (
+                                <span
                                     key={session.id}
-                                    className="badge bg-light rounded-pill border border-secondary text-secondary text-capitalize fs-6 mt-1"
-                                    style={{ marginRight: "3px" }}
+                                    className="badge bg-light rounded-pill border border-secondary text-secondary text-capitalize fs-6 mt-1 text-truncate"
+                                    style={{
+                                        maxWidth: "150px", // Consistent width
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                        marginRight: "3px",
+                                    }}
+                                    title={session.name} // Tooltip for full name
                                 >
                                     {session.name}
                                 </span>
-                            } else if (index === 2) {
-                                return <span
-                                    key={'more-' + ticket.id}
-                                    className="badge rounded-pill bg-secondary border border-secondary text-white text-capitalize fs-6 mt-1"
-                                    style={{ marginRight: "3px" }}
+                            );
+                        } else if (index === 2) {
+                            const moreCount = ticket.sessions.length - 2;
+                            const moreText = `+${moreCount} more`;
+                            return (
+                                <span
+                                    key={`more-${ticket.id}`}
+                                    className="badge rounded-pill bg-secondary border border-secondary text-white text-capitalize fs-6 mt-1 text-truncate"
+                                    style={{
+                                        maxWidth: "150px", // Match session badge width
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                        marginRight: "3px",
+                                    }}
+                                    title={moreText} // Tooltip for full "+X more"
                                 >
-                                    {"+" + (ticket.sessions.length - 2) + " more"}
+                                    {moreText}
                                 </span>
-                            }
-                        })
-                    }
+                            );
+                        }
+                        return null; // Explicitly return null for other indices
+                    })}
                 </div>
-            )
+            ),
         },
         {
             header: () => "Increment By",
-            cell: (ticket) => ticket.increment_by,
+            cell: (ticket) => ticket.increment_by ?? 'N/A',
         },
         {
             header: () => "Increment Rate",
-            cell: (ticket) => ticket.increment_rate,
+            cell: (ticket) => ticket.increment_rate ?? 'N/A',
         },
         {
             header: () => "Start Increment",
-            cell: (ticket) => ticket.start_increment ? moment(ticket.start_increment).format("MMM DD, YYYY") : "N/A",
+            cell: (ticket) =>
+                ticket.start_increment
+                    ? moment(ticket.start_increment).format("MMM DD, YYYY")
+                    : "N/A",
         },
         {
             header: () => "End Increment",
-            cell: (ticket) => ticket.end_increment ? moment(ticket.end_increment).format("MMM DD, YYYY") : "N/A",
+            cell: (ticket) =>
+                ticket.end_increment
+                    ? moment(ticket.end_increment).format("MMM DD, YYYY")
+                    : "N/A",
         },
         {
             header: () => "Show To Attendee",
             cell: (ticket) => (
                 <div className="w-100 text-center">
-                    {ticket.show_on_attendee_side && <span className="w-50 badge rounded-pill bg-secondary border border-secondary text-white text-capitalize fs-6 mt-1">Yes</span >
-                    }
-                    {!ticket.show_on_attendee_side && <span className="w-50 badge rounded-pill bg-light border border-secondary text-black text-capitalize fs-6 mt-1">No</span >
-                    }
+                    {ticket.show_on_attendee_side && (
+                        <span className="w-50 badge rounded-pill bg-secondary border border-secondary text-white text-capitalize fs-6 mt-1">
+                            Yes
+                        </span>
+                    )}
+                    {!ticket.show_on_attendee_side && (
+                        <span className="w-50 badge rounded-pill bg-light border border-secondary text-black text-capitalize fs-6 mt-1">
+                            No
+                        </span>
+                    )}
                 </div>
-            )
+            ),
         },
         {
             header: () => "Action",
@@ -210,7 +241,8 @@ function Index({ tickets, sessions, addons, fees, event_ticket_type }: any) {
                                                                 dataTable
                                                                     .getSelectedRows()
                                                                     .map(
-                                                                        (row) => row.id
+                                                                        (row) =>
+                                                                            row.id
                                                                     )
                                                             )
                                                         }

@@ -12,6 +12,8 @@ import EditAttendee from './Component/EditAttendee';
 // import Profile from './AttendeeProfile/Profile';
 import AddAttendee from './Component/AddAttendee';
 import HasPermission from '../../../../../Components/HasPermission';
+import { Check, CircleCheck, CircleX } from 'lucide-react';
+import EventCheckinButton from './Component/EventCheckinButton';
 
 function Index({ attendees }: any) {
 
@@ -96,47 +98,73 @@ function Index({ attendees }: any) {
     const columns: ColumnDef<typeof attendees.data[0]> = [
         {
             header: () => 'ID',
+            headerStyle: { width: '70px' },
             cell: (attendee) => attendee.id,
             cellClass: "fw-medium"
         },
         {
             header: () => 'Avatar',
+            headerStyle: { width: '90px' },
             cell: (attendee) => (
                 <img src={attendee.avatar_img} alt={attendee.name} width="50" height="50" className="rounded-circle" />
             ),
         },
         {
+            accessorKey: 'first_name',
             header: () => 'First Name',
+            headerStyle: { width: '100px', textWrap: 'wrap' },
             cell: (attendee) => attendee.first_name,
+            cellStyle: { width: '100px', textWrap: 'wrap' },
+            searchable: true,
         },
         {
+            accessorKey: 'last_name',
             header: () => 'Last Name',
+            headerStyle: { width: '100px', textWrap: 'wrap' },
             cell: (attendee) => attendee.last_name,
+            cellStyle: { width: '100px', textWrap: 'wrap' },
+            searchable: true,
         },
         {
+            accessorKey: 'email',
             header: () => 'Email',
+            headerStyle: { width: '150px', textWrap: 'wrap' },
             cell: (attendee) => attendee.email,
+            cellStyle: { width: '150px', textWrap: 'wrap' },
+            searchable: true,
         },
         // {
         //     header: () => 'Event Pass',
         //     cell: (attendee) => attendee.event_pass,
         // },
-        {
-            header: () => 'Company',
-            cell: (attendee) => attendee.company,
-        },
+        // {
+        //     header: () => 'Company',
+        //     cell: (attendee) => attendee.company,
+        // },
         {
             header: () => 'Position',
+            headerStyle: { width: '200px', textWrap: 'wrap' },
             cell: (attendee) => attendee.position,
+            cellStyle: { width: '200px', textWrap: 'wrap' },
         },
+        // {
+        //     header: () => 'Phone',
+        //     cell: (attendee) => attendee.phone,
+        // },
         {
-            header: () => 'Phone',
-            cell: (attendee) => attendee.phone,
+            header: () => 'Checked In',
+            headerStyle: { width: '100px', textWrap: 'wrap' },
+            cell: (attendee) => attendee.event_checkin ? <CircleCheck color='green' /> : <CircleX color='red' />,
+            cellClass: 'ps-4',
+            cellStyle: { width: '100px', textWrap: 'wrap' },
         },
         {
             header: () => "Actions",
             cell: (attendee) => (
                 <div className="hstack gap-4 fs-15 text-center">
+                    <HasPermission permission="scan_events">
+                        <EventCheckinButton attendee={attendee} />
+                    </HasPermission>
                     <Link title='View attendee details' href={route('organizer.events.attendee.info', { id: attendee.id })} className="link-primary cursor-pointer"><i className="ri-eye-fill"></i></Link>
                     <Link title='View QR Code attendee' href={route('organizer.events.attendee.qrcode', { id: attendee.id })} className="link-primary cursor-pointer"><i className="ri-qr-code-line"></i></Link>
                     <Link title='Purchase ticket for this attendee' href={route('organizer.events.attendee.tickets.assign', attendee.id)} className="link-primary cursor-pointer">
@@ -177,6 +205,7 @@ function Index({ attendees }: any) {
                                     data={attendees}
                                     columns={columns}
                                     title="Attendees"
+                                    tableLayoutFixed={true}
                                     actions={[
                                         // Delete multiple
                                         {
@@ -240,7 +269,7 @@ function Index({ attendees }: any) {
                 onCloseClick={() => { setShowDeleteManyConfirmation(false) }}
             />
 
-            <ImportModal importAttendeesModal={importAttendeesModal} availableAttributes={['name', 'email', 'phone']} importType='attendees' showModal={showImportModal} />
+            <ImportModal importAttendeesModal={importAttendeesModal} availableAttributes={['first_name', 'last_name', 'email', 'phone', 'position', 'location']} importType='attendees' showModal={showImportModal} />
 
         </React.Fragment>
     )

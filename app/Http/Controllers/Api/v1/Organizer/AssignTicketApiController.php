@@ -41,7 +41,12 @@ class AssignTicketApiController extends Controller
             return response()->json(['error' => 'Event not found'], 404);
         }
 
-        $attendees = $eventApp->attendees()->select(['id as value',DB::raw("CONCAT(first_name, ' ', last_name) as label")])->get();
+        // Fetch only the first 100 attendees initially
+        $attendees = $eventApp->attendees()
+            ->select(['id as value', DB::raw("CONCAT(first_name, ' ', last_name) as label")])
+            ->take(20) // Limit to 100 attendees
+            ->get();
+
         $eventApp->load([
             'tickets.sessions',
             'tickets.addons',
@@ -53,7 +58,35 @@ class AssignTicketApiController extends Controller
             'attendees' => $attendees,
         ]);
     }
+    public function searchAttendees(Request $request, EventApp $event)
+    {
+        if (!Auth::user()->can('assign_tickets')) {
+            return response()->json(['error' => 'Unauthorized'], 403);
+        }
 
+        $eventApp = $event ? $event : null;
+
+        if (!$eventApp) {
+            return response()->json(['error' => 'Event not found'], 404);
+        }
+
+        // Get the search query from the request
+        $searchQuery = $request->query('search', '');
+
+        // Search attendees by first_name or last_name
+        $attendees = $eventApp->attendees()
+            ->select(['id as value', DB::raw("CONCAT(first_name, ' ', last_name) as label")])
+            ->where(function ($query) use ($searchQuery) {
+                $query->where('first_name', 'LIKE', "%{$searchQuery}%")
+                    ->orWhere('last_name', 'LIKE', "%{$searchQuery}%");
+            })
+            ->take(20) // Limit to 100 results to prevent large responses
+            ->get();
+
+        return response()->json([
+            'attendees' => $attendees,
+        ]);
+    }
     public function checkout(AttendeeCheckoutRequest $request, Attendee $attendee, $payment_method)
     {
         $payment = $this->paymentController->checkout($request, true, $attendee, $payment_method);

@@ -15,12 +15,17 @@ class ImportController extends Controller
         Log::info($request->all());
         try {
             if ($request->importType == 'attendees') {
-                foreach ($request->data as $a) {
+                foreach ($request->data as $i => $a) {
+                    if ($i === 0) continue; // Skip header
+
                     Attendee::create([
                         'event_app_id' => session('event_id'),
-                        'first_name' => $a['name'],
+                        'first_name' => $a['first_name'],
+                        'last_name' => $a['last_name'],
                         'email' => $a['email'],
-                        'phone' => $a['phone'],
+                        'phone' => $a['phone'] ?? null,
+                        'position' => $a['position'] ?? null,
+                        'location' => $a['location'] ?? null,
                         'qr_code' => 'EMPTY',
                         'password' => Hash::make('12345678')  // Set Default Password
                     ]);

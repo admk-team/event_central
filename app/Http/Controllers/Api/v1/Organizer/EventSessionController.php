@@ -6,8 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\EventSessionResource;
 use App\Models\AttendeePurchasedTickets;
 use App\Models\EventApp;
+use App\Models\EventAppDate;
+use App\Models\EventPlatform;
 use App\Models\EventSession;
 use App\Models\SessionCheckIn;
+use App\Models\Track;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,11 +22,41 @@ class EventSessionController extends Controller
             return $this->errorResponse("Unauthorized", 403);
         }
 
+        $eventdates = EventAppDate::where('event_app_id', $event->id)->with('eventSessions')->get();
+        $tracks = Track::where('event_app_id', $event->id)->get();
+        $enableTracks = eventSettings($event->id)->getValue('enable_tracks', false);
+        $eventPlatforms = EventPlatform::where('event_app_id', $event->id)->get();
+
         $sessions = EventSession::where('event_app_id', $event->id)
             ->whereCanBeAccessedBy($request->user())
+            ->with(['eventPlatform', 'eventDate', 'tracks'])
+            ->get();
+
+        return response()->json([
+            'sessions' => EventSessionResource::collection($sessions),
+            'eventdates' => $eventdates,
+            'tracks' => $tracks,
+            'enableTracks' => $enableTracks,
+            'eventPlatforms' => $eventPlatforms
+        ], 200);
+    }
+    public function searchSessions(Request $request, EventApp $event)
+    {
+        if (! Auth::user()->can('view_events', $event)) {
+            return $this->errorResponse("Unauthorized", 403);
+        }
+
+        $searchQuery = $request->query('search', '');
+
+        $sessions = EventSession::where('event_app_id', $event->id)
+            ->whereCanBeAccessedBy($request->user())
+            ->where(function ($query) use ($searchQuery) {
+                $query->where('name', 'LIKE', "%{$searchQuery}%")
+                    ->orWhere('description', 'LIKE', "%{$searchQuery}%");
+            })
             ->with(['eventPlatform', 'eventDate'])
             ->get();
-        
+
         return $this->successResponse(EventSessionResource::collection($sessions));
     }
 
@@ -51,35 +84,67 @@ class EventSessionController extends Controller
         $purchasedTicket = AttendeePurchasedTickets::where('code', $request->code)->first();
 
         if (! $purchasedTicket) {
-            return $this->errorResponse("Invalid ticket", 404);
+            return response()->json([
+                'status' => 0,
+            ]);
         }
 
         $ticketEvent = $purchasedTicket->ticket?->event;
 
         if (! $ticketEvent) {
-            return $this->errorResponse("Invalid ticket", 404);
+            return response()->json([
+                'status' => 0,
+            ]);
         }
 
         if ($ticketEvent->id !== $event->id) {
-            return $this->errorResponse("Invalid ticket", 404);
+            return response()->json([
+                'status' => 0,
+            ]);
         }
 
         $ticket = $purchasedTicket->ticket;
         $attendee = $purchasedTicket->payment->attendee;
 
         if (! $ticket->sessions()->where('id', $session->id)->exists()) {
-            return $this->errorResponse("Invalid ticket", 404);
+            return response()->json([
+                'status' => 0,
+            ]);
         }
 
         // Check if attendee has already checked in
-        $isCheckedin = false;
-        $lastCheckin = $session->attendances()->where('attendee_id', $attendee->id)->latest()->first();
-        if ($lastCheckin && $lastCheckin->checked_out === null) {
-            $isCheckedin = true;
+        $checkin = $session->attendances()->where('attendee_id', $attendee->id)->latest()->first();
+
+        if ($checkin) {
+            return response()->json([
+                'status' => 2,
+                'attendee' => [
+                    'id' => $attendee->id,
+                    'first_name' => $attendee->first_name,
+                    'last_name' => $attendee->last_name,
+                    'email' => $attendee->email,
+                    'company' => $attendee->company,
+                    'position' => $attendee->position,
+                    'phone' => $attendee->phone,
+                ],
+                'ticket' => [
+                    'name' => $ticket->name,
+                    'description' => $ticket->description,
+                    'type' => $ticket->type,
+                ],
+                'checkin' => $checkin,
+            ]);
         }
 
-        return $this->successResponse([
-            'message' => "Ticket is valid",
+        $checkin = $session->attendances()->create([
+            'attendee_id' => $attendee->id,
+            'checked_in' => now(),
+            'event_app_id' => $event->id,
+            'qr_code' => $purchasedTicket->qr_code,
+        ]);
+
+        return response()->json([
+            'status' => 1,
             'attendee' => [
                 'id' => $attendee->id,
                 'first_name' => $attendee->first_name,
@@ -94,8 +159,7 @@ class EventSessionController extends Controller
                 'description' => $ticket->description,
                 'type' => $ticket->type,
             ],
-            'is_checked_in' => $isCheckedin,
-            'last_check_in' => $lastCheckin,
+            'checkin' => $checkin,
         ]);
     }
 
@@ -111,7 +175,7 @@ class EventSessionController extends Controller
         ]);
 
         $purchasedTicket = AttendeePurchasedTickets::where('code', $request->code)->first();
-        
+
         $lastCheckin = $session->attendances()->where('attendee_id', $request->attendee_id)->latest()->first();
 
         if ($lastCheckin && $lastCheckin->checked_out === null) {
@@ -152,5 +216,16 @@ class EventSessionController extends Controller
         $lastCheckin->save();
 
         return $this->successMessageResponse("Checkout successfull", 200);
+    }
+
+    public function attendance(EventApp $event, EventSession $session)
+    {
+        if (! Auth::user()->can('view_session_attendence')) {
+            return $this->errorResponse("You don't have permission to view attendance", 403);
+        }
+
+        $attendance = SessionCheckIn::where('session_id', $session->id)->with(['attendee'])->orderBy('checked_in', 'desc')->get();
+
+        return $this->successResponse($attendance->toArray());
     }
 }

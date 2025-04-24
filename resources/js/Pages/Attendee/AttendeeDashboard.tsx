@@ -41,11 +41,11 @@ const AttendeeDashboard = ({ eventApp }: any) => {
                                                 alt="event default image"
                                             />
                                         </figure>
-
-                                        <DateDifferenceFromToday
-                                            date1={eventApp.start_date}
-                                        ></DateDifferenceFromToday>
-
+                                          
+                                                <DateDifferenceFromToday
+                                                    date1={ eventApp?.dates[0].date}
+                                                ></DateDifferenceFromToday>
+                                          
                                         <CardBody>
                                             <div className="p-4 pt-0">
                                                 <div className="d-flex align-items-center">
@@ -66,7 +66,7 @@ const AttendeeDashboard = ({ eventApp }: any) => {
                                                         <p className="text-dark-gray p-0 m-0">
                                                             {" "}
                                                             {moment(
-                                                                eventApp.start_date
+                                                                eventApp?.dates[0].date
                                                             ).format(
                                                                 "DD MMM YYYY"
                                                             )}{" "}
@@ -91,8 +91,8 @@ const AttendeeDashboard = ({ eventApp }: any) => {
                                         <CardBody>
                                             <div className="p-4 d-flex justify-content-between">
                                                 <h5>My Agenda</h5>
-                                                <h5>{eventApp.start_date &&moment(eventApp.start_date).isValid()? moment(eventApp.start_date).format(
-                                                              "DD MMM YYYY" ): ""}
+                                                <h5>
+                                                {" "}{moment(eventApp?.dates[0].date).format("DD MMM YYYY")}{" "}
                                                 </h5>
                                             </div>
                                         </CardBody>

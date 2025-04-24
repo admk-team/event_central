@@ -36,11 +36,16 @@ class AuthController extends Controller
         // Assign role-based ability
         $role = $type === 'attendee' ? 'attendee' : 'user';
         $token = $user->createToken('auth_token', ["role:$role"])->plainTextToken;
+        
+        if ($type !== 'attendee') {
+            setPermissionsTeamId($user->owner_id);
+        }
 
         return response()->json([
-            'user' => $user,
+            'user' => $user->toArray(),
             'role' => $role,
             'token' => $token,
+            ...($type !== 'attendee' ? ['permissions' => $user->getAllPermissions()->pluck('name') ?? []] : []),
         ]);
     }
 

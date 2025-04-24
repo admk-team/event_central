@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\Organizer\Event\EventStoreRequest;
 use App\Http\Requests\Organizer\Event\EventUpdateRequest;
 use App\Models\EventAppImage;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
@@ -30,7 +31,7 @@ class EventController extends Controller
         $recurring_types = RecurringType::get();
         $event_category_types = EventAppCategory::get();
         $events = $this->datatable(
-            EventApp::ofOwner()->with('images')->whereCanBeAccessedBy(Auth::user())
+            EventApp::ofOwner()->with(['images','dates'])->whereCanBeAccessedBy(Auth::user())
         );
 
         return Inertia::render('Organizer/Events/Index', [
@@ -75,7 +76,7 @@ class EventController extends Controller
     {
         $event = EventApp::ofOwner()->find($id);
 
-        if (! Auth::user()->can('edit_events', $event)) {
+        if (! Auth::user()->can('view_events', $event)) {
             abort(403);
         }
 
@@ -84,6 +85,8 @@ class EventController extends Controller
         }
 
         session()->put('event_id', $id);
+
+        Cache::forget("current_event_" . Auth::id());
 
         $back = (bool) ($request->back ?? true);
 

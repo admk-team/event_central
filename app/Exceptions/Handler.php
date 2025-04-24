@@ -2,12 +2,11 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Throwable;
+use Inertia\Inertia;
+use Illuminate\Support\Facades\URL;
+use Symfony\Component\HttpKernel\Exception\HttpException;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {
@@ -35,6 +34,22 @@ class Handler extends ExceptionHandler
         //     return response()->view('error.link-expired', [], 403);
         //     // return Inertia::render('Attendee/Auth/LinkExpired');
         // });
+
+        $this->renderable(function (Throwable $e, $request) {
+            if ($e instanceof HttpException) {
+
+                $status = $e->getStatusCode();
+                if ($status === 403) {
+                    $error = [
+                        // 'responseMessage' => 'At the moment, you are unable to utilize this feature. Kindly get in touch with us for assistance.',
+                        'responseMessage' => 'We apologize, but access to this feature is currently restricted. To unlock this feature, please consider upgrading your account or contacting support for assistance.',
+                        'responseStatus'  => 403,
+                    ];
+                    $previousroute = URL::previous();
+                    return Inertia::render('Error/Cover403', compact('previousroute'));
+                }
+            }
+        });
     }
 
     /**
@@ -61,4 +76,22 @@ class Handler extends ExceptionHandler
 
     //     return parent::render($request, $e);
     // }
+
+    /**
+     * Render an exception into an HTTP response.
+     *
+     * @param  Request  $request
+     * @param  Throwable  $e
+     * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @throws Throwable
+     */
+    public function render($request, Throwable $e)
+    {
+        // if ($e instanceof \Exception && $e->getMessage() == "Please set up your GTM account with a valid property ID and file.") {
+        //     return response()->view('pages.error.missing-gtm-account', [], 500);
+        // }
+
+        return parent::render($request, $e);
+    }
 }

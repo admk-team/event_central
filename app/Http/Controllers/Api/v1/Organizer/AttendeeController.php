@@ -23,7 +23,34 @@ class AttendeeController extends Controller
 
         return $this->successResponse(AttendeeResource::collection($attendees));
     }
+    public function search(EventApp $event, Request $request)
+    {
+        // Check if user has permission to view attendees
+        if (!Auth::user()->can('view_attendees')) {
+            return $this->errorResponse("Unauthorized", 403);
+        }
 
+        // Get the search query parameter
+        $search = $request->query('search');
+
+        // Query attendees for the event
+        $attendees = $event->attendees();
+
+        // Apply search filter if search term is provided
+        if ($search) {
+            $attendees = $attendees->where(function ($query) use ($search) {
+                $query->where('first_name', 'like', '%' . $search . '%')
+                      ->orWhere('last_name', 'like', '%' . $search . '%')
+                      ->orWhere('email', 'like', '%' . $search . '%');
+            });
+        }
+
+        // Execute query and get results
+        $attendees = $attendees->get();
+
+        // Return collection response
+        return $this->successResponse(AttendeeResource::collection($attendees));
+    }
     public function create(Request $request, EventApp $event)
     {
         if (! Auth::user()->can('create_attendees')) {
@@ -87,5 +114,51 @@ class AttendeeController extends Controller
         $attendee->update($validated);
 
         return $this->successResponse(new AttendeeResource($attendee));
+    }
+    public function attendeeTickets(Attendee $attendee)
+    {
+        if(!$attendee){
+            return response()->json([
+                'message' => 'Attendee Not Exist',
+            ]);
+        }
+        // Only eager load 'paid' payments with their nested relations
+        $attendee->load(['payments' => function ($query) {
+            $query->where('status', 'paid');
+        }, 'payments.purchased_tickets.ticket.ticketType']);
+
+        $paidPayments = $attendee->payments;
+
+        if ($paidPayments->isEmpty()) {
+            return response()->json([
+                'hasTickets' => false,
+            ]);
+        }
+
+        $image = [];
+        $eventApp = null;
+
+        foreach ($paidPayments as $payment) {
+            if (!$eventApp) {
+                $eventApp = EventApp::find($payment->event_app_id);
+            }
+
+            foreach ($payment->purchased_tickets as $purchasedTicket) {
+                $image[] = [
+                    'qr_code' => asset('storage/' . $purchasedTicket->qr_code),
+                    'purchased_id' => $purchasedTicket->id,
+                    'transfer_check' => $purchasedTicket->is_transfered,
+                    'ticket_name' => $purchasedTicket->ticket?->name ?? '',
+                    'ticket_type_name' => $purchasedTicket->ticket->ticketType->name ?? '',
+                ];
+            }
+        }
+
+        return response()->json([
+            'eventApp' => $eventApp,
+            'attendee' => $attendee,
+            'image' => $image,
+            'hasTickets' => true,
+        ]);
     }
 }

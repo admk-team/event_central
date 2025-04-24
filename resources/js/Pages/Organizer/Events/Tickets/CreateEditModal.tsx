@@ -36,7 +36,7 @@ export default function CreateEditModal({
     event_ticket_type: any;
 }) {
     // console.log(fees);
-    // console.log(ticket);
+    console.log(ticket);
 
     const isEdit = ticket != null ? true : false;
 
@@ -189,7 +189,7 @@ export default function CreateEditModal({
         }),
     };
     const [manageTypesModal, setmanageTypesModal] = useState(false);
-    function showModal() {        
+    function showModal() {
         setmanageTypesModal(!manageTypesModal);
     }
 
@@ -440,7 +440,6 @@ export default function CreateEditModal({
                                     {/* <Form.Label>Sessions</Form.Label> */}
                                     <Select
                                         placeholder="Select Event Sessions"
-                                        isDisabled={selectAllSession}
                                         className={errors.sessions && "is-invalid"}
                                         value={selectMulti}
                                         isMulti={true}
@@ -609,7 +608,7 @@ export default function CreateEditModal({
                     </button>
                 </div>
             </Modal>
-            <ManageTypes manageTypesModal={manageTypesModal} 
+            <ManageTypes manageTypesModal={manageTypesModal}
                         showModal={showModal}
                             partnerCategories={event_ticket_type}/>
         </>

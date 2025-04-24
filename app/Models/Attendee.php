@@ -77,6 +77,11 @@ class Attendee extends Authenticatable
         return $this->morphMany(AttendeePayment::class, 'payer');
     }
 
+    public function attendeeFavSession()
+    {
+        return $this->hasMany(AttendeeFavSession::class);
+    }
+
     public function purchased_tickets()
     {
         $tickets =  AttendeePurchasedTickets::where(function ($subQuery) {
@@ -85,7 +90,23 @@ class Attendee extends Authenticatable
                 $subSubQuery->where('is_transfered', 0);
             });
             $subQuery->orWhere('transfered_to_attendee_id', $this->id);
-        })->get();
+        })->with(['ticket'])->get();
         return $tickets;
+    }
+    public function sessionRatings()
+    {
+        return $this->belongsToMany(EventSession::class, 'session_ratings')->withPivot('rating', 'rating_description')->withTimestamps();
+    }
+
+    public function eventCheckin()
+    {
+        return $this->hasOne(EventCheckIns::class, 'attendee_id');
+    }
+
+    public function ratedSessions()
+    {
+        return $this->belongsToMany(EventSession::class, 'session_ratings', 'attendee_id', 'event_session_id')
+            ->withPivot('rating', 'rating_description')
+            ->withTimestamps();
     }
 }

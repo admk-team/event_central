@@ -125,6 +125,19 @@ const Navdata = () => {
             },
         },
         {
+            id: "more",
+            label: "Favourite",
+            icon: "bx bxs-heart",
+            link: route("all.fav.sessions"),
+            stateVariables: isMore,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsMore(!isMore);
+                setIscurrentState("More");
+                updateIconSidebar(e);
+            },
+        },
+        {
             id: "tickets",
             label: "Tickets",
             icon: "bx bx-qr",

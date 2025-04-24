@@ -30,7 +30,7 @@ const AttendeeEventInfoBox = () => {
                                 <img
                                     src={eventInfo.logo_img}
                                     alt="attendee event bg"
-                                    width={'350px'}
+                                    width={"350px"}
                                 />
                             </div>
                         )}
@@ -58,9 +58,10 @@ const AttendeeEventInfoBox = () => {
                         >
                             <h2 className="text-center">{eventInfo.name}</h2>
                             <h5 className="text-muted">
-                                {moment(eventInfo.start_date).format(
-                                    "D MMM, YYYY"
-                                )}
+                                {" "}
+                                {moment(eventInfo?.dates[0].date).format(
+                                    "DD MMM YYYY"
+                                )}{" "}
                             </h5>
                             <span className="text-justify h-75">
                                 {eventInfo.description}

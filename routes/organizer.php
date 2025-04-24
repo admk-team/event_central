@@ -34,6 +34,7 @@ use App\Http\Controllers\Organizer\Event\Settings\QuestionnaireFormSettingsContr
 use App\Http\Controllers\Organizer\Event\Settings\RegistrationFormSettingsController;
 use App\Http\Controllers\Organizer\Event\Settings\WebsiteSettingsController;
 use App\Http\Controllers\Organizer\Event\TrackController;
+use App\Http\Controllers\Organizer\Event\UpgradeTicketController;
 use App\Http\Controllers\Organizer\Event\WebsiteController;
 use App\Http\Controllers\Organizer\Event\WorkshopController;
 use App\Http\Controllers\Organizer\ProfileController;
@@ -50,6 +51,8 @@ Route::prefix('e/{uuid}')->name('organizer.events.website')->group(function () {
     Route::get('speakers', [WebsiteController::class, 'speakers'])->name('.speakers');
     Route::get('sponsors', [WebsiteController::class, 'sponsors'])->name('.sponsors');
     Route::get('tickets', [WebsiteController::class, 'tickets'])->name('.tickets');
+    Route::get('privacy-policy', [WebsiteController::class, 'privacypolicy'])->name('.privacy');
+    Route::get('contact-us', [WebsiteController::class, 'contactus'])->name('.contactus');
     Route::get('{slug}', [WebsiteController::class, 'page'])->name('.page');
 });
 
@@ -102,6 +105,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::get('attendee/info/{id}', [AttendeeController::class, 'showInfo'])->name('attendee.info');
             Route::get('attendee/qrcode/{attendee}', [AttendeeController::class, 'qrCodeAttendee'])->name('attendee.qrcode');
             Route::put('/attendee/profile/update/{id}', [AttendeeController::class, 'updateAttendee'])->name('attendee.profile.update');
+            Route::post('/attendee/event-checkin/{attendee}', [AttendeeController::class, 'eventChechIn'])->name('attendee.event-checkin');
             Route::post('/attendee/checkin', [AttendeeController::class, 'chechIn'])->name('attendee.checkin');
 
             // Wordshop
@@ -128,11 +132,17 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::resource('addon', AddonController::class)->only(['index', 'store', 'update', 'destroy']);
             // Route::get('addon/{event_app_ticket_id?}', [AddonController::class, 'getAllAddons'])->name('fetch');
             Route::delete('addon/delete/many', [AddonController::class, 'destroyMany'])->name('addon.destroy.many');
-            Route::get('event/tickets', [EventTicketsController::class, 'index'])->name('event.tickets');
+            Route::get('payments', [EventTicketsController::class, 'index'])->name('payments');
 
             //refund payments
             Route::get('refund/tickets', [RefundPaymentController::class, 'refundTickets'])->name('refund.tickets');
             Route::post('attendee/refundticket', [RefundPaymentController::class, 'attendeeRefund'])->name('attendee.refund');
+
+            //Upgrade payments
+            Route::get('upgrade/tickets', [UpgradeTicketController::class, 'upgradeTickets'])->name('tickets.upgrade');
+            Route::post('upgrade/tickets', [UpgradeTicketController::class, 'saveTicketUpgrade'])->name('save.ticket.upgrade');
+
+
             // Promo Codes
             Route::resource('promo-codes', EventPromoCodeController::class)->only(['index', 'store', 'update', 'destroy']);
             Route::delete('promo-codes/delete/many', [EventPromoCodeController::class, 'destroyMany'])->name('promo-codes.destroy.many');

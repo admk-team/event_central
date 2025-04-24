@@ -294,7 +294,7 @@ function ImportModal({
                                             </div>
                                             <span className="text-muted fw-normal text-start">Please don't change the given attributes</span>
                                             <textarea className="border p-3 rounded-3 w-100 mt-3" cols={30} rows={8}
-                                                placeholder='e.g. name, email, phone number etc.'
+                                                placeholder='e.g. name, email, phone number, position, location etc.'
                                                 onChange={(e) => setImportText(e.target.value)}
                                                 value={importText || ""}
                                             >
@@ -316,7 +316,7 @@ function ImportModal({
                                             // Convert filteredAttributes to react-select format
                                             const filteredOptions = availableAttributes
                                                 .filter((attr) => !usedAttributes.includes(attr))
-                                                .map((attr) => ({ label: attr, value: attr }));
+                                                .map((attr) => ({ label: attr.replace('_', ' '), value: attr }));
 
                                             return (
                                                 <div key={header} className="d-flex align-items-center mb-3">

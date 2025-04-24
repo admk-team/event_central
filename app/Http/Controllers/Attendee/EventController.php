@@ -2,19 +2,22 @@
 
 namespace App\Http\Controllers\Attendee;
 
-use App\Http\Controllers\Controller;
-use App\Models\EventApp;
-use App\Models\EventAppDate;
-use App\Models\EventPlatform;
-use App\Models\EventSession;
-use App\Models\EventPost;
-use App\Models\EventSpeaker;
-use App\Models\SessionCheckIn;
-use App\Models\Track;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use App\Models\Track;
+use App\Models\EventApp;
+use App\Models\EventPost;
+use App\Models\EventAppDate;
+use App\Models\EventSession;
+use App\Models\EventSpeaker;
+use Illuminate\Http\Request;
+use App\Models\EventPlatform;
+use App\Models\SessionRating;
+use App\Models\SessionCheckIn;
+use App\Models\AttendeeFavSession;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\Api\AttendeeFavSessionResource;
 
 class EventController extends Controller
 {
@@ -22,8 +25,17 @@ class EventController extends Controller
     public function getEventDetailDashboard()
     {
         $eventApp = EventApp::find(Auth::user()->event_app_id);
-        $eventApp->load(['event_sessions.eventSpeakers', 'event_sessions.eventPlatform']);
+        $eventApp->load(['event_sessions.eventSpeakers', 'event_sessions.eventPlatform', 'dates']);
         return Inertia::render('Attendee/AttendeeDashboard', compact([
+            'eventApp',
+        ]));
+    }
+
+    public function allfavouriteSession()
+    {
+        $eventApp = EventApp::find(Auth::user()->event_app_id);
+        $eventApp->load(['event_sessions.eventSpeakers', 'event_sessions.eventPlatform', 'dates']);
+        return Inertia::render('Attendee/Favourite/Index', compact([
             'eventApp',
         ]));
     }
@@ -35,17 +47,17 @@ class EventController extends Controller
         $eventdates = EventAppDate::where('event_app_id', $eventApp->id)->with('eventSessions')->get();
         $tracks = Track::where('event_app_id', $eventApp->id)->get();
         $enableTracks = eventSettings($eventApp->id)->getValue('enable_tracks', false);
-        $eventPlatforms = EventPlatform::where('event_app_id', $eventApp->id )->get();
+        $eventPlatforms = EventPlatform::where('event_app_id', $eventApp->id)->get();
         $eventApp->load([
             'event_sessions.eventSpeakers',
             'event_sessions.eventPlatform'
         ]);
-        return Inertia::render('Attendee/AttendeeAgenda', compact('eventApp', 'eventdates','tracks', 'enableTracks', 'eventPlatforms'));
+        return Inertia::render('Attendee/AttendeeAgenda', compact('eventApp', 'eventdates', 'tracks', 'enableTracks', 'eventPlatforms'));
     }
 
     public function getEventSessionDetail(Request $request, EventSession $eventSession)
     {
-        $checkin = SessionCheckIn::where('attendee_id',auth()->user()->id)->where('session_id',$eventSession->id)->exists();
+        $checkin = SessionCheckIn::where('attendee_id', auth()->user()->id)->where('session_id', $eventSession->id)->exists();
         $eventApp = EventApp::find(Auth::user()->event_app_id);
 
         // Finding previous and next session IDs with reference to current session
@@ -63,14 +75,15 @@ class EventController extends Controller
         // $next_session_id = $sessions->after($eventSession->id);
         // $prev_session_id = $sessions->before($eventSession->id);
 
-        $eventSession->load(['eventSpeakers', 'attendees', 'eventDate', 'eventPlatform']);
+        $eventSession->load(['eventSpeakers', 'attendees', 'eventDate', 'eventPlatform', 'attendeesRating']);
         $selectedSessionDetails = DB::table('attendee_event_session')
             ->where(function ($query) use ($eventSession) {
                 $query->where('attendee_id', auth()->user()->id);
                 $query->where('event_session_id', $eventSession->id);
             })
             ->first();
-            // dd($eventSession->eventPlatform->name);
+        $attendeeRating = SessionRating::where('attendee_id', auth()->user()->id)
+            ->where('event_session_id', $eventSession->id)->first();
         return Inertia::render('Attendee/AttendeeSessionDetail', compact([
             'eventApp',
             'eventSession',
@@ -78,6 +91,7 @@ class EventController extends Controller
             'prev_session_id',
             'next_session_id',
             'checkin',
+            'attendeeRating',
         ]));
     }
 
@@ -107,9 +121,36 @@ class EventController extends Controller
 
     public function getPostsMore(String $id)
     {
-        $attendee= Auth::user()->id;
+        $attendee = Auth::user()->id;
         $eventApp = EventApp::find(Auth::user()->event_app_id);
-        $newsfeeds = EventPost::where('event_app_id', $eventApp->id)->where('session_id',$id)->get();
-        return Inertia::render('Attendee/Posts/Index', compact(['eventApp', 'newsfeeds','attendee']));
+        $newsfeeds = EventPost::where('event_app_id', $eventApp->id)->where('session_id', $id)->get();
+        return Inertia::render('Attendee/Posts/Index', compact(['eventApp', 'newsfeeds', 'attendee']));
+    }
+
+    public function favsession($sessionid)
+    {
+        $attendee = auth()->user();
+
+        $alreadyfav = AttendeeFavSession::where('attendee_id', $attendee->id)->where('event_session_id', $sessionid)->first();
+
+        if ($alreadyfav) {
+            $toggelAlreadyFav = $alreadyfav->fav;
+            if ($toggelAlreadyFav == 1) {
+                $toggelAlreadyFav = 0;
+                $alreadyfav->update(['fav' => $toggelAlreadyFav]);
+            } else {
+                $toggelAlreadyFav = 1;
+                $alreadyfav->update(['fav' => $toggelAlreadyFav]);
+            }
+        } else {
+            $alreadyfav = AttendeeFavSession::create([
+                'attendee_id' => $attendee->id,
+                'event_app_id' => $attendee->event_app_id,
+                'event_session_id' => $sessionid,
+                'fav' => 1,
+            ]);
+        }
+
+        return back()->withSuccess("Session added to favourite");
     }
 }

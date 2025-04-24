@@ -20,6 +20,7 @@ class EventSessionResource extends JsonResource
             'event_speakers' => EventSpeakerResource::collection($this->whenLoaded('eventSpeakers')),
             'event_platform' => new EventPlatformResource($this->whenLoaded('eventPlatform')),
             'event_date' => new EventDateResource($this->whenLoaded('eventDate')),
+            'tracks' => TrackResource::collection($this->whenLoaded('tracks')),
             'event_date_id' => $this->event_date_id,
             'name' => $this->name,
             'type' => $this->type,
@@ -30,6 +31,7 @@ class EventSessionResource extends JsonResource
             'start_time' => $this->start_time,
             'end_time' => $this->end_time,
             'selected_by_attendee' => $this->selected_by_attendee,
+            'is_favourite' => $this->is_favourite,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
