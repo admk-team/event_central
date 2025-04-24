@@ -30,6 +30,11 @@ class Addon extends Model
         return $this->belongsTo(EventApp::class);
     }
 
+    public function checkins()
+    {
+        return $this->hasMany(AddonCheckIn::class);
+    }
+
     public function scopeCurrentEvent($query)
     {
         $query->where('event_app_id', session('event_id'));
