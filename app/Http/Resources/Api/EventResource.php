@@ -33,6 +33,7 @@ class EventResource extends JsonResource
             'public_tickets' => PublicTicketResource::collection($this->whenLoaded('public_tickets')),
             'images' => EventImageResource::collection($this->whenLoaded('images')),
             'featured_image' => $this->featured_image,
+            'logo_img' => $this->logo_img,
             // 'applicant_answer' => AnswerResource::collection($this->whenLoaded('applicantAnswer')),
         ];
     }
