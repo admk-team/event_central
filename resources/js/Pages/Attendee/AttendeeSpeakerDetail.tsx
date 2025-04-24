@@ -5,7 +5,7 @@ import Rating from "react-rating";
 //https://codesandbox.io/p/sandbox/react-drag-and-drop-sortablelist-g205n
 //import Components
 
-import { Head, Link, } from '@inertiajs/react';
+import { Head, Link, useForm } from '@inertiajs/react';
 import Layout from '../../Layouts/Attendee';
 
 import speakerAvatar from '../../../images/speaker_avatar.svg';
@@ -17,7 +17,7 @@ const AttendeeSpeakerDetail = ({ eventApp, eventSpeaker }: any) => {
 
     const [sessions, setSessions] = useState([]);
     const [currentSpeaker, setCurrentSpeaker] = useState(eventSpeaker);
-
+    const { data, setData, get, processing, errors, reset, transform, clearErrors } = useForm({});
     const handleSpeakerChange = ((event: any, speaker: any) => {
         let elements: any = document.getElementsByClassName('active-list-item');
 
@@ -34,6 +34,19 @@ const AttendeeSpeakerDetail = ({ eventApp, eventSpeaker }: any) => {
             <ListGroup.Item className={"mb-1 " + ((!eventSpeaker.id && index === 0) || (eventSpeaker.id === speaker.id) ? 'active-list-item' : '')} >{speaker.name}</ListGroup.Item>
         </a>
     );
+
+    const sessionFav = (sessionId: any) => {
+        console.log(sessionId);
+        get(route('fav.sessions', sessionId), {
+            onSuccess: (data) => {
+                console.log(data)
+            },
+            onError: (error) => {
+                console.log(error);
+                console.log(errors);
+            }
+        });
+    };
 
     useEffect(() => {
         if (!eventSpeaker.id) {
@@ -93,8 +106,16 @@ const AttendeeSpeakerDetail = ({ eventApp, eventSpeaker }: any) => {
 
                                                         </Col>
                                                         <Col className='d-flex flex-column align-items-end'>
-                                                            {!session.selected_by_attendee && < i className='bx bx-heart fs-3 float-right'></i>}
-                                                            {session.selected_by_attendee && < i className='bx bxs-heart fs-3 text-danger' style={{ float: 'right' }}></i>}
+                                                            {!session.is_favourite && < i className='bx bx-heart fs-3 float-right' onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                e.preventDefault();
+                                                                sessionFav(session.id)
+                                                            }}></i>}
+                                                            {session.is_favourite && < i className='bx bxs-heart fs-3 text-danger' style={{ float: 'right' }} onClick={(e) => {
+                                                                e.stopPropagation();
+                                                                e.preventDefault();
+                                                                sessionFav(session.id)
+                                                            }}></i>}
                                                             <span>{moment(session.start_date_time).format('MMM DD, YYYY')}</span>
                                                             <span style={{ color: 'var(--vz-success)' }}>{moment(session.start_date_time).format('h:mm A') + ' - ' + moment(session.end_date_time).format('h:mm A')}</span>
                                                         </Col>
