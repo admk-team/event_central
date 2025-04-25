@@ -61,8 +61,11 @@ class EventController extends Controller
         $enableTracks = eventSettings($eventApp->id)->getValue('enable_tracks', false);
         $eventPlatforms = EventPlatform::where('event_app_id', $eventApp->id)->get();
         $eventApp->load([
-            'event_sessions.eventSpeakers',
-            'event_sessions.eventPlatform'
+            'event_sessions' => [
+                'eventSpeakers',
+                'eventPlatform',
+                'tracks',
+            ]
         ]);
         return Inertia::render('Attendee/AttendeeAgenda', compact('eventApp', 'eventdates', 'tracks', 'enableTracks', 'eventPlatforms'));
     }
