@@ -49,6 +49,8 @@ const EventSessionsTimeLine: React.FC<EventSessionsTimeLineProps> = ({ eventApp,
                 selectedTracks.length === 0 ||
                 session.tracks?.some((track: boolean) => selectedTracks.includes(track.id));
 
+            console.log("match", isTrackMatch, session.tracks);
+
             const isPlatformMatch =
                 selectedPlatforms.length === 0 ||
                 selectedPlatforms.includes(session.event_platform?.id);
@@ -145,7 +147,7 @@ const EventSessionsTimeLine: React.FC<EventSessionsTimeLineProps> = ({ eventApp,
             </div>
 
             {/* Tracks Filter */}
-            {enableTracks && tracks.length > 0 && (
+            {(enableTracks && tracks.length) > 0 && (
                 <div className="tracks text-center mt-4">
                     <h4>Tracks:</h4>
                     <div className="tracks-filter d-flex flex-wrap justify-content-center gap-2">

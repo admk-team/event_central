@@ -39,8 +39,11 @@ class EventController extends Controller
         $enableTracks = eventSettings($eventApp->id)->getValue('enable_tracks', false);
         $eventPlatforms = EventPlatform::where('event_app_id', $eventApp->id)->get();
         $eventApp->load([
-            'event_sessions.eventSpeakers',
-            'event_sessions.eventPlatform'
+            'event_sessions' => [
+                'eventSpeakers',
+                'eventPlatform',
+                'tracks',
+            ]
         ]);
         $partnerCategories = EventPartnerCategory::where('event_app_id', $eventApp->id)->with(['partners'])->get();
         $exhibitors = EventPartner::where('event_app_id', $eventApp->id)->where('type', 'exhibitor')->orderBy('company_name', 'asc')->get();
@@ -181,6 +184,7 @@ class EventController extends Controller
         ];
 
         return response()->json([
+            'eventSession' => $eventSession,
             'averageRating' => round($averageRating, 1),
             'ratedAttendees' => $ratedAttendees,
             'currentAttendeeRating' => $currentAttendeeRating ? [

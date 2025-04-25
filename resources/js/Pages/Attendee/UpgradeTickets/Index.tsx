@@ -400,9 +400,14 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
                             <Row>
                                 <Col>
                                     <div className="container border border-1 bg-white rounded-3 p-4 shadow-sm">
-                                        <span className="fs-5 mb-2">
-                                            Event Sessions
-                                        </span>
+                                        <div className="d-flex justify-content-between align-items-center">
+                                            <span className="fs-4 mb-2">
+                                                Event Sessions
+                                            </span>
+                                            <span className="fs-4 mb-2">
+                                                Total Amount :{" "}
+                                            </span>
+                                        </div>
                                         <div className="mt-4 row">
                                             {filteredSessions &&
                                                 filteredSessions.map(

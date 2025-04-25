@@ -26,7 +26,8 @@ class EventSession extends Model
         'qa_status',
         'event_app_id',
         'posts',
-        'price'
+        'rating_status',
+        'price',
     ];
 
     // Removed event_speaker_id from fillable since we're using a pivot table

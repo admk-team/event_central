@@ -163,6 +163,22 @@ export default function SessionCard({
                                                 {/* Attractive text styling */}
                                             </Link>
                                         )}
+                                         <Link
+                                                href={route(
+                                                    "organizer.sessions.ratings.index",
+                                                    {
+                                                        eventSession: session.id,
+                                                    }
+                                                )}
+                                                className="d-flex align-items-center text-decoration-none"
+                                            >
+                                                <i className="bx bx-star fs-4 text-primary"></i>{" "}
+                                                {/* Q&A Icon */}
+                                                <span className="fw-bold text-primary ms-1">
+                                                    Ratings
+                                                </span>{" "}
+                                                {/* Attractive text styling */}
+                                            </Link>
                                     </div>
                                 </div>
                             </div>

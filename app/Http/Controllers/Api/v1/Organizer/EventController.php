@@ -19,7 +19,9 @@ class EventController extends Controller
         }
 
         $events = EventApp::ofOwner()
-            ->with('images')
+            ->with(['images', 'dates' => function ($query) {
+                $query->orderBy('date', 'asc');
+            }])
             ->whereCanBeAccessedBy($request->user())
             ->get();
 
@@ -32,7 +34,9 @@ class EventController extends Controller
             return $this->errorResponse("Unauthorized", 403);
         }
 
-        $event->load(['images']);
+        $event->load(['images', 'dates' => function ($query) {
+                $query->orderBy('date', 'asc');
+        }]);
 
         return $this->successResponse(new EventResource($event));
     }
