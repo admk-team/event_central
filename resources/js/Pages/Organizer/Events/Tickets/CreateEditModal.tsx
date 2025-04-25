@@ -36,7 +36,6 @@ export default function CreateEditModal({
     event_ticket_type: any;
 }) {
     // console.log(fees);
-    console.log(ticket);
 
     const isEdit = ticket != null ? true : false;
 
@@ -45,7 +44,7 @@ export default function CreateEditModal({
             _method: isEdit ? "PUT" : "POST",
             event_app_id: ticket?.event_app_id ?? "",
             sessions: ticket?.selected_sessions ?? [],
-            addons: ticket?.selected_addons ?? [],
+            addons: ticket?.selected_addons.map((item: any) => item.value) ?? [],
             fees: ticket?.fees ?? [],
             name: ticket?.name ?? "",
             description: ticket?.description ?? "",
@@ -66,13 +65,8 @@ export default function CreateEditModal({
     );
     const [selectAllSession, setSelectAllSession] = useState<any>(false);
 
-    const [selectMultiAddon, setselectMultiAddon] = useState<any>(
-        ticket?.selected_addons ?? null
-    );
     const [selectAllAddons, setSelectAllAddons] = useState<any>(false);
     const [selectedFees, setSelectedFees] = useState<any>(ticket?.fees ?? []);
-
-    console.log(selectedFees);
 
     const submit = (e: any) => {
         e.preventDefault();
@@ -112,11 +106,10 @@ export default function CreateEditModal({
 
     const handleCheckChangeAddon = (event: any) => {
         if (event.target.checked) {
-            setselectMultiAddon(addons);
-            setData("addons", addons);
+            setData("addons", addons.map((item: any) => item.value));
             setSelectAllAddons(true);
         } else {
-            setselectMultiAddon([]);
+            setData("addons", []);
             setSelectAllAddons(false);
         }
     };
@@ -479,13 +472,11 @@ export default function CreateEditModal({
                                     {/* <Form.Label>Sessions</Form.Label> */}
                                     <Select
                                         placeholder="Select Add-ons"
-                                        isDisabled={selectAllAddons}
                                         className={errors.addons && "is-invalid"}
-                                        value={selectMultiAddon}
+                                        value={addons.filter((item: any) => data.addons.includes(item.value))}
                                         isMulti={true}
                                         onChange={(list: any) => {
-                                            setselectMultiAddon(list);
-                                            setData("addons", list);
+                                            setData("addons", list.map((item: any) => item.value));
                                         }}
                                         options={addons}
                                         classNamePrefix={

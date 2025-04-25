@@ -74,9 +74,7 @@ class EventAppTicket extends Model
         // Ordering and selecting appended property of model
         // and being used as preselected Select2 Options
 
-        $addons_collection = Cache::remember('addons_collection_' . $this->id, now()->addMinutes(5), function () {
-            return $this->addons()->orderBy('name')->get();
-        });
+        $addons_collection = $this->addons()->orderBy('name')->get();
 
         return $addons_collection->map(function ($addon) {
             return ['value' => $addon->id, 'label' => $addon->full_name];
