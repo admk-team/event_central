@@ -464,58 +464,58 @@ const AttendeeSessionDetail = ({
                                             </Accordion.Body>
                                         </Accordion.Item> */}
                                     </Accordion>
-
+                                    {eventSession?.rating_status == 1 && (
                                     <Card className="mt-4">
-      <CardBody>
-        {/* Attendee Ratings with Average */}
-        {ratedAttendees.length > 0 && (
-          <div className="d-flex align-items-center mb-4">
-            <span className="fs-3 me-3 mb-0">Attendee Ratings</span>
-            {[...Array(5)].map((_, i) => (
-              <i
-                key={i}
-                className={`bx ${i < averageRating ? 'bxs-star text-primary' : 'bx-star text-muted'}`}
-              ></i>
-            ))}
-            <span className="ms-3 text-muted">({averageRating.toFixed(1)})</span>
-          </div>
-        )}
+                                        <CardBody>
+                                            {/* Attendee Ratings with Average */}
+                                            {ratedAttendees.length > 0 && (
+                                            <div className="d-flex align-items-center mb-4">
+                                                <span className="fs-3 me-3 mb-0">Attendee Ratings</span>
+                                                {[...Array(5)].map((_, i) => (
+                                                <i
+                                                    key={i}
+                                                    className={`bx ${i < averageRating ? 'bxs-star text-primary' : 'bx-star text-muted'}`}
+                                                ></i>
+                                                ))}
+                                                <span className="ms-3 text-muted">({averageRating.toFixed(1)})</span>
+                                            </div>
+                                            )}
 
-        {/* Individual Ratings with Scroll */}
-        <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
-          {ratedAttendees.length > 0 ? (
-            [...ratedAttendees].reverse().map((attendee, index) => (
-              <div key={index} className="d-flex align-items-start mb-3">
-                <img
-                  src={attendee.avatar || '/default-avatar.png'}
-                  alt={attendee.first_name}
-                  className="rounded-circle me-3"
-                  width={50}
-                  height={50}
-                />
-                <div>
-                  <h6 className="mb-1">{attendee.first_name}</h6>
-                  <div className="d-flex align-items-center mb-1">
-                    {[...Array(5)].map((_, i) => (
-                      <i
-                        key={i}
-                        className={`bx ${
-                          i < (attendee.pivot.rating || 0) ? 'bxs-star text-primary' : 'bx-star text-muted'
-                        }`}
-                      ></i>
-                    ))}
-                  </div>
-                  <p className="mb-0 text-muted">{attendee.pivot.rating_description || 'No description provided'}</p>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p>No ratings available for this session yet.</p>
-          )}
-        </div>
-      </CardBody>
-    </Card>
-
+                                            {/* Individual Ratings with Scroll */}
+                                            <div style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                                            {ratedAttendees.length > 0 ? (
+                                                [...ratedAttendees].reverse().map((attendee, index) => (
+                                                <div key={index} className="d-flex align-items-start mb-3">
+                                                    <img
+                                                    src={attendee.avatar || '/default-avatar.png'}
+                                                    alt={attendee.first_name}
+                                                    className="rounded-circle me-3"
+                                                    width={50}
+                                                    height={50}
+                                                    />
+                                                    <div>
+                                                    <h6 className="mb-1">{attendee.first_name}</h6>
+                                                    <div className="d-flex align-items-center mb-1">
+                                                        {[...Array(5)].map((_, i) => (
+                                                        <i
+                                                            key={i}
+                                                            className={`bx ${
+                                                            i < (attendee.pivot.rating || 0) ? 'bxs-star text-primary' : 'bx-star text-muted'
+                                                            }`}
+                                                        ></i>
+                                                        ))}
+                                                    </div>
+                                                    <p className="mb-0 text-muted">{attendee.pivot.rating_description || 'No description provided'}</p>
+                                                    </div>
+                                                </div>
+                                                ))
+                                            ) : (
+                                                <p>No ratings available for this session yet.</p>
+                                            )}
+                                            </div>
+                                        </CardBody>
+                                    </Card>
+                                    )}
                                 </Col>
                             </Row>
                         </Col>

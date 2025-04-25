@@ -95,6 +95,7 @@ export default function CreateEditSessionModal({
         end_time: eventSession?.end_time ?? "00:00",
         qa_status: eventSession?.qa_status ?? 0,
         posts: eventSession?.posts ?? false,
+        rating_status: eventSession?.rating_status ?? 0,
         tracks: eventSession?.tracks.map((track: any) => track.id) ?? [],
     });
 
@@ -206,7 +207,7 @@ export default function CreateEditSessionModal({
                             data.type === "Workshop") && (
                             <>
                                 <Row className="mt-3 mb-3">
-                                    <Col md={6}>
+                                    <Col md={4}>
                                         <Form.Check
                                             type="switch"
                                             id="qa-status-switch"
@@ -225,7 +226,7 @@ export default function CreateEditSessionModal({
                                             </Form.Text>
                                         )}
                                     </Col>
-                                    <Col md={6}>
+                                    <Col md={4}>
                                         <div className="form-check form-switch">
                                             <Form.Check.Input
                                                 type="checkbox"
@@ -248,6 +249,25 @@ export default function CreateEditSessionModal({
                                                     : "Enable Posts"}
                                             </Form.Check.Label>
                                         </div>
+                                    </Col>
+                                    <Col md={4}>
+                                        <Form.Check
+                                            type="switch"
+                                            id="rating_status-switch"
+                                            label="Show Rating"
+                                            checked={!!data.rating_status}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "rating_status",
+                                                    e.target.checked
+                                                )
+                                            }
+                                        />
+                                        {errors.rating_status && (
+                                            <Form.Text className="text-danger">
+                                                {errors.rating_status}
+                                            </Form.Text>
+                                        )}
                                     </Col>
                                 </Row>
                             </>

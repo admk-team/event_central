@@ -48,6 +48,7 @@ class EventSessionController extends Controller
         if ($data['type'] == "Break") {
             $data['qa_status'] = false;
             $data['posts'] = false;
+            $data['rating_status'] = false;
         }
         $data['event_app_id'] = session('event_id');
 
@@ -83,6 +84,7 @@ class EventSessionController extends Controller
         if ($data['type'] == "Break") {
             $data['qa_status'] = false;
             $data['posts'] = false;
+            $data['rating_status'] = false;
         }
 
         // Handle speakers separately
