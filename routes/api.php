@@ -37,7 +37,7 @@ Route::prefix('user')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->defaults('type', 'user');
 
     Route::middleware(['auth:sanctum', 'ability:role:user'])->group(function () {
-        Route::delete('delete/{user}', [AuthController::class, 'delete'])->name('user.delete');
+        Route::delete('delete/{user}', [AuthController::class, 'delete'])->name('user.delete')->defaults('type', 'user');
         Route::get('/me', function (Request $request) {
             return $request->user();
         });
@@ -127,7 +127,7 @@ Route::prefix('attendee')->group(function () {
         Route::get('/me', function (Request $request) {
             return $request->user();
         });
-        Route::delete('delete/{attendee}', [AuthController::class, 'delete'])->name('attendee.delete');
+        Route::delete('delete/{attendee}', [AuthController::class, 'delete'])->name('attendee.delete')->defaults('type', 'attendee');
         Route::post('profile/update/{attendee}', [ProfileController::class, 'update']);
         Route::post('/logout', [AuthController::class, 'logout']);
 

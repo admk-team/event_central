@@ -56,10 +56,15 @@ class AuthController extends Controller
         return response()->json(['message' => 'Logged out']);
     }
 
-    public function delete($id)
+    public function delete($id, $type)
     {
+        // Determine the model based on type
+        if ($type === 'attendee') {
+            $attendee = Attendee::findOrFail($id);
+        } else {
+            $attendee = User::findOrFail($id);
+        }
 
-        $attendee = Attendee::findOrFail($id) ? Attendee::findOrFail($id) : User::findOrFail($id);
         $attendee->tokens()->delete();
         $attendee->delete();
 
