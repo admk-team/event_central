@@ -22,6 +22,9 @@ class RegisterController extends Controller
         ]);
 
         $event = EventApp::findOrFail($eventId);
+        $url = route('organizer.events.website', $event->uuid);
+        $title = str_replace(' ', '-', $event->name);
+        $personal_url = $url . '?link=' . $title . '-' . $event->uuid;
         $attendee = new Attendee();
         $attendee->first_name = $request->first_name;
         $attendee->last_name = $request->last_name;
@@ -31,6 +34,7 @@ class RegisterController extends Controller
         $attendee->password = Hash::make($request->password);
         $attendee->event_app_id  = $event->id;
         $attendee->type = "anonymous";
+        $attendee->personal_url =  $personal_url ?? null;
         $attendee->save();
 
         $token = $attendee->createToken('auth_token', ["role:attendee"])->plainTextToken;

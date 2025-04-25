@@ -8,13 +8,15 @@ use App\Models\EventPartner;
 use App\Models\EventPartnerCategory;
 use App\Models\EventPlatform;
 use App\Models\Page;
+use App\Models\RefferalLink;
 use App\Models\Track;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Log;
 
 class WebsiteController extends Controller
 {
-    public function index($uuid)
+    public function index(Request $request, $uuid)
     {
         $event = EventApp::where('uuid', $uuid)->first();
 
@@ -25,6 +27,24 @@ class WebsiteController extends Controller
         $colors = eventSettings($event->id)->getValue('website_colors', config('event_website.colors'));
         $partnerCategories = EventPartnerCategory::where('event_app_id', $event->id)->with(['partners'])->get();
 
+
+        $currentUrl = $request->fullUrl();
+        $link = $request->query('link');
+        // Check if the session already has the 'visited_url' set
+        if ($link) {
+            if (!session()->has('referral_link')) {
+                // If not, store the full URL in the session
+                session(['referral_link' => $currentUrl]);
+                Log::info('URL set in session: ' . $currentUrl);
+                if (session('referral_link')) {
+                    $link = RefferalLink::where('url', $currentUrl)->first();
+                    if ($link) {
+                        $link->nextcount += 1;
+                        $link->save();
+                    }
+                }
+            }
+        }
         return view('event-website.index', compact('event', 'colors', 'partnerCategories'));
     }
 
@@ -69,7 +89,7 @@ class WebsiteController extends Controller
         $colors = eventSettings($event->id)->getValue('website_colors', config('event_website.colors'));
         $partnerCategories = EventPartnerCategory::where('event_app_id', $event->id)->with(['partners'])->get();
         $exhibitors = EventPartner::where('event_app_id', session('event_id'))->where('type', 'exhibitor')->orderBy('company_name', 'asc')->get();
-        
+
         return view('event-website.sponsors', compact('event', 'colors', 'partnerCategories', 'exhibitors'));
     }
     public function tickets($uuid)

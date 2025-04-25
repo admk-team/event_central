@@ -42,7 +42,9 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request, EventApp $eventApp): RedirectResponse
     {
-
+        $url = route('organizer.events.website', $eventApp->uuid);
+        $title = str_replace(' ', '-', $eventApp->name);
+        $personal_url = $url . '?link=' . $title . '-' . $eventApp->uuid;
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -65,6 +67,8 @@ class RegisteredUserController extends Controller
             'location' => $request->location,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'referral_link' => session('referral_link') ?? null,
+            'personal_url' => $personal_url ?? null,
         ]);
 
         $this->checkIfTicketTransferCase($request->email, $eventApp, $user);

@@ -22,6 +22,7 @@ const Navdata = () => {
     const [IsQuestionnaireResponse, setIsQuestionnaireResponse] = useState<boolean>(false);
     const [isAssignTicket, setIsAssignTicket] = useState<boolean>(false);
     const [isUpgradeTicket, setUpgradeTicket] = useState<boolean>(false);
+    const [isRefferalLink, setIsRefferalLink] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
 
@@ -57,6 +58,7 @@ const Navdata = () => {
         if (iscurrentState !== 'Questionnaire_response') setIsQuestionnaireResponse(false);
         if (iscurrentState !== 'assignTickets') setIsTickets(false);
         if (iscurrentState !== 'upgradeTicket') setIsTickets(false);
+        if (iscurrentState !== 'refferal-link') setIsRefferalLink(false);
     }, [
         iscurrentState,
         isDashboard,
@@ -384,6 +386,22 @@ const Navdata = () => {
             },
             hasPermissions: [
                 'questionnaire_response'
+            ],
+        },
+        {
+            id: "",
+            label: "Referral Link",
+            icon: "bx bx-share-alt",
+            link: route('organizer.events.refferal-link.index'),
+            stateVariables: isRefferalLink,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsRefferalLink(!isRefferalLink);
+                setIscurrentState('refferal-link');
+                updateIconSidebar(e);
+            },
+            hasPermissions: [
+                'view_referral_link'
             ],
         },
         // }] : []),

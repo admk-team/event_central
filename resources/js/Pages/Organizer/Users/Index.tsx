@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Col, Container, Row, Table } from 'react-bootstrap';
 import { Head, Link, useForm } from '@inertiajs/react';
 import Layout from '../../../Layouts/Organizer';
-import CreateEditModal from './Components/CreateEditModal';
+import CreateEditModal from '../Events/RefferalLink/Components/CreateEditModal';
 import DeleteModal from '../../../Components/Common/DeleteModal';
 import DataTable, { ColumnDef } from '../../../Components/DataTable';
 import BreadCrumb2 from '../../../Components/Common/BreadCrumb2';

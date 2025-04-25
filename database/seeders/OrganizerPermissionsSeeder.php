@@ -104,6 +104,12 @@ class OrganizerPermissionsSeeder extends Seeder
         // Badges
         'print_badges',
         'refund_ticket',
+
+        // Referral links
+        'view_referral_link',
+        'create_referral_link',
+        'edit_referral_link',
+        'delete_referral_link',
     ];
 
     public function run(): void

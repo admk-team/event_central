@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Attendee;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\EventApp;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -27,10 +28,18 @@ class AuthController extends Controller
 
         // Retrieve the user by email
         $user = $userModel::where('email', $credentials['email'])->first();
-
+        
         // Validate password manually because Sanctum does not support attempt()
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
             return response()->json(['message' => 'Unauthorized'], 401);
+        }
+        if ($type === 'attendee') {
+            $event = EventApp::findOrFail($user->event_app_id);
+            $url = route('organizer.events.website', $event->uuid ?? null);
+            $title = str_replace(' ', '-', $event->name ?? null);
+            $personal_url = $url . '?link=' . $title . '-' . $event->uuid ?? null;
+            $user->personal_url = $personal_url;
+            $user->save();
         }
 
         // Assign role-based ability

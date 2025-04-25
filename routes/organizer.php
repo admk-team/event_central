@@ -29,6 +29,7 @@ use App\Http\Controllers\Organizer\Event\EventPromoCodeController;
 use App\Http\Controllers\Organizer\Event\EventTicketTypeController;
 use App\Http\Controllers\Organizer\Event\FormFieldController;
 use App\Http\Controllers\Organizer\Event\QuestionnaireFormFieldController;
+use App\Http\Controllers\Organizer\Event\RefferalLinkController;
 use App\Http\Controllers\Organizer\Event\SessionAttendanceController;
 use App\Http\Controllers\Organizer\Event\Settings\QuestionnaireFormSettingsController;
 use App\Http\Controllers\Organizer\Event\Settings\RegistrationFormSettingsController;
@@ -233,6 +234,9 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::get('/payment-success/{paymentUuId}', [AssignTicketController::class, 'paymentSuccess'])->name('payment.success');
             Route::post('update-attendee-payment/{paymentUuId}', [AssignTicketController::class, 'updateAttendeePaymnet'])->name('update.payment');
             Route::post('validate-discount-code/{disCode}', [AssignTicketController::class, 'validateDiscCode'])->name('validateCode.post');
+            // RefferalLink
+            Route::resource('refferal-link', RefferalLinkController::class);
+            Route::delete('refferal-link/delete/many', [RefferalLinkController::class, 'destroyMany'])->name('refferal-link.destroy.many');
         });
 
         // Q&A

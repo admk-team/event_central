@@ -30,7 +30,9 @@ class Attendee extends Authenticatable
         'type',
         'avatar',
         'qr_code',
-        'location'
+        'location',
+        'personal_url',
+        'referral_link',
     ];
 
     protected $appends = [
