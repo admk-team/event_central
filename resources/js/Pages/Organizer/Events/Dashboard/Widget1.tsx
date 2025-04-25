@@ -12,6 +12,7 @@ const Widget1 = ({
     totaluser,
     totalPartners,
     totalSpeakers,
+    ticketsMetrics,
 }: any) => {
     return (
         <React.Fragment>
@@ -132,14 +133,12 @@ const Widget1 = ({
                                     </p>
                                     <h2 className="mt-4 ff-secondary fw-semibold">
                                         <span className="counter-value">
-                                            {/* <CountUp
-                                                key={totalPartners}
+                                        <CountUp
+                                                key={ticketsMetrics.totalTicketsSold}
                                                 start={0}
-                                                end={Number(totalPartners)}
+                                                end={Number(ticketsMetrics.totalTicketsSold)}
                                                 decimals={
-                                                    totalPartners >= 1000
-                                                        ? 1
-                                                        : 0
+                                                    ticketsMetrics.totalTicketsSold >= 1000 ? 1 : 0
                                                 }
                                                 duration={4}
                                                 formattingFn={(value: any) =>
@@ -149,8 +148,7 @@ const Widget1 = ({
                                                           ).toFixed(1) + "K"
                                                         : value
                                                 }
-                                            /> */}
-                                            0
+                                            />
                                         </span>
                                     </h2>
                                     {/* <p className="mb-0 text-muted text-truncate ">

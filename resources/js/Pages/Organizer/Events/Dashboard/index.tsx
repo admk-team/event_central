@@ -33,6 +33,7 @@ const DashboardAnalytics = ({ totalAttendee,totalSession,totalSpeakers,totalPart
                                 totalTickets = {totalTickets}
                                 totalSpeakers = {totalSpeakers}
                                 totalPartners = {totalPartners}
+                                ticketsMetrics = {ticketsMetrics}
                             />
                         </Col>
                     </Row>
