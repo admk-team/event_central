@@ -242,8 +242,14 @@ class EventController extends Controller
     public function allfav()
     {
         $attendee = auth()->user();
+        $eventdates = EventAppDate::where('event_app_id', $attendee->event_app_id)->with('eventSessions')->get();
+        $eventPlatforms = EventPlatform::where('event_app_id', $attendee->event_app_id)->get();
         $allfav = AttendeeFavSession::where('attendee_id', $attendee->id)->where('fav', 1)->with(['session'])->get();
 
-        return $this->successResponse(AttendeeFavSessionResource::collection($allfav));
+        return response()->json([
+            'eventdates' => $eventdates,
+            'eventPlatforms' => $eventPlatforms,
+            'allfav' => AttendeeFavSessionResource::collection($allfav),
+        ], 200);
     }
 }
