@@ -27,7 +27,7 @@ class EventController extends Controller
     public function getEventDetailDashboard(String $eventApp)
     {
         // dd(Auth::user());
-        $eventApp = EventApp::find(Auth::user()->event_app_id);
+        $eventApp = EventApp::find(Auth::user() ? Auth::user()->event_app_id : $eventApp);
         $eventApp->load(['event_sessions.eventSpeakers', 'event_sessions.eventPlatform']);
         return $this->successResponse(new EventResource($eventApp));
     }
