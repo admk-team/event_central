@@ -27,6 +27,7 @@ class EventSessionRequest extends FormRequest
             'qa_status' => 'boolean',
             'posts' => 'required',
             'tracks' => 'array',
+            'rating_status' => 'boolean',
         ];
     }
 }

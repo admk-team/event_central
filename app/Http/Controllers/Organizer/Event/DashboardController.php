@@ -120,37 +120,38 @@ class DashboardController extends Controller
         // Fetch all ticket types for the current event
         $allTickets = EventAppTicket::currentEvent()->get();
         $totalTickets = $allTickets->count(); // Total number of ticket types
-
+    
         // Get ticket purchases for the current event
         $ticketPurchases = AttendeePurchasedTickets::whereHas('payment', fn($query) => $query->currentEvent())->get();
-
+    
         // Total tickets sold and revenue (event-wide)
         $totalTicketsSold = $ticketPurchases->sum('qty'); // Total quantity sold
-
+    
         // Extract payment IDs from ticket purchases and calculate total revenue
         $paymentIds = $ticketPurchases->pluck('attendee_payment_id')->unique()->values(); // Get unique payment IDs
         $totalRevenue = AttendeePayment::whereIn('id', $paymentIds)->sum('amount_paid'); // Sum amount_paid from payments
-
+    
         // Prepare data for all tickets (including those with zero sales)
         $ticketsData = $allTickets->map(function ($ticket) use ($ticketPurchases) {
             $purchasesForTicket = $ticketPurchases->where('event_app_ticket_id', $ticket->id);
             return [
                 'ticketName' => $ticket->name,
-                'ticketsSold' => $purchasesForTicket->sum('qty'), // Tickets sold for this ticket
-                'totalRevenue' => $purchasesForTicket->sum('total'), // Total revenue for this ticket
+                'ticketsSold' => $purchasesForTicket->sum('qty'),
+                'totalRevenue' => $purchasesForTicket->sum('total'),
             ];
         })->toArray();
-
+    
         // Sort by totalRevenue in descending order
-        usort($ticketsData, function ($a, $b) {
-            return $b['totalRevenue'] <=> $a['totalRevenue'];
-        });
-
+        usort($ticketsData, fn($a, $b) => $b['totalRevenue'] <=> $a['totalRevenue']);
+    
+        // Keep only top 5 tickets
+        $topTickets = array_slice($ticketsData, 0, 5);
+    
         return [
-            'totalTickets' => $totalTickets, // Total ticket types
-            'totalTicketsSold' => $totalTicketsSold, // Total tickets sold
-            'totalRevenue' => $totalRevenue, // Total revenue from payments
-            'ticketsData' => $ticketsData, // All tickets with their metrics
+            'totalTickets' => $totalTickets,
+            'totalTicketsSold' => $totalTicketsSold,
+            'totalRevenue' => $totalRevenue,
+            'ticketsData' => $topTickets, // Only top 5 tickets for graph
         ];
     }
     public function top10Attendee()

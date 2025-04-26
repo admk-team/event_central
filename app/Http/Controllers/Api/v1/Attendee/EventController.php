@@ -184,6 +184,7 @@ class EventController extends Controller
         ];
 
         return response()->json([
+            'eventSession' => $eventSession,
             'averageRating' => round($averageRating, 1),
             'ratedAttendees' => $ratedAttendees,
             'currentAttendeeRating' => $currentAttendeeRating ? [
