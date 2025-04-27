@@ -27,7 +27,7 @@ class EventController extends Controller
     public function getEventDetailDashboard(String $eventApp)
     {
         // dd(Auth::user());
-        $eventApp = EventApp::find(Auth::user()->event_app_id);
+        $eventApp = EventApp::find(Auth::user() ? Auth::user()->event_app_id : $eventApp);
         $eventApp->load(['event_sessions.eventSpeakers', 'event_sessions.eventPlatform']);
         return $this->successResponse(new EventResource($eventApp));
     }
@@ -242,8 +242,14 @@ class EventController extends Controller
     public function allfav()
     {
         $attendee = auth()->user();
+        $eventdates = EventAppDate::where('event_app_id', $attendee->event_app_id)->with('eventSessions')->get();
+        $eventPlatforms = EventPlatform::where('event_app_id', $attendee->event_app_id)->get();
         $allfav = AttendeeFavSession::where('attendee_id', $attendee->id)->where('fav', 1)->with(['session'])->get();
 
-        return $this->successResponse(AttendeeFavSessionResource::collection($allfav));
+        return response()->json([
+            'eventdates' => $eventdates,
+            'eventPlatforms' => $eventPlatforms,
+            'allfav' => AttendeeFavSessionResource::collection($allfav),
+        ], 200);
     }
 }
