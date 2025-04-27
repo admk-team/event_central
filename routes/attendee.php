@@ -45,7 +45,7 @@ Route::get('/google-login/callback', [AuthenticatedSessionController::class, 'go
 
 Route::middleware(['auth'])->group(function () {
     Route::get('get-attendee-purchased-tickets/{attendee}', [AttendeeUpgradeTicketController::class, 'getAttendeePurchasedTickets'])
-        ->name('get.attendee.purchased.ticlket');
+        ->name('get.attendee.purchased.tickets');
 });
 
 
@@ -82,6 +82,12 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
 
         Route::get('{eventApp}/payment-success', [PaymentController::class, 'paymentSuccess'])->name('attendee.payment.success');
         Route::get('/event-posts/{id}', [EventController::class, 'getPostsMore'])->name('attendee.posts.index');
+
+        //Upgrade payments
+        Route::get('upgrade/tickets', [AttendeeUpgradeTicketController::class, 'upgradeTickets'])->name('attendee.tickets.upgrade');
+        Route::post('upgrade/tickets', [AttendeeUpgradeTicketController::class, 'saveTicketUpgrade'])->name('attendee.save.ticket.upgrade');
+        Route::post('save/upgraded-sessions/{attendee}', [AttendeeUpgradeTicketController::class, 'saveUpgradedSessions'])->name('attendee.save.upgraded.sessions');
+        Route::post('proceed-for-checkout/{attendee}', [AttendeeUpgradeTicketController::class, 'getStripPaymentIntent'])->name('attendee.upgrade.ticket.proceed.checkout');
 
         //PayPal
         Route::post('/paypal/create-order', [PaymentController::class, 'createPayPalOrder'])->name('attendee.paypal.create-order');

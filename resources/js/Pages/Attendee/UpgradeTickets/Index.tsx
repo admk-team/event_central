@@ -1,6 +1,9 @@
 import { Head, Link, router, useForm } from "@inertiajs/react";
 import React, { useEffect, useState, CSSProperties, useRef } from "react";
 import AttendeeLayout from "../../../Layouts/Attendee";
+import { loadStripe } from "@stripe/stripe-js";
+import StripeCheckoutForm from "./StripeCheckoutForm";
+import { Elements } from "@stripe/react-stripe-js";
 import EventLayout from "../../../Layouts/Event";
 import {
     Button,
@@ -18,7 +21,6 @@ import {
 import axios from "axios";
 import toast from "react-hot-toast";
 import Select, { StylesConfig } from "react-select";
-import { max, set } from "date-fns";
 
 type AttendeeOption = {
     id: number;
@@ -27,8 +29,7 @@ type AttendeeOption = {
 };
 
 const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
-    console.log("sessions", sessions);
-
+    
     const Layout = organizerView ? EventLayout : AttendeeLayout;
     const foundAttendee = attendees.find(
         (attendee: any) => attendee.value === parseInt(attendee_id)
@@ -54,8 +55,14 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
     const [ticketOptions, setTicketOptions] = useState<Array<AttendeeOption>>(
         []
     );
+    const [paymentProcessed, setPaymentProcessed] = useState(false);
     const [processing, setProcessing] = useState(false);
     const [filteredSessions, setFilteredSessions] = useState<any>(sessions);
+
+    const [paymentIntent, setPaymentIntent] = useState(null);
+    const [stripPubKey, setStripePubKey] = useState(null);
+    const [paymentId, setPaymentId] = useState(null);
+    const [stripePromise, setStripePromise] = useState(null);
 
     const paymentOptionRef = useRef(null);
     const paymentNoteRef = useRef(null);
@@ -97,15 +104,15 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
         setDiscountCodeApplied("");
         setCodeError(false);
         setDiscountCodeError("");
-    },[currentAttendee])
+    }, [currentAttendee]);
 
     useEffect(() => {
-        console.log("Current Attendee", currentAttendee);
+        // console.log("Current Attendee", currentAttendee);
         if (currentAttendee) {
             axios
-                .get(route("get.attendee.purchased.ticlket", currentAttendee))
+                .get(route("get.attendee.purchased.tickets", currentAttendee))
                 .then((response) => {
-                    console.log("response", response);
+                    // console.log("response", response);
                     if (response.data.tickets.length > 0) {
                         let list = Array();
                         response.data.tickets.forEach((pticket: any) => {
@@ -135,7 +142,7 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
     }, [currentAttendee]);
 
     const updateGrandTotal = () => {
-        console.log("upgradedSessionIds", upgradedSessionIds);
+        // console.log("upgradedSessionIds", upgradedSessionIds);
         upgradedSessionIds.forEach((id) => {
             const session = sessions.find((s: any) => s.id === id);
             if (session && session.price) {
@@ -146,65 +153,145 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
         });
     };
 
-    const submitCheckOut = (e: any) => {
-        e.preventDefault();
 
+    const handlePaymentSuccess = (stripeResult: any) => {
         const data = {
+            attendee_id: currentAttendee,
+            attendee_purchased_ticket_id: currentPurchasedTicket,
             upgradedSessionIds: [...upgradedSessionIds],
             discount: discount,
             discount_code: discountCodeApplied,
             subTotal: grandTotal,
             totalAmount: totalAmount,
             organizer_payment_note: paymentNote,
+            stripe_payment_id: ""
         };
 
-        console.log(data);
+        // console.log("stripeResult", stripeResult);
+        if (stripeResult) {
+            setPaymentProcessed(true);
+            data.stripe_payment_id = stripeResult.id;
+            setPaymentId(stripeResult.id);
+            let url = organizerView
+                ? route(
+                      "organizer.events.save.upgraded.sessions",
+                      currentAttendee
+                  )
+                : route("attendee.save.upgraded.sessions", currentAttendee);
+            
+            axios
+                .post(url, data)
+                .then((response) => {
+                    console.log("response upgrade", response);
+                })
+                .catch((error) => {
+                    console.log("error", error);
+                })
+                .finally(() => {
+                    setProcessing(false);
+                });
+        }
+    };
+
+    const submitCheckOut = (e: any) => {
+        e.preventDefault();
 
         setProcessing(true);
         if (organizerView && currentAttendee > 0) {
-            // if (totalAmount > 0 && paymentMethod === 'stripe') {
-            //     axios.post(route("organizer.events.tickets.checkout", [currentAttendee, paymentMethod]), data).then((response) => {
-            //         // console.log(response);
-            //         router.visit(route('organizer.events.tickets.checkout.page', response.data.uuid));
-            //     }).catch((error) => {
-            //         console.log(error);
-            //     }).finally(() => {
-            //         setProcessing(false);
-            //     })
-            // } else if (totalAmount === 0 || paymentMethod !== 'stripe') {
-            //     axios.post(route("organizer.events.tickets.checkout.free", [currentAttendee, paymentMethod]), data).then((response) => {
-            //         // console.log(response);
-            //         router.visit(route('organizer.events.payment.success', response.data.uuid));
-            //     }).catch((error) => {
-            //         console.log(error);
-            //     }).finally(() => {
-            //         setProcessing(false);
-            //     })
-            // }
+            if (totalAmount > 0 && paymentMethod === "stripe") {
+                axios
+                    .post(
+                        route(
+                            "organizer.events.upgrade.ticket.proceed.checkout",
+                            [currentAttendee]
+                        ),
+                        {
+                            amount: totalAmount,
+                            currency: "usd",
+                        }
+                    )
+                    .then((response) => {
+                        // console.log(response);
+                        setPaymentIntent(response.data.client_secret);
+                        setStripePubKey(response.data.stripe_pub_key);
+                        setStripePromise(
+                            loadStripe(response.data.stripe_pub_key)
+                        );
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    })
+                    .finally(() => {
+                        setProcessing(false);
+                    });
+            } else if (totalAmount === 0 || paymentMethod !== "stripe") {
+                axios
+                    .post(
+                        route("organizer.events.tickets.checkout.free", [
+                            currentAttendee,
+                            paymentMethod,
+                        ])
+                    )
+                    .then((response) => {
+                        console.log(response);
+                        // router.visit(route('organizer.events.payment.success', response.data.uuid));
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    })
+                    .finally(() => {
+                        setProcessing(false);
+                    });
+            }
         } else {
-            // if (totalAmount > 0) {
-            //     //Process Stripe payment for Attendee
-            //     axios.post(route("attendee.tickets.checkout"), data).then((response) => {
-            //         // console.log(response);
-            //         router.visit(route('attendee.tickets.checkout.page', response.data.uuid));
-            //     }).catch((error) => {
-            //         //
-            //         console.log(error);
-            //     }).finally(() => {
-            //         setProcessing(false);
-            //     })
-            // } else {
-            //     //Process free tickets for Attendee
-            //     axios.post(route("attendee.tickets.checkout.free"), data).then((response) => {
-            //         console.log(response);
-            //         router.visit(route('attendee.payment.success', response.data.uuid));
-            //     }).catch((error) => {
-            //         console.log(error);
-            //     }).finally(() => {
-            //         setProcessing(false);
-            //     })
-            // }
+            if (totalAmount > 0) {
+                //Process Stripe payment for Attendee
+                axios
+                    .post(route("attendee.upgrade.ticket.proceed.checkout"), {
+                        amount: totalAmount,
+                        currency: "usd",
+                    })
+                    .then((response) => {
+                        console.log(response);
+                        router.visit(
+                            route(
+                                "attendee.tickets.checkout.page",
+                                response.data.uuid
+                            )
+                        );
+                    })
+                    .catch((error) => {
+                        //
+                        console.log(error);
+                    })
+                    .finally(() => {
+                        setProcessing(false);
+                    });
+            } else {
+                //Process free tickets for Attendee
+                axios
+                    .post(route("attendee.tickets.checkout.free"))
+                    .then((response) => {
+                        console.log(response);
+                        router.visit(
+                            route(
+                                "attendee.payment.success",
+                                response.data.uuid
+                            )
+                        );
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    })
+                    .finally(() => {
+                        setProcessing(false);
+                    });
+            }
         }
+    };
+
+    const appearance = {
+        theme: "stripe",
     };
 
     const validateCode = () => {
@@ -314,7 +401,7 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
                                                 ref={paymentOptionRef}
                                                 onChange={(e) =>
                                                     setPurchasedTicket(
-                                                        e.target.value
+                                                        parseInt(e.target.value)
                                                     )
                                                 }
                                             >
@@ -428,7 +515,9 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
                                                 Event Sessions
                                             </span>
                                             <span className="fs-4 mb-2">
-                                                Total Amount :{grandTotal}
+                                                Total Amount : <sup>
+                                                        <small>$</small>
+                                                    </sup>{grandTotal}
                                             </span>
                                         </div>
                                         <div className="mt-4 row">
@@ -499,7 +588,7 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
                             </Row>
                         )}
 
-                        {currentPurchasedTicket && (
+                        {currentPurchasedTicket  && (
                             <>
                                 <Card className="border border-1 mt-4">
                                     <CardBody>
@@ -532,10 +621,7 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
                                                         }
                                                     />
                                                     <Button
-                                                        // disabled={
-                                                        //     allTicketDetails.length ===
-                                                        //     0
-                                                        // }
+                                                        disabled={grandTotal === 0}
                                                         onClick={validateCode}
                                                     >
                                                         Apply
@@ -569,14 +655,15 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
                                             <Col md={4} lg={4}></Col>
                                             <Col md={4} lg={4}>
                                                 <Button
-                                                    // disabled={
-                                                    //     allTicketDetails.length === 0 ||
-                                                    //     processing
-                                                    // }
+                                                    disabled={
+                                                        stripePromise !== null
+                                                    }
                                                     onClick={submitCheckOut}
                                                     className="btn btn-success w-100"
                                                 >
-                                                    Checkout
+                                                    {totalAmount > 0
+                                                        ? "Proceed to Checkout"
+                                                        : "Process Free Ticket"}
                                                     {processing && (
                                                         <Spinner
                                                             animation="border"
@@ -607,6 +694,34 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
                                         </Row>
                                     </CardBody>
                                 </Card>
+
+                                {paymentIntent && stripePromise && (
+                                    <Card
+                                        style={{
+                                            backgroundColor:
+                                                "var(--vz-border-color-translucent)",
+                                        }}
+                                    >
+                                        <CardBody>
+                                            <Elements
+                                                stripe={stripePromise}
+                                                options={{
+                                                    clientSecret: paymentIntent,
+                                                }}
+                                            >
+                                                <StripeCheckoutForm
+                                                    amount={totalAmount}
+                                                    onPaymentSuccess={
+                                                        handlePaymentSuccess
+                                                    }
+                                                    organizerView={
+                                                        organizerView
+                                                    }
+                                                />
+                                            </Elements>
+                                        </CardBody>
+                                    </Card>
+                                )}
                             </>
                         )}
                     </Container>
