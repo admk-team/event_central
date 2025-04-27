@@ -695,7 +695,7 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
                                     </CardBody>
                                 </Card>
 
-                                {paymentIntent && stripePromise && (
+                                {paymentIntent && stripePromise &&  totalAmount > 0 && (
                                     <Card
                                         style={{
                                             backgroundColor:

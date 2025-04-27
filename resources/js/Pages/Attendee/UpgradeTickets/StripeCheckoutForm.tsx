@@ -3,13 +3,17 @@ import { useState } from "react";
 import { useStripe, useElements } from "@stripe/react-stripe-js";
 import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
 
-export default function CheckoutForm({ amount, onPaymentSuccess, organizerView }: any) {
+export default function CheckoutForm({
+    amount,
+    onPaymentSuccess,
+    organizerView,
+}: any) {
     const stripe = useStripe();
     const elements = useElements();
 
     const [message, setMessage] = useState("");
     const [isProcessing, setIsProcessing] = useState(false);
-    
+
     const handleSubmit = async (e: any) => {
         e.preventDefault();
 
@@ -31,13 +35,14 @@ export default function CheckoutForm({ amount, onPaymentSuccess, organizerView }
             .then((result) => {
                 console.log("result", result);
                 if (!result.error) {
-                    console.log("Stripe checkout is complete. Attendee sessions are being updated.");
+                    console.log(
+                        "Stripe checkout is complete. Attendee sessions are being updated."
+                    );
                     // let session_upgrade_url = organizerView ? route('organizer.events.save.upgraded.sessions', payment.uuid) : route("attendee.save.upgraded.sessions", payment.uuid);
                     // let payment_success_url = organizerView ? route('organizer.events.payment.success', payment.uuid) : route("attendee.payment.success", payment.uuid);
 
                     onPaymentSuccess(result);
                     setIsProcessing(false);
-                
                 } else {
                     if (
                         result.error.type === "card_error" ||
@@ -62,17 +67,24 @@ export default function CheckoutForm({ amount, onPaymentSuccess, organizerView }
                 </Spinner>
             )}
 
-            <div className="d-flex justify-content-center">
-                {(stripe && elements) && <Button
-                    className="mt-3 btn btn-success mt-2 w-75 rounded-pill"
-                    disabled={isProcessing}
-                    type="submit"
-                >
-                    <span id="button-text">
-                        {isProcessing ? "Processing ... " : "Pay $" + amount}
-                    </span>
-                </Button>}
-            </div>
+            <Row className="d-flex justify-content-center">
+                <Col md={4} lg={4}>
+                    {stripe && elements && (
+                        <Button
+                            className="mt-3 btn btn-success mt-2 w-100"
+                            disabled={isProcessing}
+                            type="submit"
+                        >
+                            <span id="button-text">
+                                {isProcessing
+                                    ? "Processing ... "
+                                    : "Pay $" + amount}
+                            </span>
+                        </Button>
+                    )}
+                </Col>
+            </Row>
+
             {message && <div id="payment-message">{message}</div>}
         </form>
     );
