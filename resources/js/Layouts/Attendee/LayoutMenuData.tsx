@@ -10,6 +10,7 @@ const Navdata = () => {
     const [isSpeakers, setIsSpeakers] = useState<boolean>(false);
     const [isPost, setIsPost] = useState<boolean>(false);
     const [isMore, setIsMore] = useState<boolean>(false);
+    const [isUpgradeTicket, setIsUpgradeTicket] = useState<boolean>(false);
     const [isQr, setIsQr] = useState<boolean>(false);
     const [purchaseTickets, setPurchaseTickets] = useState<boolean>(false);
     const [questionnaire, setquestionnaire] = useState<boolean>(false);
@@ -51,6 +52,9 @@ const Navdata = () => {
         if (iscurrentState !== "questionnaire") {
             setquestionnaire(false);
         }
+        if (iscurrentState !== "upgradeTicket") {
+            setIsUpgradeTicket(false);
+        }
         // if (iscurrentState !== "Q&A") {
         //     setIsQA(false);
         // }
@@ -65,6 +69,7 @@ const Navdata = () => {
         isPost,
         purchaseTickets,
         questionnaire,
+        isUpgradeTicket
     ]);
 
     const menuItems: any = [
@@ -162,6 +167,22 @@ const Navdata = () => {
                 setIscurrentState("More");
                 updateIconSidebar(e);
             },
+        },
+        {
+            id: "upgradeTicket",
+            label: "Upgrade Tickets",
+            icon: "bx bxs-credit-card",
+            link: route('attendee.tickets.upgrade'),
+            stateVariables: isUpgradeTicket,
+            click: function (e: any) {
+                e.preventDefault();
+                setPurchaseTickets(!isUpgradeTicket);
+                setIscurrentState('upgradeTicket');
+                updateIconSidebar(e);
+            },
+            hasPermissions: [
+                'refund_ticket'
+            ],
         },
         {
             id: "refundtickets",

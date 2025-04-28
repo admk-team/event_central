@@ -25,9 +25,9 @@ const PaymentSuccess = ({ organizerView }: any) => {
         // Set up the redirect timeout
         const redirect = setTimeout(() => {
             if (organizerView) {
-                router.visit(route("organizer.events.attendee.tickets.assign"))
+                router.visit(route("organizer.events.tickets.upgrade"))
             } else {
-                router.visit(route("attendee.tickets.get"))
+                router.visit(route("attendee.tickets.upgrade"))
             }
         }, 5000)
 
@@ -62,7 +62,7 @@ const PaymentSuccess = ({ organizerView }: any) => {
                                                     }}
                                                 ></i>
                                                 <span className="fs-3 text-green p-4 text-center">
-                                                    Checkout was processed successfully for ticket upgradation. 
+                                                    Checkout was processed successfully for ticket upgradation.
                                                     {/* Confirmation email with QR Codes has been sent to the Attendee's email address. */}
                                                 </span>
                                                 <p className="text-muted text-center">

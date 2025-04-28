@@ -144,7 +144,9 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::get('upgrade/tickets', [UpgradeTicketController::class, 'upgradeTickets'])->name('tickets.upgrade');
             Route::post('upgrade/tickets', [UpgradeTicketController::class, 'saveTicketUpgrade'])->name('save.ticket.upgrade');
             Route::post('save/upgraded-sessions/{attendee}', [UpgradeTicketController::class, 'saveUpgradedSessions'])->name('save.upgraded.sessions');
+            Route::post('save/free-upgraded-sessions/{attendee}', [UpgradeTicketController::class, 'saveUpgradedSessionsFree'])->name('save.upgraded.sessions.free');
             Route::post('proceed-for-checkout/{attendee}', [UpgradeTicketController::class, 'getStripPaymentIntent'])->name('upgrade.ticket.proceed.checkout');
+            Route::get('upgrade-payment-success/{paymentUuid}', [UpgradeTicketController::class, 'showTicketUpgradeSuccess'])->name('upgrade.payment.success');
 
             // Promo Codes
             Route::resource('promo-codes', EventPromoCodeController::class)->only(['index', 'store', 'update', 'destroy']);

@@ -14,7 +14,7 @@ class AttendeeEventSession extends Model
     protected $fillable = [
         'attendee_id',
         'event_session_id',
-        'attendee_purchased_ticket_id ',
+        'attendee_purchased_ticket_id',
         'attendee_payment_id',
         'rating',
         'rating_description'

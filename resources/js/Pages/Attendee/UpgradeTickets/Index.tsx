@@ -1,4 +1,4 @@
-import { Head, Link, router, useForm } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 import React, { useEffect, useState, CSSProperties, useRef } from "react";
 import AttendeeLayout from "../../../Layouts/Attendee";
 import { loadStripe } from "@stripe/stripe-js";
@@ -28,8 +28,10 @@ type AttendeeOption = {
     label: string;
 };
 
-const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
-    
+const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTickets }: any) => {
+
+// console.log(organizerView, attendees, attendee_id, sessions, purchasedTickets);
+
     const Layout = organizerView ? EventLayout : AttendeeLayout;
     const foundAttendee = attendees.find(
         (attendee: any) => attendee.value === parseInt(attendee_id)
@@ -51,14 +53,14 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
     const [searchName, setSearchName] = useState("");
     const [paymentNote, setPaymentNote] = useState<any>("");
     const [currentAttendee, setCurrentAttendee] = useState<any>(attendee_id);
-    const [currentPurchasedTicket, setPurchasedTicket] = useState<any>(null);
+    const [currentPurchasedTicket, setCurrentPurchasedTicket] = useState<any>(null);
     const [ticketOptions, setTicketOptions] = useState<Array<AttendeeOption>>(
         []
     );
     const [paymentProcessed, setPaymentProcessed] = useState(false);
     const [processing, setProcessing] = useState(false);
     const [filteredSessions, setFilteredSessions] = useState<any>(sessions);
-
+    const [step, setStep] = useState(1);
     const [paymentIntent, setPaymentIntent] = useState(null);
     const [stripPubKey, setStripePubKey] = useState(null);
     const [paymentId, setPaymentId] = useState(null);
@@ -66,6 +68,7 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
 
     const paymentOptionRef = useRef(null);
     const paymentNoteRef = useRef(null);
+
 
     useEffect(() => {
         if (searchName.length > 0) {
@@ -93,7 +96,7 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
     }, [grandTotal]);
 
     useEffect(() => {
-        setPurchasedTicket(null);
+        setCurrentPurchasedTicket(null);
         setFilteredSessions(sessions);
         setUpgradedSessionIds([]);
         setAlreadyPurchasedSessionIds([]);
@@ -107,12 +110,10 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
     }, [currentAttendee]);
 
     useEffect(() => {
-        // console.log("Current Attendee", currentAttendee);
         if (currentAttendee) {
             axios
                 .get(route("get.attendee.purchased.tickets", currentAttendee))
                 .then((response) => {
-                    // console.log("response", response);
                     if (response.data.tickets.length > 0) {
                         let list = Array();
                         response.data.tickets.forEach((pticket: any) => {
@@ -123,17 +124,12 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
                             });
                         });
                         setTicketOptions([...list]);
-                        setPurchasedTicket(null);
+                        setCurrentPurchasedTicket(null);
                         paymentOptionRef.current?.focus();
-                        console.log(list);
                     } else {
                         setTicketOptions([]);
                     }
                     setAlreadyPurchasedSessionIds(response.data.sessions);
-                    console.log(
-                        "Purchased Session IDs",
-                        response.data.sessions
-                    );
                 })
                 .catch((error) => {
                     console.log(error);
@@ -141,8 +137,18 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
         }
     }, [currentAttendee]);
 
+    useEffect(() => {
+        if (currentPurchasedTicket) {
+            axios.get(route('get.attendee.purchased.ticket.sessions', currentPurchasedTicket)).then((response) => {
+                console.log(response);
+                setAlreadyPurchasedSessionIds(response.data.sessions);
+            }).catch((error) => {
+                console.log(error);
+            })
+        }
+    }, [currentPurchasedTicket]);
+
     const updateGrandTotal = () => {
-        // console.log("upgradedSessionIds", upgradedSessionIds);
         upgradedSessionIds.forEach((id) => {
             const session = sessions.find((s: any) => s.id === id);
             if (session && session.price) {
@@ -152,7 +158,6 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
             }
         });
     };
-
 
     const handlePaymentSuccess = (stripeResult: any) => {
         const data = {
@@ -164,25 +169,34 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
             subTotal: grandTotal,
             totalAmount: totalAmount,
             organizer_payment_note: paymentNote,
-            stripe_payment_id: ""
+            stripe_payment_id: '',
+            stripe_payment_intent: paymentIntent,
+            payment_method: paymentMethod
         };
 
-        // console.log("stripeResult", stripeResult);
         if (stripeResult) {
             setPaymentProcessed(true);
-            data.stripe_payment_id = stripeResult.id;
-            setPaymentId(stripeResult.id);
-            let url = organizerView
+            setPaymentId(stripeResult.paymentIntent.id);
+            data.stripe_payment_id = stripeResult.paymentIntent.id;
+            console.log(data);
+            let url_payment_update = organizerView
                 ? route(
-                      "organizer.events.save.upgraded.sessions",
-                      currentAttendee
-                  )
+                    "organizer.events.save.upgraded.sessions",
+                    currentAttendee
+                )
                 : route("attendee.save.upgraded.sessions", currentAttendee);
-            
             axios
-                .post(url, data)
+                .post(url_payment_update, data)
                 .then((response) => {
-                    console.log("response upgrade", response);
+                    // console.log("response upgrade", response);
+                    let payment = response.data.payment;
+                    let url_payment_success = organizerView
+                        ? route(
+                            "organizer.events.upgrade.payment.success",
+                            payment.uuid
+                        )
+                        : route("attendee.upgrade.payment.success", payment.uuid);
+                    router.visit(url_payment_success);
                 })
                 .catch((error) => {
                     console.log("error", error);
@@ -196,7 +210,13 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
     const submitCheckOut = (e: any) => {
         e.preventDefault();
 
+        if (organizerView && paymentNote.length === 0) {
+            toast.error('Enter Organizer Note to proceed further');
+            return;
+        }
+
         setProcessing(true);
+        setStep(2);
         if (organizerView && currentAttendee > 0) {
             if (totalAmount > 0 && paymentMethod === "stripe") {
                 axios
@@ -211,7 +231,6 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
                         }
                     )
                     .then((response) => {
-                        // console.log(response);
                         setPaymentIntent(response.data.client_secret);
                         setStripePubKey(response.data.stripe_pub_key);
                         setStripePromise(
@@ -225,16 +244,28 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
                         setProcessing(false);
                     });
             } else if (totalAmount === 0 || paymentMethod !== "stripe") {
+                const data = {
+                    attendee_id: currentAttendee,
+                    attendee_purchased_ticket_id: currentPurchasedTicket,
+                    upgradedSessionIds: [...upgradedSessionIds],
+                    discount: discount,
+                    discount_code: discountCodeApplied,
+                    subTotal: grandTotal,
+                    totalAmount: totalAmount,
+                    organizer_payment_note: paymentNote,
+                    stripe_payment_id: null,
+                    stripe_payment_intent: null,
+                    payment_method: paymentMethod
+                };
                 axios
                     .post(
-                        route("organizer.events.tickets.checkout.free", [
-                            currentAttendee,
-                            paymentMethod,
-                        ])
+                        route("organizer.events.save.upgraded.sessions.free", [
+                            currentAttendee
+                        ]), data
                     )
                     .then((response) => {
                         console.log(response);
-                        // router.visit(route('organizer.events.payment.success', response.data.uuid));
+                        router.visit(route('organizer.events.upgrade.payment.success', response.data.payment.uuid));
                     })
                     .catch((error) => {
                         console.log(error);
@@ -247,17 +278,16 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
             if (totalAmount > 0) {
                 //Process Stripe payment for Attendee
                 axios
-                    .post(route("attendee.upgrade.ticket.proceed.checkout"), {
+                    .post(route("attendee.upgrade.ticket.proceed.checkout", [currentAttendee]), {
                         amount: totalAmount,
                         currency: "usd",
                     })
                     .then((response) => {
                         console.log(response);
-                        router.visit(
-                            route(
-                                "attendee.tickets.checkout.page",
-                                response.data.uuid
-                            )
+                        setPaymentIntent(response.data.client_secret);
+                        setStripePubKey(response.data.stripe_pub_key);
+                        setStripePromise(
+                            loadStripe(response.data.stripe_pub_key)
                         );
                     })
                     .catch((error) => {
@@ -269,14 +299,27 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
                     });
             } else {
                 //Process free tickets for Attendee
+                const data = {
+                    attendee_id: currentAttendee,
+                    attendee_purchased_ticket_id: currentPurchasedTicket,
+                    upgradedSessionIds: [...upgradedSessionIds],
+                    discount: discount,
+                    discount_code: discountCodeApplied,
+                    subTotal: grandTotal,
+                    totalAmount: totalAmount,
+                    organizer_payment_note: paymentNote,
+                    stripe_payment_id: null,
+                    stripe_payment_intent: null,
+                    payment_method: paymentMethod
+                };
                 axios
-                    .post(route("attendee.tickets.checkout.free"))
+                    .post(route("save.upgraded.sessions.free", currentAttendee), data)
                     .then((response) => {
                         console.log(response);
                         router.visit(
                             route(
-                                "attendee.payment.success",
-                                response.data.uuid
+                                "attendee.upgrade.payment.success",
+                                response.data.payment.uuid
                             )
                         );
                     })
@@ -290,9 +333,9 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
         }
     };
 
-    const appearance = {
-        theme: "stripe",
-    };
+    useEffect(() => {
+        console.log(paymentMethod);
+    }, [paymentMethod])
 
     const validateCode = () => {
         setCodeError(false);
@@ -310,7 +353,7 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
                         updateTotalAmount(disc);
                         return;
                     case "percentage":
-                        disc = grandTotal * (codeObj.discount_value / 100);
+                        disc = parseFloat((grandTotal * (codeObj.discount_value / 100)).toFixed(2));
                         updateTotalAmount(disc);
                         return;
                 }
@@ -325,7 +368,6 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
 
     const updateTotalAmount = (disc: any) => {
         let newV = grandTotal - disc;
-        console.log(grandTotal, disc, newV);
         setDiscount(disc);
         setTotalAmount(newV);
         setDiscountCodeApplied(discountCode);
@@ -350,12 +392,13 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
         }),
     };
 
+
+
     return (
         <Layout>
             <React.Fragment>
                 <Head title="Upgrade Ticket" />
                 <section className="section bg-light" id="tickets">
-                    {/* <div className="bg-overlay bg-overlay-pattern"></div> */}
                     <Container>
                         {organizerView && (
                             <>
@@ -399,13 +442,13 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
                                                 className="form-control"
                                                 id="payment_method"
                                                 ref={paymentOptionRef}
-                                                onChange={(e) =>
-                                                    setPurchasedTicket(
-                                                        parseInt(e.target.value)
-                                                    )
+                                                onChange={(e) => {
+                                                    let id = parseInt(e.target.value);
+                                                    setCurrentPurchasedTicket(id ? id : null)
+                                                }
                                                 }
                                             >
-                                                <option>
+                                                <option value={""}>
                                                     Choose Ticket For Upgrade
                                                 </option>
                                                 {ticketOptions &&
@@ -449,7 +492,7 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
                                         <Col>
                                             <FormGroup className="mb-3">
                                                 <Form.Label
-                                                    htmlFor="payment_method"
+                                                    htmlFor="payment_method2"
                                                     className="form-label text-start w-100"
                                                 >
                                                     Payment Method
@@ -457,7 +500,7 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
                                                 <Form.Select
                                                     aria-label="Default select example"
                                                     className="form-control"
-                                                    id="payment_method"
+                                                    id="payment_method2"
                                                     onChange={(e) =>
                                                         setPaymentMethod(
                                                             e.target.value
@@ -506,6 +549,57 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
                                 )}
                             </>
                         )}
+
+                        {!organizerView && (
+                            <Row className="d-flex flex-col justify-content-center mt-5 mb-2 mt-md-0">
+                                <Col md={12} className="text-center">
+                                    <h2>
+                                        Choose Purchased Ticket
+                                        to upgrade it's Sessions
+                                    </h2>
+                                    <hr />
+                                </Col>
+                                <Col md={6}>
+                                    <FormGroup className="mb-3">
+                                        <Form.Label
+                                            htmlFor="purchased_ticket"
+                                            className="form-label text-start w-100"
+                                        >
+                                            Choose Ticket To Upgrade
+                                        </Form.Label>
+                                        <Form.Select
+                                            aria-label="Default select example"
+                                            className="form-control"
+                                            id="purchased_ticket"
+                                            ref={paymentOptionRef}
+                                            onChange={(e) => {
+                                                let id = parseInt(e.target.value);
+                                                setCurrentPurchasedTicket(id ? id : null)
+                                            }
+                                            }
+                                        >
+                                            <option value={""}>
+                                                Choose Ticket For Upgrade
+                                            </option>
+                                            {purchasedTickets &&
+                                                purchasedTickets.map(
+                                                    (t: any) => (
+                                                        <option
+                                                            key={t.id}
+                                                            value={t.id}
+                                                        >
+                                                            {t.id +
+                                                                "-" +
+                                                                t.ticket.name}
+                                                        </option>
+                                                    )
+                                                )}
+                                        </Form.Select>
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                        )}
+
                         {currentPurchasedTicket && (
                             <Row>
                                 <Col>
@@ -516,23 +610,27 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
                                             </span>
                                             <span className="fs-4 mb-2">
                                                 Total Amount : <sup>
-                                                        <small>$</small>
-                                                    </sup>{grandTotal}
+                                                    <small>$</small>
+                                                </sup>{grandTotal}
                                             </span>
                                         </div>
-                                        <div className="mt-4 row">
+                                        <div className="row">
+                                            <hr></hr>
                                             {filteredSessions &&
                                                 filteredSessions.map(
                                                     (s: any) => (
-                                                        <div className="col-12 col-md-6 col-lg-4 mb-3">
+                                                        <div className="col-12 col-md-6 col-lg-4 mb-3" key={'div-' + s.id}>
                                                             <Form.Check
+                                                                title={alreadyPurchasedSessionIds.includes(
+                                                                    s.id
+                                                                ) ? "Session alreay available to Attendee" : ""}
                                                                 disabled={alreadyPurchasedSessionIds.includes(
                                                                     s.id
                                                                 )}
                                                                 defaultChecked={alreadyPurchasedSessionIds.includes(
                                                                     s.id
                                                                 )}
-                                                                key={s.id}
+                                                                key={'checkbox-' + s.id}
                                                                 type={
                                                                     "checkbox"
                                                                 }
@@ -544,8 +642,8 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
                                                                     s.name +
                                                                     (s.price
                                                                         ? "  ($" +
-                                                                          s.price +
-                                                                          ")"
+                                                                        s.price +
+                                                                        ")"
                                                                         : "  (free)")
                                                                 }
                                                                 onChange={(
@@ -559,10 +657,11 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
                                                                             (
                                                                                 prev
                                                                             ) => [
-                                                                                ...prev,
-                                                                                s.id,
-                                                                            ]
+                                                                                    ...prev,
+                                                                                    s.id,
+                                                                                ]
                                                                         );
+                                                                        setStep(1);
                                                                     } else {
                                                                         setUpgradedSessionIds(
                                                                             (
@@ -576,6 +675,7 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
                                                                                         s.id
                                                                                 )
                                                                         );
+                                                                        setStep(1);
                                                                     }
                                                                 }}
                                                             />
@@ -588,7 +688,7 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
                             </Row>
                         )}
 
-                        {currentPurchasedTicket  && (
+                        {currentPurchasedTicket && step === 1 && (
                             <>
                                 <Card className="border border-1 mt-4">
                                     <CardBody>
@@ -656,7 +756,7 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
                                             <Col md={4} lg={4}>
                                                 <Button
                                                     disabled={
-                                                        stripePromise !== null
+                                                        step === 2 || (totalAmount === 0 && discount === 0 && upgradedSessionIds.length === 0)
                                                     }
                                                     onClick={submitCheckOut}
                                                     className="btn btn-success w-100"
@@ -668,7 +768,7 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
                                                         <Spinner
                                                             animation="border"
                                                             role="status"
-                                                            className="ml-3"
+                                                            style={{ marginLeft: '5px' }}
                                                             size="sm"
                                                         >
                                                             <span className="visually-hidden">
@@ -694,35 +794,48 @@ const Index = ({ organizerView, attendees, attendee_id, sessions }: any) => {
                                         </Row>
                                     </CardBody>
                                 </Card>
-
-                                {paymentIntent && stripePromise &&  totalAmount > 0 && (
-                                    <Card
-                                        style={{
-                                            backgroundColor:
-                                                "var(--vz-border-color-translucent)",
+                            </>
+                        )}
+                        {step === 2 && !(paymentIntent || stripePromise) && <div className="d-flex justify-content-center p-5 mt-3" style={{
+                            backgroundColor:
+                                "var(--vz-border-color-translucent)",
+                        }}>
+                            <Spinner
+                                animation="border"
+                                role="status"
+                            >
+                                <span className="visually-hidden">
+                                    Loading...
+                                </span>
+                            </Spinner>
+                        </div>}
+                        {step === 2 && paymentIntent && stripePromise && totalAmount > 0 && (
+                            <Card
+                                className="mt-3"
+                                style={{
+                                    backgroundColor:
+                                        "var(--vz-border-color-translucent)",
+                                }}
+                            >
+                                <CardBody>
+                                    <Elements
+                                        stripe={stripePromise}
+                                        options={{
+                                            clientSecret: paymentIntent,
                                         }}
                                     >
-                                        <CardBody>
-                                            <Elements
-                                                stripe={stripePromise}
-                                                options={{
-                                                    clientSecret: paymentIntent,
-                                                }}
-                                            >
-                                                <StripeCheckoutForm
-                                                    amount={totalAmount}
-                                                    onPaymentSuccess={
-                                                        handlePaymentSuccess
-                                                    }
-                                                    organizerView={
-                                                        organizerView
-                                                    }
-                                                />
-                                            </Elements>
-                                        </CardBody>
-                                    </Card>
-                                )}
-                            </>
+                                        <StripeCheckoutForm
+                                            amount={totalAmount}
+                                            onPaymentSuccess={
+                                                handlePaymentSuccess
+                                            }
+                                            organizerView={
+                                                organizerView
+                                            }
+                                        />
+                                    </Elements>
+                                </CardBody>
+                            </Card>
                         )}
                     </Container>
                 </section>

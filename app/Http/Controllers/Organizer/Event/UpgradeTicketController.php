@@ -27,10 +27,15 @@ class UpgradeTicketController extends Controller
     {
         return $this->attendee_upgrade_ticket_controller->saveUpgradedSessions($attendee, $request, true);
     }
-    
+
+    public function saveUpgradedSessionsFree(Attendee $attendee, UpgradeTicketRequest $request)
+    {
+        return $this->attendee_upgrade_ticket_controller->saveUpgradedSessionsFree($attendee, $request, true);
+    }
+
     public function getStripPaymentIntent(Attendee $attendee, Request $request)
     {
-        
+
         // Call the method from the AttendeeUpgradeTicketController
         return $this->attendee_upgrade_ticket_controller->getStripPaymentIntent($attendee, $request, true);
     }
@@ -38,5 +43,4 @@ class UpgradeTicketController extends Controller
     public function showTicketUpgradeSuccess($uuid){
         return $this->attendee_upgrade_ticket_controller->showTicketUpgradeSuccess($uuid, true);
     }
-    
 }
