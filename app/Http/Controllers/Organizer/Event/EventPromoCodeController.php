@@ -18,7 +18,7 @@ class EventPromoCodeController extends Controller
      */
     public function index()
     {
-        if (! Auth::user()->can('view_tickets')) {
+        if (! Auth::user()->can('view_promo_code')) {
             abort(403);
         }
 
@@ -35,7 +35,7 @@ class EventPromoCodeController extends Controller
      */
     public function store(PromoCodeRequest $request)
     {
-        if (! Auth::user()->can('create_tickets')) {
+        if (! Auth::user()->can('create_promo_code')) {
             abort(403);
         }
 
@@ -52,7 +52,7 @@ class EventPromoCodeController extends Controller
      */
     public function update(PromoCodeRequest $request, PromoCode $promo_code)
     {
-        if (! Auth::user()->can('edit_tickets')) {
+        if (! Auth::user()->can('edit_promo_code')) {
             abort(403);
         }
 
@@ -67,7 +67,7 @@ class EventPromoCodeController extends Controller
      */
     public function destroy(PromoCode $promoCode)
     {
-        if (! Auth::user()->can('delete_tickets')) {
+        if (! Auth::user()->can('delete_promo_code')) {
             abort(403);
         }
 
@@ -80,7 +80,7 @@ class EventPromoCodeController extends Controller
      */
     public function destroyMany(Request $request)
     {
-        if (! Auth::user()->can('delete_tickets')) {
+        if (! Auth::user()->can('delete_promo_code')) {
             abort(403);
         }
 

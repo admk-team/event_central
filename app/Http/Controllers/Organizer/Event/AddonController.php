@@ -17,7 +17,7 @@ class AddonController extends Controller
 {
     public function index(EventAppTicket $event_app_ticket)
     {
-        if (! Auth::user()->can('view_tickets')) {
+        if (! Auth::user()->can('view_add_on')) {
             abort(403);
         }
 
@@ -26,7 +26,7 @@ class AddonController extends Controller
     }
     public function store(Request $request)
     {
-        if (! Auth::user()->can('create_tickets')) {
+        if (! Auth::user()->can('create_add_on')) {
             abort(403);
         }
 
@@ -44,7 +44,7 @@ class AddonController extends Controller
 
     public function update(Request $request, Addon $addon)
     {
-        if (! Auth::user()->can('edit_tickets')) {
+        if (! Auth::user()->can('edit_add_on')) {
             abort(403);
         }
 
@@ -63,7 +63,7 @@ class AddonController extends Controller
 
     public function destroy(Addon $addon)
     {
-        if (! Auth::user()->can('delete_tickets')) {
+        if (! Auth::user()->can('delete_add_on')) {
             abort(403);
         }
 
@@ -73,7 +73,7 @@ class AddonController extends Controller
 
     public function destroyMany(Request $request)
     {
-        if (! Auth::user()->can('delete_tickets')) {
+        if (! Auth::user()->can('delete_add_on')) {
             abort(403);
         }
         

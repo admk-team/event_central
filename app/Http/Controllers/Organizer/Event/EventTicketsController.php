@@ -50,7 +50,7 @@ class EventTicketsController extends Controller
                 'attendee_payments.discount as discount',
                 'attendee_payments.discount_code as promo_code',
             )
-            ->get();
+            ->latest()->get();
         return Inertia::render('Organizer/Events/Tickets/EventAppTickets', compact(['tickets']));
     }
 
