@@ -31,7 +31,7 @@ class PromoCodeRequest extends FormRequest
             'start_date' => 'required|date|before_or_equal:end_date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'status' => 'required|in:active,expired,disabled',
-            // 'tickets' => 'required|array|min:1'
+            'tickets' => 'required|array|min:1',
         ];
     }
 
