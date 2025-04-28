@@ -42,7 +42,7 @@ class EventPromoCodeController extends Controller
         $data = $request->validated();
         Log::info($data);
         $promoCode = PromoCode::create($request->validated());
-        $promoCode->tickets()->sync($this->transformTickets($data));
+        $promoCode->tickets()->sync($data['tickets']);
         return back()->withSuccess('Promo Code Created Successfully');
     }
 
@@ -58,7 +58,7 @@ class EventPromoCodeController extends Controller
 
         $data = $request->validated();
         $promo_code->update($data);
-        $promo_code->tickets()->sync($this->transformTickets($data));
+        $promo_code->tickets()->sync($data['tickets']);
         return back()->withSuccess('Promo Code Updated Successfully');
     }
 
