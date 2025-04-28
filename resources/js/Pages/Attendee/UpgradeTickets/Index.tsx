@@ -212,6 +212,7 @@ const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTicke
 
         if (organizerView && paymentNote.length === 0) {
             toast.error('Enter Organizer Note to proceed further');
+            paymentNoteRef.current?.focus();
             return;
         }
 
@@ -527,7 +528,7 @@ const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTicke
                                         <Col>
                                             <FormGroup className="mb-3">
                                                 <Form.Label className="form-label text-start w-100">
-                                                    Search Sessions
+                                                    Filter Sessions By Name
                                                 </Form.Label>
                                                 <Form.Control
                                                     type="text"
@@ -601,14 +602,14 @@ const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTicke
                                 <Col>
                                     <div className="container border border-1 bg-white rounded-3 p-4 shadow-sm">
                                         <div className="d-flex justify-content-between align-items-center">
-                                            <span className="fs-5 mb-2">
+                                            <h5 className="fw-bold fs-5 mb-2">
                                                 Event Sessions
-                                            </span>
-                                            <span className="fs-5 mb-2">
+                                            </h5>
+                                            <h5 className="fw-bold fs-5 mb-2">
                                                 Total Amount : <sup>
                                                     <small>$</small>
                                                 </sup>{grandTotal}
-                                            </span>
+                                            </h5>
                                         </div>
                                         <div className="row">
                                             <hr></hr>
@@ -734,7 +735,7 @@ const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTicke
                                                 lg={4}
                                                 className="d-flex justify-content-end align-items-center"
                                             >
-                                                <h5 className="mb-1 pt-2 pb-2 mr-2 text-end fs-4">
+                                                <h5 className="mb-1 pt-2 pb-2 mr-2 text-end fs-5">
                                                     Discount :{" "}
                                                     <sup>
                                                         <small>$</small>
@@ -779,7 +780,7 @@ const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTicke
                                                 lg={4}
                                                 className="d-flex justify-content-end align-items-center"
                                             >
-                                                <h5 className="mb-1 pt-2 pb-2 mr-2 text-end fs-4">
+                                                <h5 className="mb-1 pt-2 pb-2 mr-2 text-end fs-5">
                                                     Total Payable :{" "}
                                                     <sup>
                                                         <small>$</small>
@@ -792,7 +793,7 @@ const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTicke
                                 </Card>
                             </>
                         )}
-                        {step === 2 && !(paymentIntent || stripePromise) && <div className="d-flex justify-content-center p-5 mt-3" style={{
+                        {step === 2 && !(paymentIntent || stripePromise) && <div className="d-flex justify-content-center p-5 mt-3 rounded-md" style={{
                             backgroundColor:
                                 "var(--vz-border-color-translucent)",
                         }}>
