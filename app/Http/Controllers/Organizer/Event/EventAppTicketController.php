@@ -66,7 +66,7 @@ class EventAppTicketController extends Controller
 
         $data['event_app_id'] = session('event_id');
         $data['sessions'] = $this->transformSessions($data);
-        $data['addons'] = $this->transformAddons($data);
+        // $data['addons'] = $this->transformAddons($data);
         $data['fees'] = $this->transformFees($data);
 
         // Log::info($data['sessions']);
@@ -91,7 +91,7 @@ class EventAppTicketController extends Controller
         $data = $request->validated();
 
         $data['sessions'] = $this->transformSessions($data);
-        $data['addons'] = $this->transformAddons($data);
+        // $data['addons'] = $this->transformAddons($data);
         $data['fees'] = $this->transformFees($data);
 
         $ticket->update($data);

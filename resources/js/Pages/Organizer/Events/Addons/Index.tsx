@@ -96,7 +96,7 @@ function Index({ addons }: any) {
             header: () => "Action",
             cell: (addon) => (
                 <div className="hstack gap-3 fs-15">
-                    <HasPermission permission="edit_tickets">
+                    <HasPermission permission="edit_add_on">
                         <span
                             className="link-primary cursor-pointer"
                             onClick={() => editAction(addon)}
@@ -104,7 +104,7 @@ function Index({ addons }: any) {
                             <i className="ri-edit-fill"></i>
                         </span>
                     </HasPermission>
-                    <HasPermission permission="delete_tickets">
+                    <HasPermission permission="delete_add_on">
                         <span
                             className="link-danger cursor-pointer"
                             onClick={() => deleteAction(addon)}
@@ -124,7 +124,7 @@ function Index({ addons }: any) {
                     <BreadCrumb title="Ticket Add-ons" pageTitle="Dashboard" />
                     <Row>
                         <Col xs={12} id="TicketFeatureTable">
-                            <HasPermission permission="view_tickets">
+                            <HasPermission permission="view_add_on">
                                 <DataTable
                                     data={addons}
                                     columns={columns}
@@ -133,7 +133,7 @@ function Index({ addons }: any) {
                                         // Delete multiple
                                         {
                                             render: (dataTable) => (
-                                                <HasPermission permission="delete_tickets">
+                                                <HasPermission permission="delete_add_on">
                                                     <Button
                                                         className="btn-danger"
                                                         onClick={() =>
@@ -161,7 +161,7 @@ function Index({ addons }: any) {
                                         // Add new
                                         {
                                             render: (
-                                                <HasPermission permission="create_tickets">
+                                                <HasPermission permission="create_add_on">
                                                     <Button
                                                         onClick={() =>
                                                             setShowCreateEditModal(

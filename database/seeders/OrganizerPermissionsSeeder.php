@@ -110,6 +110,24 @@ class OrganizerPermissionsSeeder extends Seeder
         'create_referral_link',
         'edit_referral_link',
         'delete_referral_link',
+        // Addons
+        'scan_addons',
+
+        //promo_code
+        'view_promo_code',
+        'create_promo_code',
+        'delete_promo_code',
+        'edit_promo_code',
+        //_add_on
+        'view_add_on',
+        'create_add_on',
+        'delete_add_on',
+        'edit_add_on',
+        //_ticket_fee
+        'view_ticket_fee',
+        'create_ticket_fee',
+        'delete_ticket_fee',
+        'edit_ticket_fee',
     ];
 
     public function run(): void

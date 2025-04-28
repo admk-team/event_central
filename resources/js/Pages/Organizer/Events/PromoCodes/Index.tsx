@@ -149,10 +149,10 @@ function Index({ promoCodes, tickets }: any) {
             header: () => 'Action',
             cell: (promoCode) => (
                 <div className="hstack gap-3 fs-15">
-                    <HasPermission permission="edit_tickets">
+                    <HasPermission permission="edit_promo_code">
                         <span className="link-primary cursor-pointer" onClick={() => editAction(promoCode)}><i className="ri-edit-fill"></i></span>
                     </HasPermission>
-                    <HasPermission permission="delete_tickets">
+                    <HasPermission permission="delete_promo_code">
                         <span className="link-danger cursor-pointer" onClick={() => deleteAction(promoCode)}>
                             <i className="ri-delete-bin-5-line"></i>
                         </span>
@@ -169,7 +169,7 @@ function Index({ promoCodes, tickets }: any) {
                     <BreadCrumb title="Promo Codes" pageTitle="Promo Codes" />
                     <Row>
                         <Col xs={12}>
-                            <HasPermission permission="view_tickets">
+                            <HasPermission permission="view_promo_code">
                                 <DataTable
                                     data={promoCodes}
                                     columns={columns}
@@ -178,7 +178,7 @@ function Index({ promoCodes, tickets }: any) {
                                         // Delete multiple
                                         {
                                             render: (dataTable) => (
-                                                <HasPermission permission="delete_tickets">
+                                                <HasPermission permission="delete_promo_code">
                                                     <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>
                                                 </HasPermission>
                                             ),
@@ -188,7 +188,7 @@ function Index({ promoCodes, tickets }: any) {
                                         // Add new
                                         {
                                             render: (
-                                                <HasPermission permission="create_tickets">
+                                                <HasPermission permission="create_promo_code">
                                                     <Button onClick={() => setShowCreateEditModal(true)}><i className="ri-add-fill"></i> Add New</Button>
                                                 </HasPermission>
                                             )

@@ -130,6 +130,9 @@ const Navdata = () => {
                 'view_speakers',
                 'view_partner',
                 'view_tickets',
+                'view_promo_code',
+                'view_add_on',
+                'view_ticket_fee',
             ],
             subItems: [
                 {
@@ -174,7 +177,7 @@ const Navdata = () => {
                     link: route('organizer.events.ticket-fees.index'),
                     parentId: "Content",
                     hasPermissions: [
-                        'view_tickets', //To be changed after permission added
+                        'view_ticket_fee', //To be changed after permission added
                     ],
                 },
                 {
@@ -183,7 +186,7 @@ const Navdata = () => {
                     link: route('organizer.events.addon.index'),
                     parentId: "Content",
                     hasPermissions: [
-                        'view_tickets',  //To be changed after permission added
+                        'view_add_on',  //To be changed after permission added
                     ],
                 },
 
@@ -193,7 +196,7 @@ const Navdata = () => {
                     link: route('organizer.events.promo-codes.index'),
                     parentId: "Content",
                     hasPermissions: [
-                        'view_tickets',
+                        'view_promo_code',
                     ],
                 },
             ]

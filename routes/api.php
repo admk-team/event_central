@@ -11,6 +11,7 @@ use App\Http\Controllers\Api\v1\Attendee\RegisterController;
 use App\Http\Controllers\Api\v1\Organizer\EventSessionController;
 use App\Http\Controllers\Api\v1\Attendee\EventController as AttendeeEventController;
 use App\Http\Controllers\Api\v1\Attendee\QuestionAttendeeController as AttendeeQuestionAttendeeController;
+use App\Http\Controllers\Api\v1\Organizer\AddonController;
 use App\Http\Controllers\Api\v1\Organizer\AssignTicketApiController;
 use App\Http\Controllers\Api\v1\Organizer\QAController;
 use App\Http\Controllers\Api\v1\Organizer\AttendeeController;
@@ -36,6 +37,7 @@ Route::prefix('user')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->defaults('type', 'user');
 
     Route::middleware(['auth:sanctum', 'ability:role:user'])->group(function () {
+        Route::delete('delete/{user}', [AuthController::class, 'delete'])->name('user.delete')->defaults('type', 'user');
         Route::get('/me', function (Request $request) {
             return $request->user();
         });
@@ -58,6 +60,10 @@ Route::prefix('user')->group(function () {
         Route::post('events/{event}/sessions/{session}/checkin', [EventSessionController::class, 'checkin']);
         Route::post('events/{event}/sessions/{session}/checkout', [EventSessionController::class, 'checkout']);
         Route::get('events/{event}/sessions/{session}/attendance', [EventSessionController::class, 'attendance']);
+
+        // Addons
+        Route::get('events/{event}/addons', [AddonController::class, 'index']);
+        Route::post('events/{event}/addons/{addon}/scan', [AddonController::class, 'scan']);
 
         //Organizer Q&A  start
         Route::get('/events/organizer/qa/{session_id}', [QAController::class, 'organizerQA'])->name('api.events.qa.index');
@@ -116,20 +122,29 @@ Route::prefix('attendee')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->defaults('type', 'attendee');
     Route::post('register/{eventId}', [RegisterController::class, 'register']);
     Route::get('allevents', [AttendeeEventController::class, 'allevents']);
+
+    Route::get('event/{eventApp}', [AttendeeEventController::class, 'getEventDetailDashboard']);
+    Route::get('event/{eventApp}/session', [AttendeeEventController::class, 'getEventDetailAgenda']);
+    Route::get('event/{eventApp}/session/{eventSession}', [AttendeeEventController::class, 'eventsessions']);
+    Route::get('event/ticket/{eventApp}', [AttendeeEventController::class, 'ticket']);
+    Route::get('event/speaker/{eventApp}', [AttendeeEventController::class, 'speaker']);
+    Route::get('event/contact/{eventApp}', [AttendeeEventController::class, 'contact']);
+
     Route::middleware(['auth:sanctum', 'ability:role:attendee'])->group(function () {
 
         Route::get('/me', function (Request $request) {
             return $request->user();
         });
+        Route::delete('delete/{attendee}', [AuthController::class, 'delete'])->name('attendee.delete')->defaults('type', 'attendee');
         Route::post('profile/update/{attendee}', [ProfileController::class, 'update']);
         Route::post('/logout', [AuthController::class, 'logout']);
 
-        Route::get('event/{eventApp}', [AttendeeEventController::class, 'getEventDetailDashboard']);
-        Route::get('event/{eventApp}/session', [AttendeeEventController::class, 'getEventDetailAgenda']);
-        Route::get('event/{eventApp}/session/{eventSession}', [AttendeeEventController::class, 'eventsessions']);
-        Route::get('event/ticket/{eventApp}', [AttendeeEventController::class, 'ticket']);
-        Route::get('event/speaker/{eventApp}', [AttendeeEventController::class, 'speaker']);
-        Route::get('event/contact/{eventApp}', [AttendeeEventController::class, 'contact']);
+        // Route::get('event/{eventApp}', [AttendeeEventController::class, 'getEventDetailDashboard']);
+        // Route::get('event/{eventApp}/session', [AttendeeEventController::class, 'getEventDetailAgenda']);
+        // Route::get('event/{eventApp}/session/{eventSession}', [AttendeeEventController::class, 'eventsessions']);
+        // Route::get('event/ticket/{eventApp}', [AttendeeEventController::class, 'ticket']);
+        // Route::get('event/speaker/{eventApp}', [AttendeeEventController::class, 'speaker']);
+        // Route::get('event/contact/{eventApp}', [AttendeeEventController::class, 'contact']);
 
 
         Route::post('checkout', [PaymentController::class, 'checkout'])->name('attendee.tickets.checkout');

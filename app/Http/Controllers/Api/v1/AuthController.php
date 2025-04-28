@@ -45,7 +45,7 @@ class AuthController extends Controller
         // Assign role-based ability
         $role = $type === 'attendee' ? 'attendee' : 'user';
         $token = $user->createToken('auth_token', ["role:$role"])->plainTextToken;
-        
+
         if ($type !== 'attendee') {
             setPermissionsTeamId($user->owner_id);
         }
@@ -63,5 +63,20 @@ class AuthController extends Controller
     {
         $request->user()->tokens()->delete();
         return response()->json(['message' => 'Logged out']);
+    }
+
+    public function delete($id, $type)
+    {
+        // Determine the model based on type
+        if ($type === 'attendee') {
+            $attendee = Attendee::findOrFail($id);
+        } else {
+            $attendee = User::findOrFail($id);
+        }
+
+        $attendee->tokens()->delete();
+        $attendee->delete();
+
+        return response()->json(['message' => 'Deleted successfully']);
     }
 }
