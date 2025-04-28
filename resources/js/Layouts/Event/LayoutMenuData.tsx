@@ -52,11 +52,11 @@ const Navdata = () => {
         if (iscurrentState !== 'payemntSettings') setIspayemntSettings(false);
         if (iscurrentState !== 'sessionAttendance') setIsSessionAttendance(false);
         if (iscurrentState !== 'Tickets') setIsTickets(false);
-        if (iscurrentState !== 'refundTicket') setIsRefundTicket(false);
+        // if (iscurrentState !== 'refundTicket') setIsRefundTicket(false);
         if (iscurrentState !== 'Questionnaire') setIsQuestionnaireForm(false);
         if (iscurrentState !== 'Questionnaire_response') setIsQuestionnaireResponse(false);
-        if (iscurrentState !== 'assignTickets') setIsTickets(false);
-        if (iscurrentState !== 'upgradeTicket') setIsTickets(false);
+        // if (iscurrentState !== 'assignTickets') setIsTickets(false);
+        // if (iscurrentState !== 'upgradeTicket') setIsTickets(false);
     }, [
         iscurrentState,
         isDashboard,
@@ -67,10 +67,10 @@ const Navdata = () => {
         IsWebsite,
         IspayemntSettings,
         IsSessionAttendance,
-        isRefundTicket,
+        // isRefundTicket,
         isTickets,
-        isAssignTicket,
-        isUpgradeTicket
+        // isAssignTicket,
+        // isUpgradeTicket
     ]);
 
     // Dynamic current date
@@ -228,38 +228,7 @@ const Navdata = () => {
                 'view_payments'
             ],
         },
-        {
-            id: "refundTicket",
-            label: "Refund Tickets",
-            icon: "bx bxs-credit-card",
-            link: route('organizer.events.refund.tickets'),
-            stateVariables: isRefundTicket,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsTickets(!isRefundTicket);
-                setIscurrentState('refundTicket');
-                updateIconSidebar(e);
-            },
-            hasPermissions: [
-                'refund_ticket'
-            ],
-        },
-        {
-            id: "upgradeTicket",
-            label: "Upgrade Tickets",
-            icon: "bx bxs-credit-card",
-            link: route('organizer.events.tickets.upgrade'),
-            stateVariables: isUpgradeTicket,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsTickets(!isUpgradeTicket);
-                setIscurrentState('upgradeTicket');
-                updateIconSidebar(e);
-            },
-            hasPermissions: [
-                'refund_ticket'
-            ],
-        },
+
         {
             id: "registrationForm",
             label: "Registration Form",
@@ -325,21 +294,98 @@ const Navdata = () => {
         //     ],
         // },
         {
-            id: "assignTickets",
-            label: "Assign Tickets",
+            id: "tickets",
+            label: "Tickets",
             icon: "bx bxs-server",
-            link: route('organizer.events.attendee.tickets.assign', null),
-            stateVariables: isAssignTicket,
+            link: "/#",
+            stateVariables: isTickets,
             click: function (e: any) {
                 e.preventDefault();
-                setIsAssignTicket(!isAssignTicket);
-                setIscurrentState('assignTickets');
+                setIsTickets(!isTickets);
+                setIscurrentState('Tickets');
                 updateIconSidebar(e);
             },
-            hasPermissions: [
-                'assign_tickets',
+            hasAnyPermission: [
+                'view_tickets',
             ],
+            subItems: [
+                {
+                    id: "assignTickets",
+                    label: "Assign Tickets",
+                    link: route('organizer.events.attendee.tickets.assign', null),
+                    parentId: "tickets",
+                    hasPermissions: [
+                        'assign_tickets',
+                    ],
+                },
+                {
+                    id: "upgradeTicket",
+                    label: "Upgrade Tickets",
+                    link: route('organizer.events.tickets.upgrade'),
+                    parentId: "tickets",
+                    hasPermissions: [
+                        'refund_ticket',
+                    ],
+                },
+                {
+                    id: "refundTicket",
+                    label: "Refund Tickets",
+                    link: route('organizer.events.refund.tickets'),
+                    parentId: "tickets",
+                    hasPermissions: [
+                        'refund_ticket',
+                    ],
+                },
+            ]
         },
+        // {
+        //     id: "assignTickets",
+        //     label: "Assign Tickets",
+        //     icon: "bx bxs-server",
+        //     link: route('organizer.events.attendee.tickets.assign', null),
+        //     stateVariables: isAssignTicket,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIsAssignTicket(!isAssignTicket);
+        //         setIscurrentState('assignTickets');
+        //         updateIconSidebar(e);
+        //     },
+        //     hasPermissions: [
+        //         'assign_tickets',
+        //     ],
+        // },
+        // {
+        //     id: "refundTicket",
+        //     label: "Refund Tickets",
+        //     icon: "bx bxs-credit-card",
+        //     link: route('organizer.events.refund.tickets'),
+        //     stateVariables: isRefundTicket,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIsTickets(!isRefundTicket);
+        //         setIscurrentState('refundTicket');
+        //         updateIconSidebar(e);
+        //     },
+        //     hasPermissions: [
+        //         'refund_ticket'
+        //     ],
+        // },
+        // {
+        //     id: "upgradeTicket",
+        //     label: "Upgrade Tickets",
+        //     icon: "bx bxs-credit-card",
+        //     link: route('organizer.events.tickets.upgrade'),
+        //     stateVariables: isUpgradeTicket,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIsTickets(!isUpgradeTicket);
+        //         setIscurrentState('upgradeTicket');
+        //         updateIconSidebar(e);
+        //     },
+        //     hasPermissions: [
+        //         'refund_ticket'
+        //     ],
+        // },
         {
             id: "badgePrinting",
             label: "Badge Printing",

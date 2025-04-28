@@ -140,7 +140,7 @@ const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTicke
     useEffect(() => {
         if (currentPurchasedTicket) {
             axios.get(route('get.attendee.purchased.ticket.sessions', currentPurchasedTicket)).then((response) => {
-                console.log(response);
+                // console.log(response);
                 setAlreadyPurchasedSessionIds(response.data.sessions);
             }).catch((error) => {
                 console.log(error);
@@ -332,10 +332,6 @@ const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTicke
             }
         }
     };
-
-    useEffect(() => {
-        console.log(paymentMethod);
-    }, [paymentMethod])
 
     const validateCode = () => {
         setCodeError(false);
@@ -605,10 +601,10 @@ const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTicke
                                 <Col>
                                     <div className="container border border-1 bg-white rounded-3 p-4 shadow-sm">
                                         <div className="d-flex justify-content-between align-items-center">
-                                            <span className="fs-4 mb-2">
+                                            <span className="fs-5 mb-2">
                                                 Event Sessions
                                             </span>
-                                            <span className="fs-4 mb-2">
+                                            <span className="fs-5 mb-2">
                                                 Total Amount : <sup>
                                                     <small>$</small>
                                                 </sup>{grandTotal}
