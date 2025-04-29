@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Welcome to Our System</title>
+    <title>Welcome to {{ $event_app->name }}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,64 +17,54 @@
             border-radius: 8px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
         }
-        h2 {
-            color: #333;
-            text-align: center;
-        }
-        p {
+        p, li {
             font-size: 16px;
             color: #555;
             line-height: 1.6;
         }
-        .credentials {
-            background: #f9f9f9;
-            padding: 10px;
-            border-radius: 5px;
-            margin: 15px 0;
-        }
-        .credentials p {
-            margin: 5px 0;
-            font-weight: bold;
-        }
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            margin-top: 15px;
-            background: #28a745;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        .btn:hover {
-            background: #218838;
+        ul {
+            padding-left: 20px;
         }
         .footer {
             text-align: center;
             font-size: 14px;
             color: #777;
-            margin-top: 20px;
+            margin-top: 30px;
         }
     </style>
 </head>
 <body>
     <div class="email-container">
-        <h2>Welcome, {{ $fname }} {{ $lname}}!</h2>
-        <p>We are excited to have you onboard. Below are your login credentials:</p>
+        <p>Hello {{ $fname }} {{ $lname }},</p>
 
-        <div class="credentials">
-            <p><strong>Email:</strong> {{ $email }}</p>
-            <p><strong>Password:</strong> {{ $password }}</p>
-        </div>
+        <p>We’re excited to welcome you to the <strong>{{ $event_app->name }}</strong>!</p>
 
-        <p>You can log in using the credentials above. For security reasons, please change your password after logging in.</p>
+        <p>You can now log in to the {{ $event_app->name }} App or access everything online to stay connected and make the most of your festival experience.</p>
 
-        <p style="text-align: center;">
-            <a href="{{ url('/attendee/' . $event_app_id . '/login') }}" class="btn">Login Now</a>
-        </p>
+        <p><strong>Here are your login details:</strong></p>
+        <p>Username: {{ $email }}<br>
+           Password: {{ $password }}</p>
+
+        <p>You can log in through the app or online at:<br>
+        <a href="{{ $url }}">{{ $url }}</a></p>
+
+        <p>With your account, you’ll be able to:</p>
+        <ul>
+            <li>View the full festival schedule</li>
+            <li>Add sessions to your personal agenda</li>
+            <li>Vote for your favorite films</li>
+            <li>Leave feedback on sessions and events</li>
+            <li>Purchase tickets and more!</li>
+        </ul>
+
+        <p>Download the app from your device’s app store by searching <strong>{{ $event_app->name }}</strong>, or log in online at <a href="{{ $url }}">{{ $url }}</a> to get started.</p>
+
+        <p>We’re looking forward to seeing you at the festival!</p>
 
         <div class="footer">
-            <p>Best Regards,<br><strong>{{ config('app.name') }}</strong></p>
+            <p>Blessings,<br>
+            The {{ $event_app->name }} Team<br>
+            {{--  <a href="https://www.internationalcff.com">www.internationalcff.com</a></p>  --}}
         </div>
     </div>
 </body>
