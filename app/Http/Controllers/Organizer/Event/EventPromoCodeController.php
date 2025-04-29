@@ -18,7 +18,7 @@ class EventPromoCodeController extends Controller
      */
     public function index()
     {
-        if (! Auth::user()->can('view_tickets')) {
+        if (! Auth::user()->can('view_promo_code')) {
             abort(403);
         }
 
@@ -35,14 +35,14 @@ class EventPromoCodeController extends Controller
      */
     public function store(PromoCodeRequest $request)
     {
-        if (! Auth::user()->can('create_tickets')) {
+        if (! Auth::user()->can('create_promo_code')) {
             abort(403);
         }
 
         $data = $request->validated();
         Log::info($data);
         $promoCode = PromoCode::create($request->validated());
-        $promoCode->tickets()->sync($this->transformTickets($data));
+        $promoCode->tickets()->sync($data['tickets']);
         return back()->withSuccess('Promo Code Created Successfully');
     }
 
@@ -52,13 +52,13 @@ class EventPromoCodeController extends Controller
      */
     public function update(PromoCodeRequest $request, PromoCode $promo_code)
     {
-        if (! Auth::user()->can('edit_tickets')) {
+        if (! Auth::user()->can('edit_promo_code')) {
             abort(403);
         }
 
         $data = $request->validated();
         $promo_code->update($data);
-        $promo_code->tickets()->sync($this->transformTickets($data));
+        $promo_code->tickets()->sync($data['tickets']);
         return back()->withSuccess('Promo Code Updated Successfully');
     }
 
@@ -67,7 +67,7 @@ class EventPromoCodeController extends Controller
      */
     public function destroy(PromoCode $promoCode)
     {
-        if (! Auth::user()->can('delete_tickets')) {
+        if (! Auth::user()->can('delete_promo_code')) {
             abort(403);
         }
 
@@ -80,7 +80,7 @@ class EventPromoCodeController extends Controller
      */
     public function destroyMany(Request $request)
     {
-        if (! Auth::user()->can('delete_tickets')) {
+        if (! Auth::user()->can('delete_promo_code')) {
             abort(403);
         }
 

@@ -29,16 +29,17 @@ export type DataTableAction<T> = {
 }
 
 type DataTableProps<T> = {
-    columns: ColumnDef<T>
+    columns: ColumnDef<T>;
     data: {
         data: T[],
         links: any
-    }
-    title?: string | React.ReactNode
-    description?: string | React.ReactNode
-    actions?: DataTableAction<T>[]
-    disableRowSelection?: boolean
-    tableLayoutFixed?: boolean
+    };
+    title?: string | React.ReactNode;
+    description?: string | React.ReactNode;
+    actions?: DataTableAction<T>[];
+    disableRowSelection?: boolean;
+    tableLayoutFixed?: boolean;
+    searchCombinations?: string[][];
 }
 
 export default function DataTable<T>({
@@ -48,13 +49,14 @@ export default function DataTable<T>({
     description,
     actions,
     disableRowSelection,
-    tableLayoutFixed
+    tableLayoutFixed,
+    searchCombinations
 }: DataTableProps<T>) {
     const rowSelector = useRowSelector(data.data);
 
     const [sort, setSort] = useSort();
 
-    const { hasSearch, searchQuery, setSearchQuery, search, searchProcessing } = useSearch(columns);
+    const { hasSearch, searchQuery, setSearchQuery, search, searchProcessing } = useSearch(columns, searchCombinations);
 
     const dataTable: DataTable<T> = {
         data: data.data,
@@ -293,7 +295,7 @@ function useSort(): [{ column: string, desc: boolean } | null, (column: string) 
 type Search = { query: string, columns: string[] } | null
 type setSearchQuery = (query?: string) => void 
 
-function useSearch<T>(columns: ColumnDef<T>) {
+function useSearch<T>(columns: ColumnDef<T>, combinations: DataTableProps<T>['searchCombinations']) {
     const searchableColumns = columns.filter(col => col.searchable === true && col.accessorKey);
 
     const url = new URL(window.location.href);
@@ -311,6 +313,7 @@ function useSearch<T>(columns: ColumnDef<T>) {
         url.searchParams.set('search', JSON.stringify({
             query: query !== undefined ? query : searchQuery,
             columns: searchableColumns.map(column => column.accessorKey),
+            combinations: combinations,
         }));
 
         setSearchProcessing(true);

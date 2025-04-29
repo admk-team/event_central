@@ -15,7 +15,7 @@ class PromoCodeRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Get the validation rules that apply to the req0uest.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
@@ -31,7 +31,7 @@ class PromoCodeRequest extends FormRequest
             'start_date' => 'required|date|before_or_equal:end_date',
             'end_date' => 'required|date|after_or_equal:start_date',
             'status' => 'required|in:active,expired,disabled',
-            'tickets' => 'required|array|min:1'
+            'tickets' => 'required|array|min:1',
         ];
     }
 

@@ -22,12 +22,10 @@ export default function CreateEditModal({ show, hide, onHide, promoCode, tickets
         start_date: promoCode?.start_date ?? '',
         end_date: promoCode?.end_date ?? '',
         status: promoCode?.status ?? 'active',
-        tickets: promoCode?.tickets ?? [],
+        tickets: promoCode?.tickets.map((ticket: any) => ticket.id) ?? [],
     });
 
     const [discountLabel, setDiscountLabel] = useState('Discount Value');
-    const [selectMulti, setSelectMulti] = useState<any>(promoCode?.selected_tickets ?? null);
-    const [selectAllTickets, setSelectAllTickets] = useState<any>(false);
 
     const submit = (e: any) => {
         e.preventDefault();
@@ -53,12 +51,9 @@ export default function CreateEditModal({ show, hide, onHide, promoCode, tickets
 
     const handleCheckChange = (event: any) => {
         if (event.target.checked) {
-            setSelectMulti(tickets);
-            setData('tickets', tickets);
-            setSelectAllTickets(true);
+            setData('tickets', tickets.map((ticket: any) => ticket.value));
         } else {
-            setSelectMulti([]);
-            setSelectAllTickets(false);
+            setData('tickets', []);
         }
     }
 
@@ -266,13 +261,11 @@ export default function CreateEditModal({ show, hide, onHide, promoCode, tickets
                             <FormGroup className="mb-3">
                                 <Form.Label>Tickets</Form.Label>
                                 <Select
-                                    isDisabled={selectAllTickets}
                                     className={errors.tickets && 'is-invalid'}
-                                    value={selectMulti}
+                                    value={tickets.filter((ticket: any) => data.tickets.includes(ticket.value))}
                                     isMulti={true}
                                     onChange={(list: any) => {
-                                        setSelectMulti(list);
-                                        setData('tickets', list);
+                                        setData('tickets', list.map((item: any) => item.value));
                                     }}
                                     options={tickets}
                                     classNamePrefix={errors.tickets && 'multi-select is-invalid '}
