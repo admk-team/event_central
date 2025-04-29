@@ -229,14 +229,6 @@ const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTicke
     };
 
     const scrollBodyToBottom = () => {
-        // if (stripeElementContainerRef.current) {
-        //     stripeElementContainerRef.current.scrollIntoView({
-        //         behavior: 'smooth', // Smooth scrolling
-        //         block: 'center',    // Align the div in the center of the container
-        //         inline: 'nearest',  // Align horizontally if necessary
-        //     });
-        // }
-
         window.scrollTo({
             top: document.body.scrollHeight,  // Scroll to the bottom
             behavior: 'smooth',               // Smooth scrolling
@@ -480,7 +472,7 @@ const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTicke
                                                 }
                                             >
                                                 <option value={""}>
-                                                    Choose Ticket For Upgrade
+                                                    Choose Ticket To Upgrade
                                                 </option>
                                                 {ticketOptions &&
                                                     ticketOptions.map(
@@ -522,6 +514,23 @@ const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTicke
                                     <Row>
                                         <Col>
                                             <FormGroup className="mb-3">
+                                                <Form.Label className="form-label text-start w-100">
+                                                    Filter Event Sessions
+                                                </Form.Label>
+                                                <Form.Control
+                                                    type="text"
+                                                    placeholder="Search by session Name"
+                                                    maxLength={150}
+                                                    onChange={(e) =>
+                                                        setSearchName(
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                />
+                                            </FormGroup>
+                                        </Col>
+                                        <Col>
+                                            <FormGroup className="mb-3">
                                                 <Form.Label
                                                     htmlFor="payment_method2"
                                                     className="form-label text-start w-100"
@@ -557,23 +566,6 @@ const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTicke
                                                         Other
                                                     </option>
                                                 </Form.Select>
-                                            </FormGroup>
-                                        </Col>
-                                        <Col>
-                                            <FormGroup className="mb-3">
-                                                <Form.Label className="form-label text-start w-100">
-                                                    Filter Sessions By Name
-                                                </Form.Label>
-                                                <Form.Control
-                                                    type="text"
-                                                    placeholder="Search by session Name"
-                                                    maxLength={150}
-                                                    onChange={(e) =>
-                                                        setSearchName(
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                />
                                             </FormGroup>
                                         </Col>
                                     </Row>
