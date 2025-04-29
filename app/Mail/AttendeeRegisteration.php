@@ -8,6 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Mail\Mailables\Address;
 
 class AttendeeRegisteration extends Mailable
 {
@@ -16,14 +17,15 @@ class AttendeeRegisteration extends Mailable
     /**
      * Create a new message instance.
      */
-    public $fname,$lname,$password,$email,$event_app_id;
-    public function __construct($fname,$lname,$password,$email,$event_app_id)
+    public $fname,$lname,$password,$email,$event_app,$url;
+    public function __construct($fname,$lname,$password,$email,$event_app,$url)
     {
         $this->fname = $fname;
         $this->lname = $lname;
         $this->password = $password;
         $this->email = $email;
-        $this->event_app_id = $event_app_id;
+        $this->event_app = $event_app;
+        $this->url = $url;
     }
 
     /**
@@ -31,10 +33,14 @@ class AttendeeRegisteration extends Mailable
      */
     public function envelope(): Envelope
     {
+        $fromEmail =  env('MAIL_FROM_ADDRESS');
+        $fromName = $this->event_app->name ?? env('APP_NAME');
         return new Envelope(
+            from: new Address($fromEmail, $fromName),
             subject: 'Attendee Account Credentials',
         );
     }
+
 
     /**
      * Get the message content definition.
@@ -48,7 +54,8 @@ class AttendeeRegisteration extends Mailable
                 'lname' => $this->lname,
                 'password' => $this->password,
                 'email' => $this->email,
-                'event_app_id' => $this->event_app_id
+                'event_app' => $this->event_app,
+                'url' => $this->url
             ]
         );
     }
