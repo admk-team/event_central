@@ -111,66 +111,48 @@ class Controller extends BaseController
     }
     protected function eventBadgeDetail($type, $event_app_id, $attendee_id, $content_code): void
     {
-        $EventBadges = EventBadge::where('event_app_id', $event_app_id)
+        $eventBadges = EventBadge::where('event_app_id', $event_app_id)
             ->where('type', $type)
-            ->orderBy('milestone', 'asc') // Fetch EventBadges in ascending order of milestone
+            ->orderBy('milestone', 'asc')
             ->get();
-
-        if ($EventBadges) {
-            foreach ($EventBadges as $EventBadge) {
-                // Check if a record already exists for the same content_code and EventBadge
-                $existingEventBadgeDetail = EventBadgeDetail::where('event_app_id', $event_app_id)
-                    ->where('type', $type)
-                    ->where('attendee_id', $attendee_id)
-                    ->where('content_code', $content_code)
-                    ->where('badge_id', $EventBadge->id)
-                    ->first();
-
-                // Skip processing if a EventBadge already exists and is completed
-                if ($existingEventBadgeDetail && $existingEventBadgeDetail->completed_at) {
-                    continue;
-                }
-
-                // Fetch the most recent EventBadge details for the user
-                $previousEventBadgeDetail = EventBadgeDetail::where('event_app_id', $event_app_id)
-                    ->where('type', $type)
-                    ->where('attendee_id', $attendee_id)
-                    ->where('badge_id', $EventBadge->id)
-                    ->latest()
-                    ->first();
-                // Skip processing if a EventBadge already exists and is completed
-                if ($previousEventBadgeDetail && $previousEventBadgeDetail->completed_at) {
-                    continue;
-                }
-
-                // Calculate the total achieved points
-                $totalPoints = $previousEventBadgeDetail ? $previousEventBadgeDetail->achieved_points + $EventBadge->points : $EventBadge->points;
-
-                // Check if the EventBadge milestone is achieved
-                if ($totalPoints >= $EventBadge->milestone) {
-                    // Create a new EventBadge details record with completed status
-                    EventBadgeDetail::create([
-                        'type' => $type,
-                        'achieved_points' => $totalPoints,
-                        'attendee_id' => $attendee_id,
-                        'badge_id' => $EventBadge->id,
-                        'content_code' => $content_code,
-                        'event_app_id' => $event_app_id,
-                        'completed_at' => now(),
-                    ]);
-                } elseif ($previousEventBadgeDetail?->completed_at == null) {
-                    // Create a EventBadge record if not yet completed
-                    EventBadgeDetail::create([
-                        'type' => $type,
-                        'achieved_points' => $totalPoints,
-                        'attendee_id' => $attendee_id,
-                        'badge_id' => $EventBadge->id,
-                        'content_code' => $content_code,
-                        'event_app_id' => $event_app_id,
-                        'completed_at' => null, // Not completed yet
-                    ]);
-                }
+    
+        foreach ($eventBadges as $eventBadge) {
+            $badgeDetail = EventBadgeDetail::where([
+                    ['event_app_id', '=', $event_app_id],
+                    ['type', '=', $type],
+                    ['attendee_id', '=', $attendee_id],
+                    ['event_badge_id', '=', $eventBadge->id],
+                ])
+                ->latest()
+                ->first();
+    
+            // If already completed, skip
+            if ($badgeDetail && $badgeDetail->completed_at) {
+                continue;
+            }
+    
+            $achievedPoints = ($badgeDetail?->achieved_points ?? 0) + $eventBadge->points;
+            $completed = $achievedPoints >= $eventBadge->milestone;
+    
+            // If detail exists and not completed, update
+            if ($badgeDetail) {
+                $badgeDetail->update([
+                    'achieved_points' => $achievedPoints,
+                    'completed_at' => $completed ? now() : null,
+                ]);
+            } else {
+                // Otherwise, create new
+                EventBadgeDetail::create([
+                    'type' => $type,
+                    'achieved_points' => $achievedPoints,
+                    'attendee_id' => $attendee_id,
+                    'event_badge_id' => $eventBadge->id,
+                    'content_code' => $content_code,
+                    'event_app_id' => $event_app_id,
+                    'completed_at' => $completed ? now() : null,
+                ]);
             }
         }
     }
+    
 }

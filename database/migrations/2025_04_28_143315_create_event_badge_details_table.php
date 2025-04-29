@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('type')->nullable();
             $table->integer('achieved_points')->default(0);
-            $table->foreignId('attendee_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('event_badge_id')->constrained()->cascadeOnDelete();
+            $table->unsignedBigInteger('attendee_id')->nullable();
+            $table->unsignedBigInteger('event_badge_id')->nullable();
             $table->unsignedBigInteger('event_app_id')->nullable();
             $table->string('content_code')->nullable();
             $table->timestamp('completed_at')->nullable();

@@ -5,6 +5,7 @@ use App\Http\Controllers\Attendee\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Attendee\Auth\EmailChangeController;
 use App\Http\Controllers\Attendee\Auth\PasswordController;
 use App\Http\Controllers\Attendee\Auth\RegisteredUserController;
+use App\Http\Controllers\Attendee\BadgeAchievementController;
 use App\Http\Controllers\Attendee\EventController;
 use App\Http\Controllers\Attendee\EventSessionController;
 use App\Http\Controllers\Attendee\Payment\PaymentController;
@@ -96,6 +97,8 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
             Route::get('/', [EventQuestionnaireFormController::class, 'index']);
             Route::post('/', [EventQuestionnaireFormController::class, 'submit'])->name('.submit');
         });
+        //Attendee achievement
+        Route::get('/achievement', [BadgeAchievementController::class, 'index'])->name('attendee.achievement');
     });
 
     Route::put('/attendee-profile-update/{attendee}', [ProfileController::class, 'update'])->name('attendee.profile.update');

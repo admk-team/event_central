@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('attendees', function (Blueprint $table) {
-            $table->string('referral_link')->nullable()->after('type');
-            $table->string('personal_url')->nullable()->after('referral_link');
+            $table->text('referral_link')->nullable()->after('type');
+            $table->text('personal_url')->nullable()->after('referral_link');
         });
     }
 

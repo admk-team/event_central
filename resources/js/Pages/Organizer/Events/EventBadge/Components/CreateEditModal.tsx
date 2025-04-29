@@ -181,7 +181,7 @@ export default function CreateEditModal({
                         )}
                     </FormGroup>
 
-                    <FormGroup className="mb-3">
+                    {/* <FormGroup className="mb-3">
                         <Form.Label className="form-label">
                             Description
                         </Form.Label>
@@ -200,7 +200,7 @@ export default function CreateEditModal({
                                 {errors.description}
                             </Form.Control.Feedback>
                         )}
-                    </FormGroup>
+                    </FormGroup> */}
                 </Modal.Body>
 
                 <div className="modal-footer">

@@ -12,7 +12,7 @@ class EventBadgeDetail extends Model
         'type',
         'achieved_points',
         'attendee_id',
-        'badge_id',
+        'event_badge_id',
         'content_code',
         'event_app_id',
         'completed_at'
