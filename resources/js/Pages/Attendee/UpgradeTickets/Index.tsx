@@ -28,9 +28,9 @@ type AttendeeOption = {
     label: string;
 };
 
-const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTickets }: any) => {
+const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, purchasedTickets }: any) => {
 
-    // console.log(organizerView, attendees, attendee_id, sessions, purchasedTickets);
+    console.log(organizerView, attendees, attendee_id, sessions, purchasedTickets);
 
     const Layout = organizerView ? EventLayout : AttendeeLayout;
     const foundAttendee = attendees.find(
@@ -861,5 +861,5 @@ const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTicke
             </React.Fragment>
         </Layout>
     );
-};
+});
 export default Index;
