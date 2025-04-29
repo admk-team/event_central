@@ -20,6 +20,7 @@ use chillerlan\QRCode\QROptions;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Attendee\AttendeeCheckoutRequest;
+use App\Http\Resources\Api\AddonResource;
 use App\Mail\AttendeeTicketPurchasedEmail;
 
 use chillerlan\QRCode\Common\EccLevel;
@@ -352,7 +353,7 @@ class PaymentController extends Controller
         // Only eager load 'paid' payments with their nested relations
         $attendee->load(['payments' => function ($query) {
             $query->where('status', 'paid');
-        }, 'payments.purchased_tickets.ticket.ticketType']);
+        }, 'payments.purchased_tickets.ticket.ticketType', 'payments.purchased_tickets.purchased_addons']);
 
         $paidPayments = $attendee->payments;
 

@@ -40,8 +40,8 @@ class AttendeeController extends Controller
         if ($search) {
             $attendees = $attendees->where(function ($query) use ($search) {
                 $query->where('first_name', 'like', '%' . $search . '%')
-                      ->orWhere('last_name', 'like', '%' . $search . '%')
-                      ->orWhere('email', 'like', '%' . $search . '%');
+                    ->orWhere('last_name', 'like', '%' . $search . '%')
+                    ->orWhere('email', 'like', '%' . $search . '%');
             });
         }
 
@@ -117,7 +117,7 @@ class AttendeeController extends Controller
     }
     public function attendeeTickets(Attendee $attendee)
     {
-        if(!$attendee){
+        if (!$attendee) {
             return response()->json([
                 'message' => 'Attendee Not Exist',
             ]);
@@ -125,7 +125,7 @@ class AttendeeController extends Controller
         // Only eager load 'paid' payments with their nested relations
         $attendee->load(['payments' => function ($query) {
             $query->where('status', 'paid');
-        }, 'payments.purchased_tickets.ticket.ticketType']);
+        }, 'payments.purchased_tickets.ticket.ticketType', 'payments.purchased_tickets.purchased_addons']);
 
         $paidPayments = $attendee->payments;
 
