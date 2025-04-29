@@ -787,8 +787,8 @@ const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTicke
                                                     className="btn btn-success w-100"
                                                 >
                                                     {totalAmount > 0
-                                                        ? "Proceed to Checkout"
-                                                        : "Process Free Ticket"}
+                                                        ? "Proceed Checkout"
+                                                        : "Process Free Upgrade"}
                                                     {processing && (
                                                         <Spinner
                                                             animation="border"
