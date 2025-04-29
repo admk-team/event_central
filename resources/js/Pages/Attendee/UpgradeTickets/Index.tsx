@@ -1,7 +1,7 @@
 import { Head, router } from "@inertiajs/react";
 import React, { useEffect, useState, CSSProperties, useRef } from "react";
 import AttendeeLayout from "../../../Layouts/Attendee";
-import { loadStripe } from "@stripe/stripe-js";
+import { Stripe, loadStripe } from "@stripe/stripe-js";
 import StripeCheckoutForm from "./StripeCheckoutForm";
 import { Elements } from "@stripe/react-stripe-js";
 import EventLayout from "../../../Layouts/Event";
@@ -30,17 +30,17 @@ type AttendeeOption = {
 
 const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTickets }: any) => {
 
-// console.log(organizerView, attendees, attendee_id, sessions, purchasedTickets);
+    // console.log(organizerView, attendees, attendee_id, sessions, purchasedTickets);
 
     const Layout = organizerView ? EventLayout : AttendeeLayout;
     const foundAttendee = attendees.find(
         (attendee: any) => attendee.value === parseInt(attendee_id)
     );
-    const [alreadyPurchasedSessionIds, setAlreadyPurchasedSessionIds] =
-        useState<Array<number>>([]);
-    const [upgradedSessionIds, setUpgradedSessionIds] = useState<Array<number>>(
-        []
-    );
+    const [alreadyPurchasedSessionIds, setAlreadyPurchasedSessionIds] = useState<Array<number>>([]);
+    const [upgradedSessionIds, setUpgradedSessionIds] = useState<Array<number>>([]);
+    const [filteredSessions, setFilteredSessions] = useState<any>(sessions);
+    const [updateList, setUpdateList] = useState(Date.now());
+
     const [grandTotal, setGrandTotal] = useState(0);
     const [totalAmount, setTotalAmount] = useState(0);
     const [discount, setDiscount] = useState(0);
@@ -57,17 +57,19 @@ const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTicke
     const [ticketOptions, setTicketOptions] = useState<Array<AttendeeOption>>(
         []
     );
+    const [fetchingSessions, setFetchingSessions] = useState(false);
     const [paymentProcessed, setPaymentProcessed] = useState(false);
     const [processing, setProcessing] = useState(false);
-    const [filteredSessions, setFilteredSessions] = useState<any>(sessions);
+
     const [step, setStep] = useState(1);
     const [paymentIntent, setPaymentIntent] = useState(null);
     const [stripPubKey, setStripePubKey] = useState(null);
     const [paymentId, setPaymentId] = useState(null);
-    const [stripePromise, setStripePromise] = useState(null);
+    const [stripePromise, setStripePromise] = useState<Stripe | null>(null);
 
     const paymentOptionRef = useRef(null);
     const paymentNoteRef = useRef(null);
+    const stripeElementContainerRef = useRef(null);
 
 
     useEffect(() => {
@@ -129,7 +131,7 @@ const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTicke
                     } else {
                         setTicketOptions([]);
                     }
-                    setAlreadyPurchasedSessionIds(response.data.sessions);
+                    setAlreadyPurchasedSessionIds([]);
                 })
                 .catch((error) => {
                     console.log(error);
@@ -139,11 +141,18 @@ const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTicke
 
     useEffect(() => {
         if (currentPurchasedTicket) {
+            setFetchingSessions(true);
             axios.get(route('get.attendee.purchased.ticket.sessions', currentPurchasedTicket)).then((response) => {
                 // console.log(response);
-                setAlreadyPurchasedSessionIds(response.data.sessions);
+                setFilteredSessions([]);
+                setFilteredSessions([...sessions]);
+                setAlreadyPurchasedSessionIds([...response.data.sessions]);
+                setUpgradedSessionIds([]);
+                setUpdateList(Date.now());
             }).catch((error) => {
                 console.log(error);
+            }).finally(() => {
+                setFetchingSessions(false);
             })
         }
     }, [currentPurchasedTicket]);
@@ -158,6 +167,18 @@ const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTicke
             }
         });
     };
+
+    const handleCheckboxChange = (e: any, s: any) => {
+        if (e.target.checked) {
+            setUpgradedSessionIds((prev) => [...prev, s.id]);
+            setStep(1);
+        } else {
+            setUpgradedSessionIds((prev) =>
+                prev.filter((id) => id !== s.id)
+            );
+            setStep(1);
+        }
+    }
 
     const handlePaymentSuccess = (stripeResult: any) => {
         const data = {
@@ -207,6 +228,29 @@ const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTicke
         }
     };
 
+    const scrollBodyToBottom = () => {
+        // if (stripeElementContainerRef.current) {
+        //     stripeElementContainerRef.current.scrollIntoView({
+        //         behavior: 'smooth', // Smooth scrolling
+        //         block: 'center',    // Align the div in the center of the container
+        //         inline: 'nearest',  // Align horizontally if necessary
+        //     });
+        // }
+
+        window.scrollTo({
+            top: document.body.scrollHeight,  // Scroll to the bottom
+            behavior: 'smooth',               // Smooth scrolling
+        });
+    };
+
+    const makeStripeReady = async (response: any) => {
+        const stripeInstance = await loadStripe(response.data.stripe_pub_key)
+        setPaymentIntent(response.data.client_secret);
+        setStripePubKey(response.data.stripe_pub_key);
+        setStripePromise(stripeInstance);
+        scrollBodyToBottom();
+    }
+
     const submitCheckOut = (e: any) => {
         e.preventDefault();
 
@@ -232,11 +276,7 @@ const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTicke
                         }
                     )
                     .then((response) => {
-                        setPaymentIntent(response.data.client_secret);
-                        setStripePubKey(response.data.stripe_pub_key);
-                        setStripePromise(
-                            loadStripe(response.data.stripe_pub_key)
-                        );
+                        makeStripeReady(response);
                     })
                     .catch((error) => {
                         console.log(error);
@@ -285,14 +325,9 @@ const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTicke
                     })
                     .then((response) => {
                         console.log(response);
-                        setPaymentIntent(response.data.client_secret);
-                        setStripePubKey(response.data.stripe_pub_key);
-                        setStripePromise(
-                            loadStripe(response.data.stripe_pub_key)
-                        );
+                        makeStripeReady(response);
                     })
                     .catch((error) => {
-                        //
                         console.log(error);
                     })
                     .finally(() => {
@@ -388,7 +423,6 @@ const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTicke
             height: 35,
         }),
     };
-
 
 
     return (
@@ -546,55 +580,59 @@ const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTicke
                                 )}
                             </>
                         )}
-
+                        {/* Attendee View */}
                         {!organizerView && (
-                            <Row className="d-flex flex-col justify-content-center mt-5 mb-2 mt-md-0">
-                                <Col md={12} className="text-center">
-                                    <h2>
-                                        Choose Purchased Ticket
-                                        to upgrade it's Sessions
-                                    </h2>
-                                    <hr />
-                                </Col>
-                                <Col md={6}>
-                                    <FormGroup className="mb-3">
-                                        <Form.Label
-                                            htmlFor="purchased_ticket"
-                                            className="form-label text-start w-100"
-                                        >
-                                            Choose Ticket To Upgrade
-                                        </Form.Label>
-                                        <Form.Select
-                                            aria-label="Default select example"
-                                            className="form-control"
-                                            id="purchased_ticket"
-                                            ref={paymentOptionRef}
-                                            onChange={(e) => {
-                                                let id = parseInt(e.target.value);
-                                                setCurrentPurchasedTicket(id ? id : null)
-                                            }
-                                            }
-                                        >
-                                            <option value={""}>
-                                                Choose Ticket For Upgrade
-                                            </option>
-                                            {purchasedTickets &&
-                                                purchasedTickets.map(
-                                                    (t: any) => (
-                                                        <option
-                                                            key={t.id}
-                                                            value={t.id}
-                                                        >
-                                                            {t.id +
-                                                                "-" +
-                                                                t.ticket.name}
-                                                        </option>
-                                                    )
-                                                )}
-                                        </Form.Select>
-                                    </FormGroup>
-                                </Col>
-                            </Row>
+                            <>
+                                <Row className="d-flex flex-col justify-content-center mt-5 mt-md-0">
+                                    <Col md={6} lg={6} className="text-center">
+                                        <h2>
+                                            Choose Purchased Ticket
+                                            to upgrade it's Sessions
+                                        </h2>
+                                        <hr />
+                                    </Col>
+                                </Row>
+                                <Row className="d-flex flex-col justify-content-center mt-md-0">
+                                    <Col md={6} lg={6}>
+                                        <FormGroup className="mb-3">
+                                            <Form.Label
+                                                htmlFor="purchased_ticket"
+                                                className="form-label text-start w-100"
+                                            >
+                                                Choose Ticket To Upgrade
+                                            </Form.Label>
+                                            <Form.Select
+                                                aria-label="Default select example"
+                                                className="form-control"
+                                                id="purchased_ticket"
+                                                ref={paymentOptionRef}
+                                                onChange={(e) => {
+                                                    let id = parseInt(e.target.value);
+                                                    setCurrentPurchasedTicket(id ? id : null)
+                                                }
+                                                }
+                                            >
+                                                <option value={""}>
+                                                    Choose Ticket For Upgrade
+                                                </option>
+                                                {purchasedTickets &&
+                                                    purchasedTickets.map(
+                                                        (t: any) => (
+                                                            <option
+                                                                key={t.id}
+                                                                value={t.id}
+                                                            >
+                                                                {t.id +
+                                                                    "-" +
+                                                                    t.ticket.name}
+                                                            </option>
+                                                        )
+                                                    )}
+                                            </Form.Select>
+                                        </FormGroup>
+                                    </Col>
+                                </Row>
+                            </>
                         )}
 
                         {currentPurchasedTicket && (
@@ -602,37 +640,42 @@ const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTicke
                                 <Col>
                                     <div className="container border border-1 bg-white rounded-3 p-4 shadow-sm">
                                         <div className="d-flex justify-content-between align-items-center">
-                                            <h5 className="fw-bold fs-5 mb-2">
-                                                Event Sessions
-                                            </h5>
+                                            <div className="d-flex flex-row justify-content-start align-items-center">
+                                                <h5 className="fw-bold fs-5 mr-2">
+                                                    Event Sessions
+                                                </h5>
+                                                {fetchingSessions && <Spinner
+                                                    animation="border"
+                                                    role="status"
+                                                    size="sm"
+                                                    className="mb-2"
+                                                >
+                                                    <span className="visually-hidden">
+                                                        Fetching sessions...
+                                                    </span>
+                                                </Spinner>}
+                                            </div>
+
                                             <h5 className="fw-bold fs-5 mb-2">
                                                 Total Amount : <sup>
                                                     <small>$</small>
                                                 </sup>{grandTotal}
                                             </h5>
                                         </div>
-                                        <div className="row">
+                                        <div className="row" key={updateList}>
                                             <hr></hr>
                                             {filteredSessions &&
                                                 filteredSessions.map(
                                                     (s: any) => (
                                                         <div className="col-12 col-md-6 col-lg-4 mb-3" key={'div-' + s.id}>
-                                                            <Form.Check
-                                                                title={alreadyPurchasedSessionIds.includes(
-                                                                    s.id
-                                                                ) ? "Session alreay available to Attendee" : ""}
-                                                                disabled={alreadyPurchasedSessionIds.includes(
-                                                                    s.id
-                                                                )}
-                                                                defaultChecked={alreadyPurchasedSessionIds.includes(
-                                                                    s.id
-                                                                )}
-                                                                key={'checkbox-' + s.id}
-                                                                type={
-                                                                    "checkbox"
-                                                                }
+                                                            {alreadyPurchasedSessionIds.includes(s.id) && <Form.Check
+                                                                title="Session alreay available to Attendee"
+                                                                disabled
+                                                                defaultChecked
+                                                                key={'checkbox-checked-' + s.id}
+                                                                type={"checkbox"}
                                                                 id={
-                                                                    "session-checkbox-" +
+                                                                    "session-checkbox-checked-" +
                                                                     s.id
                                                                 }
                                                                 label={
@@ -643,39 +686,24 @@ const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTicke
                                                                         ")"
                                                                         : "  (free)")
                                                                 }
-                                                                onChange={(
-                                                                    e
-                                                                ) => {
-                                                                    if (
-                                                                        e.target
-                                                                            .checked
-                                                                    ) {
-                                                                        setUpgradedSessionIds(
-                                                                            (
-                                                                                prev
-                                                                            ) => [
-                                                                                    ...prev,
-                                                                                    s.id,
-                                                                                ]
-                                                                        );
-                                                                        setStep(1);
-                                                                    } else {
-                                                                        setUpgradedSessionIds(
-                                                                            (
-                                                                                prev
-                                                                            ) =>
-                                                                                prev.filter(
-                                                                                    (
-                                                                                        id
-                                                                                    ) =>
-                                                                                        id !==
-                                                                                        s.id
-                                                                                )
-                                                                        );
-                                                                        setStep(1);
-                                                                    }
-                                                                }}
-                                                            />
+                                                                onChange={(e) => { handleCheckboxChange(e, s) }
+                                                                }
+                                                            />}
+                                                            {!alreadyPurchasedSessionIds.includes(s.id) && <Form.Check
+                                                                key={'checkbox-' + s.id}
+                                                                type={"checkbox"}
+                                                                id={"session-checkbox-" + s.id}
+                                                                label={
+                                                                    s.name +
+                                                                    (s.price
+                                                                        ? "  ($" +
+                                                                        s.price +
+                                                                        ")"
+                                                                        : "  (free)")
+                                                                }
+                                                                onChange={(e) => { handleCheckboxChange(e, s) }
+                                                                }
+                                                            />}
                                                         </div>
                                                     )
                                                 )}
@@ -793,7 +821,9 @@ const Index = ({ organizerView, attendees, attendee_id, sessions, purchasedTicke
                                 </Card>
                             </>
                         )}
-                        {step === 2 && !(paymentIntent || stripePromise) && <div className="d-flex justify-content-center p-5 mt-3 rounded-md" style={{
+
+                        {/* Stripe Elements Conatiner */}
+                        {step === 2 && !(paymentIntent || stripePromise) && <div ref={stripeElementContainerRef} className="d-flex justify-content-center p-5 mt-3 rounded-md" style={{
                             backgroundColor:
                                 "var(--vz-border-color-translucent)",
                         }}>
