@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EventBadge;
+use App\Models\EventBadgeDetail;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
@@ -106,5 +108,69 @@ class Controller extends BaseController
                 null,
                 Response::HTTP_NO_CONTENT
             );
+    }
+    protected function eventBadgeDetail($type, $event_app_id, $attendee_id, $content_code): void
+    {
+        $EventBadges = EventBadge::where('event_app_id', $event_app_id)
+            ->where('type', $type)
+            ->orderBy('milestone', 'asc') // Fetch EventBadges in ascending order of milestone
+            ->get();
+
+        if ($EventBadges) {
+            foreach ($EventBadges as $EventBadge) {
+                // Check if a record already exists for the same content_code and EventBadge
+                $existingEventBadgeDetail = EventBadgeDetail::where('event_app_id', $event_app_id)
+                    ->where('type', $type)
+                    ->where('attendee_id', $attendee_id)
+                    ->where('content_code', $content_code)
+                    ->where('badge_id', $EventBadge->id)
+                    ->first();
+
+                // Skip processing if a EventBadge already exists and is completed
+                if ($existingEventBadgeDetail && $existingEventBadgeDetail->completed_at) {
+                    continue;
+                }
+
+                // Fetch the most recent EventBadge details for the user
+                $previousEventBadgeDetail = EventBadgeDetail::where('event_app_id', $event_app_id)
+                    ->where('type', $type)
+                    ->where('attendee_id', $attendee_id)
+                    ->where('badge_id', $EventBadge->id)
+                    ->latest()
+                    ->first();
+                // Skip processing if a EventBadge already exists and is completed
+                if ($previousEventBadgeDetail && $previousEventBadgeDetail->completed_at) {
+                    continue;
+                }
+
+                // Calculate the total achieved points
+                $totalPoints = $previousEventBadgeDetail ? $previousEventBadgeDetail->achieved_points + $EventBadge->points : $EventBadge->points;
+
+                // Check if the EventBadge milestone is achieved
+                if ($totalPoints >= $EventBadge->milestone) {
+                    // Create a new EventBadge details record with completed status
+                    EventBadgeDetail::create([
+                        'type' => $type,
+                        'achieved_points' => $totalPoints,
+                        'attendee_id' => $attendee_id,
+                        'badge_id' => $EventBadge->id,
+                        'content_code' => $content_code,
+                        'event_app_id' => $event_app_id,
+                        'completed_at' => now(),
+                    ]);
+                } elseif ($previousEventBadgeDetail?->completed_at == null) {
+                    // Create a EventBadge record if not yet completed
+                    EventBadgeDetail::create([
+                        'type' => $type,
+                        'achieved_points' => $totalPoints,
+                        'attendee_id' => $attendee_id,
+                        'badge_id' => $EventBadge->id,
+                        'content_code' => $content_code,
+                        'event_app_id' => $event_app_id,
+                        'completed_at' => null, // Not completed yet
+                    ]);
+                }
+            }
+        }
     }
 }

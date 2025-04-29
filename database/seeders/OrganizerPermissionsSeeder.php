@@ -128,6 +128,11 @@ class OrganizerPermissionsSeeder extends Seeder
         'create_ticket_fee',
         'delete_ticket_fee',
         'edit_ticket_fee',
+         //_event_badge
+         'view_event_badge',
+         'create_event_badge',
+         'delete_event_badge',
+         'edit_event_badge',
     ];
 
     public function run(): void

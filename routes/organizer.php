@@ -24,6 +24,7 @@ use App\Http\Controllers\Organizer\Event\Settings\EventAppPaymentController;
 use App\Http\Controllers\Organizer\Event\Settings\EventSettingsController;
 use App\Http\Controllers\Organizer\Event\User\AttendeeController;
 use App\Http\Controllers\Organizer\Event\EventAppTicketController;
+use App\Http\Controllers\Organizer\Event\EventBadgeController;
 use App\Http\Controllers\Organizer\Event\EventDateController;
 use App\Http\Controllers\Organizer\Event\EventPromoCodeController;
 use App\Http\Controllers\Organizer\Event\EventTicketTypeController;
@@ -239,6 +240,9 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             // RefferalLink
             Route::resource('refferal-link', RefferalLinkController::class);
             Route::delete('refferal-link/delete/many', [RefferalLinkController::class, 'destroyMany'])->name('refferal-link.destroy.many');
+             // RefferalLink
+             Route::resource('badge', EventBadgeController::class);
+             Route::delete('badge/delete/many', [EventBadgeController::class, 'destroyMany'])->name('badge.destroy.many');
         });
 
         // Q&A

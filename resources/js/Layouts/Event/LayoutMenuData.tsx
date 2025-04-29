@@ -23,6 +23,7 @@ const Navdata = () => {
     const [isAssignTicket, setIsAssignTicket] = useState<boolean>(false);
     const [isUpgradeTicket, setUpgradeTicket] = useState<boolean>(false);
     const [isRefferalLink, setIsRefferalLink] = useState<boolean>(false);
+    const [isEventBadge, setIsEventBadge] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
 
@@ -59,6 +60,7 @@ const Navdata = () => {
         if (iscurrentState !== 'assignTickets') setIsTickets(false);
         if (iscurrentState !== 'upgradeTicket') setIsTickets(false);
         if (iscurrentState !== 'refferal-link') setIsRefferalLink(false);
+        if (iscurrentState !== 'event_badge') setIsEventBadge(false);
     }, [
         iscurrentState,
         isDashboard,
@@ -392,7 +394,7 @@ const Navdata = () => {
             ],
         },
         {
-            id: "",
+            id: "refferal_link",
             label: "Referral Link",
             icon: "bx bx-share-alt",
             link: route('organizer.events.refferal-link.index'),
@@ -405,6 +407,22 @@ const Navdata = () => {
             },
             hasPermissions: [
                 'view_referral_link'
+            ],
+        },
+        {
+            id: "event_badge",
+            label: "Event Badges",
+            icon: "bx bx-badge",
+            link: route('organizer.events.badge.index'),
+            stateVariables: isEventBadge,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsRefferalLink(!isEventBadge);
+                setIscurrentState('event_badge');
+                updateIconSidebar(e);
+            },
+            hasPermissions: [
+                'view_event_badge'
             ],
         },
         // }] : []),
