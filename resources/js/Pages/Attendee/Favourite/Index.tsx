@@ -91,7 +91,7 @@ const Index = ({ eventApp }: any) => {
                                     <Card>
                                         <CardBody>
                                             <div className="p-4 d-flex justify-content-between">
-                                                <h5>My Favorite</h5>
+                                                <h5>My Favorites</h5>
                                                 <h5>
                                                     {" "}{moment(eventApp?.dates[0].date).format("DD MMM YYYY")}{" "}
                                                 </h5>
