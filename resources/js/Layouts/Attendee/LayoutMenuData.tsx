@@ -14,6 +14,7 @@ const Navdata = () => {
     const [isQr, setIsQr] = useState<boolean>(false);
     const [purchaseTickets, setPurchaseTickets] = useState<boolean>(false);
     const [questionnaire, setquestionnaire] = useState<boolean>(false);
+    const [IsAchievement, setIsAchievement] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>("Dashboard");
     // const [IsQA, setIsQA] = useState<boolean>(false);
@@ -55,6 +56,9 @@ const Navdata = () => {
         if (iscurrentState !== "upgradeTicket") {
             setIsUpgradeTicket(false);
         }
+        if (iscurrentState !== "achievement") {
+            setIsAchievement(false);
+        }
         // if (iscurrentState !== "Q&A") {
         //     setIsQA(false);
         // }
@@ -69,7 +73,8 @@ const Navdata = () => {
         isPost,
         purchaseTickets,
         questionnaire,
-        isUpgradeTicket
+        isUpgradeTicket,
+        IsAchievement,
     ]);
 
     const menuItems: any = [
@@ -202,6 +207,19 @@ const Navdata = () => {
             label: "Post Event Questionnaire",
             icon: "bx bxs-notepad",
             link: route("attendee.event-questionnaire-form"),
+            stateVariables: isMore,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsMore(!isMore);
+                setIscurrentState("More");
+                updateIconSidebar(e);
+            },
+        },
+        {
+            id: "achievement",
+            label: "Achievements",
+            icon: "bx bxs-medal",
+            link: route("attendee.achievement"),
             stateVariables: isMore,
             click: function (e: any) {
                 e.preventDefault();
