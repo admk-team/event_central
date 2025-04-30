@@ -135,7 +135,7 @@ const Navdata = () => {
         },
         {
             id: "more",
-            label: "Favorite",
+            label: "Favorites",
             icon: "bx bxs-heart",
             link: route("all.fav.sessions"),
             stateVariables: isMore,
