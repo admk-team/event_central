@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Attendee;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -11,7 +11,7 @@ class UpgradeTicketRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -24,8 +24,12 @@ class UpgradeTicketRequest extends FormRequest
         return [
             'attendee_id' => 'required',
             'attendee_purchased_ticket_id' => 'required',
-            'sessions' => 'array|min:1',
-            // 'sessions.*.session'
+            'upgradedSessionIds' => 'array|min:1',
+            'stripe_payment_intent' => 'nullable|string',
+            'stripe_payment_id' => 'nullable|string',
+            'payment_method' => 'string|in:stripe,cash,free,other',
+            'stripe_payment_id' => 'string|nullable',
+            'organizer_payment_note' => 'string|nullable|max:255',
         ];
     }
 }

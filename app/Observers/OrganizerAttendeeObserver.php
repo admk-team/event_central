@@ -5,6 +5,7 @@ namespace App\Observers;
 use App\Models\Attendee;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\AttendeeRegisteration;
+use App\Models\EventApp;
 use Exception;
 use Illuminate\Support\Facades\Log;
 
@@ -15,8 +16,10 @@ class OrganizerAttendeeObserver
      */
     public function created(Attendee $attendee): void
     {
+        $event_app = EventApp::where('id',$attendee->event_app_id)->first();
+        $url = route('organizer.events.website', $event_app->uuid);
         try {
-            Mail::to($attendee->email)->send(new AttendeeRegisteration($attendee->first_name, $attendee->last_name, "12345678", $attendee->email, $attendee->event_app_id));
+            Mail::to($attendee->email)->send(new AttendeeRegisteration($attendee->first_name, $attendee->last_name, "12345678", $attendee->email, $event_app,$url));
         } catch (Exception $ex) {
             Log::info($ex->getMessage());
         }

@@ -95,6 +95,7 @@ class Attendee extends Authenticatable
         })->with(['ticket'])->get();
         return $tickets;
     }
+
     public function sessionRatings()
     {
         return $this->belongsToMany(EventSession::class, 'session_ratings')->withPivot('rating', 'rating_description')->withTimestamps();
@@ -110,5 +111,10 @@ class Attendee extends Authenticatable
         return $this->belongsToMany(EventSession::class, 'session_ratings', 'attendee_id', 'event_session_id')
             ->withPivot('rating', 'rating_description')
             ->withTimestamps();
+    }
+
+    public function attendeeEventSessions()
+    {
+        return $this->hasMany(AttendeeEventSession::class, 'attendee_id', 'id');
     }
 }

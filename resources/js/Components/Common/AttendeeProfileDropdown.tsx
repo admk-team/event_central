@@ -22,9 +22,7 @@ const AttendeeProfileDropdown = () => {
                 dropdownRef.current &&
                 !dropdownRef.current.contains(event.target)
             ) {
-                // setShow(false);
                 setIsProfileDropdown(false);
-                console.log('clicked outside');
             }
         };
 

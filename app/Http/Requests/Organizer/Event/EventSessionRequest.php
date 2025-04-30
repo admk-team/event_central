@@ -28,6 +28,7 @@ class EventSessionRequest extends FormRequest
             'posts' => 'required',
             'tracks' => 'array',
             'rating_status' => 'boolean',
+            'price'=> 'nullable|numeric|min:0',
         ];
     }
 }

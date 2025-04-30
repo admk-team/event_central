@@ -169,7 +169,7 @@ class PaymentController extends Controller
 
             $attendee_purchased_ticket = AttendeePurchasedTickets::create([
                 'attendee_payment_id' => $payment->id,
-                'attendee_id' => $user->id,
+                'attendee_id' => $attendee->id,
                 'event_app_id' => $payment->event_app_id,
                 'event_app_ticket_id' => $ticket['id'],
                 'qty' => 1,
@@ -216,6 +216,8 @@ class PaymentController extends Controller
             $ticket = $ticketsDetail['ticket'];
 
             $attendee_purchased_ticket = AttendeePurchasedTickets::create([
+                'attendee_id' => $attendee->id,
+                'event_app_id' => $payment->event_app_id,
                 'attendee_payment_id' => $payment->id,
                 'bt_attendee_payment_id' => $payment->id,    //Added to handle transfer logic
                 'event_app_ticket_id' => $ticket['id'],

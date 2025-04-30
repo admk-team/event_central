@@ -10,6 +10,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class Controller extends BaseController
 {
@@ -29,6 +30,13 @@ class Controller extends BaseController
                     $query->where($column, 'like', "%{$search['query']}%");
                 } else {
                     $query->orWhere($column, 'like', "%{$search['query']}%");
+                }
+            }
+
+            if (isset($search['combinations'])) {
+                foreach ($search['combinations'] as $combination) {
+                    $columnRaw = DB::raw("CONCAT(" . implode(", ' ', ", $combination) . ")");
+                    $query->orWhere($columnRaw, 'like', "%{$search['query']}%");
                 }
             }
 

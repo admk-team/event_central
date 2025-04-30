@@ -72,11 +72,10 @@ class WebsiteController extends Controller
         if (! $event || !eventSettings($event->id)->getValue('website_status', false)) {
             abort(404);
         }
-
+        // Sort speakers alphabetically by name
+        $event->event_speakers = $event->event_speakers->sortBy('name')->values();
         $colors = eventSettings($event->id)->getValue('website_colors', config('event_website.colors'));
-        $partnerCategories = EventPartnerCategory::where('event_app_id', $event->id)->with(['partners'])->get();
-
-        return view('event-website.speakers', compact('event', 'colors', 'partnerCategories'));
+        return view('event-website.speakers', compact('event', 'colors'));
     }
 
     public function sponsors($uuid)

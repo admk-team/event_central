@@ -206,6 +206,7 @@ function Index({ attendees }: any) {
                                     columns={columns}
                                     title="Attendees"
                                     tableLayoutFixed={true}
+                                    searchCombinations={[['first_name', 'last_name']]}
                                     actions={[
                                         // Delete multiple
                                         {

@@ -18,6 +18,9 @@ class ImportController extends Controller
                 foreach ($request->data as $i => $a) {
                     if ($i === 0) continue; // Skip header
 
+                    $exits = Attendee::where('email', $a['email'])->where('event_app_id', session('event_id'))->exists();
+                    if ($exits) continue;
+
                     Attendee::create([
                         'event_app_id' => session('event_id'),
                         'first_name' => $a['first_name'],

@@ -164,16 +164,31 @@ class AttendeeController extends Controller
             )->get()->toArray();
 
         // attendee tickets
+        // $tickets = DB::table('attendee_payments')
+        //     ->join('attendee_purchased_tickets', 'attendee_payments.id', '=', 'attendee_purchased_tickets.attendee_payment_id')
+        //     ->join('event_app_tickets', 'attendee_purchased_tickets.event_app_ticket_id', '=', 'event_app_tickets.id')
+        //     ->where('attendee_payments.attendee_id', $id)
+        //     ->where('attendee_payments.status', 'paid')
+        //     ->select(
+        //         'event_app_tickets.name as ticket_name',
+        //         'attendee_payments.amount_paid as amount',
+        //         'attendee_payments.payment_method as type',
+        //         'attendee_purchased_tickets.qty as qty'
+        //     )->get();
         $tickets = DB::table('attendee_payments')
             ->join('attendee_purchased_tickets', 'attendee_payments.id', '=', 'attendee_purchased_tickets.attendee_payment_id')
             ->join('event_app_tickets', 'attendee_purchased_tickets.event_app_ticket_id', '=', 'event_app_tickets.id')
             ->where('attendee_payments.attendee_id', $id)
+            ->where('attendee_payments.status', 'paid')
+            ->groupBy('attendee_payments.id', 'event_app_tickets.name', 'attendee_payments.payment_method')
             ->select(
                 'event_app_tickets.name as ticket_name',
-                'attendee_payments.amount_paid as amount',
-                'attendee_payments.payment_method as type',
-                'attendee_purchased_tickets.qty as qty'
-            )->get();
+                DB::raw('SUM(attendee_purchased_tickets.qty) as qty'),
+                DB::raw('SUM(attendee_payments.amount_paid) as amount'),
+                'attendee_payments.payment_method as type'
+            )
+            ->get();
+
 
         if (! Auth::user()->can('view_attendees')) {
             abort(403);
