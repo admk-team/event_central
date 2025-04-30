@@ -17,6 +17,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Requests\Organizer\Event\User\AttendeeStoreRequest;
+use App\Models\AttendeePurchasedTickets;
 use App\Models\EventCheckIns;
 
 class AttendeeController extends Controller
@@ -175,18 +176,35 @@ class AttendeeController extends Controller
         //         'attendee_payments.payment_method as type',
         //         'attendee_purchased_tickets.qty as qty'
         //     )->get();
+        // $tickets = DB::table('attendee_payments')
+        //     ->join('attendee_purchased_tickets', 'attendee_payments.id', '=', 'attendee_purchased_tickets.attendee_payment_id')
+        //     ->join('event_app_tickets', 'attendee_purchased_tickets.event_app_ticket_id', '=', 'event_app_tickets.id')
+        //     ->where('attendee_payments.attendee_id', $id)
+        //     ->where('attendee_payments.status', 'paid')
+        //     ->groupBy('attendee_purchased_tickets.id', 'attendee_payments.id', 'event_app_tickets.name', 'attendee_payments.payment_method')
+        //     ->select(
+        //     'attendee_purchased_tickets.id as attendee_purchased_ticket_id',
+        //         'event_app_tickets.name as ticket_name',
+        //         DB::raw('SUM(attendee_purchased_tickets.qty) as qty'),
+        //         DB::raw('SUM(attendee_payments.amount_paid) as amount'),
+        //         'attendee_payments.payment_method as type'
+        //     )
+        //     ->get();
         $tickets = DB::table('attendee_payments')
             ->join('attendee_purchased_tickets', 'attendee_payments.id', '=', 'attendee_purchased_tickets.attendee_payment_id')
             ->join('event_app_tickets', 'attendee_purchased_tickets.event_app_ticket_id', '=', 'event_app_tickets.id')
+            ->leftJoin('addon_purchased_ticket', 'attendee_purchased_tickets.id', '=', 'addon_purchased_ticket.attendee_purchased_ticket_id')
             ->where('attendee_payments.attendee_id', $id)
             ->where('attendee_payments.status', 'paid')
-            ->groupBy('attendee_payments.id', 'event_app_tickets.name', 'attendee_payments.payment_method')
+            ->groupBy('attendee_purchased_tickets.id', 'attendee_payments.id', 'event_app_tickets.name', 'attendee_payments.payment_method')
             ->select(
+            'attendee_purchased_tickets.id as attendee_purchased_ticket_id',
                 'event_app_tickets.name as ticket_name',
                 DB::raw('SUM(attendee_purchased_tickets.qty) as qty'),
                 DB::raw('SUM(attendee_payments.amount_paid) as amount'),
-                'attendee_payments.payment_method as type'
-            )
+            'attendee_payments.payment_method as type',
+            DB::raw('COUNT(attendee_purchased_ticket_id) as addons_count')  // Add count of addons
+        )
             ->get();
 
 
@@ -197,6 +215,12 @@ class AttendeeController extends Controller
         $user = Attendee::where('id', $id)->first();
         $attendee = FormSubmission::where('attendee_id', $id)->with('fieldValues', 'attendee', 'formFields')->get();
         return Inertia::render('Organizer/Events/Users/Attendees/AttendeeProfile/Profile', compact('attendee', 'user', 'sessions', 'tickets', 'sessionsPurchased'));
+    }
+
+    public function getPurchasedTicketAddons(AttendeePurchasedTickets  $attendeePurchasedTicket)
+    {
+        $attendeePurchasedTicket->load('purchased_addons');
+        return response()->json(['addons' => $attendeePurchasedTicket->purchased_addons]);
     }
 
     public function eventChechIn(Attendee $attendee)
