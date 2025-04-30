@@ -45,32 +45,29 @@ const Index = ({ data }: Props) => {
   return (
     <>
       <Head title="Badges" />
-      <section className="section-bg">
+      <section className="section-bg py-5 mt-5 mb-5">
         <Container>
-          <h1 className="heading mt-3">My Achievements</h1>
+          <h1 className="heading text-center mb-5">🎖️ My Achievements</h1>
 
           <Row className="gap-4 mb-5 justify-content-center">
             {[
               {
                 title: "Total Points",
                 value: data.total_points,
-                icon: "bx bxs-medal",
-                bgColor: "#0052cc",
-                gradient: "linear-gradient(145deg, #0052cc, #00b7eb)",
+                icon: "bx bxs-star",
+                gradient: "linear-gradient(135deg, #ff6a00, #ee0979)",
               },
               {
                 title: `${currentMonth} Points`,
                 value: data.current_month_points,
-                icon: "bx bxs-medal",
-                bgColor: "#007bff",
-                gradient: "linear-gradient(145deg, #007bff, #00c4b4)",
+                icon: "bx bxs-trophy",
+                gradient: "linear-gradient(135deg, #1dd1a1, #10ac84)",
               },
               {
                 title: "Referral Link",
                 value: "Share Now",
-                icon: "bx bx-share",
-                bgColor: "#00b7eb",
-                gradient: "linear-gradient(145deg, #00b7eb, #28a745)",
+                icon: "bx bx-link",
+                gradient: "linear-gradient(135deg, #00b7eb, #0052cc)",
                 onClick: () => setShowModal(true),
               },
             ].map((item, index) => (
@@ -78,21 +75,20 @@ const Index = ({ data }: Props) => {
                 <Card
                   className="custom-card"
                   onClick={item.onClick}
-                  style={{ cursor: item.onClick ? "pointer" : "default", background: item.gradient }}
+                  style={{
+                    background: item.gradient,
+                    cursor: item.onClick ? "pointer" : "default",
+                    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
+                  }}
                 >
                   <Card.Body className="p-4 d-flex align-items-center">
                     <div className="me-3">
-                      <span
-                        className="avatar avatar-md p-3"
-                        style={{ backgroundColor: item.bgColor, borderRadius: "50%" }}
-                      >
-                        <i className={`${item.icon} text-white`} style={{ fontSize: "2rem", color: "#fff" }}></i>
+                      <span className="badge-icon">
+                        <i className={`${item.icon} text-white fs-3`}></i>
                       </span>
                     </div>
                     <div className="flex-fill">
-                      <h5 className="fw-semibold mb-1 text-white" style={{ fontSize: "1.5rem" }}>
-                        {item.value}
-                      </h5>
+                      <h5 className="fw-bold mb-1 text-white">{item.value}</h5>
                       <p className="mb-0 fs-6 text-white opacity-80">{item.title}</p>
                     </div>
                   </Card.Body>
@@ -106,13 +102,8 @@ const Index = ({ data }: Props) => {
               <Modal.Title>Share Your Referral Link</Modal.Title>
             </Modal.Header>
             <Modal.Body className="text-center">
-              <p className="mb-4 text-truncate fs-6 bg-light p-3 rounded" style={{ wordBreak: "break-all" }}>
-                {data.referral_link}
-              </p>
-              <Button
-                className={`btn-copy btn-primary ${copied ? "copied" : ""}`}
-                onClick={copyReferralLink}
-              >
+              <p className="referral-box">{data.referral_link}</p>
+              <Button className={`btn-copy ${copied ? "copied" : ""}`} onClick={copyReferralLink}>
                 {copied ? "Copied!" : "Copy Link"}
               </Button>
             </Modal.Body>
@@ -124,104 +115,53 @@ const Index = ({ data }: Props) => {
                 const achieved = badge.details?.achieved_points ?? 0;
                 const remaining = Math.max(0, badge.milestone - achieved);
                 const isCompleted = !!badge.details?.completed_at;
-                const progress = (achieved / badge.milestone) * 100;
-              
+                const progress = Math.min(100, (achieved / badge.milestone) * 100);
 
                 return (
                   <Col key={badge.id} xs={12} sm={6} md={4} lg={3}>
-                    <div className={`badge-card ${isCompleted ? "active" : "inactive"}`}>
-                      <div className="card-img-top d-flex justify-content-center align-items-center p-4">
-                        <div className="icon-container">
-                          <svg className="progress-ring" viewBox="0 0 120 120">
-                            <circle cx="60" cy="60" r="50" />
-                            <circle
-                              className="progress"
-                              cx="60"
-                              cy="60"
-                              r="50"
-                            />
-                          </svg>
-                          <img
-                            src={`/storage/${badge.icon}`}
-                            alt="Badge Icon"
-                            style={{ width: "80px", height: "80px", objectFit: "contain", position: "relative", zIndex: 1 }}
+                    <div
+                      className={`badge-card ${isCompleted ? "active" : "opacity-50"}`}
+                      style={{ transition: "opacity 0.4s ease" }}
+                    >
+                      <div className="icon-container">
+                        <svg className="progress-ring" viewBox="0 0 120 120">
+                          <circle className="track" cx="60" cy="60" r="50" />
+                          <circle
+                            className="progress"
+                            cx="60"
+                            cy="60"
+                            r="50"
+                            style={{
+                              strokeDasharray: "314",
+                              strokeDashoffset: 314 - (314 * progress) / 100,
+                            }}
                           />
-                        </div>
+                        </svg>
+                        <img
+                          src={`/storage/${badge.icon}`}
+                          alt="Badge"
+                          className="badge-image"
+                        />
                       </div>
-                      <div className="badge-details p-4">
-                        <div className="badge-title text-center mb-3">
-                           <span
-                              className="incomplete-badge"
-                              style={{ color: "#1a1a1a", fontWeight: 600, fontSize: "0.9rem" }}
-                            >
-                              {badge.title ?? "N/A"}
-                            </span>
+                      <div className="badge-details text-center">
+                        <h5 className="fw-bold">{badge.title}</h5>
+                        <div className="points-breakdown">
+                          <p><strong>Points:</strong> {badge.points}</p>
+                          <p><strong>Achieved:</strong> {achieved}</p>
+                          <p><strong>Remaining:</strong> {remaining}</p>
+                          <p><strong>Milestone:</strong> {badge.milestone}</p>
                         </div>
-                        <Row className="fs-6 text-center">
-                          <Col xs={6}>
-                            <p className="mb-1">
-                              Points:
-                            </p>
-                          </Col>
-                          <Col xs={6}>
-                            <p className="mb-1">
-                              Achieved:
-                            </p>
-                          </Col>
-                          <Col xs={6}>
-                            <p className="mb-1">
-                              <span className="fw-medium">{badge.points}</span>
-                            </p>
-                          </Col>
-                          <Col xs={6}>
-                            <p className="mb-1">
-                             <span className="fw-medium">{achieved}</span>
-                            </p>
-                          </Col>
-                          <Col xs={6}>
-                            <p className="mb-1">
-                              Remaining:
-                            </p>
-                          </Col>
-                          <Col xs={6}>
-                            <p className="mb-1">
-                              Milestone:
-                            </p>
-                          </Col>
-                          <Col xs={6}>
-                            <p className="mb-1">
-                              <span className="fw-medium">{remaining}</span>
-                            </p>
-                          </Col>
-                          <Col xs={6}>
-                            <p className="mb-1">
-                               <span className="fw-medium">{badge.milestone}</span>
-                            </p>
-                          </Col>
-                        </Row>
-                        <div className="text-center mt-3">
+                        <div className="badge-status mt-2">
                           {isCompleted ? (
                             <>
-                              <span
-                                className="completed-badge d-block mb-1"
-                                style={{ color: "#00b7eb", fontWeight: 600, fontSize: "1rem" }}
-                              >
-                                Achieved!
-                              </span>
-                              <span
-                                className="completed-badge"
-                                style={{ color: "#6c757d", fontSize: "0.85rem" }}
-                              >
-                                {" "}{moment(badge.details?.completed_at).format("DD MMM YYYY")}{" "}
-                              </span>
+                              <span className="status complete">🏆 Achieved</span>
+                              <br />
+                              <small className="text-muted">
+                                {moment(badge.details?.completed_at).format("DD MMM YYYY")}
+                              </small>
                             </>
                           ) : (
-                            <span
-                              className="incomplete-badge"
-                              style={{ color: "#ff8c00", fontWeight: 600, fontSize: "1rem" }}
-                            >
-                              In Progress
-                            </span>
+                            <span className="status in-progress">🔥 In Progress</span>
                           )}
                         </div>
                       </div>
@@ -230,9 +170,7 @@ const Index = ({ data }: Props) => {
                 );
               })
             ) : (
-              <div className="no-badges">
-                No badges available at the moment. Please check back later.!
-              </div>
+              <div className="no-badges text-center mt-5">No badges available yet. Come back soon!</div>
             )}
           </Row>
         </Container>
@@ -242,5 +180,4 @@ const Index = ({ data }: Props) => {
 };
 
 Index.layout = (page: any) => <Layout children={page} />;
-
 export default Index;
