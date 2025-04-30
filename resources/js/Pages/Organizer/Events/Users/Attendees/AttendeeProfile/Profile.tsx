@@ -3,11 +3,23 @@ import { Button, Card, Col, Container, Row, Table } from "react-bootstrap";
 import { Head, Link } from "@inertiajs/react";
 import Layout from "../../../../../../Layouts/Event";
 import CheckInModal from "./Component/CheckInModal";
+import TicketAddonsModal from "./Component/TicketAddonsModal";
 
 const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
-// console.log(sessionsPurchased);
+    console.log(tickets);
 
     const [showModal, setShowModal] = useState(false);
+    const [currentTicketId, setCurrentTicketId] = useState<number | null>(null);
+    const [showAddonModal, setShowAddonsModal] = useState(false);
+    const handleShowAddonsModal = (ticketId: number) => {
+        setCurrentTicketId(ticketId);
+        setShowAddonsModal(true);
+    }
+
+
+
+
+
     return (
         <React.Fragment>
             <Head title="Attendee Profile" />
@@ -227,6 +239,7 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                                                         <th scope="col">Quantity</th>
                                                         <th scope="col">Type</th>
                                                         <th scope="col">Status</th>
+                                                            <th scope="col">Addons</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -238,6 +251,12 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                                                                 <td>{ticket.qty}</td>
                                                                 <td>{ticket.type}</td>
                                                                 <td style={{ color: "#0d6efd" }}><i className="ri-checkbox-circle-line fs-17 align-middle"></i> Paid</td>
+                                                                <td>
+                                                                    <Button variant="primary" onClick={(e) => handleShowAddonsModal(ticket.attendee_purchased_ticket_id)} size="sm" disabled={ticket.addons_count === 0}>
+                                                                        Addons ({ticket.addons_count})
+                                                                    </Button>
+
+                                                                </td>
                                                             </tr>
                                                         ))
                                                     ) : (
@@ -301,6 +320,12 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                 onHide={() => setShowModal(false)}
                 attendee={user}
                 purchasedSession= {sessionsPurchased}
+            />
+
+            <TicketAddonsModal
+                show={showAddonModal}
+                onHide={() => setShowAddonsModal(false)}
+                puchasedTicketId={currentTicketId}
             />
         </React.Fragment>
     );
