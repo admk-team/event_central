@@ -131,7 +131,7 @@ const Navdata = () => {
         },
         {
             id: "more",
-            label: "Favourite",
+            label: "Favorite",
             icon: "bx bxs-heart",
             link: route("all.fav.sessions"),
             stateVariables: isMore,
@@ -197,7 +197,7 @@ const Navdata = () => {
         {
             id: "achievement",
             label: "Achievements",
-            icon: "bx bxs-gift",
+            icon: "bx bxs-medal",
             link: route("attendee.achievement"),
             stateVariables: isMore,
             click: function (e: any) {

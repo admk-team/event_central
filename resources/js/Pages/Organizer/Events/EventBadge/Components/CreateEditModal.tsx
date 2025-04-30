@@ -126,10 +126,12 @@ export default function CreateEditModal({
                             isInvalid={!!errors.type}
                         >
                             <option value="">Select Type</option>
-                            <option value="register">
-                                Register Account
-                            </option>
+                            <option value="register"> Register Account</option>
                             <option value="referral_link">Referral Link</option>
+                            <option value="session_rating">Session Rating</option>
+                            <option value="session_favorite">Session Favorite</option>
+                            <option value="purchase_ticket">Purchase Ticket</option>
+                            <option value="questionnaire">Questionnaire</option>
                         </Form.Select>
                         {errors.type && (
                             <Form.Control.Feedback type="invalid">
@@ -145,9 +147,9 @@ export default function CreateEditModal({
                             className="form-control"
                             value={data.points}
                             onChange={(e) =>
-                                setData("points", parseInt(e.target.value) || 0)
+                                setData("points", parseInt(e.target.value) || '')
                             }
-                            min="0"
+                           
                             isInvalid={!!errors.points}
                         />
                         {errors.points && (
@@ -168,10 +170,9 @@ export default function CreateEditModal({
                             onChange={(e) =>
                                 setData(
                                     "milestone",
-                                    parseInt(e.target.value) || 0
+                                    parseInt(e.target.value) || ''
                                 )
                             }
-                            min="0"
                             isInvalid={!!errors.milestone}
                         />
                         {errors.milestone && (

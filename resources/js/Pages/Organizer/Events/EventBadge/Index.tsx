@@ -65,12 +65,12 @@ function Index({ data }: any) {
             cell: (badge) => badge.title,
             enableSorting: true,
         },
-        {
-            accessorKey: 'description',
-            header: () => 'Description',
-            cell: (badge) => badge.description,
-            enableSorting: true,
-        },
+        // {
+        //     accessorKey: 'description',
+        //     header: () => 'Description',
+        //     cell: (badge) => badge.description,
+        //     enableSorting: true,
+        // },
         {
             accessorKey: 'icon',
             header: () => 'Icon',

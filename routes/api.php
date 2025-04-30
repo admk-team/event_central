@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\v1\Attendee\BadgeAchievementController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\v1\AuthController;
@@ -186,5 +187,7 @@ Route::prefix('attendee')->group(function () {
         //fav session
         Route::get('/favsession/{sessionid}', [AttendeeEventController::class, 'favsession']);
         Route::get('/allfav', [AttendeeEventController::class, 'allfav']);
+         //Attendee achievement
+         Route::get('/achievement', [BadgeAchievementController::class, 'index'])->name('attendee.achievement');
     });
 });

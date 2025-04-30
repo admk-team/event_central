@@ -164,6 +164,7 @@ class EventController extends Controller
                 'event_session_id' => $sessionid,
                 'fav' => 1,
             ]);
+            $this->eventBadgeDetail('session_favorite', $attendee->event_app_id, $attendee->id, $alreadyfav->id);
         }
 
         return back()->withSuccess("Session added to favourite");

@@ -197,18 +197,22 @@ class EventController extends Controller
 
     public function saveRating(Request $request, EventSession $eventSession)
     {
+        $user = Auth::user();
+        $eventAppId = $user->event_app_id;
+        $attendeeId = $user->id;
         $request->validate([
             'rating' => 'required|numeric',
             'rating_description' => 'required|string|max:255',
         ]);
         $data = $request->only(['rating', 'rating_description']);
-        SessionRating::updateOrCreate(
+        $rating = SessionRating::updateOrCreate(
             [
-                'attendee_id' => auth()->id(),
+                'attendee_id' => $attendeeId,
                 'event_session_id' => $eventSession->id,
             ],
             $data
         );
+        $this->eventBadgeDetail('session_rating',  $eventAppId, $attendeeId, $rating->id);
         return response()->json(['message' => "Saved"]);
     }
 
@@ -234,6 +238,7 @@ class EventController extends Controller
                 'event_session_id' => $sessionid,
                 'fav' => 1,
             ]);
+            $this->eventBadgeDetail('session_favorite', $attendee->event_app_id, $attendee->id, $alreadyfav->id);
         }
 
         return $this->successResponse(new AttendeeFavSessionResource($alreadyfav));

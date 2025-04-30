@@ -111,48 +111,55 @@ class Controller extends BaseController
     }
     protected function eventBadgeDetail($type, $event_app_id, $attendee_id, $content_code): void
     {
-        $eventBadges = EventBadge::where('event_app_id', $event_app_id)
+        $badges = EventBadge::where('event_app_id', $event_app_id)
             ->where('type', $type)
             ->orderBy('milestone', 'asc')
             ->get();
-    
-        foreach ($eventBadges as $eventBadge) {
-            $badgeDetail = EventBadgeDetail::where([
-                    ['event_app_id', '=', $event_app_id],
-                    ['type', '=', $type],
-                    ['attendee_id', '=', $attendee_id],
-                    ['event_badge_id', '=', $eventBadge->id],
-                ])
-                ->latest()
+
+        if ($badges->isEmpty()) {
+            return;
+        }
+
+        foreach ($badges as $badge) {
+            $commonConditions = [
+                ['event_app_id', '=', $event_app_id],
+                ['type', '=', $type],
+                ['attendee_id', '=', $attendee_id],
+                ['event_badge_id', '=', $badge->id],
+            ];
+
+            // Skip if a completed record exists for the same content_code
+            $existing = EventBadgeDetail::where($commonConditions)
+                ->where('content_code', $content_code)
+                ->whereNotNull('completed_at')
                 ->first();
-    
-            // If already completed, skip
-            if ($badgeDetail && $badgeDetail->completed_at) {
+
+            if ($existing) {
                 continue;
             }
-    
-            $achievedPoints = ($badgeDetail?->achieved_points ?? 0) + $eventBadge->points;
-            $completed = $achievedPoints >= $eventBadge->milestone;
-    
-            // If detail exists and not completed, update
-            if ($badgeDetail) {
-                $badgeDetail->update([
-                    'achieved_points' => $achievedPoints,
-                    'completed_at' => $completed ? now() : null,
-                ]);
-            } else {
-                // Otherwise, create new
-                EventBadgeDetail::create([
-                    'type' => $type,
-                    'achieved_points' => $achievedPoints,
-                    'attendee_id' => $attendee_id,
-                    'event_badge_id' => $eventBadge->id,
-                    'content_code' => $content_code,
-                    'event_app_id' => $event_app_id,
-                    'completed_at' => $completed ? now() : null,
-                ]);
+
+            // Get latest badge detail
+            $latestDetail = EventBadgeDetail::where($commonConditions)
+                ->latest()
+                ->first();
+
+            // Skip if already completed
+            if ($latestDetail && $latestDetail->completed_at) {
+                continue;
             }
+
+            $totalPoints = ($latestDetail?->achieved_points ?? 0) + $badge->points;
+            $isCompleted = $totalPoints >= $badge->milestone;
+
+            EventBadgeDetail::create([
+                'type' => $type,
+                'achieved_points' => $totalPoints,
+                'attendee_id' => $attendee_id,
+                'event_badge_id' => $badge->id,
+                'content_code' => $content_code,
+                'event_app_id' => $event_app_id,
+                'completed_at' => $isCompleted ? now() : null,
+            ]);
         }
     }
-    
 }
