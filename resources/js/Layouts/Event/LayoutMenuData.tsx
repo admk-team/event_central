@@ -22,6 +22,7 @@ const Navdata = () => {
     const [IsQuestionnaireResponse, setIsQuestionnaireResponse] = useState<boolean>(false);
     const [isAssignTicket, setIsAssignTicket] = useState<boolean>(false);
     const [isUpgradeTicket, setUpgradeTicket] = useState<boolean>(false);
+    const [isBaseTemplate, setIsBaseTemplate] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
 
@@ -54,6 +55,7 @@ const Navdata = () => {
         if (iscurrentState !== 'Tickets') setIsTickets(false);
         // if (iscurrentState !== 'refundTicket') setIsRefundTicket(false);
         if (iscurrentState !== 'Questionnaire') setIsQuestionnaireForm(false);
+        if (iscurrentState !== 'BaseTemplate') setIsBaseTemplate(false);
         if (iscurrentState !== 'Questionnaire_response') setIsQuestionnaireResponse(false);
         // if (iscurrentState !== 'assignTickets') setIsTickets(false);
         // if (iscurrentState !== 'upgradeTicket') setIsTickets(false);
@@ -67,6 +69,7 @@ const Navdata = () => {
         IsWebsite,
         IspayemntSettings,
         IsSessionAttendance,
+        isBaseTemplate,
         // isRefundTicket,
         isTickets,
         // isAssignTicket,
@@ -434,6 +437,17 @@ const Navdata = () => {
             hasPermissions: [
                 'questionnaire_response'
             ],
+        },
+        {
+            id: "BaseTemplate",
+            label: "Base Email Template",
+            icon: "bx bxs-notepad",
+            link: route('organizer.events.base.template'),
+            click: function (e: any) {
+                e.preventDefault();
+                setIscurrentState('BaseTemplate');
+                updateIconSidebar(e);
+            },
         },
         // }] : []),
     ];
