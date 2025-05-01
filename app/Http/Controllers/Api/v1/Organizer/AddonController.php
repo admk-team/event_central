@@ -14,7 +14,7 @@ class AddonController extends Controller
     public function index(Request $request, EventApp $event)
     {
         $query = Addon::where('event_app_id', $event->id)->withCount('checkins');
-        
+
         if ($request->has('search')) {
             $query->where('name', 'like', "%{$request->search}%")
                 ->limit(20);
@@ -37,7 +37,17 @@ class AddonController extends Controller
             'code' => 'required',
         ]);
 
-        $purchasedTicket = AttendeePurchasedTickets::where('code', $request->code)->first();
+        $qrcode = $request->code;
+
+        // Check if the code is a URL
+        if (filter_var($qrcode, FILTER_VALIDATE_URL)) {
+            // Extract the code from the URL
+            $urlParts = explode('/', $qrcode);
+            $qrcode = end($urlParts);  // Get the last part (the actual code)
+        }
+
+        // Query the database with the code (whether it's a string or extracted from a URL)
+        $purchasedTicket = AttendeePurchasedTickets::where('code', $qrcode)->first();
 
         if (! $purchasedTicket) {
             return response()->json([
