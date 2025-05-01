@@ -17,8 +17,8 @@ class AttendeeRegisteration extends Mailable
     /**
      * Create a new message instance.
      */
-    public $fname,$lname,$password,$email,$event_app,$url;
-    public function __construct($fname,$lname,$password,$email,$event_app,$url)
+    public $fname, $lname, $password, $email, $event_app, $url;
+    public function __construct($fname, $lname, $password, $email, $event_app, $url)
     {
         $this->fname = $fname;
         $this->lname = $lname;
@@ -33,7 +33,7 @@ class AttendeeRegisteration extends Mailable
      */
     public function envelope(): Envelope
     {
-        $fromEmail =  env('MAIL_FROM_ADDRESS');
+        $fromEmail =  "info@mail.eventcentral.net";
         $fromName = $this->event_app->name ?? env('APP_NAME');
         return new Envelope(
             from: new Address($fromEmail, $fromName),
