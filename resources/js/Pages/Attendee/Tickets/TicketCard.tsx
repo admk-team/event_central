@@ -137,7 +137,7 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated }: any) => {
                                         setTicketQty(parseInt(e.target.value))
                                     }
                                 >
-                                    {createQtyOptions(10, ticket)}
+                                    {createQtyOptions(50, ticket)}
                                 </Form.Select>
                             </Col>
                         </Row>
