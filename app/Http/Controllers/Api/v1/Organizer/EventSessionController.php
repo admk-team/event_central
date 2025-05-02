@@ -81,7 +81,16 @@ class EventSessionController extends Controller
             'code' => 'required',
         ]);
 
-        $purchasedTicket = AttendeePurchasedTickets::where('code', $request->code)->first();
+        $qrcode = $request->code;
+
+        // Check if the code is a URL
+        if (filter_var($qrcode, FILTER_VALIDATE_URL)) {
+            // Extract the code from the URL
+            $urlParts = explode('/', $qrcode);
+            $qrcode = end($urlParts);  // Get the last part (the actual code)
+        }
+
+        $purchasedTicket = AttendeePurchasedTickets::where('code', $qrcode)->first();
 
         if (! $purchasedTicket) {
             return response()->json([
