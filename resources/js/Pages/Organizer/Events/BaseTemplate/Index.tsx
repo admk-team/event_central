@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Head, Link, router } from "@inertiajs/react"
+import { Head, Link, router, useForm } from "@inertiajs/react"
 import Layout from '../../../../Layouts/Event';
 import '../../../../css/emailtemplate.css';
+
 const Index = ({ baseTemplate }: any) => {
+    const { post } = useForm({});
 
     const useTemplate = (id: any) => {
-        console.log('Use Template:', id);
+        post(route('organizer.events.use.template', id));
     };
 
     const previewTemplate = (id: any) => {

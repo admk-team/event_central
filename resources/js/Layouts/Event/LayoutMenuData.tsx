@@ -23,6 +23,7 @@ const Navdata = () => {
     const [isAssignTicket, setIsAssignTicket] = useState<boolean>(false);
     const [isUpgradeTicket, setUpgradeTicket] = useState<boolean>(false);
     const [isBaseTemplate, setIsBaseTemplate] = useState<boolean>(false);
+    const [isEmailTemplate, setIsEmailTemplate] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
 
@@ -56,6 +57,7 @@ const Navdata = () => {
         // if (iscurrentState !== 'refundTicket') setIsRefundTicket(false);
         if (iscurrentState !== 'Questionnaire') setIsQuestionnaireForm(false);
         if (iscurrentState !== 'BaseTemplate') setIsBaseTemplate(false);
+        if (iscurrentState !== 'EmailTemplate') setIsEmailTemplate(false);
         if (iscurrentState !== 'Questionnaire_response') setIsQuestionnaireResponse(false);
         // if (iscurrentState !== 'assignTickets') setIsTickets(false);
         // if (iscurrentState !== 'upgradeTicket') setIsTickets(false);
@@ -70,6 +72,7 @@ const Navdata = () => {
         IspayemntSettings,
         IsSessionAttendance,
         isBaseTemplate,
+        isEmailTemplate,
         // isRefundTicket,
         isTickets,
         // isAssignTicket,
@@ -440,12 +443,23 @@ const Navdata = () => {
         },
         {
             id: "BaseTemplate",
-            label: "Base Email Template",
-            icon: "bx bxs-notepad",
+            label: "Default Email Template",
+            icon: "bx bxs-envelope",
             link: route('organizer.events.base.template'),
             click: function (e: any) {
                 e.preventDefault();
                 setIscurrentState('BaseTemplate');
+                updateIconSidebar(e);
+            },
+        },
+        {
+            id: "EmailTemplate",
+            label: "Email Template",
+            icon: "bx bxs-envelope",
+            link: route('organizer.events.email-template.index'),
+            click: function (e: any) {
+                e.preventDefault();
+                setIscurrentState('EmailTemplate');
                 updateIconSidebar(e);
             },
         },
