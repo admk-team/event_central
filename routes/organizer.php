@@ -31,6 +31,7 @@ use App\Http\Controllers\Organizer\Event\EventTicketTypeController;
 use App\Http\Controllers\Organizer\Event\FormFieldController;
 use App\Http\Controllers\Organizer\Event\QuestionnaireFormFieldController;
 use App\Http\Controllers\Organizer\Event\RefferalLinkController;
+use App\Http\Controllers\Organizer\Event\Reports\AttendeesReportController;
 use App\Http\Controllers\Organizer\Event\SessionAttendanceController;
 use App\Http\Controllers\Organizer\Event\SessionRatingsController;
 use App\Http\Controllers\Organizer\Event\Settings\QuestionnaireFormSettingsController;
@@ -297,4 +298,8 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
 
     //Session ratings
      Route::get('/ratings/{eventSession}', [SessionRatingsController::class, 'index'])->name('sessions.ratings.index');
+
+     // Attendee Report 
+     Route::get('/attendees/report', [AttendeesReportController::class, 'index'])->name('attendees.report');
+     Route::get('/attendees/report/{id}', [AttendeeController::class, 'showRating'])->name('attendee.report.info');
 });

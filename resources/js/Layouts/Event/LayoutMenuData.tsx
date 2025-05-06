@@ -24,6 +24,7 @@ const Navdata = () => {
     const [isUpgradeTicket, setUpgradeTicket] = useState<boolean>(false);
     const [isRefferalLink, setIsRefferalLink] = useState<boolean>(false);
     const [isEventBadge, setIsEventBadge] = useState<boolean>(false);
+    const [isReport, setIsReport] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
 
@@ -61,6 +62,7 @@ const Navdata = () => {
         if (iscurrentState !== 'upgradeTicket') setIsTickets(false);
         if (iscurrentState !== 'refferal-link') setIsRefferalLink(false);
         if (iscurrentState !== 'event_badge') setIsEventBadge(false);
+        if (iscurrentState !== 'reporting') setIsReport(false);
         // if (iscurrentState !== 'assignTickets') setIsTickets(false);
         // if (iscurrentState !== 'upgradeTicket') setIsTickets(false);
     }, [
@@ -472,6 +474,33 @@ const Navdata = () => {
             hasPermissions: [
                 'view_event_badge'
             ],
+        },{
+            id: "reporting",
+            label: "All Reports",
+            icon: "bx bx-book-content",
+            link: "/#",
+            stateVariables: isReport,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsReport(!isReport);
+                setIscurrentState('reporting');
+                updateIconSidebar(e);
+            },
+            hasAnyPermission: [
+                'view_attendees_report',
+            ],
+            subItems: [
+                {
+                    id: "attendee_report",
+                    label: "Attendees Report",
+                    link: route('organizer.attendees.report'),
+                    parentId: "reporting",
+                    hasPermissions: [
+                        'view_attendees_report',
+                    ],
+                },
+               
+            ]
         },
         // }] : []),
     ];
