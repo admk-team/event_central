@@ -7,6 +7,7 @@ use App\Http\Controllers\Organizer\Event\AssignTicketController;
 use App\Http\Controllers\Organizer\Event\BadgePrintController;
 use App\Http\Controllers\Organizer\Event\CustomMenuController;
 use App\Http\Controllers\Organizer\Event\DashboardController;
+use App\Http\Controllers\Organizer\Event\EmailCampaignController;
 use App\Http\Controllers\Organizer\Event\EmailTemplateController;
 use App\Http\Controllers\Organizer\Event\Engagement\NewsfeedController;
 use App\Http\Controllers\Organizer\Event\EventAppFeeController;
@@ -249,6 +250,9 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
 
             //Email Template
             Route::resource('email-template', EmailTemplateController::class);
+
+            //Email Campaign
+            Route::resource('email-campaign', EmailCampaignController::class);
         });
 
         // Q&A

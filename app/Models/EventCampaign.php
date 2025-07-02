@@ -12,7 +12,8 @@ class EventCampaign extends Model
     protected $fillable = [
         'user_id',
         'event_app_id',
-        'email_template_id',
+        'event_email_template_id',
+        'sent_to',
         'name',
         'subject',
         'status',

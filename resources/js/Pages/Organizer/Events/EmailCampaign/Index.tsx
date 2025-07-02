@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Button, Col, Container, Row, Table } from 'react-bootstrap';
-import { Head, Link, useForm } from '@inertiajs/react';
-import Layout from '../../../../Layouts/Organizer';
-import CreateEditModal from './Components/CreateEditModal';
+import { Head, Link, router, useForm } from '@inertiajs/react';
+import Layout from '../../../../Layouts/Event';
+// import CreateEditModal from './Components/CreateEditModal';
 import DeleteModal from '../../../../Components/Common/DeleteModal';
 import DataTable, { ColumnDef } from '../../../../Components/DataTable';
 import BreadCrumb2 from '../../../../Components/Common/BreadCrumb2';
@@ -17,10 +17,7 @@ function Index({ emailcampaign }: any) {
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
 
     const setShowCreateEditModal = (state: boolean) => {
-        _setShowCreateEditModal(state);
-        if (state === false) {
-            setEditUser(null);
-        }
+        router.visit(route('organizer.events.email-campaign.create'));
     }
 
     const deleteForm = useForm({
@@ -61,37 +58,40 @@ function Index({ emailcampaign }: any) {
         {
             accessorKey: 'id',
             header: () => 'ID',
-            cell: (user) => user.id,
+            cell: (emailcampaignsingle) => emailcampaignsingle.id,
             cellClass: "fw-medium",
             enableSorting: true,
         },
         {
             accessorKey: 'name',
             header: () => 'Name',
-            cell: (user) => user.name,
+            cell: (emailcampaignsingle) => emailcampaignsingle.name,
             enableSorting: true,
         },
         {
-            accessorKey: 'email',
-            header: () => 'Email',
-            cell: (user) => user.email,
+            accessorKey: 'Subject',
+            header: () => 'subject',
+            cell: (emailcampaignsingle) => emailcampaignsingle.subject,
             enableSorting: true,
         },
         {
-            accessorKey: 'role',
-            header: () => 'Role',
-            cell: (user) => <span className="badge bg-success-subtle text-success">{user.roles[0]?.name}</span>,
+            accessorKey: 'Sent To',
+            header: () => 'sent_to',
+            cell: (emailcampaignsingle) => emailcampaignsingle.sent_to,
+            enableSorting: true,
+        },
+        {
+            accessorKey: 'Status',
+            header: () => 'status',
+            cell: (emailcampaignsingle) => <span className="badge bg-success-subtle text-success">{emailcampaignsingle.status}</span>,
             enableSorting: true,
         },
         {
             header: () => 'Action',
-            cell: (user) => (
-                <div className="hstack gap-3 fs-15">
-                    <HasPermission permission="edit_users">
-                        <span className="link-primary cursor-pointer" onClick={() => editAction(user)}><i className="ri-edit-fill"></i></span>
-                    </HasPermission>
+            cell: (emailcampaignsingle) => (
+                <div className="hstack fs-15">
                     <HasPermission permission="delete_users">
-                        <span className="link-danger cursor-pointer" onClick={() => deleteAction(user)}>
+                        <span className="link-danger cursor-pointer" onClick={() => deleteAction(emailcampaignsingle)}>
                             <i className="ri-delete-bin-5-line"></i>
                         </span>
                     </HasPermission>
@@ -139,14 +139,14 @@ function Index({ emailcampaign }: any) {
                 </Container>
             </div>
 
-            {showCreateEditModal && (
+            {/* {showCreateEditModal && (
                 <CreateEditModal
                     show={showCreateEditModal}
                     hide={() => setShowCreateEditModal(false)}
                     onHide={() => setShowCreateEditModal(false)}
                     user={editUser}
                 />
-            )}
+            )} */}
 
             <DeleteModal
                 show={showDeleteConfirmation}

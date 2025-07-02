@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('event_app_id')->constrained()->onDelete('cascade');
             $table->foreignId('event_email_template_id')->nullable()->constrained()->onDelete('cascade');
+            $table->string('sent_to')->nullable();
             $table->string('name');
             $table->string('subject')->nullable();
             $table->string('status')->default('sent');

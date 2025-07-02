@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Organizer\Event;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use App\Models\EventCampaign;
+use App\Models\EventEmailTemplate;
 use App\Http\Controllers\Controller;
 
 class EmailCampaignController extends Controller
@@ -14,19 +15,24 @@ class EmailCampaignController extends Controller
      */
     public function index()
     {
-        $eventCampaigns = EventCampaign::where('event_app_id', session('event_id'))->get();
 
-        return Inertia::render('Organizer/Events/EmailCampaigns/index', [
-            'eventCampaigns' => $eventCampaigns,
+        $eventCampaigns = $this->datatable(EventCampaign::where('event_app_id', session('event_id')));
+        return Inertia::render('Organizer/Events/EmailCampaign/Index', [
+            'emailcampaign' => $eventCampaigns,
         ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $baseTemplate = EventEmailTemplate::where('event_app_id', session('event_id'))->get();
+        $templateId = $request->query('templateId');
+        return Inertia::render('Organizer/Events/EmailCampaign/Create', [
+            'templateId' => $templateId,
+            'baseTemplate' => $baseTemplate,
+        ]);
     }
 
     /**
@@ -34,7 +40,29 @@ class EmailCampaignController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'subject' => 'required|string|max:255',
+            'sent_to' => 'required|string',
+            'event_email_template_id' => 'required',
+        ]);
+
+        $data = $request->only(['name', 'subject', 'sent_to', 'event_email_template_id']);
+        $data['user_id'] = auth()->id();
+        $data['event_app_id'] = session('event_id');
+        $data['status'] = 'draft';
+
+        EventCampaign::create([
+            'user_id' => $data['user_id'],
+            'event_app_id' => $data['event_app_id'],
+            'event_email_template_id' => $data['event_email_template_id'],
+            'sent_to' => $data['sent_to'],
+            'name' => $data['name'],
+            'subject' => $data['subject'],
+            'status' => $data['status'],
+        ]);
+
+        return redirect()->route('organizer.events.email-campaign.index')->with('success', 'Email campaign created successfully.');
     }
 
     /**

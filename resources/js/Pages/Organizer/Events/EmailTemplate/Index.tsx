@@ -4,11 +4,13 @@ import Layout from '../../../../Layouts/Event';
 import '../../../../css/emailtemplate.css';
 
 const Index = ({ baseTemplate }: any) => {
-    const { post } = useForm({});
+    const { post, get } = useForm({});
     const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
 
     const useTemplate = (id: number) => {
-        post(route('organizer.events.use.template', id));
+        get(route('organizer.events.email-campaign.create', {
+            templateId: id
+        }));
     };
 
     const previewTemplate = (id: number) => {

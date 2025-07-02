@@ -442,6 +442,17 @@ const Navdata = () => {
             ],
         },
         {
+            id: "EmailCampaign",
+            label: "Email Campaign",
+            icon: "bx bxs-envelope",
+            link: route('organizer.events.email-campaign.index'),
+            click: function (e: any) {
+                e.preventDefault();
+                setIscurrentState('EmailCampaign');
+                updateIconSidebar(e);
+            },
+        },
+        {
             id: "BaseTemplate",
             label: "Default Email Template",
             icon: "bx bxs-envelope",
