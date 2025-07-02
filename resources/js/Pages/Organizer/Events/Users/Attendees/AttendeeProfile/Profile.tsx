@@ -174,17 +174,6 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                                                 </div>
                                                 <div>
                                                     <a
-                                                        href={user.twitter_link}
-                                                        className="avatar-xs d-block"
-                                                        target="_blank"
-                                                    >
-                                                        <span className="avatar-title rounded-circle fs-16 bg-success">
-                                                            <i className="ri-twitter-x-line"></i>
-                                                        </span>
-                                                    </a>
-                                                </div>
-                                                <div>
-                                                    <a
                                                         href={user.other_link}
                                                         className="avatar-xs d-block"
                                                         target="_blank"
@@ -201,7 +190,7 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                                                         className="avatar-xs d-block"
                                                     >
                                                         <span className="avatar-title rounded-circle fs-16" style={{ background:'DodgerBlue'}}>
-                                                            <i className="ri-twitter-fill"></i>
+                                                            <i className="ri-twitter-x-line"></i>
                                                         </span>
                                                     </a>
                                                 </div>

@@ -234,12 +234,12 @@ function CreateOrEdit({ speaker, events }: any) {
 
                                             <Col xxl={6} md={6}>
                                                 <div className="">
-                                                    <Form.Label htmlFor="twitter" className="form-label">Twitter</Form.Label>
+                                                    <Form.Label htmlFor="twitter" className="form-label">X</Form.Label>
                                                     <Form.Control
                                                         type="text"
                                                         className="form-control"
                                                         id="twitter"
-                                                        placeholder="Enter Twitter URL"
+                                                        placeholder="Enter X URL"
                                                         value={data.twitter}
                                                         onChange={(e) => setData('twitter', e.target.value)}
                                                     />

@@ -27,6 +27,11 @@ class EventController extends Controller
     {
         $eventApp = EventApp::find(Auth::user()->event_app_id);
         $eventApp->load(['event_sessions.eventSpeakers', 'event_sessions.eventPlatform', 'dates']);
+        $eventApp->setRelation(
+            'event_sessions', $eventApp->event_sessions->filter(function ($session) {
+                return $session->is_favourite === true;
+            })->values()
+        );
         return Inertia::render('Attendee/AttendeeDashboard', compact([
             'eventApp',
         ]));

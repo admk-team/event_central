@@ -147,7 +147,7 @@ export default function Login({ status, canResetPassword }: any) {
                                                             <i className="ri-github-fill fs-16"></i>
                                                         </Button>{" "}
                                                         <Button variant="info" className="btn-icon btn-info">
-                                                            <i className="ri-twitter-fill fs-16"></i>
+                                                            <i className="ri-twitter-x-line fs-16"></i>
                                                         </Button>
                                                     </div>
                                                 </div>

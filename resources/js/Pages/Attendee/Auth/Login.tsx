@@ -200,7 +200,7 @@ export default function Login({
                                     variant="info"
                                     className="btn-icon btn-info"
                                 >
-                                    <i className="ri-twitter-fill fs-16"></i>
+                                    <i className="ri-twitter-x-line fs-16"></i>
                                 </Button>
                             </div>
                         </div>
