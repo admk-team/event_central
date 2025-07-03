@@ -1,6 +1,7 @@
 import React from 'react'
 import { Card, ListGroup } from 'react-bootstrap'
 import Tracks from './Features/Tracks'
+import CheckIn from './Features/CheckIn'
 
 export default function Features() {
     return (
@@ -11,6 +12,9 @@ export default function Features() {
             <Card.Body>
                 <ListGroup className="mb-1">
                     <Tracks />
+                </ListGroup>
+                <ListGroup className="mb-1">
+                    <CheckIn />
                 </ListGroup>
             </Card.Body>
         </Card>

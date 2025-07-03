@@ -27,6 +27,7 @@ class EventSettingsController extends Controller
         return Inertia::render("Organizer/Events/Settings/Event/Index", [
             'event' => $event,
             'enableTracks' => eventSettings()->getValue('enable_tracks', false),
+            'enableCheckIn' => eventSettings()->getValue('enable_check_in', false),
             'tracks' => $tracks,
         ]);
     }
@@ -103,5 +104,11 @@ class EventSettingsController extends Controller
     {
         $enableTracks = eventSettings()->getValue('enable_tracks', false);
         eventSettings()->set('enable_tracks', !$enableTracks);
+    }
+
+    public function toggleCheckIn()
+    {
+        $enableTracks = eventSettings()->getValue('enable_check_in', false);
+        eventSettings()->set('enable_check_in', !$enableTracks);
     }
 }

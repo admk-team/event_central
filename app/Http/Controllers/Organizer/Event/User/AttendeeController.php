@@ -198,13 +198,13 @@ class AttendeeController extends Controller
             ->where('attendee_payments.status', 'paid')
             ->groupBy('attendee_purchased_tickets.id', 'attendee_payments.id', 'event_app_tickets.name', 'attendee_payments.payment_method')
             ->select(
-            'attendee_purchased_tickets.id as attendee_purchased_ticket_id',
+                'attendee_purchased_tickets.id as attendee_purchased_ticket_id',
                 'event_app_tickets.name as ticket_name',
                 DB::raw('SUM(attendee_purchased_tickets.qty) as qty'),
                 DB::raw('SUM(attendee_payments.amount_paid) as amount'),
-            'attendee_payments.payment_method as type',
-            DB::raw('COUNT(attendee_purchased_ticket_id) as addons_count')  // Add count of addons
-        )
+                'attendee_payments.payment_method as type',
+                DB::raw('COUNT(attendee_purchased_ticket_id) as addons_count')  // Add count of addons
+            )
             ->get();
 
 
@@ -250,13 +250,23 @@ class AttendeeController extends Controller
 
     public function chechIn(Request $request)
     {
+
+        if (eventSettings()->getValue('enable_check_in') == true) {
+            $checkedIn = EventCheckIns::where('event_app_id', session('event_id'))
+                ->where('attendee_id', $request->attendee['id'])
+                ->exists();
+
+            if (!$checkedIn) {
+                return back()->withError("This User is not checked in to the event.");
+            }
+        }
+
         $alreadyCheckedIn = SessionCheckIn::where('attendee_id', $request->attendee['id'])
             ->where('session_id', $request->event_session_id)
             ->exists();
         if ($alreadyCheckedIn) {
             return back()->withErrors(['session' => 'You have already checked into this session.']);
         }
-
         SessionCheckIn::create([
             'attendee_id' => $request->attendee['id'],
             'session_id' => $request->event_session_id,
