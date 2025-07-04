@@ -77,6 +77,7 @@
         "react-dragula": "^1.1.17",
         "react-dropzone": "^14.2.10",
         "react-dual-listbox": "^6.0.3",
+        "react-email-editor": "^1.7.11",
         "react-filepond": "^7.1.2",
         "react-flatpickr": "^3.10.13",
         "react-hot-toast": "^2.5.2",

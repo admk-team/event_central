@@ -25,6 +25,8 @@ const Navdata = () => {
         useState<boolean>(false);
     const [isAssignTicket, setIsAssignTicket] = useState<boolean>(false);
     const [isUpgradeTicket, setUpgradeTicket] = useState<boolean>(false);
+    const [isBaseTemplate, setIsBaseTemplate] = useState<boolean>(false);
+    const [isEmailTemplate, setIsEmailTemplate] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>("Dashboard");
 
@@ -56,9 +58,10 @@ const Navdata = () => {
             setIsSessionAttendance(false);
         if (iscurrentState !== "Tickets") setIsTickets(false);
         // if (iscurrentState !== 'refundTicket') setIsRefundTicket(false);
-        if (iscurrentState !== "Questionnaire") setIsQuestionnaireForm(false);
-        if (iscurrentState !== "Questionnaire_response")
-            setIsQuestionnaireResponse(false);
+        if (iscurrentState !== 'Questionnaire') setIsQuestionnaireForm(false);
+        if (iscurrentState !== 'BaseTemplate') setIsBaseTemplate(false);
+        if (iscurrentState !== 'EmailTemplate') setIsEmailTemplate(false);
+        if (iscurrentState !== 'Questionnaire_response') setIsQuestionnaireResponse(false);
         // if (iscurrentState !== 'assignTickets') setIsTickets(false);
         // if (iscurrentState !== 'upgradeTicket') setIsTickets(false);
     }, [
@@ -71,6 +74,8 @@ const Navdata = () => {
         IsWebsite,
         IspayemntSettings,
         IsSessionAttendance,
+        isBaseTemplate,
+        isEmailTemplate,
         // isRefundTicket,
         isTickets,
         // isAssignTicket,
@@ -412,6 +417,39 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
             hasPermissions: ["questionnaire_response"],
+        },
+        {
+            id: "EmailCampaign",
+            label: "Email Campaign",
+            icon: "bx bxs-envelope",
+            link: route('organizer.events.email-campaign.index'),
+            click: function (e: any) {
+                e.preventDefault();
+                setIscurrentState('EmailCampaign');
+                updateIconSidebar(e);
+            },
+        },
+        {
+            id: "BaseTemplate",
+            label: "Default Email Template",
+            icon: "bx bxs-envelope",
+            link: route('organizer.events.base.template'),
+            click: function (e: any) {
+                e.preventDefault();
+                setIscurrentState('BaseTemplate');
+                updateIconSidebar(e);
+            },
+        },
+        {
+            id: "EmailTemplate",
+            label: "Email Template",
+            icon: "bx bxs-envelope",
+            link: route('organizer.events.email-template.index'),
+            click: function (e: any) {
+                e.preventDefault();
+                setIscurrentState('EmailTemplate');
+                updateIconSidebar(e);
+            },
         },
         // }] : []),
     ];

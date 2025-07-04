@@ -7,6 +7,8 @@ use App\Http\Controllers\Organizer\Event\AssignTicketController;
 use App\Http\Controllers\Organizer\Event\BadgePrintController;
 use App\Http\Controllers\Organizer\Event\CustomMenuController;
 use App\Http\Controllers\Organizer\Event\DashboardController;
+use App\Http\Controllers\Organizer\Event\EmailCampaignController;
+use App\Http\Controllers\Organizer\Event\EmailTemplateController;
 use App\Http\Controllers\Organizer\Event\Engagement\NewsfeedController;
 use App\Http\Controllers\Organizer\Event\EventAppFeeController;
 use App\Http\Controllers\Organizer\Event\EventController;
@@ -242,6 +244,17 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::get('/payment-success/{paymentUuId}', [AssignTicketController::class, 'paymentSuccess'])->name('payment.success');
             Route::post('update-attendee-payment/{paymentUuId}', [AssignTicketController::class, 'updateAttendeePaymnet'])->name('update.payment');
             Route::post('validate-discount-code/{disCode}', [AssignTicketController::class, 'validateDiscCode'])->name('validateCode.post');
+
+            // Base Template
+            Route::get('base-template', [EmailTemplateController::class, 'baseTemplate'])->name('base.template');
+            Route::get('base-template/{baseTemplate}', [EmailTemplateController::class, 'viewBaseTemplate'])->name('base.template.view');
+            Route::post('use-template/{baseTemplate}', [EmailTemplateController::class, 'setEmailTemplate'])->name('use.template');
+
+            //Email Template
+            Route::resource('email-template', EmailTemplateController::class);
+
+            //Email Campaign
+            Route::resource('email-campaign', EmailCampaignController::class);
         });
 
         // Q&A
@@ -290,5 +303,5 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
     // Route::post('/events/attendance/destroy/many', [SessionAttendanceController::class, 'destroyMany'])->name('events.attendance.destroy.many');
 
     //Session ratings
-     Route::get('/ratings/{eventSession}', [SessionRatingsController::class, 'index'])->name('sessions.ratings.index');
+    Route::get('/ratings/{eventSession}', [SessionRatingsController::class, 'index'])->name('sessions.ratings.index');
 });
