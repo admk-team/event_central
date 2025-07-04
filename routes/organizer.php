@@ -51,6 +51,7 @@ Route::prefix('e/{uuid}')->name('organizer.events.website')->group(function () {
     Route::get('schedule', [WebsiteController::class, 'schedule'])->name('.schedule');
     Route::get('speakers', [WebsiteController::class, 'speakers'])->name('.speakers');
     Route::get('sponsors', [WebsiteController::class, 'sponsors'])->name('.sponsors');
+    Route::get('exhibitors', [WebsiteController::class, 'exhibitors'])->name('.exhibitors');
     Route::get('tickets', [WebsiteController::class, 'tickets'])->name('.tickets');
     Route::get('privacy-policy', [WebsiteController::class, 'privacypolicy'])->name('.privacy');
     Route::get('contact-us', [WebsiteController::class, 'contactus'])->name('.contactus');

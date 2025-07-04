@@ -52,6 +52,7 @@
                     <li><a href="{{ route('organizer.events.website.speakers', $event->uuid) }}">Speakers</a></li>
                     <li><a href="#venue">Venue</a></li>
                     <li><a href="{{route('organizer.events.website.sponsors',$event->uuid) }}">Sponsors</a></li>
+                    <li><a href="{{route('organizer.events.website.exhibitors',$event->uuid) }}">Exhibitors</a></li>
                     <li><a href="{{route('organizer.events.website.tickets',$event->uuid) }}">Tickets</a></li>
                     <li class="header-actions-mobile">
                         <a href="{{ route('organizer.events.website.schedule', $event->uuid) }}" class="btn btn-primary">Schedule</a>

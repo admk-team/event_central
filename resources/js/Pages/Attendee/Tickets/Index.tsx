@@ -134,7 +134,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
     };
 
     useEffect(() => {
-        console.log("Ticket Details", allTicketDetails);
+        // console.log("Ticket Details", allTicketDetails);
         setDiscount(0);
         setDiscountCode('');
         updateGrandTotal();
@@ -268,6 +268,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
                                         <TicketCard
                                             ticket={ticket}
                                             key={ticket.id}
+                                            ticket_array={allTicketDetails}
                                             onTicketDetailsUpdated={
                                                 handleTicketCardChanged
                                             }
@@ -278,6 +279,8 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
                                         <TicketCard
                                             ticket={ticket}
                                             key={ticket.id}
+                                            ticket_array={allTicketDetails}
+                                            submitCheckOut={submitCheckOut}
                                             onTicketDetailsUpdated={
                                                 handleTicketCardChanged
                                             }
