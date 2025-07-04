@@ -139,6 +139,16 @@ class EventController extends Controller
         return Inertia::render('Attendee/AttendeeMore', compact(['eventApp']));
     }
 
+    public function submitContectForm(Request $request)
+    {
+        $request->validate([
+            'subject' => 'required',
+            'content' => 'required',
+            'event_app_id' => 'required',
+        ]);
+        // dd($request->all());
+    }
+
     public function getPostsMore(String $id)
     {
         $attendee = Auth::user()->id;

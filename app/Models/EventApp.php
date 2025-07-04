@@ -187,7 +187,7 @@ class EventApp extends Model
 
     public function getStartDateAttribute()
     {
-        $event_dates = Cache::remember('event_dates', now()->addMinutes(10), function () {
+        return Cache::remember('event_dates', now()->addMinutes(10), function () {
             $temp = $this->dates()->first();
             return $temp ? $temp->date : null;
         });
