@@ -25,18 +25,19 @@ import moment from "moment";
 const AttendeeMore = ({ eventApp }: any) => {
     // console.log(eventApp);
 
-
     const emailLink = useRef();
     const { data, setData, post, processing, errors, reset } = useForm({
         subject: "",
         content: "",
+        event_app_id: eventApp.id,
     });
     const handleContact = (e: any) => {
         e.preventDefault();
-        post(route('attendee.event.detail.contact'), {
+        console.log(data);
+        post(route("attendee.event.detail.contact"), {
             onSuccess: () => {
                 reset();
-            }
+            },
         });
     };
 
@@ -151,23 +152,36 @@ const AttendeeMore = ({ eventApp }: any) => {
                                                             Contact Form
                                                         </Accordion.Header>
                                                         <Accordion.Body>
-                                                            <Form onSubmit={handleContact}>
+                                                            <Form
+                                                                onSubmit={
+                                                                    handleContact
+                                                                }
+                                                            >
                                                                 <Form.Label htmlFor="inputPassword5">
                                                                     Subject
                                                                 </Form.Label>
                                                                 <Form.Control
                                                                     type="text"
+                                                                    value={data.subject}
                                                                     onChange={(
                                                                         e: any
                                                                     ) =>
-                                                                        setData("subject",
-                                                                            e.target
+                                                                        setData(
+                                                                            "subject",
+                                                                            e
+                                                                                .target
                                                                                 .value
                                                                         )
                                                                     }
                                                                 />
-                                                                <Form.Control.Feedback type="invalid" className="d-block mt-2">
-                                                                    {" "} {errors.subject}{" "}
+                                                                <Form.Control.Feedback
+                                                                    type="invalid"
+                                                                    className="d-block mt-2"
+                                                                >
+                                                                    {" "}
+                                                                    {
+                                                                        errors.subject
+                                                                    }{" "}
                                                                 </Form.Control.Feedback>
                                                                 <Form.Group className="mb-3">
                                                                     <Form.Label>
@@ -175,22 +189,31 @@ const AttendeeMore = ({ eventApp }: any) => {
                                                                     </Form.Label>
                                                                     <Form.Control
                                                                         as="textarea"
+                                                                        value={data.content} 
                                                                         rows={3}
                                                                         onChange={(
                                                                             e: any
                                                                         ) =>
-                                                                            setData("content",
+                                                                            setData(
+                                                                                "content",
                                                                                 e
                                                                                     .target
                                                                                     .value
                                                                             )
                                                                         }
                                                                     />
-                                                                    <Form.Control.Feedback type="invalid" className="d-block mt-2">
-                                                                        {" "} {errors.content}{" "}
+                                                                    <Form.Control.Feedback
+                                                                        type="invalid"
+                                                                        className="d-block mt-2"
+                                                                    >
+                                                                        {" "}
+                                                                        {
+                                                                            errors.content
+                                                                        }{" "}
                                                                     </Form.Control.Feedback>
                                                                 </Form.Group>
                                                                 <Button
+                                                                    type="submit"
                                                                     className="btn-sm btn-success w-100"
                                                                     style={{
                                                                         backgroundColor:

@@ -27,6 +27,7 @@ const Navdata = () => {
     const [isUpgradeTicket, setUpgradeTicket] = useState<boolean>(false);
     const [isBaseTemplate, setIsBaseTemplate] = useState<boolean>(false);
     const [isEmailTemplate, setIsEmailTemplate] = useState<boolean>(false);
+    const [isContactForm, setIsContactForm] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>("Dashboard");
 
@@ -61,6 +62,7 @@ const Navdata = () => {
         if (iscurrentState !== 'Questionnaire') setIsQuestionnaireForm(false);
         if (iscurrentState !== 'BaseTemplate') setIsBaseTemplate(false);
         if (iscurrentState !== 'EmailTemplate') setIsEmailTemplate(false);
+        if (iscurrentState !== 'ContactForm') setIsContactForm(false);
         if (iscurrentState !== 'Questionnaire_response') setIsQuestionnaireResponse(false);
         // if (iscurrentState !== 'assignTickets') setIsTickets(false);
         // if (iscurrentState !== 'upgradeTicket') setIsTickets(false);
@@ -76,6 +78,7 @@ const Navdata = () => {
         IsSessionAttendance,
         isBaseTemplate,
         isEmailTemplate,
+        isContactForm,
         // isRefundTicket,
         isTickets,
         // isAssignTicket,
@@ -450,6 +453,18 @@ const Navdata = () => {
                 setIscurrentState('EmailTemplate');
                 updateIconSidebar(e);
             },
+        },
+        {
+            id: "ContactForm",
+            label: "Contact Form",
+            icon: "bx bxs-envelope",
+            link: route('organizer.events.contact-forms.index'),
+            click: function (e: any) {
+                e.preventDefault();
+                setIscurrentState('ContactForm');
+                updateIconSidebar(e);
+            },
+            hasPermissions: ["view_contact_form"],
         },
         // }] : []),
     ];

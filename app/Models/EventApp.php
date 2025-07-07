@@ -99,6 +99,11 @@ class EventApp extends Model
         return $this->hasMany(EventSpeaker::class);
     }
 
+    public function contact_forms()
+    {
+        return $this->hasMany(AttendeeContactForm::class, 'event_id', 'id');
+    }
+    
     public function images()
     {
         return $this->hasMany(EventAppImage::class);

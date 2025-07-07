@@ -5,6 +5,7 @@ use App\Http\Controllers\Organizer\Event\RefundPaymentController;
 use App\Http\Controllers\Organizer\Event\AddonController;
 use App\Http\Controllers\Organizer\Event\AssignTicketController;
 use App\Http\Controllers\Organizer\Event\BadgePrintController;
+use App\Http\Controllers\Organizer\Event\ContactFormController;
 use App\Http\Controllers\Organizer\Event\CustomMenuController;
 use App\Http\Controllers\Organizer\Event\DashboardController;
 use App\Http\Controllers\Organizer\Event\EmailCampaignController;
@@ -45,6 +46,7 @@ use App\Http\Controllers\Organizer\RoleController;
 use App\Http\Controllers\Organizer\Settings\OrganizerPaymentSettingController;
 use App\Http\Controllers\Organizer\UserController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Middleware\CheckAttendeeRegistrationForm;
 use Illuminate\Support\Facades\Route;
 
 // Event Website
@@ -255,6 +257,12 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
 
             //Email Campaign
             Route::resource('email-campaign', EmailCampaignController::class);
+
+            // contact forms
+            Route::prefix('contact-forms')->name('contact-forms.')->group(function () {
+                Route::resource('/', ContactFormController::class);
+                Route::delete('/delete/many', [ContactFormController::class, 'destroyMany'])->name('destroy.many');
+            });
         });
 
         // Q&A
