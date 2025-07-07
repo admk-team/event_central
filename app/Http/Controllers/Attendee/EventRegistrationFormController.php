@@ -27,6 +27,8 @@ class EventRegistrationFormController extends Controller
             abort(404);
         }
 
+        $eventApp->load(['dates']);
+
         return Inertia::render("Attendee/Auth/EventRegistrationForm", [
             'form' => $form,
             'eventApp' => $eventApp,
