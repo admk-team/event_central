@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import Select, { StylesConfig } from 'react-select';
 
 
-const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
+const Index = ({ eventApp, organizerView, attendees, attendee_id,lasteventDate }: any) => {
 
     //Set Page Layout as per User [Organizer, Attendee]
     const Layout = organizerView ? EventLayout : AttendeeLayout;
@@ -195,6 +195,13 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
         }),
     };
 
+// console.log('eventApp');
+// console.log(lasteventDate);
+
+
+
+const formatted =(evnetDate:any)=> new Date(evnetDate).toLocaleDateString('en-GB').replace(/\//g, '-');
+
 
     return (
         <Layout>
@@ -262,6 +269,10 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
                         </Row>}
                         {(!organizerView || currentAttendee > 0) &&
                             <>
+                            <div className="d-flex justify-content-end gap-3">
+                           <p>Event Start : <span className="fw-bold"> {formatted(eventApp.start_date)}</span></p> 
+                           <p>Event End : <span className="fw-bold"> {formatted(lasteventDate[0].date)}</span></p> 
+                            </div>
                                 <Row className=" justify-content-center gy-4">
                                 {organizerView && eventApp.tickets.length > 0 &&
                                     eventApp.tickets.map((ticket: any) => (
