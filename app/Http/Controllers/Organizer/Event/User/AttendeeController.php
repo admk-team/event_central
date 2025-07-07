@@ -8,17 +8,18 @@ use App\Models\Attendee;
 use App\Models\EventApp;
 use App\Models\EventSession;
 use Illuminate\Http\Request;
+use App\Models\EventCheckIns;
 use App\Models\FormSubmission;
 use App\Models\SessionCheckIn;
 use App\Models\TransferTicket;
+use App\Jobs\ImportAttendeeJob;
 use App\Models\AttendeePayment;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Requests\Organizer\Event\User\AttendeeStoreRequest;
 use App\Models\AttendeePurchasedTickets;
-use App\Models\EventCheckIns;
+use App\Http\Requests\Organizer\Event\User\AttendeeStoreRequest;
 
 class AttendeeController extends Controller
 {
@@ -27,9 +28,9 @@ class AttendeeController extends Controller
         if (! Auth::user()->can('view_attendees')) {
             abort(403);
         }
-
+        $eventList = EventApp::ofOwner()->where('id', '!=', session('event_id'))->get();
         $attendees = $this->datatable(Attendee::currentEvent()->with('eventCheckin'));
-        return Inertia::render('Organizer/Events/Users/Attendees/Index', compact('attendees'));
+        return Inertia::render('Organizer/Events/Users/Attendees/Index', compact('attendees', 'eventList'));
     }
 
 
@@ -198,13 +199,13 @@ class AttendeeController extends Controller
             ->where('attendee_payments.status', 'paid')
             ->groupBy('attendee_purchased_tickets.id', 'attendee_payments.id', 'event_app_tickets.name', 'attendee_payments.payment_method')
             ->select(
-            'attendee_purchased_tickets.id as attendee_purchased_ticket_id',
+                'attendee_purchased_tickets.id as attendee_purchased_ticket_id',
                 'event_app_tickets.name as ticket_name',
                 DB::raw('SUM(attendee_purchased_tickets.qty) as qty'),
                 DB::raw('SUM(attendee_payments.amount_paid) as amount'),
-            'attendee_payments.payment_method as type',
-            DB::raw('COUNT(attendee_purchased_ticket_id) as addons_count')  // Add count of addons
-        )
+                'attendee_payments.payment_method as type',
+                DB::raw('COUNT(attendee_purchased_ticket_id) as addons_count')  // Add count of addons
+            )
             ->get();
 
 
@@ -307,5 +308,15 @@ class AttendeeController extends Controller
             'image' => $image,
             'hasTickets' => true,
         ]);
+    }
+
+    public function importFromEvent(Request $request)
+    {
+        $fromEventId = $request->input('event_id'); // source event
+        $toEventId = session('event_id'); // destination event
+
+        ImportAttendeeJob::dispatch($fromEventId, $toEventId);
+
+        return back()->withSuccess("Import Job Dispatched In Successfully");
     }
 }
