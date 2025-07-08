@@ -3,10 +3,11 @@ import EmailEditor, { EditorRef } from 'react-email-editor';
 import { router, usePage } from '@inertiajs/react';
 import Layout from '../../../../Layouts/Event';
 import { Button, Card, Col, Container, Form, Row, Spinner } from 'react-bootstrap';
+import axios from 'axios';
 
-const Edit = ({ EmailTemplate }: any) => {
+const Edit = ({ EmailTemplate, eventId }: any) => {
     const emailEditorRef = useRef<EditorRef>(null);
-
+    const page = usePage();
     const [name, setName] = useState(EmailTemplate?.name || '');
     const [thumbnail, setThumbnail] = useState<File | null>(null);
     const [thumbnailUrl, setThumbnailUrl] = useState(EmailTemplate?.thumbnail || '');
@@ -49,30 +50,33 @@ const Edit = ({ EmailTemplate }: any) => {
             const html = await new Promise<string>((resolve) =>
                 emailEditorRef.current?.editor?.exportHtml((data: { html: string }) => resolve(data.html))
             );
-            console.log('hasdasd');
+
             const formData = new FormData();
+            formData.append('id', EmailTemplate.id); // <-- Send ID if needed to update
             formData.append('name', name);
             formData.append('editor_content', JSON.stringify(design));
             formData.append('mail_content', html);
+            formData.append('event_id', eventId);
+            formData.append('user_id', page.props.auth.user.id);
             formData.append('role', 'user');
-            formData.append('_method', 'PUT'); // For Laravel's update route
 
             if (thumbnail) formData.append('thumbnail', thumbnail);
 
-            router.post(route('organizer.events.email-template.update', EmailTemplate.id), formData, {
-                forceFormData: true,
-                onSuccess: () => {
-                    router.visit(route('template.index'));
-                },
-                onError: (errors: any) => {
-                    setErrorMessage(errors.name || errors.message || 'Something went wrong');
-                },
-                onFinish: () => {
-                    setIsSubmitting(false);
+            await axios.post('http://localhost/api/user/email-template-update/' + EmailTemplate.id, formData, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
                 },
             });
-        } catch (error) {
-            setErrorMessage('Failed to submit form.');
+
+            router.visit(route('organizer.events.email-template.index')); // redirect after success
+        } catch (error: any) {
+            if (error.response?.data?.errors) {
+                setErrorMessage(error.response.data.errors.name || 'Something went wrong');
+            } else {
+                setErrorMessage('Failed to submit form.');
+            }
+        } finally {
             setIsSubmitting(false);
         }
     };

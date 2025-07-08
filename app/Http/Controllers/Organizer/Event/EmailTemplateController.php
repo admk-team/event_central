@@ -69,6 +69,7 @@ class EmailTemplateController extends Controller
     public function edit(EventEmailTemplate $EmailTemplate)
     {
         return Inertia::render('Organizer/Events/EmailTemplate/Edit', [
+            'eventId' => session('event_id'),
             'EmailTemplate' => $EmailTemplate,
         ]);
     }
