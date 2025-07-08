@@ -64,21 +64,19 @@ export default function DataTable<T>({
         getSelectedRows: rowSelector.getSelectedRows,
     };
     // toggle the columns
-    const [visibleColumns, setVisibleColumns] = useState<string[]>(
-        columns.filter(col => col.header).map(col => col.header)
-    );
-    console.log('tesign visible column', visibleColumns);
+    const [visibleColumnsIndexes, setVisibleColumnsIndexes] = useState<number[]>(columns.map((_, index) => index));
+    console.log('tesign visible column', visibleColumnsIndexes);
 
 
-    const toggleColumnVisibility = (header: string) => {
-        setVisibleColumns(prev =>
-            prev.includes(header)
-                ? prev.filter(key => key !== header)
-                : [...prev, header]
+    const toggleColumnVisibility = (index: number) => {
+        setVisibleColumnsIndexes(prev =>
+            prev.includes(index)
+                ? prev.filter(key => key !== index)
+                : [...prev, index]
         );
     };
 
-    const filteredColumns = columns.filter(col => !col.header || visibleColumns?.includes(col.header));
+    const filteredColumns = columns.filter((col, index) => visibleColumnsIndexes.includes(index));
     console.log('filterColumns', filteredColumns);
 
     return (
@@ -142,7 +140,6 @@ export default function DataTable<T>({
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
                             {columns
-                                .filter(col => col.header) // Only show columns with accessorKey
                                 .map((col, index) => (
                                     <Dropdown.Item
                                         key={index}
@@ -153,8 +150,8 @@ export default function DataTable<T>({
                                     >
                                         <Form.Check
                                             type="checkbox"
-                                            checked={visibleColumns.includes(col.header!)}
-                                            onChange={() => toggleColumnVisibility(col.header!)}
+                                            checked={visibleColumnsIndexes.includes(index)}
+                                            onChange={() => toggleColumnVisibility(index)}
                                         />
                                         {typeof col.header === 'function' ? col.header() : col.header}
                                     </Dropdown.Item>
