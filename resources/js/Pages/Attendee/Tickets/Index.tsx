@@ -65,7 +65,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
 
         const data = {
             ticketsDetails: [...allTicketDetails],
-            discount: discount,
+            discount: discountAmount,
             discount_code: discountCodeApplied,
             subTotal: grandTotal,
             totalAmount: totalAmount,
