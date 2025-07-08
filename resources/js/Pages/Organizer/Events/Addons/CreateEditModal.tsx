@@ -14,6 +14,7 @@ import {
     Table,
     Button,
 } from "react-bootstrap";
+import FormCheckInput from "react-bootstrap/esm/FormCheckInput";
 
 export default function CreateEditModal({
     show,
@@ -41,6 +42,7 @@ export default function CreateEditModal({
             price: addon?.price ?? "0",
             qty_total: addon?.qty_total ?? "",
             qty_sold: addon?.qty_sold ?? "0",
+            enable_discount: addon?.enable_discount ?? true,
         });
 
     const submit = (e: any) => {
@@ -182,6 +184,20 @@ export default function CreateEditModal({
                                         {errors.qty_sold}
                                     </Form.Control.Feedback>
                                 )}
+                            </FormGroup>
+                        </Col>
+
+                        <Col md={4}>
+                            <FormGroup className="mb-3">
+                                <Form.Label>Enable Discount</Form.Label>
+                                <div className="form-check form-switch form-switch-lg" dir='ltr'>
+                                    <FormCheckInput
+                                        type="checkbox" 
+                                        className="form-check-input"
+                                        checked={data.enable_discount}
+                                        onChange={(e: any) => setData('enable_discount', e.target.checked)}
+                                    />
+                                </div>
                             </FormGroup>
                         </Col>
                     </Row>

@@ -16,9 +16,14 @@ class Addon extends Model
         'price',
         'qty_total',
         'qty_sold',
+        'enable_discount',
     ];
 
     protected $appends = ['full_name'];
+
+    protected $casts = [
+        'enable_discount' => 'boolean',
+    ];
 
     public function organizer()
     {

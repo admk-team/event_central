@@ -26,10 +26,25 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
     const [codeError, setCodeError] = useState<string | boolean | any>(null);
     const [discountCode, setDiscountCode] = useState('');
     const [discountCodeApplied, setDiscountCodeApplied] = useState('');
-    const [discount, setDiscount] = useState(0);
+    const [discount, setDiscount] = useState<{
+        type: string;
+        value: number;
+    } | null>(null);
+    const [discountAmount, setDiscountAmount] = useState(0);
     const [totalAmount, setTotalAmount] = useState(0);
     const [processing, setProcessing] = useState(false);
     const paymentNoteRef = useRef(null);
+
+    const getDiscountAmount = (discount: any, total: number) => {
+        if (! discount) return 0;
+
+        switch (discount.type) {
+            case "fixed":
+                return discount.value;
+            case "percentage":
+                return total * (discount.value / 100);
+        }
+    }
 
     const scrollToNoteField = () => {
         const offset = 120; // your custom offset
@@ -113,50 +128,78 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
         let url = organizerView ? route("organizer.events.validateCode.post", discountCode) : route("attendee.validateCode.post", discountCode)
         axios.post(url).then((response) => {
             let codeObj = response.data.code;
-            let disc = parseFloat(codeObj.discount_value);
-            switch (codeObj.discount_type) {
-                case "fixed":
-                    disc = codeObj.discount_value;
-                    updateTotalAmount(disc);
-                    return;
-                case "percentage":
-                    disc = grandTotal * (codeObj.discount_value / 100);
-                    updateTotalAmount(disc);
-                    return;
-            }
+            setDiscount({
+                type: codeObj.discount_type,
+                value: codeObj.discount_value,
+            });
+            toast.success("Coupon Code applied successfuly");
+            // let disc = parseFloat(codeObj.discount_value);
+            // switch (codeObj.discount_type) {
+            //     case "fixed":
+            //         disc = codeObj.discount_value;
+            //         updateTotalAmount(disc);
+            //         return;
+            //     case "percentage":
+            //         disc = grandTotal * (codeObj.discount_value / 100);
+            //         updateTotalAmount(disc);
+            //         return;
+            // }
         })
             .catch((error) => {
                 console.log(error);
                 setCodeError(error.response.data.message);
-                setDiscount(0);
+                setDiscount(null);
                 setTotalAmount(grandTotal);
             });
     };
 
     useEffect(() => {
         console.log("Ticket Details", allTicketDetails);
-        setDiscount(0);
+        // setDiscount(0);
         setDiscountCode('');
         updateGrandTotal();
     }, [allTicketDetails]);
 
-    const updateTotalAmount = (disc: any) => {
-        let newV = grandTotal - disc;
-        console.log(grandTotal, disc, newV);
-        setDiscount(disc);
-        setTotalAmount(newV);
-        setDiscountCodeApplied(discountCode);
-        setDiscountCode('');
-        toast.success("Coupon Code applied successfuly");
-    }
+    // const updateTotalAmount = (disc: any) => {
+    //     //let newV = grandTotal - disc;
+    //     //console.log(grandTotal, disc, newV);
+    //     setDiscount(disc);
+    //     //setTotalAmount(newV);
+    //     setDiscountCodeApplied(discountCode);
+    //     setDiscountCode('');
+    //     toast.success("Coupon Code applied successfuly");
+    // }
+
+    useEffect(() => {
+        updateGrandTotal();
+    }, [discount])
 
     const updateGrandTotal = () => {
         let gTotal = 0;
+        const noDiscountAddons: any[] = [];
+
         allTicketDetails.forEach((ticketDetail) => {
             gTotal += parseFloat(ticketDetail.ticket.base_price);
             gTotal += parseFloat(ticketDetail.fees_sub_total);
-            gTotal += parseFloat(ticketDetail.addons_sub_total);
+            // gTotal += parseFloat(ticketDetail.addons_sub_total);
+            ticketDetail.addons.forEach((addon: any) => {
+                if (addon.enable_discount) {
+                    gTotal += parseFloat(addon.price);
+                } else {
+                    noDiscountAddons.push(addon);
+                }
+            });
         });
+
+        // Apply Discount
+        const discountAmt = getDiscountAmount(discount, gTotal);
+        gTotal = gTotal - discountAmt;
+        setDiscountAmount(discountAmt);
+
+        noDiscountAddons.forEach(addon => {
+            gTotal += parseFloat(addon.price);
+        })
+
         gTotal = parseFloat(gTotal.toFixed(2));
         setGrandTotal(gTotal);
         setTotalAmount(gTotal);
@@ -176,7 +219,6 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
             return newList;
         });
     };
-
 
     const customSelect2Styles = {
         control: (base: any) => ({
@@ -323,7 +365,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
                                         <Col md={4} lg={4} className="d-flex justify-content-end align-items-center">
                                             <h5 className="mb-1 pt-2 pb-2 mr-2 text-end fs-4">Discount : <sup>
                                                 <small>$</small>
-                                            </sup>{discount}</h5>
+                                            </sup>{discountAmount.toFixed(2)}</h5>
                                         </Col>
                                     </Row>
                                 </CardBody>

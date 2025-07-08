@@ -37,6 +37,7 @@ class AddonController extends Controller
             'price' => 'nullable|numeric',
             'qty_total' => 'required|numeric',
             'qty_sold' => 'nullable|numeric',
+            'enable_discount' => 'boolean',
         ]);
         Addon::create($request->all());
         return back()->withSuccess('Addon Created Successfully');
@@ -55,6 +56,7 @@ class AddonController extends Controller
             'price' => 'nullable|numeric',
             'qty_total' => 'required|numeric',
             'qty_sold' => 'nullable|numeric',
+            'enable_discount' => 'boolean',
         ]);
 
         $addon->update($request->all());
