@@ -156,7 +156,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
     useEffect(() => {
         console.log("Ticket Details", allTicketDetails);
         // setDiscount(0);
-        setDiscountCode('');
+        // setDiscountCode('');
         updateGrandTotal();
     }, [allTicketDetails]);
 
