@@ -50,12 +50,12 @@ const Edit = ({ EmailTemplate, eventId }: any) => {
             const html = await new Promise<string>((resolve) =>
                 emailEditorRef.current?.editor?.exportHtml((data: { html: string }) => resolve(data.html))
             );
-
+            const encodedHtml = btoa(unescape(encodeURIComponent(html)));
             const formData = new FormData();
             formData.append('id', EmailTemplate.id); // <-- Send ID if needed to update
             formData.append('name', name);
             formData.append('editor_content', JSON.stringify(design));
-            formData.append('mail_content', html);
+            formData.append('mail_content', encodedHtml);
             formData.append('event_id', eventId);
             formData.append('user_id', page.props.auth.user.id);
             formData.append('role', 'user');

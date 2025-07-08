@@ -26,7 +26,7 @@ class EmailTemplateController extends Controller
             'editor_content' => $request->editor_content,
             'mail_content' => $request->mail_content,
         ];
-        // dd($input);
+        dd($input);
 
         DB::transaction(function () use ($EmailTemplate, $input) {
             $this->templateService->update($EmailTemplate, $input);
