@@ -62,7 +62,7 @@ const Edit = ({ EmailTemplate, eventId }: any) => {
 
             if (thumbnail) formData.append('thumbnail', thumbnail);
 
-            await axios.post('http://localhost/api/user/email-template-update/' + EmailTemplate.id, formData, {
+            await axios.post(route('email.template.update', EmailTemplate.id), formData, {
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'application/json',

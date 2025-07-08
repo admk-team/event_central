@@ -36,7 +36,7 @@ use App\Http\Controllers\Api\v1\Organizer\ProfileController as OrganizerProfileC
 Route::prefix('user')->group(function () {
 
     Route::post('/login', [AuthController::class, 'login'])->defaults('type', 'user');
-    Route::post('email-template-update/{EmailTemplate}', [EmailTemplateController::class, 'update']);
+    Route::post('email-template-update/{EmailTemplate}', [EmailTemplateController::class, 'update'])->name('email.template.update');
     Route::middleware(['auth:sanctum', 'ability:role:user'])->group(function () {
         Route::delete('delete/{user}', [AuthController::class, 'delete'])->name('user.delete')->defaults('type', 'user');
         Route::get('/me', function (Request $request) {
