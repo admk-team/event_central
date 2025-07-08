@@ -51,10 +51,11 @@ const Edit = ({ EmailTemplate, eventId }: any) => {
                 emailEditorRef.current?.editor?.exportHtml((data: { html: string }) => resolve(data.html))
             );
             const encodedHtml = btoa(unescape(encodeURIComponent(html)));
+            const encodedMailContent = btoa(unescape(encodeURIComponent(JSON.stringify(design))));
             const formData = new FormData();
             formData.append('id', EmailTemplate.id); // <-- Send ID if needed to update
             formData.append('name', name);
-            formData.append('editor_content', JSON.stringify(design));
+            formData.append('editor_content', encodedMailContent);
             formData.append('mail_content', encodedHtml);
             formData.append('event_id', eventId);
             formData.append('user_id', page.props.auth.user.id);
