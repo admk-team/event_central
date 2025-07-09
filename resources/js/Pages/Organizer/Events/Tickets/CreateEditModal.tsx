@@ -58,6 +58,7 @@ export default function CreateEditModal({
             start_increment: ticket?.start_increment ?? "",
             end_increment: ticket?.end_increment ?? "",
             show_on_attendee_side: ticket?.show_on_attendee_side ?? true,
+            qty_total: ticket?.qty_total ?? null,
         });
 
     const [selectMulti, setselectMulti] = useState<any>(
@@ -411,6 +412,43 @@ export default function CreateEditModal({
                                         </FormGroup>
                                     </Col>
                                 </Row>
+                            </Col>
+                        </Row>
+                        <Row className="mt-4">
+                            <Col md={6}>
+                                <FormGroup className="mb-3">
+                                    <Form.Label>Total Quantity</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        step={1}
+                                        min={0}
+                                        value={data.qty_total}
+                                        onChange={(e) =>
+                                            setData(
+                                                "qty_total",
+                                                e.target.value
+                                            )
+                                        }
+                                        isInvalid={!!errors.qty_total}
+                                    />
+                                    {errors.qty_total && (
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.qty_total}
+                                        </Form.Control.Feedback>
+                                    )}
+                                </FormGroup>
+                            </Col>
+                            <Col md={6}>
+                                <FormGroup className="mb-3">
+                                    <Form.Label>Sold Quantity</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        step={1}
+                                        min={0}
+                                        value={ticket?.qty_sold ?? 0}
+                                        disabled={true}
+                                    />
+                                </FormGroup>
                             </Col>
                         </Row>
                         <Row className="mt-4">

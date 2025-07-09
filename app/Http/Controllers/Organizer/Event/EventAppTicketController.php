@@ -39,15 +39,15 @@ class EventAppTicketController extends Controller
         });
         $event_ticket_type = EventTicketType::where('event_app_id', session('event_id'))->latest()->get();
         $addons_collection = Addon::currentEvent()->orderBy('name')->get();
-        $addons = $addons_collection->map(function ($addon) {
-            return ['value' => $addon->id, 'label' => $addon->full_name];
+        $addonsAll = $addons_collection->map(function ($addon) {
+            return ['value' => $addon->id, 'label' => $addon->full_name, 'event_app_ticket_id' => $addon->event_app_ticket_id];
         });
 
         $fees = EventAppFee::where('status', 'active')->currentEvent()->orderBy('name')->get();
         return Inertia::render('Organizer/Events/Tickets/Index', compact([
             'tickets',
             'sessions',
-            'addons',
+            'addonsAll',
             'fees',
             'event_ticket_type'
         ]));
