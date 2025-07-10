@@ -26,6 +26,7 @@ class TemplateService
      */
     public function update(EventEmailTemplate $template, array $validatedData): EventEmailTemplate
     {
+        // dd($template);
         if (isset($validatedData['thumbnail']) && $validatedData['thumbnail'] instanceof UploadedFile) {
             if ($template->thumbnail && Storage::disk('public')->exists($template->thumbnail)) {
                 Storage::disk('public')->delete($template->thumbnail);
@@ -33,7 +34,9 @@ class TemplateService
             $validatedData['thumbnail'] = $validatedData['thumbnail']->store('templates', ['disk' => 'public']);
         }
 
-        $template->update($validatedData);
+        $sss = $template->update($validatedData);
+
+        // dd($sss);
         return $template;
     }
 }
