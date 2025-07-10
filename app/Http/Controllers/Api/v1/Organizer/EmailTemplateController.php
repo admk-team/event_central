@@ -23,10 +23,9 @@ class EmailTemplateController extends Controller
             'name' => $request->name,
             'event_app_id' => $request->event_id,
             'thumbnail' => $request->thumbnail,
-            'editor_content' => $request->editor_content,
-            'mail_content' => $request->mail_content,
+            'editor_content' => html_entity_decode(base64_decode($request->editor_content)),
+            'mail_content' => html_entity_decode(base64_decode($request->mail_content)),
         ];
-        dd($input);
 
         DB::transaction(function () use ($EmailTemplate, $input) {
             $this->templateService->update($EmailTemplate, $input);

@@ -21,3 +21,5 @@ yarn-error.log
 /.idea
 /.vscode
 .htaccess
+/public/storage
+/public/attendee-avatar
