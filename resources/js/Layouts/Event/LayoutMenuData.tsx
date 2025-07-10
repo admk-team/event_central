@@ -457,7 +457,7 @@ const Navdata = () => {
         {
             id: "ContactForm",
             label: "Contact Form",
-            icon: "bx bxs-envelope",
+            icon: "bx  bxs-contact",
             link: route('organizer.events.contact-forms.index'),
             click: function (e: any) {
                 e.preventDefault();
