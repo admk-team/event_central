@@ -392,7 +392,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
                                                 <sup>
                                                     <small>$</small>
                                                 </sup>
-                                                {totalAmount}
+                                                {totalAmount.toFixed(2)}
                                             </h5>
                                         </Col>
                                     </Row>

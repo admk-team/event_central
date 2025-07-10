@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useForm, usePage } from "@inertiajs/react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
@@ -30,6 +30,7 @@ export default function CreateEditModal({
     const isEdit = addon != null ? true : false;
     const editorRef = useRef<ClassicEditor>();
     const eventApp = usePage().props.currentEvent;
+    const tickets = usePage().props.tickets as any[];
 
     // console.log(eventApp);
 
@@ -43,6 +44,7 @@ export default function CreateEditModal({
             qty_total: addon?.qty_total ?? "",
             qty_sold: addon?.qty_sold ?? "0",
             enable_discount: addon?.enable_discount ?? true,
+            event_app_ticket_id: addon?.event_app_ticket_id,
         });
 
     const submit = (e: any) => {
@@ -64,6 +66,8 @@ export default function CreateEditModal({
             });
         }
     };
+
+    const [useTicketInventory, setUseTicketInventory] = useState(data.event_app_ticket_id);
 
     const handleChange = (editorData: any) => {
         setData("name", editorData);
@@ -129,6 +133,40 @@ export default function CreateEditModal({
                         </Col>
                     </Row>
                     <Row>
+                        <Col md={12}>
+                            <FormGroup className="mb-3">
+                                <Form.Label>Use ticket inventory</Form.Label>
+                                <div className="form-check form-switch form-switch-lg" dir='ltr'>
+                                    <FormCheckInput
+                                        type="checkbox" 
+                                        className="form-check-input"
+                                        checked={useTicketInventory}
+                                        onChange={(e: any) => {
+                                            setUseTicketInventory(e.target.checked);
+                                            if (e.target.checked === false) {
+                                                setData('event_app_ticket_id', null);
+                                            }
+                                        }}
+                                    />
+                                </div>
+                            </FormGroup>
+                        </Col>
+                        {useTicketInventory && (
+                            <Col md={12}>
+                                <FormGroup className="mb-3">
+                                    <Form.Label>Ticket</Form.Label>
+                                    <Form.Select
+                                        value={data.event_app_ticket_id}
+                                        onChange={(e) => setData('event_app_ticket_id', e.target.value)}
+                                    >
+                                        <option value="">Select</option>
+                                        {tickets.map(ticket => (
+                                            <option value={ticket.id} key={ticket.id}>{ticket.name}</option>
+                                        ))}
+                                    </Form.Select>
+                                </FormGroup>
+                            </Col>
+                        )}
                         <Col md={4}>
                             <FormGroup className="mb-3">
                                 <Form.Label>Price</Form.Label>
@@ -157,6 +195,7 @@ export default function CreateEditModal({
                                         setData("qty_total", e.target.value)
                                     }
                                     isInvalid={!!errors.qty_total}
+                                    disabled={useTicketInventory}
                                 />
                                 {errors.qty_total && (
                                     <Form.Control.Feedback type="invalid">

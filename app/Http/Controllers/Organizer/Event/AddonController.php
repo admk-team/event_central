@@ -22,7 +22,9 @@ class AddonController extends Controller
         }
 
         $addons = $this->datatable(Addon::currentEvent());
-        return Inertia::render('Organizer/Events/Addons/Index', compact('addons'));
+        $tickets = EventAppTicket::currentEvent()->orderBy('name', 'asc')->get();
+
+        return Inertia::render('Organizer/Events/Addons/Index', compact('addons', 'tickets'));
     }
     public function store(Request $request)
     {
@@ -33,13 +35,18 @@ class AddonController extends Controller
         $request->validate([
             'organizer_id' => 'required',
             'event_app_id' => 'nullable|numeric',
+            'event_app_ticket_id' => 'nullable',
             'name' => 'required|max:250',
             'price' => 'nullable|numeric',
-            'qty_total' => 'required|numeric',
+            'qty_total' => 'nullable|numeric',
             'qty_sold' => 'nullable|numeric',
             'enable_discount' => 'boolean',
         ]);
-        Addon::create($request->all());
+        $data = $request->all();
+        if (!$data['qty_total']) {
+            $data['qty_total'] = 0;
+        }
+        Addon::create($data);
         return back()->withSuccess('Addon Created Successfully');
     }
 
@@ -52,14 +59,18 @@ class AddonController extends Controller
         $request->validate([
             'organizer_id' => 'required',
             'event_app_id' => 'nullable|numeric',
+            'event_app_ticket_id' => 'nullable',
             'name' => 'required|max:250',
             'price' => 'nullable|numeric',
-            'qty_total' => 'required|numeric',
+            'qty_total' => 'nullable|numeric',
             'qty_sold' => 'nullable|numeric',
             'enable_discount' => 'boolean',
         ]);
-
-        $addon->update($request->all());
+        $data = $request->all();
+        if (!$data['qty_total']) {
+            $data['qty_total'] = 0;
+        }
+        $addon->update($data);
         return back()->withSuccess('Addon Updated Successfully');
     }
 

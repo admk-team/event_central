@@ -69,7 +69,17 @@ class PaymentController extends Controller
         } else {                //For attendees show only public tickets
             $eventApp->load([
                 'public_tickets.sessions',
-                'public_tickets.addons',
+                'public_tickets' => [
+                    'addons' => function ($query) {
+                        $query->where(function ($query) {
+                            $query->where('addons.event_app_ticket_id', null)
+                            ->whereColumn('qty_total', '>', 'qty_sold');
+                        })
+                        ->orWhereHas('ticket', function ($query) {
+                            $query->whereColumn('qty_total', '>', 'qty_sold');
+                        });
+                    }
+                ],
                 'public_tickets.fees'
             ]);
         }

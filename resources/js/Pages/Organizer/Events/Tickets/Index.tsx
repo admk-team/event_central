@@ -11,7 +11,7 @@ import CreateEditModal from "./CreateEditModal";
 import moment from "moment";
 import { DialogBackdrop } from "@headlessui/react";
 
-function Index({ tickets, sessions, addons, fees, event_ticket_type }: any) {
+function Index({ tickets, sessions, addonsAll, fees, event_ticket_type }: any) {
     // console.log('tickets', tickets);
 
     const [showCreateEditModal, _setShowCreateEditModal] =
@@ -291,7 +291,11 @@ function Index({ tickets, sessions, addons, fees, event_ticket_type }: any) {
                     onHide={() => setShowCreateEditModal(false)}
                     ticket={editTicket}
                     sessions={sessions}
-                    addons={addons}
+                    addons={
+                        addonsAll
+                            .filter((addon: any) => addon.event_app_ticket_id === null || addon.event_app_ticket_id === editTicket?.id)
+                            .map((addon: any) => ({ value: addon.value, label: addon.label }))
+                    }
                     fees={fees}
                     event_ticket_type={event_ticket_type}
                 />
