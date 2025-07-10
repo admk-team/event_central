@@ -105,7 +105,7 @@ const Navdata = () => {
                 setIscurrentState("Dashboard");
                 updateIconSidebar(e);
             },
-            hasPermissions: ["view_event_dashboard"],
+            // hasPermissions: ["view_event_dashboard"],
         },
         {
             id: "attendees",
