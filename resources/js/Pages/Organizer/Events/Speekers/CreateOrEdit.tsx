@@ -6,10 +6,15 @@ import Select from "react-select";
 import { Button, Col, Container, Row, Form, Card } from 'react-bootstrap';
 import languageData from "../../../../common/language-list.json";
 import countryData from "../../../../common/countries.json";
+import ImageCroper from "../../../../Components/ImageCroper";
 
 function CreateOrEdit({ speaker, events }: any) {
     // Determine if the form is in edit mode
     const isEdit = !!speaker;
+    //for image croper
+    const [showCropper, setShowCropper] = useState(false);
+    const [selectedImage, setSelectedImage] = useState<File | null>(null);
+
     const { data, setData, post, processing, errors, reset } = useForm({
         name: speaker?.name || "",
         avatar: null,
@@ -41,7 +46,8 @@ function CreateOrEdit({ speaker, events }: any) {
 
     function handleAvatar(e: any) {
         const file = e.target.files[0]
-        setData('avatar', file);
+        setSelectedImage(file);
+        setShowCropper(true);
     }
 
     const submit = (e: any) => {
@@ -53,6 +59,10 @@ function CreateOrEdit({ speaker, events }: any) {
             console.log('testing ', errors);
 
         }
+    };
+
+    const updateImagePreview = (file: any) => {
+        setData('avatar', file);
     };
 
     return (
@@ -313,6 +323,13 @@ function CreateOrEdit({ speaker, events }: any) {
                     </Row>
                 </Container>
             </div>
+
+            <ImageCroper
+                visible={showCropper}
+                imageSrc={selectedImage}
+                onClose={() => setShowCropper(false)}
+                onCrop={updateImagePreview}
+            />
         </React.Fragment>
     )
 }

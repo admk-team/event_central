@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\Api\AttendeeFavSessionResource;
+use App\Models\AttendeeContactForm;
 use Carbon\Carbon;
 
 class EventController extends Controller
@@ -28,7 +29,8 @@ class EventController extends Controller
         $eventApp = EventApp::find(Auth::user()->event_app_id);
         $eventApp->load(['event_sessions.eventSpeakers', 'event_sessions.eventPlatform', 'dates']);
         $eventApp->setRelation(
-            'event_sessions', $eventApp->event_sessions->filter(function ($session) {
+            'event_sessions',
+            $eventApp->event_sessions->filter(function ($session) {
                 return $session->is_favourite === true;
             })->values()
         );
@@ -146,7 +148,17 @@ class EventController extends Controller
             'content' => 'required',
             'event_app_id' => 'required',
         ]);
-        // dd($request->all());
+        $attendee = Auth::user();
+
+        if ($attendee) {
+            AttendeeContactForm::create([
+                'event_id' => $request->event_app_id,
+                'attendee_id' => $attendee->id,
+                'subject' => $request->subject,
+                'content' => $request->content,
+            ]);
+            return back()->withSuccess("Form Submitted Successfully");
+        }
     }
 
     public function getPostsMore(String $id)
