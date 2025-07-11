@@ -52,14 +52,18 @@ class PaymentController extends Controller
 
         $eventApp = null;
         $attendees = [];
+        $lasteventDate=[];
         //If Page is being visited by Organizer
         if ($organizerView) {
-            $eventApp = EventApp::find(session('event_id'));
+            $eventApp = EventApp::with('dates')->find(session('event_id'));
+            $lasteventDate = $eventApp->dates()->orderBy('date', 'desc')->get();
+
             $attendees = $eventApp->attendees()->select(['id as value',DB::raw("CONCAT(first_name, ' ', last_name) as label")])->get();
         } else {
-            $eventApp =  EventApp::find(auth()->user()->event_app_id);
+            $eventApp =  EventApp::with('dates')->find(auth()->user()->event_app_id);
+            $lasteventDate = $eventApp->dates()->orderBy('date', 'desc')->get();
+            
         }
-
         if ($organizerView) {     //For organizer show all tickets
             $eventApp->load([
                 'tickets.sessions',
@@ -89,7 +93,8 @@ class PaymentController extends Controller
             'eventApp',
             'organizerView',
             'attendees',
-            'attendee_id'
+            'attendee_id',
+            'lasteventDate'
         ]));
     }
 

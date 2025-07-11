@@ -105,10 +105,10 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckO
             prevItems.map((item: any) =>
                 item.ticket_no === ticket_no
                     ? {
-                          ...item,
-                          addons: addons,
-                          addons_sub_total: calculateAddonsSubTotal(addons),
-                      }
+                        ...item,
+                        addons: addons,
+                        addons_sub_total: calculateAddonsSubTotal(addons),
+                    }
                     : item
             )
         );
@@ -158,8 +158,8 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckO
                                 <Col md={2} lg={2}>
                                     <InputGroup>
                                         <Button size="sm" onClick={e => setTicketQty(prev => prev === 0 ? prev : --prev)}><Minus size={20} /></Button>
-                                        <FormControl 
-                                            type="number" 
+                                        <FormControl
+                                            type="number"
                                             className="text-center"
                                             min={0}
                                             step={1}
@@ -216,7 +216,7 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckO
                                         </button>
                                     )}
                                     {(() => {
-                                        const ticketExists = ticket_array.some((t:any) => t.ticket.id === ticket.id);
+                                        const ticketExists = ticket_array.some((t: any) => t.ticket.id === ticket.id);
                                         if (!ticketExists) return null;
                                         return (
                                             <Col md={4} lg={4}>
