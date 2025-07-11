@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\EventCampaign;
 use App\Models\EventEmailTemplate;
 use App\Http\Controllers\Controller;
+use App\Jobs\SendCampaignEmailBatchJob;
 
 class EmailCampaignController extends Controller
 {
@@ -52,7 +53,7 @@ class EmailCampaignController extends Controller
         $data['event_app_id'] = session('event_id');
         $data['status'] = 'draft';
 
-        EventCampaign::create([
+        $campaign = EventCampaign::create([
             'user_id' => $data['user_id'],
             'event_app_id' => $data['event_app_id'],
             'event_email_template_id' => $data['event_email_template_id'],
@@ -62,6 +63,8 @@ class EmailCampaignController extends Controller
             'status' => $data['status'],
         ]);
 
+        $emailTemplate = EventEmailTemplate::find($data['event_email_template_id']);
+        SendCampaignEmailBatchJob::dispatch($campaign, $emailTemplate);
         return redirect()->route('organizer.events.email-campaign.index')->with('success', 'Email campaign created successfully.');
     }
 

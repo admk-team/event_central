@@ -8,17 +8,18 @@ use App\Models\Attendee;
 use App\Models\EventApp;
 use App\Models\EventSession;
 use Illuminate\Http\Request;
+use App\Models\EventCheckIns;
 use App\Models\FormSubmission;
 use App\Models\SessionCheckIn;
 use App\Models\TransferTicket;
+use App\Jobs\ImportAttendeeJob;
 use App\Models\AttendeePayment;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Requests\Organizer\Event\User\AttendeeStoreRequest;
 use App\Models\AttendeePurchasedTickets;
-use App\Models\EventCheckIns;
+use App\Http\Requests\Organizer\Event\User\AttendeeStoreRequest;
 
 class AttendeeController extends Controller
 {
@@ -27,9 +28,9 @@ class AttendeeController extends Controller
         if (! Auth::user()->can('view_attendees')) {
             abort(403);
         }
-
+        $eventList = EventApp::ofOwner()->where('id', '!=', session('event_id'))->get();
         $attendees = $this->datatable(Attendee::currentEvent()->with('eventCheckin'));
-        return Inertia::render('Organizer/Events/Users/Attendees/Index', compact('attendees'));
+        return Inertia::render('Organizer/Events/Users/Attendees/Index', compact('attendees', 'eventList'));
     }
 
 
@@ -317,5 +318,15 @@ class AttendeeController extends Controller
             'image' => $image,
             'hasTickets' => true,
         ]);
+    }
+
+    public function importFromEvent(Request $request)
+    {
+        $fromEventId = $request->input('event_id'); // source event
+        $toEventId = session('event_id'); // destination event
+
+        ImportAttendeeJob::dispatch($fromEventId, $toEventId);
+
+        return back()->withSuccess("Import Job Dispatched In Successfully");
     }
 }

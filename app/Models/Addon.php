@@ -12,13 +12,19 @@ class Addon extends Model
     protected $fillable = [
         'organizer_id',
         'event_app_id',
+        'event_app_ticket_id',
         'name',
         'price',
         'qty_total',
         'qty_sold',
+        'enable_discount',
     ];
 
     protected $appends = ['full_name'];
+
+    protected $casts = [
+        'enable_discount' => 'boolean',
+    ];
 
     public function organizer()
     {
@@ -33,6 +39,11 @@ class Addon extends Model
     public function checkins()
     {
         return $this->hasMany(AddonCheckIn::class);
+    }
+
+    public function ticket()
+    {
+        return $this->belongsTo(EventAppTicket::class, 'event_app_ticket_id');
     }
 
     public function scopeCurrentEvent($query)

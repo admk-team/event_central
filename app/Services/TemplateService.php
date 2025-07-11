@@ -33,7 +33,9 @@ class TemplateService
             $validatedData['thumbnail'] = $validatedData['thumbnail']->store('templates', ['disk' => 'public']);
         }
 
-        $template->update($validatedData);
+        $sss = $template->update($validatedData);
+
+        // dd($sss);
         return $template;
     }
 }

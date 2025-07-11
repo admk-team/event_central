@@ -11,8 +11,10 @@ import {
     Spinner,
     InputGroup,
     Accordion,
+    FormControl,
 } from "react-bootstrap";
 import TicketDetail from "./TicketDetail";
+import { Minus, Plus } from "lucide-react";
 
 const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckOut }: any) => {
     const isAddedToCart = ticket.is_added_to_cart;
@@ -103,10 +105,10 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckO
             prevItems.map((item: any) =>
                 item.ticket_no === ticket_no
                     ? {
-                          ...item,
-                          addons: addons,
-                          addons_sub_total: calculateAddonsSubTotal(addons),
-                      }
+                        ...item,
+                        addons: addons,
+                        addons_sub_total: calculateAddonsSubTotal(addons),
+                    }
                     : item
             )
         );
@@ -117,19 +119,23 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckO
         onTicketDetailsUpdated(ticketDetails, removedIds);
     }, [ticketDetails]);
 
+    const availableQty = ticket.qty_total - ticket.qty_sold;
+
     return (
         <Col lg={12}>
             <Accordion>
                 <Accordion.Item eventKey="1">
                     <Accordion.Header>
-                        <h5 className="mb-1 fw-bold">
-                            {ticket.name}{" "}
-                            {ticketQty > 0 ? " x " + ticketQty : ""}
-                        </h5>
+                        <div className="d-flex justify-content-between align-items-center w-100">
+                            <h5 className="mb-1 fw-bold">{ticket.name} {ticketQty > 0 ? ' x ' + ticketQty : ''}</h5>
+                            {availableQty <= 0 && (
+                                <div className="me-5 fw-bold text-danger">Sold Out</div>
+                            )}
+                        </div>
                     </Accordion.Header>
                     <Accordion.Body>
                         <Row className="d-flex justify-content-centel align-items-center">
-                            <Col md={8} lg={8}>
+                            <Col md={6} lg={6}>
                                 {/* <h5 className="mb-1 fw-bold">{ticket.name}</h5> */}
                                 <span className="mb-1">
                                     {ticket.description}
@@ -144,18 +150,41 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckO
                                 </span>
                             </Col>
                             <Col md={2} lg={2}>
-                                <Form.Select
-                                    aria-label="Ticket Qty"
-                                    disabled={isAddedToCart}
-                                    name="ticket_quantity"
-                                    value={ticketQty}
-                                    onChange={(e: any) =>
-                                        setTicketQty(parseInt(e.target.value))
-                                    }
-                                >
-                                    {createQtyOptions(50, ticket)}
-                                </Form.Select>
+                                <span className="ff-secondary fw-bold">
+                                    <span className="fs-4">Stock</span>: <span className="fs-3">{availableQty}</span>
+                                </span>
                             </Col>
+                            {availableQty > 0 && (
+                                <Col md={2} lg={2}>
+                                    <InputGroup>
+                                        <Button size="sm" onClick={e => setTicketQty(prev => prev === 0 ? prev : --prev)}><Minus size={20} /></Button>
+                                        <FormControl
+                                            type="number"
+                                            className="text-center"
+                                            min={0}
+                                            step={1}
+                                            max={availableQty}
+                                            disabled={isAddedToCart}
+                                            value={ticketQty}
+                                            onChange={(e: any) =>
+                                                parseInt(e.target.value) <= (availableQty) && setTicketQty(parseInt(e.target.value))
+                                            }
+                                        />
+                                        <Button size="sm" onClick={e => setTicketQty(prev => prev >= (availableQty) ? prev : ++prev)}><Plus size={20} /></Button>
+                                    </InputGroup>
+                                    {/* <Form.Select
+                                        aria-label="Ticket Qty"
+                                        disabled={isAddedToCart}
+                                        name="ticket_quantity"
+                                        value={ticketQty}
+                                        onChange={(e: any) =>
+                                            setTicketQty(parseInt(e.target.value))
+                                        }
+                                    >
+                                        {createQtyOptions(50, ticket)}
+                                    </Form.Select> */}
+                                </Col>
+                            )}
                         </Row>
                         <Row className="mt-2 p-2  bg-light">
                             <Col md={12} lg={12}>
@@ -187,7 +216,7 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckO
                                         </button>
                                     )}
                                     {(() => {
-                                        const ticketExists = ticket_array.some((t:any) => t.ticket.id === ticket.id);
+                                        const ticketExists = ticket_array.some((t: any) => t.ticket.id === ticket.id);
                                         if (!ticketExists) return null;
                                         return (
                                             <Col md={4} lg={4}>

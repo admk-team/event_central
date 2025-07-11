@@ -11,11 +11,12 @@ import ImportModal from '../../Components/ImportModal';
 import EditAttendee from './Component/EditAttendee';
 // import Profile from './AttendeeProfile/Profile';
 import AddAttendee from './Component/AddAttendee';
+import ImportFromEvent from './Component/ImportFromEvent';
 import HasPermission from '../../../../../Components/HasPermission';
 import { Check, CircleCheck, CircleX } from 'lucide-react';
 import EventCheckinButton from './Component/EventCheckinButton';
 
-function Index({ attendees }: any) {
+function Index({ attendees, eventList }: any) {
 
     const [deleteAttendee, setDeleteAttendee] = React.useState<any>(null);
     const [updateAttendee, setUpdateAttendee] = React.useState<any>(null);
@@ -24,6 +25,7 @@ function Index({ attendees }: any) {
 
     const [showEditModal, setShowEditModal] = useState(false);
     const [showAddModal, setShowEddModal] = useState(false);
+    const [showImportAttendeeModal, setShowImportAttendeeModal] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
 
     const { get } = useForm()
@@ -226,15 +228,17 @@ function Index({ attendees }: any) {
                                                 </HasPermission>
                                             )
                                         },
-                                        // // Export Attendees
-                                        // {
-                                        //     render: <Button className='btn btn-outline-primary' onClick={handleExport}><i className="ri-login-box-line"></i> Export</Button>
-                                        // },
-                                        // Add new Attendee
                                         {
                                             render: (
                                                 <HasPermission permission="create_attendees">
                                                     <Button onClick={() => setShowEddModal(true)}><i className="ri-add-fill"></i> Add New</Button>
+                                                </HasPermission>
+                                            )
+                                        },
+                                        {
+                                            render: (
+                                                <HasPermission permission="create_attendees">
+                                                    <Button onClick={() => setShowImportAttendeeModal(true)}><i className="ri-add-fill"></i> Import From Event</Button>
                                                 </HasPermission>
                                             )
                                         },
@@ -249,6 +253,12 @@ function Index({ attendees }: any) {
             <AddAttendee
                 show={showAddModal}
                 handleClose={() => setShowEddModal(false)}
+            />
+
+            <ImportFromEvent
+                show={showImportAttendeeModal}
+                eventList={eventList}
+                handleClose={() => setShowImportAttendeeModal(false)}
             />
 
             <EditAttendee
