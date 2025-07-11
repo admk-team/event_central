@@ -1,6 +1,7 @@
 import { Link, useForm } from "@inertiajs/react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Flatpickr from "react-flatpickr";
+import ImageCroper from "../../../../Components/ImageCroper";
 import {
     Button,
     Col,
@@ -57,7 +58,9 @@ function CreateEditModal({
         event?.is_recurring ?? false
     );
     const [eventImageFiles, setEventImageFiles] = useState(Array<File>());
-    const [eventImagePreviews, setEventImagePreviews] = useState<EventImage[]>([]);
+    const [eventImagePreviews, setEventImagePreviews] = useState<EventImage[]>(
+        []
+    );
 
     const [imagePreview, setImagePreview] = useState<
         string | ArrayBuffer | null
@@ -66,6 +69,11 @@ function CreateEditModal({
             ? event.logo_img + "?" + imageHash
             : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s"
     );
+
+    //for image croper
+    const [showCropper, setShowCropper] = useState(false);
+    const [selectedImage, setSelectedImage] = useState<File | null>(null);
+    const [logoImage, setLogoImage] = useState(false);
 
     const { data, setData, post, processing, errors, reset, transform } =
         useForm({
@@ -112,14 +120,15 @@ function CreateEditModal({
     };
 
     const handleLogoFileChange = (event: any) => {
+        setLogoImage(true);
         let file = event.target.files[0];
-        setData("logo_file", file);
-        updateImagePreview(file);
-        setImageHash(Date.now());
+        setSelectedImage(file);
+        setShowCropper(true);
     };
 
     const updateImagePreview = (file: any) => {
         const reader = new FileReader();
+        setData("logo_file", file);
         reader.addEventListener(
             "load",
             () => {
@@ -130,6 +139,7 @@ function CreateEditModal({
         if (file) {
             reader.readAsDataURL(file);
         }
+        setImageHash(Date.now());
     };
 
     const handleCheckChange = (e: any) => {
@@ -192,12 +202,15 @@ function CreateEditModal({
     };
 
     const triggerFileUpload = () => {
+        setLogoImage(false);
         fileInput.current?.click();
     };
 
     const handleImageSelected = (e: any) => {
         const file = e.target.files[0];
-        updatePreview(file);
+        // updatePreview(file);
+        setSelectedImage(file);
+        setShowCropper(true);
     };
 
     const updatePreview = (file: any) => {
@@ -237,15 +250,25 @@ function CreateEditModal({
     const removeImageForm = useForm();
 
     const removeImage = (imageId: EventImage["id"]) => {
-        const eventImage = eventImagePreviews.find((item: EventImage) => item.id === imageId);
+        const eventImage = eventImagePreviews.find(
+            (item: EventImage) => item.id === imageId
+        );
         if (eventImage?.is_new ?? false) {
-            setEventImagePreviews(prev => prev.filter((item: EventImage) => item.id !== imageId));
+            setEventImagePreviews((prev) =>
+                prev.filter((item: EventImage) => item.id !== imageId)
+            );
         } else {
-            removeImageForm.delete(route('organizer.events.images.destroy', {event_app: event.id, eventAppImage: imageId}), {
-                preserveScroll: true,
-            });
+            removeImageForm.delete(
+                route("organizer.events.images.destroy", {
+                    event_app: event.id,
+                    eventAppImage: imageId,
+                }),
+                {
+                    preserveScroll: true,
+                }
+            );
         }
-    }
+    };
 
     const listImages = eventImagePreviews.map((image: EventImage) => (
         <div className="position-relative" key={image.id}>
@@ -260,418 +283,437 @@ function CreateEditModal({
                 type="button"
                 variant="danger"
                 className="position-absolute"
-                style={{ top: '15px', left: '0px' }}
-                disabled={removeImageForm.processing}>
+                style={{ top: "15px", left: "0px" }}
+                disabled={removeImageForm.processing}
+            >
                 Remove
             </Button>
         </div>
     ));
 
     return (
-        <Modal
-            className="modal-dialog-centered"
-            size="xl"
-            centered
-            show={show}
-            onHide={() => {}}
-            backdrop={"static"}
-        >
-            <Modal.Header>
-                <h5 className="modal-title" id="staticBackdropLabel">
-                    Create Event
-                </h5>
-                <Button
-                    type="button"
-                    className="btn-close"
-                    onClick={() => {
-                        hide();
-                    }}
-                    aria-label="Close"
-                ></Button>
-            </Modal.Header>
-            <Modal.Body className="p-4">
-                <form onSubmit={submit}>
-                    <Row>
-                        <Col md={6} lg={6}>
-                            <FormGroup className="mb-3">
-                                <Form.Label
-                                    htmlFor="event_app_category_id"
-                                    className="form-label text-start w-100"
-                                >
-                                    Event Category
-                                </Form.Label>
-                                <Form.Select
-                                    aria-label="Default select example"
-                                    className="form-control"
-                                    id="name"
-                                    value={data.event_app_category_id}
-                                    onChange={(e) =>
-                                        setData(
-                                            "event_app_category_id",
-                                            e.target.value
-                                        )
-                                    }
-                                    isInvalid={!!errors.event_app_category_id}
-                                >
-                                    <option>Select Event Type</option>
-                                    {event_category_types &&
-                                        event_category_types.map(
-                                            (type: any) => (
-                                                <option
-                                                    value={type.id}
-                                                    key={type.id}
-                                                >
-                                                    {type.name}
-                                                </option>
-                                            )
-                                        )}
-                                </Form.Select>
-                                <Form.Control.Feedback type="invalid">
-                                    {errors.event_app_category_id}
-                                </Form.Control.Feedback>
-                            </FormGroup>
-                            <FormGroup className="mb-3">
-                                <Form.Label
-                                    htmlFor="name"
-                                    className="form-label text-start w-100"
-                                >
-                                    Event Name
-                                </Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    className="form-control"
-                                    id="name"
-                                    placeholder="Enter name"
-                                    value={data.name}
-                                    onChange={(e) =>
-                                        setData("name", e.target.value)
-                                    }
-                                    isInvalid={!!errors.name}
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    {" "}
-                                    {errors.name}{" "}
-                                </Form.Control.Feedback>
-                            </FormGroup>
-                            <FormGroup className="mb-3">
-                                <Form.Label
-                                    htmlFor="start_date"
-                                    className="form-label text-start w-100"
-                                >
-                                    Start Date
-                                </Form.Label>
-                                <Flatpickr
-                                    id="start_date"
-                                    className={
-                                        "form-control " +
-                                        (!!errors.start_date
-                                            ? "is-invalid"
-                                            : "")
-                                    }
-                                    options={{
-                                        altInput: true,
-                                        altFormat: "d M, Y",
-                                        dateFormat: "Y-m-d",
-                                    }}
-                                    value={data.start_date}
-                                    onChange={([selectedDate]: Date[]) => {
-                                        setData((prevData) => ({
-                                            ...prevData,
-                                            start_date: selectedDate
-                                                .toLocaleDateString("en-CA")
-                                                .split("T")[0],
-                                        }));
-                                    }}
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    {" "}
-                                    {errors.start_date}{" "}
-                                </Form.Control.Feedback>
-                            </FormGroup>
-                            <FormGroup className="mb-3">
-                                <Form.Label
-                                    htmlFor="tagline"
-                                    className="form-label text-start w-100"
-                                >
-                                    Tagline
-                                </Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    className="form-control"
-                                    id="tagline"
-                                    placeholder="Enter tagline"
-                                    value={data.tagline}
-                                    onChange={(e) =>
-                                        setData("tagline", e.target.value)
-                                    }
-                                    isInvalid={!!errors.tagline}
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    {" "}
-                                    {errors.tagline}{" "}
-                                </Form.Control.Feedback>
-                            </FormGroup>
-                            <FormGroup className="mb-3">
-                                <Form.Label
-                                    htmlFor="description"
-                                    className="form-label text-start w-100"
-                                >
-                                    Event Description
-                                </Form.Label>
-                                <Form.Control
-                                    as="textarea"
-                                    className="form-control"
-                                    id="description"
-                                    rows={10}
-                                    isInvalid={!!errors.description}
-                                    placeholder="Enter description"
-                                    value={data.description}
-                                    onChange={(e) =>
-                                        setData("description", e.target.value)
-                                    }
-                                />
-                                <Form.Control.Feedback type="invalid">
-                                    {" "}
-                                    {errors.description}{" "}
-                                </Form.Control.Feedback>
-                            </FormGroup>
-                            <FormGroup className="mb-3">
-                                <Row className="mt-3">
-                                    <Col
-                                        md={12}
-                                        lg={12}
-                                        className="d-flex justify-content-between align-items-center"
+        <>
+            <Modal
+                className="modal-dialog-centered"
+                size="xl"
+                centered
+                show={show}
+                onHide={() => {}}
+                backdrop={"static"}
+            >
+                <Modal.Header>
+                    <h5 className="modal-title" id="staticBackdropLabel">
+                        Create Event
+                    </h5>
+                    <Button
+                        type="button"
+                        className="btn-close"
+                        onClick={() => {
+                            hide();
+                        }}
+                        aria-label="Close"
+                    ></Button>
+                </Modal.Header>
+                <Modal.Body className="p-4">
+                    <form onSubmit={submit}>
+                        <Row>
+                            <Col md={6} lg={6}>
+                                <FormGroup className="mb-3">
+                                    <Form.Label
+                                        htmlFor="event_app_category_id"
+                                        className="form-label text-start w-100"
                                     >
-                                        <Form.Check // prettier-ignore
-                                            type="switch"
-                                            isInvalid={!!errors.is_recurring}
-                                            id="is_recurring"
-                                            label="Recurring"
-                                            checked={data.is_recurring}
-                                            value={data.is_recurring}
-                                            onClick={handleCheckChange}
-                                            onChange={handleCheckChange}
-                                        />
-                                        {showRecurringOptions && (
-                                            <div className="">
-                                                <Form.Select
-                                                    aria-label="Select Recurring Frequency"
-                                                    className="form-control"
-                                                    id="name"
-                                                    value={
-                                                        data.recurring_type_id
-                                                    }
-                                                    isInvalid={
-                                                        !!errors.recurring_type_id
-                                                    }
-                                                    onChange={(e) =>
-                                                        setData(
-                                                            "recurring_type_id",
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                >
-                                                    <option>
-                                                        Select Recurring
-                                                        Frequency
+                                        Event Category
+                                    </Form.Label>
+                                    <Form.Select
+                                        aria-label="Default select example"
+                                        className="form-control"
+                                        id="name"
+                                        value={data.event_app_category_id}
+                                        onChange={(e) =>
+                                            setData(
+                                                "event_app_category_id",
+                                                e.target.value
+                                            )
+                                        }
+                                        isInvalid={
+                                            !!errors.event_app_category_id
+                                        }
+                                    >
+                                        <option>Select Event Type</option>
+                                        {event_category_types &&
+                                            event_category_types.map(
+                                                (type: any) => (
+                                                    <option
+                                                        value={type.id}
+                                                        key={type.id}
+                                                    >
+                                                        {type.name}
                                                     </option>
-
-                                                    {recurring_types &&
-                                                        recurring_types.map(
-                                                            (type: any) => (
-                                                                <option
-                                                                    value={
-                                                                        type.id
-                                                                    }
-                                                                    key={
-                                                                        type.id
-                                                                    }
-                                                                >
-                                                                    {type.name}
-                                                                </option>
+                                                )
+                                            )}
+                                    </Form.Select>
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.event_app_category_id}
+                                    </Form.Control.Feedback>
+                                </FormGroup>
+                                <FormGroup className="mb-3">
+                                    <Form.Label
+                                        htmlFor="name"
+                                        className="form-label text-start w-100"
+                                    >
+                                        Event Name
+                                    </Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        className="form-control"
+                                        id="name"
+                                        placeholder="Enter name"
+                                        value={data.name}
+                                        onChange={(e) =>
+                                            setData("name", e.target.value)
+                                        }
+                                        isInvalid={!!errors.name}
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                        {" "}
+                                        {errors.name}{" "}
+                                    </Form.Control.Feedback>
+                                </FormGroup>
+                                <FormGroup className="mb-3">
+                                    <Form.Label
+                                        htmlFor="start_date"
+                                        className="form-label text-start w-100"
+                                    >
+                                        Start Date
+                                    </Form.Label>
+                                    <Flatpickr
+                                        id="start_date"
+                                        className={
+                                            "form-control " +
+                                            (!!errors.start_date
+                                                ? "is-invalid"
+                                                : "")
+                                        }
+                                        options={{
+                                            altInput: true,
+                                            altFormat: "d M, Y",
+                                            dateFormat: "Y-m-d",
+                                        }}
+                                        value={data.start_date}
+                                        onChange={([selectedDate]: Date[]) => {
+                                            setData((prevData) => ({
+                                                ...prevData,
+                                                start_date: selectedDate
+                                                    .toLocaleDateString("en-CA")
+                                                    .split("T")[0],
+                                            }));
+                                        }}
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                        {" "}
+                                        {errors.start_date}{" "}
+                                    </Form.Control.Feedback>
+                                </FormGroup>
+                                <FormGroup className="mb-3">
+                                    <Form.Label
+                                        htmlFor="tagline"
+                                        className="form-label text-start w-100"
+                                    >
+                                        Tagline
+                                    </Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        className="form-control"
+                                        id="tagline"
+                                        placeholder="Enter tagline"
+                                        value={data.tagline}
+                                        onChange={(e) =>
+                                            setData("tagline", e.target.value)
+                                        }
+                                        isInvalid={!!errors.tagline}
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                        {" "}
+                                        {errors.tagline}{" "}
+                                    </Form.Control.Feedback>
+                                </FormGroup>
+                                <FormGroup className="mb-3">
+                                    <Form.Label
+                                        htmlFor="description"
+                                        className="form-label text-start w-100"
+                                    >
+                                        Event Description
+                                    </Form.Label>
+                                    <Form.Control
+                                        as="textarea"
+                                        className="form-control"
+                                        id="description"
+                                        rows={10}
+                                        isInvalid={!!errors.description}
+                                        placeholder="Enter description"
+                                        value={data.description}
+                                        onChange={(e) =>
+                                            setData(
+                                                "description",
+                                                e.target.value
+                                            )
+                                        }
+                                    />
+                                    <Form.Control.Feedback type="invalid">
+                                        {" "}
+                                        {errors.description}{" "}
+                                    </Form.Control.Feedback>
+                                </FormGroup>
+                                <FormGroup className="mb-3">
+                                    <Row className="mt-3">
+                                        <Col
+                                            md={12}
+                                            lg={12}
+                                            className="d-flex justify-content-between align-items-center"
+                                        >
+                                            <Form.Check // prettier-ignore
+                                                type="switch"
+                                                isInvalid={
+                                                    !!errors.is_recurring
+                                                }
+                                                id="is_recurring"
+                                                label="Recurring"
+                                                checked={data.is_recurring}
+                                                value={data.is_recurring}
+                                                onClick={handleCheckChange}
+                                                onChange={handleCheckChange}
+                                            />
+                                            {showRecurringOptions && (
+                                                <div className="">
+                                                    <Form.Select
+                                                        aria-label="Select Recurring Frequency"
+                                                        className="form-control"
+                                                        id="name"
+                                                        value={
+                                                            data.recurring_type_id
+                                                        }
+                                                        isInvalid={
+                                                            !!errors.recurring_type_id
+                                                        }
+                                                        onChange={(e) =>
+                                                            setData(
+                                                                "recurring_type_id",
+                                                                e.target.value
                                                             )
-                                                        )}
-                                                </Form.Select>
-                                                <Form.Control.Feedback type="invalid">
-                                                    {" "}
-                                                    {
-                                                        errors.recurring_type_id
-                                                    }{" "}
-                                                </Form.Control.Feedback>
+                                                        }
+                                                    >
+                                                        <option>
+                                                            Select Recurring
+                                                            Frequency
+                                                        </option>
+
+                                                        {recurring_types &&
+                                                            recurring_types.map(
+                                                                (type: any) => (
+                                                                    <option
+                                                                        value={
+                                                                            type.id
+                                                                        }
+                                                                        key={
+                                                                            type.id
+                                                                        }
+                                                                    >
+                                                                        {
+                                                                            type.name
+                                                                        }
+                                                                    </option>
+                                                                )
+                                                            )}
+                                                    </Form.Select>
+                                                    <Form.Control.Feedback type="invalid">
+                                                        {" "}
+                                                        {
+                                                            errors.recurring_type_id
+                                                        }{" "}
+                                                    </Form.Control.Feedback>
+                                                </div>
+                                            )}
+                                        </Col>
+                                    </Row>
+                                </FormGroup>
+                                {/* <FormGroup className="mb-3">
+                                    <Form.Label htmlFor="location-type" className="form-label text-start w-100">Location Type</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        className="form-control"
+                                        id="location-type"
+                                        isInvalid={!!errors.location_type}
+                                        placeholder="Enter location type"
+                                        value={data.location_type}
+                                        onChange={(e) => setData('location_type', e.target.value)}
+                                    />
+                                    <Form.Control.Feedback type="invalid"> {errors.location_type} </Form.Control.Feedback>
+                                </FormGroup>
+                                <FormGroup className='mb-3'>
+                                    <LoadScript googleMapsApiKey="AIzaSyAbvyBxmMbFhrzP9Z8moyYr6dCr-pzjhBE">
+                                        <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={14}>
+                                            <Marker position={center} onClick={() => onSelect(center)} />
+                                            {selected && (
+                                                <InfoWindow
+                                                    position={selected}
+                                                    onCloseClick={() => setSelected(null)}
+                                                >
+                                                    <div>
+                                                        <h1>{selectedPlace.name}</h1>
+                                                    </div>
+                                                </InfoWindow>
+                                            )}
+                                        </GoogleMap>
+                                    </LoadScript>
+                                </FormGroup> */}
+                            </Col>
+                            <Col md={6} lg={6}>
+                                <Row>
+                                    <Col md={12} lg={12}>
+                                        <div className="d-flex flex-row justify-content-center">
+                                            <div className="d-flex flex-column align-items-center w-100">
+                                                <img
+                                                    src={imagePreview}
+                                                    alt="Event Model Logo"
+                                                    className="img-fluid rounded-circle avatar-lg"
+                                                />
+                                                <Button
+                                                    className="btn btn-primary mt-3 btn-sm w-50"
+                                                    onClick={() => {
+                                                        logoFileInput.current?.click();
+                                                    }}
+                                                >
+                                                    Change Event Logo
+                                                </Button>
                                             </div>
-                                        )}
+                                            <input
+                                                type="file"
+                                                accept="image/*"
+                                                hidden
+                                                onChange={handleLogoFileChange}
+                                                ref={logoFileInput}
+                                            />
+                                        </div>
+                                        <Form.Control.Feedback
+                                            type="invalid"
+                                            className=" d-block"
+                                        >
+                                            {errors.logo_file}
+                                        </Form.Control.Feedback>
+                                        {/* <Form.Group
+                                            controlId="formFileMultiple"
+                                            className="mb-3"
+                                        >
+                                            <Form.Label>Event Logo</Form.Label>
+                                            <Form.Control
+                                                type="file"
+                                                name="logo_file"
+                                                placeholder="Choose File For Event Logo"
+                                                onChange={handleLogoFileChange}
+                                                isInvalid={!!errors.logo_file}
+                                                accept="image/*"
+                                            />
+                                        </Form.Group> */}
                                     </Col>
                                 </Row>
-                            </FormGroup>
-                            {/* <FormGroup className="mb-3">
-                                <Form.Label htmlFor="location-type" className="form-label text-start w-100">Location Type</Form.Label>
-                                <Form.Control
-                                    type="text"
-                                    className="form-control"
-                                    id="location-type"
-                                    isInvalid={!!errors.location_type}
-                                    placeholder="Enter location type"
-                                    value={data.location_type}
-                                    onChange={(e) => setData('location_type', e.target.value)}
-                                />
-                                <Form.Control.Feedback type="invalid"> {errors.location_type} </Form.Control.Feedback>
-                            </FormGroup>
-                            <FormGroup className='mb-3'>
-                                <LoadScript googleMapsApiKey="AIzaSyAbvyBxmMbFhrzP9Z8moyYr6dCr-pzjhBE">
-                                    <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={14}>
-                                        <Marker position={center} onClick={() => onSelect(center)} />
-                                        {selected && (
-                                            <InfoWindow
-                                                position={selected}
-                                                onCloseClick={() => setSelected(null)}
-                                            >
-                                                <div>
-                                                    <h1>{selectedPlace.name}</h1>
-                                                </div>
-                                            </InfoWindow>
-                                        )}
-                                    </GoogleMap>
-                                </LoadScript>
-                            </FormGroup> */}
-                        </Col>
-                        <Col md={6} lg={6}>
-                            <Row>
-                                <Col md={12} lg={12}>
-                                    <div className="d-flex flex-row justify-content-center">
-                                        <div className="d-flex flex-column align-items-center w-100">
-                                            <img
-                                                src={imagePreview}
-                                                alt="Event Model Logo"
-                                                className="img-fluid rounded-circle avatar-lg"
-                                            />
-                                            <Button
-                                                className="btn btn-primary mt-3 btn-sm w-50"
-                                                onClick={() => {
-                                                    logoFileInput.current?.click();
-                                                }}
-                                            >
-                                                Change Event Logo
-                                            </Button>
-                                        </div>
+                                <Row className="bg-light p-2 rounded mt-2">
+                                    <Col
+                                        md={10}
+                                        lg={10}
+                                        className="d-flex align-items-center"
+                                    >
+                                        <h5 className="p-0 m-0">
+                                            Event Images{" "}
+                                            {eventImagePreviews.length > 0
+                                                ? `(${eventImagePreviews.length})`
+                                                : ""}
+                                        </h5>
+                                    </Col>
+                                    <Col
+                                        md={2}
+                                        lg={2}
+                                        className="d-flex justify-content-end"
+                                    >
+                                        <Button
+                                            className="btn btn-primary btn-sm"
+                                            size="sm"
+                                            onClick={triggerFileUpload}
+                                        >
+                                            <i className="bx bx-plus fs-5"></i>
+                                        </Button>
                                         <input
                                             type="file"
-                                            accept="image/*"
                                             hidden
-                                            onChange={handleLogoFileChange}
-                                            ref={logoFileInput}
+                                            ref={fileInput}
+                                            onChange={handleImageSelected}
                                         />
-                                    </div>
+                                    </Col>
                                     <Form.Control.Feedback
                                         type="invalid"
                                         className=" d-block"
                                     >
-                                        {errors.logo_file}
+                                        {" "}
+                                        {errors.image_files}{" "}
                                     </Form.Control.Feedback>
-                                    {/* <Form.Group
-                                        controlId="formFileMultiple"
-                                        className="mb-3"
+                                </Row>
+                                <Row>
+                                    <Col
+                                        md={12}
+                                        lg={12}
+                                        className="p-2"
+                                        style={{
+                                            marginTop: "10px",
+                                            overflowY: "auto",
+                                            maxHeight: "330px",
+                                        }}
                                     >
-                                        <Form.Label>Event Logo</Form.Label>
-                                        <Form.Control
-                                            type="file"
-                                            name="logo_file"
-                                            placeholder="Choose File For Event Logo"
-                                            onChange={handleLogoFileChange}
-                                            isInvalid={!!errors.logo_file}
-                                            accept="image/*"
-                                        />
-                                    </Form.Group> */}
-                                </Col>
-                            </Row>
-                            <Row className="bg-light p-2 rounded mt-2">
-                                <Col
-                                    md={10}
-                                    lg={10}
-                                    className="d-flex align-items-center"
-                                >
-                                    <h5 className="p-0 m-0">
-                                        Event Images{" "}
-                                        {eventImagePreviews.length > 0
-                                            ? `(${eventImagePreviews.length})`
-                                            : ""}
-                                    </h5>
-                                </Col>
-                                <Col
-                                    md={2}
-                                    lg={2}
-                                    className="d-flex justify-content-end"
-                                >
-                                    <Button
-                                        className="btn btn-primary btn-sm"
-                                        size="sm"
-                                        onClick={triggerFileUpload}
-                                    >
-                                        <i className="bx bx-plus fs-5"></i>
-                                    </Button>
-                                    <input
-                                        type="file"
-                                        hidden
-                                        ref={fileInput}
-                                        onChange={handleImageSelected}
-                                    />
-                                </Col>
-                                <Form.Control.Feedback
-                                    type="invalid"
-                                    className=" d-block"
-                                >
-                                    {" "}
-                                    {errors.image_files}{" "}
-                                </Form.Control.Feedback>
-                            </Row>
-                            <Row>
-                                <Col
-                                    md={12}
-                                    lg={12}
-                                    className="p-2"
-                                    style={{
-                                        marginTop: "10px",
-                                        overflowY: "auto",
-                                        maxHeight: "330px",
-                                    }}
-                                >
-                                    {listImages}
-                                </Col>
-                            </Row>
-                        </Col>
-                    </Row>
+                                        {listImages}
+                                    </Col>
+                                </Row>
+                            </Col>
+                        </Row>
 
-                    <div className="hstack gap-2 justify-content-between mt-4">
-                        <Button
-                            disabled={processing}
-                            className="btn btn-light"
-                            onClick={hide}
-                        >
-                            Close
-                        </Button>
-                        <Button
-                            type="submit"
-                            disabled={processing}
-                            className="btn btn-success"
-                            style={{ width: "150px" }}
-                        >
-                            {btnTitle}
-                            {processing && (
-                                <Spinner
-                                    animation="border"
-                                    role="status"
-                                    size="sm"
-                                    className="ms-2"
-                                >
-                                    <span className="visually-hidden">
-                                        Loading...
-                                    </span>
-                                </Spinner>
-                            )}
-                        </Button>
-                    </div>
-                </form>
-            </Modal.Body>
-        </Modal>
+                        <div className="hstack gap-2 justify-content-between mt-4">
+                            <Button
+                                disabled={processing}
+                                className="btn btn-light"
+                                onClick={hide}
+                            >
+                                Close
+                            </Button>
+                            <Button
+                                type="submit"
+                                disabled={processing}
+                                className="btn btn-success"
+                                style={{ width: "150px" }}
+                            >
+                                {btnTitle}
+                                {processing && (
+                                    <Spinner
+                                        animation="border"
+                                        role="status"
+                                        size="sm"
+                                        className="ms-2"
+                                    >
+                                        <span className="visually-hidden">
+                                            Loading...
+                                        </span>
+                                    </Spinner>
+                                )}
+                            </Button>
+                        </div>
+                    </form>
+                </Modal.Body>
+            </Modal>
+
+            <ImageCroper
+                visible={showCropper}
+                imageSrc={selectedImage}
+                onClose={() => setShowCropper(false)}
+                onCrop={logoImage == true ? updateImagePreview : updatePreview}
+            />
+        </>
     );
 }
 
