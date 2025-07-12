@@ -1,7 +1,7 @@
 import { router, useForm, usePage } from '@inertiajs/react';
 import React from 'react'
 import { Button, Card, Col, ListGroup, Row, Spinner } from 'react-bootstrap'
-import ImageCroper from "../../../../../../Components/ImageCroper";
+import ImageCroper from "../../../../../../Components/ImageCroper/Index";
 type EventImage = {
     image_url: string | ArrayBuffer | null;
     id: string;
@@ -38,8 +38,8 @@ export default function Images() {
         setImageProcessing(true);
         router.post(
             route('organizer.events.images.store', { event_app: event.id }), {
-                image_files: file,
-            },
+            image_files: file,
+        },
             {
                 preserveScroll: true,
                 onFinish: () => setImageProcessing(false),
@@ -48,13 +48,13 @@ export default function Images() {
     }
 
     const removeImageForm = useForm();
-    
+
     const removeImage = (imageId: EventImage["id"]) => {
         const eventImage = eventImagePreviews.find((item: EventImage) => item.id === imageId);
         if (eventImage?.is_new ?? false) {
             setEventImagePreviews(prev => prev.filter((item: EventImage) => item.id !== imageId));
         } else {
-            removeImageForm.delete(route('organizer.events.images.destroy', {event_app: event.id, eventAppImage: imageId}), {
+            removeImageForm.delete(route('organizer.events.images.destroy', { event_app: event.id, eventAppImage: imageId }), {
                 preserveScroll: true,
             });
         }
@@ -68,12 +68,12 @@ export default function Images() {
                 alt="event image"
                 style={{ width: "100%", marginTop: "15px" }}
             />
-            <Button 
-                onClick={() => removeImage(image.id)} 
-                type="button" 
+            <Button
+                onClick={() => removeImage(image.id)}
+                type="button"
                 variant="danger"
-                className="position-absolute" 
-                style={{ top: '0px', left: '0px' }} 
+                className="position-absolute"
+                style={{ top: '0px', left: '0px' }}
                 disabled={removeImageForm.processing}>
                 Remove
             </Button>

@@ -3,7 +3,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Button, Card, CardBody, CardHeader, CardText, CardTitle, Form, FormGroup, Spinner, Row, Col, InputGroup } from 'react-bootstrap';
 import toast from 'react-hot-toast';
-import ImageCroper from "../../../../../../Components/ImageCroper";
+import ImageCroper from "../../../../../../Components/ImageCroper/Index";
 
 export default function Information() {
     const event = usePage().props.event as Record<string, string>;
@@ -38,11 +38,11 @@ export default function Information() {
         setShowCropper(true);
     };
 
-     const updateImagePreview = (file: any) => {
+    const updateImagePreview = (file: any) => {
         setData({ ...data, logo: file });
         const reader = new FileReader();
         reader.onloadend = () => {
-            setPreview(reader.result); 
+            setPreview(reader.result);
         };
         reader.readAsDataURL(file);
     };
