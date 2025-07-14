@@ -21,9 +21,9 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // if (! Auth::user()->can('view_event_dashboard')) {
-        //     abort(403);
-        // }
+        if (! Auth::user()->can('view_event_dashboard')) {
+            abort(403);
+        }
 
         $totalAttendee = EventApp::where('organizer_id', Auth::user()->id)->where('id', session('event_id'))->withCount('attendees')->get()->sum('attendees_count');
         $totalSession = EventApp::where('organizer_id', Auth::user()->id)->where('id', session('event_id'))
