@@ -6,7 +6,7 @@ import Select from "react-select";
 import { Button, Col, Container, Row, Form, Card } from 'react-bootstrap';
 import languageData from "../../../../common/language-list.json";
 import countryData from "../../../../common/countries.json";
-import ImageCroper from "../../../../Components/ImageCroper";
+import ImageCroper from "../../../../Components/ImageCroper/Index";
 
 function CreateOrEdit({ speaker, events }: any) {
     // Determine if the form is in edit mode
