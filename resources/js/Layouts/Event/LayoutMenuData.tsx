@@ -27,6 +27,7 @@ const Navdata = () => {
     const [isUpgradeTicket, setUpgradeTicket] = useState<boolean>(false);
     const [isBaseTemplate, setIsBaseTemplate] = useState<boolean>(false);
     const [isEmailTemplate, setIsEmailTemplate] = useState<boolean>(false);
+    const [isContactForm, setIsContactForm] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>("Dashboard");
 
@@ -61,6 +62,7 @@ const Navdata = () => {
         if (iscurrentState !== 'Questionnaire') setIsQuestionnaireForm(false);
         if (iscurrentState !== 'BaseTemplate') setIsBaseTemplate(false);
         if (iscurrentState !== 'EmailTemplate') setIsEmailTemplate(false);
+        if (iscurrentState !== 'ContactForm') setIsContactForm(false);
         if (iscurrentState !== 'Questionnaire_response') setIsQuestionnaireResponse(false);
         // if (iscurrentState !== 'assignTickets') setIsTickets(false);
         // if (iscurrentState !== 'upgradeTicket') setIsTickets(false);
@@ -76,6 +78,7 @@ const Navdata = () => {
         IsSessionAttendance,
         isBaseTemplate,
         isEmailTemplate,
+        isContactForm,
         // isRefundTicket,
         isTickets,
         // isAssignTicket,
@@ -102,7 +105,7 @@ const Navdata = () => {
                 setIscurrentState("Dashboard");
                 updateIconSidebar(e);
             },
-            hasPermissions: ["view_event_dashboard"],
+            // hasPermissions: ["view_event_dashboard"],
         },
         {
             id: "attendees",
@@ -212,21 +215,21 @@ const Navdata = () => {
         },
         ...(isEventStarted
             ? [
-                  {
-                      id: "sessionAttendance",
-                      label: "Sessions Attendance",
-                      icon: "bx bx-calendar-check",
-                      link: route("organizer.events.attendance.index"),
-                      stateVariables: IsSessionAttendance,
-                      click: function (e: any) {
-                          e.preventDefault();
-                          setIsSessionAttendance(!IsSessionAttendance);
-                          setIscurrentState("sessionAttendance");
-                          updateIconSidebar(e);
-                      },
-                      hasPermissions: ["view_session_attendence"],
-                  },
-              ]
+                {
+                    id: "sessionAttendance",
+                    label: "Sessions Attendance",
+                    icon: "bx bx-calendar-check",
+                    link: route("organizer.events.attendance.index"),
+                    stateVariables: IsSessionAttendance,
+                    click: function (e: any) {
+                        e.preventDefault();
+                        setIsSessionAttendance(!IsSessionAttendance);
+                        setIscurrentState("sessionAttendance");
+                        updateIconSidebar(e);
+                    },
+                    hasPermissions: ["view_session_attendence"],
+                },
+            ]
             : []),
         {
             id: "website",
@@ -325,6 +328,12 @@ const Navdata = () => {
                     link: route("organizer.events.refund.tickets"),
                     parentId: "tickets",
                     hasPermissions: ["refund_ticket"],
+                },
+                {
+                    id: "purchasedNotification",
+                    label: "Purchased Notification",
+                    link: route("organizer.events.purchased-ticket.notification"),
+                    parentId: "tickets",
                 },
             ],
         },
@@ -450,6 +459,18 @@ const Navdata = () => {
                 setIscurrentState('EmailTemplate');
                 updateIconSidebar(e);
             },
+        },
+        {
+            id: "ContactForm",
+            label: "Contact Form",
+            icon: "bx  bxs-contact",
+            link: route('organizer.events.contact-forms.index'),
+            click: function (e: any) {
+                e.preventDefault();
+                setIscurrentState('ContactForm');
+                updateIconSidebar(e);
+            },
+            hasPermissions: ["view_contact_form"],
         },
         // }] : []),
     ];

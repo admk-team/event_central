@@ -30,7 +30,7 @@ class EventAppTicketController extends Controller
 
         $speakers = null;
 
-        $tickets = $this->datatable(EventAppTicket::currentEvent()->with(['event', 'sessions', 'fees','ticketType']));
+        $tickets = $this->datatable(EventAppTicket::currentEvent()->with(['event', 'sessions', 'fees', 'ticketType']));
         $sessions = EventSession::currentEvent()->with('tracks')->get()->map(function ($session) {
             return [
                 'value' => $session->id,
@@ -159,5 +159,24 @@ class EventAppTicketController extends Controller
             array_push($temp, $fee['id']);
         }
         return $temp;
+    }
+
+    public function purchaseNotification()
+    {
+        $emailList = eventSettings(session('event_id'))->getValue('email_list');
+        if (!$emailList) {
+            $emailList = eventSettings(session('event_id'))->set('email_list', '');
+        }
+        return Inertia::render('Organizer/Events/Tickets/TicketNotification', [
+            'emailList' => $emailList
+        ]);
+    }
+
+    public function saveNotificationList(Request $request)
+    {
+        $emailList = $request->notificationlist;
+
+        $emailList = eventSettings(session('event_id'))->set('email_list', $emailList);
+        return back()->withSuccess('Ticket Removed Successfully');
     }
 }
