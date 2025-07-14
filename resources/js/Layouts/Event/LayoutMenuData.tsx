@@ -215,21 +215,21 @@ const Navdata = () => {
         },
         ...(isEventStarted
             ? [
-                  {
-                      id: "sessionAttendance",
-                      label: "Sessions Attendance",
-                      icon: "bx bx-calendar-check",
-                      link: route("organizer.events.attendance.index"),
-                      stateVariables: IsSessionAttendance,
-                      click: function (e: any) {
-                          e.preventDefault();
-                          setIsSessionAttendance(!IsSessionAttendance);
-                          setIscurrentState("sessionAttendance");
-                          updateIconSidebar(e);
-                      },
-                      hasPermissions: ["view_session_attendence"],
-                  },
-              ]
+                {
+                    id: "sessionAttendance",
+                    label: "Sessions Attendance",
+                    icon: "bx bx-calendar-check",
+                    link: route("organizer.events.attendance.index"),
+                    stateVariables: IsSessionAttendance,
+                    click: function (e: any) {
+                        e.preventDefault();
+                        setIsSessionAttendance(!IsSessionAttendance);
+                        setIscurrentState("sessionAttendance");
+                        updateIconSidebar(e);
+                    },
+                    hasPermissions: ["view_session_attendence"],
+                },
+            ]
             : []),
         {
             id: "website",
@@ -328,6 +328,12 @@ const Navdata = () => {
                     link: route("organizer.events.refund.tickets"),
                     parentId: "tickets",
                     hasPermissions: ["refund_ticket"],
+                },
+                {
+                    id: "purchasedNotification",
+                    label: "Purchased Notification",
+                    link: route("organizer.events.purchased-ticket.notification"),
+                    parentId: "tickets",
                 },
             ],
         },
