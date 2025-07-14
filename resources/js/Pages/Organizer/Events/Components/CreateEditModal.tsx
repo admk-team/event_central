@@ -1,7 +1,7 @@
 import { Link, useForm } from "@inertiajs/react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Flatpickr from "react-flatpickr";
-import ImageCroper from "../../../../Components/ImageCroper";
+import ImageCroper from "../../../../Components/ImageCroper/Index";
 import {
     Button,
     Col,
@@ -298,7 +298,7 @@ function CreateEditModal({
                 size="xl"
                 centered
                 show={show}
-                onHide={() => {}}
+                onHide={() => { }}
                 backdrop={"static"}
             >
                 <Modal.Header>
