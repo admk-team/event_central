@@ -6,7 +6,16 @@
         <div class="container">
             <div class="hero-content">
                 <div class="event-meta">
-                    <div class="event-date">{{ date('F j, Y', strtotime($event->dates[0]->date)) }}</div>
+                    <div class="event-date">{{ date('F j, Y', strtotime($event->dates[0]->date)) }}</div> <svg
+                        xmlns="http://www.w3.org/2000/svg" width="30" height="40" viewBox="0 0 24 24">
+                        <path
+                            d="m18.707 12.707-3 3a1 1 0 0 1-1.414-1.414L15.586 13H6a1 1 0 0 1 0-2h9.586l-1.293-1.293a1 1 0 0 1 1.414-1.414l3 3a1 1 0 0 1 0 1.414z"
+                            style="fill:#1c1b1e" data-name="Right" />
+                    </svg>
+                    <div class="event-date">
+                        <div class="">
+                            {{ date('F j, Y', strtotime($event->dates()->orderBy('date', 'desc')->get()[0]->date)) }}</div>
+                    </div>
                     <div class="event-location">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -273,7 +282,7 @@
                                         </div>
                                         <!-- <div class="modal-footer">
 
-                                        </div> -->
+                                                                                                                                                                                                                                                                                                                                                                                </div> -->
                                     </div>
                                 </div>
                             </div>
