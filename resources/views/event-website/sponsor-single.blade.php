@@ -4,23 +4,23 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
 @section('content')
-@if ($partnerCategories->count() > 0 && $event->partners->count() > 0)
+{{-- @if ($partnerCategories->count() > 0 && $event->partners->count() > 0) --}}
 <section id="sponsors" class="sponsors">
     <div class="container">
-        <div class="section-header">
+        {{-- <div class="section-header">
             <span class="section-tag">Our Sponsors</span>
-        </div>
+        </div> --}}
         <div class="sponsors-tiers">
-            @foreach ($partnerCategories ?? [] as $category)
-            @if ($category->partners->count() > 0)
+            {{-- @foreach ($partnerCategories ?? [] as $category) --}}
+            {{-- @if ($category->count() > 0) --}}
             <div class="sponsors-tier">
-                <h3 class="tier-title">{{ $category->name }}</h3>
+                {{-- <h3 class="tier-title">{{ $category->name }}</h3> --}}
                 <div class="sponsors-grid gold">
-                    @foreach ($category->partners ?? [] as $partner)
-                    <a href="{{ route('organizer.events.website.sponsors.single',['uuid' => $event->uuid, 'id' => $partner->id]) }}"  class="sponsor-logo">
-                        <img src="{{ $partner->exhibitor_logo}}"
+                    {{-- @foreach ($category->partners ?? [] as $partner) --}}
+                    <div type="button" class="sponsor-logo">
+                        <img src="{{ $partner->exhibitor_logo }}"
                             alt="{{ $partner->name }}">
-                    </a>
+                    </div>
                     <!-- Modal -->
                     <div class="modal fade" id="partnerModal{{ $partner->id }}" tabindex="-1" aria-labelledby="modalLabel{{ $partner->id }}" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
@@ -67,15 +67,15 @@
                             </div>
                         </div>
                     </div>
-                    @endforeach
+                    {{-- @endforeach --}}
                 </div>
             </div>
-            @endif
-            @endforeach
+            {{-- @endif --}}
+            {{-- @endforeach --}}
         </div>
     </div>
 </section>
-@endif
+{{-- @endif --}}
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
