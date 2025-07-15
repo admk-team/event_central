@@ -38,6 +38,18 @@
                                     <a target="_blank" href="{{ $partner->web }}">
                                         <i class="bi bi-globe"></i>
                                     </a>
+                                    <a target="_blank" href="{{ $partner->facebook }}">
+                                        <i class="bi bi-facebook"></i>
+                                    </a>
+                                    <a style="text-decoration: none; color:black" target="_blank" href="{{ $partner->twitter }}">
+                                        <i class="bi bi-twitter-x"></i>
+                                    </a>
+                                    <a  target="_blank" href="{{ $partner->linkedin }}">
+                                        <i class="bi bi-linkedin"></i>
+                                    </a>
+                                    <a style="text-decoration: none; color:red" target="_blank" href="{{ $partner->youtube }}">
+                                        <i class="bi bi-youtube"></i>
+                                    </a>
                                     @endif
                                     <p class="text-muted">{{$partner->address}}</p>
 
