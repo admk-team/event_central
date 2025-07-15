@@ -7,6 +7,7 @@
             <div class="hero-content">
                 <div class="event-meta">
                     <div class="event-date">{{ date('F j, Y', strtotime($event->dates[0]->date)) }}</div>
+                    <div class="">{{ date('F j, Y', strtotime($event->dates()->orderBy('date', 'desc')->get()[0]->date)) }}</div>
                     <div class="event-location">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
