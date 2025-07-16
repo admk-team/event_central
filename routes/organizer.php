@@ -164,6 +164,10 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::resource('ticket-fees', EventAppFeeController::class)->only(['index', 'store', 'update', 'destroy']);
             Route::delete('ticket-fees/delete/many', [EventAppFeeController::class, 'destroyMany'])->name('ticket-fees.destroy.many');
 
+            //ticket notifications
+            Route::get('purchased-ticket/notification', [EventAppTicketController::class, 'purchaseNotification'])->name('purchased-ticket.notification');
+            Route::post('notification/list', [EventAppTicketController::class, 'saveNotificationList'])->name('ticket.notification.list');
+
             // Pages
             Route::resource('pages', PageController::class)->only(['store', 'update', 'destroy']);
             Route::delete('pages/delete/many', [PageController::class, 'destroyMany'])->name('pages.destroy.many');
