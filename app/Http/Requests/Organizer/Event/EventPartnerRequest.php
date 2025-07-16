@@ -34,6 +34,7 @@ class EventPartnerRequest extends FormRequest
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
             'exhibitor_logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'banner_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'exhibitor_booth_no' => 'nullable|string|max:50',
             'partner_category_id' => 'nullable',
         ];

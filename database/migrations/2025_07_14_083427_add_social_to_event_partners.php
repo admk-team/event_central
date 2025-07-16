@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('twitter')->nullable()->after('facebook');
             $table->string('linkedin')->nullable()->after('twitter');
             $table->string('youtube')->nullable()->after('linkedin');
+            $table->string('banner_image')->nullable()->after('youtube');
         });
     }
 

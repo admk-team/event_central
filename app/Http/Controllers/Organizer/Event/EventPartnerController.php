@@ -60,6 +60,12 @@ class EventPartnerController extends Controller
             // Get the full URL
             $data['exhibitor_logo'] = asset('storage/' . $data['exhibitor_logo']);
         }
+        if ($request->hasFile('banner_image')) {
+            $name = uniqid() . '.' . $data['banner_image']->getClientOriginalExtension();
+            $data['banner_image'] = $data['banner_image']->storeAs('organizer/partner', $name, 'public');
+            // Get the full URL
+            $data['banner_image'] = asset('storage/' . $data['banner_image']);
+        }
         EventPartner::create($data);
         return redirect()->route('organizer.events.partner.index')->withSuccess('success', 'Partner created successfully.');
     }
@@ -87,6 +93,23 @@ class EventPartnerController extends Controller
             // If no new logo is uploaded, retain the old logo
             $data['exhibitor_logo'] = $partner->exhibitor_logo;
         }
+
+        if ($request->hasFile('banner_image')) {
+            // Delete old image if exists
+            if ($partner->banner_image && Storage::disk('public')->exists($partner->banner_image)) {
+                Storage::disk('public')->delete($partner->banner_image);
+            }
+
+            // Store the new image
+            $name = uniqid() . '.' . $data['banner_image']->getClientOriginalExtension();
+            $data['banner_image'] = $data['banner_image']->storeAs('organizer/partner', $name, 'public');
+            // Get the full URL
+            $data['banner_image'] = asset('storage/' . $data['banner_image']);
+        } else {
+            // If no new logo is uploaded, retain the old logo
+            $data['banner_image'] = $partner->banner_image;
+        }
+
 
         $partner->update($data);
         return redirect()->route('organizer.events.partner.index')->withSuccess('success', 'Partner updated successfully.');
