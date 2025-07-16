@@ -93,6 +93,11 @@ class Attendee extends Authenticatable
         })->with(['ticket'])->get();
         return $tickets;
     }
+    
+    public function attendeePurchasedTickets()
+    {
+        return $this->hasMany(AttendeePurchasedTickets::class, 'attendee_id');
+    }
 
     public function sessionRatings()
     {
