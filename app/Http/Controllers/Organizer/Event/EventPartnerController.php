@@ -107,7 +107,7 @@ class EventPartnerController extends Controller
             $data['banner_image'] = asset('storage/' . $data['banner_image']);
         } else {
             // If no new logo is uploaded, retain the old logo
-            $data['banner_image'] = $partner->banner_image;
+            unset($data['banner_image']);
         }
 
 

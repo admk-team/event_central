@@ -49,6 +49,14 @@
                                 <a style="text-decoration: none; color:red" target="_blank" href="{{ $partner->youtube }}">
                                     <i class="bi bi-youtube"></i>
                                 </a>
+                                <a style="text-decoration: none; color:rgb(252, 127, 148)" target="_blank"
+                                    href="{{ $partner->insta }}">
+                                    <i class="bi bi-instagram"></i>
+                                </a>
+                                <a style="text-decoration: none; color:black" target="_blank"
+                                    href="{{ $partner->tiktok }}">
+                                    <i class="bi bi-tiktok"></i>
+                                </a>
                             @endif
                             <p class="text-muted">{{ $partner->address }}</p>
 

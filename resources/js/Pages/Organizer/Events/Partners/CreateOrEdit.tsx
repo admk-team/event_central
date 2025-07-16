@@ -25,7 +25,9 @@ function CreateOrEdit({ partner, partnerCategories }: any) {
         twitter: partner?.twitter || "",
         linkedin: partner?.linkedin || "",
         youtube: partner?.youtube || "",
-        banner_image: partner?.banner_image || "",
+        insta: partner?.insta || "",
+        tiktok: partner?.tiktok || "",
+        banner_image: "",
         _method: partner?.id ? "PUT" : "POST", // Spoof method
     });
 
@@ -240,6 +242,34 @@ function CreateOrEdit({ partner, partnerCategories }: any) {
                                                         onChange={(e) => setData('youtube', e.target.value)}
                                                     />
                                                     <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.youtube} </Form.Control.Feedback>
+                                                </div>
+                                            </Col>
+                                            <Col xxl={6} md={6}>
+                                                <div className="">
+                                                    <Form.Label htmlFor="name" className="form-label">Instagram</Form.Label>
+                                                    <Form.Control
+                                                        type="text"
+                                                        className="form-control"
+                                                        id="insta"
+                                                        placeholder="Enter Instagram"
+                                                        value={data.insta}
+                                                        onChange={(e) => setData('insta', e.target.value)}
+                                                    />
+                                                    <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.insta} </Form.Control.Feedback>
+                                                </div>
+                                            </Col>
+                                            <Col xxl={6} md={6}>
+                                                <div className="">
+                                                    <Form.Label htmlFor="name" className="form-label">Tiktok</Form.Label>
+                                                    <Form.Control
+                                                        type="text"
+                                                        className="form-control"
+                                                        id="tiktok"
+                                                        placeholder="Enter tiktok"
+                                                        value={data.tiktok}
+                                                        onChange={(e) => setData('tiktok', e.target.value)}
+                                                    />
+                                                    <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.tiktok} </Form.Control.Feedback>
                                                 </div>
                                             </Col>
 

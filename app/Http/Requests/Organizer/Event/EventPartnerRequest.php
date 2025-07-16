@@ -30,6 +30,8 @@ class EventPartnerRequest extends FormRequest
             'twitter' => 'nullable|url|max:255',
             'linkedin' => 'nullable|url|max:255',
             'youtube' => 'nullable|url|max:255',
+            'insta' => 'nullable|url|max:255',
+            'tiktok' => 'nullable|url|max:255',
             'email' => 'nullable|email|max:255',
             'phone' => 'nullable|string|max:20',
             'address' => 'nullable|string|max:255',
