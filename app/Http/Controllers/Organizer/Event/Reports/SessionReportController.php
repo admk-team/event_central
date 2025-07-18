@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Organizer\Event\Reports;
 use App\Http\Controllers\Controller;
 use App\Models\EventSession;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class SessionReportController extends Controller
@@ -14,7 +15,10 @@ class SessionReportController extends Controller
      */
     public function index()
     {
-        $sessions = $this->datatable(EventSession::currentEvent()->with(['attendees','attendances','favSessions','tickets','attendeesRating']));
+        if (! Auth::user()->can('view_session_report')) {
+            abort(403);
+        }
+        $sessions = $this->datatable(EventSession::currentEvent()->with(['attendees', 'attendances', 'favSessions', 'tickets', 'attendeesRating']));
         // dd($sessions->toArray());
         return Inertia::render('Organizer/Events/Reports/SessionReport/Index', compact(
             'sessions',

@@ -46,27 +46,26 @@ function Index({ contactForm }: any) {
     const columns: ColumnDef<typeof contactForm.data[0]> = [
         {
             header: () => 'ID',
-            // headerStyle: { width: '70px' },
+            headerStyle: { width: '200px' },
             cell: (contactForm) => contactForm.id,
-            cellClass: "fw-medium",
         },
         {
             header: () => 'Name',
-            headerStyle: { width: '100px', textWrap: 'wrap' },
+            headerStyle: { width: '200px', textWrap: 'wrap' },
             cell: (contactForm) => contactForm.attendee.first_name + " " +contactForm.attendee.last_name,
-            cellStyle: { width: '100px', textWrap: 'wrap' },
+            cellStyle: { width: '200px', textWrap: 'wrap' },
         },
         {
             header: () => 'Email',
-            headerStyle: { width: '100px', textWrap: 'wrap' },
+            headerStyle: { width: '200px', textWrap: 'wrap' },
             cell: (contactForm) => contactForm.attendee.email,
-            cellStyle: { width: '100px', textWrap: 'wrap' },
+            cellStyle: { width: '200px', textWrap: 'wrap' },
         },
         {
             header: () => 'Subject',
-            headerStyle: { width: '150px', textWrap: 'wrap' },
+            headerStyle: { width: '200px', textWrap: 'wrap' },
             cell: (contactForm) => contactForm.subject,
-            cellStyle: { width: '150px', textWrap: 'wrap' },
+            cellStyle: { width: '200px', textWrap: 'wrap' },
         },
         {
             header: () => 'Contant',

@@ -97,7 +97,7 @@ function Index({ tickets }: any) {
                     <BreadCrumb title="Tickets Report" pageTitle="Dashboard" />
                     <Row>
                         <Col xs={12}>
-                            <HasPermission permission="view_attendees">
+                            <HasPermission permission="view_ticket_report">
                                 <DataTable
                                     data={tickets}
                                     columns={columns}

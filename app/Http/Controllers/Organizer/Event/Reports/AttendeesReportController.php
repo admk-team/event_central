@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Organizer\Event\Reports;
 use App\Http\Controllers\Controller;
 use App\Models\Attendee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class AttendeesReportController extends Controller
@@ -14,7 +15,11 @@ class AttendeesReportController extends Controller
      */
     public function index()
     {
-        $attendees = $this->datatable(Attendee::currentEvent()->with(['attendeeEventSessions','attendeeFavSession','payments','eventSelectedSessions','attendeePurchasedTickets']));
+        if (! Auth::user()->can('view_attendee_report')) {
+            abort(403);
+        }
+
+        $attendees = $this->datatable(Attendee::currentEvent()->with(['attendeeEventSessions', 'attendeeFavSession', 'payments', 'eventSelectedSessions', 'attendeePurchasedTickets']));
         // dd($attendees->toArray());
         return Inertia::render('Organizer/Events/Reports/AttendeeReport/Index', compact(
             'attendees',

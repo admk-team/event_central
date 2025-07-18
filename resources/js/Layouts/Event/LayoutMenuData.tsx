@@ -490,33 +490,32 @@ const Navdata = () => {
                 setIscurrentState("Report");
                 updateIconSidebar(e);
             },
-            // hasAnyPermission: [
-            //     "view_attendee",
-            //     "view_speakers",
-            //     "view_partner",
-            //     "view_promo_code",
-            // ],
+            hasAnyPermission: [
+                "view_attendee_report",
+                "view_ticket_report",
+                "view_session_report",
+            ],
             subItems: [
                 {
                     id: "attendeeReport",
                     label: "Attendee",
                     link: route("organizer.events.report.attendee.index"),
                     parentId: "Report",
-                    // hasPermissions: ["view_event_sessions"],
+                    hasPermissions: ["view_attendee_report"],
                 },
                 {
                     id: "sessionReport",
                     label: "Session",
                     link: route("organizer.events.report.session.index"),
                     parentId: "Report",
-                    // hasPermissions: ["view_event_sessions"],
+                    hasPermissions: ["view_session_report"],
                 },
                 {
                     id: "ticketReport",
                     label: "Ticket",
                     link: route("organizer.events.report.ticket.index"),
                     parentId: "Report",
-                    // hasPermissions: ["view_event_sessions"],
+                    hasPermissions: ["view_ticket_report"],
                 },
             ],
         },
