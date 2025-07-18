@@ -6,64 +6,64 @@ import Layout from '../../../../../Layouts/Event';
 import DataTable, { ColumnDef } from '../../../../../Components/DataTable';
 import HasPermission from '../../../../../Components/HasPermission';
 
-function Index({ sessions }: any) {
+function Index({ tickets }: any) {
 
 
-    const columns: ColumnDef<typeof sessions.data[0]> = [
+    const columns: ColumnDef<typeof tickets.data[0]> = [
         {
             header: () => 'ID',
             headerStyle: { width: '70px' },
-            cell: (session) => session.id,
+            cell: (ticket) => ticket.id,
             cellClass: "fw-medium"
         },
         {
             accessorKey: 'name',
             header: () => 'Name',
             headerStyle: { width: '200px', textWrap: 'wrap' ,textAlign:'center' },
-            cell: (session) => session.name,
+            cell: (ticket) => ticket.name,
             cellStyle: { width: '200px', textWrap: 'wrap' ,textAlign:'center' },
         },
         {
-            header: () => 'Type',
-            headerStyle: { width: '100px', textWrap: 'wrap' ,textAlign:'center' },
-            cell: (session) => session.type,
+            header: () => 'Description',
+            headerStyle: { width: '200px', textWrap: 'wrap' ,textAlign:'center' },
+            cell: (ticket) => ticket.description,
             cellStyle: { width: '100px', textWrap: 'wrap' ,textAlign:'center' },
         },
         {
-            header: () => 'Capacity',
-            headerStyle: { width: '100px', textWrap: 'wrap' ,textAlign:'center' },
-            cell: (session) => session.capacity ?? 0,
-            cellStyle: { width: '100px', textWrap: 'wrap' ,textAlign:'center' },
-        },
-        {
-            header: () => 'Attendees',
+            header: () => 'Base Price',
             headerStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
-            cell: (session) => session.attendees.length,
-            cellStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
+            cell: (ticket) => ticket.base_price ?? 0,
+            cellStyle: { width: '100px', textWrap: 'wrap' ,textAlign:'center' },
+        },
+        {
+            header: () => 'Session',
+            headerStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center'},
+            cell: (ticket) => ticket.selected_sessions.length,
+            cellStyle: { width: '150px', textWrap: 'wrap', textAlign:'center' },
             searchable: true,
         },
         {
-            header: () => 'Attendances',
-            headerStyle: { width: '200px', textWrap: 'wrap' ,textAlign:'center' },
-            cell: (session) => session.attendances.length,
+            header: () => 'Addon',
+            headerStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
+            cell: (ticket) => ticket.selected_addons.length,
             cellStyle: { width: '200px', textWrap: 'wrap' ,textAlign:'center' },
         },
         {
-            header: () => 'Favorite By',
+            header: () => 'Promo Code',
             headerStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
-            cell: (session) => session.fav_sessions.length,
+            cell: (ticket) => ticket.promo_codes.length,
             cellStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
         },
         {
-            header: () => 'Rated by',
+            header: () => 'Sold ticket',
             headerStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
-            cell: (session) => session.attendees_rating.length,
+            cell: (ticket) => ticket.sold_tickets.length,
             cellStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
         },
         {
-            header: () => 'Tickets',
+            header: () => 'Revenue',
             headerStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
-            cell: (session) => session.tickets.length,
+            cell: (ticket) => "$ "+ticket.total_revenue,
             cellStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
         },
         // {
@@ -80,7 +80,7 @@ function Index({ sessions }: any) {
     return (
         <React.Fragment>
             <Head>
-                <title>Sessions Report </title>
+                <title>Tickets Report </title>
                 <meta name="description" content="Manage event attendees, edit details, and delete records from the organizer's dashboard." />
                 <meta name="keywords" content="event attendees, attendee management, conference attendees, admin dashboard" />
                 <meta name="robots" content="index, follow" />
@@ -89,19 +89,19 @@ function Index({ sessions }: any) {
                 <meta property="og:title" content="attendees Management | Organizer Dashboard" />
                 <meta property="og:description" content="Manage event attendees, edit details, and delete records from the organizer's dashboard." />
                 <meta property="og:type" content="website" />
-                <meta property="og:url" content={route('organizer.events.report.session.index')} />
+                <meta property="og:url" content={route('organizer.events.report.ticket.index')} />
             </Head>
 
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Sessions Report" pageTitle="Dashboard" />
+                    <BreadCrumb title="Tickets Report" pageTitle="Dashboard" />
                     <Row>
                         <Col xs={12}>
                             <HasPermission permission="view_attendees">
                                 <DataTable
-                                    data={sessions}
+                                    data={tickets}
                                     columns={columns}
-                                    title="Sessions"
+                                    title="Tickets"
                                     tableLayoutFixed={true}
                                     searchCombinations={[['name']]}
                                     actions={[

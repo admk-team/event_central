@@ -34,6 +34,7 @@ use App\Http\Controllers\Organizer\Event\FormFieldController;
 use App\Http\Controllers\Organizer\Event\QuestionnaireFormFieldController;
 use App\Http\Controllers\Organizer\Event\Reports\AttendeesReportController;
 use App\Http\Controllers\Organizer\Event\Reports\SessionReportController;
+use App\Http\Controllers\Organizer\Event\Reports\TicketsReportController;
 use App\Http\Controllers\Organizer\Event\SessionAttendanceController;
 use App\Http\Controllers\Organizer\Event\SessionRatingsController;
 use App\Http\Controllers\Organizer\Event\Settings\QuestionnaireFormSettingsController;
@@ -246,6 +247,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::prefix('report')->name('report.')->group(function () {
                 Route::resource('attendee', AttendeesReportController::class);
                 Route::resource('session', SessionReportController::class);
+                Route::resource('ticket', TicketsReportController::class);
             });
 
             Route::post('import/{importType}', [ImportController::class, 'import'])->name('import');

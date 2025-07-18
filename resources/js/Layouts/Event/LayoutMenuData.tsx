@@ -511,6 +511,13 @@ const Navdata = () => {
                     parentId: "Report",
                     // hasPermissions: ["view_event_sessions"],
                 },
+                {
+                    id: "ticketReport",
+                    label: "Ticket",
+                    link: route("organizer.events.report.ticket.index"),
+                    parentId: "Report",
+                    // hasPermissions: ["view_event_sessions"],
+                },
             ],
         },
         // }] : []),

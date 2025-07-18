@@ -22,7 +22,7 @@ const TopPages  = ({topSession}: any) => {
     return (
         <React.Fragment>
             <Col xl={6} md={6}>
-                <Link title='View attendee details' href={route('organizer.events.report.session.index')} className="link-primary cursor-pointer">
+                <Link title='View session report' href={route('organizer.events.report.session.index')} className="link-primary cursor-pointer">
                     <Card className="card-height-100">
                         <Card.Header className="align-items-center d-flex">
                             <h4 className="card-title mb-0 flex-grow-1">Top Sessions</h4>
