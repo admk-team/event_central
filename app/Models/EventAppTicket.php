@@ -34,6 +34,7 @@ class EventAppTicket extends Model
     protected $appends = [
         'selected_sessions',
         'selected_addons',
+        'total_revenue',
     ];
 
     public function scopeCurrentEvent($query)
@@ -71,6 +72,11 @@ class EventAppTicket extends Model
         return $this->sessions()->select(['id as value', 'name as label'])->get();
     }
 
+    public function getTotalRevenueAttribute()
+    {
+        return $this->sold_tickets()->sum('total');
+    }
+
     public function getSelectedAddonsAttribute()
     {
         // Ordering and selecting appended property of model
@@ -82,8 +88,14 @@ class EventAppTicket extends Model
             return ['value' => $addon->id, 'label' => $addon->full_name];
         });
     }
+
     public function ticketType()
-{
-    return $this->belongsTo(EventTicketType::class, 'type');
-}
+    {
+        return $this->belongsTo(EventTicketType::class, 'type');
+    }
+
+    public function sold_tickets()
+    {
+        return $this->hasMany(AttendeePurchasedTickets::class, 'event_app_ticket_id');
+    }
 }

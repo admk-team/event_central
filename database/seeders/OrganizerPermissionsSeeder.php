@@ -127,6 +127,11 @@ class OrganizerPermissionsSeeder extends Seeder
         //contact forms
         'view_contact_form',
         'delete_contact_form',
+
+        //Reports section
+        'view_attendee_report',
+        'view_session_report',
+        'view_ticket_report',
     ];
 
     public function run(): void
