@@ -57,8 +57,9 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('e/{uuid}')->name('organizer.events.website')->group(function () {
     Route::get('/', [WebsiteController::class, 'index']);
     Route::get('schedule', [WebsiteController::class, 'schedule'])->name('.schedule');
-    Route::get('speakers', [WebsiteController::class, 'speakers'])->name('.speakers');
+    Route::get('speakers', [WebsiteController::class, 'speake-rs'])->name('.speakers');
     Route::get('sponsors', [WebsiteController::class, 'sponsors'])->name('.sponsors');
+    Route::get('sponsors/{id}', [WebsiteController::class, 'sponsorsSingle'])->name('.sponsors.single');
     Route::get('exhibitors', [WebsiteController::class, 'exhibitors'])->name('.exhibitors');
     Route::get('tickets', [WebsiteController::class, 'tickets'])->name('.tickets');
     Route::get('privacy-policy', [WebsiteController::class, 'privacypolicy'])->name('.privacy');

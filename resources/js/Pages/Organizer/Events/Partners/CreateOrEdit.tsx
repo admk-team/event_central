@@ -25,6 +25,9 @@ function CreateOrEdit({ partner, partnerCategories }: any) {
         twitter: partner?.twitter || "",
         linkedin: partner?.linkedin || "",
         youtube: partner?.youtube || "",
+        insta: partner?.insta || "",
+        tiktok: partner?.tiktok || "",
+        banner_image: "",
         _method: partner?.id ? "PUT" : "POST", // Spoof method
     });
 
@@ -32,6 +35,12 @@ function CreateOrEdit({ partner, partnerCategories }: any) {
         console.log(e.target.files);
         const file = e.target.files[0]
         setData('exhibitor_logo', file);
+
+    }
+    function banner_image_handle(e: any) {
+        console.log(e.target.files);
+        const file = e.target.files[0]
+        setData('banner_image', file);
 
     }
     const submit = (e: any) => {
@@ -235,6 +244,34 @@ function CreateOrEdit({ partner, partnerCategories }: any) {
                                                     <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.youtube} </Form.Control.Feedback>
                                                 </div>
                                             </Col>
+                                            <Col xxl={6} md={6}>
+                                                <div className="">
+                                                    <Form.Label htmlFor="name" className="form-label">Instagram</Form.Label>
+                                                    <Form.Control
+                                                        type="text"
+                                                        className="form-control"
+                                                        id="insta"
+                                                        placeholder="Enter Instagram"
+                                                        value={data.insta}
+                                                        onChange={(e) => setData('insta', e.target.value)}
+                                                    />
+                                                    <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.insta} </Form.Control.Feedback>
+                                                </div>
+                                            </Col>
+                                            <Col xxl={6} md={6}>
+                                                <div className="">
+                                                    <Form.Label htmlFor="name" className="form-label">Tiktok</Form.Label>
+                                                    <Form.Control
+                                                        type="text"
+                                                        className="form-control"
+                                                        id="tiktok"
+                                                        placeholder="Enter tiktok"
+                                                        value={data.tiktok}
+                                                        onChange={(e) => setData('tiktok', e.target.value)}
+                                                    />
+                                                    <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.tiktok} </Form.Control.Feedback>
+                                                </div>
+                                            </Col>
 
                                             {data.type === 'exhibitor' && (
                                                 <>
@@ -281,6 +318,19 @@ function CreateOrEdit({ partner, partnerCategories }: any) {
                                                                 onChange={exhibitor_logo_handle}
                                                             />
                                                             <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.exhibitor_logo} </Form.Control.Feedback>
+                                                        </div>
+                                                    </Col>
+                                                    <Col xxl={6} md={6}>
+                                                        <div className="">
+                                                            <Form.Label htmlFor="name" className="form-label">Sponsor Banner</Form.Label>
+                                                            <Form.Control
+                                                                type="file"
+                                                                className="form-control"
+                                                                id="banner_image"
+                                                                placeholder="banner_image"
+                                                                onChange={banner_image_handle}
+                                                            />
+                                                            <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.banner_image} </Form.Control.Feedback>
                                                         </div>
                                                     </Col>
                                                     <Col xxl={6} md={6}>
