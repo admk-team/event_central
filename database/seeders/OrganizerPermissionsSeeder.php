@@ -132,6 +132,7 @@ class OrganizerPermissionsSeeder extends Seeder
         'view_attendee_report',
         'view_session_report',
         'view_ticket_report',
+        'view_refund_ticket_report',
     ];
 
     public function run(): void

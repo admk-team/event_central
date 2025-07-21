@@ -494,6 +494,7 @@ const Navdata = () => {
                 "view_attendee_report",
                 "view_ticket_report",
                 "view_session_report",
+                "view_refund_ticket_report"
             ],
             subItems: [
                 {
@@ -516,6 +517,13 @@ const Navdata = () => {
                     link: route("organizer.events.report.ticket.index"),
                     parentId: "Report",
                     hasPermissions: ["view_ticket_report"],
+                },
+                {
+                    id: "refundTicketReport",
+                    label: "Refund Ticket",
+                    link: route("organizer.events.report.refund-ticket.index"),
+                    parentId: "Report",
+                    hasPermissions: ["view_refund_ticket_report"],
                 },
             ],
         },
