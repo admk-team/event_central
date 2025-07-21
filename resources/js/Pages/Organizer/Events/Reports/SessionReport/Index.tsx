@@ -22,6 +22,7 @@ function Index({ sessions }: any) {
             headerStyle: { width: '200px', textWrap: 'wrap' ,textAlign:'center' },
             cell: (session) => session.name,
             cellStyle: { width: '200px', textWrap: 'wrap' ,textAlign:'center' },
+            searchable: true,
         },
         {
             header: () => 'Type',
@@ -40,7 +41,6 @@ function Index({ sessions }: any) {
             headerStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
             cell: (session) => session.attendees.length,
             cellStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
-            searchable: true,
         },
         {
             header: () => 'Attendances',

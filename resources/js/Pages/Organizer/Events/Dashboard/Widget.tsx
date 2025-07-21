@@ -73,7 +73,7 @@ const Widget = ({
                     </Link>
                 </Col>
                 <Col md={6}>
-                    <Link title='View ticket report' href={route('organizer.events.report.ticket.index')} className="link-primary cursor-pointer">
+                    <Link title='View refund ticket report' href={route('organizer.events.report.refund-ticket.index')} className="link-primary cursor-pointer">
                         <Card className="card-animate">
                             <Card.Body>
                                 <div className="d-flex justify-content-between">
