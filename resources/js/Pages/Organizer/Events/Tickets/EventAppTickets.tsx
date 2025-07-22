@@ -83,9 +83,9 @@ const EventAppTickets = ({ tickets }: any) => {
                                                             <td>{ticket.promo_code ?? 'N/A'}</td>
                                                             <td>
                                                                 {ticket.discount && ticket.total != '0.00'
-                                                                    ? `${((ticket.discount / ticket.total) * 100)}%`
+                                                                    ? `${Math.round((ticket.discount / ticket.total) * 100).toFixed(2)}%`
                                                                     : '0%'}
-                                                            </td>
+                                                                </td>
                                                             <td>{ticket.qty}</td>
                                                             <td>{ticket.type}</td>
                                                             {/* <td>{
