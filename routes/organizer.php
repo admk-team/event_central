@@ -5,6 +5,7 @@ use App\Http\Controllers\Organizer\Event\RefundPaymentController;
 use App\Http\Controllers\Organizer\Event\AddonController;
 use App\Http\Controllers\Organizer\Event\AssignTicketController;
 use App\Http\Controllers\Organizer\Event\BadgePrintController;
+use App\Http\Controllers\Organizer\Event\ChatController;
 use App\Http\Controllers\Organizer\Event\ContactFormController;
 use App\Http\Controllers\Organizer\Event\CustomMenuController;
 use App\Http\Controllers\Organizer\Event\DashboardController;
@@ -165,6 +166,8 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::resource('promo-codes', EventPromoCodeController::class)->only(['index', 'store', 'update', 'destroy']);
             Route::delete('promo-codes/delete/many', [EventPromoCodeController::class, 'destroyMany'])->name('promo-codes.destroy.many');
 
+            Route::resource('chat', ChatController::class);
+
             // Ticket Fees
             Route::resource('ticket-fees', EventAppFeeController::class)->only(['index', 'store', 'update', 'destroy']);
             Route::delete('ticket-fees/delete/many', [EventAppFeeController::class, 'destroyMany'])->name('ticket-fees.destroy.many');
@@ -242,9 +245,8 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                     Route::post('/toggle-status', [WebsiteSettingsController::class, 'toggleStatus'])->name('toggle-status');
                     Route::post('/save-colors', [WebsiteSettingsController::class, 'saveColors'])->name('save-colors');
                 });
-
             });
-            
+
             // Reports
             Route::prefix('report')->name('report.')->group(function () {
                 Route::resource('attendee', AttendeesReportController::class);

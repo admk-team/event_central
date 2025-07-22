@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\ChatMessage;
 use App\Models\EventApp;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -19,10 +20,12 @@ class EventGroupChat
      * Create a new event instance.
      */
     public $event;
+    public $message;
 
-    public function __construct(EventApp $event)
+    public function __construct(EventApp $event, ChatMessage $chatMessage)
     {
         $this->event = $event;
+        $this->message = $chatMessage;
     }
 
     /**
@@ -33,7 +36,16 @@ class EventGroupChat
     public function broadcastOn(): array
     {
         return [
-            new Channel('event-app-' . $this->event),
+            new Channel('event-app-' . $this->event->id),
+        ];
+    }
+
+    public function broadcastWith()
+    {
+        return [
+            'message' => $this->message->message,
+            'sender' => $this->message->sender->only('id', 'name'),
+            'timestamp' => $this->message->created_at->toDateTimeString(),
         ];
     }
 }

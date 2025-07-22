@@ -93,7 +93,7 @@ class Attendee extends Authenticatable
         })->with(['ticket'])->get();
         return $tickets;
     }
-    
+
     public function attendeePurchasedTickets()
     {
         return $this->hasMany(AttendeePurchasedTickets::class, 'attendee_id');
@@ -119,5 +119,16 @@ class Attendee extends Authenticatable
     public function attendeeEventSessions()
     {
         return $this->hasMany(AttendeeEventSession::class, 'attendee_id', 'id');
+    }
+
+
+    public function chatMessages()
+    {
+        return $this->morphMany(ChatMessage::class, 'sender');
+    }
+
+    public function chatMemberships()
+    {
+        return $this->morphMany(ChatMember::class, 'participant');
     }
 }

@@ -27,6 +27,7 @@ const Navdata = () => {
     const [isUpgradeTicket, setUpgradeTicket] = useState<boolean>(false);
     const [isBaseTemplate, setIsBaseTemplate] = useState<boolean>(false);
     const [isEmailTemplate, setIsEmailTemplate] = useState<boolean>(false);
+    const [isChat, setIsChat] = useState<boolean>(false);
     const [isContactForm, setIsContactForm] = useState<boolean>(false);
     const [isReport, setIsReport] = useState<boolean>(false);
 
@@ -65,6 +66,7 @@ const Navdata = () => {
         if (iscurrentState !== "BaseTemplate") setIsBaseTemplate(false);
         if (iscurrentState !== "EmailTemplate") setIsEmailTemplate(false);
         if (iscurrentState !== "ContactForm") setIsContactForm(false);
+        if (iscurrentState !== "chat") setIsChat(false);
         if (iscurrentState !== "Questionnaire_response")
             setIsQuestionnaireResponse(false);
         // if (iscurrentState !== 'assignTickets') setIsTickets(false);
@@ -85,6 +87,7 @@ const Navdata = () => {
         // isRefundTicket,
         isTickets,
         isReport,
+        isChat,
         // isAssignTicket,
         // isUpgradeTicket
     ]);
@@ -403,6 +406,22 @@ const Navdata = () => {
             hasPermissions: ["print_badges"],
         },
         // ...(isEventStarted ? [{
+        
+
+        {
+            id: "chat",
+            label: "Chat",
+            icon: "bx bx-message-rounded-dots",
+            link: route("organizer.events.chat.index"),
+            stateVariables: isForm,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsChat(!isForm);
+                setIscurrentState("chat");
+                updateIconSidebar(e);
+            },
+            // hasPermissions: ["edit_questionnaire_form"],
+        },
         {
             id: "Questionnaire",
             label: "Questionnaire Form",
