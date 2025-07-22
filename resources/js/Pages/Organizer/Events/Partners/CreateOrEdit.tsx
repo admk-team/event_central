@@ -277,7 +277,7 @@ function CreateOrEdit({ partner, partnerCategories }: any) {
                                                 <>
                                                     <Col xxl={6} md={6}>
                                                         <div className="">
-                                                            <Form.Label htmlFor="name" className="form-label">Exhibitor profile</Form.Label>
+                                                            <Form.Label htmlFor="name" className="form-label">Exhibitor logo</Form.Label>
                                                             <Form.Control
                                                                 type="file"
                                                                 className="form-control"
@@ -309,7 +309,7 @@ function CreateOrEdit({ partner, partnerCategories }: any) {
                                                 <>
                                                     <Col xxl={6} md={6}>
                                                         <div className="">
-                                                            <Form.Label htmlFor="name" className="form-label">Sponsor profile</Form.Label>
+                                                            <Form.Label htmlFor="name" className="form-label">Sponsor logo</Form.Label>
                                                             <Form.Control
                                                                 type="file"
                                                                 className="form-control"
