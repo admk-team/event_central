@@ -35,7 +35,8 @@ class Attendee extends Authenticatable
 
     protected $appends = [
         'avatar' => 'avatar_img',
-        'qr_code' => 'qr_code_img'
+        'qr_code' => 'qr_code_img',
+        'name'
     ];
 
     protected $hidden = [
@@ -50,6 +51,10 @@ class Attendee extends Authenticatable
     public function getAvatarImgAttribute()
     {
         return $this->avatar ? url($this->avatar) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s';
+    }
+    public function getNameAttribute()
+    {
+        return $this->first_name . " " . $this->last_name;
     }
 
     public function getQrCodeImgAttribute()

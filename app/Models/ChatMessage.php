@@ -26,4 +26,9 @@ class ChatMessage extends Model
     {
         return $this->morphTo(); // can be User or Attendee
     }
+
+    public function scopeCurrentEvent($query)
+    {
+        $query->where('event_id', session('event_id'));
+    }
 }

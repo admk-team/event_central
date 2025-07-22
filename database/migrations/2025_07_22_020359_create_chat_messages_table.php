@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('event_id');
             $table->unsignedBigInteger('sender_id');
             $table->string('sender_type'); // App\Models\User or App\Models\Attendee
-            $table->text('message');
+            $table->longText('message');
             $table->timestamps();
 
             $table->foreign('event_id')->references('id')->on('event_apps')->onDelete('cascade');
