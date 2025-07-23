@@ -166,8 +166,10 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::resource('promo-codes', EventPromoCodeController::class)->only(['index', 'store', 'update', 'destroy']);
             Route::delete('promo-codes/delete/many', [EventPromoCodeController::class, 'destroyMany'])->name('promo-codes.destroy.many');
 
+            // Chat
             Route::resource('chat', ChatController::class);
             Route::get('get-chat', [ChatController::class, 'getMessages'])->name('get-messages');
+            Route::post('send-message', [ChatController::class, 'store']);
 
             // Ticket Fees
             Route::resource('ticket-fees', EventAppFeeController::class)->only(['index', 'store', 'update', 'destroy']);

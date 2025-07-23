@@ -12,20 +12,19 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class EventGroupChat
+class EventGroupChat implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public $event;
     public $message;
-
-    public function __construct(EventApp $event, ChatMessage $chatMessage)
+    public $eventId;
+    public function __construct(ChatMessage $chatMessage)
     {
-        $this->event = $event;
         $this->message = $chatMessage;
+        $this->eventId = $chatMessage->event_id;
     }
 
     /**
@@ -33,19 +32,15 @@ class EventGroupChat
      *
      * @return array<int, \Illuminate\Broadcasting\Channel>
      */
-    public function broadcastOn(): array
+    public function broadcastOn()
     {
-        return [
-            new Channel('event-app-' . $this->event->id),
-        ];
+        return new Channel('event-app-' . $this->eventId);
     }
 
     public function broadcastWith()
     {
         return [
-            'message' => $this->message->message,
-            'sender' => $this->message->sender->only('id', 'name'),
-            'timestamp' => $this->message->created_at->toDateTimeString(),
+            'message' => $this->message
         ];
     }
 }

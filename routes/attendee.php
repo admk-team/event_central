@@ -5,6 +5,7 @@ use App\Http\Controllers\Attendee\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Attendee\Auth\EmailChangeController;
 use App\Http\Controllers\Attendee\Auth\PasswordController;
 use App\Http\Controllers\Attendee\Auth\RegisteredUserController;
+use App\Http\Controllers\Attendee\ChatController;
 use App\Http\Controllers\Attendee\EventController;
 use App\Http\Controllers\Attendee\EventSessionController;
 use App\Http\Controllers\Attendee\Payment\PaymentController;
@@ -45,7 +46,7 @@ Route::get('/google-login/callback', [AuthenticatedSessionController::class, 'go
 
 // Route::middleware(['auth'])->group(function () {
 Route::get('get-attendee-purchased-tickets/{attendee}', [AttendeeUpgradeTicketController::class, 'getAttendeePurchasedTickets'])
-        ->name('get.attendee.purchased.tickets');
+    ->name('get.attendee.purchased.tickets');
 Route::get('get-attendee-sessions/{purchasedTicketId}', [AttendeeUpgradeTicketController::class, 'getAttendeePurchasedTicketSessions'])
     ->name('get.attendee.purchased.ticket.sessions');
 // });
@@ -107,6 +108,11 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
             Route::get('/', [EventQuestionnaireFormController::class, 'index']);
             Route::post('/', [EventQuestionnaireFormController::class, 'submit'])->name('.submit');
         });
+
+        // Chat
+        Route::get('chat', [ChatController::class, 'index'])->name('attendee.event.chat');
+        Route::get('get-chat', [ChatController::class, 'getMessages'])->name('attendee.event.get-messages');
+        Route::post('send-message', [ChatController::class, 'store']);
     });
 
     Route::put('/attendee-profile-update/{attendee}', [ProfileController::class, 'update'])->name('attendee.profile.update');

@@ -18,6 +18,7 @@ use BaconQrCode\Renderer\Image\SvgImageBackEnd;
 use BaconQrCode\Renderer\PlainTextRenderer;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 use BaconQrCode\Writer;
+use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
@@ -41,6 +42,8 @@ use Illuminate\Support\Facades\Storage;
 //     ]);
 // });
 
+
+Broadcast::routes(['middleware' => ['auth']]);
 
 Route::get('/', function () {
     //If Attendee User is logged in then redirect to Attendee Dashboard

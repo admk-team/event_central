@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Organizer\Event;
+namespace App\Http\Controllers\Attendee;
 
 use App\Events\EventGroupChat;
 use App\Http\Controllers\Controller;
@@ -15,15 +15,15 @@ class ChatController extends Controller
 {
     public function index()
     {
-        $member = ChatMember::currentEvent()->with('participant')->first();
-        $event_data = EventApp::where('id', session('event_id'))->first();
+        $member = ChatMember::where('event_id', Auth::user()->event_app_id)->with('participant')->first();
+        $event_data = EventApp::where('id', Auth::user()->event_app_id)->first();
         $loged_user = Auth::user()->id;
-        return Inertia::render('Organizer/Events/Chat/Index', compact('member', 'event_data', 'loged_user'));
+        return Inertia::render('Attendee/Chat/Index', compact('member', 'event_data', 'loged_user'));
     }
 
     public function getMessages()
     {
-        $messages = ChatMessage::currentEvent()->with('sender')->get();
+        $messages = ChatMessage::where('event_id', Auth::user()->event_app_id)->with('sender')->get();
         return response()->json([
             'success' => true,
             'messages' => $messages,
@@ -37,9 +37,9 @@ class ChatController extends Controller
         ]);
 
         $message = ChatMessage::create([
-            'event_id' => session('event_id'),
+            'event_id' => Auth::user()->event_app_id,
             'sender_id' => Auth::user()->id,
-            'sender_type' => \App\Models\User::class,
+            'sender_type' => \App\Models\Attendee::class,
             'message'=> $request->message,
         ]);
         $message->load('sender');

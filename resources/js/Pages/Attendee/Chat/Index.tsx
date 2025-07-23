@@ -19,21 +19,21 @@ import EmojiPicker from 'emoji-picker-react';
 //Import Icons
 import FeatherIcon from "feather-icons-react";
 
-import { chatContactData } from "../../../../common/data";
+import { chatContactData } from "../../../common/data";
 
 //redux
 import { useSelector, useDispatch } from "react-redux";
 
-import avatar2 from "../../../../../images/users/avatar-2.jpg";
-import userDummayImage from "../../../../../images/users/user-dummy-img.jpg";
+import avatar2 from "../../../../images/users/avatar-2.jpg";
+import userDummayImage from "../../../../images/users/user-dummy-img.jpg";
 
 //Import Scrollbar
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { createSelector } from "reselect";
-import Spinners from "../../../../Components/Common/Spinner";
+import Spinners from "../../../Components/Common/Spinner";
 import { Head, Link } from "@inertiajs/react";
-import Layout from "../../../../Layouts/Event";
-import { onAddMessage, onDeleteMessage, onGetDirectContact, onGetMessages } from "../../../../slices/thunk";
+import AttendeeLayout from "../../../Layouts/Attendee";
+import { onAddMessage, onDeleteMessage, onGetDirectContact, onGetMessages } from "../../../slices/thunk";
 import axios from 'axios';
 import { useEchoPublic } from '@laravel/echo-react';
 
@@ -120,9 +120,9 @@ const Chat = ({member,event_data,loged_user}:any) => {
   const [reply, setreply] = useState<any>("");
   const [emojiPicker, setemojiPicker] = useState<boolean>(false);
 
-  // ✅ Real-time subscription to public channel like "event-app-[12]"
+  // Real-time subscription to public channel like "event-app-[id]"
   const eventChannelName = `event-app-${event_data.id}`;
-
+  console.log(eventChannelName);
   useEchoPublic(eventChannelName, "EventGroupChat", (e: any) => {
     console.log("New message via Echo:", e);
     const newMessage = e.message;
@@ -150,7 +150,7 @@ const Chat = ({member,event_data,loged_user}:any) => {
   //Use For Chat Box
   const userChatOpen = async (chats: any) => {
     try {
-      const response = await axios.get(`/organizer/events/get-chat`);
+      const response = await axios.get(`/attendee/get-chat`);
       userChatShow.current.classList.remove("d-none");
       setChat_Box_Username(chats.name);
       setCurrentRoomId(chats.id);
@@ -183,7 +183,7 @@ const Chat = ({member,event_data,loged_user}:any) => {
   // add message
   const addMessage = async () => {
     try {
-      const response = await axios.post('/organizer/events/send-message', {
+      const response = await axios.post('/attendee/send-message', {
         message: curMessage,
       });
       const newMessage = response.data.message;
@@ -491,6 +491,6 @@ const Chat = ({member,event_data,loged_user}:any) => {
     </React.Fragment >
   );
 };
-Chat.layout = (page: any) => <Layout children={page} />
+Chat.layout = (page: any) => <AttendeeLayout children={page} />
 
 export default Chat;
