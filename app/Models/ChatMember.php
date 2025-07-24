@@ -14,6 +14,7 @@ class ChatMember extends Model
         'event_id',
         'participant_id',
         'participant_type',
+        'unread_count'
     ];
 
     public function event()

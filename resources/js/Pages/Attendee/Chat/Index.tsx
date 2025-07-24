@@ -37,62 +37,7 @@ import { onAddMessage, onDeleteMessage, onGetDirectContact, onGetMessages } from
 import axios from 'axios';
 import { useEchoPublic } from '@laravel/echo-react';
 
-interface DirectContact {
-  id: number,
-  roomId: number,
-  status: string,
-  name: string,
-  image: string,
-  number: string,
-  email: string,
-  bgColor: string,
-  badge: string | number,
-  location: string
-}
-interface channelsListType {
-  id: number,
-  name: string,
-  unReadMessage?: number,
-  image: string,
-}
-interface chatContactType {
-  direactContact?: DirectContact[];
-  channelsList?: channelsListType[];
-}
-interface contact {
-  id: number,
-  name: string,
-  status: string,
-  roomId: number,
-  image?: string
-}
-interface chatContactDataTye {
-  id: number,
-  title: string,
-  contacts?: contact[],
-  image?: string,
-  name: string,
-}
-type UserMessage = {
-  id: number;
-  from_id: number;
-  to_id: number;
-  msg: string | null;
-  reply: { sender: string, msg: string, id: number },
-  isImages: boolean;
-  has_images: { id: number; image: string }[];
-  datetime: string;
-};
-
-type userMessagesType = {
-  id: number;
-  roomId: number;
-  sender: string;
-  createdAt: string;
-  usermessages: UserMessage[];
-};
-
-const Chat = ({member,event_data,loged_user}:any) => {
+const Chat = ({member,event_data,loged_user,unread_count}:any) => {
   
   const userChatShow: any = useRef();
 
@@ -176,6 +121,7 @@ const Chat = ({member,event_data,loged_user}:any) => {
     }
   };
 
+  // on mobile responsive
   const backToUserChat = () => {
     userChatShow.current.classList.remove("user-chat-show");
   }
@@ -186,8 +132,8 @@ const Chat = ({member,event_data,loged_user}:any) => {
       const response = await axios.post('/attendee/send-message', {
         message: curMessage,
       });
-      const newMessage = response.data.message;
-      setChatMessages(prev  => [...prev , newMessage]);
+      // const newMessage = response.data.message;
+      // setChatMessages(prev  => [...prev , newMessage]);
       setcurMessage('');
       setreply('');
       setemojiPicker(false);
@@ -197,12 +143,13 @@ const Chat = ({member,event_data,loged_user}:any) => {
     }
   };
 
+  //scroll to bottom on messages
   const chatRef = useRef<any>(null);
   useEffect(() => {
     if (chatRef.current?.el) {
       chatRef.current.getScrollElement().scrollTop = chatRef.current.getScrollElement().scrollHeight;
     }
-  }, [messages])
+  }, [chatmessages])
 
   const onKeyPress = (e: any) => {
     const { key, value } = e;
@@ -214,7 +161,6 @@ const Chat = ({member,event_data,loged_user}:any) => {
   };
 
   //serach recent user
-
   const searchUsers = () => {
     const input = document.getElementById("search-user") as HTMLInputElement;
     const filter = input.value.toUpperCase();
@@ -291,7 +237,7 @@ const Chat = ({member,event_data,loged_user}:any) => {
                             <p className="text-truncate mb-0">{event_data.name}</p>
                           </div>
                           <div className="flex-shrink-0" id={"unread-msg-user" + event_data.id}>
-                            <span className="badge bg-dark-subtle text-body rounded p-1">1</span>
+                            <span className="badge bg-dark-subtle text-body rounded p-1">{unread_count > 0 ? unread_count : ''}</span>
                           </div>
                         </div>
                       </Link>

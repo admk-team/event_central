@@ -18,7 +18,9 @@ class ChatController extends Controller
         $member = ChatMember::where('event_id', Auth::user()->event_app_id)->with('participant')->first();
         $event_data = EventApp::where('id', Auth::user()->event_app_id)->first();
         $loged_user = Auth::user()->id;
-        return Inertia::render('Attendee/Chat/Index', compact('member', 'event_data', 'loged_user'));
+        $unread_count = $member->unread_count ?? 0;
+
+        return Inertia::render('Attendee/Chat/Index', compact('member', 'event_data', 'loged_user','unread_count'));
     }
 
     public function getMessages()
@@ -36,13 +38,24 @@ class ChatController extends Controller
             'message' => 'required|string',
         ]);
 
+        $eventId = Auth::user()->event_app_id;
+        $senderId = Auth::user()->id;
+
         $message = ChatMessage::create([
-            'event_id' => Auth::user()->event_app_id,
-            'sender_id' => Auth::user()->id,
+            'event_id' => $eventId,
+            'sender_id' => $senderId,
             'sender_type' => \App\Models\Attendee::class,
             'message'=> $request->message,
         ]);
         $message->load('sender');
+
+        ChatMember::where('event_id', $eventId)
+            ->where(function ($query) use ($senderId) {
+                $query->where('participant_id', '!=', $senderId)
+                    ->where('participant_type', \App\Models\User::class);
+            })
+            ->increment('unread_count');
+
         broadcast(new EventGroupChat($message))->toOthers();
         return response()->json(['success' => true, 'message' => $message]);
     }

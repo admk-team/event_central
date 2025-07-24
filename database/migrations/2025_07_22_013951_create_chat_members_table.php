@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('event_id');
             $table->unsignedBigInteger('participant_id'); // App\Models\User or App\Models\Attendee
             $table->string('participant_type');
+            $table->unsignedInteger('unread_count')->default(0);
             $table->timestamps();
 
             $table->foreign('event_id')->references('id')->on('event_apps')->onDelete('cascade');
