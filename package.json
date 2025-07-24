@@ -70,6 +70,7 @@
         "nouislider-react": "^3.4.2",
         "papaparse": "^5.5.2",
         "prismjs": "^1.29.0",
+        "quill": "^2.0.3",
         "react-apexcharts": "^1.4.1",
         "react-bootstrap": "^2.10.5",
         "react-chartjs-2": "^5.2.0",

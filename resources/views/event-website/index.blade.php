@@ -164,7 +164,7 @@
                 </div>
                 <div class="about-content">
                     <div class="about-text">
-                        {{ $event->description }}
+                        {!! $event->description !!}
                     </div>
                     <div class="about-video">
                         <div class="video-wrapper">

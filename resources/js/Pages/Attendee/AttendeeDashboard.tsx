@@ -80,8 +80,8 @@ const AttendeeDashboard = ({ eventApp }: any) => {
                                                         display:
                                                             "-webkit - box",
                                                     }}
+                                                    dangerouslySetInnerHTML={{ __html: eventApp.description }}
                                                 >
-                                                    {eventApp.description}
                                                 </div>
                                             </div>
                                         </CardBody>

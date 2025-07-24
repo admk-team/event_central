@@ -98,7 +98,7 @@ const EventAppTickets = ({ tickets }: any) => {
                 header: () => 'Status',
                 headerStyle: { textWrap: 'wrap' },
                 cell: (ticket) => <><i className="ri-checkbox-circle-line fs-17 align-middle"></i> Paid</>,
-                cellStyle: { textWrap: 'wrap' },
+                cellStyle: { textWrap: 'wrap', color: 'rgb(13, 110, 253)' },
             },
             {
                 header: () => "Actions",
