@@ -408,20 +408,20 @@ const Navdata = () => {
         // ...(isEventStarted ? [{
         
 
-        {
-            id: "chat",
-            label: "Chat",
-            icon: "bx bx-message-rounded-dots",
-            link: route("organizer.events.chat.index"),
-            stateVariables: isForm,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsChat(!isForm);
-                setIscurrentState("chat");
-                updateIconSidebar(e);
-            },
-            // hasPermissions: ["edit_questionnaire_form"],
-        },
+        // {
+        //     id: "chat",
+        //     label: "Chat",
+        //     icon: "bx bx-message-rounded-dots",
+        //     link: route("organizer.events.chat.index"),
+        //     stateVariables: isForm,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIsChat(!isForm);
+        //         setIscurrentState("chat");
+        //         updateIconSidebar(e);
+        //     },
+        //     // hasPermissions: ["edit_questionnaire_form"],
+        // },
         {
             id: "Questionnaire",
             label: "Questionnaire Form",

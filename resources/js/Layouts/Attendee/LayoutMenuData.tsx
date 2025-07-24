@@ -121,20 +121,20 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
-        {
-            id: "chat",
-            label: "Chat",
-            icon: "bx bx-message-rounded-dots",
-            link: route("attendee.event.chat"),
-            stateVariables: isChat,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsChat(!isChat);
-                setIscurrentState("chat");
-                updateIconSidebar(e);
-            },
-            // hasPermissions: ["edit_questionnaire_form"],
-        },
+        // {
+        //     id: "chat",
+        //     label: "Chat",
+        //     icon: "bx bx-message-rounded-dots",
+        //     link: route("attendee.event.chat"),
+        //     stateVariables: isChat,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIsChat(!isChat);
+        //         setIscurrentState("chat");
+        //         updateIconSidebar(e);
+        //     },
+        //     // hasPermissions: ["edit_questionnaire_form"],
+        // },
         {
             id: "more",
             label: "Contact",
