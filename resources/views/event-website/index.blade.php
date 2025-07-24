@@ -245,6 +245,12 @@
                                         </a>
                                     @endif
                                 </ul>
+                                <div class="description-header">
+                                    <h6>Description:</h6>
+                                    <div class="description">
+                                        <span>{{ $ticket->description }}</span>
+                                    </div>
+                                </div>
 
                                 <a href="{{ route('attendee.register', $event) }}"
                                     class="btn btn-primary btn-block mt-auto">Register Now</a>

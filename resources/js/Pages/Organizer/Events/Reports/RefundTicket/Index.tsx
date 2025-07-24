@@ -53,9 +53,9 @@ function Index({ refundPayments }: any) {
             headerStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
             cell: (refund) =>  
                 <>
-                    {refund.status === 'approved' && <span className='w-100 rounded-pill badge bg-secondary  text-capitalize p-2'>{refund?.status ? refund.status : ""}</span>}
-                    {refund.status === 'rejected' && <span className='w-100 rounded-pill badge bg-warning text-dark text-capitalize p-2'>{refund?.status ? refund.status : ""}</span>}
-                    {refund.status === 'pending' && <span className='w-100 rounded-pill badge bg-primary text-capitalize p-2'>{refund?.status ? refund.status : ""}</span>}
+                    {refund.status === 'approved' && <span className='w-100 fw-bold text-secondary  text-capitalize p-2'>{refund?.status ? refund.status : ""}</span>}
+                    {refund.status === 'rejected' && <span className='w-100 fw-bold text-warning text-dark text-capitalize p-2'>{refund?.status ? refund.status : ""}</span>}
+                    {refund.status === 'pending' && <span className='w-100 fw-bold text-primary text-capitalize p-2'>{refund?.status ? refund.status : ""}</span>}
                 </>,
             cellStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
         },

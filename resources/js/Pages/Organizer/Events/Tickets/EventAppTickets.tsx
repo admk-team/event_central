@@ -8,7 +8,7 @@ import DeleteModal from "../../../../Components/Common/DeleteModal";
 
 
 const EventAppTickets = ({ tickets }: any) => {
-    
+
     const [deleteTicket, setDeleteTicket] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
