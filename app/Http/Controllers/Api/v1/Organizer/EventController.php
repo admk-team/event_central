@@ -7,6 +7,7 @@ use App\Http\Resources\Api\EventResource;
 use App\Http\Resources\Api\EventScanResource;
 use App\Models\AttendeePurchasedTickets;
 use App\Models\EventApp;
+use App\Models\EventCheckIns;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -35,7 +36,7 @@ class EventController extends Controller
         }
 
         $event->load(['images', 'dates' => function ($query) {
-                $query->orderBy('date', 'asc');
+            $query->orderBy('date', 'asc');
         }]);
 
         return $this->successResponse(new EventResource($event));
@@ -51,7 +52,17 @@ class EventController extends Controller
             'code' => 'required',
         ]);
 
-        $purchasedTicket = AttendeePurchasedTickets::where('code', $request->code)->first();
+        $qrcode = $request->code;
+
+        // Check if the code is a URL
+        if (filter_var($qrcode, FILTER_VALIDATE_URL)) {
+            // Extract the code from the URL
+            $urlParts = explode('/', $qrcode);
+            $qrcode = end($urlParts);  // Get the last part (the actual code)
+        }
+
+        // Query the database with the code (whether it's a string or extracted from a URL)
+        $purchasedTicket = AttendeePurchasedTickets::where('code', $qrcode)->first();
 
         if (! $purchasedTicket) {
             return response()->json([
@@ -72,6 +83,8 @@ class EventController extends Controller
                 'status' => 0,
             ]);
         }
+
+
 
         $ticket = $purchasedTicket->ticket;
         $attendee = $purchasedTicket->payment->attendee;
@@ -137,8 +150,18 @@ class EventController extends Controller
             'code' => 'required',
         ]);
 
+        if (eventSettings()->getValue('enable_check_in') == true) {
+            $checkedIn = EventCheckIns::where('event_app_id', $event->id)
+                ->where('attendee_id', $request->attendee_id)
+                ->exists();
+
+            if (!$checkedIn) {
+                return back()->withError("This User is not checked in to the event.");
+            }
+        }
+
         $purchasedTicket = AttendeePurchasedTickets::where('code', $request->code)->first();
-        
+
         $lastCheckin = $event->attendances()->where('attendee_id', $request->attendee_id)->latest()->first();
 
         if ($lastCheckin && $lastCheckin->checked_out === null) {

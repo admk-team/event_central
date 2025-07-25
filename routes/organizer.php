@@ -5,8 +5,11 @@ use App\Http\Controllers\Organizer\Event\RefundPaymentController;
 use App\Http\Controllers\Organizer\Event\AddonController;
 use App\Http\Controllers\Organizer\Event\AssignTicketController;
 use App\Http\Controllers\Organizer\Event\BadgePrintController;
+use App\Http\Controllers\Organizer\Event\ContactFormController;
 use App\Http\Controllers\Organizer\Event\CustomMenuController;
 use App\Http\Controllers\Organizer\Event\DashboardController;
+use App\Http\Controllers\Organizer\Event\EmailCampaignController;
+use App\Http\Controllers\Organizer\Event\EmailTemplateController;
 use App\Http\Controllers\Organizer\Event\Engagement\NewsfeedController;
 use App\Http\Controllers\Organizer\Event\EventAppFeeController;
 use App\Http\Controllers\Organizer\Event\EventController;
@@ -46,6 +49,7 @@ use App\Http\Controllers\Organizer\RoleController;
 use App\Http\Controllers\Organizer\Settings\OrganizerPaymentSettingController;
 use App\Http\Controllers\Organizer\UserController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Middleware\CheckAttendeeRegistrationForm;
 use Illuminate\Support\Facades\Route;
 
 // Event Website
@@ -54,6 +58,7 @@ Route::prefix('e/{uuid}')->name('organizer.events.website')->group(function () {
     Route::get('schedule', [WebsiteController::class, 'schedule'])->name('.schedule');
     Route::get('speakers', [WebsiteController::class, 'speakers'])->name('.speakers');
     Route::get('sponsors', [WebsiteController::class, 'sponsors'])->name('.sponsors');
+    Route::get('exhibitors', [WebsiteController::class, 'exhibitors'])->name('.exhibitors');
     Route::get('tickets', [WebsiteController::class, 'tickets'])->name('.tickets');
     Route::get('privacy-policy', [WebsiteController::class, 'privacypolicy'])->name('.privacy');
     Route::get('contact-us', [WebsiteController::class, 'contactus'])->name('.contactus');
@@ -112,6 +117,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::post('/attendee/event-checkin/{attendee}', [AttendeeController::class, 'eventChechIn'])->name('attendee.event-checkin');
             Route::post('/attendee/checkin', [AttendeeController::class, 'chechIn'])->name('attendee.checkin');
             Route::get('get-attendee-puchased-addons/{attendeePurchasedTicket}', [AttendeeController::class, 'getPurchasedTicketAddons'])->name('attendee.puchased-ticket.adddons');
+            Route::post('attendee/import/event', [AttendeeController::class, 'importFromEvent'])->name('attendee.importevent');
 
 
             // Wordshop
@@ -161,6 +167,10 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::resource('ticket-fees', EventAppFeeController::class)->only(['index', 'store', 'update', 'destroy']);
             Route::delete('ticket-fees/delete/many', [EventAppFeeController::class, 'destroyMany'])->name('ticket-fees.destroy.many');
 
+            //ticket notifications
+            Route::get('purchased-ticket/notification', [EventAppTicketController::class, 'purchaseNotification'])->name('purchased-ticket.notification');
+            Route::post('notification/list', [EventAppTicketController::class, 'saveNotificationList'])->name('ticket.notification.list');
+
             // Pages
             Route::resource('pages', PageController::class)->only(['store', 'update', 'destroy']);
             Route::delete('pages/delete/many', [PageController::class, 'destroyMany'])->name('pages.destroy.many');
@@ -198,6 +208,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                     Route::put('info', [EventSettingsController::class, 'updateInfo'])->name('info');
                     Route::get('generate-link', [EventSettingsController::class, 'generateLink'])->name('link');
                     Route::post('toggle-tracks', [EventSettingsController::class, 'toggleTracks'])->name('toggle-tracks');
+                    Route::post('toggle-checkin', [EventSettingsController::class, 'toggleCheckIn'])->name('toggle-checkin');
                 });
 
                 // Payment
@@ -249,6 +260,23 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
              // RefferalLink
              Route::resource('badge', EventBadgeController::class);
              Route::delete('badge/delete/many', [EventBadgeController::class, 'destroyMany'])->name('badge.destroy.many');
+
+            // Base Template
+            Route::get('base-template', [EmailTemplateController::class, 'baseTemplate'])->name('base.template');
+            Route::get('base-template/{baseTemplate}', [EmailTemplateController::class, 'viewBaseTemplate'])->name('base.template.view');
+            Route::post('use-template/{baseTemplate}', [EmailTemplateController::class, 'setEmailTemplate'])->name('use.template');
+
+            //Email Template
+            Route::resource('email-template', EmailTemplateController::class);
+
+            //Email Campaign
+            Route::resource('email-campaign', EmailCampaignController::class);
+
+            // contact forms
+            Route::prefix('contact-forms')->name('contact-forms.')->group(function () {
+                Route::resource('/', ContactFormController::class);
+                Route::delete('/delete/many', [ContactFormController::class, 'destroyMany'])->name('destroy.many');
+            });
         });
 
         // Q&A
@@ -302,4 +330,5 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
      // Attendee Report 
      Route::get('/attendees/report', [AttendeesReportController::class, 'index'])->name('attendees.report');
      Route::get('/attendees/report/{id}', [AttendeeController::class, 'showRating'])->name('attendee.report.info');
+    Route::get('/ratings/{eventSession}', [SessionRatingsController::class, 'index'])->name('sessions.ratings.index');
 });

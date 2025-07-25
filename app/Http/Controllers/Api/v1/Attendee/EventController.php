@@ -26,9 +26,13 @@ class EventController extends Controller
 {
     public function getEventDetailDashboard(String $eventApp)
     {
-        // dd(Auth::user());
         $eventApp = EventApp::find(Auth::user() ? Auth::user()->event_app_id : $eventApp);
         $eventApp->load(['event_sessions.eventSpeakers', 'event_sessions.eventPlatform']);
+        $eventApp->setRelation(
+            'event_sessions', $eventApp->event_sessions->filter(function ($session) {
+                return $session->is_favourite === true;
+            })->values()
+        );
         return $this->successResponse(new EventResource($eventApp));
     }
 

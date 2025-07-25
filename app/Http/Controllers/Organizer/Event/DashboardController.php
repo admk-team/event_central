@@ -21,9 +21,9 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        if (! Auth::user()->can('view_event_dashboard')) {
-            abort(403);
-        }
+        // if (! Auth::user()->can('view_event_dashboard')) {
+        //     abort(403);
+        // }
 
         $totalAttendee = EventApp::where('organizer_id', Auth::user()->id)->where('id', session('event_id'))->withCount('attendees')->get()->sum('attendees_count');
         $totalSession = EventApp::where('organizer_id', Auth::user()->id)->where('id', session('event_id'))
@@ -137,12 +137,12 @@ class DashboardController extends Controller
             return [
                 'ticketName' => $ticket->name,
                 'ticketsSold' => $purchasesForTicket->sum('qty'),
-                'totalRevenue' => $purchasesForTicket->sum('total'),
+                // 'totalRevenue' => $purchasesForTicket->sum('total'),
             ];
         })->toArray();
     
         // Sort by totalRevenue in descending order
-        usort($ticketsData, fn($a, $b) => $b['totalRevenue'] <=> $a['totalRevenue']);
+        usort($ticketsData, fn($a, $b) => $b['ticketsSold'] <=> $a['ticketsSold']);
     
         // Keep only top 5 tickets
         $topTickets = array_slice($ticketsData, 0, 5);

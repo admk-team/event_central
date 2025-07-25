@@ -135,6 +135,10 @@ class OrganizerPermissionsSeeder extends Seeder
          'edit_event_badge',
         //Reports 
         'view_attendees_report',
+
+        //contact forms
+        'view_contact_form',
+        'delete_contact_form',
     ];
 
     public function run(): void

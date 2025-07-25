@@ -198,9 +198,9 @@ export default function Login({
                                 </Button>{" "}
                                 <Button
                                     variant="info"
-                                    className="btn-icon btn-info"
+                                    className="btn-icon btn-dark"
                                 >
-                                    <i className="ri-twitter-fill fs-16"></i>
+                                    <i className="ri-twitter-x-line fs-16"></i>
                                 </Button>
                             </div>
                         </div>

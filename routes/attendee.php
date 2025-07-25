@@ -62,6 +62,7 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::get('session/{eventSession}', [EventController::class, 'getEventSessionDetail'])->name('attendee.event.detail.session');
         Route::get('speakers/{eventSpeaker?}', [EventController::class, 'getEventSpeakerDetail'])->name('attendee.event.detail.speakers');
         Route::get('more', [EventController::class, 'getEventDetailMore'])->name('attendee.event.detail.more');
+        Route::post('contact-form', [EventController::class, 'submitContectForm'])->name('attendee.event.detail.contact');
 
         //QR Routes
         Route::get('/qr-code/{eventApp}', [QrCodeController::class, 'getQrCode'])->name('attendee.qr-code.get');

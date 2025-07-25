@@ -7,6 +7,7 @@ use App\Http\Resources\Api\EventSessionResource;
 use App\Models\AttendeePurchasedTickets;
 use App\Models\EventApp;
 use App\Models\EventAppDate;
+use App\Models\EventCheckIns;
 use App\Models\EventPlatform;
 use App\Models\EventSession;
 use App\Models\SessionCheckIn;
@@ -81,7 +82,16 @@ class EventSessionController extends Controller
             'code' => 'required',
         ]);
 
-        $purchasedTicket = AttendeePurchasedTickets::where('code', $request->code)->first();
+        $qrcode = $request->code;
+
+        // Check if the code is a URL
+        if (filter_var($qrcode, FILTER_VALIDATE_URL)) {
+            // Extract the code from the URL
+            $urlParts = explode('/', $qrcode);
+            $qrcode = end($urlParts);  // Get the last part (the actual code)
+        }
+
+        $purchasedTicket = AttendeePurchasedTickets::where('code', $qrcode)->first();
 
         if (! $purchasedTicket) {
             return response()->json([
@@ -173,6 +183,14 @@ class EventSessionController extends Controller
             'attendee_id' => 'required',
             'code' => 'required',
         ]);
+        
+        $checkedIn = EventCheckIns::where('event_app_id', $event->id)
+            ->where('attendee_id', $request->attendee_id)
+            ->exists();
+
+        if (!$checkedIn) {
+            return $this->errorResponse("You are not checked in to the event.", 404);
+        }
 
         $purchasedTicket = AttendeePurchasedTickets::where('code', $request->code)->first();
 

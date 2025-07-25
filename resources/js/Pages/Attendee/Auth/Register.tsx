@@ -290,9 +290,9 @@ export default function Register() {
                                 </button>{" "}
                                 <button
                                     type="button"
-                                    className="btn btn-info btn-icon waves-effect waves-light"
+                                    className="btn btn-dark btn-icon waves-effect waves-light"
                                 >
-                                    <i className="ri-twitter-fill fs-16"></i>
+                                    <i className="ri-twitter-x-line fs-16"></i>
                                 </button>
                             </div>
                         </div>
