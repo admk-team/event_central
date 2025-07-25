@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Card, Col, Row } from 'react-bootstrap';
 import CountUp from 'react-countup';
-import { AudiencesCharts } from './DashboardAnalyticsCharts'; // Adjust path
+import { AudiencesCharts ,PieChart} from './DashboardAnalyticsCharts'; // Adjust path
 import { Link } from '@inertiajs/react';
 
 // Define the structure of each ticket data item

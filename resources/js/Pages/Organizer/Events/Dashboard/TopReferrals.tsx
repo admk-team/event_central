@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
 import { Link } from '@inertiajs/react';
+import { PieChart} from './DashboardAnalyticsCharts'; // Adjust path
 
 // Define the structure of each attendee data item
 interface AttendeeData {
@@ -56,7 +57,14 @@ const TopReferrals = ({ top10Attendee }: TopReferralsProps) => {
                                     </div>
                                 </Col>
                             </Row>
-                            <div className="mt-3 pt-2">
+                             <PieChart 
+                                dataColors='[ "#A3C1FF","#9FE2BF","#FFD580","#FFB6B6","#B0E0E6","#D8BFD8","#F0E68C","#E6E6FA","#F5DEB3","#FFE4E1"]'
+                                data={top10Attendee.attendeeData.map((attendee: any) => ({
+                                    name: `${attendee.first_name}`,
+                                    value: attendee.amountPaid,
+                                }))}
+                             />
+                            {/* <div className="mt-3 pt-2">
                                 <div className="progress progress-lg rounded-pill">
                                     {top10Attendee.attendeeData.map((attendee, index) => {
                                         const percentage = (attendee.amountPaid / maxAmount) * 100;
@@ -88,7 +96,7 @@ const TopReferrals = ({ top10Attendee }: TopReferralsProps) => {
                                         </div>
                                     </div>
                                 ))}
-                            </div>
+                            </div> */}
                         </Card.Body>
                     </Card>
                 </Link>

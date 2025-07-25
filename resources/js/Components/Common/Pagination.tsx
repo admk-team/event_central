@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { Button, Row } from "react-bootstrap";
 
 const Pagination = ({ links }: any) => {
+    if (!Array.isArray(links)) return null;
     return (
         <React.Fragment>
             <Row className="g-0 justify-content-end">

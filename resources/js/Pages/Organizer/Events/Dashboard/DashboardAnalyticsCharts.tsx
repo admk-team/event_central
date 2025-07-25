@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactApexChart from "react-apexcharts";
-
+import ReactEcharts from "echarts-for-react";
 import getChartColorsArray from "../../../../Components/Common/ChartsDynamicColor";
 interface CountriesChartsProps {
     dataColors: string; // String of color array (e.g., '["--vz-primary", "--vz-success"]')
@@ -12,6 +12,11 @@ interface AudiencesChartsProps {
     series: { name: string; data: number[] }[];
     sessionNames: string[]; // Now represents ticket names
 }
+interface PieChartProps {
+    dataColors: string;
+    data: { name: string; value: number }[];
+}
+
 const AudiencesCharts = ({ dataColors, series, sessionNames }: AudiencesChartsProps) => {
     const chartAudienceColumnChartsColors = getChartColorsArray(dataColors);
 
@@ -284,5 +289,48 @@ const UsersByDeviceCharts = ({ dataColors, series }:any) => {
     );
 };
 
+//Pie Chart
+const PieChart: React.FC<PieChartProps> = ({ dataColors, data }) => {
+    var chartPieColors = getChartColorsArray(dataColors);
+    var option = {
+        tooltip: {
+            trigger: 'item',
+            formatter: (params: any) => {
+                return `${params.name}: $${params.value.toLocaleString()} (${params.percent}%)`;
+            },
+        },
+        legend: {
+            orient: 'horizontal',
+            top: 'bottom',
+            textStyle: {
+                color: '#030303ff',
+            },
+        },
+        color: chartPieColors,
+        series: [{
+            name: 'Access From',
+            type: 'pie',
+            radius: '40%',
+            data: data,
+            emphasis: {
+                itemStyle: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            },
+        }],
+        textStyle: {
+            fontFamily: 'Poppins, sans-serif'
+        },
+    };
 
-export { AudiencesCharts, AudiencesSessionsCharts, CountriesCharts, UsersByDeviceCharts };
+    return (
+        <React.Fragment>
+            <ReactEcharts style={{ height: "350px" }} option={option} />
+        </React.Fragment>
+    )
+}
+
+
+export { AudiencesCharts, AudiencesSessionsCharts, CountriesCharts, UsersByDeviceCharts ,PieChart };
