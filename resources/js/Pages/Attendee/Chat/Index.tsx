@@ -37,7 +37,7 @@ import { onAddMessage, onDeleteMessage, onGetDirectContact, onGetMessages } from
 import axios from 'axios';
 import { useEchoPublic } from '@laravel/echo-react';
 
-const Chat = ({member,event_data,loged_user,unread_count}:any) => {
+const Chat = ({member,event_data,loged_user,unread_count,lastMessage}:any) => {
   
   const userChatShow: any = useRef();
 
@@ -112,9 +112,11 @@ const Chat = ({member,event_data,loged_user,unread_count}:any) => {
     }
     // remove unread msg on read in chat
     var unreadMessage: any = document.getElementById("unread-msg-user" + chats.id);
+    var lastMessage: any = document.getElementById("last-msg-user" + chats.id);
     var msgUser: any = document.getElementById("msgUser" + chats.id);
     if (unreadMessage) {
       unreadMessage.style.display = "none";
+      lastMessage.style.display = "none";
     }
     if (msgUser) {
       msgUser.classList.remove("unread-msg-user");
@@ -235,9 +237,25 @@ const Chat = ({member,event_data,loged_user,unread_count}:any) => {
                           </div>
                           <div className="flex-grow-1 overflow-hidden">
                             <p className="text-truncate mb-0">{event_data.name}</p>
+                            <small className="text-truncate mb-0" id={"last-msg-user" + event_data.id}>{lastMessage?.message ?? ''}</small>
                           </div>
                           <div className="flex-shrink-0" id={"unread-msg-user" + event_data.id}>
-                            <span className="badge bg-dark-subtle text-body rounded p-1">{unread_count > 0 ? unread_count : ''}</span>
+                            <span className="badge bg-dark-subtle text-body rounded p-1">
+                                {(() => {
+                                  if (!lastMessage?.created_at) return null;
+                                  const messageDate = new Date(lastMessage.created_at);
+                                  const now = new Date();
+
+                                  const isToday =
+                                    messageDate.getDate() === now.getDate() &&
+                                    messageDate.getMonth() === now.getMonth() &&
+                                    messageDate.getFullYear() === now.getFullYear();
+
+                                  return isToday
+                                    ? messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) // e.g., 10:15 AM
+                                    : messageDate.toLocaleDateString(); // e.g., 7/25/2025
+                                })()}
+                              </span>
                           </div>
                         </div>
                       </Link>

@@ -18,9 +18,10 @@ class ChatController extends Controller
         $member = ChatMember::currentEvent()->with('participant')->first();
         $event_data = EventApp::where('id', session('event_id'))->first();
         $loged_user = Auth::user()->id;
+        $lastMessage = ChatMessage::currentEvent()->with('sender')->latest('created_at')->first();
         $unread_count = $member->unread_count ?? 0;
 
-        return Inertia::render('Organizer/Events/Chat/Index', compact('member', 'event_data', 'loged_user','unread_count'));
+        return Inertia::render('Organizer/Events/Chat/Index', compact('member', 'event_data', 'loged_user','unread_count','lastMessage'));
     }
 
     public function getMessages()
