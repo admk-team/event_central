@@ -10,21 +10,67 @@ use Inertia\Inertia;
 
 class AttendeesReportController extends Controller
 {
-    public function index(Request $request)
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
     {
-        if (!Auth::user()->can('view_attendees')) {
+        if (! Auth::user()->can('view_attendee_report')) {
             abort(403);
         }
 
-        $query = Attendee::currentEvent()->with('eventCheckin');
+        $attendees = $this->datatable(Attendee::currentEvent()->with(['attendeeEventSessions', 'attendeeFavSession', 'payments', 'eventSelectedSessions', 'attendeePurchasedTickets']));
+        // dd($attendees->toArray());
+        return Inertia::render('Organizer/Events/Reports/AttendeeReport/Index', compact(
+            'attendees',
+        ));
+    }
 
-        // Apply date range filter on created_at if provided
-        if ($request->has(['start_date', 'end_date']) && $request->start_date && $request->end_date) {
-            $query->whereBetween('created_at', [$request->start_date, $request->end_date]);
-        }
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
+    }
 
-        $attendees = $this->datatable($query);
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        //
+    }
 
-        return Inertia::render('Organizer/Events/EventReports/AttendeeReport/Attendees', compact('attendees'));
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        //
     }
 }

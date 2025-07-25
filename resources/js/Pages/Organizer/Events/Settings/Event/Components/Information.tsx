@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Card, CardBody, CardHeader, CardText, CardTitle, Form, FormGroup, Spinner, Row, Col, InputGroup } from 'react-bootstrap';
 import toast from 'react-hot-toast';
 import ImageCroper from "../../../../../../Components/ImageCroper/Index";
+import QuillEditor from '../../../../../../Components/Quill/QuillEditor';
 
 export default function Information() {
     const event = usePage().props.event as Record<string, string>;
@@ -167,14 +168,14 @@ export default function Information() {
                         </FormGroup>
                         <FormGroup className="mb-3">
                             <Form.Label className="form-label">Event Description</Form.Label>
-                            <Form.Control
-                                as="textarea"
-                                className="form-control"
+                            <div className={!!errors.description ? "is-invalid" : ""}>
+                                <QuillEditor
                                 value={data.description}
-                                onChange={(e) => setData({ ...data, description: e.target.value })}
-                                isInvalid={!!errors.description}
-                                style={{ height: '100px' }}
-                            />
+                                onChange={(val) => setData({ ...data, description: val })}
+                                placeholder="Enter description"
+                                className="form-control"
+                                />
+                            </div>
                             {errors.description && (
                                 <Form.Control.Feedback type="invalid">{errors.description}</Form.Control.Feedback>
                             )}

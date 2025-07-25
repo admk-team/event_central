@@ -5,6 +5,7 @@ use App\Http\Controllers\Organizer\Event\RefundPaymentController;
 use App\Http\Controllers\Organizer\Event\AddonController;
 use App\Http\Controllers\Organizer\Event\AssignTicketController;
 use App\Http\Controllers\Organizer\Event\BadgePrintController;
+use App\Http\Controllers\Organizer\Event\ChatController;
 use App\Http\Controllers\Organizer\Event\ContactFormController;
 use App\Http\Controllers\Organizer\Event\CustomMenuController;
 use App\Http\Controllers\Organizer\Event\DashboardController;
@@ -35,6 +36,9 @@ use App\Http\Controllers\Organizer\Event\FormFieldController;
 use App\Http\Controllers\Organizer\Event\QuestionnaireFormFieldController;
 use App\Http\Controllers\Organizer\Event\RefferalLinkController;
 use App\Http\Controllers\Organizer\Event\Reports\AttendeesReportController;
+use App\Http\Controllers\Organizer\Event\Reports\RefundTicketReportController;
+use App\Http\Controllers\Organizer\Event\Reports\SessionReportController;
+use App\Http\Controllers\Organizer\Event\Reports\TicketsReportController;
 use App\Http\Controllers\Organizer\Event\SessionAttendanceController;
 use App\Http\Controllers\Organizer\Event\SessionRatingsController;
 use App\Http\Controllers\Organizer\Event\Settings\QuestionnaireFormSettingsController;
@@ -56,8 +60,9 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('e/{uuid}')->name('organizer.events.website')->group(function () {
     Route::get('/', [WebsiteController::class, 'index']);
     Route::get('schedule', [WebsiteController::class, 'schedule'])->name('.schedule');
-    Route::get('speakers', [WebsiteController::class, 'speakers'])->name('.speakers');
+    Route::get('speakers', [WebsiteController::class, 'speake-rs'])->name('.speakers');
     Route::get('sponsors', [WebsiteController::class, 'sponsors'])->name('.sponsors');
+    Route::get('sponsors/{id}', [WebsiteController::class, 'sponsorsSingle'])->name('.sponsors.single');
     Route::get('exhibitors', [WebsiteController::class, 'exhibitors'])->name('.exhibitors');
     Route::get('tickets', [WebsiteController::class, 'tickets'])->name('.tickets');
     Route::get('privacy-policy', [WebsiteController::class, 'privacypolicy'])->name('.privacy');
@@ -163,6 +168,11 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::resource('promo-codes', EventPromoCodeController::class)->only(['index', 'store', 'update', 'destroy']);
             Route::delete('promo-codes/delete/many', [EventPromoCodeController::class, 'destroyMany'])->name('promo-codes.destroy.many');
 
+            // Chat
+            Route::resource('chat', ChatController::class);
+            Route::get('get-chat', [ChatController::class, 'getMessages'])->name('get-messages');
+            Route::post('send-message', [ChatController::class, 'store']);
+
             // Ticket Fees
             Route::resource('ticket-fees', EventAppFeeController::class)->only(['index', 'store', 'update', 'destroy']);
             Route::delete('ticket-fees/delete/many', [EventAppFeeController::class, 'destroyMany'])->name('ticket-fees.destroy.many');
@@ -240,6 +250,14 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                     Route::post('/toggle-status', [WebsiteSettingsController::class, 'toggleStatus'])->name('toggle-status');
                     Route::post('/save-colors', [WebsiteSettingsController::class, 'saveColors'])->name('save-colors');
                 });
+            });
+
+            // Reports
+            Route::prefix('report')->name('report.')->group(function () {
+                Route::resource('attendee', AttendeesReportController::class);
+                Route::resource('session', SessionReportController::class);
+                Route::resource('ticket', TicketsReportController::class);
+                Route::resource('refund-ticket', RefundTicketReportController::class);
             });
 
             Route::post('import/{importType}', [ImportController::class, 'import'])->name('import');
