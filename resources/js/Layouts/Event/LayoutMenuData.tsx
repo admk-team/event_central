@@ -32,7 +32,6 @@ const Navdata = () => {
     const [isEmailTemplate, setIsEmailTemplate] = useState<boolean>(false);
     const [isChat, setIsChat] = useState<boolean>(false);
     const [isContactForm, setIsContactForm] = useState<boolean>(false);
-    const [isReport, setIsReport] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>("Dashboard");
 
@@ -74,7 +73,7 @@ const Navdata = () => {
         if (iscurrentState !== 'upgradeTicket') setIsTickets(false);
         if (iscurrentState !== 'refferal-link') setIsRefferalLink(false);
         if (iscurrentState !== 'event_badge') setIsEventBadge(false);
-        if (iscurrentState !== 'reporting') setIsReport(false);
+        if (iscurrentState !== 'Report') setIsReport(false);
         if (iscurrentState !== "chat") setIsChat(false);
         if (iscurrentState !== "Questionnaire_response")
             setIsQuestionnaireResponse(false);
