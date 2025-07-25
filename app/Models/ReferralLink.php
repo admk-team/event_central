@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class RefferalLink extends Model
+class ReferralLink extends Model
 {
     use HasFactory;
     protected $fillable = ['code', 'event_app_id', 'url', 'nextcount', 'name'];

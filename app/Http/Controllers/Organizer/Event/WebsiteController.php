@@ -8,7 +8,7 @@ use App\Models\EventPartner;
 use App\Models\EventPartnerCategory;
 use App\Models\EventPlatform;
 use App\Models\Page;
-use App\Models\RefferalLink;
+use App\Models\ReferralLink;
 use App\Models\Track;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -37,7 +37,7 @@ class WebsiteController extends Controller
                 session(['referral_link' => $currentUrl]);
                 Log::info('URL set in session: ' . $currentUrl);
                 if (session('referral_link')) {
-                    $link = RefferalLink::where('url', $currentUrl)->first();
+                    $link = ReferralLink::where('url', $currentUrl)->first();
                     if ($link) {
                         $link->nextcount += 1;
                         $link->save();
@@ -45,7 +45,6 @@ class WebsiteController extends Controller
                 }
             }
         }
-        return view('event-website.index', compact('event', 'colors', 'partnerCategories'));
         $exhibitors = EventPartner::where('event_app_id', $event->id)->where('type', 'exhibitor')->orderBy('company_name', 'asc')->get();
         return view('event-website.index', compact('event', 'colors', 'partnerCategories', 'exhibitors'));
     }

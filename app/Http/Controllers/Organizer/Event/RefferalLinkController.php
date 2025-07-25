@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Organizer\Event;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organizer\Event\RefferalLinkRequest;
 use App\Models\EventApp;
-use App\Models\RefferalLink;
+use App\Models\ReferralLink;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -20,7 +20,7 @@ class RefferalLinkController extends Controller
         }
     
         $data = $this->datatable(
-        RefferalLink::currentEvent()->withCount(['attendees as successful']));
+        ReferralLink::currentEvent()->withCount(['attendees as successful']));
         return Inertia::render('Organizer/Events/RefferalLink/Index', compact('data'));
     }
     public function store(RefferalLinkRequest $request)
@@ -42,7 +42,7 @@ class RefferalLinkController extends Controller
             $validatedData['url'] = $url . '?link=' . $title . '-' . $validatedData['code'];
     
             // Create the PartnerLink record
-            $data = RefferalLink::create($validatedData);
+            $data = ReferralLink::create($validatedData);
         }
     
         // Check if the data is successfully created
@@ -55,7 +55,7 @@ class RefferalLinkController extends Controller
         }
     }
 
-    public function destroy(RefferalLink $refferal_link)
+    public function destroy(ReferralLink $refferal_link)
     {
         if (! Auth::user()->can('delete_referral_link')) {
             abort(403);
@@ -81,7 +81,7 @@ class RefferalLinkController extends Controller
         ]);
 
         foreach ($request->ids as $id) {
-            RefferalLink::find($id)?->delete();
+            ReferralLink::find($id)?->delete();
         }
 
         return back()->withSuccess('Deleted');
