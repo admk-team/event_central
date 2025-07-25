@@ -27,11 +27,11 @@ const Navdata = () => {
     const [isUpgradeTicket, setUpgradeTicket] = useState<boolean>(false);
     const [isRefferalLink, setIsRefferalLink] = useState<boolean>(false);
     const [isEventBadge, setIsEventBadge] = useState<boolean>(false);
-    const [isReport, setIsReport] = useState<boolean>(false);
     const [isBaseTemplate, setIsBaseTemplate] = useState<boolean>(false);
     const [isEmailTemplate, setIsEmailTemplate] = useState<boolean>(false);
     const [isChat, setIsChat] = useState<boolean>(false);
     const [isContactForm, setIsContactForm] = useState<boolean>(false);
+    const [isReport, setIsReport] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>("Dashboard");
 
@@ -64,16 +64,12 @@ const Navdata = () => {
             setIsSessionAttendance(false);
         if (iscurrentState !== "Tickets") setIsTickets(false);
         // if (iscurrentState !== 'refundTicket') setIsRefundTicket(false);
-        if (iscurrentState !== 'Questionnaire') setIsQuestionnaireForm(false);
-        if (iscurrentState !== 'BaseTemplate') setIsBaseTemplate(false);
-        if (iscurrentState !== 'EmailTemplate') setIsEmailTemplate(false);
-        if (iscurrentState !== 'ContactForm') setIsContactForm(false);
-        if (iscurrentState !== 'Questionnaire_response') setIsQuestionnaireResponse(false);
-        if (iscurrentState !== 'assignTickets') setIsTickets(false);
-        if (iscurrentState !== 'upgradeTicket') setIsTickets(false);
-        if (iscurrentState !== 'refferal-link') setIsRefferalLink(false);
-        if (iscurrentState !== 'event_badge') setIsEventBadge(false);
-        if (iscurrentState !== 'Report') setIsReport(false);
+        if (iscurrentState !== "Questionnaire") setIsQuestionnaireForm(false);
+        if (iscurrentState !== "BaseTemplate") setIsBaseTemplate(false);
+        if (iscurrentState !== "EmailTemplate") setIsEmailTemplate(false);
+        if (iscurrentState !== "ContactForm") setIsContactForm(false);
+        if (iscurrentState !== "refferal-link") setIsRefferalLink(false);
+        if (iscurrentState !== "event_badge") setIsEventBadge(false);
         if (iscurrentState !== "chat") setIsChat(false);
         if (iscurrentState !== "Questionnaire_response")
             setIsQuestionnaireResponse(false);
@@ -414,7 +410,6 @@ const Navdata = () => {
             hasPermissions: ["print_badges"],
         },
         // ...(isEventStarted ? [{
-        
 
         // {
         //     id: "chat",
@@ -552,7 +547,7 @@ const Navdata = () => {
                 "view_attendee_report",
                 "view_ticket_report",
                 "view_session_report",
-                "view_refund_ticket_report"
+                "view_refund_ticket_report",
             ],
             subItems: [
                 {
