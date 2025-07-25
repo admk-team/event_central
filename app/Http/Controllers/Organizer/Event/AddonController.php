@@ -23,7 +23,7 @@ class AddonController extends Controller
         }
 
         $addons = $this->datatable(
-            Addon::with(['attributes.options'])->currentEvent()
+            Addon::with(['attributes.options', 'variants.attributeValues'])->currentEvent()
         );
         $tickets = EventAppTicket::currentEvent()->orderBy('name', 'asc')->get();
 
@@ -122,6 +122,8 @@ class AddonController extends Controller
 
     public function createUpdateVariants($addon, $request)
     {
+        $attributeIndexToIdMap = [];
+
         // Delete existing attributes and options if they are marked as deleted
         foreach ($request->input('deletedAttributes') ?? [] as $deletedAttributeId) {
             $addon->attributes()->where('id', $deletedAttributeId)->delete();
@@ -129,7 +131,7 @@ class AddonController extends Controller
         AddonAttributeOption::whereIn('id', $request->input('deletedOptions') ?? [])->delete();
 
         // Create attributes
-        foreach ($request->input('attributes') ?? [] as $attribute) {
+        foreach ($request->input('attributes') ?? [] as $attributeIndex => $attribute) {
             if (! $attribute['name']) continue;
 
             $attributeModel = null;
@@ -147,7 +149,12 @@ class AddonController extends Controller
                 ]);
             }
 
-            foreach ($attribute['options'] ?? [] as $option) {
+            $attributeIndexToIdMap[$attributeIndex] = [
+                'id' => $attributeModel->id,
+                'options' => [],
+            ];
+
+            foreach ($attribute['options'] ?? [] as $optionIndex => $option) {
                 if (! $option['value']) continue;
 
                 if (isset($option['id'])) {
@@ -158,10 +165,12 @@ class AddonController extends Controller
                         ]);
                     }
                 } else {
-                    $attributeModel->options()->create([
+                    $optionModel = $attributeModel->options()->create([
                         'value' => $option['value'],
                     ]);
                 }
+
+                $attributeIndexToIdMap[$attributeIndex]['options'][$optionIndex] = $optionModel->id;
             }
         }
 
@@ -188,6 +197,14 @@ class AddonController extends Controller
                 $variantModel = $addon->variants()->create($variantData);
             }
 
+            foreach ($variant['attribute_values'] as $attributeValue) {
+                if (isset($attributeValue['attribute_index']) && isset($attributeValue['option_index'])) {
+                    $variantModel->attributeValues()->create([
+                        'addon_attribute_id' => $attributeIndexToIdMap[$attributeValue['attribute_index']]['id'],
+                        'addon_attribute_option_id' => $attributeIndexToIdMap[$attributeValue['attribute_index']]['options'][$attributeValue['option_index']],
+                    ]);
+                }
+            }
             
         }
     }

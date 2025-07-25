@@ -61,12 +61,10 @@ export default function CreateEditModal({
             enable_discount: addon?.enable_discount ?? true,
             event_app_ticket_id: addon?.event_app_ticket_id,
             attributes: addon?.attributes ?? [],
-            variants: addon?.varients ?? [],
+            variants: addon?.variants ?? [],
             deletedAttributes: [],
             deletedOptions: [],
         });
-
-    console.log(data);
 
     const submit = (e: any) => {
         e.preventDefault();

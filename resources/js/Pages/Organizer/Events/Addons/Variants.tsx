@@ -12,7 +12,7 @@ import {
     Badge,
     Table,
 } from "react-bootstrap";
-import { useEffect, useState } from 'react'
+import { useEffect, useReducer, useState } from 'react'
 import InputGroup from 'react-bootstrap/InputGroup';;
 import { add } from 'date-fns';
 import { Plus, Trash, Trash2 } from 'lucide-react';
@@ -57,227 +57,194 @@ type VariantsProps = {
     onDataChange: (data: Omit<Data, 'defaultPrice'>) => void;
 }
 
-export default function Variants({ data, onDataChange }: VariantsProps) {
-    const [attributes, _setAttributes] = useState<Attribute[]>(data.attributes);
-    const [variants, _setVariants] = useState<Variant[]>(data.variants);
-    const [deletedAttributes, _setDeletedAttributes] = useState<number[]>([]);
-    const [deletedOptions, _setDeletedOptions] = useState<number[]>([]);
-    const [deletedVariants, _setDeletedVariants] = useState<number[]>([]);
+type State = {
+    attributes: Attribute[];
+    variants: Variant[];
+    deletedAttributes: number[];
+    deletedOptions: number[];
+    deletedVariants: number[];
+}
 
-    const setAttributes = (newAttributes: Attribute[]) => {
-        _setAttributes(newAttributes);
-        onDataChange && onDataChange({
-            attributes: newAttributes,
-            variants: variants,
-            deletedAttributes: deletedAttributes,
-            deletedOptions: deletedOptions,
-        });
-    }
+type AddAttribute = {
+    type: 'add_attribute';
+}
 
-    const setVariants = (newVariants: Variant[]) => {
-        _setVariants(newVariants);
-        onDataChange && onDataChange({
-            attributes: attributes,
-            variants: newVariants,
-            deletedAttributes: deletedAttributes,
-            deletedOptions: deletedOptions,
-        });
-    }
+type EditAttributeAction = {
+    type: 'edit_attribute';
+    index: number;
+    edit: boolean;
+}
 
-    const setDeletedAttributes = (newDeletedAttributes: number[]) => {
-        _setDeletedAttributes(newDeletedAttributes);
-        onDataChange && onDataChange({
-            attributes: attributes,
-            variants: variants,
-            deletedAttributes: newDeletedAttributes,
-            deletedOptions: deletedOptions,
-        });
-    }
+type UpdateAttributeName = {
+    type: 'update_attribute_name';
+    index: number;
+    name: string;
+}
 
-    const setDeletedOptions = (newDeletedOptions: number[]) => {
-        _setDeletedOptions(newDeletedOptions);
-        onDataChange && onDataChange({
-            attributes: attributes,
-            variants: variants,
-            deletedAttributes: deletedAttributes,
-            deletedOptions: newDeletedOptions,
-        });
-    }
+type DeleteAttribute = {
+    type: 'delete_attribute';
+    index: number;
+    id?: number;
+}
 
-    const setDeletedVariants = (newDeletedVariants: number[]) => {
-        _setDeletedVariants(newDeletedVariants);
-        onDataChange && onDataChange({
-            attributes: attributes,
-            variants: variants,
-            deletedAttributes: deletedAttributes,
-            deletedOptions: deletedOptions,
-            deletedVariants: newDeletedVariants,
-        });
-    }
+type AddOption = {
+    type: 'add_option';
+    attributeIndex: number;
+}
 
-    const getNonEmptyAttributes = (attributes: Attribute[]) => {
-        return attributes.filter(attribute => attribute.name !== '' && getNonEmptyOptions(attribute).length > 0);
-    }
+type UpdateOptionValue = {
+    type: 'update_option_value';
+    attributeIndex: number;
+    optionIndex: number;
+    value: string;
+}
 
-    const getNonEmptyOptions = (attribute: Attribute) => {
-        return attribute.options.filter(option => option.value !== '');
-    }
+type DeleteOption = {
+    type: 'delete_option';
+    attributeIndex: number;
+    optionIndex: number;
+    optionId?: number;
+}
 
-    const addNewAttribute = () => {
-        setAttributes([
-            ...attributes,
-            {
-                name: '',
-                options: [
-                    { value: '' },
+type UpdateVariantPrice = {
+    type: 'update_variant_price';
+    index: number;
+    price: number;
+}
+
+type UpdateVariantQty = {
+    type: 'update_variant_qty';
+    index: number;
+    qty: number;
+}
+
+type Action = AddAttribute | EditAttributeAction | UpdateAttributeName | DeleteAttribute | AddOption | UpdateOptionValue | DeleteOption | UpdateVariantPrice | UpdateVariantQty;
+
+const reducer = (state: State, action: Action): State => {
+    switch (action.type) {
+        case 'add_attribute': {
+            return {
+                ...state,
+                attributes: [
+                    ...state.attributes,
+                    {
+                        name: '',
+                        options: [
+                            { value: '' },
+                        ],
+                        edit: true,
+                    }
+                ]
+            }
+        }
+        case 'edit_attribute': {
+            let newState = {
+                ...state,
+                attributes: state.attributes.map((attribute, i) => i === action.index ? {...attribute, edit: action.edit} : attribute)
+            };
+            newState = generateVariants(newState);
+            return newState;
+        }
+        case 'update_attribute_name': {
+            let newState = {
+                ...state,
+                attributes: state.attributes.map((attribute, i) => i === action.index ? {...attribute, name: action.name} : attribute)
+            };
+            newState = generateVariants(newState);
+            return newState;
+        }
+        case 'delete_attribute': {
+            let newState = {
+                ...state,
+                attributes: state.attributes.filter((_, i) => i !== action.index),
+                deletedAttributes: [
+                    ...state.deletedAttributes,
+                    ...(action.id ? [action.id] : [])
                 ],
-                edit: true,
-            }
-        ])
-    }
-
-    const setAttribute = (index: number, newAttribute: Attribute) => {
-        setAttributes(attributes.map((attribute, attrIndex) => {
-            if (attrIndex === index) {
-                return newAttribute;
-            }
-            return attribute;
-        }))
-    }
-
-    const deleteAttribute = (index: number, id?: number) => {
-        setAttributes(attributes.filter((_, attrIndex) => attrIndex !== index));
-        if (id) {
-            setDeletedAttributes([...deletedAttributes, id]);
+            };
+            newState = generateVariants(newState);
+            return newState;
         }
-    }
-
-    const getOptionByAttributeValue = (attributeValue: AttributeValue) => {
-        const isOld = attributeValue.addon_attribute_id !== undefined && attributeValue.addon_attribute_option_id !== undefined;
-
-        if (isOld) {
-            const attribute = attributes.find(attr => attr.id === attributeValue.addon_attribute_id) as Attribute;
-            if (!attribute) return null;
-            return getNonEmptyOptions(attribute).find(opt => opt.id === attributeValue.addon_attribute_option_id);
-
-        } else {
-            const attribute = attributes[attributeValue.attribute_index as number];
-            if (!attribute) return null;
-            return getNonEmptyOptions(attribute)[attributeValue.option_index as number];
-        }
-    }
-
-    const addOption = (attributeIndex: number) => {
-        setAttributes(attributes.map((attribute, index) => {
-            if (index === attributeIndex) {
-                return {
-                    ...attribute,
-                    options: [
-                        ...attribute.options,
-                        { value: '' }
-                    ]
-                }
-            }
-            return attribute;
-        }))
-    }
-
-    const setOption = (attributeIndex: number, optionIndex: number, newOption: Option) => {
-        setAttributes(attributes.map((attribute, index) => {
-            if (index === attributeIndex) {
-                return {
-                    ...attribute,
-                    options: attribute.options.map((option, optIndex) => {
-                        if (optIndex === optionIndex) {
-                            return newOption;
+        case 'add_option': {
+            return {
+                ...state,
+                attributes: state.attributes.map((attribute, i) => {
+                    if (i === action.attributeIndex) {
+                        return {
+                            ...attribute,
+                            options: [...attribute.options, { value: '' }]
                         }
-                        return option;
-                    })
-                }
+                    }
+                    return attribute;
+                })
+            };
+        }
+        case 'update_option_value': {
+            let newState = {
+                ...state,
+                attributes: state.attributes.map((attribute, aIndex) => {
+                    if (aIndex === action.attributeIndex) {
+                        return {
+                            ...attribute,
+                            options: attribute.options.map((option, oIndex) => oIndex === action.optionIndex ? {...option, value: action.value} : option)
+                        };
+                    }
+                    return attribute;
+                })
+            };
+            newState = generateVariants(newState);
+            return newState;
+        }
+        case 'delete_option': {
+            let newState = {
+                ...state,
+                attributes: state.attributes.map((attribute, aIndex) => {
+                    if (aIndex === action.attributeIndex) {
+                        return {
+                            ...attribute,
+                            options: attribute.options.filter((_, oIndex) => oIndex !== action.optionIndex)
+                        };
+                    }
+                    return attribute;
+                }),
+                deletedOptions: [
+                    ...state.deletedOptions,
+                    ...(action.optionId ? [action.optionId]: [])
+                ]
+            };
+            newState = generateVariants(newState);
+            return newState;
+        }
+        case 'update_variant_price': {
+            return {
+                ...state,
+                variants: state.variants.map((variant, i) => i === action.index ? {...variant, price: action.price} : variant)
             }
-            return attribute;
-        }))
-    }
-
-    const deleteOption = (attributeIndex: number, optionIndex: number, id?: number) => {
-        setAttributes(attributes.map((attribute, index) => {
-            if (index === attributeIndex) {
-                return {
-                    ...attribute,
-                    options: attribute.options.filter((_, optIndex) => optIndex !== optionIndex)
-                }
+        }
+        case 'update_variant_qty': {
+            return {
+                ...state,
+                variants: state.variants.map((variant, i) => i === action.index ? {...variant, qty: action.qty} : variant)
             }
-            return attribute;
-        }))
-
-        if (id) {
-            setDeletedOptions([...deletedOptions, id]);
+        }
+        default: {
+            throw Error('Unknown action');
         }
     }
+}
+
+export default function Variants({ data, onDataChange }: VariantsProps) {
+    const [state, dispatch] = useReducer(reducer, {
+        attributes: data.attributes,
+        variants: data.variants,
+        deletedAttributes: [],
+        deletedOptions: [],
+        deletedVariants: [],
+    });
 
     useEffect(() => {
-        let newVariants: Variant[] = [];
-        getNonEmptyAttributes(attributes).forEach((attribute, attrIndex) => {
-            const nonEmptyOption = getNonEmptyOptions(attribute);
-            const optionsCount = nonEmptyOption.length;
-            
-            if (optionsCount === 0) return;
-            
-            if (newVariants.length === 0) {
-                nonEmptyOption.forEach((_, optIndex) => {
-                    newVariants.push({
-                        price: data.defaultPrice,
-                        qty: 0,
-                        attribute_values: [
-                            {
-                                attribute_index: attrIndex,
-                                option_index: optIndex,
-                            }
-                        ]
-                    });
-                })
-                return;
-            }
-            
-            const variantGroups: Variant[][] = [];
-            newVariants.forEach((variant) => {
-                const group: Variant[] = [];
-                for (let i = 1; i <= optionsCount; ++i) {
-                    group.push(JSON.parse(JSON.stringify(variant)));
-                }
-                variantGroups.push(group);
-            });
-            newVariants = variantGroups.flat();
-       
-            newVariants.forEach((_, variantIndex) => {
-                const optionIndex = variantIndex % (optionsCount);
-                newVariants[variantIndex].attribute_values.push({
-                    attribute_index: attrIndex,
-                    option_index: optionIndex,
-                });
-            });
-        })
-
-        newVariants = newVariants.map(variant => {
-            variants.forEach(oldVariant => {
-                if (oldVariant.attribute_values.length === variant.attribute_values.length &&
-                    oldVariant.attribute_values.every((val, index) => {
-                        return getOptionByAttributeValue(variant.attribute_values[index])?.value === getOptionByAttributeValue(val)?.value;
-                    })) {
-                    return {
-                        ...variant,
-                        id: oldVariant.id,
-                        price: oldVariant.price,
-                        qty: oldVariant.qty,
-                    };
-                }
-            });
-
-            return variant;
-        });
-
-        setVariants(newVariants);
-    }, [attributes])
+        onDataChange && onDataChange(state);
+    }, [state])
 
     return (
         <>
@@ -286,10 +253,10 @@ export default function Variants({ data, onDataChange }: VariantsProps) {
                 {/* Attributes */}
                 <div>
                     <ListGroup className="mb-1">
-                        {attributes.map((attribute, index) => (
+                        {state.attributes.map((attribute, index) => (
                             <ListGroup.Item key={index} className="p-0">
                                 {!attribute.edit ? (
-                                    <div className="px-4 py-3 cursor-pointer addon-attr-option" onClick={() => setAttribute(index, { ...attribute, edit: true })}>
+                                    <div className="px-4 py-3 cursor-pointer addon-attr-option" onClick={() => dispatch({ type: 'edit_attribute', index, edit: true })}>
                                         <div className="fw-bold mb-2">{attribute.name}</div>
                                         <div className="d-flex flex-wrap gap-2">
                                             {getNonEmptyOptions(attribute).map((option, optionIndex) => (
@@ -304,7 +271,7 @@ export default function Variants({ data, onDataChange }: VariantsProps) {
                                             <Form.Control
                                                 type="text"
                                                 value={attribute.name}
-                                                onChange={(e) => setAttribute(index, { ...attribute, name: e.target.value })}
+                                                onChange={(e) => dispatch({ type: 'update_attribute_name', index, name: e.target.value })}
                                             />
                                         </FormGroup>
                                         <FormGroup className="mb-3">
@@ -314,22 +281,20 @@ export default function Variants({ data, onDataChange }: VariantsProps) {
                                                     <Form.Control
                                                         type="text"
                                                         value={option.value}
-                                                        onChange={(e) => {
-                                                            setOption(index, optionIndex, { ...option, value: e.target.value });
-                                                        }}
+                                                        onChange={(e) => dispatch({ type: 'update_option_value', attributeIndex: index, optionIndex, value: e.target.value })}
                                                     />
                                                     {attribute.options.length > 1 && (
-                                                        <Button size="sm" variant="danger" onClick={() => deleteOption(index, optionIndex, option.id)}><Trash2 size={16} /></Button>
+                                                        <Button size="sm" variant="danger" onClick={() => dispatch({ type: 'delete_option', attributeIndex: index, optionIndex, optionId: option.id})}><Trash2 size={16} /></Button>
                                                     )}
                                                 </InputGroup>
                                             ))}
-                                            <Button variant="light" className="w-100" onClick={() => addOption(index)}><Plus size={16} /></Button>
+                                            <Button variant="light" className="w-100" onClick={() => dispatch({ type: 'add_option', attributeIndex: index })}><Plus size={16} /></Button>
                                         </FormGroup>
                                         <div className="d-flex justify-content-between align-items-center">
-                                            <Button variant="danger" onClick={() => deleteAttribute(index, attribute.id)}>Delete</Button>
+                                            <Button variant="danger" onClick={() => dispatch({ type: 'delete_attribute', index, id: attribute.id })}>Delete</Button>
                                             <Button
                                                 variant="secondary"
-                                                onClick={() => setAttribute(index, { ...attribute, edit: false })}
+                                                onClick={() => dispatch({ type: 'edit_attribute', index, edit: false })}
                                                 disabled={!attribute.name || !attribute.options[0].value}
                                             >Done</Button>
                                         </div>
@@ -341,7 +306,7 @@ export default function Variants({ data, onDataChange }: VariantsProps) {
                     <Button
                         variant="light"
                         className="d-block w-100 d-flex align-items-center justify-content-center"
-                        onClick={addNewAttribute}
+                        onClick={() => dispatch({ type: 'add_attribute' })}
                     >
                         Add new attribute
                     </Button>
@@ -361,10 +326,10 @@ export default function Variants({ data, onDataChange }: VariantsProps) {
                         </tr>
                     </thead>
                     <tbody>
-                        {variants.map((variant, index) => (
+                        {state.variants.map((variant, index) => (
                             <tr key={index}>
                                 <td>
-                                    {variant.attribute_values.map((attrVal) => getOptionByAttributeValue(attrVal)?.value).join(' / ')}
+                                    {variant.attribute_values.map((attrVal) => getOptionByAttributeValue(attrVal, state)?.value).join(' / ')}
                                 </td>
                                 <td>
                                     <Form.Control
@@ -372,7 +337,7 @@ export default function Variants({ data, onDataChange }: VariantsProps) {
                                         value={variant.price}
                                         onChange={(e) => {
                                             const newPrice = parseFloat(e.target.value);
-                                            setVariants(variants.map((v, vIndex) => vIndex === index ? { ...v, price: isNaN(newPrice) ? 0 : newPrice } : v));
+                                            dispatch({ type: 'update_variant_price', index, price: newPrice });
                                         }}
                                     />
                                 </td>
@@ -382,7 +347,7 @@ export default function Variants({ data, onDataChange }: VariantsProps) {
                                         value={variant.qty}
                                         onChange={(e) => {
                                             const newQty = parseInt(e.target.value, 10);
-                                            setVariants(variants.map((v, vIndex) => vIndex === index ? { ...v, qty: isNaN(newQty) ? 0 : newQty } : v));
+                                            dispatch({ type: 'update_variant_qty', index, qty: newQty })
                                         }}
                                     />
                                 </td>
@@ -393,4 +358,126 @@ export default function Variants({ data, onDataChange }: VariantsProps) {
             </Col>
         </>
     )
+}
+
+function generateVariants(state: State): State {
+    let newVariants: Variant[] = [];
+    getNonEmptyAttributes(state.attributes).forEach((attribute, attrIndex) => {
+        const nonEmptyOption = getNonEmptyOptions(attribute);
+        const optionsCount = nonEmptyOption.length;
+        
+        if (optionsCount === 0) return;
+        
+        if (newVariants.length === 0) {
+            nonEmptyOption.forEach((_, optIndex) => {
+                newVariants.push({
+                    price: 0,
+                    qty: 0,
+                    attribute_values: [
+                        {
+                            attribute_index: attrIndex,
+                            option_index: optIndex,
+                        }
+                    ]
+                });
+            })
+            return;
+        }
+        
+        const variantGroups: Variant[][] = [];
+        newVariants.forEach((variant) => {
+            const group: Variant[] = [];
+            for (let i = 1; i <= optionsCount; ++i) {
+                group.push(JSON.parse(JSON.stringify(variant)));
+            }
+            variantGroups.push(group);
+        });
+        newVariants = variantGroups.flat();
+    
+        newVariants.forEach((_, variantIndex) => {
+            const optionIndex = variantIndex % (optionsCount);
+            newVariants[variantIndex].attribute_values.push({
+                attribute_index: attrIndex,
+                option_index: optionIndex,
+            });
+        });
+    })
+
+    newVariants = newVariants.map(variant => {
+        state.variants.forEach(oldVariant => {
+            if (oldVariant.attribute_values.length === variant.attribute_values.length &&
+                oldVariant.attribute_values.every((val, index) => {
+                    return getOptionByAttributeValue(variant.attribute_values[index], state)?.value === getOptionByAttributeValue(val, state)?.value;
+                })) {
+                return {
+                    ...variant,
+                    id: oldVariant.id,
+                    price: oldVariant.price,
+                    qty: oldVariant.qty,
+                };
+            }
+        });
+
+        return variant;
+    });
+
+    // Copy data from old variants to new variants
+    state.variants.forEach((oldVariant) => {
+        const oldVariantAttributeCount = oldVariant.attribute_values.length;
+        let matchFound = false;
+
+        newVariants = newVariants.map((newVariant) => {
+            let matchedAttributes = 0;
+            oldVariant.attribute_values.forEach((oldAttributeValue) => {
+                newVariant.attribute_values.forEach((newAttributeValue) => {
+                    if (getOptionByAttributeValue(oldAttributeValue, state)?.value === getOptionByAttributeValue(newAttributeValue, state)?.value) {
+                        ++matchedAttributes;
+                    }
+                })
+            })
+
+            if (matchedAttributes === oldVariantAttributeCount) {
+                matchFound = true;
+                return {
+                    ...newVariant,
+                    id: oldVariant.id,
+                    price: oldVariant.price,
+                    qty: oldVariant.qty,
+                }
+            }
+
+            return newVariant;
+        })
+
+        if (!matchFound && oldVariant.id) {
+            state.deletedVariants.push(oldVariant.id);
+        }
+    })
+    
+    state.variants = newVariants;
+
+    return state;
+}
+
+function getNonEmptyAttributes(attributes: Attribute[]) {
+    return attributes.filter(attribute => attribute.name !== '' && getNonEmptyOptions(attribute).length > 0);
+}
+
+function getNonEmptyOptions(attribute: Attribute) {
+    return attribute.options.filter(option => option.value !== '');
+}
+
+function getOptionByAttributeValue(attributeValue: AttributeValue, state: State) {
+    const isOld = attributeValue.addon_attribute_id !== undefined && attributeValue.addon_attribute_option_id !== undefined;
+
+    if (isOld) {
+        const attribute = state.attributes.find(attr => attr.id === attributeValue.addon_attribute_id) as Attribute;
+        if (!attribute) return null;
+        return getNonEmptyOptions(attribute).find(opt => opt.id === attributeValue.addon_attribute_option_id);
+
+    } else {
+        const attribute = state.attributes[attributeValue.attribute_index as number];
+        if (!attribute) return null;
+        return getNonEmptyOptions(attribute)[attributeValue.option_index as number];
+    }
 }
