@@ -123,7 +123,7 @@ const LiveUsers  = ({sessionAttendance,top10Attendee}: any) => {
                                 <div className="card-body p-0">
                                     <div>
                                         <CountriesCharts series={sessionAttendance.series} sessionNames={sessionAttendance.sessionNames}
-                                        dataColors='["--vz-info", "--vz-success", "--vz-primary", "--vz-warning","--vz-danger","--vz-info", "--vz-success", "--vz-primary", "--vz-warning", "--vz-danger"]' />
+                                        dataColors='["#4e79a7", "#59a14f", "#f28e2b", "#e15759", "#af7aa1", "#76b7b2", "#ff9da7", "#edc948", "#17becf", "#9c755f"]'/>
                                     </div>
                                 </div>
                             </Card>

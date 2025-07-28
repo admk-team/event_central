@@ -58,7 +58,7 @@ const TopReferrals = ({ top10Attendee }: TopReferralsProps) => {
                                 </Col>
                             </Row>
                              <PieChart 
-                                dataColors='[ "#A3C1FF","#9FE2BF","#FFD580","#FFB6B6","#B0E0E6","#D8BFD8","#F0E68C","#E6E6FA","#F5DEB3","#FFE4E1"]'
+                                dataColors='["#4e79a7", "#59a14f", "#f28e2b", "#e15759", "#af7aa1", "#76b7b2", "#ff9da7", "#edc948", "#17becf", "#9c755f"]'
                                 data={top10Attendee.attendeeData.map((attendee: any) => ({
                                     name: `${attendee.first_name}`,
                                     value: attendee.amountPaid,
