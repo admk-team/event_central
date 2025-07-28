@@ -53,14 +53,17 @@ class PaymentController extends Controller
 
         $eventApp = null;
         $attendees = [];
+        $lasteventDate = [];
         //If Page is being visited by Organizer
         if ($organizerView) {
-            $eventApp = EventApp::find(session('event_id'));
-            $attendees = $eventApp->attendees()->select(['id as value',DB::raw("CONCAT(first_name, ' ', last_name) as label")])->get();
-        } else {
-            $eventApp =  EventApp::find(auth()->user()->event_app_id);
-        }
+            $eventApp = EventApp::with('dates')->find(session('event_id'));
+            $lasteventDate = $eventApp->dates()->orderBy('date', 'desc')->get();
 
+            $attendees = $eventApp->attendees()->select(['id as value', DB::raw("CONCAT(first_name, ' ', last_name) as label")])->get();
+        } else {
+            $eventApp =  EventApp::with('dates')->find(auth()->user()->event_app_id);
+            $lasteventDate = $eventApp->dates()->orderBy('date', 'desc')->get();
+        }
         if ($organizerView) {     //For organizer show all tickets
             $eventApp->load([
                 'tickets.sessions',
@@ -95,7 +98,7 @@ class PaymentController extends Controller
                     'addons' => function ($query) {
                         $query->where(function ($query) {
                             $query->where('addons.event_app_ticket_id', null)
-                            ->whereColumn('qty_total', '>', 'qty_sold');
+                                ->whereColumn('qty_total', '>', 'qty_sold');
                         })
                         ->orWhereHas('ticket', function ($query) {
                             $query->whereColumn('qty_total', '>', 'qty_sold');
@@ -122,7 +125,8 @@ class PaymentController extends Controller
             'eventApp',
             'organizerView',
             'attendees',
-            'attendee_id'
+            'attendee_id',
+            'lasteventDate'
         ]));
     }
 
@@ -387,12 +391,20 @@ class PaymentController extends Controller
             $attendee = auth()->user();
             $attendee->load('payments.purchased_tickets');
             $attendee_purchased_tickets = [];
-
             foreach ($attendee->payments as $payment) {
                 foreach ($payment->purchased_tickets as $ticket)
                     array_push($attendee_purchased_tickets, $ticket);
             }
             Mail::to($attendee->email)->send(new AttendeeTicketPurchasedEmail($attendee, $attendee_purchased_tickets));
+            $emailNotificationList =  eventSettings($attendee->event_app_id)->getValue('email_list');
+            $emailNotificationList = explode(',', $emailNotificationList);
+            if ($emailNotificationList) {
+                Log::info('test', $emailNotificationList);
+                foreach ($emailNotificationList as $singleEmail) {
+                    Log::info('Test', $attendee->toArray());
+                    Mail::to($singleEmail)->send(new AttendeeTicketPurchasedEmail($attendee, $attendee_purchased_tickets));
+                }
+            }
         } catch (Exception $ex) {
             Log::error('An Error occurred while sending confirmation email to attendee');
             Log::error($ex->getMessage());

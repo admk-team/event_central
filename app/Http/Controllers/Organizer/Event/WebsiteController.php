@@ -24,8 +24,8 @@ class WebsiteController extends Controller
 
         $colors = eventSettings($event->id)->getValue('website_colors', config('event_website.colors'));
         $partnerCategories = EventPartnerCategory::where('event_app_id', $event->id)->with(['partners'])->get();
-
-        return view('event-website.index', compact('event', 'colors', 'partnerCategories'));
+        $exhibitors = EventPartner::where('event_app_id', $event->id)->where('type', 'exhibitor')->orderBy('company_name', 'asc')->get();
+        return view('event-website.index', compact('event', 'colors', 'partnerCategories', 'exhibitors'));
     }
 
     public function schedule($uuid)
@@ -70,6 +70,19 @@ class WebsiteController extends Controller
         $exhibitors = EventPartner::where('event_app_id', session('event_id'))->where('type', 'exhibitor')->orderBy('company_name', 'asc')->get();
 
         return view('event-website.sponsors', compact('event', 'colors', 'partnerCategories', 'exhibitors'));
+    }
+
+    public function exhibitors($uuid)
+    {
+        $event = EventApp::where('uuid', $uuid)->first();
+        if (! $event || !eventSettings($event->id)->getValue('website_status', false)) {
+            abort(404);
+        }
+
+        $colors = eventSettings($event->id)->getValue('website_colors', config('event_website.colors'));
+        $exhibitors = EventPartner::where('event_app_id', $event->id)->where('type', 'exhibitor')->orderBy('company_name', 'asc')->get();
+
+        return view('event-website.exhibitors', compact('event', 'colors', 'exhibitors'));
     }
     public function tickets($uuid)
     {

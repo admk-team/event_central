@@ -6,13 +6,13 @@ import { Button, Col, Container, Row, Form, Card, Tab, Nav } from 'react-bootstr
 import ManageCategories from "./Components/ManageCategories";
 
 function CreateOrEdit({ partner, partnerCategories }: any) {
-    console.log('category test',partner);
-    
+    console.log('category test', partner);
+
     // Determine if the form is in edit mode
     const isEdit = !!partner;
     const { data, setData, post, processing, errors, reset } = useForm({
         partner_category_id: partner?.partner_category_id || '',
-        type: partner?.type ||'',
+        type: partner?.type || '',
         company_name: partner?.company_name || "",
         email: partner?.email || "",
         description: partner?.description || "",
@@ -21,6 +21,10 @@ function CreateOrEdit({ partner, partnerCategories }: any) {
         address: partner?.address || "",
         exhibitor_logo: null,
         exhibitor_booth_no: partner?.exhibitor_booth_no || "",
+        facebook: partner?.facebook || "",
+        twitter: partner?.twitter || "",
+        linkedin: partner?.linkedin || "",
+        youtube: partner?.youtube || "",
         _method: partner?.id ? "PUT" : "POST", // Spoof method
     });
 
@@ -42,7 +46,7 @@ function CreateOrEdit({ partner, partnerCategories }: any) {
     };
 
     const [manageCategoriesModal, setManageCategoriesModal] = useState(false);
-    function showModal() {        
+    function showModal() {
         setManageCategoriesModal(!manageCategoriesModal);
     }
 
@@ -67,13 +71,13 @@ function CreateOrEdit({ partner, partnerCategories }: any) {
                                                 <Form.Label htmlFor="name" className="form-label">Partner Type</Form.Label>
                                                 <div className="d-flex align-items-center">
                                                     <div className="form-check  me-5">
-                                                        <Form.Check.Input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked={data.type==='exhibitor'} onChange={(e) => setData('type', 'exhibitor')} />
+                                                        <Form.Check.Input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" checked={data.type === 'exhibitor'} onChange={(e) => setData('type', 'exhibitor')} />
                                                         <Form.Check.Label className="form-check-label" htmlFor="flexRadioDefault1">
                                                             Exhibitor
                                                         </Form.Check.Label>
                                                     </div>
                                                     <div className="form-check">
-                                                        <Form.Check.Input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked={data.type ==='sponsor'} onChange={(e) => setData('type', 'sponsor')} />
+                                                        <Form.Check.Input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked={data.type === 'sponsor'} onChange={(e) => setData('type', 'sponsor')} />
                                                         <Form.Check.Label className="form-check-label" htmlFor="flexRadioDefault2">
                                                             Sponsor
                                                         </Form.Check.Label>
@@ -116,7 +120,7 @@ function CreateOrEdit({ partner, partnerCategories }: any) {
                                                 <div className="">
                                                     <Form.Label htmlFor="name" className="form-label">Phone</Form.Label>
                                                     <Form.Control
-                                                        type="number"
+                                                        type="text"
                                                         className="form-control"
                                                         id="phone"
                                                         placeholder="Enter phone"
@@ -170,6 +174,65 @@ function CreateOrEdit({ partner, partnerCategories }: any) {
                                                     />
                                                     <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.web} </Form.Control.Feedback>
 
+                                                </div>
+                                            </Col>
+                                            <Col xxl={6} md={6}>
+                                                <div className="">
+                                                    <Form.Label htmlFor="name" className="form-label">Facebook</Form.Label>
+                                                    <Form.Control
+                                                        type="text"
+                                                        className="form-control"
+                                                        id="facebook"
+                                                        placeholder="Enter facebook"
+                                                        value={data.facebook}
+                                                        onChange={(e) => setData('facebook', e.target.value)}
+                                                    />
+                                                    <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.facebook} </Form.Control.Feedback>
+
+                                                </div>
+                                            </Col>
+                                            <Col xxl={6} md={6}>
+                                                <div className="">
+                                                    <Form.Label htmlFor="name" className="form-label">Enter X</Form.Label>
+                                                    <Form.Control
+                                                        type="text"
+                                                        className="form-control"
+                                                        id="twitter"
+                                                        placeholder="Enter X"
+                                                        value={data.twitter}
+                                                        onChange={(e) => setData('twitter', e.target.value)}
+                                                    />
+                                                    <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.twitter} </Form.Control.Feedback>
+
+                                                </div>
+                                            </Col>
+                                            <Col xxl={6} md={6}>
+                                                <div className="">
+                                                    <Form.Label htmlFor="name" className="form-label">linkedin</Form.Label>
+                                                    <Form.Control
+                                                        type="text"
+                                                        className="form-control"
+                                                        id="linkedin"
+                                                        placeholder="Enter linkedin"
+                                                        value={data.linkedin}
+                                                        onChange={(e) => setData('linkedin', e.target.value)}
+                                                    />
+                                                    <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.linkedin} </Form.Control.Feedback>
+
+                                                </div>
+                                            </Col>
+                                            <Col xxl={6} md={6}>
+                                                <div className="">
+                                                    <Form.Label htmlFor="name" className="form-label">youtube</Form.Label>
+                                                    <Form.Control
+                                                        type="text"
+                                                        className="form-control"
+                                                        id="youtube"
+                                                        placeholder="Enter youtube"
+                                                        value={data.youtube}
+                                                        onChange={(e) => setData('youtube', e.target.value)}
+                                                    />
+                                                    <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.youtube} </Form.Control.Feedback>
                                                 </div>
                                             </Col>
 
@@ -259,9 +322,9 @@ function CreateOrEdit({ partner, partnerCategories }: any) {
                     </Row>
                 </Container>
             </div>
-            <ManageCategories manageCategoriesModal={manageCategoriesModal} 
-            showModal={showModal}
-                partnerCategories={partnerCategories}/>
+            <ManageCategories manageCategoriesModal={manageCategoriesModal}
+                showModal={showModal}
+                partnerCategories={partnerCategories} />
 
         </React.Fragment>
     )

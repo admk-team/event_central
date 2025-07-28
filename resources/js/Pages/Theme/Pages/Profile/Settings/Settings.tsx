@@ -568,8 +568,8 @@ const Settings = () => {
                                                             <h6 className="fs-14 mb-1">Backup Codes</h6>
                                                             <p className="text-muted mb-sm-0">A backup code is automatically
                                                                 generated for you when you turn on two-factor authentication
-                                                                through your iOS or Android Twitter app. You can also
-                                                                generate a backup code on twitter.com.</p>
+                                                                through your iOS or Android X app. You can also
+                                                                generate a backup code on X.com.</p>
                                                         </div>
                                                         <div className="flex-shrink-0 ms-sm-3">
                                                             <Link href="#"

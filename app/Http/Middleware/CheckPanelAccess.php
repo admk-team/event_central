@@ -16,7 +16,7 @@ class CheckPanelAccess
      */
     public function handle(Request $request, Closure $next, string $panel): Response
     {
-        if (Auth::user()?->role === $panel || Auth::user()?->role === 'admin') {
+        if (Auth::user()?->role === $panel /*|| Auth::user()?->role === 'admin'*/) {
             return $next($request);
         }
 

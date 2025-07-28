@@ -65,8 +65,10 @@ const Edit = ({ EmailTemplate, eventId }: any) => {
 
             await axios.post(route('email.template.update', EmailTemplate.id), formData, {
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'multipart/form-data',
                     'Accept': 'application/json',
+
+
                 },
             });
 

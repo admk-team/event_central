@@ -5,6 +5,7 @@ use App\Http\Controllers\Organizer\Event\RefundPaymentController;
 use App\Http\Controllers\Organizer\Event\AddonController;
 use App\Http\Controllers\Organizer\Event\AssignTicketController;
 use App\Http\Controllers\Organizer\Event\BadgePrintController;
+use App\Http\Controllers\Organizer\Event\ContactFormController;
 use App\Http\Controllers\Organizer\Event\CustomMenuController;
 use App\Http\Controllers\Organizer\Event\DashboardController;
 use App\Http\Controllers\Organizer\Event\EmailCampaignController;
@@ -45,6 +46,7 @@ use App\Http\Controllers\Organizer\RoleController;
 use App\Http\Controllers\Organizer\Settings\OrganizerPaymentSettingController;
 use App\Http\Controllers\Organizer\UserController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Middleware\CheckAttendeeRegistrationForm;
 use Illuminate\Support\Facades\Route;
 
 // Event Website
@@ -53,6 +55,7 @@ Route::prefix('e/{uuid}')->name('organizer.events.website')->group(function () {
     Route::get('schedule', [WebsiteController::class, 'schedule'])->name('.schedule');
     Route::get('speakers', [WebsiteController::class, 'speakers'])->name('.speakers');
     Route::get('sponsors', [WebsiteController::class, 'sponsors'])->name('.sponsors');
+    Route::get('exhibitors', [WebsiteController::class, 'exhibitors'])->name('.exhibitors');
     Route::get('tickets', [WebsiteController::class, 'tickets'])->name('.tickets');
     Route::get('privacy-policy', [WebsiteController::class, 'privacypolicy'])->name('.privacy');
     Route::get('contact-us', [WebsiteController::class, 'contactus'])->name('.contactus');
@@ -161,6 +164,10 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::resource('ticket-fees', EventAppFeeController::class)->only(['index', 'store', 'update', 'destroy']);
             Route::delete('ticket-fees/delete/many', [EventAppFeeController::class, 'destroyMany'])->name('ticket-fees.destroy.many');
 
+            //ticket notifications
+            Route::get('purchased-ticket/notification', [EventAppTicketController::class, 'purchaseNotification'])->name('purchased-ticket.notification');
+            Route::post('notification/list', [EventAppTicketController::class, 'saveNotificationList'])->name('ticket.notification.list');
+
             // Pages
             Route::resource('pages', PageController::class)->only(['store', 'update', 'destroy']);
             Route::delete('pages/delete/many', [PageController::class, 'destroyMany'])->name('pages.destroy.many');
@@ -198,6 +205,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                     Route::put('info', [EventSettingsController::class, 'updateInfo'])->name('info');
                     Route::get('generate-link', [EventSettingsController::class, 'generateLink'])->name('link');
                     Route::post('toggle-tracks', [EventSettingsController::class, 'toggleTracks'])->name('toggle-tracks');
+                    Route::post('toggle-checkin', [EventSettingsController::class, 'toggleCheckIn'])->name('toggle-checkin');
                 });
 
                 // Payment
@@ -254,6 +262,12 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
 
             //Email Campaign
             Route::resource('email-campaign', EmailCampaignController::class);
+
+            // contact forms
+            Route::prefix('contact-forms')->name('contact-forms.')->group(function () {
+                Route::resource('/', ContactFormController::class);
+                Route::delete('/delete/many', [ContactFormController::class, 'destroyMany'])->name('destroy.many');
+            });
         });
 
         // Q&A

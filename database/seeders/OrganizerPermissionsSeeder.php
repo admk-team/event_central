@@ -123,6 +123,10 @@ class OrganizerPermissionsSeeder extends Seeder
         'create_ticket_fee',
         'delete_ticket_fee',
         'edit_ticket_fee',
+
+        //contact forms
+        'view_contact_form',
+        'delete_contact_form',
     ];
 
     public function run(): void

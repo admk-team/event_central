@@ -251,13 +251,23 @@ class AttendeeController extends Controller
 
     public function chechIn(Request $request)
     {
+
+        if (eventSettings()->getValue('enable_check_in') == true) {
+            $checkedIn = EventCheckIns::where('event_app_id', session('event_id'))
+                ->where('attendee_id', $request->attendee['id'])
+                ->exists();
+
+            if (!$checkedIn) {
+                return back()->withError("This User is not checked in to the event.");
+            }
+        }
+
         $alreadyCheckedIn = SessionCheckIn::where('attendee_id', $request->attendee['id'])
             ->where('session_id', $request->event_session_id)
             ->exists();
         if ($alreadyCheckedIn) {
             return back()->withErrors(['session' => 'You have already checked into this session.']);
         }
-
         SessionCheckIn::create([
             'attendee_id' => $request->attendee['id'],
             'session_id' => $request->event_session_id,

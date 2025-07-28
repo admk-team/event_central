@@ -29,7 +29,7 @@ const TicketDetail = ({ ticket_no, ticket, fees_sub_total, addons_sub_total, onA
                     <i className="ri-checkbox-circle-fill text-success fs-15 align-middle mr-2"></i>
                     <p key={id} className="m-0">
                         {fee.name}
-                        <i className="fw-bold">{fee.fee_type === 'flat' ? " (" + fee.fee_amount + "$)" : " (" + fee.fee_amount + "%)"}</i>
+                        <i className="fw-bold">{fee.fee_type === 'flat' ? " ($" + fee.fee_amount + ")" : " (" + fee.fee_amount + "%)"}</i>
                     </p>
                 </Col>
             );

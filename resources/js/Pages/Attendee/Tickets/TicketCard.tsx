@@ -8,6 +8,7 @@ import {
     Row,
     Button,
     Form,
+    Spinner,
     InputGroup,
     Accordion,
     FormControl,
@@ -15,22 +16,26 @@ import {
 import TicketDetail from "./TicketDetail";
 import { Minus, Plus } from "lucide-react";
 
-const TicketCard = ({ ticket, onTicketDetailsUpdated }: any) => {
+const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckOut }: any) => {
     const isAddedToCart = ticket.is_added_to_cart;
+    const [processing, setProcessing] = useState(false);
     const [ticketQty, setTicketQty] = useState(0);
     const [ticketDetails, setTicketDetails] = useState<any>([]);
     const [removedIds, setRemovedIds] = useState<any>([]);
+    const [showAll, setShowAll] = useState(false);
 
-    // console.log(ticket);
+    const sessionsToShow = showAll
+        ? ticket.sessions
+        : ticket.sessions.slice(0, 5);
 
     useEffect(() => {
         let list = [];
         let newIds = [];
-        const ticketDetailsCopy = ticketDetails.map(item => ({ ...item }));
+        const ticketDetailsCopy = ticketDetails.map((item) => ({ ...item }));
 
         for (let i = 0; i < ticketQty; i++) {
             let id = parseInt(ticket.id + "" + i);
-            const foundItem = ticketDetailsCopy.find(item => item.id === id);
+            const foundItem = ticketDetailsCopy.find((item) => item.id === id);
             if (foundItem) {
                 list.push(foundItem);
             } else {
@@ -40,7 +45,7 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated }: any) => {
                     ticket: { id: ticket.id, base_price: ticket.base_price },
                     addons: [],
                     fees_sub_total: calculateFeesSubTotal(ticket),
-                    addons_sub_total: 0
+                    addons_sub_total: 0,
                 });
                 newIds.push(id);
             }
@@ -55,19 +60,24 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated }: any) => {
         setTicketDetails([...list]);
     }, [ticketQty]);
 
+    console.log(ticket_array);
     const calculateFeesSubTotal = (ticket: any) => {
         let subTotal = 0;
         let ticket_base_price = ticket.base_price;
         ticket.fees.forEach((fee: any) => {
-            if (fee.fee_type === 'flat') {
+            if (fee.fee_type === "flat") {
                 subTotal += parseFloat(fee.fee_amount);
-            } else {  //Percentage
-                subTotal += (parseFloat(ticket_base_price) * parseFloat(fee.fee_amount) / 100);
+            } else {
+                //Percentage
+                subTotal +=
+                    (parseFloat(ticket_base_price) *
+                        parseFloat(fee.fee_amount)) /
+                    100;
             }
         });
         subTotal = parseFloat(subTotal.toFixed(2));
         return subTotal;
-    }
+    };
 
     const calculateAddonsSubTotal = (addons: any) => {
         let subTotal = 0;
@@ -76,7 +86,7 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated }: any) => {
         });
         subTotal = parseFloat(subTotal.toFixed(2));
         return subTotal;
-    }
+    };
 
     const createQtyOptions = (items: any, ticket: any) => {
         const listItems = [];
@@ -97,12 +107,13 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated }: any) => {
                     ? {
                         ...item,
                         addons: addons,
-                        addons_sub_total: calculateAddonsSubTotal(addons)
+                        addons_sub_total: calculateAddonsSubTotal(addons),
                     }
                     : item
             )
         );
     };
+
 
     useEffect(() => {
         onTicketDetailsUpdated(ticketDetails, removedIds);
@@ -126,7 +137,9 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated }: any) => {
                         <Row className="d-flex justify-content-centel align-items-center">
                             <Col md={6} lg={6}>
                                 {/* <h5 className="mb-1 fw-bold">{ticket.name}</h5> */}
-                                <span className="mb-1">{ticket.description}</span>
+                                <span className="mb-1">
+                                    {ticket.description}
+                                </span>
                             </Col>
                             <Col md={2} lg={2}>
                                 <sup>
@@ -145,8 +158,8 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated }: any) => {
                                 <Col md={2} lg={2}>
                                     <InputGroup>
                                         <Button size="sm" onClick={e => setTicketQty(prev => prev === 0 ? prev : --prev)}><Minus size={20} /></Button>
-                                        <FormControl 
-                                            type="number" 
+                                        <FormControl
+                                            type="number"
                                             className="text-center"
                                             min={0}
                                             step={1}
@@ -175,12 +188,10 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated }: any) => {
                         </Row>
                         <Row className="mt-2 p-2  bg-light">
                             <Col md={12} lg={12}>
-                                <h5 className="mb-1 fw-bold ">
-                                    Sessions
-                                </h5>
+                                <h5 className="mb-1 fw-bold ">Sessions</h5>
                                 <ul className="list-unstyled text-muted vstack gap-1 m-0">
                                     {ticket.sessions.length > 0 &&
-                                        ticket.sessions.map((session: any) => (
+                                        sessionsToShow.map((session: any) => (
                                             <li key={session.id}>
                                                 <div className="d-flex">
                                                     <div className="flex-shrink-0 text-success me-1">
@@ -192,6 +203,43 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated }: any) => {
                                                 </div>
                                             </li>
                                         ))}
+                                    {ticket.sessions.length > 5 && (
+                                        <button
+                                            className="btn btn-link p-0 m-0 mt-2"
+                                            onClick={() =>
+                                                setShowAll((prev) => !prev)
+                                            }
+                                        >
+                                            {showAll
+                                                ? "Show less"
+                                                : "Show more"}
+                                        </button>
+                                    )}
+                                    {(() => {
+                                        const ticketExists = ticket_array.some((t: any) => t.ticket.id === ticket.id);
+                                        if (!ticketExists) return null;
+                                        return (
+                                            <Col md={4} lg={4}>
+                                                <Button
+                                                    disabled={processing}
+                                                    onClick={submitCheckOut}
+                                                    className="btn btn-success w-100"
+                                                >
+                                                    Checkout
+                                                    {processing && (
+                                                        <Spinner
+                                                            animation="border"
+                                                            role="status"
+                                                            className="ml-3"
+                                                            size="sm"
+                                                        >
+                                                            <span className="visually-hidden">Loading...</span>
+                                                        </Spinner>
+                                                    )}
+                                                </Button>
+                                            </Col>
+                                        );
+                                    })()}
                                 </ul>
                             </Col>
                         </Row>
