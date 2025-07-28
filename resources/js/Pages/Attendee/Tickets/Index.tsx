@@ -72,8 +72,6 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
             organizer_payment_note: paymnetNote,
         };
 
-        console.log(data);
-
         setProcessing(true);
         if (organizerView && currentAttendee > 0) {
             if (totalAmount > 0 && paymentMethod === 'stripe') {
@@ -184,7 +182,8 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
             // gTotal += parseFloat(ticketDetail.addons_sub_total);
             ticketDetail.addons.forEach((addon: any) => {
                 if (addon.enable_discount) {
-                    gTotal += parseFloat(addon.price);
+
+                    gTotal += parseFloat(addon.selectedVariant?.price ?? addon.price);
                 } else {
                     noDiscountAddons.push(addon);
                 }
@@ -197,7 +196,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
         setDiscountAmount(discountAmt);
 
         noDiscountAddons.forEach(addon => {
-            gTotal += parseFloat(addon.price);
+            gTotal += parseFloat(addon.selectedVariant?.price ?? addon.price);
         })
 
         gTotal = parseFloat(gTotal.toFixed(2));

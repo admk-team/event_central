@@ -16,6 +16,7 @@ const TicketDetail = ({ ticket_no, ticket, fees_sub_total, addons_sub_total, onA
     }, [ticket]);
 
     useEffect(() => {
+        createAddonOptions();
         onAddonsUpdated(selectedAddons, ticket_no);
     }, [selectedAddons]);
 
@@ -41,13 +42,31 @@ const TicketDetail = ({ ticket_no, ticket, fees_sub_total, addons_sub_total, onA
         addons.map((addon: any) => {
             let id = ticket.id + "-" + ticket_no + "-addon-" + addon.id;
             listItems.push(
-                <Form.Check
-                    id={id}
-                    type="checkbox"
-                    label={addon.full_name}
-                    key={id}
-                    onChange={(e) => handleCheckChanged(e, addon)}
-                />
+                <div key={id}>
+                    <Form.Check
+                        id={id}
+                        type="checkbox"
+                        label={addon.full_name.replace(/\([^)]*\)/g, `(${getSelectedAddon(addon, selectedAddons).selectedVariant?.price ?? addon.price})`)}
+                        key={id}
+                        onChange={(e) => handleCheckChanged(e, addon)}
+                    />
+                    {isAddonSelect(addon, selectedAddons) && (
+                        addon.attributes.map((attribute: any) => (
+                            <div key={attribute.id} className="ps-4 mt-2 mb-3">
+                                <Form.Label className="fw-bold mb-1">{attribute.name}:</Form.Label>
+                                <div className="d-flex gap-2 flex-wrap">
+                                    {attribute.options.map((option: any) => (
+                                        <div
+                                            key={option.id}
+                                            className={`border py-1 px-2 cursor-pointer text-black ${isOptionSelected(option, attribute, selectedAddons) ? 'bg-primary text-white border-primary' : ''}`}
+                                            onClick={() => selectAddonAttributeOption(addon, attribute, option)}
+                                        >{option.value}</div>
+                                    ))}
+                                </div>
+                            </div>
+                        ))
+                    )}
+                </div>
             );
         });
         setAddonsOptions(listItems);
@@ -56,11 +75,95 @@ const TicketDetail = ({ ticket_no, ticket, fees_sub_total, addons_sub_total, onA
     const handleCheckChanged = (e: any, addon: any) => {
         setSelectedAddons(
             (prev: any) =>
-                prev.includes(addon)
+                isAddonSelect(addon, prev)
                     ? prev.filter((i: any) => i.id !== addon.id) // Remove if already selected
                     : [...prev, addon] // Add if newly selected
         );
     };
+
+    const isAddonSelect = (addon: any, selectedAddons: any) => {
+        for (const a of selectedAddons) {
+            if (a.id === addon.id) return true;
+        }
+
+        return false;
+    }
+
+    const isOptionSelected = (option: any, attribute: any, selectedAddons: any) => {
+        for (const a of selectedAddons) {
+            for (const attr of a.attributes) {
+                if (attr.id === attribute.id) {
+                    for (const o of attr.options) {
+                        if (o.id === option.id && o.isSelected) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+
+    const getSelectedAddon = (addon: any, selectedAddons: any) => {
+        for (const a of selectedAddons) {
+            if (a.id === addon.id) {
+                return a;
+            }
+        }
+
+        return addon;
+    }
+
+    const selectAddonAttributeOption = (addon: any, attribute: any, option: any) => {
+        setSelectedAddons((prev: any) => { 
+            return prev.map((a: any) => {
+                if (a.id === addon.id) {
+                    const newState = {
+                        ...a,
+                        attributes: a.attributes.map((attr: any) => {
+                            if (attr.id === attribute.id) {
+                                return {
+                                    ...attr,
+                                    options: attr.options.map((o: any) => o.id === option.id ? {...o, isSelected: true} : {...o, isSelected: false})
+                                };
+                            }
+
+                            return attr
+                        }),
+                    };
+
+                    const selectedOptionIds: number[] = [];
+                    for (const a of newState.attributes) {
+                        for (const o of a.options) {
+                            if (o.isSelected) {
+                                selectedOptionIds.push(o.id);
+                            }
+                        }
+                    }
+
+                    let selectedVariant = null;
+                    newState.variants.forEach((v: any) => {
+                        let valuesMatched = true;
+                        v.attribute_values.forEach((av: any) => {
+                            if (! selectedOptionIds.includes(av.addon_attribute_option_id)) {
+                                valuesMatched = false;
+                            }
+                        });
+                        
+                        if (valuesMatched) {
+                            selectedVariant = v;
+                        }
+                    })
+
+                    newState.selectedVariant = selectedVariant;
+
+                    return newState;
+                }
+                return a;
+            })
+        })
+    }
 
     return (
         <Row className="mt-2 p-2 bg-light">

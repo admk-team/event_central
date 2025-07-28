@@ -72,7 +72,7 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated }: any) => {
     const calculateAddonsSubTotal = (addons: any) => {
         let subTotal = 0;
         addons.forEach((addon: any) => {
-            subTotal += parseFloat(addon.price);
+            subTotal += parseFloat(addon.selectedVariant?.price ?? addon.price);
         });
         subTotal = parseFloat(subTotal.toFixed(2));
         return subTotal;
