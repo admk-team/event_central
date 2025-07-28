@@ -138,4 +138,8 @@ class Attendee extends Authenticatable
     {
         return $this->morphMany(ChatMember::class, 'participant');
     }
+    public function prayerRequest()
+    {
+        return $this->hasMany(PrayerRequest::class);
+    }
 }

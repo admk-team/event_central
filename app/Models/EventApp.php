@@ -103,7 +103,7 @@ class EventApp extends Model
     {
         return $this->hasMany(AttendeeContactForm::class, 'event_id', 'id');
     }
-    
+
     public function images()
     {
         return $this->hasMany(EventAppImage::class);
@@ -229,5 +229,9 @@ class EventApp extends Model
                 }
             }
         });
+    }
+    public function prayerRequest()
+    {
+        return $this->hasMany(PrayerRequest::class);
     }
 }

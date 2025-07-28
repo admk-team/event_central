@@ -35,7 +35,7 @@ export default function CreateEditModal({ show, hide, onHide, refferal }: { show
         <Modal show={show} onHide={onHide} centered>
             <Modal.Header className="bg-light p-3" closeButton>
                 <h5 className="modal-title">
-                    {isEdit ? 'Edit User' : 'Add User'}
+                    {isEdit ? 'Edit Link' : 'Add Link'}
                 </h5>
             </Modal.Header>
 

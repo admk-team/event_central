@@ -33,6 +33,7 @@ use App\Http\Controllers\Organizer\Event\EventDateController;
 use App\Http\Controllers\Organizer\Event\EventPromoCodeController;
 use App\Http\Controllers\Organizer\Event\EventTicketTypeController;
 use App\Http\Controllers\Organizer\Event\FormFieldController;
+use App\Http\Controllers\Organizer\Event\PrayerRequestController;
 use App\Http\Controllers\Organizer\Event\QuestionnaireFormFieldController;
 use App\Http\Controllers\Organizer\Event\RefferalLinkController;
 use App\Http\Controllers\Organizer\Event\Reports\AttendeesReportController;
@@ -275,9 +276,9 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             // RefferalLink
             Route::resource('refferal-link', RefferalLinkController::class);
             Route::delete('refferal-link/delete/many', [RefferalLinkController::class, 'destroyMany'])->name('refferal-link.destroy.many');
-             // RefferalLink
-             Route::resource('badge', EventBadgeController::class);
-             Route::delete('badge/delete/many', [EventBadgeController::class, 'destroyMany'])->name('badge.destroy.many');
+            // RefferalLink
+            Route::resource('badge', EventBadgeController::class);
+            Route::delete('badge/delete/many', [EventBadgeController::class, 'destroyMany'])->name('badge.destroy.many');
 
             // Base Template
             Route::get('base-template', [EmailTemplateController::class, 'baseTemplate'])->name('base.template');
@@ -343,10 +344,15 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
     // Route::post('/events/attendance/destroy/many', [SessionAttendanceController::class, 'destroyMany'])->name('events.attendance.destroy.many');
 
     //Session ratings
-     Route::get('/ratings/{eventSession}', [SessionRatingsController::class, 'index'])->name('sessions.ratings.index');
-
-     // Attendee Report 
-     Route::get('/attendees/report', [AttendeesReportController::class, 'index'])->name('attendees.report');
-     Route::get('/attendees/report/{id}', [AttendeeController::class, 'showRating'])->name('attendee.report.info');
     Route::get('/ratings/{eventSession}', [SessionRatingsController::class, 'index'])->name('sessions.ratings.index');
+
+    // Attendee Report 
+    Route::get('/attendees/report', [AttendeesReportController::class, 'index'])->name('attendees.report');
+    Route::get('/attendees/report/{id}', [AttendeeController::class, 'showRating'])->name('attendee.report.info');
+    Route::get('/ratings/{eventSession}', [SessionRatingsController::class, 'index'])->name('sessions.ratings.index');
+
+    //prayer request 
+    Route::get('prayer-requests', [PrayerRequestController::class, 'index'])->name('prayer-requests.index');
+    Route::put('prayer-requests/{id}', [PrayerRequestController::class, 'update'])->name('prayer-requests.update');
+    Route::delete('prayer-requests/{id}', [PrayerRequestController::class, 'destroy'])->name('prayer-requests.destroy');
 });
