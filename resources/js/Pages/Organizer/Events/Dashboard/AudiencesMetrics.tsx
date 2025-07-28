@@ -27,6 +27,7 @@ interface AudiencesMetricsProps {
 const AudiencesMetrics = ({ ticketsMetrics }: AudiencesMetricsProps) => {
     const [chartData, setChartData] = useState<{ name: string; data: number[] }[]>([]);
 
+    console.log(ticketsMetrics);
     useEffect(() => {
         // Prepare chart data from ticketsData
         setChartData([

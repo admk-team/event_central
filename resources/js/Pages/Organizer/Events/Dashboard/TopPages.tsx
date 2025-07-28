@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Card, Col, Dropdown } from 'react-bootstrap';
 import { Link, usePage } from '@inertiajs/react';
+import { SimpleDonut } from './DashboardAnalyticsCharts';
 
 interface TopSession {
     sessionName: string;
@@ -18,6 +19,9 @@ const TopPages  = ({topSession}: any) => {
     const toggleDropdown = () => {
         setTopPageDropdown(!isTopPageDropdown);
     };
+
+    const sessionSeries = topSession.length > 0 ? topSession.map((item:any) => item.joinedAttendees): [];
+    const sessionLabels = topSession.length > 0 ? topSession.map((item:any) => item.sessionName): [];
 
     return (
         <React.Fragment>
@@ -42,7 +46,7 @@ const TopPages  = ({topSession}: any) => {
                             </div>
                         </Card.Header>
                         <Card.Body>
-                            <div className="table-responsive table-card">
+                            {/* <div className="table-responsive table-card">
                                 <table className="table align-middle table-borderless table-centered table-nowrap mb-0">
                                     <thead className="text-muted table-light">
                                         <tr>
@@ -63,7 +67,12 @@ const TopPages  = ({topSession}: any) => {
                                         ))}
                                     </tbody>
                                 </table>
-                            </div>
+                            </div> */}
+                            <SimpleDonut
+                                dataColors='["#4e79a7", "#59a14f", "#f28e2b", "#e15759", "#af7aa1", "#76b7b2", "#ff9da7", "#edc948", "#17becf", "#9c755f"]'
+                                series={sessionSeries}
+                                labels={sessionLabels}
+                            />
                         </Card.Body>
                     </Card>
                 </Link>

@@ -17,6 +17,12 @@ interface PieChartProps {
     data: { name: string; value: number }[];
 }
 
+interface SimpleDonutProps {
+    dataColors: string;
+    series: number[];
+    labels: string[];
+}
+
 const AudiencesCharts = ({ dataColors, series, sessionNames }: AudiencesChartsProps) => {
     const chartAudienceColumnChartsColors = getChartColorsArray(dataColors);
 
@@ -332,5 +338,37 @@ const PieChart: React.FC<PieChartProps> = ({ dataColors, data }) => {
     )
 }
 
+// dount chart 
+const SimpleDonut = ({ dataColors, series, labels }: SimpleDonutProps) => {
+    const chartDonutBasicColors = getChartColorsArray(dataColors);
+    const options: any = {
+        chart: {
+            height: 300,
+            type: 'donut',
+        },
+        labels: labels,
+        legend: {
+            position: 'left',
+            horizontalAlign: 'center',
+        },
+        dataLabels: {
+            dropShadow: {
+                enabled: false,
+            }
+        },
+        colors: chartDonutBasicColors,
+    };
 
-export { AudiencesCharts, AudiencesSessionsCharts, CountriesCharts, UsersByDeviceCharts ,PieChart };
+    return (
+        <ReactApexChart
+            dir="ltr"
+            className="apex-charts"
+            series={series}
+            options={options}
+            type="donut"
+            height={300}
+        />
+    );
+};
+
+export { AudiencesCharts, AudiencesSessionsCharts,SimpleDonut, CountriesCharts, UsersByDeviceCharts ,PieChart };
