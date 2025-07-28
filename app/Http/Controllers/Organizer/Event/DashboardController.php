@@ -145,7 +145,7 @@ class DashboardController extends Controller
         usort($ticketsData, fn($a, $b) => $b['ticketsSold'] <=> $a['ticketsSold']);
     
         // Keep only top 5 tickets
-        $topTickets = array_slice($ticketsData, 0, 5);
+        $topTickets = $ticketsData;
     
         return [
             'totalTickets' => $totalTickets,

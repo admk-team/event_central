@@ -25,69 +25,80 @@ interface SimpleDonutProps {
 
 const AudiencesCharts = ({ dataColors, series, sessionNames }: AudiencesChartsProps) => {
     const chartAudienceColumnChartsColors = getChartColorsArray(dataColors);
-
+    const shortNames = sessionNames.map(name =>
+        name.length > 12 ? name.slice(0, 12) + '…' : name
+    );
     const options: any = {
         chart: {
             type: 'bar',
-            height: 309,
-            stacked: true,
-            toolbar: {
+            height: 350,
+                toolbar: {
                 show: false,
             },
         },
         plotOptions: {
             bar: {
-                horizontal: false,
-                columnWidth: '20%',
-                borderRadius: 6,
+                borderRadius: 10,
+                dataLabels: {
+                    position: 'top',
+                },
+                columnWidth: '40%',
             },
         },
         dataLabels: {
-            enabled: false,
-        },
-        legend: {
-            show: true,
-            position: 'bottom',
-            horizontalAlign: 'center',
-            fontWeight: 400,
-            fontSize: '8px',
-            offsetX: 0,
-            offsetY: 0,
-            markers: {
-                width: 9,
-                height: 9,
-                radius: 4,
+            enabled: true,
+            formatter: function (val: number) {
+                return isNaN(val) ? '' : val.toString();
+            },
+            offsetY: -20,
+            style: {
+                fontSize: '12px',
+                colors: ['#304758'],
             },
         },
-        stroke: {
-            show: true,
-            width: 2,
-            colors: ['transparent'],
-        },
-        grid: {
-            show: false,
-        },
-        colors: chartAudienceColumnChartsColors,
+
         xaxis: {
-            categories: sessionNames, // Now ticket names
+            categories: shortNames,
+            position: 'top',
+            axisBorder: {
+                show: false,
+            },
             axisTicks: {
                 show: false,
             },
-            axisBorder: {
-                show: true,
-                strokeDashArray: 1,
-                height: 1,
-                width: '100%',
-                offsetX: 0,
-                offsetY: 0,
+            tooltip: {
+                enabled: true,
+                formatter: function (val: string, opts: any) {
+                    return sessionNames[opts.dataPointIndex] || val;
+                },
+            },
+            labels: {
+                rotate: 0,
+                style: {
+                    fontSize: '10px',
+                    whiteSpace: 'nowrap',
+                    textOverflow: 'ellipsis',
+                    overflow: 'hidden',
+                    colors: ['#161718ff'],
+                },
             },
         },
+
         yaxis: {
-            show: false,
+            axisBorder: {
+                show: false,
+            },
+            axisTicks: {
+                show: false,
+            },
+            labels: {
+                show: false,
+            },
         },
         fill: {
             opacity: 1,
         },
+        colors: chartAudienceColumnChartsColors,
     };
 
     return (

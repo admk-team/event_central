@@ -85,12 +85,14 @@ const AudiencesMetrics = ({ ticketsMetrics }: AudiencesMetricsProps) => {
                             </Row>
                         </Card.Header>
                         <Card.Body className="p-0 pb-2">
-                            <div>
-                                <AudiencesCharts
-                                    series={chartData}
-                                    dataColors='["--vz-success", "--vz-success"]'
-                                    sessionNames={ticketsMetrics.ticketsData.map((ticket: TicketData) => ticket.ticketName)}
-                                />
+                            <div style={{ overflowX: 'auto' }}>
+                                <div style={{ minWidth: `${ticketsMetrics.ticketsData.length * 100}px` }}>
+                                    <AudiencesCharts
+                                        series={chartData}
+                                        dataColors='["--vz-success", "--vz-success"]'
+                                        sessionNames={ticketsMetrics.ticketsData.map((ticket: TicketData) => ticket.ticketName)}
+                                    />
+                                </div>
                             </div>
                         </Card.Body>
                     </Card>
