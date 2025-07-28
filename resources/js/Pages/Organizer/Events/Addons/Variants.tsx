@@ -63,6 +63,7 @@ type State = {
     deletedAttributes: number[];
     deletedOptions: number[];
     deletedVariants: number[];
+    defaultPrice: number;
 }
 
 type AddAttribute = {
@@ -118,7 +119,12 @@ type UpdateVariantQty = {
     qty: number;
 }
 
-type Action = AddAttribute | EditAttributeAction | UpdateAttributeName | DeleteAttribute | AddOption | UpdateOptionValue | DeleteOption | UpdateVariantPrice | UpdateVariantQty;
+type UpdateDefaultPrice = {
+    type: 'update_default_price';
+    price: number;
+}
+
+type Action = AddAttribute | EditAttributeAction | UpdateAttributeName | DeleteAttribute | AddOption | UpdateOptionValue | DeleteOption | UpdateVariantPrice | UpdateVariantQty | UpdateDefaultPrice;
 
 const reducer = (state: State, action: Action): State => {
     switch (action.type) {
@@ -227,6 +233,12 @@ const reducer = (state: State, action: Action): State => {
                 variants: state.variants.map((variant, i) => i === action.index ? {...variant, qty: action.qty} : variant)
             }
         }
+        case 'update_default_price': {
+            return {
+                ...state,
+                defaultPrice: action.price,
+            }
+        }
         default: {
             throw Error('Unknown action');
         }
@@ -240,11 +252,22 @@ export default function Variants({ data, onDataChange }: VariantsProps) {
         deletedAttributes: [],
         deletedOptions: [],
         deletedVariants: [],
+        defaultPrice: data.defaultPrice,
     });
 
     useEffect(() => {
-        onDataChange && onDataChange(state);
+        onDataChange && onDataChange({
+            attributes: state.attributes,
+            variants: state.variants,
+            deletedAttributes: state.deletedAttributes,
+            deletedOptions: state.deletedOptions,
+            deletedVariants: state.deletedVariants,
+        });
     }, [state])
+
+    useEffect(() => {
+        dispatch({ type: 'update_default_price', price: data.defaultPrice });
+    }, [data.defaultPrice])
 
     return (
         <>
@@ -371,7 +394,7 @@ function generateVariants(state: State): State {
         if (newVariants.length === 0) {
             nonEmptyOption.forEach((_, optIndex) => {
                 newVariants.push({
-                    price: 0,
+                    price: state.defaultPrice,
                     qty: 0,
                     attribute_values: [
                         {
@@ -427,6 +450,7 @@ function generateVariants(state: State): State {
         let matchFound = false;
 
         newVariants = newVariants.map((newVariant) => {
+            const newVariantAttributeCount = newVariant.attribute_values.length;
             let matchedAttributes = 0;
             oldVariant.attribute_values.forEach((oldAttributeValue) => {
                 newVariant.attribute_values.forEach((newAttributeValue) => {
@@ -436,7 +460,7 @@ function generateVariants(state: State): State {
                 })
             })
 
-            if (matchedAttributes === oldVariantAttributeCount) {
+            if (matchedAttributes === oldVariantAttributeCount || matchedAttributes === newVariantAttributeCount) {
                 matchFound = true;
                 return {
                     ...newVariant,
