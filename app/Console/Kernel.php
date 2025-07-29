@@ -19,48 +19,48 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->call(function () {
-            $now = Carbon::now();
-            $currentDate = Carbon::today();
+        // $schedule->call(function () {
+        //     $now = Carbon::now();
+        //     $currentDate = Carbon::today();
 
-            Log::info('now date: ' . $now);
-            Log::info('current date: ' . $currentDate);
+        //     Log::info('now date: ' . $now);
+        //     Log::info('current date: ' . $currentDate);
 
-            $favSessions = AttendeeFavSession::with([
-                'attendee', 
-                'event.dates', 
-                'session.eventDate', 
-                'session.eventSpeakers', 
-                'session.eventPlatform',])
-                ->get();
+        //     $favSessions = AttendeeFavSession::with([
+        //         'attendee', 
+        //         'event.dates', 
+        //         'session.eventDate', 
+        //         'session.eventSpeakers', 
+        //         'session.eventPlatform',])
+        //         ->get();
 
-            foreach ($favSessions as $fav) {
+        //     foreach ($favSessions as $fav) {
 
-                $event = $fav->event;
-                $matchingDate = $event->dates->firstWhere('date', $currentDate->toDateString());
+        //         $event = $fav->event;
+        //         $matchingDate = $event->dates->firstWhere('date', $currentDate->toDateString());
 
-                if (!$matchingDate) continue;
-                Log::info('Matching date found: ' . $matchingDate->date);
+        //         if (!$matchingDate) continue;
+        //         Log::info('Matching date found: ' . $matchingDate->date);
 
-                $session = $fav->session;
+        //         $session = $fav->session;
 
-                if (!$session || $session->event_date_id !== $matchingDate->id) continue;
-                Log::info('Session found: ' . $session->id);
+        //         if (!$session || $session->event_date_id !== $matchingDate->id) continue;
+        //         Log::info('Session found: ' . $session->id);
 
-                $startTime = Carbon::parse($session->start_time);
-                $diffInMinutes = $now->diffInMinutes($startTime, false);
+        //         $startTime = Carbon::parse($session->start_time);
+        //         $diffInMinutes = $now->diffInMinutes($startTime, false);
 
-                if ($diffInMinutes === 10) {
-                    Log::info('Sending reminder for session before 10 minutes of starting time: ' . $session->id);
-                    EventSessionReminder::dispatch(
-                        $fav->attendee->email,
-                        $event,
-                        $matchingDate,
-                        $session
-                    );
-                }
-            }
-        })->everyMinute();
+        //         if ($diffInMinutes === 10) {
+        //             Log::info('Sending reminder for session before 10 minutes of starting time: ' . $session->id);
+        //             EventSessionReminder::dispatch(
+        //                 $fav->attendee->email,
+        //                 $event,
+        //                 $matchingDate,
+        //                 $session
+        //             );
+        //         }
+        //     }
+        // })->everyMinute();
     }
 
     /**

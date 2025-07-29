@@ -581,22 +581,23 @@ const Navdata = () => {
                     hasPermissions: ["view_refund_ticket_report"],
                 },
             ],
-        },{
-            id: "prayer_request",
-            label: "Prayer Request Report",
-            icon: "bx bx-donate-heart",
-            link: route('organizer.prayer-requests.index'),
-            stateVariables: isPrayerRequest,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsPrayerRequest(!isPrayerRequest);
-                setIscurrentState('prayer_request');
-                updateIconSidebar(e);
-            },
-            hasPermissions: [
-                'view_prayer_request'
-            ],
         },
+        // {
+        //     id: "prayer_request",
+        //     label: "Prayer Request Report",
+        //     icon: "bx bx-donate-heart",
+        //     link: route('organizer.prayer-requests.index'),
+        //     stateVariables: isPrayerRequest,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIsPrayerRequest(!isPrayerRequest);
+        //         setIscurrentState('prayer_request');
+        //         updateIconSidebar(e);
+        //     },
+        //     hasPermissions: [
+        //         'view_prayer_request'
+        //     ],
+        // },
 
         // }] : []),
     ];
