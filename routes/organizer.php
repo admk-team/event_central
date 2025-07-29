@@ -355,4 +355,5 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
     Route::get('prayer-requests', [PrayerRequestController::class, 'index'])->name('prayer-requests.index');
     Route::put('prayer-requests/{id}', [PrayerRequestController::class, 'update'])->name('prayer-requests.update');
     Route::delete('prayer-requests/{id}', [PrayerRequestController::class, 'destroy'])->name('prayer-requests.destroy');
+    Route::delete('prayer-requests/delete/many', [PrayerRequestController::class, 'destroyMany'])->name('prayer-requests.destroy.many');
 });

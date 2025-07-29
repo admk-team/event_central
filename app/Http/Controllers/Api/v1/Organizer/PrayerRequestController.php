@@ -1,26 +1,26 @@
 <?php
 
-namespace App\Http\Controllers\Organizer\Event;
+namespace App\Http\Controllers\Api\v1\Organizer;
 
 use App\Http\Controllers\Controller;
 use App\Mail\PrayerRequestStatusUpdated;
 use App\Models\PrayerRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
-use Inertia\Inertia;
 
 class PrayerRequestController extends Controller
 {
-    public function index(Request $request)
+    public function index($session_id)
     {
-        if (! Auth::user()->can('view_prayer_request')) {
-            abort(403);
-        }
+        $prayers = PrayerRequest::where('event_app_id',$session_id)->with(['attendee'])->latest()->get();
 
-        $data = $this->datatable(PrayerRequest::currentEvent()->with(['attendee']));
-        return Inertia::render('Organizer/Events/PrayerRequest/Index', compact('data'));
+        return response()->json([
+            'success' => true,
+            'message' => 'Prayer requests fetched successfully.',
+            'data' => $prayers
+        ], 200);
     }
+
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -37,7 +37,7 @@ class PrayerRequestController extends Controller
         $prayer->status = $newStatus;
         $prayer->save();
 
-        // ✅ If status was changed from 'pending' to approved/rejected, send email
+        // Send email if status changed
         if ($statusChanged) {
             $prayerRequest = PrayerRequest::with(['eventApp', 'attendee'])->find($id);
 
@@ -46,30 +46,29 @@ class PrayerRequestController extends Controller
             }
         }
 
-        return back()->withSuccess("Updated successfully");
+        return response()->json([
+            'success' => true,
+            'message' => 'Prayer request updated successfully.',
+            'data' => $prayer
+        ], 200);
     }
+
     public function destroy($id)
     {
-        if (! Auth::user()->can('delete_prayer_request')) {
-            abort(403);
+        $prayer = PrayerRequest::find($id);
+
+        if (!$prayer) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Prayer request not found.'
+            ], 404);
         }
 
-        PrayerRequest::find($id)->delete();
-        return back()->withSuccess('Deleted successfully.');
-    }
+        $prayer->delete();
 
-    public function destroyMany(Request $request)
-    {
-        if (! Auth::user()->can('delete_prayer_request')) {
-            abort(403);
-        }
-
-        $request->validate([
-            'ids' => 'required|Array'
-        ]);
-        foreach ($request->ids as $id) {
-            PrayerRequest::find($id)->delete();
-        }
-        return back()->withSuccess('Deleted successfully.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Prayer request deleted successfully.'
+        ], 200);
     }
 }

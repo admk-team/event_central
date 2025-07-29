@@ -593,9 +593,9 @@ const Navdata = () => {
                 setIscurrentState('prayer_request');
                 updateIconSidebar(e);
             },
-            // hasPermissions: [
-            //     'view_prayer_request'
-            // ],
+            hasPermissions: [
+                'view_prayer_request'
+            ],
         },
 
         // }] : []),

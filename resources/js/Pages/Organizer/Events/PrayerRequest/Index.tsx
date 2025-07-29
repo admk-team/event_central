@@ -7,6 +7,7 @@ import HasPermission from "../../../../Components/HasPermission";
 import DataTable, { ColumnDef } from "../../../../Components/DataTable";
 import DeleteModal from "../../../../Components/Common/DeleteModal";
 import CreateEditModal from "./Components/CreateEditModal";
+import DeleteManyModal from "../../../../Components/Common/DeleteManyModal";
 
 function Index({ data }: any) {
     const [showCreateEditModal, setShowCreateEditModal] = useState(false);
@@ -14,11 +15,16 @@ function Index({ data }: any) {
     const [deleteItem, setDeleteItem] = useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [copiedId, setCopiedId] = useState<number | null>(null);
+    const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] =
+        useState(false);
 
     const deleteForm = useForm({
         _method: "DELETE",
     });
-
+    const deleteManyForm = useForm<{ _method: string; ids: number[] }>({
+        _method: "DELETE",
+        ids: [],
+    });
     const handleEdit = (item: any) => {
         setEditItem(item);
         setShowCreateEditModal(true);
@@ -29,6 +35,17 @@ function Index({ data }: any) {
             route("organizer.prayer-requests.destroy", deleteItem.id)
         );
         setShowDeleteConfirmation(false);
+    };
+    const deleteManyAction = (ids: number[]) => {
+        deleteManyForm.setData((data) => ({ ...data, ids }));
+        setShowDeleteManyConfirmation(true);
+    };
+
+    const handleDeleteMany = () => {
+        deleteManyForm.delete(
+            route("organizer.prayer-requests.destroy.many")
+        );
+        setShowDeleteManyConfirmation(false);
     };
     const columns: ColumnDef<(typeof data.data)[0]> = [
         {
@@ -114,25 +131,25 @@ function Index({ data }: any) {
             header: () => "Actions",
             cell: (row) => (
                 <div className="hstack gap-3 fs-15">
-                    {/* <HasPermission permission="edit_prayer_request"> */}
-                    <span
-                        className="link-primary cursor-pointer"
-                        onClick={() => handleEdit(row)}
-                    >
-                        <i className="ri-edit-line"></i>
-                    </span>
-                    {/* </HasPermission>
-                    <HasPermission permission="delete_prayer_request"> */}
-                    <span
-                        className="link-danger cursor-pointer"
-                        onClick={() => {
-                            setDeleteItem(row);
-                            setShowDeleteConfirmation(true);
-                        }}
-                    >
-                        <i className="ri-delete-bin-5-line"></i>
-                    </span>
-                    {/* </HasPermission> */}
+                    <HasPermission permission="edit_prayer_request">
+                        <span
+                            className="link-primary cursor-pointer"
+                            onClick={() => handleEdit(row)}
+                        >
+                            <i className="ri-edit-line"></i>
+                        </span>
+                    </HasPermission>
+                    <HasPermission permission="delete_prayer_request">
+                        <span
+                            className="link-danger cursor-pointer"
+                            onClick={() => {
+                                setDeleteItem(row);
+                                setShowDeleteConfirmation(true);
+                            }}
+                        >
+                            <i className="ri-delete-bin-5-line"></i>
+                        </span>
+                    </HasPermission>
                 </div>
             ),
         },
@@ -144,7 +161,7 @@ function Index({ data }: any) {
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb
-                        title="Admin Panel"
+                        title="Prayer Requests"
                         pageTitle="Prayer Requests"
                     />
                     <Row>
@@ -153,7 +170,37 @@ function Index({ data }: any) {
                                 data={data}
                                 columns={columns}
                                 title="Prayer Requests"
-                                actions={[]} // No Add New or Delete Many
+                                actions={[
+                                    // Delete multiple
+                                    {
+                                        render: (dataTable) => (
+                                            <HasPermission permission="delete_referral_link">
+                                                <Button
+                                                    className="btn-danger"
+                                                    onClick={() =>
+                                                        deleteManyAction(
+                                                            dataTable
+                                                                .getSelectedRows()
+                                                                .map(
+                                                                    (row) =>
+                                                                        row.id
+                                                                )
+                                                        )
+                                                    }
+                                                >
+                                                    <i className="ri-delete-bin-5-line"></i>{" "}
+                                                    Delete (
+                                                    {
+                                                        dataTable.getSelectedRows()
+                                                            .length
+                                                    }
+                                                    )
+                                                </Button>
+                                            </HasPermission>
+                                        ),
+                                        showOnRowSelection: true,
+                                    },
+                                ]}
                             />
                         </Col>
                     </Row>
@@ -179,6 +226,11 @@ function Index({ data }: any) {
                 show={showDeleteConfirmation}
                 onDeleteClick={handleDelete}
                 onCloseClick={() => setShowDeleteConfirmation(false)}
+            />
+            <DeleteManyModal
+                show={showDeleteManyConfirmation}
+                onDeleteClick={handleDeleteMany}
+                onCloseClick={() => setShowDeleteManyConfirmation(false)}
             />
         </>
     );

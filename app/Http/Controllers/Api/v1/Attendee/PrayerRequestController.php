@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Attendee;
+namespace App\Http\Controllers\Api\v1\Attendee;
 
 use App\Http\Controllers\Controller;
+use App\Mail\PrayerRequestSubmitted;
 use App\Models\EventApp;
 use App\Models\PrayerRequest;
 use App\Models\PrayerRequestView;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
-use App\Mail\PrayerRequestSubmitted;
 use Illuminate\Support\Facades\Mail;
 
 class PrayerRequestController extends Controller
@@ -25,17 +24,19 @@ class PrayerRequestController extends Controller
             ->latest()
             ->get();
 
-        $publicRequests = PrayerRequest::where('request_type', 'public')->with('attendee')
+        $publicRequests = PrayerRequest::where('request_type', 'public')
+            ->with('attendee')
             ->where('attendee_id', '!=', $attendeeId)
             ->where('status', 'approved')
             ->where('event_app_id', $eventAppId)
             ->orderBy('count', 'desc')
             ->get();
 
-        return Inertia::render('Attendee/PrayerRequest/Index', [
+        return response()->json([
+            'success' => true,
             'my_requests' => $myRequests,
-            'public_requests' => $publicRequests,
-        ]);
+            'public_requests' => $publicRequests
+        ], 200);
     }
 
     public function store(Request $request)
@@ -59,22 +60,26 @@ class PrayerRequestController extends Controller
         ]);
 
         $eventApp = EventApp::with('organiser')->find($eventAppId);
-        // ✅ Send email to organiser
+
         if ($eventApp && $eventApp->organiser && $eventApp->organiser->email) {
-            Mail::to($eventApp->organiser->email)->send(new PrayerRequestSubmitted($user, $eventApp, $prayerrequest)
+            Mail::to($eventApp->organiser->email)->send(
+                new PrayerRequestSubmitted($user, $eventApp, $prayerrequest)
             );
         }
 
-        return back()->with('success', 'Prayer request submitted.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Prayer request submitted successfully.',
+            'data' => $prayerrequest,
+        ], 201);
     }
 
     public function view($id)
     {
         $attendeeId = auth()->id();
-
         $prayerRequest = PrayerRequest::findOrFail($id);
 
-        // ❌ Don't count if the user is viewing their own request
+        // ❌ Don't count own view
         if ($prayerRequest->attendee_id == $attendeeId) {
             return response()->json(['count' => $prayerRequest->count]);
         }
@@ -89,7 +94,6 @@ class PrayerRequestController extends Controller
                 'prayer_request_id' => $id,
             ]);
 
-            // ✅ Increment view count only for others
             $prayerRequest->increment('count');
         }
 
@@ -101,7 +105,7 @@ class PrayerRequestController extends Controller
         $prayer = PrayerRequest::findOrFail($id);
 
         if ($prayer->attendee_id !== auth()->user()->id) {
-            abort(403);
+            return response()->json(['error' => 'Unauthorized'], 403);
         }
 
         $request->validate([
@@ -114,7 +118,11 @@ class PrayerRequestController extends Controller
             'request_type' => $request->request_type,
         ]);
 
-        return back()->with('success', 'Prayer request updated.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Prayer request updated successfully.',
+            'data' => $prayer,
+        ]);
     }
 
     public function destroy($id)
@@ -122,11 +130,14 @@ class PrayerRequestController extends Controller
         $prayer = PrayerRequest::findOrFail($id);
 
         if ($prayer->attendee_id !== auth()->user()->id) {
-            abort(403);
+            return response()->json(['error' => 'Unauthorized'], 403);
         }
 
         $prayer->delete();
 
-        return back()->with('success', 'Prayer request deleted.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Prayer request deleted successfully.'
+        ]);
     }
 }
