@@ -25,11 +25,14 @@ const Navdata = () => {
         useState<boolean>(false);
     const [isAssignTicket, setIsAssignTicket] = useState<boolean>(false);
     const [isUpgradeTicket, setUpgradeTicket] = useState<boolean>(false);
+    const [isRefferalLink, setIsRefferalLink] = useState<boolean>(false);
+    const [isEventBadge, setIsEventBadge] = useState<boolean>(false);
     const [isBaseTemplate, setIsBaseTemplate] = useState<boolean>(false);
     const [isEmailTemplate, setIsEmailTemplate] = useState<boolean>(false);
     const [isChat, setIsChat] = useState<boolean>(false);
     const [isContactForm, setIsContactForm] = useState<boolean>(false);
     const [isReport, setIsReport] = useState<boolean>(false);
+    const [isPrayerRequest, setIsPrayerRequest] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>("Dashboard");
 
@@ -66,6 +69,9 @@ const Navdata = () => {
         if (iscurrentState !== "BaseTemplate") setIsBaseTemplate(false);
         if (iscurrentState !== "EmailTemplate") setIsEmailTemplate(false);
         if (iscurrentState !== "ContactForm") setIsContactForm(false);
+        if (iscurrentState !== "refferal-link") setIsRefferalLink(false);
+        if (iscurrentState !== "event_badge") setIsEventBadge(false);
+         if (iscurrentState !== "prayer_request") setIsPrayerRequest(false);
         if (iscurrentState !== "chat") setIsChat(false);
         if (iscurrentState !== "Questionnaire_response")
             setIsQuestionnaireResponse(false);
@@ -406,22 +412,21 @@ const Navdata = () => {
             hasPermissions: ["print_badges"],
         },
         // ...(isEventStarted ? [{
-        
 
-        {
-            id: "chat",
-            label: "Chat",
-            icon: "bx bx-message-rounded-dots",
-            link: route("organizer.events.chat.index"),
-            stateVariables: isForm,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsChat(!isForm);
-                setIscurrentState("chat");
-                updateIconSidebar(e);
-            },
-            // hasPermissions: ["edit_questionnaire_form"],
-        },
+        // {
+        //     id: "chat",
+        //     label: "Chat",
+        //     icon: "bx bx-message-rounded-dots",
+        //     link: route("organizer.events.chat.index"),
+        //     stateVariables: isForm,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIsChat(!isForm);
+        //         setIscurrentState("chat");
+        //         updateIconSidebar(e);
+        //     },
+        //     // hasPermissions: ["edit_questionnaire_form"],
+        // },
         {
             id: "Questionnaire",
             label: "Questionnaire Form",
@@ -498,6 +503,37 @@ const Navdata = () => {
             hasPermissions: ["view_contact_form"],
         },
         {
+            id: "refferal_link",
+            label: "Referral Link",
+            icon: "bx bx-share-alt",
+            link: route('organizer.events.refferal-link.index'),
+            stateVariables: isRefferalLink,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsRefferalLink(!isRefferalLink);
+                setIscurrentState('refferal-link');
+                updateIconSidebar(e);
+            },
+            hasPermissions: [
+                'view_referral_link'
+            ],
+        },
+        {
+            id: "event_badge",
+            label: "Event Badges",
+            icon: "bx bx-badge",
+            link: route('organizer.events.badge.index'),
+            stateVariables: isEventBadge,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsRefferalLink(!isEventBadge);
+                setIscurrentState('event_badge');
+                updateIconSidebar(e);
+            },
+            hasPermissions: [
+                'view_event_badge'
+            ],
+        },{
             id: "Report",
             label: "Reports",
             icon: "bx bxs-report",
@@ -513,7 +549,7 @@ const Navdata = () => {
                 "view_attendee_report",
                 "view_ticket_report",
                 "view_session_report",
-                "view_refund_ticket_report"
+                "view_refund_ticket_report",
             ],
             subItems: [
                 {
@@ -545,7 +581,23 @@ const Navdata = () => {
                     hasPermissions: ["view_refund_ticket_report"],
                 },
             ],
+        },{
+            id: "prayer_request",
+            label: "Prayer Request Report",
+            icon: "bx bx-donate-heart",
+            link: route('organizer.prayer-requests.index'),
+            stateVariables: isPrayerRequest,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsPrayerRequest(!isPrayerRequest);
+                setIscurrentState('prayer_request');
+                updateIconSidebar(e);
+            },
+            hasPermissions: [
+                'view_prayer_request'
+            ],
         },
+
         // }] : []),
     ];
 

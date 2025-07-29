@@ -42,6 +42,9 @@ class AuthenticatedSessionController extends Controller
     {
         //Custom logic to login user as attendee may sigunup with different event keeping same email address
         // Laravel default auth guard will not work here
+        $url = route('organizer.events.website', $eventApp->uuid);
+        $code = substr(sha1(mt_rand()), 1, 32);
+        $personal_url = $url . '?link=' . $code;
 
         $user = Attendee::where('event_app_id', $eventApp->id)->where('email', $request->email)->first();
         if ($user) {
@@ -49,7 +52,8 @@ class AuthenticatedSessionController extends Controller
                 'email' => ['required', 'email'],
                 'password' => ['required'],
             ]);
-
+            $user->personal_url = $personal_url;
+            $user->save();
             if (Hash::check($credentials['password'], $user->password)) {
                 Auth::guard('attendee')->login($user);
                 $request->session()->regenerate();

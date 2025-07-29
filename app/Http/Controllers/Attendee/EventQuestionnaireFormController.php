@@ -99,6 +99,7 @@ class EventQuestionnaireFormController extends Controller
             ]);
         }
 
+        $this->eventBadgeDetail('questionnaire', $eventApp->id,$formSubmission->attendee_id,$formSubmission->id);
         return back()->withSuccess("Updated");
     }
 }

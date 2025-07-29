@@ -30,7 +30,9 @@ class Attendee extends Authenticatable
         'type',
         'avatar',
         'qr_code',
-        'location'
+        'location',
+        'personal_url',
+        'referral_link',
     ];
 
     protected $appends = [
@@ -284,5 +286,10 @@ class Attendee extends Authenticatable
         })->delete();
 
         return true;
+    }
+    
+    public function prayerRequest()
+    {
+        return $this->hasMany(PrayerRequest::class);
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\v1\Attendee\BadgeAchievementController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\v1\AuthController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\Api\v1\Attendee\ProfileController;
 use App\Http\Controllers\Api\v1\Attendee\RegisterController;
 use App\Http\Controllers\Api\v1\Organizer\EventSessionController;
 use App\Http\Controllers\Api\v1\Attendee\EventController as AttendeeEventController;
+use App\Http\Controllers\Api\v1\Attendee\PrayerRequestController as AttendeePrayerRequestController;
 use App\Http\Controllers\Api\v1\Attendee\QuestionAttendeeController as AttendeeQuestionAttendeeController;
 use App\Http\Controllers\Api\v1\Organizer\AddonController;
 use App\Http\Controllers\Api\v1\Organizer\AssignTicketApiController;
@@ -20,6 +22,7 @@ use App\Http\Controllers\Api\v1\Organizer\TicketController;
 use App\Http\Controllers\Api\v1\Organizer\EventPostsController;
 use App\Http\Controllers\Api\v1\Organizer\PasswordController;
 use App\Http\Controllers\Api\v1\Organizer\PaymentController as OrganizerPaymentController;
+use App\Http\Controllers\Api\v1\Organizer\PrayerRequestController;
 use App\Http\Controllers\Api\v1\Organizer\ProfileController as OrganizerProfileController;
 
 /*
@@ -116,6 +119,10 @@ Route::prefix('user')->group(function () {
         // Payments
         Route::get('events/{event}/payments', [OrganizerPaymentController::class, 'index']);
         Route::get('/events/{event}/payments/search', [OrganizerPaymentController::class, 'search']);
+        //prayer request 
+        Route::get('events/organizer/prayer-requests/{event_id}', [PrayerRequestController::class, 'index']);
+        Route::put('events/organizer/prayer-requests/update/{id}', [PrayerRequestController::class, 'update']);
+        Route::delete('events/organizer/prayer-requests/delete/{id}', [PrayerRequestController::class, 'destroy']);
     });
 });
 
@@ -187,5 +194,13 @@ Route::prefix('attendee')->group(function () {
         //fav session
         Route::get('/favsession/{sessionid}', [AttendeeEventController::class, 'favsession']);
         Route::get('/allfav', [AttendeeEventController::class, 'allfav']);
+        //Attendee achievement
+        Route::get('/achievement', [BadgeAchievementController::class, 'index'])->name('attendee.achievement');
+        //Prayer Request
+        Route::get('/prayer-requests', [AttendeePrayerRequestController::class, 'index']);
+        Route::post('/prayer-requests', [AttendeePrayerRequestController::class, 'store']);
+        Route::put('/prayer-requests/{id}', [AttendeePrayerRequestController::class, 'update']);
+        Route::delete('/prayer-requests/{id}', [AttendeePrayerRequestController::class, 'destroy']);
+        Route::post('/prayer-request/view/{id}', [AttendeePrayerRequestController::class, 'view']);
     });
 });

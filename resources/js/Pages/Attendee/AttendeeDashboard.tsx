@@ -16,7 +16,6 @@ import EventSessionsTimeLine from "./common/EventSessionsTimeLine";
 import moment from "moment";
 
 const AttendeeDashboard = ({ eventApp }: any) => {
-
     const selectedSessions = eventApp.event_sessions.filter(
         (session: any) => session.selected_by_attendee
     );
