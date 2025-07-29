@@ -9,6 +9,7 @@ import Other from './Components/Other';
 import HasPermission from '../../../../../Components/HasPermission';
 import Features from './Components/Features';
 import Images from './Components/Images';
+import AddtoGoogleCalendar from './Components/AddtoGoogleCalendar';
 
 function Event() {
     return (
@@ -37,6 +38,9 @@ function Event() {
                                     <HasPermission permission="delete_events">
                                         <Other />
                                     </HasPermission>
+                                </Col>
+                                <Col xs={12}>
+                                    <AddtoGoogleCalendar />
                                 </Col>
                                 <Col xs={12}>
                                     <HasPermission permission="edit_events">
