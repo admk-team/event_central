@@ -102,6 +102,7 @@
         "react-toastify": "^10.0.6",
         "read-excel-file": "^5.8.7",
         "redux": "^5.0.1",
+        "rollup": "^4.46.1",
         "rsuite": "^5.79.1",
         "sass": "1.69.7",
         "simplebar-react": "^3.2.6",
