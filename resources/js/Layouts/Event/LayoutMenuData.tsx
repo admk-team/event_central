@@ -32,6 +32,7 @@ const Navdata = () => {
     const [isChat, setIsChat] = useState<boolean>(false);
     const [isContactForm, setIsContactForm] = useState<boolean>(false);
     const [isReport, setIsReport] = useState<boolean>(false);
+    const [isPrayerRequest, setIsPrayerRequest] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>("Dashboard");
 
@@ -70,6 +71,7 @@ const Navdata = () => {
         if (iscurrentState !== "ContactForm") setIsContactForm(false);
         if (iscurrentState !== "refferal-link") setIsRefferalLink(false);
         if (iscurrentState !== "event_badge") setIsEventBadge(false);
+         if (iscurrentState !== "prayer_request") setIsPrayerRequest(false);
         if (iscurrentState !== "chat") setIsChat(false);
         if (iscurrentState !== "Questionnaire_response")
             setIsQuestionnaireResponse(false);
@@ -579,7 +581,23 @@ const Navdata = () => {
                     hasPermissions: ["view_refund_ticket_report"],
                 },
             ],
+        },{
+            id: "prayer_request",
+            label: "Prayer Request Report",
+            icon: "bx bx-donate-heart",
+            link: route('organizer.prayer-requests.index'),
+            stateVariables: isPrayerRequest,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsPrayerRequest(!isPrayerRequest);
+                setIscurrentState('prayer_request');
+                updateIconSidebar(e);
+            },
+            hasPermissions: [
+                'view_prayer_request'
+            ],
         },
+
         // }] : []),
     ];
 

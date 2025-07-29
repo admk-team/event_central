@@ -15,6 +15,7 @@ const Navdata = () => {
     const [purchaseTickets, setPurchaseTickets] = useState<boolean>(false);
     const [questionnaire, setquestionnaire] = useState<boolean>(false);
     const [IsAchievement, setIsAchievement] = useState<boolean>(false);
+    const [IsPrayerRequest, setIsPrayerRequest] = useState<boolean>(false);
     const [isChat, setIsChat] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>("Dashboard");
@@ -63,6 +64,9 @@ const Navdata = () => {
         if (iscurrentState !== "chat") {
             setIsChat(false);
         }
+         if (iscurrentState !== "PrayerRequest") {
+            setIsPrayerRequest(false);
+        }
         // if (iscurrentState !== "Q&A") {
         //     setIsQA(false);
         // }
@@ -80,6 +84,7 @@ const Navdata = () => {
         questionnaire,
         isUpgradeTicket,
         IsAchievement,
+        IsPrayerRequest,
     ]);
 
     const menuItems: any = [
@@ -239,6 +244,19 @@ const Navdata = () => {
             label: "Achievements",
             icon: "bx bxs-medal",
             link: route("attendee.achievement"),
+            stateVariables: isMore,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsMore(!isMore);
+                setIscurrentState("More");
+                updateIconSidebar(e);
+            },
+        },
+          {
+            id: "PrayerRequest",
+            label: "Prayer Request",
+            icon: "bx bx-donate-heart",
+            link: route("attendee.prayer"),
             stateVariables: isMore,
             click: function (e: any) {
                 e.preventDefault();
