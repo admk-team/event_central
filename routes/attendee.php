@@ -12,6 +12,7 @@ use App\Http\Controllers\Attendee\Payment\PaymentController;
 use App\Http\Controllers\Attendee\EventPostController;
 use App\Http\Controllers\Attendee\EventQuestionnaireFormController;
 use App\Http\Controllers\Attendee\EventRegistrationFormController;
+use App\Http\Controllers\Attendee\GoogleController;
 use App\Http\Controllers\Attendee\Payment\RefundPaymentController;
 use App\Http\Controllers\Attendee\ProfileController;
 use App\Http\Controllers\Attendee\QrCodeController;
@@ -41,8 +42,8 @@ Route::prefix('{eventApp}/event-registration-form')->name('attendee.event-regist
 });
 
 // http://127.0.0.1:8000/google-login/callback
-Route::get('/google-login/redirect', [AuthenticatedSessionController::class, 'googleRedirect'])->name('attendee.google.redirect');
-Route::get('/google-login/callback', [AuthenticatedSessionController::class, 'googleCallback'])->name('attendee.google.callback');
+Route::get('{eventApp}/google-login/redirect', [AuthenticatedSessionController::class, 'googleRedirect'])->name('attendee.google.redirect');
+Route::get('google-login/callback', [AuthenticatedSessionController::class, 'googleCallback'])->name('attendee.google.callback');
 
 // Route::middleware(['auth'])->group(function () {
 Route::get('get-attendee-purchased-tickets/{attendee}', [AttendeeUpgradeTicketController::class, 'getAttendeePurchasedTickets'])
