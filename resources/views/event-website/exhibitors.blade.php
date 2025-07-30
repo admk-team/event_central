@@ -34,7 +34,21 @@
                     @endif
                     @if ($exhibitor->web)
                         <div>
-                            <b>Web: </b> {{ $exhibitor->web }}
+                            <a target="_blank" href="{{ $exhibitor->web }}">
+                                        <i class="bi bi-globe"></i>
+                            </a>
+                            <a target="_blank" href="{{ $exhibitor->facebook }}">
+                                <i class="bi bi-facebook"></i>
+                            </a>
+                            <a style="text-decoration: none; color:black" target="_blank" href="{{ $exhibitor->twitter }}">
+                                <i class="bi bi-twitter-x"></i>
+                            </a>
+                            <a  target="_blank" href="{{ $exhibitor->linkedin }}">
+                                <i class="bi bi-linkedin"></i>
+                            </a>
+                            <a style="text-decoration: none; color:red" target="_blank" href="{{ $exhibitor->youtube }}">
+                                <i class="bi bi-youtube"></i>
+                            </a>
                         </div>
                     @endif
                 </li>
