@@ -34,6 +34,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
     const [totalAmount, setTotalAmount] = useState(0);
     const [processing, setProcessing] = useState(false);
     const paymentNoteRef = useRef(null);
+    const [blockCheckout, setBlockCheckout] = useState(false);
 
     const getDiscountAmount = (discount: any, total: number) => {
         if (!discount) return 0;
@@ -324,6 +325,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
                                                 onTicketDetailsUpdated={
                                                     handleTicketCardChanged
                                                 }
+                                                onBlockCheckout={setBlockCheckout}
                                             ></TicketCard>
                                         ))}
                                     {!organizerView && eventApp.public_tickets.length > 0 &&
@@ -336,6 +338,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
                                                 onTicketDetailsUpdated={
                                                     handleTicketCardChanged
                                                 }
+                                                onBlockCheckout={setBlockCheckout}
                                             ></TicketCard>
                                         ))}
                                 </Row>
@@ -389,7 +392,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
                                             <Col md={4} lg={4}></Col>
                                             <Col md={4} lg={4}>
                                                 <Button
-                                                    disabled={allTicketDetails.length === 0 || processing}
+                                                    disabled={allTicketDetails.length === 0 || processing || blockCheckout}
                                                     onClick={submitCheckOut}
                                                     className="btn btn-success w-100"
                                                 >

@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\AttendeePurchasedTickets;
 use App\Http\Requests\Organizer\Event\User\AttendeeStoreRequest;
+use App\Models\AddonVariant;
 
 class AttendeeController extends Controller
 {
@@ -221,7 +222,32 @@ class AttendeeController extends Controller
     public function getPurchasedTicketAddons(AttendeePurchasedTickets  $attendeePurchasedTicket)
     {
         $attendeePurchasedTicket->load('purchased_addons');
-        return response()->json(['addons' => $attendeePurchasedTicket->purchased_addons]);
+        $addons = $attendeePurchasedTicket->purchased_addons;
+        $addon_attributes = [];
+        foreach ($addons as $addon) {
+            $pivot = DB::table('addon_purchased_ticket')
+                ->where('attendee_purchased_ticket_id', $attendeePurchasedTicket->id)
+                ->where('addon_id', $addon->id)
+                ->first();
+
+            $variant = AddonVariant::with(['attributeValues' => ['addonAttribute', 'addonAttributeOption']])->find($pivot->addon_variant_id);
+            if (! $variant) continue;
+
+            $addon->price = $variant->price;
+            $addon_attributes[$addon->id] = [];
+            foreach ($variant->attributeValues as $attrValue) {
+                $attribute = $attrValue->addonAttribute;
+                $option = $attrValue->addonAttributeOption;
+                $addon_attributes[$addon->id][$attribute->name] = $option->value;
+            }
+        }
+
+        $addons = $addons->toArray();
+        foreach ($addons as &$addon) {
+            $addon['attributes'] = $addon_attributes[$addon['id']] ?? [];
+        }
+
+        return response()->json(['addons' => $addons]);
     }
 
     public function eventChechIn(Attendee $attendee)

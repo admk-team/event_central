@@ -199,7 +199,7 @@ class AddonController extends Controller
 
             foreach ($variant['attribute_values'] as $attributeValue) {
                 if (isset($attributeValue['attribute_index']) && isset($attributeValue['option_index'])) {
-                    $variantModel->attributeValues()->create([
+                    $variantModel->attributeValues()->updateOrCreate([
                         'addon_attribute_id' => $attributeIndexToIdMap[$attributeValue['attribute_index']]['id'],
                         'addon_attribute_option_id' => $attributeIndexToIdMap[$attributeValue['attribute_index']]['options'][$attributeValue['option_index']],
                     ]);

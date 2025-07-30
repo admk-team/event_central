@@ -3,12 +3,13 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Col, Row, Form } from "react-bootstrap";
 
-const TicketDetail = ({ ticket_no, ticket, fees_sub_total, addons_sub_total, onAddonsUpdated }: any) => {
+const TicketDetail = ({ ticket_no, ticket, fees_sub_total, addons_sub_total, onAddonsUpdated, onBlockCheckout }: any) => {
     const [selectedAddons, setSelectedAddons] = useState<any>([]);
     const [addonOptions, setAddonsOptions] = useState<any>([]);
     const [addons, setAddons] = useState<any>(ticket.addons);
     const [fees, setFees] = useState<any>(ticket.fees);
     const [feesOptions, setFeesOptions] = useState<any>([]);
+    const [addonVariantErrors, setAddonVariantErrors] = useState<Record<number, string | null>>({});
 
     useEffect(() => {
         createAddonOptions();
@@ -46,10 +47,13 @@ const TicketDetail = ({ ticket_no, ticket, fees_sub_total, addons_sub_total, onA
                     <Form.Check
                         id={id}
                         type="checkbox"
-                        label={addon.full_name.replace(/\([^)]*\)/g, `(${getSelectedAddon(addon, selectedAddons).selectedVariant?.price ?? addon.price})`)}
+                        label={addon.full_name.replace(/\([^)]*\)/g, `(${getSelectedAddon(addon, selectedAddons).selectedVariant?.price ?? addon.variants[0]?.price ?? addon.price})`)}
                         key={id}
                         onChange={(e) => handleCheckChanged(e, addon)}
                     />
+                    {addonVariantErrors[addon.id] && (
+                        <p className="text-danger ps-4">{addonVariantErrors[addon.id]}</p>
+                    )}
                     {isAddonSelect(addon, selectedAddons) && (
                         addon.attributes.map((attribute: any) => (
                             <div key={attribute.id} className="ps-4 mt-2 mb-3">
@@ -73,6 +77,27 @@ const TicketDetail = ({ ticket_no, ticket, fees_sub_total, addons_sub_total, onA
     };
 
     const handleCheckChanged = (e: any, addon: any) => {
+        // Select first variant by default
+        if (addon.variants?.length) {
+            addon.selectedVariant = addon.variants[0];
+            addon.attributes = addon.attributes.map((attr: any) => {
+                return {
+                    ...attr,
+                    options: attr.options.map((option: any) => {
+                        for (const attrValue of addon.selectedVariant.attribute_values) {
+                            if (option.id === attrValue.addon_attribute_option_id) {
+                                return {
+                                    ...option,
+                                    isSelected: true,
+                                }
+                            }
+                        }
+                        return option;
+                    }),
+                };
+            });
+        }
+        
         setSelectedAddons(
             (prev: any) =>
                 isAddonSelect(addon, prev)
@@ -157,6 +182,20 @@ const TicketDetail = ({ ticket_no, ticket, fees_sub_total, addons_sub_total, onA
                     })
 
                     newState.selectedVariant = selectedVariant;
+
+                    if (newState.selectedVariant.qty_sold >= newState.selectedVariant.qty) {
+                        setAddonVariantErrors(prev => ({
+                            ...prev,
+                            [newState.id]: "This variant is sold out. Please select another variant",
+                        }));
+                        onBlockCheckout && onBlockCheckout(true);
+                    } else {
+                        setAddonVariantErrors(prev => ({
+                            ...prev,
+                            [newState.id]: null,
+                        }));
+                        onBlockCheckout && onBlockCheckout(false);
+                    }
 
                     return newState;
                 }

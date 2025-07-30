@@ -205,7 +205,7 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                                             <h5 className="card-title mb-3">Other Information</h5>
                                             {attendee[0]?.field_values.length > 0 && attendee[0]?.form_fields.length > 0 ? (
                                                     attendee[0]?.form_fields.map((field:any, index:any) => (
-                                                        <div className="row p-2">
+                                                        <div className="row p-2" key={index}>
                                                             <div className="col">
                                                                 <h6 className="mb-0">{field.label}:
                                                                     <span className="text-secondary">{" "}{attendee[0]?.field_values[index].value}
