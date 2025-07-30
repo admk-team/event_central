@@ -13,6 +13,7 @@ class Attendee extends Authenticatable
     use HasFactory, HasApiTokens;
 
     protected $fillable = [
+        'parent_id',
         'email',
         'password',
         'event_app_id',
@@ -248,12 +249,12 @@ class Attendee extends Authenticatable
         $this->removeFriend($attendee);
 
         // Update any existing requests to blocked
-        FriendRequest::where(function($query) use ($attendee) {
+        FriendRequest::where(function ($query) use ($attendee) {
             $query->where('sender_id', $this->id)
-                  ->where('receiver_id', $attendee->id);
-        })->orWhere(function($query) use ($attendee) {
+                ->where('receiver_id', $attendee->id);
+        })->orWhere(function ($query) use ($attendee) {
             $query->where('sender_id', $attendee->id)
-                  ->where('receiver_id', $this->id);
+                ->where('receiver_id', $this->id);
         })->update(['status' => 'blocked']);
 
         // Create a blocked record if no existing request
@@ -278,17 +279,17 @@ class Attendee extends Authenticatable
         $attendee->friends()->detach($this->id);
 
         // Update any friend requests
-        FriendRequest::where(function($query) use ($attendee) {
+        FriendRequest::where(function ($query) use ($attendee) {
             $query->where('sender_id', $this->id)
-                  ->where('receiver_id', $attendee->id);
-        })->orWhere(function($query) use ($attendee) {
+                ->where('receiver_id', $attendee->id);
+        })->orWhere(function ($query) use ($attendee) {
             $query->where('sender_id', $attendee->id)
-                  ->where('receiver_id', $this->id);
+                ->where('receiver_id', $this->id);
         })->delete();
 
         return true;
     }
-    
+
     public function prayerRequest()
     {
         return $this->hasMany(PrayerRequest::class);

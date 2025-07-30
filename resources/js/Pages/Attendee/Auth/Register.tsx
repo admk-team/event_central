@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import GuestLayout from "../../../Layouts/Attendee/GuestLayout";
 import { Head, Link, useForm, usePage } from "@inertiajs/react";
 import { Button, Col, Container, Form, Row, Spinner } from "react-bootstrap";
@@ -17,6 +17,7 @@ export default function Register() {
         position: '',
         location: '',
         password_confirmation: "",
+        group_emails: ''
     });
 
     useEffect(() => {
@@ -24,6 +25,8 @@ export default function Register() {
             reset("password", "password_confirmation");
         };
     }, []);
+
+    const [isGroup, setIsGroup] = useState(false)
 
     const submit = (e: any) => {
         e.preventDefault();
@@ -251,6 +254,37 @@ export default function Register() {
                             >
                                 {errors.password_confirmation}
                             </Form.Control.Feedback>
+                        </div>
+                        {isGroup}
+                        <div className="mt-4">
+                            {/* <span className="text-danger ms-1">*</span> */}
+                            <Form.Check
+                                id="group_registration"
+                                name="check"
+                                className="d-inline me-1"
+                                type="checkbox"
+                                checked={isGroup}
+                                onChange={(event) => { setIsGroup(event.target.checked) }}
+
+                            />
+                            <Form.Label htmlFor="group_registration" className="form-label user-select-none cursor-pointer">
+                                Group Registration
+                            </Form.Label>
+
+                            {isGroup && (
+                                <>
+                                    <textarea
+                                        id="group_emails"
+                                        placeholder="xyz@gmail.com,abc@gmail.com...."
+                                        name="group_emails"
+                                        // value={data.group_emails}
+                                        className={"mt-1 form-control " + (errors?.group_emails ? 'is-invalid' : '')}
+                                        onChange={(e: any) => setData('group_emails', e.target.value)}
+                                        required
+                                    />
+                                    <Form.Control.Feedback type="invalid" className='mt-2 d-block'>{errors.group_emails}</Form.Control.Feedback>
+                                </>
+                            )}
                         </div>
 
                         <Button

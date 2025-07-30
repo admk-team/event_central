@@ -23,6 +23,7 @@ use App\Models\AttendeePurchasedTickets;
 use App\Models\AttendeeTransferedTicket;
 use Illuminate\Support\Facades\DB;
 use Nette\Schema\Expect;
+use App\Services\GroupAttendeeService;
 
 class RegisteredUserController extends Controller
 {
@@ -58,19 +59,47 @@ class RegisteredUserController extends Controller
                 Rule::unique('attendees', 'email')->where('event_app_id', $eventApp->id),
             ],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'group_emails' => [
+                'nullable',
+                function ($attribute, $value, $fail) {
+                    $emails = array_map('trim', explode(',', $value));
+                    foreach ($emails as $email) {
+                        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                            $fail("One or more emails in $attribute are invalid.");
+                        }
+                    }
+                },
+            ],
         ]);
 
-        $user = Attendee::create([
-            'event_app_id' => $eventApp->id,
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'position' => $request->position,
-            'location' => $request->location,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'referral_link' =>  $referralLink ?? null,
-            'personal_url' => $personal_url ?? null,
-        ]);
+        $groupService = app(GroupAttendeeService::class);
+
+        DB::beginTransaction();
+        try {
+            $user = Attendee::create([
+                'event_app_id' => $eventApp->id,
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'position' => $request->position,
+                'location' => $request->location,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'referral_link' => $referralLink,
+                'personal_url' => $personal_url,
+            ]);
+
+            $groupEmails = is_array($request->group_emails)
+                ? $request->group_emails
+                : explode(',', $request->group_emails ?? '');
+
+            $groupService->createGroupAttendees($groupEmails, $user, $eventApp, $referralLink, $personal_url);
+
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            report($e);
+            return back()->withErrors(['error' => 'Something went wrong. Please try again.']);
+        }
 
         $this->checkIfTicketTransferCase($request->email, $eventApp, $user);
         $this->eventBadgeDetail('register', $eventApp->id, $user->id, $referralLink);
@@ -80,13 +109,14 @@ class RegisteredUserController extends Controller
                 $this->eventBadgeDetail('referral_link', $eventApp->id, $referralUser, $user->id);
             }
         }
-       
+
         event(new Registered($user));
 
         Auth::guard('attendee')->login($user);
 
         return redirect(route('attendee.event.detail.dashboard'));
     }
+
 
     private function checkIfTicketTransferCase($email, $eventApp, $user)
     {
