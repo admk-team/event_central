@@ -17,6 +17,7 @@ const Navdata = () => {
     const [IsAchievement, setIsAchievement] = useState<boolean>(false);
     const [IsPrayerRequest, setIsPrayerRequest] = useState<boolean>(false);
     const [isChat, setIsChat] = useState<boolean>(false);
+    const [isFriend, setIsFriend] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>("Dashboard");
     // const [IsQA, setIsQA] = useState<boolean>(false);
@@ -64,6 +65,9 @@ const Navdata = () => {
         if (iscurrentState !== "chat") {
             setIsChat(false);
         }
+        if (iscurrentState !== "friend") {
+            setIsFriend(false);
+        }
          if (iscurrentState !== "PrayerRequest") {
             setIsPrayerRequest(false);
         }
@@ -79,6 +83,7 @@ const Navdata = () => {
         isMore,
         isQr,
         isChat,
+        isFriend,
         isPost,
         purchaseTickets,
         questionnaire,
@@ -131,20 +136,32 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
-        // {
-        //     id: "chat",
-        //     label: "Chat",
-        //     icon: "bx bx-message-rounded-dots",
-        //     link: route("attendee.event.chat"),
-        //     stateVariables: isChat,
-        //     click: function (e: any) {
-        //         e.preventDefault();
-        //         setIsChat(!isChat);
-        //         setIscurrentState("chat");
-        //         updateIconSidebar(e);
-        //     },
-        //     // hasPermissions: ["edit_questionnaire_form"],
-        // },
+        {
+            id: "chat",
+            label: "Chat",
+            icon: "bx bx-message-rounded-dots",
+            link: route("attendee.event.chat"),
+            stateVariables: isChat,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsChat(!isChat);
+                setIscurrentState("chat");
+                updateIconSidebar(e);
+            },
+        },
+        {
+            id: "friend",
+            label: "Freind System",
+            icon: "bx bx-info-circle",
+            link: route("friend.index"),
+            stateVariables: isFriend,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsFriend(!isFriend);
+                setIscurrentState("friend");
+                updateIconSidebar(e);
+            },
+        },
         {
             id: "more",
             label: "Contact",
