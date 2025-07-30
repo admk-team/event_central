@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Attendee\AttendeeCheckoutRequest;
 use App\Mail\AttendeeTicketPurchasedEmail;
+use App\Models\AddonVariant;
 use App\Models\Attendee;
 use chillerlan\QRCode\Common\EccLevel;
 use Illuminate\Support\Facades\Storage;
@@ -280,10 +281,6 @@ class PaymentController extends Controller
                 'addons_sub_total' => $ticketsDetail['addons_sub_total'],
                 'total' => $ticket['base_price'] + $ticketsDetail['fees_sub_total'] + $ticketsDetail['addons_sub_total']
             ]);
-
-            $ticketDB = EventAppTicket::find($ticket['id']);
-            $ticketDB->increment('qty_sold');
-            $ticketDB->save();
             
             foreach ($addons as $addon) {
                 DB::table('addon_purchased_ticket')->insert([
@@ -350,6 +347,15 @@ class PaymentController extends Controller
                 $addonObject = Addon::find($addon->id);
                 $addonObject->increment('qty_sold');
                 $addonObject->save();
+
+                $pivot = DB::table('addon_purchased_ticket')
+                    ->where('attendee_purchased_ticket_id', $purchasedTicket->id)
+                    ->where('addon_id', $addon->id)
+                    ->first();
+                $variant = AddonVariant::with(['attributeValues' => ['addonAttribute', 'addonAttributeOption']])->find($pivot->addon_variant_id);
+                if (! $variant) continue;
+                $variant->increment('qty_sold');
+                $variant->save();
             }
         }
 
