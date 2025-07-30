@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\EventBadge;
+use App\Models\EventBadgeDetail;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
@@ -114,5 +116,58 @@ class Controller extends BaseController
                 null,
                 Response::HTTP_NO_CONTENT
             );
+    }
+    protected function eventBadgeDetail($type, $event_app_id, $attendee_id, $content_code): void
+    {
+        $badges = EventBadge::where('event_app_id', $event_app_id)
+            ->where('type', $type)
+            ->orderBy('milestone', 'asc')
+            ->get();
+
+        if ($badges->isEmpty()) {
+            return;
+        }
+
+        foreach ($badges as $badge) {
+            $commonConditions = [
+                ['event_app_id', '=', $event_app_id],
+                ['type', '=', $type],
+                ['attendee_id', '=', $attendee_id],
+                ['event_badge_id', '=', $badge->id],
+            ];
+
+            // Skip if a completed record exists for the same content_code
+            $existing = EventBadgeDetail::where($commonConditions)
+                ->where('content_code', $content_code)
+                ->whereNotNull('completed_at')
+                ->first();
+
+            if ($existing) {
+                continue;
+            }
+
+            // Get latest badge detail
+            $latestDetail = EventBadgeDetail::where($commonConditions)
+                ->latest()
+                ->first();
+
+            // Skip if already completed
+            if ($latestDetail && $latestDetail->completed_at) {
+                continue;
+            }
+
+            $totalPoints = ($latestDetail?->achieved_points ?? 0) + $badge->points;
+            $isCompleted = $totalPoints >= $badge->milestone;
+
+            EventBadgeDetail::create([
+                'type' => $type,
+                'achieved_points' => $totalPoints,
+                'attendee_id' => $attendee_id,
+                'event_badge_id' => $badge->id,
+                'content_code' => $content_code,
+                'event_app_id' => $event_app_id,
+                'completed_at' => $isCompleted ? now() : null,
+            ]);
+        }
     }
 }

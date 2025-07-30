@@ -122,7 +122,7 @@ const AttendeeMore = ({ eventApp }: any) => {
                                                     </h5>
                                                 </Col>
                                             </Row>
-                                            <Row>
+                                            {/* <Row>
                                                 <Col md={4} lg={4}>
                                                     <h5>Contact Email</h5>
                                                 </Col>
@@ -144,7 +144,7 @@ const AttendeeMore = ({ eventApp }: any) => {
                                                         }
                                                     </a>
                                                 </Col>
-                                            </Row>
+                                            </Row> */}
                                             <Row>
                                                 <Accordion defaultActiveKey="0">
                                                     <Accordion.Item eventKey="1">

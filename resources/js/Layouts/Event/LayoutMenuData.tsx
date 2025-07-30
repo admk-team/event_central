@@ -25,9 +25,14 @@ const Navdata = () => {
         useState<boolean>(false);
     const [isAssignTicket, setIsAssignTicket] = useState<boolean>(false);
     const [isUpgradeTicket, setUpgradeTicket] = useState<boolean>(false);
+    const [isRefferalLink, setIsRefferalLink] = useState<boolean>(false);
+    const [isEventBadge, setIsEventBadge] = useState<boolean>(false);
     const [isBaseTemplate, setIsBaseTemplate] = useState<boolean>(false);
     const [isEmailTemplate, setIsEmailTemplate] = useState<boolean>(false);
+    const [isChat, setIsChat] = useState<boolean>(false);
     const [isContactForm, setIsContactForm] = useState<boolean>(false);
+    const [isReport, setIsReport] = useState<boolean>(false);
+    const [isPrayerRequest, setIsPrayerRequest] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>("Dashboard");
 
@@ -50,6 +55,7 @@ const Navdata = () => {
         if (iscurrentState !== "Dashboard") setIsDashboard(false);
         if (iscurrentState !== "Event") setIsEvent(false);
         if (iscurrentState !== "Content") setIsContent(false);
+        if (iscurrentState !== "Report") setIsContent(false);
         if (iscurrentState !== "users") setIsAttendees(false);
         if (iscurrentState !== "registrationForm") setIsForm(false);
         if (iscurrentState !== "website") setIsWebsite(false);
@@ -59,11 +65,16 @@ const Navdata = () => {
             setIsSessionAttendance(false);
         if (iscurrentState !== "Tickets") setIsTickets(false);
         // if (iscurrentState !== 'refundTicket') setIsRefundTicket(false);
-        if (iscurrentState !== 'Questionnaire') setIsQuestionnaireForm(false);
-        if (iscurrentState !== 'BaseTemplate') setIsBaseTemplate(false);
-        if (iscurrentState !== 'EmailTemplate') setIsEmailTemplate(false);
-        if (iscurrentState !== 'ContactForm') setIsContactForm(false);
-        if (iscurrentState !== 'Questionnaire_response') setIsQuestionnaireResponse(false);
+        if (iscurrentState !== "Questionnaire") setIsQuestionnaireForm(false);
+        if (iscurrentState !== "BaseTemplate") setIsBaseTemplate(false);
+        if (iscurrentState !== "EmailTemplate") setIsEmailTemplate(false);
+        if (iscurrentState !== "ContactForm") setIsContactForm(false);
+        if (iscurrentState !== "refferal-link") setIsRefferalLink(false);
+        if (iscurrentState !== "event_badge") setIsEventBadge(false);
+         if (iscurrentState !== "prayer_request") setIsPrayerRequest(false);
+        if (iscurrentState !== "chat") setIsChat(false);
+        if (iscurrentState !== "Questionnaire_response")
+            setIsQuestionnaireResponse(false);
         // if (iscurrentState !== 'assignTickets') setIsTickets(false);
         // if (iscurrentState !== 'upgradeTicket') setIsTickets(false);
     }, [
@@ -81,6 +92,8 @@ const Navdata = () => {
         isContactForm,
         // isRefundTicket,
         isTickets,
+        isReport,
+        isChat,
         // isAssignTicket,
         // isUpgradeTicket
     ]);
@@ -105,7 +118,7 @@ const Navdata = () => {
                 setIscurrentState("Dashboard");
                 updateIconSidebar(e);
             },
-            // hasPermissions: ["view_event_dashboard"],
+            hasPermissions: ["view_event_dashboard"],
         },
         {
             id: "attendees",
@@ -215,21 +228,21 @@ const Navdata = () => {
         },
         ...(isEventStarted
             ? [
-                {
-                    id: "sessionAttendance",
-                    label: "Sessions Attendance",
-                    icon: "bx bx-calendar-check",
-                    link: route("organizer.events.attendance.index"),
-                    stateVariables: IsSessionAttendance,
-                    click: function (e: any) {
-                        e.preventDefault();
-                        setIsSessionAttendance(!IsSessionAttendance);
-                        setIscurrentState("sessionAttendance");
-                        updateIconSidebar(e);
-                    },
-                    hasPermissions: ["view_session_attendence"],
-                },
-            ]
+                  {
+                      id: "sessionAttendance",
+                      label: "Sessions Attendance",
+                      icon: "bx bx-calendar-check",
+                      link: route("organizer.events.attendance.index"),
+                      stateVariables: IsSessionAttendance,
+                      click: function (e: any) {
+                          e.preventDefault();
+                          setIsSessionAttendance(!IsSessionAttendance);
+                          setIscurrentState("sessionAttendance");
+                          updateIconSidebar(e);
+                      },
+                      hasPermissions: ["view_session_attendence"],
+                  },
+              ]
             : []),
         {
             id: "website",
@@ -332,7 +345,9 @@ const Navdata = () => {
                 {
                     id: "purchasedNotification",
                     label: "Purchased Notification",
-                    link: route("organizer.events.purchased-ticket.notification"),
+                    link: route(
+                        "organizer.events.purchased-ticket.notification"
+                    ),
                     parentId: "tickets",
                 },
             ],
@@ -397,6 +412,21 @@ const Navdata = () => {
             hasPermissions: ["print_badges"],
         },
         // ...(isEventStarted ? [{
+
+        // {
+        //     id: "chat",
+        //     label: "Chat",
+        //     icon: "bx bx-message-rounded-dots",
+        //     link: route("organizer.events.chat.index"),
+        //     stateVariables: isForm,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIsChat(!isForm);
+        //         setIscurrentState("chat");
+        //         updateIconSidebar(e);
+        //     },
+        //     // hasPermissions: ["edit_questionnaire_form"],
+        // },
         {
             id: "Questionnaire",
             label: "Questionnaire Form",
@@ -431,10 +461,10 @@ const Navdata = () => {
             id: "EmailCampaign",
             label: "Email Campaign",
             icon: "bx bxs-envelope",
-            link: route('organizer.events.email-campaign.index'),
+            link: route("organizer.events.email-campaign.index"),
             click: function (e: any) {
                 e.preventDefault();
-                setIscurrentState('EmailCampaign');
+                setIscurrentState("EmailCampaign");
                 updateIconSidebar(e);
             },
         },
@@ -442,10 +472,10 @@ const Navdata = () => {
             id: "BaseTemplate",
             label: "Default Email Template",
             icon: "bx bxs-envelope",
-            link: route('organizer.events.base.template'),
+            link: route("organizer.events.base.template"),
             click: function (e: any) {
                 e.preventDefault();
-                setIscurrentState('BaseTemplate');
+                setIscurrentState("BaseTemplate");
                 updateIconSidebar(e);
             },
         },
@@ -453,10 +483,10 @@ const Navdata = () => {
             id: "EmailTemplate",
             label: "Email Template",
             icon: "bx bxs-envelope",
-            link: route('organizer.events.email-template.index'),
+            link: route("organizer.events.email-template.index"),
             click: function (e: any) {
                 e.preventDefault();
-                setIscurrentState('EmailTemplate');
+                setIscurrentState("EmailTemplate");
                 updateIconSidebar(e);
             },
         },
@@ -464,14 +494,111 @@ const Navdata = () => {
             id: "ContactForm",
             label: "Contact Form",
             icon: "bx  bxs-contact",
-            link: route('organizer.events.contact-forms.index'),
+            link: route("organizer.events.contact-forms.index"),
             click: function (e: any) {
                 e.preventDefault();
-                setIscurrentState('ContactForm');
+                setIscurrentState("ContactForm");
                 updateIconSidebar(e);
             },
             hasPermissions: ["view_contact_form"],
         },
+        {
+            id: "refferal_link",
+            label: "Referral Link",
+            icon: "bx bx-share-alt",
+            link: route('organizer.events.refferal-link.index'),
+            stateVariables: isRefferalLink,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsRefferalLink(!isRefferalLink);
+                setIscurrentState('refferal-link');
+                updateIconSidebar(e);
+            },
+            hasPermissions: [
+                'view_referral_link'
+            ],
+        },
+        {
+            id: "event_badge",
+            label: "Event Badges",
+            icon: "bx bx-badge",
+            link: route('organizer.events.badge.index'),
+            stateVariables: isEventBadge,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsRefferalLink(!isEventBadge);
+                setIscurrentState('event_badge');
+                updateIconSidebar(e);
+            },
+            hasPermissions: [
+                'view_event_badge'
+            ],
+        },{
+            id: "Report",
+            label: "Reports",
+            icon: "bx bxs-report",
+            link: "/#",
+            stateVariables: isReport,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsReport(!isReport);
+                setIscurrentState("Report");
+                updateIconSidebar(e);
+            },
+            hasAnyPermission: [
+                "view_attendee_report",
+                "view_ticket_report",
+                "view_session_report",
+                "view_refund_ticket_report",
+            ],
+            subItems: [
+                {
+                    id: "attendeeReport",
+                    label: "Attendee",
+                    link: route("organizer.events.report.attendee.index"),
+                    parentId: "Report",
+                    hasPermissions: ["view_attendee_report"],
+                },
+                {
+                    id: "sessionReport",
+                    label: "Session",
+                    link: route("organizer.events.report.session.index"),
+                    parentId: "Report",
+                    hasPermissions: ["view_session_report"],
+                },
+                {
+                    id: "ticketReport",
+                    label: "Ticket",
+                    link: route("organizer.events.report.ticket.index"),
+                    parentId: "Report",
+                    hasPermissions: ["view_ticket_report"],
+                },
+                {
+                    id: "refundTicketReport",
+                    label: "Refund Ticket",
+                    link: route("organizer.events.report.refund-ticket.index"),
+                    parentId: "Report",
+                    hasPermissions: ["view_refund_ticket_report"],
+                },
+            ],
+        },
+        // {
+        //     id: "prayer_request",
+        //     label: "Prayer Request Report",
+        //     icon: "bx bx-donate-heart",
+        //     link: route('organizer.prayer-requests.index'),
+        //     stateVariables: isPrayerRequest,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIsPrayerRequest(!isPrayerRequest);
+        //         setIscurrentState('prayer_request');
+        //         updateIconSidebar(e);
+        //     },
+        //     hasPermissions: [
+        //         'view_prayer_request'
+        //     ],
+        // },
+
         // }] : []),
     ];
 

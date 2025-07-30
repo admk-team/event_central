@@ -42,7 +42,10 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request, EventApp $eventApp): RedirectResponse
     {
-
+        $referralLink = session('referral_link') ?? null;
+        $url = route('organizer.events.website', $eventApp->uuid);
+        $code = substr(sha1(mt_rand()), 1, 32);
+        $personal_url = $url . '?link=' . $code;
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -65,10 +68,19 @@ class RegisteredUserController extends Controller
             'location' => $request->location,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'referral_link' =>  $referralLink ?? null,
+            'personal_url' => $personal_url ?? null,
         ]);
 
         $this->checkIfTicketTransferCase($request->email, $eventApp, $user);
-
+        $this->eventBadgeDetail('register', $eventApp->id, $user->id, $referralLink);
+        if ($referralLink) {
+            $referralUser = Attendee::where('personal_url', $referralLink)->value('id');
+            if ($referralUser) {
+                $this->eventBadgeDetail('referral_link', $eventApp->id, $referralUser, $user->id);
+            }
+        }
+       
         event(new Registered($user));
 
         Auth::guard('attendee')->login($user);

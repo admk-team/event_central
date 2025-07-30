@@ -42,6 +42,9 @@ class AuthenticatedSessionController extends Controller
     {
         //Custom logic to login user as attendee may sigunup with different event keeping same email address
         // Laravel default auth guard will not work here
+        $url = route('organizer.events.website', $eventApp->uuid);
+        $code = substr(sha1(mt_rand()), 1, 32);
+        $personal_url = $url . '?link=' . $code;
 
         $user = Attendee::where('event_app_id', $eventApp->id)->where('email', $request->email)->first();
         if ($user) {
@@ -49,7 +52,8 @@ class AuthenticatedSessionController extends Controller
                 'email' => ['required', 'email'],
                 'password' => ['required'],
             ]);
-
+            $user->personal_url = $personal_url;
+            $user->save();
             if (Hash::check($credentials['password'], $user->password)) {
                 Auth::guard('attendee')->login($user);
                 $request->session()->regenerate();
@@ -73,23 +77,22 @@ class AuthenticatedSessionController extends Controller
 
         return redirect(route('attendee.login', [$eventId]));
     }
-    public function googleRedirect()
+
+    public function googleRedirect($id)
     {
-        return Socialite::driver('google')->with([
-            'state' => '1'
-        ])->redirect();
+        return Socialite::driver('google')->with(['state' => $id])->redirect();
     }
+
     public function googleCallback(Request $request)
     {
         $event_id = $request->input('state');
         $googleUser = Socialite::driver('google')->stateless()->user();
 
         $user = Attendee::where('email', $googleUser->email)->first();
-        // if (!$user) {
-        //     $user = Attendee::create(['name' => $googleUser->name, 'email' => $googleUser->email, 'password' => Hash::make(rand(100000, 999999))]);
-        // }
-
-        // Auth::guard('attendee')->login($user);
+        if (!$user) {
+            $user = Attendee::create(['name' => $googleUser->name, 'email' => $googleUser->email, 'password' => Hash::make(rand(100000, 999999))]);
+        }
+        Auth::guard('attendee')->login($user);
         return redirect(route('attendee.event.detail.dashboard', [1]));
     }
 }

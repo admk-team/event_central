@@ -18,6 +18,8 @@ import {
     InfoWindow,
 } from "@react-google-maps/api";
 
+import QuillEditor from "../../../../Components/Quill/QuillEditor";
+
 const containerStyle = {
     width: "100%",
     height: "200px",
@@ -445,21 +447,14 @@ function CreateEditModal({
                                     >
                                         Event Description
                                     </Form.Label>
-                                    <Form.Control
-                                        as="textarea"
-                                        className="form-control"
-                                        id="description"
-                                        rows={10}
-                                        isInvalid={!!errors.description}
-                                        placeholder="Enter description"
+                                    <div className={!!errors.description ? "is-invalid" : ""}>
+                                        <QuillEditor
                                         value={data.description}
-                                        onChange={(e) =>
-                                            setData(
-                                                "description",
-                                                e.target.value
-                                            )
-                                        }
-                                    />
+                                        onChange={(val) => setData("description", val)}
+                                        placeholder="Enter description"
+                                        className="form-control"
+                                        />
+                                    </div>
                                     <Form.Control.Feedback type="invalid">
                                         {" "}
                                         {errors.description}{" "}

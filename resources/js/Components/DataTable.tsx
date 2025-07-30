@@ -64,20 +64,33 @@ export default function DataTable<T>({
         getSelectedRows: rowSelector.getSelectedRows,
     };
     // toggle the columns
-    const [visibleColumnsIndexes, setVisibleColumnsIndexes] = useState<number[]>(columns.map((_, index) => index));
-    console.log('tesign visible column', visibleColumnsIndexes);
+    const [visibleColumnsIndexes, setVisibleColumnsIndexes] = useState<number[]>([]);
 
+    // Sync from localStorage
+    useEffect(() => {
+        const stored = window.localStorage.getItem(`${title}`);
+        if (stored) {
+            setVisibleColumnsIndexes(JSON.parse(stored));
+        } else {
+            const allIndexes = columns.map((_, index) => index);
+            setVisibleColumnsIndexes(allIndexes);
+            window.localStorage.setItem(`${title}`, JSON.stringify(allIndexes));
+        }
+    }, [columns, title]);
 
+    // Toggle column visibility
     const toggleColumnVisibility = (index: number) => {
-        setVisibleColumnsIndexes(prev =>
-            prev.includes(index)
-                ? prev.filter(key => key !== index)
-                : [...prev, index]
-        );
+        setVisibleColumnsIndexes(prev => {
+            const updated = prev.includes(index)
+                ? prev.filter(i => i !== index)
+                : [...prev, index];
+            window.localStorage.setItem(`${title}`, JSON.stringify(updated));
+            return updated;
+        });
     };
 
-    const filteredColumns = columns.filter((col, index) => visibleColumnsIndexes.includes(index));
-    console.log('filterColumns', filteredColumns);
+    const filteredColumns = columns.filter((_, index) => visibleColumnsIndexes.includes(index));
+    console.log(`filterColumns of ${title}`, filteredColumns);
 
     return (
         <div className="card">
@@ -197,7 +210,7 @@ export default function DataTable<T>({
                                                 <div>
                                                     {col.header !== sort?.column as any ? (
                                                         <ChevronsUpDown size={20} color="#666" />
-                                                    ) : sort.desc ? (
+                                                    ) : sort?.desc ? (
                                                         <ArrowDown size={17} color="#666" />
                                                     ) : (
                                                         <ArrowUp size={17} color="#666" />

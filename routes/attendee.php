@@ -5,13 +5,17 @@ use App\Http\Controllers\Attendee\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Attendee\Auth\EmailChangeController;
 use App\Http\Controllers\Attendee\Auth\PasswordController;
 use App\Http\Controllers\Attendee\Auth\RegisteredUserController;
+use App\Http\Controllers\Attendee\BadgeAchievementController;
+use App\Http\Controllers\Attendee\ChatController;
 use App\Http\Controllers\Attendee\EventController;
 use App\Http\Controllers\Attendee\EventSessionController;
 use App\Http\Controllers\Attendee\Payment\PaymentController;
 use App\Http\Controllers\Attendee\EventPostController;
 use App\Http\Controllers\Attendee\EventQuestionnaireFormController;
 use App\Http\Controllers\Attendee\EventRegistrationFormController;
+use App\Http\Controllers\Attendee\GoogleController;
 use App\Http\Controllers\Attendee\Payment\RefundPaymentController;
+use App\Http\Controllers\Attendee\PrayerRequestController;
 use App\Http\Controllers\Attendee\ProfileController;
 use App\Http\Controllers\Attendee\QrCodeController;
 use App\Http\Controllers\Attendee\QuestionAttendeeController as AttendeeQuestionAttendeeController;
@@ -40,12 +44,12 @@ Route::prefix('{eventApp}/event-registration-form')->name('attendee.event-regist
 });
 
 // http://127.0.0.1:8000/google-login/callback
-Route::get('/google-login/redirect', [AuthenticatedSessionController::class, 'googleRedirect'])->name('attendee.google.redirect');
-Route::get('/google-login/callback', [AuthenticatedSessionController::class, 'googleCallback'])->name('attendee.google.callback');
+Route::get('{eventApp}/google-login/redirect', [AuthenticatedSessionController::class, 'googleRedirect'])->name('attendee.google.redirect');
+Route::get('google-login/callback', [AuthenticatedSessionController::class, 'googleCallback'])->name('attendee.google.callback');
 
 // Route::middleware(['auth'])->group(function () {
 Route::get('get-attendee-purchased-tickets/{attendee}', [AttendeeUpgradeTicketController::class, 'getAttendeePurchasedTickets'])
-        ->name('get.attendee.purchased.tickets');
+    ->name('get.attendee.purchased.tickets');
 Route::get('get-attendee-sessions/{purchasedTicketId}', [AttendeeUpgradeTicketController::class, 'getAttendeePurchasedTicketSessions'])
     ->name('get.attendee.purchased.ticket.sessions');
 // });
@@ -107,6 +111,19 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
             Route::get('/', [EventQuestionnaireFormController::class, 'index']);
             Route::post('/', [EventQuestionnaireFormController::class, 'submit'])->name('.submit');
         });
+        //Attendee achievement
+        Route::get('/achievement', [BadgeAchievementController::class, 'index'])->name('attendee.achievement');
+
+        // Chat
+        Route::get('chat', [ChatController::class, 'index'])->name('attendee.event.chat');
+        Route::get('get-chat', [ChatController::class, 'getMessages'])->name('attendee.event.get-messages');
+        Route::post('send-message', [ChatController::class, 'store']);
+        //Prayer Request
+        Route::get('/prayer-requests', [PrayerRequestController::class, 'index'])->name('attendee.prayer');
+        Route::post('/prayer-requests', [PrayerRequestController::class, 'store'])->name('attendee.prayer.store');
+        Route::put('/prayer-requests/{id}', [PrayerRequestController::class, 'update'])->name('attendee.prayer.update');
+        Route::delete('/prayer-requests/{id}', [PrayerRequestController::class, 'destroy'])->name('attendee.prayer.destroy');
+        Route::post('/prayer-request/view/{id}', [PrayerRequestController::class, 'view'])->name('attendee.prayer.view');
     });
 
     Route::put('/attendee-profile-update/{attendee}', [ProfileController::class, 'update'])->name('attendee.profile.update');
