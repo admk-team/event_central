@@ -21,43 +21,47 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        if (! Auth::user()->can('view_event_dashboard')) {
-            abort(403);
+        // if (! Auth::user()->can('view_event_dashboard')) {
+        //     abort(403);
+        // }
+
+        if (Auth::user()->can('view_event_dashboard')) {
+            $totalAttendee = EventApp::where('organizer_id', Auth::user()->id)->where('id', session('event_id'))->withCount('attendees')->get()->sum('attendees_count');
+            $totalSession = EventApp::where('organizer_id', Auth::user()->id)->where('id', session('event_id'))
+                ->withCount('event_sessions')
+                ->get()
+                ->sum('event_sessions_count');
+            $totalTickets = EventApp::where('organizer_id', Auth::user()->id)
+                ->where('id', session('event_id'))
+                ->withCount('tickets')
+                ->get()
+                ->sum('tickets_count');
+            $totalPartners = EventPartner::currentEvent()->count();
+            $totalSpeakers = EventSpeaker::currentEvent()->count();
+            $totalPosts = EventPost::currentEvent()->count();
+            $sessionAttendance = $this->sessionAttendance();
+            $totalRevenue = $this->totalRevenue();
+            $topSession = $this->topSession();
+    
+            $ticketsMetrics = $this->ticketsMetrics();
+            $top10Attendee = $this->top10Attendee();
+            // dd($ticketsMetrics);
+            return Inertia::render('Organizer/Events/Dashboard/index', compact(
+                'totalAttendee',
+                'totalSession',
+                'totalPartners',
+                'totalSpeakers',
+                'totalTickets',
+                'totalPosts',
+                'sessionAttendance',
+                'topSession',
+                'ticketsMetrics',
+                'top10Attendee',
+                'totalRevenue',
+            ));
+        } else {
+            return Inertia::render('Organizer/Events/Dashboard/Empty');
         }
-
-        $totalAttendee = EventApp::where('organizer_id', Auth::user()->id)->where('id', session('event_id'))->withCount('attendees')->get()->sum('attendees_count');
-        $totalSession = EventApp::where('organizer_id', Auth::user()->id)->where('id', session('event_id'))
-            ->withCount('event_sessions')
-            ->get()
-            ->sum('event_sessions_count');
-        $totalTickets = EventApp::where('organizer_id', Auth::user()->id)
-            ->where('id', session('event_id'))
-            ->withCount('tickets')
-            ->get()
-            ->sum('tickets_count');
-        $totalPartners = EventPartner::currentEvent()->count();
-        $totalSpeakers = EventSpeaker::currentEvent()->count();
-        $totalPosts = EventPost::currentEvent()->count();
-        $sessionAttendance = $this->sessionAttendance();
-        $totalRevenue = $this->totalRevenue();
-        $topSession = $this->topSession();
-
-        $ticketsMetrics = $this->ticketsMetrics();
-        $top10Attendee = $this->top10Attendee();
-        // dd($ticketsMetrics);
-        return Inertia::render('Organizer/Events/Dashboard/index', compact(
-            'totalAttendee',
-            'totalSession',
-            'totalPartners',
-            'totalSpeakers',
-            'totalTickets',
-            'totalPosts',
-            'sessionAttendance',
-            'topSession',
-            'ticketsMetrics',
-            'top10Attendee',
-            'totalRevenue',
-        ));
     }
 
     public function sessionAttendance()
