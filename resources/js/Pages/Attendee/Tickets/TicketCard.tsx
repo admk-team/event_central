@@ -16,7 +16,7 @@ import {
 import TicketDetail from "./TicketDetail";
 import { Minus, Plus } from "lucide-react";
 
-const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckOut }: any) => {
+const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckOut, onBlockCheckout }: any) => {
     const isAddedToCart = ticket.is_added_to_cart;
     const [processing, setProcessing] = useState(false);
     const [ticketQty, setTicketQty] = useState(0);
@@ -60,7 +60,6 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckO
         setTicketDetails([...list]);
     }, [ticketQty]);
 
-    console.log(ticket_array);
     const calculateFeesSubTotal = (ticket: any) => {
         let subTotal = 0;
         let ticket_base_price = ticket.base_price;
@@ -82,7 +81,7 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckO
     const calculateAddonsSubTotal = (addons: any) => {
         let subTotal = 0;
         addons.forEach((addon: any) => {
-            subTotal += parseFloat(addon.price);
+            subTotal += parseFloat(addon.selectedVariant?.price ?? addon.price);
         });
         subTotal = parseFloat(subTotal.toFixed(2));
         return subTotal;
@@ -257,6 +256,7 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckO
                                     ticketDetail.ticket_no
                                 }
                                 onAddonsUpdated={handleAddonUpdated}
+                                onBlockCheckout={onBlockCheckout}
                             ></TicketDetail>
                         ))}
                     </Accordion.Body>
