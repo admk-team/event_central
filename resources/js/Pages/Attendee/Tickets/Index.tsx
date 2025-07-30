@@ -153,7 +153,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
     };
 
     useEffect(() => {
-        console.log("Ticket Details", allTicketDetails);
+        // console.log("Ticket Details", allTicketDetails);
         // setDiscount(0);
         // setDiscountCode('');
         updateGrandTotal();

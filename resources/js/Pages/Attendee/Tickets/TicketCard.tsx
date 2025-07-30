@@ -60,7 +60,6 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckO
         setTicketDetails([...list]);
     }, [ticketQty]);
 
-    console.log(ticket_array);
     const calculateFeesSubTotal = (ticket: any) => {
         let subTotal = 0;
         let ticket_base_price = ticket.base_price;

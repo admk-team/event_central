@@ -188,13 +188,11 @@ const TicketDetail = ({ ticket_no, ticket, fees_sub_total, addons_sub_total, onA
                             ...prev,
                             [newState.id]: "This variant is sold out. Please select another variant",
                         }));
-                        onBlockCheckout && onBlockCheckout(true);
                     } else {
                         setAddonVariantErrors(prev => ({
                             ...prev,
                             [newState.id]: null,
                         }));
-                        onBlockCheckout && onBlockCheckout(false);
                     }
 
                     return newState;
@@ -203,6 +201,17 @@ const TicketDetail = ({ ticket_no, ticket, fees_sub_total, addons_sub_total, onA
             })
         })
     }
+
+    useEffect(() => {
+        let blockCheckout = false;
+        for (const key in addonVariantErrors) {
+            if (addonVariantErrors[key]) {
+                blockCheckout = true;
+                break;
+            }
+        }
+        onBlockCheckout && onBlockCheckout(blockCheckout);
+    }, [addonVariantErrors]);
 
     return (
         <Row className="mt-2 p-2 bg-light">
