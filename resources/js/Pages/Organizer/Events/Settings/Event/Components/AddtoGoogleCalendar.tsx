@@ -11,15 +11,16 @@ export default function AddtoGoogleCalendar() {
         return date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
     };
     
+    const end_date = usePage().props.lasteventDate as any;
     const event = {
         title: events.name,
         start: formatToUTC(events.start_date),
+        end: formatToUTC(end_date[0].date),
         details: events.description,
         location: events.location_base
     };
-    console.log(event);
 
-    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${event.start}&details=${encodeURIComponent(event.details)}&location=${encodeURIComponent(event.location)}`;
+    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${event.start}/${event.end}&details=${encodeURIComponent(event.details)}&location=${encodeURIComponent(event.location)}`;
 
     return (
         <>

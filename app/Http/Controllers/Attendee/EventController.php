@@ -34,8 +34,9 @@ class EventController extends Controller
                 return $session->is_favourite === true;
             })->values()
         );
+        $lasteventDate = $eventApp->dates()->orderBy('date', 'desc')->get();
         return Inertia::render('Attendee/AttendeeDashboard', compact([
-            'eventApp',
+            'eventApp','lasteventDate'
         ]));
     }
 

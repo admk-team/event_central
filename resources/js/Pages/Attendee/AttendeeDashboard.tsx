@@ -15,10 +15,11 @@ import DateDifferenceFromToday from "./common/DateDifferenceFromToday";
 import EventSessionsTimeLine from "./common/EventSessionsTimeLine";
 import moment from "moment";
 
-const AttendeeDashboard = ({ eventApp }: any) => {
+const AttendeeDashboard = ({ eventApp,lasteventDate }: any) => {
     const selectedSessions = eventApp.event_sessions.filter(
         (session: any) => session.selected_by_attendee
     );
+    
     const isEventAvailable = eventApp && Object.keys(eventApp).length > 0;
     const formatToUTC = (dateString:any) => {
         const date = new Date(dateString); // local time
@@ -27,10 +28,11 @@ const AttendeeDashboard = ({ eventApp }: any) => {
     const event = {
         title: eventApp.name,
         start: formatToUTC(eventApp.start_date),
+        end: formatToUTC(lasteventDate[0].date),
         details: eventApp.description,
         location: eventApp.location_base
     };
-    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${event.start}&details=${encodeURIComponent(event.details)}&location=${encodeURIComponent(event.location)}`;
+    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${event.start}/${event.end}&details=${encodeURIComponent(event.details)}&location=${encodeURIComponent(event.location)}`;
 
 
     return (
