@@ -252,19 +252,19 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
-          {
-            id: "PrayerRequest",
-            label: "Prayer Request",
-            icon: "bx bx-donate-heart",
-            link: route("attendee.prayer"),
-            stateVariables: isMore,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsMore(!isMore);
-                setIscurrentState("More");
-                updateIconSidebar(e);
-            },
-        },
+        //   {
+        //     id: "PrayerRequest",
+        //     label: "Prayer Request",
+        //     icon: "bx bx-donate-heart",
+        //     link: route("attendee.prayer"),
+        //     stateVariables: isMore,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIsMore(!isMore);
+        //         setIscurrentState("More");
+        //         updateIconSidebar(e);
+        //     },
+        // },
 
         // {
         //     id: "attendee-pass",

@@ -146,10 +146,10 @@ class OrganizerPermissionsSeeder extends Seeder
         'view_ticket_report',
         'view_refund_ticket_report',
         
-        //Prayer Request
-        'view_prayer_request',
-        'edit_prayer_request',
-        'delete_prayer_request',
+        // //Prayer Request
+        // 'view_prayer_request',
+        // 'edit_prayer_request',
+        // 'delete_prayer_request',
     ];
 
     public function run(): void
