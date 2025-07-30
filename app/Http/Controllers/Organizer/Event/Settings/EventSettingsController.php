@@ -23,12 +23,13 @@ class EventSettingsController extends Controller
 
         $event = EventApp::with('images')->find(session('event_id'));
         $tracks = Track::where('event_app_id', session('event_id'))->latest()->get(); // For Track Manager
-        
+        $lasteventDate = $event->dates()->orderBy('date', 'desc')->get();
         return Inertia::render("Organizer/Events/Settings/Event/Index", [
             'event' => $event,
             'enableTracks' => eventSettings()->getValue('enable_tracks', false),
             'enableCheckIn' => eventSettings()->getValue('enable_check_in', false),
             'tracks' => $tracks,
+            'lasteventDate' => $lasteventDate
         ]);
     }
 

@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('attendees', function (Blueprint $table) {
-            $table->string('google_id')->nullable();
+        Schema::create('attribute_options', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('attribute_id')->constrained()->onDelete('cascade');
+            $table->string('value');
+            $table->timestamps();
         });
     }
 
@@ -21,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('attendees', function (Blueprint $table) {
-            $table->dropColumn('google_id');
-        });
+        Schema::dropIfExists('attribute_options');
     }
 };

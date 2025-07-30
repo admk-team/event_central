@@ -15,6 +15,7 @@ import {
     Button,
 } from "react-bootstrap";
 import FormCheckInput from "react-bootstrap/esm/FormCheckInput";
+import Variants from "./Variants";
 
 export default function CreateEditModal({
     show,
@@ -35,7 +36,21 @@ export default function CreateEditModal({
     // console.log(eventApp);
 
     const { data, setData, post, put, processing, errors, reset, transform } =
-        useForm({
+        useForm<{
+            _method: string;
+            event_app_id: number;
+            organizer_id: number;
+            name: string;
+            price: string;
+            qty_total: string;
+            qty_sold: string;
+            enable_discount: boolean;
+            event_app_ticket_id?: number | null;
+            attributes: any[];
+            variants: any[];
+            deletedAttributes?: number[];
+            deletedOptions?: number[];
+        }>({
             _method: isEdit ? "PUT" : "POST",
             event_app_id: addon?.event_app_id ?? eventApp.id,
             organizer_id: addon?.organizer_id ?? eventApp.organizer_id,
@@ -45,6 +60,10 @@ export default function CreateEditModal({
             qty_sold: addon?.qty_sold ?? "0",
             enable_discount: addon?.enable_discount ?? true,
             event_app_ticket_id: addon?.event_app_ticket_id,
+            attributes: addon?.attributes ?? [],
+            variants: addon?.variants ?? [],
+            deletedAttributes: [],
+            deletedOptions: [],
         });
 
     const submit = (e: any) => {
@@ -135,20 +154,24 @@ export default function CreateEditModal({
                     <Row>
                         <Col md={12}>
                             <FormGroup className="mb-3">
-                                <Form.Label>Use ticket inventory</Form.Label>
-                                <div className="form-check form-switch form-switch-lg" dir='ltr'>
-                                    <FormCheckInput
-                                        type="checkbox" 
-                                        className="form-check-input"
-                                        checked={useTicketInventory}
-                                        onChange={(e: any) => {
-                                            setUseTicketInventory(e.target.checked);
-                                            if (e.target.checked === false) {
-                                                setData('event_app_ticket_id', null);
-                                            }
-                                        }}
-                                    />
-                                </div>
+                                <Form.Label className="m-0 d-flex justify-content-between align-items-center border p-3 cursor-pointer rounded" htmlFor="useTicketInventory">
+                                    <Form.Label className="m-0 cursor-pointer" htmlFor="useTicketInventory">Use ticket inventory</Form.Label>
+                                    <div className="form-check form-switch form-switch-lg" dir='ltr'>
+                                        <FormCheckInput
+                                            id="useTicketInventory"
+                                            type="checkbox" 
+                                            className="form-check-input"
+                                            checked={useTicketInventory}
+                                            onChange={(e: any) => {
+                                                setUseTicketInventory(e.target.checked);
+                                                if (e.target.checked === false) {
+                                                    setData('event_app_ticket_id', null);
+                                                }
+                                            }}
+                                        />
+                                    </div>
+                                </Form.Label>
+
                             </FormGroup>
                         </Col>
                         {useTicketInventory && (
@@ -226,19 +249,39 @@ export default function CreateEditModal({
                             </FormGroup>
                         </Col>
 
-                        <Col md={4}>
+                        <Col md={12}>
                             <FormGroup className="mb-3">
-                                <Form.Label>Enable Discount</Form.Label>
-                                <div className="form-check form-switch form-switch-lg" dir='ltr'>
-                                    <FormCheckInput
-                                        type="checkbox" 
-                                        className="form-check-input"
-                                        checked={data.enable_discount}
-                                        onChange={(e: any) => setData('enable_discount', e.target.checked)}
-                                    />
-                                </div>
+                                <Form.Label className="m-0 d-flex justify-content-between align-items-center border p-3 cursor-pointer rounded" htmlFor="enableDiscount">
+                                    <Form.Label className="m-0 cursor-pointer" htmlFor="enableDiscount">Enable Discount</Form.Label>
+                                    <div className="form-check form-switch form-switch-lg" dir='ltr'>
+                                        <FormCheckInput
+                                            id="enableDiscount"
+                                            type="checkbox" 
+                                            className="form-check-input"
+                                            checked={data.enable_discount}
+                                            onChange={(e: any) => setData('enable_discount', e.target.checked)}
+                                        />
+                                    </div>
+                                </Form.Label>
                             </FormGroup>
                         </Col>
+
+                        <Variants 
+                            data={{
+                                attributes: data.attributes,
+                                variants: data.variants,
+                                defaultPrice: data.price,
+                            }}
+                            onDataChange={(variantsData) => {
+                                setData({
+                                    ...data,
+                                    attributes: variantsData.attributes,
+                                    variants: variantsData.variants,
+                                    deletedAttributes: variantsData.deletedAttributes,
+                                    deletedOptions: variantsData.deletedOptions,
+                                });
+                            }}
+                        />
                     </Row>
                 </Form>
             </Modal.Body>

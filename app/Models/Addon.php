@@ -46,6 +46,16 @@ class Addon extends Model
         return $this->belongsTo(EventAppTicket::class, 'event_app_ticket_id');
     }
 
+    public function attributes()
+    {
+        return $this->hasMany(AddonAttribute::class);
+    }
+
+    public function variants()
+    {
+        return $this->hasMany(AddonVariant::class);
+    }
+
     public function scopeCurrentEvent($query)
     {
         $query->where('event_app_id', session('event_id'));

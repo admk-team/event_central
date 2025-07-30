@@ -21,11 +21,13 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Attendee\AttendeeCheckoutRequest;
 use App\Mail\AttendeeTicketPurchasedEmail;
+use App\Models\AddonVariant;
 use App\Models\Attendee;
 use chillerlan\QRCode\Common\EccLevel;
 use Illuminate\Support\Facades\Storage;
 use App\Models\AttendeePurchasedTickets;
 use App\Models\AttendeeRefundTicket;
+use App\Models\EventAppTicket;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
@@ -66,7 +68,28 @@ class PaymentController extends Controller
         if ($organizerView) {     //For organizer show all tickets
             $eventApp->load([
                 'tickets.sessions',
-                'tickets.addons',
+                'tickets' => [
+                    'addons' => function ($query) {
+                        $query->where(function ($query) {
+                            $query->where('addons.event_app_ticket_id', null)
+                            ->whereColumn('qty_total', '>', 'qty_sold');
+                        })
+                        ->orWhereHas('ticket', function ($query) {
+                            $query->whereColumn('qty_total', '>', 'qty_sold');
+                        });
+
+                        $query->with([
+                            'attributes' => [
+                                'options'
+                            ],
+                            'variants' => [
+                                'attributeValues' => [
+                                    'addonAttributeOption'
+                                ]
+                            ],
+                        ]);
+                    }
+                ],
                 'tickets.fees'
             ]);
         } else {                //For attendees show only public tickets
@@ -78,9 +101,20 @@ class PaymentController extends Controller
                             $query->where('addons.event_app_ticket_id', null)
                                 ->whereColumn('qty_total', '>', 'qty_sold');
                         })
-                            ->orWhereHas('ticket', function ($query) {
-                                $query->whereColumn('qty_total', '>', 'qty_sold');
-                            });
+                        ->orWhereHas('ticket', function ($query) {
+                            $query->whereColumn('qty_total', '>', 'qty_sold');
+                        });
+
+                        $query->with([
+                            'attributes' => [
+                                'options'
+                            ],
+                            'variants' => [
+                                'attributeValues' => [
+                                    'addonAttributeOption'
+                                ]
+                            ],
+                        ]);
                     }
                 ],
                 'public_tickets.fees'
@@ -192,8 +226,14 @@ class PaymentController extends Controller
                 'addons_sub_total' => $ticketsDetail['addons_sub_total'],
                 'total' => $ticket['base_price'] + $ticketsDetail['fees_sub_total'] + $ticketsDetail['addons_sub_total']
             ]);
-            $addon_ids = array_column($addons, "id");
-            $attendee_purchased_ticket->purchased_addons()->sync($addon_ids);
+            
+            foreach ($addons as $addon) {
+                DB::table('addon_purchased_ticket')->insert([
+                    'attendee_purchased_ticket_id' => $attendee_purchased_ticket->id,
+                    'addon_id' => $addon['id'],
+                    'addon_variant_id' => isset($addon['selectedVariant']) ? $addon['selectedVariant']['id'] : null,
+                ]);
+            }
         }
         return $payment;
     }
@@ -241,8 +281,14 @@ class PaymentController extends Controller
                 'addons_sub_total' => $ticketsDetail['addons_sub_total'],
                 'total' => $ticket['base_price'] + $ticketsDetail['fees_sub_total'] + $ticketsDetail['addons_sub_total']
             ]);
-            $addon_ids = $names = array_column($addons, "id");
-            $attendee_purchased_ticket->purchased_addons()->sync($addon_ids);
+            
+            foreach ($addons as $addon) {
+                DB::table('addon_purchased_ticket')->insert([
+                    'attendee_purchased_ticket_id' => $attendee_purchased_ticket->id,
+                    'addon_id' => $addon['id'],
+                    'addon_variant_id' => isset($addon['selectedVariant']) ? $addon['selectedVariant']['id'] : null,
+                ]);
+            }
         }
         //Update Attendee Payment status and session etc
         $this->updateAttendeePaymnet($payment->uuid);
@@ -294,10 +340,23 @@ class PaymentController extends Controller
         //5. Increment Addon Sold Qty
         $payment->load('purchased_tickets.purchased_addons'); //Load Tickets and Addons
         foreach ($payment->purchased_tickets as $purchasedTicket) {
+            $ticketDB = EventAppTicket::find($purchasedTicket['event_app_ticket_id']);
+            $ticketDB->increment('qty_sold');
+            $ticketDB->save();
+
             foreach ($purchasedTicket->purchased_addons as $addon) {
                 $addonObject = Addon::find($addon->id);
                 $addonObject->increment('qty_sold');
                 $addonObject->save();
+
+                $pivot = DB::table('addon_purchased_ticket')
+                    ->where('attendee_purchased_ticket_id', $purchasedTicket->id)
+                    ->where('addon_id', $addon->id)
+                    ->first();
+                $variant = AddonVariant::with(['attributeValues' => ['addonAttribute', 'addonAttributeOption']])->find($pivot->addon_variant_id);
+                if (! $variant) continue;
+                $variant->increment('qty_sold');
+                $variant->save();
             }
         }
 

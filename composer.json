@@ -16,6 +16,7 @@
         "laravel/sanctum": "^3.2",
         "laravel/socialite": "^5.23",
         "laravel/tinker": "^2.8",
+        "league/flysystem-aws-s3-v3": "^3.29",
         "paypal/rest-api-sdk-php": "*",
         "pusher/pusher-php-server": "^7.2",
         "spatie/laravel-permission": "^6.13",

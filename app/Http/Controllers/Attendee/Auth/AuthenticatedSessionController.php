@@ -80,7 +80,8 @@ class AuthenticatedSessionController extends Controller
 
     public function googleRedirect($id)
     {
-        return Socialite::driver('google')->with(['state' => $id])->redirect();
+        return Socialite::driver('google')->with(['state' => $id])
+        ->redirect();
     }
 
     public function googleCallback(Request $request)
@@ -90,9 +91,15 @@ class AuthenticatedSessionController extends Controller
 
         $user = Attendee::where('email', $googleUser->email)->first();
         if (!$user) {
-            $user = Attendee::create(['name' => $googleUser->name, 'email' => $googleUser->email, 'password' => Hash::make(rand(100000, 999999))]);
+            $user = Attendee::create([
+                'event_app_id' => $event_id,
+                'name' => $googleUser->name,
+                'email' => $googleUser->email, 
+                'password' => Hash::make(rand(100000, 999999)),
+                'google_id' => $googleUser->id,
+            ]);
         }
         Auth::guard('attendee')->login($user);
-        return redirect(route('attendee.event.detail.dashboard', [1]));
+        return redirect(route('attendee.event.detail.dashboard'));
     }
 }
