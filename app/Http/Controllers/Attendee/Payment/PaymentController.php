@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\AttendeePurchasedTickets;
 use App\Models\AttendeeRefundTicket;
 use App\Models\EventAppTicket;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 
@@ -72,11 +73,11 @@ class PaymentController extends Controller
                     'addons' => function ($query) {
                         $query->where(function ($query) {
                             $query->where('addons.event_app_ticket_id', null)
-                            ->whereColumn('qty_total', '>', 'qty_sold');
+                                ->whereColumn('qty_total', '>', 'qty_sold');
                         })
-                        ->orWhereHas('ticket', function ($query) {
-                            $query->whereColumn('qty_total', '>', 'qty_sold');
-                        });
+                            ->orWhereHas('ticket', function ($query) {
+                                $query->whereColumn('qty_total', '>', 'qty_sold');
+                            });
 
                         $query->with([
                             'attributes' => [
@@ -101,9 +102,9 @@ class PaymentController extends Controller
                             $query->where('addons.event_app_ticket_id', null)
                                 ->whereColumn('qty_total', '>', 'qty_sold');
                         })
-                        ->orWhereHas('ticket', function ($query) {
-                            $query->whereColumn('qty_total', '>', 'qty_sold');
-                        });
+                            ->orWhereHas('ticket', function ($query) {
+                                $query->whereColumn('qty_total', '>', 'qty_sold');
+                            });
 
                         $query->with([
                             'attributes' => [
@@ -226,7 +227,7 @@ class PaymentController extends Controller
                 'addons_sub_total' => $ticketsDetail['addons_sub_total'],
                 'total' => $ticket['base_price'] + $ticketsDetail['fees_sub_total'] + $ticketsDetail['addons_sub_total']
             ]);
-            
+
             foreach ($addons as $addon) {
                 DB::table('addon_purchased_ticket')->insert([
                     'attendee_purchased_ticket_id' => $attendee_purchased_ticket->id,
@@ -281,7 +282,7 @@ class PaymentController extends Controller
                 'addons_sub_total' => $ticketsDetail['addons_sub_total'],
                 'total' => $ticket['base_price'] + $ticketsDetail['fees_sub_total'] + $ticketsDetail['addons_sub_total']
             ]);
-            
+
             foreach ($addons as $addon) {
                 DB::table('addon_purchased_ticket')->insert([
                     'attendee_purchased_ticket_id' => $attendee_purchased_ticket->id,
@@ -330,7 +331,11 @@ class PaymentController extends Controller
 
         //4. Increment discount code used count
         if ($payment->discount_code) {
-            $code = PromoCode::where('code', $payment->discount_code)->first();
+            $code = PromoCode::where('code', $payment->discount_code)
+                ->where('event_app_id', Auth::user()->event_app_id)
+                ->where('status', 'active')
+                ->whereColumn('used_count', '<', 'usage_limit')
+                ->whereDate('end_date', '>', date('Y-m-d'))->first();
             if ($code) {
                 $code->increment('used_count');
                 $code->save();
@@ -380,6 +385,7 @@ class PaymentController extends Controller
     public function  validateDiscCode($disCode)
     {
         $code = PromoCode::where(function ($subQuery) use ($disCode) {
+            $subQuery->where('event_app_id', Auth::user()->event_app_id);
             $subQuery->where('code', $disCode);
             $subQuery->where('status', 'active');
             $subQuery->whereColumn('used_count', '<', 'usage_limit');
