@@ -34,8 +34,9 @@ class EventController extends Controller
                 return $session->is_favourite === true;
             })->values()
         );
+        $lasteventDate = $eventApp->dates()->orderBy('date', 'desc')->get();
         return Inertia::render('Attendee/AttendeeDashboard', compact([
-            'eventApp',
+            'eventApp','lasteventDate'
         ]));
     }
 
@@ -191,6 +192,7 @@ class EventController extends Controller
                 'event_session_id' => $sessionid,
                 'fav' => 1,
             ]);
+            $this->eventBadgeDetail('session_favorite', $attendee->event_app_id, $attendee->id, $alreadyfav->id);
         }
 
         return back()->withSuccess("Session added to favourite");

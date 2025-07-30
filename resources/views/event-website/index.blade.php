@@ -6,8 +6,27 @@
         <div class="container">
             <div class="hero-content">
                 <div class="event-meta">
-                    <div class="event-date">{{ date('F j, Y', strtotime($event->dates[0]->date)) }}</div>
-                    <div class="">{{ date('F j, Y', strtotime($event->dates()->orderBy('date', 'desc')->get()[0]->date)) }}</div>
+                    @php
+                        $startDate = \Carbon\Carbon::parse($event->dates()->orderBy('date', 'asc')->first()->date);
+                        $endDate = \Carbon\Carbon::parse($event->dates()->orderBy('date', 'desc')->first()->date);
+                    @endphp
+                    @if ($startDate->isSameDay($endDate))
+                        <div class="event-date">
+                            {{ $startDate->format('F j, Y') }}
+                        </div>
+                    @else
+                        <div class="event-date">
+                            {{ $startDate->format('F j, Y') }}
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="40" viewBox="0 0 24 24">
+                            <path
+                                d="m18.707 12.707-3 3a1 1 0 0 1-1.414-1.414L15.586 13H6a1 1 0 0 1 0-2h9.586l-1.293-1.293a1 1 0 0 1 1.414-1.414l3 3a1 1 0 0 1 0 1.414z"
+                                style="fill:#1c1b1e" data-name="Right" />
+                        </svg>
+                        <div class="event-date">
+                            {{ $endDate->format('F j, Y') }}
+                        </div>
+                    @endif
                     <div class="event-location">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
                             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -156,7 +175,7 @@
                 </div>
                 <div class="about-content">
                     <div class="about-text">
-                        {{ $event->description }}
+                        {!! $event->description !!}
                     </div>
                     <div class="about-video">
                         <div class="video-wrapper">
@@ -237,6 +256,12 @@
                                         </a>
                                     @endif
                                 </ul>
+                                <div class="description-header">
+                                    <h6>Description:</h6>
+                                    <div class="description">
+                                        <span>{{ $ticket->description }}</span>
+                                    </div>
+                                </div>
 
                                 <a href="{{ route('attendee.register', $event) }}"
                                     class="btn btn-primary btn-block mt-auto">Register Now</a>
@@ -274,7 +299,7 @@
                                         </div>
                                         <!-- <div class="modal-footer">
 
-                                        </div> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                        </div> -->
                                     </div>
                                 </div>
                             </div>

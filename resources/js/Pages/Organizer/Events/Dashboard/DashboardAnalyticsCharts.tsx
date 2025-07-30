@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactApexChart from "react-apexcharts";
-
+import ReactEcharts from "echarts-for-react";
 import getChartColorsArray from "../../../../Components/Common/ChartsDynamicColor";
 interface CountriesChartsProps {
     dataColors: string; // String of color array (e.g., '["--vz-primary", "--vz-success"]')
@@ -12,71 +12,93 @@ interface AudiencesChartsProps {
     series: { name: string; data: number[] }[];
     sessionNames: string[]; // Now represents ticket names
 }
+interface PieChartProps {
+    dataColors: string;
+    data: { name: string; value: number }[];
+}
+
+interface SimpleDonutProps {
+    dataColors: string;
+    series: number[];
+    labels: string[];
+}
+
 const AudiencesCharts = ({ dataColors, series, sessionNames }: AudiencesChartsProps) => {
     const chartAudienceColumnChartsColors = getChartColorsArray(dataColors);
-
+    const shortNames = sessionNames.map(name =>
+        name.length > 12 ? name.slice(0, 12) + '…' : name
+    );
     const options: any = {
         chart: {
             type: 'bar',
-            height: 309,
-            stacked: true,
-            toolbar: {
+            height: 350,
+                toolbar: {
                 show: false,
             },
         },
         plotOptions: {
             bar: {
-                horizontal: false,
-                columnWidth: '20%',
-                borderRadius: 6,
+                borderRadius: 10,
+                dataLabels: {
+                    position: 'top',
+                },
+                columnWidth: '40%',
             },
         },
         dataLabels: {
-            enabled: false,
-        },
-        legend: {
-            show: true,
-            position: 'bottom',
-            horizontalAlign: 'center',
-            fontWeight: 400,
-            fontSize: '8px',
-            offsetX: 0,
-            offsetY: 0,
-            markers: {
-                width: 9,
-                height: 9,
-                radius: 4,
+            enabled: true,
+            formatter: function (val: number) {
+                return isNaN(val) ? '' : val.toString();
+            },
+            offsetY: -20,
+            style: {
+                fontSize: '12px',
+                colors: ['#304758'],
             },
         },
-        stroke: {
-            show: true,
-            width: 2,
-            colors: ['transparent'],
-        },
-        grid: {
-            show: false,
-        },
-        colors: chartAudienceColumnChartsColors,
+
         xaxis: {
-            categories: sessionNames, // Now ticket names
+            categories: shortNames,
+            position: 'top',
+            axisBorder: {
+                show: false,
+            },
             axisTicks: {
                 show: false,
             },
-            axisBorder: {
-                show: true,
-                strokeDashArray: 1,
-                height: 1,
-                width: '100%',
-                offsetX: 0,
-                offsetY: 0,
+            tooltip: {
+                enabled: true,
+                formatter: function (val: string, opts: any) {
+                    return sessionNames[opts.dataPointIndex] || val;
+                },
+            },
+            labels: {
+                rotate: 0,
+                style: {
+                    fontSize: '10px',
+                    whiteSpace: 'nowrap',
+                    textOverflow: 'ellipsis',
+                    overflow: 'hidden',
+                    colors: ['#161718ff'],
+                },
             },
         },
+
         yaxis: {
-            show: false,
+            axisBorder: {
+                show: false,
+            },
+            axisTicks: {
+                show: false,
+            },
+            labels: {
+                show: false,
+            },
         },
         fill: {
             opacity: 1,
         },
+        colors: chartAudienceColumnChartsColors,
     };
 
     return (
@@ -284,5 +306,80 @@ const UsersByDeviceCharts = ({ dataColors, series }:any) => {
     );
 };
 
+//Pie Chart
+const PieChart: React.FC<PieChartProps> = ({ dataColors, data }) => {
+    var chartPieColors = getChartColorsArray(dataColors);
+    var option = {
+        tooltip: {
+            trigger: 'item',
+            formatter: (params: any) => {
+                return `${params.name}: $${params.value.toLocaleString()} (${params.percent}%)`;
+            },
+        },
+        legend: {
+            orient: 'horizontal',
+            top: 'bottom',
+            textStyle: {
+                color: '#030303ff',
+            },
+        },
+        color: chartPieColors,
+        series: [{
+            name: 'Access From',
+            type: 'pie',
+            radius: '40%',
+            data: data,
+            emphasis: {
+                itemStyle: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            },
+        }],
+        textStyle: {
+            fontFamily: 'Poppins, sans-serif'
+        },
+    };
 
-export { AudiencesCharts, AudiencesSessionsCharts, CountriesCharts, UsersByDeviceCharts };
+    return (
+        <React.Fragment>
+            <ReactEcharts style={{ height: "350px" }} option={option} />
+        </React.Fragment>
+    )
+}
+
+// dount chart 
+const SimpleDonut = ({ dataColors, series, labels }: SimpleDonutProps) => {
+    const chartDonutBasicColors = getChartColorsArray(dataColors);
+    const options: any = {
+        chart: {
+            height: 300,
+            type: 'donut',
+        },
+        labels: labels,
+        legend: {
+            position: 'left',
+            horizontalAlign: 'center',
+        },
+        dataLabels: {
+            dropShadow: {
+                enabled: false,
+            }
+        },
+        colors: chartDonutBasicColors,
+    };
+
+    return (
+        <ReactApexChart
+            dir="ltr"
+            className="apex-charts"
+            series={series}
+            options={options}
+            type="donut"
+            height={300}
+        />
+    );
+};
+
+export { AudiencesCharts, AudiencesSessionsCharts,SimpleDonut, CountriesCharts, UsersByDeviceCharts ,PieChart };

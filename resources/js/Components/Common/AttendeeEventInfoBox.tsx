@@ -63,8 +63,7 @@ const AttendeeEventInfoBox = () => {
                                     "DD MMM YYYY"
                                 )}{" "}
                             </h5>
-                            <span className="text-justify h-75">
-                                {eventInfo.description}
+                            <span className="text-justify h-75" dangerouslySetInnerHTML={{ __html: eventInfo.description }}>
                             </span>
                         </div>
                     </div>

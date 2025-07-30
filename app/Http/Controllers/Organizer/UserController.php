@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Organizer;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organizer\UserRequest;
+use App\Models\ChatMember;
 use App\Models\EventApp;
 use App\Models\EventSession;
 use App\Models\ModelPermission;
@@ -55,14 +56,22 @@ class UserController extends Controller
 
         $input['parent_id'] = Auth::user()->owner_id;
         $input['role'] = 'organizer'; // User type
-
+        
         $user = User::create($input);
-
         $user->syncRoles(Role::whereIn('id', [$role_id])->get());
 
         EventApp::syncModelPermissions($accessibleEvents, $user);
 
         EventSession::syncModelPermissions($accessibleEventSessions, $user);
+
+        // for initiating chat against event
+        foreach ($accessibleEvents as $item) {
+            ChatMember::create([
+                'event_id' => $item,
+                'participant_id' => $user->id,
+                'participant_type' => \App\Models\User::class,
+            ]);
+        }
 
         return back()->withSuccess("Created");
     }
@@ -126,11 +135,11 @@ class UserController extends Controller
     }
 
     public function destroyMany(Request $request)
-    {   
+    {
         if (! Auth::user()->can('delete_users')) {
             abort(403);
         }
-        
+
         $request->validate([
             'ids' => 'required|array'
         ]);

@@ -92,7 +92,7 @@ class OrganizerPermissionsSeeder extends Seeder
         // Website
         'view_website',
         'edit_website',
-        
+
         // Questionnaire Form
         'edit_questionnaire_form',
         'questionnaire_response',
@@ -105,6 +105,11 @@ class OrganizerPermissionsSeeder extends Seeder
         'print_badges',
         'refund_ticket',
 
+        // Referral links
+        'view_referral_link',
+        'create_referral_link',
+        'edit_referral_link',
+        'delete_referral_link',
         // Addons
         'scan_addons',
 
@@ -123,10 +128,28 @@ class OrganizerPermissionsSeeder extends Seeder
         'create_ticket_fee',
         'delete_ticket_fee',
         'edit_ticket_fee',
+        //_event_badge
+        'view_event_badge',
+        'create_event_badge',
+        'delete_event_badge',
+        'edit_event_badge',
+        //Reports 
+        'view_attendees_report',
 
         //contact forms
         'view_contact_form',
         'delete_contact_form',
+
+        //Reports section
+        'view_attendee_report',
+        'view_session_report',
+        'view_ticket_report',
+        'view_refund_ticket_report',
+        
+        // //Prayer Request
+        // 'view_prayer_request',
+        // 'edit_prayer_request',
+        // 'delete_prayer_request',
     ];
 
     public function run(): void

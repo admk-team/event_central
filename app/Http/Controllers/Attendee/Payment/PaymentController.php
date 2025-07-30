@@ -320,6 +320,7 @@ class PaymentController extends Controller
         //1 Update Payment status to paid
         $payment->status = 'paid';
         $payment->save();
+        $this->eventBadgeDetail('purchase_ticket', $payment->event_app_id, $payment->attendee_id, $payment->id);
 
         //2. Generate Ticket QR Code
         $this->purchasedTickets($paymentUuId);

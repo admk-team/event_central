@@ -22,6 +22,9 @@ class RegisterController extends Controller
         ]);
 
         $event = EventApp::findOrFail($eventId);
+        $url = route('organizer.events.website', $event->uuid);
+        $code = substr(sha1(mt_rand()), 1, 32);
+        $personal_url = $url . '?link=' . $code;
         $attendee = new Attendee();
         $attendee->first_name = $request->first_name;
         $attendee->last_name = $request->last_name;
@@ -31,10 +34,11 @@ class RegisterController extends Controller
         $attendee->password = Hash::make($request->password);
         $attendee->event_app_id  = $event->id;
         $attendee->type = "anonymous";
+        $attendee->personal_url =  $personal_url ?? null;
         $attendee->save();
 
         $token = $attendee->createToken('auth_token', ["role:attendee"])->plainTextToken;
-
+        $this->eventBadgeDetail('register', $event->id, $attendee->id, null);
         return response()->json([
             'user' => $attendee,
             'role' => "attendee",

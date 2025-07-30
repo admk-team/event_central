@@ -381,7 +381,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
                                             <Col md={4} lg={4} className="d-flex justify-content-end align-items-center">
                                                 <h5 className="mb-1 pt-2 pb-2 mr-2 text-end fs-4">Discount : <sup>
                                                     <small>$</small>
-                                                </sup>{discountAmount.toFixed(2)}</h5>
+                                                </sup>{Math.round(discountAmount).toFixed(2)}</h5>
                                             </Col>
                                         </Row>
                                     </CardBody>
@@ -408,7 +408,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
                                                     <sup>
                                                         <small>$</small>
                                                     </sup>
-                                                    {totalAmount.toFixed(2)}
+                                                    {Math.round(totalAmount).toFixed(2)}
                                                 </h5>
                                             </Col>
                                         </Row>
