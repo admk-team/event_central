@@ -121,6 +121,8 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::post('send-message', [ChatController::class, 'store']);
         // Friends system
         Route::resource('friend', FriendRequestController::class);
+        Route::post('accept', [FriendRequestController::class,'AcceptRequest'])->name('friend.accept');
+        Route::post('unfollow', [FriendRequestController::class,'remove'])->name('friend.unfollow');
 
         //Prayer Request
         Route::get('/prayer-requests', [PrayerRequestController::class, 'index'])->name('attendee.prayer');

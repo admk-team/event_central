@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -39,7 +40,7 @@ class Attendee extends Authenticatable
     protected $appends = [
         'avatar' => 'avatar_img',
         'qr_code' => 'qr_code_img',
-        'name'
+        'name',
     ];
 
     protected $hidden = [
@@ -59,7 +60,6 @@ class Attendee extends Authenticatable
     {
         return $this->first_name . " " . $this->last_name;
     }
-
     public function getQrCodeImgAttribute()
     {
         return $this->qr_code != 'EMPTY' ? url(Storage::url($this->qr_code)) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s';
@@ -248,12 +248,12 @@ class Attendee extends Authenticatable
         $this->removeFriend($attendee);
 
         // Update any existing requests to blocked
-        FriendRequest::where(function($query) use ($attendee) {
+        FriendRequest::where(function ($query) use ($attendee) {
             $query->where('sender_id', $this->id)
-                  ->where('receiver_id', $attendee->id);
-        })->orWhere(function($query) use ($attendee) {
+                ->where('receiver_id', $attendee->id);
+        })->orWhere(function ($query) use ($attendee) {
             $query->where('sender_id', $attendee->id)
-                  ->where('receiver_id', $this->id);
+                ->where('receiver_id', $this->id);
         })->update(['status' => 'blocked']);
 
         // Create a blocked record if no existing request
@@ -278,17 +278,17 @@ class Attendee extends Authenticatable
         $attendee->friends()->detach($this->id);
 
         // Update any friend requests
-        FriendRequest::where(function($query) use ($attendee) {
+        FriendRequest::where(function ($query) use ($attendee) {
             $query->where('sender_id', $this->id)
-                  ->where('receiver_id', $attendee->id);
-        })->orWhere(function($query) use ($attendee) {
+                ->where('receiver_id', $attendee->id);
+        })->orWhere(function ($query) use ($attendee) {
             $query->where('sender_id', $attendee->id)
-                  ->where('receiver_id', $this->id);
+                ->where('receiver_id', $this->id);
         })->delete();
 
         return true;
     }
-    
+
     public function prayerRequest()
     {
         return $this->hasMany(PrayerRequest::class);

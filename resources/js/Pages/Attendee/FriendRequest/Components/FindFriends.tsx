@@ -1,34 +1,29 @@
 import React, { useState } from "react";
-import avatar1 from "../../../../../images/products/img-10.png";
+import avatar1 from "../../../../../images/users/user-dummy-img.jpg";
+import { useForm, usePage } from "@inertiajs/react";
 
-const users = [
-    {
-        id: 1,
-        name: "Anna Adame",
-        position: "Web Developer",
-        avatar: avatar1,
-    },
-    {
-        id: 2,
-        name: "John Doe",
-        position: "Backend Engineer",
-        avatar: avatar1,
-    },
-    {
-        id: 3,
-        name: "Sarah Miller",
-        position: "UI/UX Designer",
-        avatar: avatar1,
-    },
-];
 
 const FindFriends = () => {
+    const attendee = usePage().props.attendees as any;
     const [search, setSearch] = useState("");
-
     // Filter users by search input
-    const filteredUsers = users.filter((user) =>
+    const filteredUsers = attendee.filter((user:any) =>
         user.name.toLowerCase().includes(search.toLowerCase())
     );
+
+    const { data, setData, post, reset,processing, errors } = useForm({
+        receiver_id: '',
+    })
+
+    function submit(e: any) {
+        e.preventDefault();
+        post(route("friend.store"), {
+            onSuccess: () => {
+                reset();
+            },
+        });
+    }
+
 
     return (
         <div className="container">
@@ -42,13 +37,13 @@ const FindFriends = () => {
             {/* User Cards */}
             <div className="row">
                 {filteredUsers.length > 0 ? (
-                    filteredUsers.map((user) => (
+                    filteredUsers.map((user:any) => (
                         <div className="col-lg-3 col-md-6 mb-4" key={user.id}>
                             <div className="card shadow-lg h-100">
                                 <div className="card-body text-center">
                                     <div className="avatar-md mb-3 mx-auto">
                                         <img
-                                            src={user.avatar}
+                                            src={user.avatar ?? avatar1}
                                             alt={user.name}
                                             className="img-thumbnail rounded-circle shadow-none"
                                         />
@@ -82,9 +77,19 @@ const FindFriends = () => {
 
 
                                     <div>
-                                        <button type="button" className="btn btn-success rounded-pill w-sm">
-                                            <i className="ri-add-fill me-1 align-bottom"></i> Follow
-                                        </button>
+                                        <form onSubmit={submit}>
+                                            <button
+                                                type="submit"
+                                                className="btn btn-success rounded-pill w-sm"
+                                                disabled={user.has_sent_request || processing}
+                                                onClick={() => setData('receiver_id',user.id)}
+                                            >
+                                                <i className="ri-add-fill me-1 align-bottom"></i>
+                                                {user.has_sent_request ? "Followed" : "Follow"}
+                                            </button>
+                                            {errors.receiver_id && <div className="text-danger">{errors.receiver_id}</div>}
+                                        </form>
+
                                     </div>
                                 </div>
                             </div>
