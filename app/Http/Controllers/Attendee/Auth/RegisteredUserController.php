@@ -27,6 +27,13 @@ use App\Services\GroupAttendeeService;
 
 class RegisteredUserController extends Controller
 {
+    protected GroupAttendeeService $groupService;
+
+    public function __construct(GroupAttendeeService $groupService)
+    {
+        $this->groupService = $groupService;
+    }
+
     /**
      * Display the registration view.
      */
@@ -72,8 +79,6 @@ class RegisteredUserController extends Controller
             ],
         ]);
 
-        $groupService = app(GroupAttendeeService::class);
-
         DB::beginTransaction();
         try {
             $user = Attendee::create([
@@ -87,13 +92,14 @@ class RegisteredUserController extends Controller
                 'referral_link' => $referralLink,
                 'personal_url' => $personal_url,
             ]);
-
-            $groupEmails = is_array($request->group_emails)
-                ? $request->group_emails
-                : explode(',', $request->group_emails ?? '');
-
-            $groupService->createGroupAttendees($groupEmails, $user, $eventApp, $referralLink, $personal_url);
-
+            // start group members registration 
+            if ($request->has('group_emails')) {
+                $groupEmails = is_array($request->group_emails)
+                    ? $request->group_emails
+                    : explode(',', $request->group_emails ?? '');
+                $this->groupService->createGroupAttendees($groupEmails, $user, $eventApp, $referralLink, $personal_url);
+                // end group members registration 
+            }
             DB::commit();
         } catch (\Throwable $e) {
             DB::rollBack();

@@ -6,7 +6,9 @@ namespace App\Services;
 use App\Models\Attendee;
 use App\Models\EventApp;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use App\Mail\GroupAttendeePasswordMail;
 
 class GroupAttendeeService
 {
@@ -23,20 +25,22 @@ class GroupAttendeeService
             $last_name = Str::random(4);
             $password = Str::random(8);
 
-            Attendee::create([
+            $data = Attendee::create([
                 'event_app_id' => $eventApp->id,
                 'parent_id' => $parent->id,
                 'first_name' => $first_name,
                 'last_name' => $last_name,
                 'position' => $parent->position,
                 'location' => $parent->location,
-                'email' => strtolower($email),
+                'email' => $email,
                 'password' => Hash::make($password),
                 'referral_link' => $referralLink,
                 'personal_url' => $personalUrl,
             ]);
-
-            // Optional: Email password to group attendee
+            if ($data) {
+                // Send password to user via email
+                Mail::to($email)->queue(new GroupAttendeePasswordMail($password, $email, $eventApp, $personalUrl));
+            }
         }
     }
 }

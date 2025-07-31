@@ -21,6 +21,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\AttendeePurchasedTickets;
 use App\Http\Requests\Organizer\Event\User\AttendeeStoreRequest;
 use App\Models\AddonVariant;
+use App\Mail\AttendeeRegisteration;
+use Illuminate\Support\Facades\Mail;
 
 class AttendeeController extends Controller
 {
@@ -45,10 +47,22 @@ class AttendeeController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:attendees,email',
+            'company' => 'nullable|string|max:255',
+            'position' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:20',
+            'bio' => 'nullable|string|max:500',
+            'location' => 'nullable|string|max:255',
+            'password' => 'required',
+            'string',
+            'min:8',
+            'confirmed'
         ]);
         if (!session()->has('event_id')) {
             return redirect()->back()->withErrors(['error' => 'Event ID not found in session.']);
         }
+        $event_app = EventApp::where('id', session('event_id'))->first();
+        $url = route('organizer.events.website', $event_app->uuid);
+
         $user = Attendee::create([
             'event_app_id' => session('event_id'),
             'first_name' => $request->first_name,
@@ -59,8 +73,9 @@ class AttendeeController extends Controller
             'phone' => $request->phone,
             'bio' => $request->bio,
             'location' => $request->location,
-            'password' => Hash::make("12345678"),
+            'password' => Hash::make($request->password),
         ]);
+        Mail::to($user->email)->send(new AttendeeRegisteration($user->first_name, $user->last_name, $request->password, $user->email, $event_app, $url));
         return back()->withSuccess('attendee created successfully.');
     }
 
