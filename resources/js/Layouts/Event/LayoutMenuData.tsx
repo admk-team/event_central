@@ -425,7 +425,7 @@ const Navdata = () => {
         //         setIscurrentState("chat");
         //         updateIconSidebar(e);
         //     },
-        //     // hasPermissions: ["edit_questionnaire_form"],
+        //     hasPermissions: ["view_chat"],
         // },
         {
             id: "Questionnaire",
@@ -467,6 +467,7 @@ const Navdata = () => {
                 setIscurrentState("EmailCampaign");
                 updateIconSidebar(e);
             },
+            hasPermissions: ["view_email_campaign"],
         },
         {
             id: "BaseTemplate",
@@ -478,6 +479,7 @@ const Navdata = () => {
                 setIscurrentState("BaseTemplate");
                 updateIconSidebar(e);
             },
+            hasPermissions: ["view_default_email_template"],
         },
         {
             id: "EmailTemplate",
@@ -489,6 +491,7 @@ const Navdata = () => {
                 setIscurrentState("EmailTemplate");
                 updateIconSidebar(e);
             },
+            hasPermissions: ["view_email_template"],
         },
         {
             id: "ContactForm",

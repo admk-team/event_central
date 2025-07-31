@@ -90,7 +90,7 @@ function Index({ emailcampaign }: any) {
             header: () => 'Action',
             cell: (emailcampaignsingle) => (
                 <div className="hstack fs-15">
-                    <HasPermission permission="delete_users">
+                    <HasPermission permission="delete_email_campaign">
                         <span className="link-danger cursor-pointer" onClick={() => deleteAction(emailcampaignsingle)}>
                             <i className="ri-delete-bin-5-line"></i>
                         </span>
@@ -118,7 +118,7 @@ function Index({ emailcampaign }: any) {
                                     // Delete multiple
                                     {
                                         render: (dataTable) => (
-                                            <HasPermission permission="delete_users">
+                                            <HasPermission permission="delete_email_campaign">
                                                 <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>
                                             </HasPermission>
                                         ),
@@ -127,7 +127,7 @@ function Index({ emailcampaign }: any) {
                                     // Add new
                                     {
                                         render: (
-                                            <HasPermission permission="create_users">
+                                            <HasPermission permission="create_email_campaign">
                                                 <Button onClick={() => setShowCreateEditModal(true)}><i className="ri-add-fill"></i> Add New</Button>
                                             </HasPermission>
                                         )
