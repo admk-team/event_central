@@ -149,19 +149,19 @@ const Navdata = () => {
         //         updateIconSidebar(e);
         //     },
         // },
-        {
-            id: "friend",
-            label: "Freind System",
-            icon: "bx bx-info-circle",
-            link: route("friend.index"),
-            stateVariables: isFriend,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsFriend(!isFriend);
-                setIscurrentState("friend");
-                updateIconSidebar(e);
-            },
-        },
+        // {
+        //     id: "friend",
+        //     label: "Freind System",
+        //     icon: "bx bx-info-circle",
+        //     link: route("friend.index"),
+        //     stateVariables: isFriend,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIsFriend(!isFriend);
+        //         setIscurrentState("friend");
+        //         updateIconSidebar(e);
+        //     },
+        // },
         {
             id: "more",
             label: "Contact",
