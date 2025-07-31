@@ -15,13 +15,11 @@ class ChatController extends Controller
 {
     public function index()
     {
-        $member = ChatMember::where('event_id', Auth::user()->event_app_id)->with('participant')->first();
+        $member = ChatMember::where('event_id', Auth::user()->event_app_id)->where('user_id',Auth::user()->id)->with('participant')->get();
         $event_data = EventApp::where('id', Auth::user()->event_app_id)->first();
         $lastMessage = ChatMessage::where('event_id', Auth::user()->event_app_id)->with('sender')->latest('created_at')->first();
         $loged_user = Auth::user()->id;
-        $unread_count = $member->unread_count ?? 0;
-
-        return Inertia::render('Attendee/Chat/Index', compact('member', 'event_data', 'loged_user','unread_count','lastMessage'));
+        return Inertia::render('Attendee/Chat/Index', compact('member', 'event_data', 'loged_user','lastMessage'));
     }
 
     public function getMessages()

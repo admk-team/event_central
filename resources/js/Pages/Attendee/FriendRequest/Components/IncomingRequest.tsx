@@ -42,7 +42,7 @@ const IncomingRequest = () => {
                                 <div className="card-body text-center">
                                     <div className="avatar-md mb-3 mx-auto">
                                         <img
-                                            src={user.sender.avatar ?? avatar1}
+                                            src={user.sender.avatar_img ?? avatar1}
                                             alt={user.sender.name}
                                             className="img-thumbnail rounded-circle shadow-none"
                                         />

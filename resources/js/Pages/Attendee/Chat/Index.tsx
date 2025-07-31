@@ -37,7 +37,7 @@ import { onAddMessage, onDeleteMessage, onGetDirectContact, onGetMessages } from
 import axios from 'axios';
 import { useEchoPublic } from '@laravel/echo-react';
 
-const Chat = ({member,event_data,loged_user,unread_count,lastMessage}:any) => {
+const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
   
   const userChatShow: any = useRef();
 
@@ -222,7 +222,7 @@ const Chat = ({member,event_data,loged_user,unread_count,lastMessage}:any) => {
                 <div className="chat-message-list">
                   <ul className="list-unstyled chat-list chat-user-list users-list" id="userList">
                     <li key={event_data.id} className={Chat_Box_Username === event_data.name ? "active" : ""}>
-                      <Link href="#!" onClick={(event) => {event.preventDefault();userChatOpen(event_data)}} className={"unread-msg-user"} id={"msgUser" + event_data.id}>
+                      <Link href="#!" onClick={(event) => {event.preventDefault();userChatOpen(event_data)}} className={"unread-msg-user border-bottom"} id={"msgUser" + event_data.id}>
                         <div className="d-flex align-items-center">
                           <div className={'flex-shrink-0 chat-user-img align-self-center me-2 ms-0'}>
                             <div className="avatar-xxs">
@@ -263,39 +263,36 @@ const Chat = ({member,event_data,loged_user,unread_count,lastMessage}:any) => {
                   </ul>
                 </div>
                 {/* user SECTION */}
-                {/* <div className="chat-message-list">
+                <div className="chat-message-list">
                   <ul className="list-unstyled chat-list chat-user-list users-list" id="userList">
-                    {(chats || []).map((chatContact: chatContactType) => (
-                      chatContact.direactContact && (chatContact.direactContact || [])?.map((chat) => (
-                        <li key={chat.id + chat.status} className={Chat_Box_Username === chat.name ? "active" : ""}>
-                          <Link href="#!" onClick={(event) => {event.preventDefault();userChatOpen(chat)}} className={chat.badge && chat.badge !== 0 ? "unread-msg-user" : ''} id={"msgUser" + chat.id}>
-                            <div className="d-flex align-items-center">
-                              <div className={`flex-shrink-0 chat-user-img ${chat.status === 'Online' ? "online" : "away"} align-self-center me-2 ms-0`}>
-                                <div className="avatar-xxs">
-                                  {chat.image ? (
-                                    <img src={chat.image} className="rounded-circle img-fluid userprofile" alt="" />
-                                  ) : (
-                                    <div className={"avatar-title rounded-circle bg-" + chat.bgColor + " userprofile"}>
-                                      {chat.name.charAt(0)}
-                                    </div>
-                                  )}
-                                </div>
+                    {(member || []).map((chat: any) => (
+                      <li key={chat.id + chat.status} className={Chat_Box_Username === chat.participant.name ? "active" : ""}>
+                        <Link href="#!" onClick={(event) => { event.preventDefault(); userChatOpen(chat); }} className="unread-msg-user border-bottom" id={"msgUser" + chat.participant.id}>
+                          <div className="d-flex align-items-center">
+                            <div className={`flex-shrink-0 chat-user-img align-self-center me-2 ms-0`}>
+                              <div className="avatar-xxs">
+                                {chat.participant.avatar_img ? (
+                                  <img src={chat.participant.avatar_img} className="rounded-circle img-fluid userprofile" alt="" />
+                                ) : (
+                                  <div className={"avatar-title rounded-circle bg-dark userprofile"}>
+                                    {chat.participant.name?.charAt(0)}
+                                  </div>
+                                )}
                               </div>
-                              <div className="flex-grow-1 overflow-hidden">
-                                <p className="text-truncate mb-0">{chat.name}</p>
-                              </div>
-                              {chat.badge &&
-                                <div className="flex-shrink-0" id={"unread-msg-user" + chat.id}>
-                                  <span className="badge bg-dark-subtle text-body rounded p-1">{chat.badge}</span>
-                                </div>
-                              }
                             </div>
-                          </Link>
-                        </li>
-                      )))
-                    )}
+                            <div className="flex-grow-1 overflow-hidden">
+                              <p className="text-truncate mb-0">{chat.participant.name}</p>
+                            </div>
+                            <div className="flex-shrink-0" id={"unread-msg-user" + chat.participant.id}>
+                              {chat.unread_count != 0 ? (<span className="badge bg-dark-subtle text-body rounded p-1">{chat.unread_count}</span>) : ("")}
+                            </div>
+                          </div>
+                        </Link>
+                      </li>
+                    ))}
                   </ul>
-                </div> */}
+                </div>
+
               </SimpleBar>
             </div>
 

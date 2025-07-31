@@ -43,7 +43,7 @@ const FindFriends = () => {
                                 <div className="card-body text-center">
                                     <div className="avatar-md mb-3 mx-auto">
                                         <img
-                                            src={user.avatar ?? avatar1}
+                                            src={user.avatar_img ?? avatar1}
                                             alt={user.name}
                                             className="img-thumbnail rounded-circle shadow-none"
                                         />
