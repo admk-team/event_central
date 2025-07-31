@@ -358,6 +358,7 @@ export default function Variants({ data, onDataChange }: VariantsProps) {
                                     <Form.Control
                                         type="number"
                                         value={variant.price}
+                                        min={0}
                                         onChange={(e) => {
                                             const newPrice = parseFloat(e.target.value);
                                             dispatch({ type: 'update_variant_price', index, price: newPrice });
@@ -368,6 +369,7 @@ export default function Variants({ data, onDataChange }: VariantsProps) {
                                     <Form.Control
                                         type="number"
                                         value={variant.qty}
+                                        min={0}
                                         onChange={(e) => {
                                             const newQty = parseInt(e.target.value, 10);
                                             dispatch({ type: 'update_variant_qty', index, qty: newQty })

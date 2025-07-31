@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useForm, usePage } from "@inertiajs/react";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
@@ -91,6 +91,10 @@ export default function CreateEditModal({
     const handleChange = (editorData: any) => {
         setData("name", editorData);
     };
+
+    useEffect(() => {
+        setData('qty_total', data.variants.reduce((total, variant) => total = total + variant.qty, 0));
+    }, data.variants);
 
     return (
         <Modal show={show} onHide={onHide} centered size="lg">
@@ -218,7 +222,7 @@ export default function CreateEditModal({
                                         setData("qty_total", e.target.value)
                                     }
                                     isInvalid={!!errors.qty_total}
-                                    disabled={useTicketInventory}
+                                    disabled={!!useTicketInventory || data.variants.length > 0}
                                 />
                                 {errors.qty_total && (
                                     <Form.Control.Feedback type="invalid">
