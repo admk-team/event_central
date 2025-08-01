@@ -409,7 +409,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
                                                     <sup>
                                                         <small>$</small>
                                                     </sup>
-                                                    {Math.round(totalAmount).toFixed(2)}
+                                                    {totalAmount.toFixed(2)}
                                                 </h5>
                                             </Col>
                                         </Row>
