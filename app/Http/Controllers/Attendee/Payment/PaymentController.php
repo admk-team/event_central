@@ -5,32 +5,34 @@ namespace App\Http\Controllers\Attendee\Payment;
 use Exception;
 use Inertia\Inertia;
 use App\Models\Addon;
+use App\Models\Attendee;
 use App\Models\EventApp;
 use App\Models\PromoCode;
 use Illuminate\Support\Str;
+use App\Models\AddonVariant;
+
 use Illuminate\Http\Request;
 use chillerlan\QRCode\QRCode;
-
-use App\Models\AttendeeTransferedTicket;
+use App\Models\EventAppTicket;
 use App\Models\AttendeePayment;
 use App\Services\PayPalService;
+
 use App\Services\StripeService;
 use chillerlan\QRCode\QROptions;
-
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Attendee\AttendeeCheckoutRequest;
-use App\Mail\AttendeeTicketPurchasedEmail;
-use App\Models\AddonVariant;
-use App\Models\Attendee;
+use App\Models\AttendeeRefundTicket;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use chillerlan\QRCode\Common\EccLevel;
 use Illuminate\Support\Facades\Storage;
 use App\Models\AttendeePurchasedTickets;
-use App\Models\AttendeeRefundTicket;
-use App\Models\EventAppTicket;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
+use App\Models\AttendeeTransferedTicket;
+use Illuminate\Console\Scheduling\Event;
+use App\Mail\AttendeeTicketPurchasedEmail;
+use App\Mail\EventTicketPurchasedNotification;
+use App\Http\Requests\Attendee\AttendeeCheckoutRequest;
 
 class PaymentController extends Controller
 {
@@ -328,6 +330,7 @@ class PaymentController extends Controller
 
         //3. Send confirmation Email to Attendee along with Ticket QR Codes  -----
         $this->sendPurchasedTicketsEmailToAttendee();
+        $this->sendPurchasedTicketsEmailToOrganizer();
 
         //4. Increment discount code used count
         if ($payment->discount_code) {
@@ -416,6 +419,29 @@ class PaymentController extends Controller
             //         Mail::to($singleEmail)->send(new AttendeeTicketPurchasedEmail($attendee, $attendee_purchased_tickets));
             //     }
             // }
+        } catch (Exception $ex) {
+            Log::error('An Error occurred while sending confirmation email to attendee');
+            Log::error($ex->getMessage());
+        }
+    }
+    public function sendPurchasedTicketsEmailToOrganizer()
+    {
+        try {
+            $attendee = auth()->user();
+            $attendee->load('payments.purchased_tickets');
+            $attendee_purchased_tickets = [];
+            foreach ($attendee->payments as $payment) {
+                foreach ($payment->purchased_tickets as $ticket)
+                    array_push($attendee_purchased_tickets, $ticket);
+            }
+            // dd($attendee_purchased_tickets);
+            $emailNotificationList =  eventSettings($attendee->event_app_id)->getValue('email_list');
+            $emailNotificationList = explode(',', $emailNotificationList);
+            if ($emailNotificationList) {
+                foreach ($emailNotificationList as $singleEmail) {
+                    Mail::to($singleEmail)->queue(new EventTicketPurchasedNotification($attendee, $attendee_purchased_tickets));
+                }
+            }
         } catch (Exception $ex) {
             Log::error('An Error occurred while sending confirmation email to attendee');
             Log::error($ex->getMessage());
