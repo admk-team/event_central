@@ -417,7 +417,7 @@ export default function CreateEditModal({
                         <Row className="mt-4">
                             <Col md={6}>
                                 <FormGroup className="mb-3">
-                                    <Form.Label>Total Quantity</Form.Label>
+                                    <Form.Label>Total Quantity (leave empty for unlimited)</Form.Label>
                                     <Form.Control
                                         type="number"
                                         step={1}

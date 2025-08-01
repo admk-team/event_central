@@ -119,6 +119,7 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckO
     }, [ticketDetails]);
 
     const availableQty = ticket.qty_total - ticket.qty_sold;
+    const unlimitedQty = ticket.qty_total === null;
 
     return (
         <Col lg={12}>
@@ -127,14 +128,14 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckO
                     <Accordion.Header>
                         <div className="d-flex justify-content-between align-items-center w-100">
                             <h5 className="mb-1 fw-bold">{ticket.name} {ticketQty > 0 ? ' x ' + ticketQty : ''}</h5>
-                            {availableQty <= 0 && (
+                            {(!unlimitedQty && availableQty <= 0) && (
                                 <div className="me-5 fw-bold text-danger">Sold Out</div>
                             )}
                         </div>
                     </Accordion.Header>
                     <Accordion.Body>
                         <Row className="d-flex justify-content-centel align-items-center">
-                            <Col md={6} lg={6}>
+                            <Col md={5} lg={5}>
                                 {/* <h5 className="mb-1 fw-bold">{ticket.name}</h5> */}
                                 <span className="mb-1">
                                     {ticket.description}
@@ -148,12 +149,12 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckO
                                     {ticket.base_price}
                                 </span>
                             </Col>
-                            <Col md={2} lg={2}>
+                            <Col md={3} lg={3}>
                                 <span className="ff-secondary fw-bold">
-                                    <span className="fs-4">Stock</span>: <span className="fs-3">{availableQty}</span>
+                                    <span className="fs-5">Available Quantity</span>: <span className="fs-5">{unlimitedQty ? 'Unlimited' : availableQty}</span>
                                 </span>
                             </Col>
-                            {availableQty > 0 && (
+                            {(availableQty > 0 || unlimitedQty) && (
                                 <Col md={2} lg={2}>
                                     <InputGroup>
                                         <Button size="sm" onClick={e => setTicketQty(prev => prev === 0 ? prev : --prev)}><Minus size={20} /></Button>
@@ -162,14 +163,16 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckO
                                             className="text-center"
                                             min={0}
                                             step={1}
-                                            max={availableQty}
+                                            max={unlimitedQty ? undefined : availableQty}
                                             disabled={isAddedToCart}
                                             value={ticketQty}
-                                            onChange={(e: any) =>
-                                                parseInt(e.target.value) <= (availableQty) && setTicketQty(parseInt(e.target.value))
-                                            }
+                                            onChange={(e: any) => {
+                                                if (unlimitedQty || parseInt(e.target.value) <= (availableQty)) {
+                                                    setTicketQty(parseInt(e.target.value))
+                                                }
+                                            }}
                                         />
-                                        <Button size="sm" onClick={e => setTicketQty(prev => prev >= (availableQty) ? prev : ++prev)}><Plus size={20} /></Button>
+                                        <Button size="sm" onClick={e => setTicketQty(prev => prev >= (availableQty) && !unlimitedQty ? prev : ++prev)}><Plus size={20} /></Button>
                                     </InputGroup>
                                     {/* <Form.Select
                                         aria-label="Ticket Qty"
