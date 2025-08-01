@@ -98,12 +98,33 @@ class OrganizerPermissionsSeeder extends Seeder
         'questionnaire_response',
         'delete_questionnaire_response',
 
+        // Email Compain
+        'view_email_campaign',
+        'create_email_campaign',
+        'edit_email_campaign',
+        'delete_email_campaign',
+
+        // Default Email Template
+        'view_default_email_template',
+        'create_default_email_template',
+        'edit_default_email_template',
+        'delete_default_email_template',
+
+        // Email Template
+        'view_email_template',
+        'create_email_template',
+        'edit_email_template',
+        'delete_email_template',
+
         // Payments
         'view_payments',
 
         // Badges
         'print_badges',
         'refund_ticket',
+
+        // Chat
+        'view_chat',
 
         // Referral links
         'view_referral_link',

@@ -413,20 +413,20 @@ const Navdata = () => {
         },
         // ...(isEventStarted ? [{
 
-        {
-            id: "chat",
-            label: "Chat",
-            icon: "bx bx-message-rounded-dots",
-            link: route("organizer.events.chat.index"),
-            stateVariables: isForm,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsChat(!isForm);
-                setIscurrentState("chat");
-                updateIconSidebar(e);
-            },
-            // hasPermissions: ["edit_questionnaire_form"],
-        },
+        // {
+        //     id: "chat",
+        //     label: "Chat",
+        //     icon: "bx bx-message-rounded-dots",
+        //     link: route("organizer.events.chat.index"),
+        //     stateVariables: isForm,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIsChat(!isForm);
+        //         setIscurrentState("chat");
+        //         updateIconSidebar(e);
+        //     },
+        //     hasPermissions: ["view_chat"],
+        // },
         {
             id: "Questionnaire",
             label: "Questionnaire Form",
@@ -467,6 +467,7 @@ const Navdata = () => {
                 setIscurrentState("EmailCampaign");
                 updateIconSidebar(e);
             },
+            hasPermissions: ["view_email_campaign"],
         },
         {
             id: "BaseTemplate",
@@ -478,6 +479,7 @@ const Navdata = () => {
                 setIscurrentState("BaseTemplate");
                 updateIconSidebar(e);
             },
+            hasPermissions: ["view_default_email_template"],
         },
         {
             id: "EmailTemplate",
@@ -489,6 +491,7 @@ const Navdata = () => {
                 setIscurrentState("EmailTemplate");
                 updateIconSidebar(e);
             },
+            hasPermissions: ["view_email_template"],
         },
         {
             id: "ContactForm",

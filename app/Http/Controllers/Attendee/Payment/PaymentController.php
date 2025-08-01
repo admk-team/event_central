@@ -412,9 +412,7 @@ class PaymentController extends Controller
             $emailNotificationList =  eventSettings($attendee->event_app_id)->getValue('email_list');
             $emailNotificationList = explode(',', $emailNotificationList);
             if ($emailNotificationList) {
-                Log::info('test', $emailNotificationList);
                 foreach ($emailNotificationList as $singleEmail) {
-                    Log::info('Test', $attendee->toArray());
                     Mail::to($singleEmail)->send(new AttendeeTicketPurchasedEmail($attendee, $attendee_purchased_tickets));
                 }
             }
