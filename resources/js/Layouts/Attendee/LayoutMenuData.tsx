@@ -152,7 +152,7 @@ const Navdata = () => {
         {
             id: "friend",
             label: "Freind System",
-            icon: "bx bx-info-circle",
+            icon: "las la-user-friends",
             link: route("friend.index"),
             stateVariables: isFriend,
             click: function (e: any) {

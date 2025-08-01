@@ -21,12 +21,12 @@ class ChatController extends Controller
         $lastMessage = ChatMessage::currentEvent()->with('sender')->latest('created_at')->first();
         $unread_count = $member->unread_count ?? 0;
 
-        return Inertia::render('Organizer/Events/Chat/Index', compact('member', 'event_data', 'loged_user','unread_count','lastMessage'));
+        return Inertia::render('Organizer/Events/Chat/Index', compact('member', 'event_data', 'loged_user', 'unread_count', 'lastMessage'));
     }
 
     public function getMessages()
     {
-        $messages = ChatMessage::currentEvent()->with('sender')->get();
+        $messages = ChatMessage::currentEvent()->with(['sender','reply'])->get();
         return response()->json([
             'success' => true,
             'messages' => $messages,
@@ -44,14 +44,17 @@ class ChatController extends Controller
             'event_id' => $eventId,
             'sender_id' => $senderId,
             'sender_type' => \App\Models\User::class,
+            'receiver_id' => $eventId,
+            'receiver_type' => \App\Models\EventApp::class,
             'message' => $request->message,
+            'reply_to' => $request->reply_to,
         ]);
-        $message->load('sender');
+        $message->load(['sender','reply']);
         // Increment unread_count for all other participants
         ChatMember::where('event_id', $eventId)
-            ->where(function ($query) use ($senderId) {
-                $query->where('participant_id', '!=', $senderId)
-                    ->where('participant_type', \App\Models\User::class);
+            ->where(function ($q) use ($senderId) {
+                $q->where('participant_id', '!=', $senderId)
+                    ->orWhere('user_id', '!=', $senderId);
             })
             ->increment('unread_count');
 

@@ -1,55 +1,27 @@
 import React, { useEffect, useState, useRef } from "react";
-import {
-  Container,
-  Button,
-  Tooltip,
-  Dropdown,
-  Row,
-  Col,
-  Card,
-  Nav,
-  Alert,
-  OverlayTrigger,
-  Tab,
-  Form
-} from "react-bootstrap";
+import { Container,Row,Col,Dropdown, Card } from "react-bootstrap";
 import SimpleBar from "simplebar-react";
 import EmojiPicker from 'emoji-picker-react';
-
-//Import Icons
-import FeatherIcon from "feather-icons-react";
-
-import { chatContactData } from "../../../common/data";
-
 //redux
 import { useSelector, useDispatch } from "react-redux";
-
 import avatar2 from "../../../../images/users/avatar-2.jpg";
 import userDummayImage from "../../../../images/users/user-dummy-img.jpg";
-
 //Import Scrollbar
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { createSelector } from "reselect";
 import Spinners from "../../../Components/Common/Spinner";
 import { Head, Link } from "@inertiajs/react";
 import AttendeeLayout from "../../../Layouts/Attendee";
-import { onAddMessage, onDeleteMessage, onGetDirectContact, onGetMessages } from "../../../slices/thunk";
+import { onGetMessages } from "../../../slices/thunk";
 import axios from 'axios';
-import { useEchoPublic } from '@laravel/echo-react';
+import { useEcho, useEchoPublic } from '@laravel/echo-react';
 
 const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
   
   const userChatShow: any = useRef();
-
-  // hide the chat open section on reload or open 
-  useEffect(() => {
-    if (userChatShow.current) {
-      userChatShow.current.classList.add("d-none");
-    }
-  }, []);
-
   const [chatmessages, setChatMessages] = useState<any[]>([]);
   const [customActiveTab, setcustomActiveTab] = useState<any>("1");
+  const [membersList, setMembersList] = useState(member || []);
   const toggleCustom = (tab: any) => {
     if (customActiveTab !== tab) {
       setcustomActiveTab(tab);
@@ -62,17 +34,57 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
   const [Chat_Box_Image, setChat_Box_Image] = useState<any>(avatar2);
   const [currentRoomId, setCurrentRoomId] = useState<any>(1);
   const [curMessage, setcurMessage] = useState<string>("");
-  const [reply, setreply] = useState<any>("");
+  const [reply, setReply] = useState<any>(null);
   const [emojiPicker, setemojiPicker] = useState<boolean>(false);
+
+  // hide the chat open section on reload or open 
+  useEffect(() => {
+    if (userChatShow.current) {
+      userChatShow.current.classList.add("d-none");
+    }
+  }, []);
+
 
   // Real-time subscription to public channel like "event-app-[id]"
   const eventChannelName = `event-app-${event_data.id}`;
-  console.log(eventChannelName);
   useEchoPublic(eventChannelName, "EventGroupChat", (e: any) => {
-    console.log("New message via Echo:", e);
+    // console.log("New message via Echo:", e);
     const newMessage = e.message;
     setChatMessages(prev  => [...prev , newMessage]);
   });
+
+
+  // for private chat
+  useEffect(() => {
+    const channelName = `attendee-chat-${loged_user}`;
+    const channel = window.Echo.private(channelName)
+        .listen('AttendeeChatMessage', (e: any) => {
+            if (e.message.sender_id == currentRoomId) {
+                setChatMessages(prev => [...prev, e.message]);
+            }else {
+            // Message from another chat → increment unread count
+            setMembersList((prevMembers:any) =>
+              prevMembers.map((user:any) => {
+                if (user.participant.id === e.message.sender_id) {
+                  return {
+                    ...user,
+                    unread_count: (user.unread_count || 0) + 1
+                  };
+                }
+                return user;
+              })
+            );
+          }
+        })
+        .error((error: any) => {
+            console.error('CHANNEL ERROR:', error);
+        });
+
+    return () => {
+        // Cleanup — leave channel on unmount
+        window.Echo.leave(`private-${channelName}`);
+    };
+  }, [loged_user, currentRoomId]);
 
 
   const selectChatState = (state: any) => state.Chat;
@@ -93,12 +105,18 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
   const [isLoading, setLoading] = useState<any>(loading);
 
   //Use For Chat Box
-  const userChatOpen = async (chats: any) => {
+  const userChatOpen = async (chats: any,reciever_id:any) => {
     try {
-      const response = await axios.get(`/attendee/get-chat`);
+      let response: any;
+      if(reciever_id == null)
+      {
+        response = await axios.get(`/attendee/get-chat`);
+      }else{
+        response = await axios.get(`/attendee/private-chat/${reciever_id}`);
+      }
       userChatShow.current.classList.remove("d-none");
-      setChat_Box_Username(chats.name);
-      setCurrentRoomId(chats.id);
+      setChat_Box_Username(chats.name ?? chats.participant.name);
+      setCurrentRoomId(reciever_id);
       setChat_Box_Image(chats.image ?? chats.logo_img);
       setUser_Status(chats.status)
       dispatch(onGetMessages());
@@ -110,10 +128,14 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
     if (window.innerWidth < 892) {
       userChatShow.current.classList.add("user-chat-show");
     }
+    let idSuffix = reciever_id ?? chats.id;
+    if (reciever_id) {
+      idSuffix = chats.participant.id;
+    }
     // remove unread msg on read in chat
-    var unreadMessage: any = document.getElementById("unread-msg-user" + chats.id);
-    var lastMessage: any = document.getElementById("last-msg-user" + chats.id);
-    var msgUser: any = document.getElementById("msgUser" + chats.id);
+    var unreadMessage: any = document.getElementById("unread-msg-user" + idSuffix);
+    var lastMessage: any = document.getElementById("last-msg-user" + idSuffix);
+    var msgUser: any = document.getElementById("msgUser" + idSuffix);
     if (unreadMessage) {
       unreadMessage.style.display = "none";
       lastMessage.style.display = "none";
@@ -133,11 +155,17 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
     try {
       const response = await axios.post('/attendee/send-message', {
         message: curMessage,
+        receiver_id: currentRoomId ?? event_data.id,
+        reply_to: reply ? reply.msg_id : null
       });
-      // const newMessage = response.data.message;
-      // setChatMessages(prev  => [...prev , newMessage]);
+      // for private chat
+      if(currentRoomId != null)
+      {
+        const newMessage = response.data.message;
+        setChatMessages(prev  => [...prev , newMessage]);
+      }
       setcurMessage('');
-      setreply('');
+      setReply(null);
       setemojiPicker(false);
       setemojiArray('');
     } catch (error) {
@@ -222,7 +250,7 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
                 <div className="chat-message-list">
                   <ul className="list-unstyled chat-list chat-user-list users-list" id="userList">
                     <li key={event_data.id} className={Chat_Box_Username === event_data.name ? "active" : ""}>
-                      <Link href="#!" onClick={(event) => {event.preventDefault();userChatOpen(event_data)}} className={"unread-msg-user border-bottom"} id={"msgUser" + event_data.id}>
+                      <Link href="#!" onClick={(event) => {event.preventDefault();userChatOpen(event_data,null)}} className={"unread-msg-user border-bottom"} id={"msgUser" + event_data.id}>
                         <div className="d-flex align-items-center">
                           <div className={'flex-shrink-0 chat-user-img align-self-center me-2 ms-0'}>
                             <div className="avatar-xxs">
@@ -265,9 +293,9 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
                 {/* user SECTION */}
                 <div className="chat-message-list">
                   <ul className="list-unstyled chat-list chat-user-list users-list" id="userList">
-                    {(member || []).map((chat: any) => (
+                    {(membersList || []).map((chat: any) => (
                       <li key={chat.id + chat.status} className={Chat_Box_Username === chat.participant.name ? "active" : ""}>
-                        <Link href="#!" onClick={(event) => { event.preventDefault(); userChatOpen(chat); }} className="unread-msg-user border-bottom" id={"msgUser" + chat.participant.id}>
+                        <Link href="#!" onClick={(event) => { event.preventDefault(); userChatOpen(chat,chat.participant.id); }} className="unread-msg-user border-bottom" id={"msgUser" + chat.participant.id}>
                           <div className="d-flex align-items-center">
                             <div className={`flex-shrink-0 chat-user-img align-self-center me-2 ms-0`}>
                               <div className="avatar-xxs">
@@ -369,17 +397,53 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
                                     <div className="user-chat-content">
                                       <div className="ctext-wrap">
                                         <div className="ctext-wrap-content">
+                                          {/* Show reply block if this message is replying to another */}
+                                          {msg.reply && (
+                                            <div className="replymessage-block mb-1 p-2 rounded bg-light">
+                                              <strong>{msg.reply.sender?.name}</strong>
+                                              <p className="mb-0 small">{msg.reply.message}</p>
+                                            </div>
+                                          )}
                                           <p className="mb-0 ctext-content">{msg.message}</p>
                                         </div>
+
+                                        {/* Three-dot dropdown menu */}
+                                        <Dropdown className="align-self-start message-box-drop ms-2">
+                                          <Dropdown.Toggle
+                                            href="#"
+                                            className="btn nav-btn arrow-none p-0"
+                                            as="a"
+                                          >
+                                            <i className="ri-more-2-fill"></i>
+                                          </Dropdown.Toggle>
+                                          <Dropdown.Menu>
+                                            <Dropdown.Item
+                                              href="#"
+                                              className="reply-message"
+                                              onClick={() => setReply({
+                                                sender: msg.sender?.name || "Unknown",
+                                                msg: msg.message,
+                                                msg_id : msg.id
+                                              })}
+                                            >
+                                              <i className="ri-reply-line me-2 text-muted align-bottom"></i>
+                                              Reply
+                                            </Dropdown.Item>
+                                            <Dropdown.Item href="#" onClick={() => navigator.clipboard.writeText(msg.message)}>
+                                              <i className="ri-file-copy-line me-2 text-muted align-bottom"></i>
+                                              Copy
+                                            </Dropdown.Item>
+                                          </Dropdown.Menu>
+                                        </Dropdown>
                                       </div>
+
                                       <div className="conversation-name">
-                                        <span className="text-muted">{msg.sender_id != loged_user ? msg.sender?.name : 'You'}</span>
+                                        <span className="text-muted">
+                                          {msg.sender_id !== loged_user ? msg.sender?.name : "You"}
+                                        </span>
                                         <small className="text-muted time">
                                           {new Date(msg.created_at).toLocaleTimeString()}
                                         </small>
-                                        {/* <span className="text-success check-message-icon">
-                                          <i className="ri-check-double-line align-bottom"></i>
-                                        </span> */}
                                       </div>
                                     </div>
                                   </div>
@@ -441,6 +505,28 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
                           </div>
                         </Row>
                       </form>
+                    </div>
+                    <div className={reply ? "replyCard show" : "replyCard"}>
+                      <Card className="mb-0">
+                        <Card.Body className="py-3">
+                          <div className="replymessage-block mb-0 d-flex align-items-start">
+                            <div className="flex-grow-1">
+                              <h5 className="conversation-name">{reply?.sender || "Unknown"}</h5>
+                              <p className="mb-0">{reply?.msg || ""}</p>
+                            </div>
+                            <div className="flex-shrink-0">
+                              <button
+                                type="button"
+                                id="close_toggle"
+                                className="btn btn-sm btn-link mt-n2 me-n3 fs-18"
+                                onClick={() => setReply(null)}
+                              >
+                                <i className="bx bx-x align-middle"></i>
+                              </button>
+                            </div>
+                          </div>
+                        </Card.Body>
+                      </Card>
                     </div>
                   </div>
                 </div>

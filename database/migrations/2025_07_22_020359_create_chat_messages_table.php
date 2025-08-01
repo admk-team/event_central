@@ -16,9 +16,19 @@ return new class extends Migration
             $table->unsignedBigInteger('event_id');
             $table->unsignedBigInteger('sender_id');
             $table->string('sender_type'); // App\Models\User or App\Models\Attendee
+            $table->unsignedBigInteger('receiver_id');
+            $table->string('receiver_type'); // App\Models\User or App\Models\Attendee
             $table->longText('message');
-            $table->timestamps();
 
+            // Reply to another message
+            $table->unsignedBigInteger('reply_to')->nullable();
+            $table->foreign('reply_to')->references('id')->on('chat_messages')->onDelete('set null');
+            // File attachment (path or URL)
+            $table->string('file_path')->nullable(); // e.g., storage path or S3 URL
+            $table->string('file_type')->nullable(); // e.g., 'image/png', 'application/pdf'
+            $table->unsignedBigInteger('file_size')->nullable(); // size in bytes
+
+            $table->timestamps();
             $table->foreign('event_id')->references('id')->on('event_apps')->onDelete('cascade');
         });
     }

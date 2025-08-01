@@ -10,11 +10,17 @@ class ChatMessage extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
+   protected $fillable = [
         'event_id',
         'sender_id',
         'sender_type',
+        'receiver_id',
+        'receiver_type',
         'message',
+        'reply_to',
+        'file_path',
+        'file_type',
+        'file_size',
     ];
 
     public function event()
@@ -26,6 +32,17 @@ class ChatMessage extends Model
     {
         return $this->morphTo(); // can be User or Attendee
     }
+
+    public function reciever(): MorphTo
+    {
+        return $this->morphTo(); // can be User or Attendee
+    }
+
+    public function reply()
+    {
+        return $this->belongsTo(ChatMessage::class, 'reply_to');
+    }
+
 
     public function scopeCurrentEvent($query)
     {

@@ -21,7 +21,7 @@ use BaconQrCode\Writer;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Http\Request;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -43,7 +43,11 @@ use Illuminate\Support\Facades\Storage;
 // });
 
 
-Broadcast::routes(['middleware' => ['auth']]);
+Broadcast::routes(['middleware' => ['auth:web,attendee']]);
+
+// Route::post('/auth/broadcasting', function (Request $request) {
+//     return Broadcast::auth($request);
+// });
 
 Route::get('/', function () {
     //If Attendee User is logged in then redirect to Attendee Dashboard
