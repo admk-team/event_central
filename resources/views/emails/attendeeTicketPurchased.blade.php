@@ -148,8 +148,7 @@
     <div class="email-container">
         <h2>Welcome, {{ $attendee->first_name }} {{ $attendee->last_name }}!</h2>
         <p>You have successfully purchased following
-            {{ count($attendee_purchased_tickets) > 1 ? count($attendee_purchased_tickets) . ' tickets' : ' ticket' }}:
-        </p>
+            {{ count($attendee_purchased_tickets) > 1 ? count($attendee_purchased_tickets) . ' tickets' : ' ticket' }}:</p>
 
         <div class="table-wrapper">
             <table class="responsive-table">
@@ -166,7 +165,8 @@
                             <td>{{ $index + 1 }}. {{ $purchased_ticket->ticket->name }}</td>
                             <td>{{ $purchased_ticket->total + $purchased_ticket->purchased_addons()->sum('price') }}
                             </td>
-                            <td><img src="{{ $message->embed(public_path('storage/' . $purchased_ticket->qr_code)) }}">
+                            <td><img
+                                    src="{{ $message->embed(storage_path('app/public/' . $purchased_ticket->qr_code)) }}">
                             </td>
                         </tr>
                     @endforeach
