@@ -4,6 +4,10 @@ import { useForm } from "@inertiajs/react";
 
 const AddAttendee = ({ show, handleClose }: any) => {
 
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [error, setError] = useState("");
+
     const { data, setData, post, processing, errors, reset } = useForm({
         first_name: "",
         last_name: "",
@@ -12,10 +16,18 @@ const AddAttendee = ({ show, handleClose }: any) => {
         position: '',
         phone: "",
         location: "",
-        bio: ''
+        bio: '',
+        password: "",
     });
 
     const handleSubmit = (e: any) => {
+         if (password.trim() != "" || confirmPassword.trim() != "") {
+            if (password !== confirmPassword) {
+                setError("Passwords do not match");
+                return;
+            }
+        }
+        setError("");
         e.preventDefault();
         post(route('organizer.events.attendees.store'), {
             onSuccess: () => {
@@ -100,6 +112,36 @@ const AddAttendee = ({ show, handleClose }: any) => {
                             {" "} {errors.bio}{" "}
                         </Form.Control.Feedback>
                     </Form.Group>
+                    <Row>
+                        <Col md={6} lg={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Password</Form.Label>
+                                <Form.Control
+                                    type="password"
+                                    value={password}
+                                    onChange={(e) =>
+                                        setPassword(e.target.value)
+                                    }
+                                    name="password"
+                                />
+                            </Form.Group>
+                        </Col>
+                        <Col md={6} lg={6}>
+                            <Form.Group className="mb-3">
+                                <Form.Label>Confirm Password</Form.Label>
+                                <Form.Control
+                                    type="password"
+                                    value={confirmPassword}
+                                    onChange={(e) => {
+                                        setConfirmPassword(e.target.value);
+                                        setData("password", e.target.value);
+                                    }}
+                                    name="confirmPassword"
+                                />
+                            </Form.Group>
+                        </Col>
+                        {error && <Alert variant="danger">{error}</Alert>}
+                    </Row>
                     <div className="hstack gap-2 justify-content-center mt-4">
                         <Button className="btn btn-light" onClick={handleClose}>
                             Close

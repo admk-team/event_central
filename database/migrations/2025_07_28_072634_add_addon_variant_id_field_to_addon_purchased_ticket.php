@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('attendees', function (Blueprint $table) {
-            $table->string('google_id')->nullable();
+        Schema::table('addon_purchased_ticket', function (Blueprint $table) {
+            $table->foreignId('addon_variant_id')->nullable()->default(null)->after('addon_id');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('attendees', function (Blueprint $table) {
-            $table->dropColumn('google_id');
+        Schema::table('addon_purchased_ticket', function (Blueprint $table) {
+            $table->dropColumn('addon_variant_id');
         });
     }
 };

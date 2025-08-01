@@ -72,7 +72,7 @@ const EventAppTickets = ({ tickets }: any) => {
                 header: () => 'Discount Percentage',
                 headerStyle: { textWrap: 'wrap' },
                 cell: (ticket) => ticket.discount && ticket.total != '0.00'
-                                ? `${((ticket.discount / ticket.total) * 100)}%`
+                                ? `${Math.round((ticket.discount / ticket.total) * 100).toFixed(2)}%`
                                 : '0%',
                 cellStyle: { textWrap: 'wrap' },
             },

@@ -8,6 +8,7 @@ use App\Models\EventCampaign;
 use App\Models\EventEmailTemplate;
 use App\Http\Controllers\Controller;
 use App\Jobs\SendCampaignEmailBatchJob;
+use Illuminate\Support\Facades\Auth;
 
 class EmailCampaignController extends Controller
 {
@@ -16,6 +17,9 @@ class EmailCampaignController extends Controller
      */
     public function index()
     {
+        if (! Auth::user()->can('view_email_campaign')) {
+            abort(403);
+        }
 
         $eventCampaigns = $this->datatable(EventCampaign::where('event_app_id', session('event_id')));
         return Inertia::render('Organizer/Events/EmailCampaign/Index', [
@@ -28,6 +32,10 @@ class EmailCampaignController extends Controller
      */
     public function create(Request $request)
     {
+        if (! Auth::user()->can('create_email_campaign')) {
+            abort(403);
+        }
+
         $baseTemplate = EventEmailTemplate::where('event_app_id', session('event_id'))->get();
         $templateId = $request->query('templateId');
         return Inertia::render('Organizer/Events/EmailCampaign/Create', [
@@ -41,6 +49,10 @@ class EmailCampaignController extends Controller
      */
     public function store(Request $request)
     {
+        if (! Auth::user()->can('create_email_campaign')) {
+            abort(403);
+        }
+
         $request->validate([
             'name' => 'required|string|max:255',
             'subject' => 'required|string|max:255',

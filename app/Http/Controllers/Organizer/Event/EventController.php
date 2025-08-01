@@ -93,9 +93,7 @@ class EventController extends Controller
         if ($back) {
             return back();
         }
-        if (! Auth::user()->can('view_event_dashboard', $event)) {
-            return redirect()->route('organizer.events.settings.event.index');
-        }
+    
         return redirect()->route('organizer.events.dashboard');
     }
 

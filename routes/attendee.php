@@ -13,6 +13,7 @@ use App\Http\Controllers\Attendee\Payment\PaymentController;
 use App\Http\Controllers\Attendee\EventPostController;
 use App\Http\Controllers\Attendee\EventQuestionnaireFormController;
 use App\Http\Controllers\Attendee\EventRegistrationFormController;
+use App\Http\Controllers\Attendee\FriendRequestController;
 use App\Http\Controllers\Attendee\GoogleController;
 use App\Http\Controllers\Attendee\Payment\RefundPaymentController;
 use App\Http\Controllers\Attendee\PrayerRequestController;
@@ -118,6 +119,9 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::get('chat', [ChatController::class, 'index'])->name('attendee.event.chat');
         Route::get('get-chat', [ChatController::class, 'getMessages'])->name('attendee.event.get-messages');
         Route::post('send-message', [ChatController::class, 'store']);
+        // Friends system
+        Route::resource('friend', FriendRequestController::class);
+
         //Prayer Request
         Route::get('/prayer-requests', [PrayerRequestController::class, 'index'])->name('attendee.prayer');
         Route::post('/prayer-requests', [PrayerRequestController::class, 'store'])->name('attendee.prayer.store');

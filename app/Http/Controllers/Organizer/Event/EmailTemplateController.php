@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Console\Scheduling\Event;
 use App\Http\Requests\Organizer\Event\TemplateRequest;
+use Illuminate\Support\Facades\Auth;
 
 class EmailTemplateController extends Controller
 {
@@ -25,6 +26,10 @@ class EmailTemplateController extends Controller
      */
     public function index()
     {
+        if (! Auth::user()->can('view_email_template')) {
+            abort(403);
+        }
+
         $baseTemplate = EventEmailTemplate::where('event_app_id', session('event_id'))->get();
 
         return Inertia::render('Organizer/Events/EmailTemplate/Index', [
@@ -37,6 +42,10 @@ class EmailTemplateController extends Controller
      */
     public function create()
     {
+        if (! Auth::user()->can('create_email_template')) {
+            abort(403);
+        }
+
         return Inertia::render('Organizer/Events/EmailTemplate/Create');
     }
 
@@ -45,6 +54,10 @@ class EmailTemplateController extends Controller
      */
     public function store(TemplateRequest $request)
     {
+        if (! Auth::user()->can('create_email_template')) {
+            abort(403);
+        }
+
         $input = $request->validated();
         $input['user_id'] = auth()->id();
         $input['event_app_id'] = session('event_id');
@@ -58,6 +71,10 @@ class EmailTemplateController extends Controller
      */
     public function show(EventEmailTemplate $EmailTemplate)
     {
+        if (! Auth::user()->can('view_email_template')) {
+            abort(403);
+        }
+
         return Inertia::render('Organizer/Events/EmailTemplate/Show', [
             'baseTemplate' => $EmailTemplate,
         ]);
@@ -68,6 +85,10 @@ class EmailTemplateController extends Controller
      */
     public function edit(EventEmailTemplate $EmailTemplate)
     {
+        if (! Auth::user()->can('edit_email_template')) {
+            abort(403);
+        }
+
         return Inertia::render('Organizer/Events/EmailTemplate/Edit', [
             'eventId' => session('event_id'),
             'EmailTemplate' => $EmailTemplate,
@@ -79,6 +100,10 @@ class EmailTemplateController extends Controller
      */
     public function update(TemplateRequest $request, EventEmailTemplate $EmailTemplate)
     {
+        if (! Auth::user()->can('edit_email_template')) {
+            abort(403);
+        }
+
         $input = $request->validated();
         $input['user_id'] = auth()->id();
         $input['event_app_id'] = session('event_id');
@@ -100,6 +125,10 @@ class EmailTemplateController extends Controller
 
     public function baseTemplate()
     {
+        if (! Auth::user()->can('view_default_email_template')) {
+            abort(403);
+        }
+
         $baseTemplate = BaseTemplate::get();
 
         return Inertia::render('Organizer/Events/BaseTemplate/Index', [
@@ -109,6 +138,10 @@ class EmailTemplateController extends Controller
 
     public function setEmailTemplate(BaseTemplate $baseTemplate)
     {
+        if (! Auth::user()->can('create_default_email_template')) {
+            abort(403);
+        }
+
         EventEmailTemplate::create([
             'user_id' => auth()->id(),
             'event_app_id' => session('event_id'),
@@ -123,6 +156,10 @@ class EmailTemplateController extends Controller
 
     public function viewBaseTemplate(BaseTemplate $baseTemplate)
     {
+        if (! Auth::user()->can('view_default_email_template')) {
+            abort(403);
+        }
+
         return Inertia::render('Organizer/Events/BaseTemplate/Show', [
             'baseTemplate' => $baseTemplate,
         ]);
