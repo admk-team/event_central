@@ -409,13 +409,13 @@ class PaymentController extends Controller
                     array_push($attendee_purchased_tickets, $ticket);
             }
             Mail::to($attendee->email)->send(new AttendeeTicketPurchasedEmail($attendee, $attendee_purchased_tickets));
-            $emailNotificationList =  eventSettings($attendee->event_app_id)->getValue('email_list');
-            $emailNotificationList = explode(',', $emailNotificationList);
-            if ($emailNotificationList) {
-                foreach ($emailNotificationList as $singleEmail) {
-                    Mail::to($singleEmail)->send(new AttendeeTicketPurchasedEmail($attendee, $attendee_purchased_tickets));
-                }
-            }
+            // $emailNotificationList =  eventSettings($attendee->event_app_id)->getValue('email_list');
+            // $emailNotificationList = explode(',', $emailNotificationList);
+            // if ($emailNotificationList) {
+            //     foreach ($emailNotificationList as $singleEmail) {
+            //         Mail::to($singleEmail)->send(new AttendeeTicketPurchasedEmail($attendee, $attendee_purchased_tickets));
+            //     }
+            // }
         } catch (Exception $ex) {
             Log::error('An Error occurred while sending confirmation email to attendee');
             Log::error($ex->getMessage());
