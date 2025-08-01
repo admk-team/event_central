@@ -110,7 +110,7 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
       let response: any;
       if(reciever_id == null)
       {
-        response = await axios.get(`/attendee/get-chat`);
+        response = await axios.get(`/attendee/get-chat/${event_data.id}`);
       }else{
         response = await axios.get(`/attendee/private-chat/${reciever_id}`);
       }

@@ -24,9 +24,15 @@ class ChatController extends Controller
         return Inertia::render('Organizer/Events/Chat/Index', compact('member', 'event_data', 'loged_user', 'unread_count', 'lastMessage'));
     }
 
-    public function getMessages()
+    public function getMessages($id)
     {
-        $messages = ChatMessage::currentEvent()->with(['sender','reply'])->get();
+        $eventId = session('event_id');
+        $messages = ChatMessage::where('event_id', $eventId)
+            ->Where('receiver_id', $id)
+            ->with(['sender', 'reply'])
+            ->orderBy('created_at', 'asc')
+            ->get();
+
         return response()->json([
             'success' => true,
             'messages' => $messages,
@@ -37,7 +43,10 @@ class ChatController extends Controller
     {
         $request->validate([
             'message' => 'required|string',
+            'receiver_id' => 'required',
+            'reply_to' => 'nullable|exists:chat_messages,id',
         ]);
+
         $eventId = session('event_id');
         $senderId = Auth::user()->id;
         $message = ChatMessage::create([
@@ -49,7 +58,7 @@ class ChatController extends Controller
             'message' => $request->message,
             'reply_to' => $request->reply_to,
         ]);
-        $message->load(['sender','reply']);
+        $message->load(['sender', 'reply']);
         // Increment unread_count for all other participants
         ChatMember::where('event_id', $eventId)
             ->where(function ($q) use ($senderId) {
@@ -57,7 +66,6 @@ class ChatController extends Controller
                     ->orWhere('user_id', '!=', $senderId);
             })
             ->increment('unread_count');
-
         broadcast(new EventGroupChat($message))->toOthers();
         return response()->json(['success' => true, 'message' => $message]);
     }

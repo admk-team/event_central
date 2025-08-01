@@ -23,9 +23,14 @@ class ChatController extends Controller
         return Inertia::render('Attendee/Chat/Index', compact('member', 'event_data', 'loged_user', 'lastMessage'));
     }
 
-    public function getMessages()
+    public function getMessages($id)
     {
-        $messages = ChatMessage::where('event_id', Auth::user()->event_app_id)->with(['sender', 'reply'])->get();
+        $eventId = Auth::user()->event_app_id;
+        $messages = ChatMessage::where('event_id', $eventId)
+            ->Where('receiver_id', $id)
+            ->with(['sender', 'reply'])
+            ->orderBy('created_at', 'asc')
+            ->get();
         return response()->json([
             'success' => true,
             'messages' => $messages,
@@ -57,7 +62,7 @@ class ChatController extends Controller
             ->with(['sender', 'reply'])
             ->orderBy('created_at', 'asc')
             ->get();
-            
+
         return response()->json([
             'success' => true,
             'messages' => $messages,
@@ -70,7 +75,7 @@ class ChatController extends Controller
         // Validate the request
         $request->validate([
             'message' => 'required|string',
-            'receiver_id' => 'required', 
+            'receiver_id' => 'required',
             'reply_to' => 'nullable|exists:chat_messages,id',
         ]);
 

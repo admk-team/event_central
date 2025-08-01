@@ -171,7 +171,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
 
             // Chat
             Route::resource('chat', ChatController::class);
-            Route::get('get-chat', [ChatController::class, 'getMessages'])->name('get-messages');
+            Route::get('get-chat/{id}', [ChatController::class, 'getMessages'])->name('get-messages');
             Route::post('send-message', [ChatController::class, 'store']);
 
             // Ticket Fees

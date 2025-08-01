@@ -15,15 +15,8 @@ import {
 } from "react-bootstrap";
 import SimpleBar from "simplebar-react";
 import EmojiPicker from 'emoji-picker-react';
-
-//Import Icons
-import FeatherIcon from "feather-icons-react";
-
-import { chatContactData } from "../../../../common/data";
-
 //redux
 import { useSelector, useDispatch } from "react-redux";
-
 import avatar2 from "../../../../../images/users/avatar-2.jpg";
 import userDummayImage from "../../../../../images/users/user-dummy-img.jpg";
 
@@ -33,21 +26,13 @@ import { createSelector } from "reselect";
 import Spinners from "../../../../Components/Common/Spinner";
 import { Head, Link } from "@inertiajs/react";
 import Layout from "../../../../Layouts/Event";
-import { onAddMessage, onDeleteMessage, onGetDirectContact, onGetMessages } from "../../../../slices/thunk";
+import { onGetMessages } from "../../../../slices/thunk";
 import axios from 'axios';
 import { useEchoPublic } from '@laravel/echo-react';
 
 const Chat = ({member,event_data,loged_user,unread_count,lastMessage}:any) => {
   
   const userChatShow: any = useRef();
-
-  // hide the chat open section on reload or open 
-  useEffect(() => {
-    if (userChatShow.current) {
-      userChatShow.current.classList.add("d-none");
-    }
-  }, []);
-
   const [chatmessages, setChatMessages] = useState<any[]>([]);
   const [customActiveTab, setcustomActiveTab] = useState<any>("1");
   const toggleCustom = (tab: any) => {
@@ -55,21 +40,26 @@ const Chat = ({member,event_data,loged_user,unread_count,lastMessage}:any) => {
       setcustomActiveTab(tab);
     }
   };
-
   const dispatch = useDispatch<any>();
   const [Chat_Box_Username, setChat_Box_Username] = useState<any>("Lisa Parker");
   const [user_Status, setUser_Status] = useState<string | null>("online");
   const [Chat_Box_Image, setChat_Box_Image] = useState<any>(avatar2);
   const [currentRoomId, setCurrentRoomId] = useState<any>(1);
   const [curMessage, setcurMessage] = useState<string>("");
-  const [reply, setreply] = useState<any>("");
+  const [reply, setReply] = useState<any>(null);
   const [emojiPicker, setemojiPicker] = useState<boolean>(false);
+  // hide the chat open section on reload or open 
+  useEffect(() => {
+    if (userChatShow.current) {
+      userChatShow.current.classList.add("d-none");
+    }
+  }, []);
 
-  // ✅ Real-time subscription to public channel like "event-app-[12]"
+
+  //Real-time subscription to public channel like "event-app-[12]"
   const eventChannelName = `event-app-${event_data.id}`;
 
   useEchoPublic(eventChannelName, "EventGroupChat", (e: any) => {
-    console.log("New message via Echo:", e);
     const newMessage = e.message;
     setChatMessages(prev  => [...prev , newMessage]);
   });
@@ -94,7 +84,7 @@ const Chat = ({member,event_data,loged_user,unread_count,lastMessage}:any) => {
   //Use For Chat Box
   const userChatOpen = async (chats: any) => {
     try {
-      const response = await axios.get(`/organizer/events/get-chat`);
+      const response = await axios.get(`/organizer/events/get-chat/${event_data.id}`);
       userChatShow.current.classList.remove("d-none");
       setChat_Box_Username(chats.name);
       setCurrentRoomId(chats.id);
@@ -131,11 +121,13 @@ const Chat = ({member,event_data,loged_user,unread_count,lastMessage}:any) => {
     try {
       const response = await axios.post('/organizer/events/send-message', {
         message: curMessage,
+        receiver_id: currentRoomId ?? event_data.id,
+        reply_to: reply ? reply.msg_id : null
       });
       // const newMessage = response.data.message;
       // setChatMessages(prev  => [...prev , newMessage]);
       setcurMessage('');
-      setreply('');
+      setReply(null);
       setemojiPicker(false);
       setemojiArray('');
     } catch (error) {
@@ -370,17 +362,49 @@ const Chat = ({member,event_data,loged_user,unread_count,lastMessage}:any) => {
                                     <div className="user-chat-content">
                                       <div className="ctext-wrap">
                                         <div className="ctext-wrap-content">
+                                          {/* Show reply block if this message is replying to another */}
+                                          {msg.reply && (
+                                            <div className="replymessage-block mb-1 p-2 rounded bg-light">
+                                              <strong>{msg.reply.sender?.name}</strong>
+                                              <p className="mb-0 small">{msg.reply.message}</p>
+                                            </div>
+                                          )}
                                           <p className="mb-0 ctext-content">{msg.message}</p>
                                         </div>
+                                        {/* Three-dot dropdown menu */}
+                                        <Dropdown className="align-self-start message-box-drop ms-2">
+                                          <Dropdown.Toggle
+                                            href="#"
+                                            className="btn nav-btn arrow-none p-0"
+                                            as="a"
+                                          >
+                                            <i className="ri-more-2-fill"></i>
+                                          </Dropdown.Toggle>
+                                          <Dropdown.Menu>
+                                            <Dropdown.Item
+                                              href="#"
+                                              className="reply-message"
+                                              onClick={() => setReply({
+                                                sender: msg.sender?.name || "Unknown",
+                                                msg: msg.message,
+                                                msg_id : msg.id
+                                              })}
+                                            >
+                                              <i className="ri-reply-line me-2 text-muted align-bottom"></i>
+                                              Reply
+                                            </Dropdown.Item>
+                                            <Dropdown.Item href="#" onClick={() => navigator.clipboard.writeText(msg.message)}>
+                                              <i className="ri-file-copy-line me-2 text-muted align-bottom"></i>
+                                              Copy
+                                            </Dropdown.Item>
+                                          </Dropdown.Menu>
+                                        </Dropdown>
                                       </div>
                                       <div className="conversation-name">
                                         <span className="text-muted">{msg.sender_id != loged_user ? msg.sender?.name : 'You'}</span>
                                         <small className="text-muted time">
                                           {new Date(msg.created_at).toLocaleTimeString()}
                                         </small>
-                                        {/* <span className="text-success check-message-icon">
-                                          <i className="ri-check-double-line align-bottom"></i>
-                                        </span> */}
                                       </div>
                                     </div>
                                   </div>
@@ -442,6 +466,28 @@ const Chat = ({member,event_data,loged_user,unread_count,lastMessage}:any) => {
                           </div>
                         </Row>
                       </form>
+                    </div>
+                    <div className={reply ? "replyCard show" : "replyCard"}>
+                      <Card className="mb-0">
+                        <Card.Body className="py-3">
+                          <div className="replymessage-block mb-0 d-flex align-items-start">
+                            <div className="flex-grow-1">
+                              <h5 className="conversation-name">{reply?.sender || "Unknown"}</h5>
+                              <p className="mb-0">{reply?.msg || ""}</p>
+                            </div>
+                            <div className="flex-shrink-0">
+                              <button
+                                type="button"
+                                id="close_toggle"
+                                className="btn btn-sm btn-link mt-n2 me-n3 fs-18"
+                                onClick={() => setReply(null)}
+                              >
+                                <i className="bx bx-x align-middle"></i>
+                              </button>
+                            </div>
+                          </div>
+                        </Card.Body>
+                      </Card>
                     </div>
                   </div>
                 </div>
