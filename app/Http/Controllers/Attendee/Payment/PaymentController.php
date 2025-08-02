@@ -335,7 +335,7 @@ class PaymentController extends Controller
         //4. Increment discount code used count
         if ($payment->discount_code) {
             $code = PromoCode::where('code', $payment->discount_code)
-                ->where('event_app_id', Auth::user()->event_app_id)
+                ->where('event_app_id', Auth::user()->event_app_id ?? session('event_id'))
                 ->where('status', 'active')
                 ->whereColumn('used_count', '<', 'usage_limit')
                 ->whereDate('end_date', '>', date('Y-m-d'))->first();
@@ -388,7 +388,7 @@ class PaymentController extends Controller
     public function  validateDiscCode($disCode)
     {
         $code = PromoCode::where(function ($subQuery) use ($disCode) {
-            $subQuery->where('event_app_id', Auth::user()->event_app_id);
+            $subQuery->where('event_app_id', Auth::user()->event_app_id ?? session('event_id'));
             $subQuery->where('code', $disCode);
             $subQuery->where('status', 'active');
             $subQuery->whereColumn('used_count', '<', 'usage_limit');
