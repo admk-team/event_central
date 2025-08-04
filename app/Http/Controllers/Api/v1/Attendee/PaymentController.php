@@ -235,7 +235,11 @@ class PaymentController extends Controller
 
             //4. Increment discount code used count
             if ($payment->discount_code) {
-                $code = PromoCode::where('code', $payment->discount_code)->first();
+                 $code = PromoCode::where('code', $payment->discount_code)
+                ->where('event_app_id', Auth::user()->event_app_id ?? session('event_id'))
+                ->where('status', 'active')
+                ->whereColumn('used_count', '<', 'usage_limit')
+                ->whereDate('end_date', '>', date('Y-m-d'))->first();
                 if ($code) {
                     $code->increment('used_count');
                     $code->save();
