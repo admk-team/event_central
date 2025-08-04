@@ -31,6 +31,7 @@ class WebsiteSettingsController extends Controller
             // 'pages' => $this->datatable(Page::where('event_app_id', session('event_id'))),
             // 'footers' => $this->datatable(Footer::where('event_app_id', session('event_id'))),
             // 'homePageSelected' => $currentEvent->pages()->homePage()->count() !== 0,
+            'previewUrl' => route('settings.website.preview'),
             'colors' => eventSettings()->getValue('website_colors', config('event_website.colors')),
         ]);
     }
@@ -51,7 +52,7 @@ class WebsiteSettingsController extends Controller
         if (! Auth::user()->can('edit_website')) {
             abort(403);
         }
-        
+
         eventSettings()->set('website_colors', $request->colors);
         return back()->withSuccess("Saved");
     }
@@ -88,5 +89,23 @@ class WebsiteSettingsController extends Controller
                 'default_footer' => true,
             ]);
         }
+    }
+    public function preview()
+    {
+        if (!Auth::user()->can('view_website')) {
+            abort(403);
+        }
+
+        $event = EventApp::findOrFail(session('event_id'));
+
+        $this->createDefaults($event);
+
+        return Inertia::render("Organizer/Events/Settings/Website/Preview", [
+            'event' => $event,
+            'header' => $event->headers()->where('is_default', true)->first(),
+            'footer' => $event->footers()->where('is_default', true)->first(),
+            'page' => $event->pages()->where('is_home_page', true)->first(),
+            'colors' => eventSettings()->getValue('website_colors', config('event_website.colors')),
+        ]);
     }
 }

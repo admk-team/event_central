@@ -38,6 +38,18 @@ function Website() {
                                         <Colors />
                                     </HasPermission>
                                 </Col>
+                                <Col xs={12} className="mt-3">
+                                    <HasPermission permission="view_website">
+                                        <a
+                                            href={previewUrl}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="btn btn-outline-primary"
+                                        >
+                                            Preview Website
+                                        </a>
+                                    </HasPermission>
+                                </Col>
                                 {/* <Col xs={12}>
                                     <WebsitePages />
                                 </Col>
@@ -59,7 +71,7 @@ function Website() {
                             </Row>
                         </Col>
                     </Row>
-                    
+
                 </Container>
             </div>
         </React.Fragment>
