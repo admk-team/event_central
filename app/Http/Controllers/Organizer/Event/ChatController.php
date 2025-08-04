@@ -29,7 +29,7 @@ class ChatController extends Controller
         $eventId = session('event_id');
         $messages = ChatMessage::where('event_id', $eventId)
             ->Where('receiver_id', $id)
-            ->with(['sender', 'reply'])
+            ->with(['sender', 'reply', 'files'])
             ->orderBy('created_at', 'asc')
             ->get();
 
@@ -45,6 +45,7 @@ class ChatController extends Controller
             'message' => 'required|string',
             'receiver_id' => 'required',
             'reply_to' => 'nullable|exists:chat_messages,id',
+            'files' => 'nullable|array',
         ]);
 
         $eventId = session('event_id');
@@ -55,10 +56,24 @@ class ChatController extends Controller
             'sender_type' => \App\Models\User::class,
             'receiver_id' => $eventId,
             'receiver_type' => \App\Models\EventApp::class,
-            'message' => $request->message,
+            'message' => $request->message == 'media' ? null : $request->message,
             'reply_to' => $request->reply_to,
         ]);
-        $message->load(['sender', 'reply']);
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+                $originalName = $file->getClientOriginalName();
+                $path = $file->store('chat_files', 'public');
+
+                $message->files()->create([
+                    'file_path' => "/storage/" . $path,
+                    'file_type' => $file->getMimeType(),
+                    'file_size' => $file->getSize(),
+                    'file_name' => $originalName
+                ]);
+            }
+        }
+
+        $message->load(['sender', 'reply', 'files']);
         // Increment unread_count for all other participants
         ChatMember::where('event_id', $eventId)
             ->where(function ($q) use ($senderId) {

@@ -29,6 +29,8 @@ import Layout from "../../../../Layouts/Event";
 import { onGetMessages } from "../../../../slices/thunk";
 import axios from 'axios';
 import { useEchoPublic } from '@laravel/echo-react';
+import Attachments from "./Components/Attachments";
+import ChatAttachments from "./Components/ChatAttachments";
 
 const Chat = ({member,event_data,loged_user,unread_count,lastMessage}:any) => {
   
@@ -55,6 +57,11 @@ const Chat = ({member,event_data,loged_user,unread_count,lastMessage}:any) => {
     }
   }, []);
 
+  // file attachments in chat
+  const [showFileModal, setShowFileModal] = useState(false);
+  const sendFiles = (files: File[]) => {
+    addMessage(files);
+  };
 
   //Real-time subscription to public channel like "event-app-[12]"
   const eventChannelName = `event-app-${event_data.id}`;
@@ -117,19 +124,45 @@ const Chat = ({member,event_data,loged_user,unread_count,lastMessage}:any) => {
   }
 
   // add message
-  const addMessage = async () => {
+  const addMessage = async (files?: File[]) => {
     try {
-      const response = await axios.post('/organizer/events/send-message', {
-        message: curMessage,
-        receiver_id: currentRoomId ?? event_data.id,
-        reply_to: reply ? reply.msg_id : null
-      });
+      const selectedFilesData = files ?? [];
+      const formData = new FormData();
+      formData.append("receiver_id", currentRoomId ?? event_data.id);
+      if (reply?.msg_id) {
+        formData.append("reply_to", reply.msg_id);
+      }
+      if (selectedFilesData && selectedFilesData.length > 0) {
+        Array.from(selectedFilesData).forEach((file) => {
+          formData.append("files[]", file);
+        });
+      }
+      if (curMessage && curMessage.trim() !== "") {
+        formData.append("message", curMessage);
+      } else {
+        formData.append("message", "media");
+      }
+      // Send request with multipart/form-data
+      const response = await axios.post("/organizer/events/send-message",formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        }
+      );
+      // const response = await axios.post('/organizer/events/send-message', {
+      //   message: curMessage,
+      //   receiver_id: currentRoomId ?? event_data.id,
+      //   reply_to: reply ? reply.msg_id : null,
+      //   files: selectedFiles ?? null
+      // });
       // const newMessage = response.data.message;
       // setChatMessages(prev  => [...prev , newMessage]);
       setcurMessage('');
       setReply(null);
       setemojiPicker(false);
       setemojiArray('');
+
     } catch (error) {
       console.error('Message sending failed:', error);
     }
@@ -347,18 +380,6 @@ const Chat = ({member,event_data,loged_user,unread_count,lastMessage}:any) => {
                                   key={index}
                                 >
                                   <div className="conversation-list">
-                                    {/* Avatar if sender is the current user */}
-                                    {msg.sender?.first_name === Chat_Box_Username && (
-                                      msg.sender_id === 1 && (
-                                        <div className="chat-avatar">
-                                          {Chat_Box_Image === undefined ? (
-                                            <img src={userDummayImage} alt="" />
-                                          ) : (
-                                            <img src={Chat_Box_Image} alt="" />
-                                          )}
-                                        </div>
-                                      )
-                                    )}
                                     <div className="user-chat-content">
                                       <div className="ctext-wrap">
                                         <div className="ctext-wrap-content">
@@ -369,36 +390,44 @@ const Chat = ({member,event_data,loged_user,unread_count,lastMessage}:any) => {
                                               <p className="mb-0 small">{msg.reply.message}</p>
                                             </div>
                                           )}
+                                          {/* Show text message */}
                                           <p className="mb-0 ctext-content">{msg.message}</p>
+
+                                          {/* Show attachments */}
+                                          {msg.files && msg.files.length > 0 && (
+                                            <ChatAttachments files={msg.files} />
+                                          )}
                                         </div>
                                         {/* Three-dot dropdown menu */}
-                                        <Dropdown className="align-self-start message-box-drop ms-2">
-                                          <Dropdown.Toggle
-                                            href="#"
-                                            className="btn nav-btn arrow-none p-0"
-                                            as="a"
-                                          >
-                                            <i className="ri-more-2-fill"></i>
-                                          </Dropdown.Toggle>
-                                          <Dropdown.Menu>
-                                            <Dropdown.Item
+                                        {msg.files && msg.files.length > 0 ? ("") : (
+                                          <Dropdown className="align-self-start message-box-drop ms-2">
+                                            <Dropdown.Toggle
                                               href="#"
-                                              className="reply-message"
-                                              onClick={() => setReply({
-                                                sender: msg.sender?.name || "Unknown",
-                                                msg: msg.message,
-                                                msg_id : msg.id
-                                              })}
+                                              className="btn nav-btn arrow-none p-0"
+                                              as="a"
                                             >
-                                              <i className="ri-reply-line me-2 text-muted align-bottom"></i>
-                                              Reply
-                                            </Dropdown.Item>
-                                            <Dropdown.Item href="#" onClick={() => navigator.clipboard.writeText(msg.message)}>
-                                              <i className="ri-file-copy-line me-2 text-muted align-bottom"></i>
-                                              Copy
-                                            </Dropdown.Item>
-                                          </Dropdown.Menu>
-                                        </Dropdown>
+                                              <i className="ri-more-2-fill"></i>
+                                            </Dropdown.Toggle>
+                                            <Dropdown.Menu>
+                                              <Dropdown.Item
+                                                href="#"
+                                                className="reply-message"
+                                                onClick={() => setReply({
+                                                  sender: msg.sender?.name || "Unknown",
+                                                  msg: msg.message,
+                                                  msg_id : msg.id
+                                                })}
+                                              >
+                                                <i className="ri-reply-line me-2 text-muted align-bottom"></i>
+                                                Reply
+                                              </Dropdown.Item>
+                                              <Dropdown.Item href="#" onClick={() => navigator.clipboard.writeText(msg.message)}>
+                                                <i className="ri-file-copy-line me-2 text-muted align-bottom"></i>
+                                                Copy
+                                              </Dropdown.Item>
+                                            </Dropdown.Menu>
+                                          </Dropdown>
+                                        )}
                                       </div>
                                       <div className="conversation-name">
                                         <span className="text-muted">{msg.sender_id != loged_user ? msg.sender?.name : 'You'}</span>
@@ -433,9 +462,25 @@ const Chat = ({member,event_data,loged_user,unread_count,lastMessage}:any) => {
                                   <i className="bx bx-smile align-middle"></i>
                                 </button>
                               </div>
+                              <div className="links-list-item">
+                                <button
+                                  type="button"
+                                  className="btn btn-link text-decoration-none file-attach-btn"
+                                  onClick={() => setShowFileModal(true)}
+                                >
+                                  <i className="bx bx-paperclip align-middle" 
+                                   style={{ transform: "rotate(90deg)", display: "inline-block" }}
+                                  ></i>
+                                </button>
+                                <Attachments
+                                  showFileModal={showFileModal}
+                                  setShowFileModal={setShowFileModal}
+                                  sendFiles={sendFiles}
+                                />
+                              </div>
+
                             </div>
                           </div>
-
                           <div className="col">
                             <div className="chat-input-feedback">
                               Please Enter a Message

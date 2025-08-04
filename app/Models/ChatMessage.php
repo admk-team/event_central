@@ -10,7 +10,7 @@ class ChatMessage extends Model
 {
     use HasFactory;
 
-   protected $fillable = [
+    protected $fillable = [
         'event_id',
         'sender_id',
         'sender_type',
@@ -18,9 +18,6 @@ class ChatMessage extends Model
         'receiver_type',
         'message',
         'reply_to',
-        'file_path',
-        'file_type',
-        'file_size',
     ];
 
     public function event()
@@ -47,5 +44,10 @@ class ChatMessage extends Model
     public function scopeCurrentEvent($query)
     {
         $query->where('event_id', session('event_id'));
+    }
+
+    public function files()
+    {
+        return $this->hasMany(ChatMessageFile::class, 'message_id');
     }
 }
