@@ -272,7 +272,7 @@ const Navdata = () => {
         {
             id: "eventCalendar",
             label: "Event Calendar",
-            icon: "bx bxs-medal",
+            icon: "bx bxs-calendar",
             link: route("event.calendar"),
             stateVariables: isMore,
             click: function (e: any) {
