@@ -15,6 +15,8 @@ import AttendeeLayout from "../../../Layouts/Attendee";
 import { onGetMessages } from "../../../slices/thunk";
 import axios from 'axios';
 import { useEcho, useEchoPublic } from '@laravel/echo-react';
+import ChatAttachments from "./Components/ChatAttachments";
+import Attachments from "./Components/Attachments";
 
 const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
   
@@ -44,6 +46,11 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
     }
   }, []);
 
+   // file attachments in chat
+  const [showFileModal, setShowFileModal] = useState(false);
+  const sendFiles = (files: File[]) => {
+    addMessage(files);
+  };
 
   // Real-time subscription to public channel like "event-app-[id]"
   const eventChannelName = `event-app-${event_data.id}`;
@@ -151,13 +158,30 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
   }
 
   // add message
-  const addMessage = async () => {
+   const addMessage = async (files?: File[]) => {
     try {
-      const response = await axios.post('/attendee/send-message', {
-        message: curMessage,
-        receiver_id: currentRoomId ?? event_data.id,
-        reply_to: reply ? reply.msg_id : null
-      });
+      const selectedFilesData = files ?? [];
+      const formData = new FormData();
+      formData.append("receiver_id", currentRoomId ?? event_data.id);
+      if (reply?.msg_id) {
+        formData.append("reply_to", reply.msg_id);
+      }
+      if (selectedFilesData && selectedFilesData.length > 0) {
+        Array.from(selectedFilesData).forEach((file) => {
+          formData.append("files[]", file);
+        });
+      }
+      if (curMessage && curMessage.trim() !== "") {
+        formData.append("message", curMessage);
+      } else {
+        formData.append("message", "media");
+      }
+      const response = await axios.post('/attendee/send-message',formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        });
       // for private chat
       if(currentRoomId != null)
       {
@@ -405,36 +429,42 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
                                             </div>
                                           )}
                                           <p className="mb-0 ctext-content">{msg.message}</p>
+                                          {/* Show attachments */}
+                                          {msg.files && msg.files.length > 0 && (
+                                            <ChatAttachments files={msg.files} />
+                                          )}
                                         </div>
 
                                         {/* Three-dot dropdown menu */}
-                                        <Dropdown className="align-self-start message-box-drop ms-2">
-                                          <Dropdown.Toggle
-                                            href="#"
-                                            className="btn nav-btn arrow-none p-0"
-                                            as="a"
-                                          >
-                                            <i className="ri-more-2-fill"></i>
-                                          </Dropdown.Toggle>
-                                          <Dropdown.Menu>
-                                            <Dropdown.Item
-                                              href="#"
-                                              className="reply-message"
-                                              onClick={() => setReply({
-                                                sender: msg.sender?.name || "Unknown",
-                                                msg: msg.message,
-                                                msg_id : msg.id
-                                              })}
-                                            >
-                                              <i className="ri-reply-line me-2 text-muted align-bottom"></i>
-                                              Reply
-                                            </Dropdown.Item>
-                                            <Dropdown.Item href="#" onClick={() => navigator.clipboard.writeText(msg.message)}>
-                                              <i className="ri-file-copy-line me-2 text-muted align-bottom"></i>
-                                              Copy
-                                            </Dropdown.Item>
-                                          </Dropdown.Menu>
-                                        </Dropdown>
+                                         {msg.files && msg.files.length > 0 ? ("") : (
+                                            <Dropdown className="align-self-start message-box-drop ms-2">
+                                              <Dropdown.Toggle
+                                                href="#"
+                                                className="btn nav-btn arrow-none p-0"
+                                                as="a"
+                                              >
+                                                <i className="ri-more-2-fill"></i>
+                                              </Dropdown.Toggle>
+                                              <Dropdown.Menu>
+                                                <Dropdown.Item
+                                                  href="#"
+                                                  className="reply-message"
+                                                  onClick={() => setReply({
+                                                    sender: msg.sender?.name || "Unknown",
+                                                    msg: msg.message,
+                                                    msg_id : msg.id
+                                                  })}
+                                                >
+                                                  <i className="ri-reply-line me-2 text-muted align-bottom"></i>
+                                                  Reply
+                                                </Dropdown.Item>
+                                                <Dropdown.Item href="#" onClick={() => navigator.clipboard.writeText(msg.message)}>
+                                                  <i className="ri-file-copy-line me-2 text-muted align-bottom"></i>
+                                                  Copy
+                                                </Dropdown.Item>
+                                              </Dropdown.Menu>
+                                            </Dropdown>
+                                          )}
                                       </div>
 
                                       <div className="conversation-name">
@@ -471,6 +501,22 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
                                 >
                                   <i className="bx bx-smile align-middle"></i>
                                 </button>
+                              </div>
+                              <div className="links-list-item">
+                                <button
+                                  type="button"
+                                  className="btn btn-link text-decoration-none file-attach-btn"
+                                  onClick={() => setShowFileModal(true)}
+                                >
+                                  <i className="bx bx-paperclip align-middle" 
+                                    style={{ transform: "rotate(90deg)", display: "inline-block" }}
+                                  ></i>
+                                </button>
+                                <Attachments
+                                  showFileModal={showFileModal}
+                                  setShowFileModal={setShowFileModal}
+                                  sendFiles={sendFiles}
+                                />
                               </div>
                             </div>
                           </div>

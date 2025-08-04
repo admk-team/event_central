@@ -28,7 +28,7 @@ class ChatController extends Controller
         $eventId = Auth::user()->event_app_id;
         $messages = ChatMessage::where('event_id', $eventId)
             ->Where('receiver_id', $id)
-            ->with(['sender', 'reply'])
+            ->with(['sender', 'reply', 'files'])
             ->orderBy('created_at', 'asc')
             ->get();
         return response()->json([
@@ -59,7 +59,7 @@ class ChatController extends Controller
                             ->where('receiver_id', $userId);
                     });
             })
-            ->with(['sender', 'reply'])
+            ->with(['sender', 'reply', 'files'])
             ->orderBy('created_at', 'asc')
             ->get();
 
@@ -77,6 +77,7 @@ class ChatController extends Controller
             'message' => 'required|string',
             'receiver_id' => 'required',
             'reply_to' => 'nullable|exists:chat_messages,id',
+            'files' => 'nullable|array',
         ]);
 
         $eventId = Auth::user()->event_app_id;
@@ -96,7 +97,21 @@ class ChatController extends Controller
             'reply_to' => $request->reply_to,
         ]);
 
-        $message->load(['sender', 'reply']);
+       if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+                $originalName = $file->getClientOriginalName();
+                $path = $file->store('chat_files', 'public');
+
+                $message->files()->create([
+                    'file_path' => "/storage/" . $path,
+                    'file_type' => $file->getMimeType(),
+                    'file_size' => $file->getSize(),
+                    'file_name' => $originalName
+                ]);
+            }
+        }
+
+        $message->load(['sender', 'reply', 'files']);
 
         // Handle group or private chat
         if ($receiver_type === \App\Models\EventApp::class) {
