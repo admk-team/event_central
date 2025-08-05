@@ -15,6 +15,7 @@ import DateDifferenceFromToday from "./common/DateDifferenceFromToday";
 import EventSessionsTimeLine from "./common/EventSessionsTimeLine";
 import moment from "moment";
 
+
 const AttendeeDashboard = ({ eventApp, lasteventDate }: any) => {
     const selectedSessions = eventApp.event_sessions.filter(
         (session: any) => session.selected_by_attendee
@@ -98,15 +99,23 @@ const AttendeeDashboard = ({ eventApp, lasteventDate }: any) => {
                                     </Card>
                                     <Card>
                                         <CardHeader>
-                                            <CardTitle>Add to Google Calendar</CardTitle>
+                                            <CardTitle>Add to Event Calendar</CardTitle>
                                         </CardHeader>
                                         <CardBody>
-                                            <div className="d-grid grid">
-                                                <Form.Label>Add this event to your Google Calendar.</Form.Label>
+                                            <div className="d-flex">
                                                 <Button
                                                     disabled={!isEventAvailable}
                                                     variant="primary"
                                                     href={googleCalendarUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer">
+                                                    <i className='bx bxs-calendar-plus'></i> Click to Add
+                                                </Button>
+                                                <Button
+                                                    className="mr-6"
+                                                    disabled={!isEventAvailable}
+                                                    variant="primary"
+                                                    href={'/attendee/calendar/download/' + eventApp.id}
                                                     target="_blank"
                                                     rel="noopener noreferrer">
                                                     <i className='bx bxs-calendar-plus'></i> Click to Add
@@ -120,7 +129,6 @@ const AttendeeDashboard = ({ eventApp, lasteventDate }: any) => {
                                         </CardHeader>
                                         <CardBody>
                                             <div className="d-grid grid">
-                                                <Form.Label>Add this event to your Apple Calendar.</Form.Label>
                                                 <Button
                                                     disabled={!isEventAvailable}
                                                     variant="primary"

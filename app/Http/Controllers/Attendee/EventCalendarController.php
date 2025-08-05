@@ -35,8 +35,8 @@ class EventCalendarController extends Controller
         $timezone = new \DateTimeZone('America/New_York'); // Change if needed
         $event->setOccurrence(
             new TimeSpan(
-                new DateTime(new DateTimeImmutable($eventApp->start_date), $timezone),
-                new DateTime(new DateTimeImmutable($lasteventDate[0]->date), $timezone)
+                new DateTime(new DateTimeImmutable($eventApp->start_date, $timezone), true),
+                new DateTime(new DateTimeImmutable($lasteventDate[0]->date, $timezone), true)
             )
         );
 
