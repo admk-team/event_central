@@ -5,8 +5,8 @@ function Preview({ event, header, footer, page, colors }) {
     return (
         <div
             style={{
-                backgroundColor: colors?.background || '#fff',
-                color: colors?.text || '#000',
+                backgroundColor: colors?.background || '#ffffff',
+                color: colors?.text || '#000000',
                 padding: '2rem',
                 minHeight: '100vh',
             }}
@@ -18,8 +18,10 @@ function Preview({ event, header, footer, page, colors }) {
             )}
 
             <main className="my-4">
-                <h1>{page?.title}</h1>
-                <div dangerouslySetInnerHTML={{ __html: page?.content }} />
+                {page?.title && <h1>{page.title}</h1>}
+                {page?.content && (
+                    <div dangerouslySetInnerHTML={{ __html: page.content }} />
+                )}
             </main>
 
             {footer && (
@@ -28,5 +30,8 @@ function Preview({ event, header, footer, page, colors }) {
         </div>
     );
 }
+
+// ✅ Disable admin layout for standalone preview
+Preview.layout = null;
 
 export default Preview;

@@ -32,13 +32,15 @@ export default function WebsiteUrl() {
                 </CardText>
             </CardBody>
             <CardFooter>
-                <Button className="d-flex gap-1" onClick={copyLink}>
-                    <Copy size={20} />
-                    <span>Copy</span>
-                </Button>
-                <Button variant="secondary" onClick={openPreview}>
-                    Preview
-                </Button>
+                <div className="d-flex gap-2">
+                    <Button className="d-flex align-items-center gap-1" onClick={copyLink}>
+                        <Copy size={20} />
+                        <span>Copy</span>
+                    </Button>
+                    <Button className="d-flex align-items-center gap-1" variant="secondary" onClick={openPreview}>
+                        <span>Preview</span>
+                    </Button>
+                </div>
             </CardFooter>
         </Card>
     )

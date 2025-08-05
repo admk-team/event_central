@@ -7,6 +7,7 @@ use App\Models\EventApp;
 use App\Models\Footer;
 use App\Models\Header;
 use App\Models\Page;
+use App\Models\EventPartnerCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -23,6 +24,7 @@ class WebsiteSettingsController extends Controller
         $currentEvent = EventApp::find(session('event_id'));
 
         $this->createDefaults($currentEvent);
+       // dd(route('organizer.events.settings.website.preview', $currentEvent->uuid));
 
         return Inertia::render("Organizer/Events/Settings/Website/Index", [
             'websiteStatus' => eventSettings()->getValue('website_status', false),
@@ -31,7 +33,7 @@ class WebsiteSettingsController extends Controller
             // 'pages' => $this->datatable(Page::where('event_app_id', session('event_id'))),
             // 'footers' => $this->datatable(Footer::where('event_app_id', session('event_id'))),
             // 'homePageSelected' => $currentEvent->pages()->homePage()->count() !== 0,
-            'previewUrl' => route('settings.website.preview'),
+            'previewUrl' => route('organizer.events.settings.website.preview', $currentEvent->uuid),
             'colors' => eventSettings()->getValue('website_colors', config('event_website.colors')),
         ]);
     }
@@ -52,7 +54,6 @@ class WebsiteSettingsController extends Controller
         if (! Auth::user()->can('edit_website')) {
             abort(403);
         }
-
         eventSettings()->set('website_colors', $request->colors);
         return back()->withSuccess("Saved");
     }
@@ -90,22 +91,36 @@ class WebsiteSettingsController extends Controller
             ]);
         }
     }
-    public function preview()
+    public function preview($uuid)
     {
-        if (!Auth::user()->can('view_website')) {
-            abort(403);
+        $event = EventApp::where('uuid', $uuid)->first();
+
+        // if (! $event || !eventSettings($event->id)->getValue('website_status', false)) {
+        //     abort(404);
+        // }
+
+        $colors = eventSettings($event->id)->getValue('website_colors', config('event_website.colors'));
+        $partnerCategories = EventPartnerCategory::where('event_app_id', $event->id)->with(['partners'])->get();
+
+
+        $currentUrl = $request->fullUrl();
+        $link = $request->query('link');
+        // Check if the session already has the 'visited_url' set
+        if ($link) {
+            if (!session()->has('referral_link')) {
+                // If not, store the full URL in the session
+                session(['referral_link' => $currentUrl]);
+                Log::info('URL set in session: ' . $currentUrl);
+                if (session('referral_link')) {
+                    $link = ReferralLink::where('url', $currentUrl)->first();
+                    if ($link) {
+                        $link->nextcount += 1;
+                        $link->save();
+                    }
+                }
+            }
         }
-
-        $event = EventApp::findOrFail(session('event_id'));
-
-        $this->createDefaults($event);
-
-        return Inertia::render("Organizer/Events/Settings/Website/Preview", [
-            'event' => $event,
-            'header' => $event->headers()->where('is_default', true)->first(),
-            'footer' => $event->footers()->where('is_default', true)->first(),
-            'page' => $event->pages()->where('is_home_page', true)->first(),
-            'colors' => eventSettings()->getValue('website_colors', config('event_website.colors')),
-        ]);
+        $exhibitors = EventPartner::where('event_app_id', $event->id)->where('type', 'exhibitor')->orderBy('company_name', 'asc')->get();
+        return view('event-website.index', compact('event', 'colors', 'partnerCategories', 'exhibitors'));
     }
 }
