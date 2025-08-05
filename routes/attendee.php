@@ -7,6 +7,7 @@ use App\Http\Controllers\Attendee\Auth\PasswordController;
 use App\Http\Controllers\Attendee\Auth\RegisteredUserController;
 use App\Http\Controllers\Attendee\BadgeAchievementController;
 use App\Http\Controllers\Attendee\ChatController;
+use App\Http\Controllers\Attendee\EventCalendarController;
 use App\Http\Controllers\Attendee\EventController;
 use App\Http\Controllers\Attendee\EventSessionController;
 use App\Http\Controllers\Attendee\Payment\PaymentController;
@@ -128,6 +129,8 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::put('/prayer-requests/{id}', [PrayerRequestController::class, 'update'])->name('attendee.prayer.update');
         Route::delete('/prayer-requests/{id}', [PrayerRequestController::class, 'destroy'])->name('attendee.prayer.destroy');
         Route::post('/prayer-request/view/{id}', [PrayerRequestController::class, 'view'])->name('attendee.prayer.view');
+
+        Route::get('/eventcalendar', [EventCalendarController::class, 'index'])->name('event.calendar');
     });
 
     Route::put('/attendee-profile-update/{attendee}', [ProfileController::class, 'update'])->name('attendee.profile.update');
