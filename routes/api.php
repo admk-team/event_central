@@ -130,6 +130,8 @@ Route::prefix('attendee')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->defaults('type', 'attendee');
     Route::post('register/{eventId}', [RegisterController::class, 'register']);
     Route::get('allevents', [AttendeeEventController::class, 'allevents']);
+    //organizer event
+    Route::get('events/{organizer_id}', [EventController::class, 'organizerEvents']);
 
     Route::get('event/{eventApp}', [AttendeeEventController::class, 'getEventDetailDashboard']);
     Route::get('event/{eventApp}/session', [AttendeeEventController::class, 'getEventDetailAgenda']);
@@ -203,4 +205,6 @@ Route::prefix('attendee')->group(function () {
         Route::delete('/prayer-requests/{id}', [AttendeePrayerRequestController::class, 'destroy']);
         Route::post('/prayer-request/view/{id}', [AttendeePrayerRequestController::class, 'view']);
     });
+
+
 });
