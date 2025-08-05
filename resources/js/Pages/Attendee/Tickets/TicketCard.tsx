@@ -99,17 +99,22 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckO
         return listItems;
     };
 
-    const handleAddonUpdated = (addons: any, ticket_no: any) => {
+    const handleAddonUpdated = (addons: any, ticket_no: any, extraFieldValues: any) => {
         setTicketDetails((prevItems: any) =>
-            prevItems.map((item: any) =>
-                item.ticket_no === ticket_no
-                    ? {
+            prevItems.map((item: any) => {
+                if (item.ticket_no === ticket_no) {
+                    const updatedAddons = addons.map((addon: any) => ({
+                        ...addon,
+                        extraFields: extraFieldValues[addon.id] || {},
+                    }));
+                    return {
                         ...item,
-                        addons: addons,
+                        addons: updatedAddons,
                         addons_sub_total: calculateAddonsSubTotal(addons),
-                    }
-                    : item
-            )
+                    };
+                }
+                return item;
+            })
         );
     };
 
