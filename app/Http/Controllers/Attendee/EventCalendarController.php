@@ -32,10 +32,11 @@ class EventCalendarController extends Controller
         $event = new Event();
         $event->setSummary($eventApp->name);
         $event->setDescription($eventApp->description);
+        $timezone = new \DateTimeZone('America/New_York'); // Change if needed
         $event->setOccurrence(
             new TimeSpan(
-                new DateTime(new DateTimeImmutable($eventApp->start_date), 'GMT'),
-                new DateTime(new DateTimeImmutable($lasteventDate[0]->date), 'GMT')
+                new DateTime(new DateTimeImmutable($eventApp->start_date), $timezone),
+                new DateTime(new DateTimeImmutable($lasteventDate[0]->date), $timezone)
             )
         );
 
