@@ -131,7 +131,7 @@ Route::prefix('attendee')->group(function () {
     Route::post('register/{eventId}', [RegisterController::class, 'register']);
     Route::get('allevents', [AttendeeEventController::class, 'allevents']);
     //organizer event
-    Route::get('events/{organizer_id}', [EventController::class, 'organizerEvents']);
+    Route::get('organizer-allevents/{organizer_id}', [EventController::class, 'organizerEvents']);
 
     Route::get('event/{eventApp}', [AttendeeEventController::class, 'getEventDetailDashboard']);
     Route::get('event/{eventApp}/session', [AttendeeEventController::class, 'getEventDetailAgenda']);
