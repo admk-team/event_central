@@ -50,10 +50,19 @@ class RegisterController extends Controller
 
         $token = $attendee->createToken('auth_token', ["role:attendee"])->plainTextToken;
         $this->eventBadgeDetail('register', $event->id, $attendee->id, null);
+
+        // Check if custom registration form is enabled and not filled
+        $registration_complete = true;
+        $form = $event->form;
+        if ($form && $form->status && $form->submissions()->where('attendee_id', $attendee->id)->count() === 0) {
+            $registration_complete = false;
+        }
+
         return response()->json([
             'user' => $attendee,
             'role' => "attendee",
             'token' => $token,
+            'registration_complete' => $registration_complete,
         ]);
 
         return response()->json(['message' => 'Attendee registered successfully'], 201);
