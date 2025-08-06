@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Attendee;
 use App\Models\EventApp;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class RegisterController extends Controller
 {
@@ -15,10 +16,20 @@ class RegisterController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:attendees',
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('attendees', 'email')->where(function ($query) use ($eventId) {
+                    return $query->where('event_app_id', $eventId);
+                }),
+            ],
             'position' => 'nullable|string|max:255',
             'location' => 'nullable|string|max:255',
             'password' => 'required|string|min:8|confirmed',
+        ], [
+            'email.unique' => 'An account already exists for this email in this event.',
         ]);
 
         $event = EventApp::findOrFail($eventId);
@@ -39,10 +50,19 @@ class RegisterController extends Controller
 
         $token = $attendee->createToken('auth_token', ["role:attendee"])->plainTextToken;
         $this->eventBadgeDetail('register', $event->id, $attendee->id, null);
+
+        // Check if custom registration form is enabled and not filled
+        $registration_complete = true;
+        $form = $event->form;
+        if ($form && $form->status && $form->submissions()->where('attendee_id', $attendee->id)->count() === 0) {
+            $registration_complete = false;
+        }
+
         return response()->json([
             'user' => $attendee,
             'role' => "attendee",
             'token' => $token,
+            'registration_complete' => $registration_complete,
         ]);
 
         return response()->json(['message' => 'Attendee registered successfully'], 201);
