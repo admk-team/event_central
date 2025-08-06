@@ -83,11 +83,7 @@ class AppEventQuestionnaireFormController extends Controller
 
         $formSubmission = FormSubmission::create([
             'form_id' => $form->id,
-<<<<<<< HEAD
-            'attendee_id' => Auth::guard('attendee')->id(),
-=======
             'attendee_id' => $attendee->id,
->>>>>>> main
         ]);
 
         foreach ($form->fields as $field) {
