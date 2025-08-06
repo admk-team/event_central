@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\EventApp;
 use App\Models\FormSubmission;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Laravel\Sanctum\PersonalAccessToken;
 
@@ -84,7 +83,11 @@ class AppEventQuestionnaireFormController extends Controller
 
         $formSubmission = FormSubmission::create([
             'form_id' => $form->id,
+<<<<<<< HEAD
             'attendee_id' => Auth::guard('attendee')->id(),
+=======
+            'attendee_id' => $attendee->id,
+>>>>>>> main
         ]);
 
         foreach ($form->fields as $field) {
