@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Attendee\AppEventQuestionnaireFormController;
 use App\Http\Controllers\Attendee\AppEventRegistrationFormController;
 use App\Http\Controllers\Attendee\AttendeeUpgradeTicketController;
 use App\Http\Controllers\Attendee\Auth\AuthenticatedSessionController;
@@ -116,11 +117,12 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::post('validate-discount-code/{disCode}', [PaymentController::class, 'validateDiscCode'])->name('attendee.validateCode.post');
         Route::get('/payment-success/{paymentUuId}', [PaymentController::class, 'paymentSuccess'])->name('attendee.payment.success');
 
-        // Event questionnaire Form
+        // Event questionnaire Form For Web
         Route::prefix('event-questionnaire-form')->name('attendee.event-questionnaire-form')->group(function () {
             Route::get('/', [EventQuestionnaireFormController::class, 'index']);
             Route::post('/', [EventQuestionnaireFormController::class, 'submit'])->name('.submit');
         });
+
         //Attendee achievement
         Route::get('/achievement', [BadgeAchievementController::class, 'index'])->name('attendee.achievement');
 
@@ -167,4 +169,10 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
     //fav session
     Route::get('/favsession/{sessionid}', [EventController::class, 'favsession'])->name('fav.sessions');
     Route::get('/allfav', [EventController::class, 'allfavouriteSession'])->name('all.fav.sessions');
+});
+
+// Event questionnaire Form For Web
+Route::prefix('app-event-questionnaire-form/{eventApp}')->name('attendee.app-event-questionnaire-form')->group(function () {
+    Route::get('/', [AppEventQuestionnaireFormController::class, 'index']);
+    Route::post('/', [AppEventQuestionnaireFormController::class, 'submit'])->name('.submit');
 });
