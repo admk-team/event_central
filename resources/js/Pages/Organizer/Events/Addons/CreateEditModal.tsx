@@ -271,7 +271,7 @@ export default function CreateEditModal({
                         </Col>
 
                         <Col md={12} className="mb-2">
-                            <Form.Label>Add New Fields</Form.Label>
+                            <Form.Label>Add Extra Fields</Form.Label>
 
                             {data.newField.map((fieldValue, i) => (
                                 <div key={i}>

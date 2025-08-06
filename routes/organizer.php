@@ -222,6 +222,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                     Route::post('toggle-tracks', [EventSettingsController::class, 'toggleTracks'])->name('toggle-tracks');
                     Route::post('toggle-checkin', [EventSettingsController::class, 'toggleCheckIn'])->name('toggle-checkin');
                     Route::post('toggle-register', [EventSettingsController::class, 'togglePrivateRegister'])->name('toggle-register');
+                    Route::post('close-open-registration/{event}', [EventSettingsController::class, 'closeOpenRegistration'])->name('close.open.registration');
                 });
 
                 // Payment

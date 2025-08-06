@@ -24,13 +24,16 @@ class EventSettingsController extends Controller
         $event = EventApp::with('images')->find(session('event_id'));
         $tracks = Track::where('event_app_id', session('event_id'))->latest()->get(); // For Track Manager
         $lasteventDate = $event->dates()->orderBy('date', 'desc')->get();
+        $closeRegistration = eventSettings()->getValue('close_registration', false);
+
         return Inertia::render("Organizer/Events/Settings/Event/Index", [
             'event' => $event,
             'enableTracks' => eventSettings()->getValue('enable_tracks', false),
             'enableCheckIn' => eventSettings()->getValue('enable_check_in', false),
             'enablePrivateRegistraion' => eventSettings()->getValue('private_register', false),
             'tracks' => $tracks,
-            'lasteventDate' => $lasteventDate
+            'lasteventDate' => $lasteventDate,
+            'closeRegistration' => $closeRegistration,
         ]);
     }
 
@@ -117,5 +120,18 @@ class EventSettingsController extends Controller
     {
         $enableTracks = eventSettings()->getValue('private_register', false);
         eventSettings()->set('private_register', !$enableTracks);
+    }
+
+    public function closeOpenRegistration($eventId)
+    {
+
+        $closeOpenRegistration = eventSettings()->getValue('close_registration', false);
+        eventSettings()->set('close_registration', !$closeOpenRegistration);
+
+        if ($closeOpenRegistration) {
+            return redirect()->route('organizer.events.settings.event.index')->withSuccess('Event registration open successfully');
+        } else {
+            return redirect()->route('organizer.events.settings.event.index')->withSuccess('Event registration close successfully');
+        }
     }
 }
