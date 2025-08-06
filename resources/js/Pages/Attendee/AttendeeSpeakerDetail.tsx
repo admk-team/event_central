@@ -95,7 +95,7 @@ const AttendeeSpeakerDetail = ({ eventApp, eventSpeaker }: any) => {
                                     <Card className='p-2'>
                                         <span className='fs-4'>Speaker Sessions</span>
                                     </Card>
-                                    {sessions && sessions.map((session: any) =>
+                                    {sessions && sessions.sort((a:any, b:any) => new Date(a.start_date_time).getTime() - new Date(b.start_date_time).getTime()).map((session: any) =>
                                         <Link href={route('attendee.event.detail.session', [session.id])} key={session.id}>
                                             <Card >
                                                 <CardBody>

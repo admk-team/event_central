@@ -3,7 +3,7 @@ import { Card, Col, Row } from 'react-bootstrap';
 import classNames from "classnames";
 import { useSelector, useDispatch } from "react-redux";
 import { CountriesCharts } from './DashboardAnalyticsCharts';
-
+import { Link } from '@inertiajs/react';
 import { VectorMap } from '@south-paw/react-vector-maps'
 import world from '../../../../common/world.svg.json';
 import { createSelector } from 'reselect';
@@ -104,28 +104,30 @@ const LiveUsers  = ({sessionAttendance,top10Attendee}: any) => {
                     </Col> */}
 
                     <Col xl={6}>
-                        <Card className="card-height-100">
-                            <div className="card-header align-items-center d-flex">
-                                <h4 className="card-title mb-0 flex-grow-1">Sessions Attendance</h4>
-                                {/* <div className="d-flex gap-1">
-                                    <button type="button" className={classNames({ active: periodType === "all" }, "btn btn-soft-secondary btn-sm")} onClick={() => { onChangeChartPeriod("all"); }}>
-                                        ALL
-                                    </button>
-                                    <button type="button" className={classNames({ active: periodType === "monthly" }, "btn btn-soft-primary btn-sm")} onClick={() => { onChangeChartPeriod("monthly"); }}>
-                                        1M
-                                    </button>
-                                    <button type="button" className={classNames({ active: periodType === "halfyearly" }, "btn btn-soft-secondary btn-sm")} onClick={() => { onChangeChartPeriod("halfyearly"); }}>
-                                        6M
-                                    </button>
-                                </div> */}
-                            </div>
-                            <div className="card-body p-0">
-                                <div>
-                                    <CountriesCharts series={sessionAttendance.series} sessionNames={sessionAttendance.sessionNames}
-                                     dataColors='["--vz-info", "--vz-success", "--vz-primary", "--vz-warning","--vz-danger","--vz-info", "--vz-success", "--vz-primary", "--vz-warning", "--vz-danger"]' />
+                        <Link title='View session report' href={route('organizer.events.report.session.index')} className="link-primary cursor-pointer">
+                            <Card className="card-height-100">
+                                <div className="card-header align-items-center d-flex">
+                                    <h4 className="card-title mb-0 flex-grow-1">Sessions Attendance</h4>
+                                    {/* <div className="d-flex gap-1">
+                                        <button type="button" className={classNames({ active: periodType === "all" }, "btn btn-soft-secondary btn-sm")} onClick={() => { onChangeChartPeriod("all"); }}>
+                                            ALL
+                                        </button>
+                                        <button type="button" className={classNames({ active: periodType === "monthly" }, "btn btn-soft-primary btn-sm")} onClick={() => { onChangeChartPeriod("monthly"); }}>
+                                            1M
+                                        </button>
+                                        <button type="button" className={classNames({ active: periodType === "halfyearly" }, "btn btn-soft-secondary btn-sm")} onClick={() => { onChangeChartPeriod("halfyearly"); }}>
+                                            6M
+                                        </button>
+                                    </div> */}
                                 </div>
-                            </div>
-                        </Card>
+                                <div className="card-body p-0">
+                                    <div>
+                                        <CountriesCharts series={sessionAttendance.series} sessionNames={sessionAttendance.sessionNames}
+                                        dataColors='["#4e79a7", "#59a14f", "#f28e2b", "#e15759", "#af7aa1", "#76b7b2", "#ff9da7", "#edc948", "#17becf", "#9c755f"]'/>
+                                    </div>
+                                </div>
+                            </Card>
+                        </Link>
                     </Col>
 
                 </Row>

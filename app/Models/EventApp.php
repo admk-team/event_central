@@ -99,6 +99,11 @@ class EventApp extends Model
         return $this->hasMany(EventSpeaker::class);
     }
 
+    public function contact_forms()
+    {
+        return $this->hasMany(AttendeeContactForm::class, 'event_id', 'id');
+    }
+
     public function images()
     {
         return $this->hasMany(EventAppImage::class);
@@ -187,7 +192,7 @@ class EventApp extends Model
 
     public function getStartDateAttribute()
     {
-        $event_dates = Cache::remember('event_dates', now()->addMinutes(10), function () {
+        return Cache::remember('event_dates', now()->addMinutes(10), function () {
             $temp = $this->dates()->first();
             return $temp ? $temp->date : null;
         });
@@ -224,5 +229,9 @@ class EventApp extends Model
                 }
             }
         });
+    }
+    public function prayerRequest()
+    {
+        return $this->hasMany(PrayerRequest::class);
     }
 }

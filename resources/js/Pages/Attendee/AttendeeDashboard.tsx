@@ -3,9 +3,7 @@ import {
     Col,
     Container,
     Row,
-    Card,
-    CardBody,
-    ListGroup,
+    Card, CardBody, CardHeader, CardTitle, Form,
     Button,
 } from "react-bootstrap";
 
@@ -17,13 +15,25 @@ import DateDifferenceFromToday from "./common/DateDifferenceFromToday";
 import EventSessionsTimeLine from "./common/EventSessionsTimeLine";
 import moment from "moment";
 
-const AttendeeDashboard = ({ eventApp }: any) => {
-
+const AttendeeDashboard = ({ eventApp,lasteventDate }: any) => {
     const selectedSessions = eventApp.event_sessions.filter(
         (session: any) => session.selected_by_attendee
     );
+    
+    const isEventAvailable = eventApp && Object.keys(eventApp).length > 0;
+    const formatToUTC = (dateString:any) => {
+        const date = new Date(dateString); // local time
+        return date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+    };
+    const event = {
+        title: eventApp.name,
+        start: formatToUTC(eventApp.start_date),
+        end: formatToUTC(lasteventDate[0].date),
+        details: eventApp.description,
+        location: eventApp.location_base
+    };
+    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${event.start}/${event.end}&details=${encodeURIComponent(event.details)}&location=${encodeURIComponent(event.location)}`;
 
-    console.log(eventApp);
 
     return (
         <React.Fragment>
@@ -80,10 +90,28 @@ const AttendeeDashboard = ({ eventApp }: any) => {
                                                         display:
                                                             "-webkit - box",
                                                     }}
+                                                    dangerouslySetInnerHTML={{ __html: eventApp.description }}
                                                 >
-                                                    {eventApp.description}
                                                 </div>
                                             </div>
+                                        </CardBody>
+                                    </Card>
+                                    <Card>
+                                        <CardHeader>
+                                        <CardTitle>Add to Google Calendar</CardTitle>
+                                        </CardHeader>
+                                        <CardBody>
+                                        <div className="d-grid grid">
+                                            <Form.Label>Add this event to your Google Calendar.</Form.Label>
+                                            <Button
+                                                disabled={!isEventAvailable}
+                                                variant="primary"
+                                                href={googleCalendarUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer">
+                                                <i className='bx bxs-calendar-plus'></i> Click to Add
+                                            </Button>
+                                        </div>
                                         </CardBody>
                                     </Card>
                                 </Col>

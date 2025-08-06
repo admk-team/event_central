@@ -175,4 +175,14 @@ class User extends Authenticatable
     {
         return $this->morphMany(AttendeePayment::class, 'payer');
     }
+
+    public function chatMessages()
+    {
+        return $this->morphMany(ChatMessage::class, 'sender');
+    }
+
+    public function chatMemberships()
+    {
+        return $this->morphMany(ChatMember::class, 'participant');
+    }
 }

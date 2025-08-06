@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button, Form, Spinner, Table } from 'react-bootstrap'
 import Pagination from './Common/Pagination'
 import { router } from '@inertiajs/react'
 import { ArrowDown, ArrowUp, ChevronDown, ChevronsUpDown, ChevronUp, Search, X } from 'lucide-react'
+import Dropdown from 'react-bootstrap/Dropdown';
 
 type Column<T> = {
     accessorKey?: string;
@@ -53,7 +54,7 @@ export default function DataTable<T>({
     searchCombinations
 }: DataTableProps<T>) {
     const rowSelector = useRowSelector(data.data);
-
+    console.log('testing', columns.map((col, colIndex) => col.header.name));
     const [sort, setSort] = useSort();
 
     const { hasSearch, searchQuery, setSearchQuery, search, searchProcessing } = useSearch(columns, searchCombinations);
@@ -62,6 +63,34 @@ export default function DataTable<T>({
         data: data.data,
         getSelectedRows: rowSelector.getSelectedRows,
     };
+    // toggle the columns
+    const [visibleColumnsIndexes, setVisibleColumnsIndexes] = useState<number[]>([]);
+
+    // Sync from localStorage
+    useEffect(() => {
+        const stored = window.localStorage.getItem(`${title}`);
+        if (stored) {
+            setVisibleColumnsIndexes(JSON.parse(stored));
+        } else {
+            const allIndexes = columns.map((_, index) => index);
+            setVisibleColumnsIndexes(allIndexes);
+            window.localStorage.setItem(`${title}`, JSON.stringify(allIndexes));
+        }
+    }, [columns, title]);
+
+    // Toggle column visibility
+    const toggleColumnVisibility = (index: number) => {
+        setVisibleColumnsIndexes(prev => {
+            const updated = prev.includes(index)
+                ? prev.filter(i => i !== index)
+                : [...prev, index];
+            window.localStorage.setItem(`${title}`, JSON.stringify(updated));
+            return updated;
+        });
+    };
+
+    const filteredColumns = columns.filter((_, index) => visibleColumnsIndexes.includes(index));
+    console.log(`filterColumns of ${title}`, filteredColumns);
 
     return (
         <div className="card">
@@ -80,7 +109,7 @@ export default function DataTable<T>({
                     }}>
                         <div className="input-group w-auto position-relative">
                             <Form.Control
-                                type="text" 
+                                type="text"
                                 placeholder="Search"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -89,10 +118,10 @@ export default function DataTable<T>({
                                 }}
                             />
                             {searchQuery && (
-                                <X 
-                                    className="position-absolute cursor-pointer" 
-                                    size={20} 
-                                    style={{ top: '8px', right: '38px' }} 
+                                <X
+                                    className="position-absolute cursor-pointer"
+                                    size={20}
+                                    style={{ top: '8px', right: '38px' }}
                                     onClick={() => {
                                         search('');
                                     }}
@@ -117,6 +146,31 @@ export default function DataTable<T>({
 
                 {/* Actions */}
                 <div className="d-flex justify-content-end align-items-center gap-2">
+
+                    <Dropdown>
+                        <Dropdown.Toggle variant="success" id="dropdown-basic">
+                            Toggle Columns
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            {columns
+                                .map((col, index) => (
+                                    <Dropdown.Item
+                                        key={index}
+                                        as="label"
+                                        className="d-flex align-items-center gap-2"
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={e => e.stopPropagation()}
+                                    >
+                                        <Form.Check
+                                            type="checkbox"
+                                            checked={visibleColumnsIndexes.includes(index)}
+                                            onChange={() => toggleColumnVisibility(index)}
+                                        />
+                                        {typeof col.header === 'function' ? col.header() : col.header}
+                                    </Dropdown.Item>
+                                ))}
+                        </Dropdown.Menu>
+                    </Dropdown>
                     {actions?.map((action, i) => {
                         if (action.showOnRowSelection && rowSelector.getSelectedRows().length === 0) {
                             return null;
@@ -139,30 +193,33 @@ export default function DataTable<T>({
                             <tr>
                                 {!disableRowSelection && (
                                     <th style={tableLayoutFixed ? { width: '40px' } : undefined}>
-                                        <Form.Check.Input onChange={(e) => rowSelector.handleAllRowSelection(e.target.checked)} checked={data.data.length > 0 && rowSelector.isAllRowSelected()} />
+                                        <Form.Check.Input
+                                            onChange={(e) => rowSelector.handleAllRowSelection(e.target.checked)}
+                                            checked={data.data.length > 0 && rowSelector.isAllRowSelected()}
+                                        />
                                     </th>
                                 )}
-                                {columns.map((col, colIndex) => (
+                                {filteredColumns.map((col, colIndex) => (
                                     <th scope="col" className={col.headerClass || ''} key={colIndex} style={col.headerStyle}>
-                                        {col.enableSorting && col.accessorKey ? (
+                                        {col.enableSorting && col.header ? (
                                             <div
-                                                onClick={() => setSort(col.accessorKey as string)} 
+                                                onClick={() => setSort(col.header as any)}
                                                 className="d-flex justify-content-between align-items-center cursor-pointer"
                                             >
                                                 <div>{col.header()}</div>
                                                 <div>
-                                                    {col.accessorKey !== sort?.column ? (
-                                                        <ChevronsUpDown size={20} color='#666' />
+                                                    {col.header !== sort?.column as any ? (
+                                                        <ChevronsUpDown size={20} color="#666" />
+                                                    ) : sort?.desc ? (
+                                                        <ArrowDown size={17} color="#666" />
                                                     ) : (
-                                                        sort.desc ? (
-                                                            <ArrowDown size={17} color='#666' />
-                                                        ) : (
-                                                            <ArrowUp size={17} color='#666' />
-                                                        )
+                                                        <ArrowUp size={17} color="#666" />
                                                     )}
                                                 </div>
                                             </div>
-                                        ) : col.header()}
+                                        ) : (
+                                            col.header()
+                                        )}
                                     </th>
                                 ))}
                             </tr>
@@ -173,17 +230,27 @@ export default function DataTable<T>({
                                     <tr key={rowIndex} className={`${rowSelector.isRowSelected(row) ? 'table-active' : ''}`}>
                                         {!disableRowSelection && (
                                             <td>
-                                                <Form.Check.Input onChange={(e) => rowSelector.handleRowSelection(e.target.checked, row)} checked={rowSelector.isRowSelected(row)} />
+                                                <Form.Check.Input
+                                                    onChange={(e) => rowSelector.handleRowSelection(e.target.checked, row)}
+                                                    checked={rowSelector.isRowSelected(row)}
+                                                />
                                             </td>
                                         )}
-                                        {columns.map((col, colIndex) => (
-                                            <td className={col.cellClass || ''} key={colIndex} style={col.cellStyle}>{col.cell(row)}</td>
+                                        {filteredColumns.map((col, colIndex) => (
+                                            <td className={col.cellClass || ''} key={colIndex} style={col.cellStyle}>
+                                                {col.cell(row)}
+                                            </td>
                                         ))}
                                     </tr>
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan={columns.length + (!disableRowSelection ? 1 : 0)} className="text-center fw-semibold">No data found</td>
+                                    <td
+                                        colSpan={filteredColumns.length + (!disableRowSelection ? 1 : 0)}
+                                        className="text-center fw-semibold"
+                                    >
+                                        No data found
+                                    </td>
                                 </tr>
                             )}
                         </tbody>
@@ -218,7 +285,7 @@ function useRowSelector<T>(data: T[]) {
 
     const isAllRowSelected = () => {
         for (const row of data) {
-            if (! isRowSelected(row)) {
+            if (!isRowSelected(row)) {
                 return false;
             }
         }
@@ -227,7 +294,7 @@ function useRowSelector<T>(data: T[]) {
     }
 
     const selectRow = (row: T) => {
-        if (! isRowSelected(row)) {
+        if (!isRowSelected(row)) {
             setSelectedRows(prevState => [...prevState, row]);
         }
     }
@@ -272,18 +339,18 @@ function useRowSelector<T>(data: T[]) {
 }
 
 type Sort = { column: string, desc: boolean } | null
-type SetSort = (column: string) => void 
+type SetSort = (column: string) => void
 
 function useSort(): [{ column: string, desc: boolean } | null, (column: string) => void] {
     const url = new URL(window.location.href);
     const sortParam = url.searchParams.get('sort');
 
-    const sort: Sort = sortParam ? JSON.parse(sortParam): null;
+    const sort: Sort = sortParam ? JSON.parse(sortParam) : null;
 
     const setSort: SetSort = (column: string) => {
         url.searchParams.set('sort', JSON.stringify({
             column: column,
-            desc: sort?.column === column? !sort.desc : false,
+            desc: sort?.column === column ? !sort.desc : false,
         }));
 
         router.visit(url.toString());
@@ -293,7 +360,7 @@ function useSort(): [{ column: string, desc: boolean } | null, (column: string) 
 }
 
 type Search = { query: string, columns: string[] } | null
-type setSearchQuery = (query?: string) => void 
+type setSearchQuery = (query?: string) => void
 
 function useSearch<T>(columns: ColumnDef<T>, combinations: DataTableProps<T>['searchCombinations']) {
     const searchableColumns = columns.filter(col => col.searchable === true && col.accessorKey);
@@ -301,12 +368,12 @@ function useSearch<T>(columns: ColumnDef<T>, combinations: DataTableProps<T>['se
     const url = new URL(window.location.href);
     const searchParam = url.searchParams.get('search');
 
-    const search: Search = searchParam ? JSON.parse(searchParam): null;
+    const search: Search = searchParam ? JSON.parse(searchParam) : null;
 
-    
+
     const [searchQuery, setSearchQuery] = React.useState(search?.query ?? '');
     const [searchProcessing, setSearchProcessing] = React.useState(false);
-    
+
     const doSearch: setSearchQuery = (query) => {
         if (query !== undefined) setSearchQuery(query);
 

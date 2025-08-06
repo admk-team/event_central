@@ -8,13 +8,15 @@ use App\Models\EventPartner;
 use App\Models\EventPartnerCategory;
 use App\Models\EventPlatform;
 use App\Models\Page;
+use App\Models\ReferralLink;
 use App\Models\Track;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Log;
 
 class WebsiteController extends Controller
 {
-    public function index($uuid)
+    public function index(Request $request, $uuid)
     {
         $event = EventApp::where('uuid', $uuid)->first();
 
@@ -25,7 +27,26 @@ class WebsiteController extends Controller
         $colors = eventSettings($event->id)->getValue('website_colors', config('event_website.colors'));
         $partnerCategories = EventPartnerCategory::where('event_app_id', $event->id)->with(['partners'])->get();
 
-        return view('event-website.index', compact('event', 'colors', 'partnerCategories'));
+
+        $currentUrl = $request->fullUrl();
+        $link = $request->query('link');
+        // Check if the session already has the 'visited_url' set
+        if ($link) {
+            if (!session()->has('referral_link')) {
+                // If not, store the full URL in the session
+                session(['referral_link' => $currentUrl]);
+                Log::info('URL set in session: ' . $currentUrl);
+                if (session('referral_link')) {
+                    $link = ReferralLink::where('url', $currentUrl)->first();
+                    if ($link) {
+                        $link->nextcount += 1;
+                        $link->save();
+                    }
+                }
+            }
+        }
+        $exhibitors = EventPartner::where('event_app_id', $event->id)->where('type', 'exhibitor')->orderBy('company_name', 'asc')->get();
+        return view('event-website.index', compact('event', 'colors', 'partnerCategories', 'exhibitors'));
     }
 
     public function schedule($uuid)
@@ -67,10 +88,46 @@ class WebsiteController extends Controller
 
         $colors = eventSettings($event->id)->getValue('website_colors', config('event_website.colors'));
         $partnerCategories = EventPartnerCategory::where('event_app_id', $event->id)->with(['partners'])->get();
-        $exhibitors = EventPartner::where('event_app_id', session('event_id'))->where('type', 'exhibitor')->orderBy('company_name', 'asc')->get();
+        $exhibitors = EventPartner::where('event_app_id', $event->id)->where('type', 'sponsor')->orderBy('company_name', 'asc')->get();
 
         return view('event-website.sponsors', compact('event', 'colors', 'partnerCategories', 'exhibitors'));
     }
+
+    public function sponsorsSingle($uuid, $id)
+    {
+        $event = EventApp::where('uuid', $uuid)->first();
+        if (! $event || !eventSettings($event->id)->getValue('website_status', false)) {
+            abort(404);
+        }
+
+        $colors = eventSettings($event->id)->getValue('website_colors', config('event_website.colors'));
+        $partnerCategories = EventPartnerCategory::where('id', $event->id)
+            // ->whereHas('partners', function ($query) use ($id) {
+            //     $query->where('id', $id);
+            // })
+            ->with(['partners' => function ($query) use ($id) {
+                $query->where('id', $id);
+            }])
+            ->get();
+
+        // dd($partnerCategories);
+        $partner = EventPartner::where('id', $id)->first();
+        return view('event-website.sponsor-single', compact('event', 'colors', 'partnerCategories', 'partner'));
+    }
+
+    public function exhibitors($uuid)
+    {
+        $event = EventApp::where('uuid', $uuid)->first();
+        if (! $event || !eventSettings($event->id)->getValue('website_status', false)) {
+            abort(404);
+        }
+
+        $colors = eventSettings($event->id)->getValue('website_colors', config('event_website.colors'));
+        $exhibitors = EventPartner::where('event_app_id', $event->id)->where('type', 'exhibitor')->orderBy('company_name', 'asc')->get();
+
+        return view('event-website.exhibitors', compact('event', 'colors', 'exhibitors'));
+    }
+
     public function tickets($uuid)
     {
         $event = EventApp::where('uuid', $uuid)->first();

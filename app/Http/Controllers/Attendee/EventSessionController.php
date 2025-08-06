@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class EventSessionController extends Controller
 {
@@ -29,18 +30,22 @@ class EventSessionController extends Controller
 
     public function saveRating(Request $request, EventSession $eventSession)
     {
+        $user = Auth::user();
+        $eventAppId = $user->event_app_id;
+        $attendeeId = $user->id;
         $request->validate([
             'rating' => 'required|numeric',
             'rating_description' => 'required|string|max:255',
         ]);
         $data = $request->only(['rating', 'rating_description']);
-        SessionRating::updateOrCreate(
+        $rating = SessionRating::updateOrCreate(
             [
-                'attendee_id' => auth()->id(),
+                'attendee_id' => $attendeeId,
                 'event_session_id' => $eventSession->id,
             ],
             $data
         );
+        $this->eventBadgeDetail('session_rating',  $eventAppId, $attendeeId, $rating->id);
         return back()->withSuccess("Rating saved successfully");
     }
     

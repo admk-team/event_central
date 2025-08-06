@@ -92,11 +92,29 @@ class OrganizerPermissionsSeeder extends Seeder
         // Website
         'view_website',
         'edit_website',
-        
+
         // Questionnaire Form
         'edit_questionnaire_form',
         'questionnaire_response',
         'delete_questionnaire_response',
+
+        // Email Compain
+        'view_email_campaign',
+        'create_email_campaign',
+        'edit_email_campaign',
+        'delete_email_campaign',
+
+        // Default Email Template
+        'view_default_email_template',
+        'create_default_email_template',
+        'edit_default_email_template',
+        'delete_default_email_template',
+
+        // Email Template
+        'view_email_template',
+        'create_email_template',
+        'edit_email_template',
+        'delete_email_template',
 
         // Payments
         'view_payments',
@@ -105,6 +123,14 @@ class OrganizerPermissionsSeeder extends Seeder
         'print_badges',
         'refund_ticket',
 
+        // Chat
+        'view_chat',
+
+        // Referral links
+        'view_referral_link',
+        'create_referral_link',
+        'edit_referral_link',
+        'delete_referral_link',
         // Addons
         'scan_addons',
 
@@ -123,6 +149,28 @@ class OrganizerPermissionsSeeder extends Seeder
         'create_ticket_fee',
         'delete_ticket_fee',
         'edit_ticket_fee',
+        //_event_badge
+        'view_event_badge',
+        'create_event_badge',
+        'delete_event_badge',
+        'edit_event_badge',
+        //Reports 
+        'view_attendees_report',
+
+        //contact forms
+        'view_contact_form',
+        'delete_contact_form',
+
+        //Reports section
+        'view_attendee_report',
+        'view_session_report',
+        'view_ticket_report',
+        'view_refund_ticket_report',
+        
+        // //Prayer Request
+        // 'view_prayer_request',
+        // 'edit_prayer_request',
+        // 'delete_prayer_request',
     ];
 
     public function run(): void

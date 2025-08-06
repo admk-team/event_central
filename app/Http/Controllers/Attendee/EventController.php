@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\Api\AttendeeFavSessionResource;
+use App\Models\AttendeeContactForm;
 use Carbon\Carbon;
 
 class EventController extends Controller
@@ -27,8 +28,15 @@ class EventController extends Controller
     {
         $eventApp = EventApp::find(Auth::user()->event_app_id);
         $eventApp->load(['event_sessions.eventSpeakers', 'event_sessions.eventPlatform', 'dates']);
+        $eventApp->setRelation(
+            'event_sessions',
+            $eventApp->event_sessions->filter(function ($session) {
+                return $session->is_favourite === true;
+            })->values()
+        );
+        $lasteventDate = $eventApp->dates()->orderBy('date', 'desc')->get();
         return Inertia::render('Attendee/AttendeeDashboard', compact([
-            'eventApp',
+            'eventApp','lasteventDate'
         ]));
     }
 
@@ -134,6 +142,26 @@ class EventController extends Controller
         return Inertia::render('Attendee/AttendeeMore', compact(['eventApp']));
     }
 
+    public function submitContectForm(Request $request)
+    {
+        $request->validate([
+            'subject' => 'required',
+            'content' => 'required',
+            'event_app_id' => 'required',
+        ]);
+        $attendee = Auth::user();
+
+        if ($attendee) {
+            AttendeeContactForm::create([
+                'event_id' => $request->event_app_id,
+                'attendee_id' => $attendee->id,
+                'subject' => $request->subject,
+                'content' => $request->content,
+            ]);
+            return back()->withSuccess("Form Submitted Successfully");
+        }
+    }
+
     public function getPostsMore(String $id)
     {
         $attendee = Auth::user()->id;
@@ -164,6 +192,7 @@ class EventController extends Controller
                 'event_session_id' => $sessionid,
                 'fav' => 1,
             ]);
+            $this->eventBadgeDetail('session_favorite', $attendee->event_app_id, $attendee->id, $alreadyfav->id);
         }
 
         return back()->withSuccess("Session added to favourite");

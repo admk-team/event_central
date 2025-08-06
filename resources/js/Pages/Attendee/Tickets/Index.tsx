@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import Select, { StylesConfig } from 'react-select';
 
 
-const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
+const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate }: any) => {
 
     //Set Page Layout as per User [Organizer, Attendee]
     const Layout = organizerView ? EventLayout : AttendeeLayout;
@@ -34,9 +34,10 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
     const [totalAmount, setTotalAmount] = useState(0);
     const [processing, setProcessing] = useState(false);
     const paymentNoteRef = useRef(null);
+    const [blockCheckout, setBlockCheckout] = useState(false);
 
     const getDiscountAmount = (discount: any, total: number) => {
-        if (! discount) return 0;
+        if (!discount) return 0;
 
         switch (discount.type) {
             case "fixed":
@@ -71,8 +72,6 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
             totalAmount: totalAmount,
             organizer_payment_note: paymnetNote,
         };
-
-        console.log(data);
 
         setProcessing(true);
         if (organizerView && currentAttendee > 0) {
@@ -132,6 +131,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
                 type: codeObj.discount_type,
                 value: codeObj.discount_value,
             });
+             setDiscountCodeApplied(discountCode);
             toast.success("Coupon Code applied successfuly");
             // let disc = parseFloat(codeObj.discount_value);
             // switch (codeObj.discount_type) {
@@ -154,7 +154,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
     };
 
     useEffect(() => {
-        console.log("Ticket Details", allTicketDetails);
+        // console.log("Ticket Details", allTicketDetails);
         // setDiscount(0);
         // setDiscountCode('');
         updateGrandTotal();
@@ -184,7 +184,8 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
             // gTotal += parseFloat(ticketDetail.addons_sub_total);
             ticketDetail.addons.forEach((addon: any) => {
                 if (addon.enable_discount) {
-                    gTotal += parseFloat(addon.price);
+
+                    gTotal += parseFloat(addon.selectedVariant?.price ?? addon.price);
                 } else {
                     noDiscountAddons.push(addon);
                 }
@@ -197,7 +198,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
         setDiscountAmount(discountAmt);
 
         noDiscountAddons.forEach(addon => {
-            gTotal += parseFloat(addon.price);
+            gTotal += parseFloat(addon.selectedVariant?.price ?? addon.price);
         })
 
         gTotal = parseFloat(gTotal.toFixed(2));
@@ -236,6 +237,13 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
             height: 49,
         }),
     };
+
+    // console.log('eventApp');
+    // console.log(lasteventDate);
+
+
+
+    const formatted = (evnetDate: any) => new Date(evnetDate).toLocaleDateString('en-GB').replace(/\//g, '-');
 
 
     return (
@@ -293,8 +301,8 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
                         {!organizerView && <Row className="justify-content-center mt-5 mt-md-0">
                             <Col lg={8}>
                                 <div className="text-center mb-5">
-                                   <h1 className="mb-3 fw-bold" style={{ fontSize: '30px' }}>
-                                     Choose the Ticket that's right for you
+                                    <h1 className="mb-3 fw-bold" style={{ fontSize: '30px' }}>
+                                        Choose the Ticket that's right for you
                                     </h1>
                                     <p className="text-muted mb-4">
                                         Simple pricing. No hidden fees.
@@ -304,100 +312,109 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id }: any) => {
                         </Row>}
                         {(!organizerView || currentAttendee > 0) &&
                             <>
+                                <div className="d-flex justify-content-end gap-3">
+                                    <p>Event Start : <span className="fw-bold"> {formatted(eventApp.start_date)}</span></p>
+                                    <p>Event End : <span className="fw-bold"> {formatted(lasteventDate[0].date)}</span></p>
+                                </div>
                                 <Row className=" justify-content-center gy-4">
-                                {organizerView && eventApp.tickets.length > 0 &&
-                                    eventApp.tickets.map((ticket: any) => (
-                                        <TicketCard
-                                            ticket={ticket}
-                                            key={ticket.id}
-                                            onTicketDetailsUpdated={
-                                                handleTicketCardChanged
-                                            }
-                                        ></TicketCard>
-                                    ))}
-                                {!organizerView && eventApp.public_tickets.length > 0 &&
-                                    eventApp.public_tickets.map((ticket: any) => (
-                                        <TicketCard
-                                            ticket={ticket}
-                                            key={ticket.id}
-                                            onTicketDetailsUpdated={
-                                                handleTicketCardChanged
-                                            }
-                                        ></TicketCard>
-                                    ))}
+                                    {organizerView && eventApp.tickets.length > 0 &&
+                                        eventApp.tickets.map((ticket: any) => (
+                                            <TicketCard
+                                                ticket={ticket}
+                                                key={ticket.id}
+                                                ticket_array={allTicketDetails}
+                                                onTicketDetailsUpdated={
+                                                    handleTicketCardChanged
+                                                }
+                                                onBlockCheckout={setBlockCheckout}
+                                            ></TicketCard>
+                                        ))}
+                                    {!organizerView && eventApp.public_tickets.length > 0 &&
+                                        eventApp.public_tickets.map((ticket: any) => (
+                                            <TicketCard
+                                                ticket={ticket}
+                                                key={ticket.id}
+                                                ticket_array={allTicketDetails}
+                                                submitCheckOut={submitCheckOut}
+                                                onTicketDetailsUpdated={
+                                                    handleTicketCardChanged
+                                                }
+                                                onBlockCheckout={setBlockCheckout}
+                                            ></TicketCard>
+                                        ))}
                                 </Row>
 
-                            <Card className="mt-4">
-                                <CardBody>
-                                    <Row>
-                                        <Col md={4} lg={4} className="d-flex align-items-center">
-                                            <h5 className="fw-bold mb-0">Coupon Code</h5>
-                                        </Col>
-                                        <Col md={4} lg={4}>
-                                            <InputGroup >
-                                                <Form.Control
-                                                    disabled={allTicketDetails.length === 0}
-                                                    id="ticket-discount-code"
-                                                    type="text"
-                                                    isInvalid={codeError}
-                                                    name="coupon code"
-                                                    placeholder="Enter Coupon Code Here"
-                                                    value={discountCode}
-                                                    onChange={(e: any) =>
-                                                        setDiscountCode(
-                                                            e.target
-                                                                .value
-                                                        )
-                                                    }
-                                                />
-                                                <Button disabled={allTicketDetails.length === 0}
-                                                    onClick={validateCode}
-                                                >
-                                                    Apply
-                                                </Button>
-                                            </InputGroup>
-                                            {codeError && (
-                                                <div className="invalid-feedback d-block">
-                                                    Invalid or Expired Code
-                                                </div>
-                                            )}
-                                        </Col>
-                                        <Col md={4} lg={4} className="d-flex justify-content-end align-items-center">
-                                            <h5 className="mb-1 pt-2 pb-2 mr-2 text-end fs-4">Discount : <sup>
-                                                <small>$</small>
-                                            </sup>{discountAmount.toFixed(2)}</h5>
-                                        </Col>
-                                    </Row>
-                                </CardBody>
-                            </Card>
-                            <Card>
-                                <CardBody>
-                                    <Row>
-                                        <Col md={4} lg={4}></Col>
-                                        <Col md={4} lg={4}>
-                                            <Button
-                                                disabled={allTicketDetails.length === 0 || processing}
-                                                onClick={submitCheckOut}
-                                                className="btn btn-success w-100"
-                                            >
-                                                Checkout
-                                                {processing && <Spinner animation="border" role="status" className="ml-3" size="sm">
-                                                    <span className="visually-hidden">Loading...</span>
-                                                </Spinner>}
-                                            </Button>
-                                        </Col>
-                                        <Col md={4} lg={4} className="d-flex justify-content-end align-items-center">
-                                            <h5 className="mb-1 pt-2 pb-2 mr-2 text-end fs-4">
-                                                Total Payable :{" "}
-                                                <sup>
+                                <Card className="mt-4">
+                                    <CardBody>
+                                        <Row>
+                                            <Col md={4} lg={4} className="d-flex align-items-center">
+                                                <h5 className="fw-bold mb-0">Coupon Code</h5>
+                                            </Col>
+                                            <Col md={4} lg={4}>
+                                                <InputGroup >
+                                                    <Form.Control
+                                                        disabled={allTicketDetails.length === 0}
+                                                        id="ticket-discount-code"
+                                                        type="text"
+                                                        isInvalid={codeError}
+                                                        name="coupon code"
+                                                        placeholder="Enter Coupon Code Here"
+                                                        value={discountCode}
+                                                        onChange={(e: any) =>
+                                                            setDiscountCode(
+                                                                e.target
+                                                                    .value
+                                                            )
+                                                        }
+                                                    />
+                                                    <Button disabled={allTicketDetails.length === 0}
+                                                        onClick={validateCode}
+                                                    >
+                                                        Apply
+                                                    </Button>
+                                                </InputGroup>
+                                                {codeError && (
+                                                    <div className="invalid-feedback d-block">
+                                                        Invalid or Expired Code
+                                                    </div>
+                                                )}
+                                            </Col>
+                                            <Col md={4} lg={4} className="d-flex justify-content-end align-items-center">
+                                                <h5 className="mb-1 pt-2 pb-2 mr-2 text-end fs-4">Discount : <sup>
                                                     <small>$</small>
-                                                </sup>
-                                                {totalAmount.toFixed(2)}
-                                            </h5>
-                                        </Col>
-                                    </Row>
-                                </CardBody>
-                            </Card>
+                                                </sup>{Math.round(discountAmount).toFixed(2)}</h5>
+                                            </Col>
+                                        </Row>
+                                    </CardBody>
+                                </Card>
+                                <Card>
+                                    <CardBody>
+                                        <Row>
+                                            <Col md={4} lg={4}></Col>
+                                            <Col md={4} lg={4}>
+                                                <Button
+                                                    disabled={allTicketDetails.length === 0 || processing || blockCheckout}
+                                                    onClick={submitCheckOut}
+                                                    className="btn btn-success w-100"
+                                                >
+                                                    Checkout
+                                                    {processing && <Spinner animation="border" role="status" className="ml-3" size="sm">
+                                                        <span className="visually-hidden">Loading...</span>
+                                                    </Spinner>}
+                                                </Button>
+                                            </Col>
+                                            <Col md={4} lg={4} className="d-flex justify-content-end align-items-center">
+                                                <h5 className="mb-1 pt-2 pb-2 mr-2 text-end fs-4">
+                                                    Total Payable :{" "}
+                                                    <sup>
+                                                        <small>$</small>
+                                                    </sup>
+                                                    {totalAmount.toFixed(2)}
+                                                </h5>
+                                            </Col>
+                                        </Row>
+                                    </CardBody>
+                                </Card>
                             </>
                         }
                     </Container>

@@ -31,7 +31,7 @@ class EventController extends Controller
         $recurring_types = RecurringType::get();
         $event_category_types = EventAppCategory::get();
         $events = $this->datatable(
-            EventApp::ofOwner()->with(['images','dates'])->whereCanBeAccessedBy(Auth::user())
+            EventApp::ofOwner()->with(['images', 'dates'])->whereCanBeAccessedBy(Auth::user())
         );
 
         return Inertia::render('Organizer/Events/Index', [
@@ -93,7 +93,7 @@ class EventController extends Controller
         if ($back) {
             return back();
         }
-
+    
         return redirect()->route('organizer.events.dashboard');
     }
 

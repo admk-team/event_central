@@ -174,17 +174,6 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                                                 </div>
                                                 <div>
                                                     <a
-                                                        href={user.twitter_link}
-                                                        className="avatar-xs d-block"
-                                                        target="_blank"
-                                                    >
-                                                        <span className="avatar-title rounded-circle fs-16 bg-success">
-                                                            <i className="ri-twitter-x-line"></i>
-                                                        </span>
-                                                    </a>
-                                                </div>
-                                                <div>
-                                                    <a
                                                         href={user.other_link}
                                                         className="avatar-xs d-block"
                                                         target="_blank"
@@ -200,8 +189,8 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                                                         href={user.twitter_link}
                                                         className="avatar-xs d-block"
                                                     >
-                                                        <span className="avatar-title rounded-circle fs-16" style={{ background:'DodgerBlue'}}>
-                                                            <i className="ri-twitter-fill"></i>
+                                                        <span className="avatar-title rounded-circle fs-16" style={{ background:'black'}}>
+                                                            <i className="ri-twitter-x-line"></i>
                                                         </span>
                                                     </a>
                                                 </div>
@@ -216,7 +205,7 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                                             <h5 className="card-title mb-3">Other Information</h5>
                                             {attendee[0]?.field_values.length > 0 && attendee[0]?.form_fields.length > 0 ? (
                                                     attendee[0]?.form_fields.map((field:any, index:any) => (
-                                                        <div className="row p-2">
+                                                        <div className="row p-2" key={index}>
                                                             <div className="col">
                                                                 <h6 className="mb-0">{field.label}:
                                                                     <span className="text-secondary">{" "}{attendee[0]?.field_values[index].value}

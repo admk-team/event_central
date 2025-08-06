@@ -314,7 +314,7 @@ const UserProfileRightSidebar = (props: any) => {
                                             id="twitter_link"
                                             type="text"
                                             name="twitter_link"
-                                            placeholder="Enter Twitter link"
+                                            placeholder="Enter X link"
                                             value={data.twitter_link}
                                             className={'mt-1 form-control' + (errors.twitter_link ? 'is-invalid' : '')}
                                             autoComplete="twitter_link"

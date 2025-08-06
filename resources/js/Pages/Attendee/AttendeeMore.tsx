@@ -8,8 +8,10 @@ import {
     CardHeader,
     CardBody,
     ListGroup,
+    Form,
+    Accordion,
 } from "react-bootstrap";
-
+import axios from "axios";
 import { Head, useForm, Link, router } from "@inertiajs/react";
 import Layout from "../../Layouts/Attendee";
 
@@ -22,9 +24,21 @@ import moment from "moment";
 
 const AttendeeMore = ({ eventApp }: any) => {
     // console.log(eventApp);
+
     const emailLink = useRef();
-    const handleContact = () => {
-        emailLink.current.click();
+    const { data, setData, post, processing, errors, reset } = useForm({
+        subject: "",
+        content: "",
+        event_app_id: eventApp.id,
+    });
+    const handleContact = (e: any) => {
+        e.preventDefault();
+        console.log(data);
+        post(route("attendee.event.detail.contact"), {
+            onSuccess: () => {
+                reset();
+            },
+        });
     };
 
     return (
@@ -108,7 +122,7 @@ const AttendeeMore = ({ eventApp }: any) => {
                                                     </h5>
                                                 </Col>
                                             </Row>
-                                            <Row>
+                                            {/* <Row>
                                                 <Col md={4} lg={4}>
                                                     <h5>Contact Email</h5>
                                                 </Col>
@@ -130,17 +144,89 @@ const AttendeeMore = ({ eventApp }: any) => {
                                                         }
                                                     </a>
                                                 </Col>
+                                            </Row> */}
+                                            <Row>
+                                                <Accordion defaultActiveKey="0">
+                                                    <Accordion.Item eventKey="1">
+                                                        <Accordion.Header>
+                                                            Contact Form
+                                                        </Accordion.Header>
+                                                        <Accordion.Body>
+                                                            <Form
+                                                                onSubmit={
+                                                                    handleContact
+                                                                }
+                                                            >
+                                                                <Form.Label htmlFor="inputPassword5">
+                                                                    Subject
+                                                                </Form.Label>
+                                                                <Form.Control
+                                                                    type="text"
+                                                                    value={data.subject}
+                                                                    onChange={(
+                                                                        e: any
+                                                                    ) =>
+                                                                        setData(
+                                                                            "subject",
+                                                                            e
+                                                                                .target
+                                                                                .value
+                                                                        )
+                                                                    }
+                                                                />
+                                                                <Form.Control.Feedback
+                                                                    type="invalid"
+                                                                    className="d-block mt-2"
+                                                                >
+                                                                    {" "}
+                                                                    {
+                                                                        errors.subject
+                                                                    }{" "}
+                                                                </Form.Control.Feedback>
+                                                                <Form.Group className="mb-3">
+                                                                    <Form.Label>
+                                                                        Content
+                                                                    </Form.Label>
+                                                                    <Form.Control
+                                                                        as="textarea"
+                                                                        value={data.content} 
+                                                                        rows={3}
+                                                                        onChange={(
+                                                                            e: any
+                                                                        ) =>
+                                                                            setData(
+                                                                                "content",
+                                                                                e
+                                                                                    .target
+                                                                                    .value
+                                                                            )
+                                                                        }
+                                                                    />
+                                                                    <Form.Control.Feedback
+                                                                        type="invalid"
+                                                                        className="d-block mt-2"
+                                                                    >
+                                                                        {" "}
+                                                                        {
+                                                                            errors.content
+                                                                        }{" "}
+                                                                    </Form.Control.Feedback>
+                                                                </Form.Group>
+                                                                <Button
+                                                                    type="submit"
+                                                                    className="btn-sm btn-success w-100"
+                                                                    style={{
+                                                                        backgroundColor:
+                                                                            "var(--vz-success)",
+                                                                    }}
+                                                                >
+                                                                    Submit
+                                                                </Button>
+                                                            </Form>
+                                                        </Accordion.Body>
+                                                    </Accordion.Item>
+                                                </Accordion>
                                             </Row>
-                                            <Button
-                                                className="btn-sm btn-success w-100"
-                                                style={{
-                                                    backgroundColor:
-                                                        "var(--vz-success)",
-                                                }}
-                                                onClick={handleContact}
-                                            >
-                                                Contact Organizer
-                                            </Button>
                                         </CardBody>
                                     </Card>
                                 </Col>

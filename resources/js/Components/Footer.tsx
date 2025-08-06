@@ -58,7 +58,7 @@ export default function Footer() {
                         <ul className="list-unstyled">
                             <li className="mb-2">
                                 <a href="#" className="text-decoration-none text-muted-dark">
-                                    Twitter
+                                    X
                                 </a>
                             </li>
                             <li className="mb-2">

@@ -26,9 +26,14 @@ class EventController extends Controller
 {
     public function getEventDetailDashboard(String $eventApp)
     {
-        // dd(Auth::user());
         $eventApp = EventApp::find(Auth::user() ? Auth::user()->event_app_id : $eventApp);
         $eventApp->load(['event_sessions.eventSpeakers', 'event_sessions.eventPlatform']);
+        $eventApp->setRelation(
+            'event_sessions',
+            $eventApp->event_sessions->filter(function ($session) {
+                return $session->is_favourite === true;
+            })->values()
+        );
         return $this->successResponse(new EventResource($eventApp));
     }
 
@@ -197,18 +202,22 @@ class EventController extends Controller
 
     public function saveRating(Request $request, EventSession $eventSession)
     {
+        $user = Auth::user();
+        $eventAppId = $user->event_app_id;
+        $attendeeId = $user->id;
         $request->validate([
             'rating' => 'required|numeric',
             'rating_description' => 'required|string|max:255',
         ]);
         $data = $request->only(['rating', 'rating_description']);
-        SessionRating::updateOrCreate(
+        $rating = SessionRating::updateOrCreate(
             [
-                'attendee_id' => auth()->id(),
+                'attendee_id' => $attendeeId,
                 'event_session_id' => $eventSession->id,
             ],
             $data
         );
+        $this->eventBadgeDetail('session_rating',  $eventAppId, $attendeeId, $rating->id);
         return response()->json(['message' => "Saved"]);
     }
 
@@ -234,6 +243,7 @@ class EventController extends Controller
                 'event_session_id' => $sessionid,
                 'fav' => 1,
             ]);
+            $this->eventBadgeDetail('session_favorite', $attendee->event_app_id, $attendee->id, $alreadyfav->id);
         }
 
         return $this->successResponse(new AttendeeFavSessionResource($alreadyfav));
@@ -251,5 +261,45 @@ class EventController extends Controller
             'eventPlatforms' => $eventPlatforms,
             'allfav' => AttendeeFavSessionResource::collection($allfav),
         ], 200);
+    }
+    public function searchSessions(EventApp $eventApp, Request $request)
+    {
+        $query = EventSession::query()
+            ->where('event_app_id', $eventApp->id);
+
+        if ($request->filled('q')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->q . '%')
+                    ->orWhere('description', 'like', '%' . $request->q . '%');
+            });
+        }
+
+        $sessions = $query->with(['eventSpeakers', 'eventPlatform'])->get();
+
+        return response()->json([
+            'data' => EventSessionResource::collection($sessions),
+        ]);
+    }
+
+    public function searchSpeakers(EventApp $eventApp, Request $request)
+    {
+        $query = EventSpeaker::query()
+            ->where('event_app_id', $eventApp->id);
+
+        if ($request->filled('q')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->q . '%')
+                    ->orWhere('company', 'like', '%' . $request->q . '%')
+                    ->orWhere('position', 'like', '%' . $request->q . '%')
+                    ->orWhere('phone', 'like', '%' . $request->q . '%')
+                    ->orWhere('email', 'like', '%' . $request->q . '%');
+            });
+        }
+
+        $speakers = $query->get();
+
+        return response()->json([
+            'data' => EventSpeakerResource::collection($speakers),
+        ]);
     }
 }

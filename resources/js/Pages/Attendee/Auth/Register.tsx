@@ -278,9 +278,12 @@ export default function Register() {
                                 </button>{" "}
                                 <button
                                     type="button"
-                                    className="btn btn-danger btn-icon waves-effect waves-light"
+                                    onClick={() => {
+                                        window.location.href = route("attendee.google.redirect", [eventApp.id]);
+                                    }}
+                                    className="btn btn-danger btn-icon me-1"
                                 >
-                                    <i className="ri-google-fill fs-16"></i>
+                                    <i className="ri-google-fill fs-16" />
                                 </button>{" "}
                                 <button
                                     type="button"
@@ -290,9 +293,9 @@ export default function Register() {
                                 </button>{" "}
                                 <button
                                     type="button"
-                                    className="btn btn-info btn-icon waves-effect waves-light"
+                                    className="btn btn-dark btn-icon waves-effect waves-light"
                                 >
-                                    <i className="ri-twitter-fill fs-16"></i>
+                                    <i className="ri-twitter-x-line fs-16"></i>
                                 </button>
                             </div>
                         </div>

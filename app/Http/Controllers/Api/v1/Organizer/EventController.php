@@ -7,6 +7,7 @@ use App\Http\Resources\Api\EventResource;
 use App\Http\Resources\Api\EventScanResource;
 use App\Models\AttendeePurchasedTickets;
 use App\Models\EventApp;
+use App\Models\EventCheckIns;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -149,6 +150,16 @@ class EventController extends Controller
             'code' => 'required',
         ]);
 
+        if (eventSettings()->getValue('enable_check_in') == true) {
+            $checkedIn = EventCheckIns::where('event_app_id', $event->id)
+                ->where('attendee_id', $request->attendee_id)
+                ->exists();
+
+            if (!$checkedIn) {
+                return back()->withError("This User is not checked in to the event.");
+            }
+        }
+
         $purchasedTicket = AttendeePurchasedTickets::where('code', $request->code)->first();
 
         $lastCheckin = $event->attendances()->where('attendee_id', $request->attendee_id)->latest()->first();
@@ -190,5 +201,14 @@ class EventController extends Controller
         $lastCheckin->save();
 
         return $this->successMessageResponse("Checkout successfull", 200);
+    }
+    public function organizerEvents($organizer_id)
+    {
+        $events = EventApp::where('organizer_id', $organizer_id)
+            ->with(['images', 'dates' => function ($query) {
+                $query->orderBy('date', 'asc');
+            }])->get();
+
+        return $this->successResponse(EventResource::collection($events));
     }
 }

@@ -17,10 +17,10 @@
                 <h3 class="tier-title">{{ $category->name }}</h3>
                 <div class="sponsors-grid gold">
                     @foreach ($category->partners ?? [] as $partner)
-                    <div type="button" data-bs-toggle="modal" data-bs-target="#partnerModal{{ $partner->id }}" class="sponsor-logo">
+                    <a href="{{ route('organizer.events.website.sponsors.single',['uuid' => $event->uuid, 'id' => $partner->id]) }}"  class="sponsor-logo">
                         <img src="{{ $partner->exhibitor_logo}}"
                             alt="{{ $partner->name }}">
-                    </div>
+                    </a>
                     <!-- Modal -->
                     <div class="modal fade" id="partnerModal{{ $partner->id }}" tabindex="-1" aria-labelledby="modalLabel{{ $partner->id }}" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered">
@@ -37,6 +37,18 @@
                                     @if ($partner->web)
                                     <a target="_blank" href="{{ $partner->web }}">
                                         <i class="bi bi-globe"></i>
+                                    </a>
+                                    <a target="_blank" href="{{ $partner->facebook }}">
+                                        <i class="bi bi-facebook"></i>
+                                    </a>
+                                    <a style="text-decoration: none; color:black" target="_blank" href="{{ $partner->twitter }}">
+                                        <i class="bi bi-twitter-x"></i>
+                                    </a>
+                                    <a  target="_blank" href="{{ $partner->linkedin }}">
+                                        <i class="bi bi-linkedin"></i>
+                                    </a>
+                                    <a style="text-decoration: none; color:red" target="_blank" href="{{ $partner->youtube }}">
+                                        <i class="bi bi-youtube"></i>
                                     </a>
                                     @endif
                                     <p class="text-muted">{{$partner->address}}</p>
@@ -60,46 +72,6 @@
             </div>
             @endif
             @endforeach
-        </div>
-    </div>
-</section>
-@endif
-
-@if ($exhibitors->count() > 0)
-<section id="speakers" class="speakers">
-    <div class="container">
-        <div class="section-header">
-            <span class="section-tag">Our Exhibitors</span>
-        </div>
-        <ul class="list-group">
-            @foreach ($exhibitors ?? [] as $exhibitor)
-                <li class="list-group-item">
-                    @if ($exhibitor->exhibitor_logo)
-                        <div class="mb-3">
-                            <img src="{{ $exhibitor->exhibitor_logo }}" alt="{{ $exhibitor->company_name }} Logo" height="60px" style="height: 60px;" />
-                        </div>
-                    @endif
-                    <div>
-                        <b>Name: </b> {{ $exhibitor->company_name }}
-                    </div>
-                    @if ($exhibitor->phone)
-                        <div>
-                            <b>Phone: </b> {{ $exhibitor->phone }}
-                        </div>
-                    @endif
-                    @if ($exhibitor->exhibitor_booth_no)
-                        <div>
-                            <b>Booth number: </b> {{ $exhibitor->exhibitor_booth_no }}
-                        </div>
-                    @endif
-                    @if ($exhibitor->web)
-                        <div>
-                            <b>Web: </b> {{ $exhibitor->web }}
-                        </div>
-                    @endif
-                </li>
-            @endforeach
-        </ul>
         </div>
     </div>
 </section>

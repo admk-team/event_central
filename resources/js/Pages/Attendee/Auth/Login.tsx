@@ -179,17 +179,21 @@ export default function Login({
                             </div>
                             <div>
                                 <Link
-                                    href={route("attendee.google.redirect")}
+                                    href="#"
                                     className="btn btn-primary btn-icon me-1"
                                 >
                                     <i className="ri-facebook-fill fs-16" />
                                 </Link>
-                                <Link
-                                    href="#"
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        window.location.href = route("attendee.google.redirect", [eventApp.id]);
+                                    }}
                                     className="btn btn-danger btn-icon me-1"
                                 >
                                     <i className="ri-google-fill fs-16" />
-                                </Link>
+                                </button>
+
                                 <Button
                                     variant="dark"
                                     className="btn-icon btn-dark"
@@ -198,9 +202,9 @@ export default function Login({
                                 </Button>{" "}
                                 <Button
                                     variant="info"
-                                    className="btn-icon btn-info"
+                                    className="btn-icon btn-dark"
                                 >
-                                    <i className="ri-twitter-fill fs-16"></i>
+                                    <i className="ri-twitter-x-line fs-16"></i>
                                 </Button>
                             </div>
                         </div>

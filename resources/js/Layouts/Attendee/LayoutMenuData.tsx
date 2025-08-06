@@ -14,6 +14,10 @@ const Navdata = () => {
     const [isQr, setIsQr] = useState<boolean>(false);
     const [purchaseTickets, setPurchaseTickets] = useState<boolean>(false);
     const [questionnaire, setquestionnaire] = useState<boolean>(false);
+    const [IsAchievement, setIsAchievement] = useState<boolean>(false);
+    const [IsPrayerRequest, setIsPrayerRequest] = useState<boolean>(false);
+    const [isChat, setIsChat] = useState<boolean>(false);
+    const [isFriend, setIsFriend] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>("Dashboard");
     // const [IsQA, setIsQA] = useState<boolean>(false);
@@ -55,6 +59,18 @@ const Navdata = () => {
         if (iscurrentState !== "upgradeTicket") {
             setIsUpgradeTicket(false);
         }
+        if (iscurrentState !== "achievement") {
+            setIsAchievement(false);
+        }
+        if (iscurrentState !== "chat") {
+            setIsChat(false);
+        }
+        if (iscurrentState !== "friend") {
+            setIsFriend(false);
+        }
+         if (iscurrentState !== "PrayerRequest") {
+            setIsPrayerRequest(false);
+        }
         // if (iscurrentState !== "Q&A") {
         //     setIsQA(false);
         // }
@@ -66,10 +82,14 @@ const Navdata = () => {
         isSpeakers,
         isMore,
         isQr,
+        isChat,
+        isFriend,
         isPost,
         purchaseTickets,
         questionnaire,
-        isUpgradeTicket
+        isUpgradeTicket,
+        IsAchievement,
+        IsPrayerRequest,
     ]);
 
     const menuItems: any = [
@@ -116,6 +136,32 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
+        // {
+        //     id: "chat",
+        //     label: "Chat",
+        //     icon: "bx bx-message-rounded-dots",
+        //     link: route("attendee.event.chat"),
+        //     stateVariables: isChat,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIsChat(!isChat);
+        //         setIscurrentState("chat");
+        //         updateIconSidebar(e);
+        //     },
+        // },
+        // {
+        //     id: "friend",
+        //     label: "Freind System",
+        //     icon: "bx bx-info-circle",
+        //     link: route("friend.index"),
+        //     stateVariables: isFriend,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIsFriend(!isFriend);
+        //         setIscurrentState("friend");
+        //         updateIconSidebar(e);
+        //     },
+        // },
         {
             id: "more",
             label: "Contact",
@@ -210,6 +256,32 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
+        {
+            id: "achievement",
+            label: "Achievements",
+            icon: "bx bxs-medal",
+            link: route("attendee.achievement"),
+            stateVariables: isMore,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsMore(!isMore);
+                setIscurrentState("More");
+                updateIconSidebar(e);
+            },
+        },
+        //   {
+        //     id: "PrayerRequest",
+        //     label: "Prayer Request",
+        //     icon: "bx bx-donate-heart",
+        //     link: route("attendee.prayer"),
+        //     stateVariables: isMore,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIsMore(!isMore);
+        //         setIscurrentState("More");
+        //         updateIconSidebar(e);
+        //     },
+        // },
 
         // {
         //     id: "attendee-pass",

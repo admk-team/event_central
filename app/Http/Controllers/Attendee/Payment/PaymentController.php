@@ -5,29 +5,34 @@ namespace App\Http\Controllers\Attendee\Payment;
 use Exception;
 use Inertia\Inertia;
 use App\Models\Addon;
+use App\Models\Attendee;
 use App\Models\EventApp;
 use App\Models\PromoCode;
 use Illuminate\Support\Str;
+use App\Models\AddonVariant;
+
 use Illuminate\Http\Request;
 use chillerlan\QRCode\QRCode;
-
-use App\Models\AttendeeTransferedTicket;
+use App\Models\EventAppTicket;
 use App\Models\AttendeePayment;
 use App\Services\PayPalService;
+
 use App\Services\StripeService;
 use chillerlan\QRCode\QROptions;
-
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Attendee\AttendeeCheckoutRequest;
-use App\Mail\AttendeeTicketPurchasedEmail;
-use App\Models\Attendee;
+use App\Models\AttendeeRefundTicket;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use chillerlan\QRCode\Common\EccLevel;
 use Illuminate\Support\Facades\Storage;
 use App\Models\AttendeePurchasedTickets;
-use App\Models\AttendeeRefundTicket;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
+use App\Models\AttendeeTransferedTicket;
+use Illuminate\Console\Scheduling\Event;
+use App\Mail\AttendeeTicketPurchasedEmail;
+use App\Mail\EventTicketPurchasedNotification;
+use App\Http\Requests\Attendee\AttendeeCheckoutRequest;
 
 class PaymentController extends Controller
 {
@@ -52,18 +57,42 @@ class PaymentController extends Controller
 
         $eventApp = null;
         $attendees = [];
+        $lasteventDate = [];
         //If Page is being visited by Organizer
         if ($organizerView) {
-            $eventApp = EventApp::find(session('event_id'));
-            $attendees = $eventApp->attendees()->select(['id as value',DB::raw("CONCAT(first_name, ' ', last_name) as label")])->get();
-        } else {
-            $eventApp =  EventApp::find(auth()->user()->event_app_id);
-        }
+            $eventApp = EventApp::with('dates')->find(session('event_id'));
+            $lasteventDate = $eventApp->dates()->orderBy('date', 'desc')->get();
 
+            $attendees = $eventApp->attendees()->select(['id as value', DB::raw("CONCAT(first_name, ' ', last_name) as label")])->get();
+        } else {
+            $eventApp =  EventApp::with('dates')->find(auth()->user()->event_app_id);
+            $lasteventDate = $eventApp->dates()->orderBy('date', 'desc')->get();
+        }
         if ($organizerView) {     //For organizer show all tickets
             $eventApp->load([
                 'tickets.sessions',
-                'tickets.addons',
+                'tickets' => [
+                    'addons' => function ($query) {
+                        $query->where(function ($query) {
+                            $query->where('addons.event_app_ticket_id', null)
+                                ->whereColumn('qty_total', '>', 'qty_sold');
+                        })
+                            ->orWhereHas('ticket', function ($query) {
+                                $query->whereColumn('qty_total', '>', 'qty_sold');
+                            });
+
+                        $query->with([
+                            'attributes' => [
+                                'options'
+                            ],
+                            'variants' => [
+                                'attributeValues' => [
+                                    'addonAttributeOption'
+                                ]
+                            ],
+                        ]);
+                    }
+                ],
                 'tickets.fees'
             ]);
         } else {                //For attendees show only public tickets
@@ -73,11 +102,22 @@ class PaymentController extends Controller
                     'addons' => function ($query) {
                         $query->where(function ($query) {
                             $query->where('addons.event_app_ticket_id', null)
-                            ->whereColumn('qty_total', '>', 'qty_sold');
+                                ->whereColumn('qty_total', '>', 'qty_sold');
                         })
-                        ->orWhereHas('ticket', function ($query) {
-                            $query->whereColumn('qty_total', '>', 'qty_sold');
-                        });
+                            ->orWhereHas('ticket', function ($query) {
+                                $query->whereColumn('qty_total', '>', 'qty_sold');
+                            });
+
+                        $query->with([
+                            'attributes' => [
+                                'options'
+                            ],
+                            'variants' => [
+                                'attributeValues' => [
+                                    'addonAttributeOption'
+                                ]
+                            ],
+                        ]);
                     }
                 ],
                 'public_tickets.fees'
@@ -89,7 +129,8 @@ class PaymentController extends Controller
             'eventApp',
             'organizerView',
             'attendees',
-            'attendee_id'
+            'attendee_id',
+            'lasteventDate'
         ]));
     }
 
@@ -188,8 +229,14 @@ class PaymentController extends Controller
                 'addons_sub_total' => $ticketsDetail['addons_sub_total'],
                 'total' => $ticket['base_price'] + $ticketsDetail['fees_sub_total'] + $ticketsDetail['addons_sub_total']
             ]);
-            $addon_ids = array_column($addons, "id");
-            $attendee_purchased_ticket->purchased_addons()->sync($addon_ids);
+
+            foreach ($addons as $addon) {
+                DB::table('addon_purchased_ticket')->insert([
+                    'attendee_purchased_ticket_id' => $attendee_purchased_ticket->id,
+                    'addon_id' => $addon['id'],
+                    'addon_variant_id' => isset($addon['selectedVariant']) ? $addon['selectedVariant']['id'] : null,
+                ]);
+            }
         }
         return $payment;
     }
@@ -237,8 +284,14 @@ class PaymentController extends Controller
                 'addons_sub_total' => $ticketsDetail['addons_sub_total'],
                 'total' => $ticket['base_price'] + $ticketsDetail['fees_sub_total'] + $ticketsDetail['addons_sub_total']
             ]);
-            $addon_ids = $names = array_column($addons, "id");
-            $attendee_purchased_ticket->purchased_addons()->sync($addon_ids);
+
+            foreach ($addons as $addon) {
+                DB::table('addon_purchased_ticket')->insert([
+                    'attendee_purchased_ticket_id' => $attendee_purchased_ticket->id,
+                    'addon_id' => $addon['id'],
+                    'addon_variant_id' => isset($addon['selectedVariant']) ? $addon['selectedVariant']['id'] : null,
+                ]);
+            }
         }
         //Update Attendee Payment status and session etc
         $this->updateAttendeePaymnet($payment->uuid);
@@ -270,16 +323,22 @@ class PaymentController extends Controller
         //1 Update Payment status to paid
         $payment->status = 'paid';
         $payment->save();
+        $this->eventBadgeDetail('purchase_ticket', $payment->event_app_id, $payment->attendee_id, $payment->id);
 
         //2. Generate Ticket QR Code
         $this->purchasedTickets($paymentUuId);
 
         //3. Send confirmation Email to Attendee along with Ticket QR Codes  -----
         $this->sendPurchasedTicketsEmailToAttendee();
+        $this->sendPurchasedTicketsEmailToOrganizer();
 
         //4. Increment discount code used count
         if ($payment->discount_code) {
-            $code = PromoCode::where('code', $payment->discount_code)->first();
+            $code = PromoCode::where('code', $payment->discount_code)
+                ->where('event_app_id', Auth::user()->event_app_id ?? session('event_id'))
+                ->where('status', 'active')
+                ->whereColumn('used_count', '<', 'usage_limit')
+                ->whereDate('end_date', '>', date('Y-m-d'))->first();
             if ($code) {
                 $code->increment('used_count');
                 $code->save();
@@ -289,10 +348,23 @@ class PaymentController extends Controller
         //5. Increment Addon Sold Qty
         $payment->load('purchased_tickets.purchased_addons'); //Load Tickets and Addons
         foreach ($payment->purchased_tickets as $purchasedTicket) {
+            $ticketDB = EventAppTicket::find($purchasedTicket['event_app_ticket_id']);
+            $ticketDB->increment('qty_sold');
+            $ticketDB->save();
+
             foreach ($purchasedTicket->purchased_addons as $addon) {
                 $addonObject = Addon::find($addon->id);
                 $addonObject->increment('qty_sold');
                 $addonObject->save();
+
+                $pivot = DB::table('addon_purchased_ticket')
+                    ->where('attendee_purchased_ticket_id', $purchasedTicket->id)
+                    ->where('addon_id', $addon->id)
+                    ->first();
+                $variant = AddonVariant::with(['attributeValues' => ['addonAttribute', 'addonAttributeOption']])->find($pivot->addon_variant_id);
+                if (! $variant) continue;
+                $variant->increment('qty_sold');
+                $variant->save();
             }
         }
 
@@ -316,6 +388,7 @@ class PaymentController extends Controller
     public function  validateDiscCode($disCode)
     {
         $code = PromoCode::where(function ($subQuery) use ($disCode) {
+            $subQuery->where('event_app_id', Auth::user()->event_app_id ?? session('event_id'));
             $subQuery->where('code', $disCode);
             $subQuery->where('status', 'active');
             $subQuery->whereColumn('used_count', '<', 'usage_limit');
@@ -334,12 +407,41 @@ class PaymentController extends Controller
             $attendee = auth()->user();
             $attendee->load('payments.purchased_tickets');
             $attendee_purchased_tickets = [];
-
             foreach ($attendee->payments as $payment) {
                 foreach ($payment->purchased_tickets as $ticket)
                     array_push($attendee_purchased_tickets, $ticket);
             }
             Mail::to($attendee->email)->send(new AttendeeTicketPurchasedEmail($attendee, $attendee_purchased_tickets));
+            // $emailNotificationList =  eventSettings($attendee->event_app_id)->getValue('email_list');
+            // $emailNotificationList = explode(',', $emailNotificationList);
+            // if ($emailNotificationList) {
+            //     foreach ($emailNotificationList as $singleEmail) {
+            //         Mail::to($singleEmail)->send(new AttendeeTicketPurchasedEmail($attendee, $attendee_purchased_tickets));
+            //     }
+            // }
+        } catch (Exception $ex) {
+            Log::error('An Error occurred while sending confirmation email to attendee');
+            Log::error($ex->getMessage());
+        }
+    }
+    public function sendPurchasedTicketsEmailToOrganizer()
+    {
+        try {
+            $attendee = auth()->user();
+            $attendee->load('payments.purchased_tickets');
+            $attendee_purchased_tickets = [];
+            foreach ($attendee->payments as $payment) {
+                foreach ($payment->purchased_tickets as $ticket)
+                    array_push($attendee_purchased_tickets, $ticket);
+            }
+            // dd($attendee_purchased_tickets);
+            $emailNotificationList =  eventSettings($attendee->event_app_id)->getValue('email_list');
+            $emailNotificationList = explode(',', $emailNotificationList);
+            if ($emailNotificationList) {
+                foreach ($emailNotificationList as $singleEmail) {
+                    Mail::to($singleEmail)->queue(new EventTicketPurchasedNotification($attendee, $attendee_purchased_tickets));
+                }
+            }
         } catch (Exception $ex) {
             Log::error('An Error occurred while sending confirmation email to attendee');
             Log::error($ex->getMessage());

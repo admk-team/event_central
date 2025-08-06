@@ -31,7 +31,14 @@ const TicketAddonsModal = ({ show, onHide, puchasedTicketId }: any) => {
             <Modal.Body>
                 <div className="">
                     {!fetchingAddons && addons && addons.map((addon, index) => (
-                        <p className='m-2'>{(index + 1) + ". " + addon.full_name}</p>
+                        <div className="mb-3" key={index}>
+                            <p className='m-2'>{(index + 1) + ". " + addon.full_name}</p>
+                            <div className="ps-4">
+                                {Object.entries<[string, string]>(addon.attributes ?? {}).map(([attribute, value]) => (
+                                    <div key={attribute}><b>{attribute}: </b>{value}</div>
+                                ))}
+                            </div>
+                        </div>
                     ))}
                     {fetchingAddons && <div className='d-flex w-100 h-100 justify-content-center'>
                         <Spinner
