@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Attendee;
 
 use App\Http\Controllers\Controller;
-use App\Models\Attendee;
 use App\Models\EventApp;
 use App\Models\FormSubmission;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Laravel\Sanctum\PersonalAccessToken;
 
-class AppEventRegistrationFormController extends Controller
+class AppEventQuestionnaireFormController extends Controller
 {
     public function index(Request $request, EventApp $eventApp)
     {
@@ -26,23 +25,32 @@ class AppEventRegistrationFormController extends Controller
             abort(404);
         }
 
-        $form = $eventApp->form()->with('fields')->first();
-
-        if (!$form || !$form->status) {
+        $eventApp->load('questionnaireForm');
+        
+        if (!$eventApp->questionnaireForm) {
+            $eventApp->questionnaireForm()->create([
+                'title' => '',
+                'description' => '',
+                'status' => false,
+                'type' => 'questionnaire',
+            ]);
+            $eventApp->load('questionnaireForm');
+        }
+        if (! $eventApp) {
             abort(404);
         }
 
-        $formFilled = $request->form_submitted ? true : false;
-
-        // if ($form->submissions()->where('attendee_id', $attendee->id)->count() > 0) {
-        //     $formFilled = true;
-        // }
-
-        return Inertia::render("Attendee/Auth/AppEventRegistrationForm", [
+        $form = $eventApp->questionnaireForm()->with('fields')->first();
+        $submitted = false;
+        if ($form) {
+            $submitted = FormSubmission::where('form_id', $form->id)->where('attendee_id', $attendee->id)->exists();
+        }
+       
+        return Inertia::render("Attendee/QuestionnaireForm/App", [
             'form' => $form,
             'eventApp' => $eventApp,
+            'submitted' => $submitted,
             'token' => $request->token,
-            'formFilled' => $formFilled,
         ]);
     }
 
@@ -60,7 +68,7 @@ class AppEventRegistrationFormController extends Controller
             abort(404);
         }
 
-        $form = $eventApp->form()->with('fields')->first();
+        $form = $eventApp->questionnaireForm()->with('fields')->first();
 
         $validationRules = [];
         $validationMessages = [];
@@ -101,10 +109,7 @@ class AppEventRegistrationFormController extends Controller
             ]);
         }
 
-        return to_route('attendee.app-event-registration-form', [
-            'eventApp' => $eventApp->id,
-            'token' => $request->token,
-            'form_submitted' => 1,
-        ]);
+        $this->eventBadgeDetail('questionnaire', $eventApp->id,$formSubmission->attendee_id,$formSubmission->id);
+        return back()->withSuccess("Updated");
     }
 }
