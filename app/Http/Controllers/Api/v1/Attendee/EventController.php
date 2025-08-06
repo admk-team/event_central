@@ -29,7 +29,8 @@ class EventController extends Controller
         $eventApp = EventApp::find(Auth::user() ? Auth::user()->event_app_id : $eventApp);
         $eventApp->load(['event_sessions.eventSpeakers', 'event_sessions.eventPlatform']);
         $eventApp->setRelation(
-            'event_sessions', $eventApp->event_sessions->filter(function ($session) {
+            'event_sessions',
+            $eventApp->event_sessions->filter(function ($session) {
                 return $session->is_favourite === true;
             })->values()
         );
@@ -260,5 +261,45 @@ class EventController extends Controller
             'eventPlatforms' => $eventPlatforms,
             'allfav' => AttendeeFavSessionResource::collection($allfav),
         ], 200);
+    }
+    public function searchSessions(EventApp $eventApp, Request $request)
+    {
+        $query = EventSession::query()
+            ->where('event_app_id', $eventApp->id);
+
+        if ($request->filled('q')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->q . '%')
+                    ->orWhere('description', 'like', '%' . $request->q . '%');
+            });
+        }
+
+        $sessions = $query->with(['eventSpeakers', 'eventPlatform'])->get();
+
+        return response()->json([
+            'data' => EventSessionResource::collection($sessions),
+        ]);
+    }
+
+    public function searchSpeakers(EventApp $eventApp, Request $request)
+    {
+        $query = EventSpeaker::query()
+            ->where('event_app_id', $eventApp->id);
+
+        if ($request->filled('q')) {
+            $query->where(function ($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->q . '%')
+                    ->orWhere('company', 'like', '%' . $request->q . '%')
+                    ->orWhere('position', 'like', '%' . $request->q . '%')
+                    ->orWhere('phone', 'like', '%' . $request->q . '%')
+                    ->orWhere('email', 'like', '%' . $request->q . '%');
+            });
+        }
+
+        $speakers = $query->get();
+
+        return response()->json([
+            'data' => EventSpeakerResource::collection($speakers),
+        ]);
     }
 }
