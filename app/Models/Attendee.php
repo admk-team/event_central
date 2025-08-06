@@ -34,7 +34,8 @@ class Attendee extends Authenticatable
         'location',
         'personal_url',
         'referral_link',
-        'google_id'
+        'google_id',
+        'is_public'
     ];
 
     protected $appends = [

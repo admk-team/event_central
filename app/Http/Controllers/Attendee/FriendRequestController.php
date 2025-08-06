@@ -15,9 +15,14 @@ class FriendRequestController extends Controller
     public function Index()
     {
         $authUser = Auth::user();
-
+        // return the message if account is private 
+        if($authUser->is_public == 0)
+        {
+            return back()->withError('Your account is private');
+        }
         $attendees = Attendee::where('event_app_id', $authUser->event_app_id)
             ->where('id', '!=', $authUser->id)
+            ->where('is_public', true)
             ->get()
             ->map(function ($attendee) use ($authUser) {
                 $attendee->has_sent_request = $authUser->hasFriendRequestPending($attendee);

@@ -60,6 +60,7 @@ class AttendeeController extends Controller
             'bio' => $request->bio,
             'location' => $request->location,
             'password' => Hash::make("12345678"),
+            'is_public' => $request->is_public == 1 ? true : false,
         ]);
         return back()->withSuccess('attendee created successfully.');
     }
