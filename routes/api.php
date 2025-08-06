@@ -130,6 +130,8 @@ Route::prefix('attendee')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->defaults('type', 'attendee');
     Route::post('register/{eventId}', [RegisterController::class, 'register']);
     Route::get('allevents', [AttendeeEventController::class, 'allevents']);
+    //organizer event
+    Route::get('organizer-allevents/{organizer_id}', [EventController::class, 'organizerEvents']);
 
     Route::get('event/{eventApp}', [AttendeeEventController::class, 'getEventDetailDashboard']);
     Route::get('event/{eventApp}/session', [AttendeeEventController::class, 'getEventDetailAgenda']);
@@ -137,6 +139,10 @@ Route::prefix('attendee')->group(function () {
     Route::get('event/ticket/{eventApp}', [AttendeeEventController::class, 'ticket']);
     Route::get('event/speaker/{eventApp}', [AttendeeEventController::class, 'speaker']);
     Route::get('event/contact/{eventApp}', [AttendeeEventController::class, 'contact']);
+    //search
+    Route::get('event/{eventApp}/session-search', [AttendeeEventController::class, 'searchSessions']);
+    Route::get('event/{eventApp}/speaker-search', [AttendeeEventController::class, 'searchSpeakers']);
+
 
     Route::middleware(['auth:sanctum', 'ability:role:attendee'])->group(function () {
 

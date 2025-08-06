@@ -202,4 +202,13 @@ class EventController extends Controller
 
         return $this->successMessageResponse("Checkout successfull", 200);
     }
+    public function organizerEvents($organizer_id)
+    {
+        $events = EventApp::where('organizer_id', $organizer_id)
+            ->with(['images', 'dates' => function ($query) {
+                $query->orderBy('date', 'asc');
+            }])->get();
+
+        return $this->successResponse(EventResource::collection($events));
+    }
 }
