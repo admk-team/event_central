@@ -15,11 +15,38 @@ class ChatController extends Controller
 {
     public function index()
     {
-        $member = ChatMember::currentEvent()->with('participant')->first();
+        $member = ChatMember::currentEvent()->where('user_id', Auth::user()->id)
+            ->with(['participant'])->get()
+            ->map(function ($member) {
+                $lastMessage = ChatMessage::where('event_id', $member->event_id)
+                    ->where(function ($q) use ($member) {
+                        $q->where(function ($q2) use ($member) {
+                            $q2->where('sender_id', $member->user_id)
+                                ->where('receiver_id', $member->participant_id);
+                        })
+                            ->orWhere(function ($q2) use ($member) {
+                                $q2->where('sender_id', $member->participant_id)
+                                    ->where('receiver_id', $member->user_id);
+                            });
+                    })
+                    ->orderByDesc('created_at')
+                    ->first();
+
+                $member->last_message = $lastMessage->message;
+                return $member;
+            });
         $event_data = EventApp::where('id', session('event_id'))->first();
+        if ($event_data) {
+            $lastMessage = ChatMessage::where('event_id', $event_data->id)
+                ->where('receiver_id', $event_data->id)
+                ->where('receiver_type', EventApp::class)
+                ->orderByDesc('created_at')
+                ->first();
+
+            $event_data->last_message = $lastMessage?->message ?? null;
+            $event_data->last_message_created_at = $lastMessage?->created_at;
+        }
         $loged_user = Auth::user()->id;
-        $lastMessage = ChatMessage::currentEvent()->with('sender')->latest('created_at')->first();
-        $unread_count = $member->unread_count ?? 0;
 
         return Inertia::render('Organizer/Events/Chat/Index', compact('member', 'event_data', 'loged_user', 'unread_count', 'lastMessage'));
     }

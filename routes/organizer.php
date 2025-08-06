@@ -124,6 +124,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::post('/attendee/checkin', [AttendeeController::class, 'chechIn'])->name('attendee.checkin');
             Route::get('get-attendee-puchased-addons/{attendeePurchasedTicket}', [AttendeeController::class, 'getPurchasedTicketAddons'])->name('attendee.puchased-ticket.adddons');
             Route::post('attendee/import/event', [AttendeeController::class, 'importFromEvent'])->name('attendee.importevent');
+            Route::post('attendee/chat-initiate/{id}', [AttendeeController::class, 'initiateChat'])->name('attendee.chat.initiate');
 
 
             // Wordshop

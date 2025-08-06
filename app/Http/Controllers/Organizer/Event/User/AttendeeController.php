@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\AttendeePurchasedTickets;
 use App\Http\Requests\Organizer\Event\User\AttendeeStoreRequest;
 use App\Models\AddonVariant;
+use App\Models\ChatMember;
 
 class AttendeeController extends Controller
 {
@@ -355,5 +356,38 @@ class AttendeeController extends Controller
         ImportAttendeeJob::dispatch($fromEventId, $toEventId);
 
         return back()->withSuccess("Import Job Dispatched In Successfully");
+    }
+
+
+    public function initiateChat($id)
+    {
+        $event = EventApp::find(session('event_id'));
+        $attendee = Attendee::find($id);
+
+        if (!$event) {
+            return back()->withError('No active event found.');
+        }
+        if (!$attendee) {
+            return back()->withError('No attendee found.');
+        }
+
+        $existing = ChatMember::where('event_id', $event->id)
+        ->where('user_id', Auth::user()->id)
+        ->where('participant_id', $attendee->id)
+        ->first();
+        
+        if ($existing) {
+            return back()->withError('A chat with this attendee already exists.');
+        }
+
+        ChatMember::create([
+            'event_id' => $event->id,
+            'user_id' => Auth::user()->id,
+            'user_type' => \App\Models\User::class,
+            'participant_id' => $attendee->id,
+            'participant_type' => \App\Models\Attendee::class,
+        ]);
+
+        return back()->withSuccess('Chat initiated successfully.');
     }
 }
