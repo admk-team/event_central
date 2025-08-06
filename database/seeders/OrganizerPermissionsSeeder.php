@@ -171,6 +171,8 @@ class OrganizerPermissionsSeeder extends Seeder
         // 'view_prayer_request',
         // 'edit_prayer_request',
         // 'delete_prayer_request',
+
+        'view_private_registration',
     ];
 
     public function run(): void

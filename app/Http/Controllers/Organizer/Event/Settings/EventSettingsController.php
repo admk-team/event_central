@@ -28,6 +28,7 @@ class EventSettingsController extends Controller
             'event' => $event,
             'enableTracks' => eventSettings()->getValue('enable_tracks', false),
             'enableCheckIn' => eventSettings()->getValue('enable_check_in', false),
+            'enablePrivateRegistraion' => eventSettings()->getValue('private_register', false),
             'tracks' => $tracks,
             'lasteventDate' => $lasteventDate
         ]);
@@ -58,8 +59,8 @@ class EventSettingsController extends Controller
         } else {
             eventSettings()->set('registration_link', '');
         }
-  
-        if($request->hasFile('logo')) {
+
+        if ($request->hasFile('logo')) {
             $name = uniqid() . '.' . $request->file('logo')->getClientOriginalExtension();
             $event->logo = $request->file('logo')->storeAs('events-avatars', $name, 'public');
             $event->save();
@@ -111,5 +112,10 @@ class EventSettingsController extends Controller
     {
         $enableTracks = eventSettings()->getValue('enable_check_in', false);
         eventSettings()->set('enable_check_in', !$enableTracks);
+    }
+    public function togglePrivateRegister()
+    {
+        $enableTracks = eventSettings()->getValue('private_register', false);
+        eventSettings()->set('private_register', !$enableTracks);
     }
 }
