@@ -28,8 +28,8 @@ class IncreaseTicketPrices extends Command
     {
         $tickets = EventAppTicket::whereColumn('qty_total', '>', 'qty_sold')
             ->whereNotNull('increment_rate')
-            ->where('start_increment', '<', now())
-            ->where('end_increment', '>', now())
+            ->where('start_increment', '<=', now())
+            ->where('end_increment', '>=', now())
             ->whereHas('event', function ($query) {
                 $query->whereIn('id', function ($subquery) {
                     $subquery->select('event_app_id')
