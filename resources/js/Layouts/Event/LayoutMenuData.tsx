@@ -174,13 +174,6 @@ const Navdata = () => {
                     parentId: "Content",
                     hasPermissions: ["view_partner"],
                 },
-                {
-                    id: "promo-codes",
-                    label: "Promo Codes",
-                    link: route("organizer.events.promo-codes.index"),
-                    parentId: "Content",
-                    hasPermissions: ["view_promo_code"],
-                },
             ],
         },
         {
@@ -317,6 +310,13 @@ const Navdata = () => {
                     hasPermissions: [
                         "view_add_on", //To be changed after permission added
                     ],
+                },
+                {
+                    id: "promo-codes",
+                    label: "Promo Codes",
+                    link: route("organizer.events.promo-codes.index"),
+                    parentId: "Content",
+                    hasPermissions: ["view_promo_code"],
                 },
                 {
                     id: "assignTickets",

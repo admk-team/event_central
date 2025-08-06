@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\IncreaseTicketPrices;
 use App\Jobs\EventSessionReminder;
 use App\Mail\EventSessionReminderMail;
 use App\Models\AttendeeFavSession;
@@ -19,6 +20,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
+        $schedule->command(IncreaseTicketPrices::class)->daily();
+
         // $schedule->call(function () {
         //     $now = Carbon::now();
         //     $currentDate = Carbon::today();
