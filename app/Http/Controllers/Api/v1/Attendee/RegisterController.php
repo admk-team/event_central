@@ -16,12 +16,20 @@ class RegisterController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => ['required','string','lowercase','email','max:255',
-                Rule::unique('attendees', 'email')->where('event_app_id', $eventId),
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('attendees', 'email')->where(function ($query) use ($eventId) {
+                    return $query->where('event_app_id', $eventId);
+                }),
             ],
             'position' => 'nullable|string|max:255',
             'location' => 'nullable|string|max:255',
             'password' => 'required|string|min:8|confirmed',
+        ], [
+            'email.unique' => 'An account already exists for this email in this event.',
         ]);
 
         $event = EventApp::findOrFail($eventId);
