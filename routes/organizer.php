@@ -362,4 +362,6 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
     //Private Registration Via Email
     Route::get('private-registration', [PrivateRegistrationViaEmailController::class, 'index'])->name('private-registration.index');
     Route::post('/private-registration/send', [PrivateRegistrationViaEmailController::class, 'send'])->name('private-registration.send');
+     Route::delete('prayer-requests/{id}', [PrivateRegistrationViaEmailController::class, 'destroy'])->name('private-registration.destroy');
+    Route::delete('prayer-requests/delete/many', [PrivateRegistrationViaEmailController::class, 'destroyMany'])->name('private-registration.destroy.many');
 });

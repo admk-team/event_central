@@ -64,8 +64,8 @@ class HandleInertiaRequests extends Middleware
             'currentEvent' => Cache::remember("current_event_" . Auth::id(), now()->addMinutes(10), function () {
                 return EventApp::with('dates')->find(session('event_id')) ?? null;
             }),
-            'permissions' => function () {
-                return array_filter(
+           'permissions' => function () {
+                return array_values(array_filter(
                     Auth::user()?->getAllPermissions()->pluck('name')->toArray() ?? [],
                     function ($permission) {
                         if(!session('event_id')){
@@ -73,7 +73,7 @@ class HandleInertiaRequests extends Middleware
                         }
                         return $permission !== 'view_private_registration' || eventSettings()->getValue('private_register', false);
                     }
-                );
+                ));
             }
         ];
     }

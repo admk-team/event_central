@@ -18,11 +18,9 @@ class PrivateRegistrationViaEmailController extends Controller
         if (! Auth::user()->can('view_private_registration')) {
             abort(403);
         }
-        $invitedEmails = PrivateInvite::currentEvent()->get();
+        $data = $this->datatable(PrivateInvite::currentEvent());
 
-        return Inertia::render('Organizer/Events/PrivateRegistration/Index', [
-            'invitedEmails' => $invitedEmails,
-        ]);
+        return Inertia::render('Organizer/Events/PrivateRegistration/Index', ['data' => $data,]);
     }
     public function send(Request $request)
     {
@@ -46,11 +44,34 @@ class PrivateRegistrationViaEmailController extends Controller
 
             // Generate invite URL for this eventApp
             $inviteUrl = route('attendee.register', ['eventApp' => $eventApp->id]);
-
             // Dispatch job to send email
             SendPrivateInviteEmail::dispatch($email, $eventApp, $inviteUrl);
         }
 
         return back()->withSuccess('Invitations sent successfully.');
+    }
+    public function destroy($id)
+    {
+        if (! Auth::user()->can('delete_private_registration')) {
+            abort(403);
+        }
+
+        PrivateInvite::find($id)->delete();
+        return back()->withSuccess('Deleted successfully.');
+    }
+
+    public function destroyMany(Request $request)
+    {
+        if (! Auth::user()->can('delete_private_registration')) {
+            abort(403);
+        }
+
+        $request->validate([
+            'ids' => 'required|Array'
+        ]);
+        foreach ($request->ids as $id) {
+            PrivateInvite::find($id)->delete();
+        }
+        return back()->withSuccess('Deleted successfully.');
     }
 }
