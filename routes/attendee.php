@@ -119,6 +119,7 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::get('chat', [ChatController::class, 'index'])->name('attendee.event.chat');
         Route::get('get-chat/{id}', [ChatController::class, 'getMessages'])->name('attendee.event.get-messages');
         Route::get('private-chat/{id}', [ChatController::class, 'getOneToOneChat']);
+        Route::post('chat/mark-as-read/{id}', [ChatController::class, 'markAsRead']);
         Route::post('send-message', [ChatController::class, 'store']);
         // Friends system
         Route::resource('friend', FriendRequestController::class);

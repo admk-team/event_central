@@ -68,6 +68,7 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
         .listen('AttendeeChatMessage', (e: any) => {
             if (e.message.sender_id == currentRoomId) {
                 setChatMessages(prev => [...prev, e.message]);
+                axios.post(`/attendee/chat/mark-as-read/${currentRoomId}`);
             }else {
             // Message from another chat → increment unread count
             setMembersList((prevMembers:any) =>
@@ -77,6 +78,7 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
                     ...user,
                     unread_count: (user.unread_count || 0) + 1
                   };
+
                 }
                 return user;
               })
@@ -289,7 +291,7 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
                           </div>
                           <div className="flex-grow-1 overflow-hidden">
                             <p className="text-truncate mb-0">{event_data.name}</p>
-                            <small className="text-truncate mb-0" id={"last-msg-user" + event_data.id}>{lastMessage?.message ?? ''}</small>
+                            <small className="text-truncate mb-0" id={"last-msg-user" + event_data.id}>{event_data.last_message ?? ''}</small>
                           </div>
                           <div className="flex-shrink-0" id={"unread-msg-user" + event_data.id}>
                             <span className="badge bg-dark-subtle text-body rounded p-1">
@@ -334,6 +336,7 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
                             </div>
                             <div className="flex-grow-1 overflow-hidden">
                               <p className="text-truncate mb-0">{chat.participant.name}</p>
+                              <small className="text-truncate mb-0" id={"last-msg-user" + chat.participant.id}>{chat.last_message ?? 'Media'}</small>
                             </div>
                             <div className="flex-shrink-0" id={"unread-msg-user" + chat.participant.id}>
                               {chat.unread_count != 0 ? (<span className="badge bg-dark-subtle text-body rounded p-1">{chat.unread_count}</span>) : ("")}

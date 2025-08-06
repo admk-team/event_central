@@ -16,11 +16,44 @@ class ChatController extends Controller
 {
     public function index()
     {
-        $member = ChatMember::where('event_id', Auth::user()->event_app_id)->where('user_id', Auth::user()->id)->with('participant')->get();
+        // Private chats
+        $member = ChatMember::where('event_id', Auth::user()->event_app_id)
+            ->where('user_id', Auth::user()->id)
+            ->with(['participant'])->get()
+            ->map(function ($member) {
+                $lastMessage = ChatMessage::where('event_id', $member->event_id)
+                    ->where(function ($q) use ($member) {
+                        $q->where(function ($q2) use ($member) {
+                            $q2->where('sender_id', $member->user_id)
+                                ->where('receiver_id', $member->participant_id);
+                        })
+                            ->orWhere(function ($q2) use ($member) {
+                                $q2->where('sender_id', $member->participant_id)
+                                    ->where('receiver_id', $member->user_id);
+                            });
+                    })
+                    ->orderByDesc('created_at')
+                    ->first();
+
+                $member->last_message = $lastMessage->message;
+                return $member;
+            });
+
+        // Public chat
         $event_data = EventApp::where('id', Auth::user()->event_app_id)->first();
-        $lastMessage = ChatMessage::where('event_id', Auth::user()->event_app_id)->with('sender')->latest('created_at')->first();
+        if ($event_data) {
+            $lastMessage = ChatMessage::where('event_id', $event_data->id)
+                ->where('receiver_id', $event_data->id)
+                ->where('receiver_type', EventApp::class)
+                ->orderByDesc('created_at')
+                ->first();
+
+            $event_data->last_message = $lastMessage?->message ?? null;
+            $event_data->last_message_created_at = $lastMessage?->created_at;
+        }
+
         $loged_user = Auth::user()->id;
-        return Inertia::render('Attendee/Chat/Index', compact('member', 'event_data', 'loged_user', 'lastMessage'));
+        return Inertia::render('Attendee/Chat/Index', compact('member', 'event_data', 'loged_user'));
     }
 
     public function getMessages($id)
@@ -93,11 +126,11 @@ class ChatController extends Controller
             'sender_type' => \App\Models\Attendee::class,
             'receiver_id' => $receiver_id,
             'receiver_type' => $receiver_type,
-            'message' => $request->message,
+            'message' => $request->message == 'media' ? null : $request->message,
             'reply_to' => $request->reply_to,
         ]);
 
-       if ($request->hasFile('files')) {
+        if ($request->hasFile('files')) {
             foreach ($request->file('files') as $file) {
                 $originalName = $file->getClientOriginalName();
                 $path = $file->store('chat_files', 'public');
@@ -135,5 +168,18 @@ class ChatController extends Controller
         }
 
         return response()->json(['success' => true, 'message' => $message]);
+    }
+
+    public function markAsRead($chatWithUserId)
+    {
+        $eventId = Auth::user()->event_app_id;
+        $userId = Auth::id();
+
+        ChatMember::where('event_id', $eventId)
+            ->where('participant_id', $userId)
+            ->where('user_id', $chatWithUserId)
+            ->update(['unread_count' => 0]);
+
+        return response()->json(['success' => true]);
     }
 }

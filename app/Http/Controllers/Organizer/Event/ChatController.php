@@ -56,7 +56,7 @@ class ChatController extends Controller
             'sender_type' => \App\Models\User::class,
             'receiver_id' => $eventId,
             'receiver_type' => \App\Models\EventApp::class,
-            'message' => $request->message == 'media' ? null : $request->message,
+            'message' => $request->message == 'media' ? "" : $request->message,
             'reply_to' => $request->reply_to,
         ]);
         if ($request->hasFile('files')) {
