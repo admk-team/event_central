@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Attendee\AppEventRegistrationFormController;
 use App\Http\Controllers\Attendee\AttendeeUpgradeTicketController;
 use App\Http\Controllers\Attendee\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Attendee\Auth\EmailChangeController;
@@ -33,10 +34,16 @@ Route::middleware('guest')->prefix('attendee')->group(function () {
     );
 });
 
-// Event Registration Form
+// Event Registration Form for Web
 Route::prefix('{eventApp}/event-registration-form')->name('attendee.event-registration-form')->group(function () {
     Route::get('/', [EventRegistrationFormController::class, 'index']);
     Route::post('/', [EventRegistrationFormController::class, 'submit'])->name('.submit');
+});
+
+// Event Registration Form for App
+Route::prefix('app-event-registration-form/{eventApp}')->name('attendee.app-event-registration-form')->group(function () {
+    Route::get('/', [AppEventRegistrationFormController::class, 'index']);
+    Route::post('/', [AppEventRegistrationFormController::class, 'submit'])->name('.submit');
 });
 
 // http://127.0.0.1:8000/google-login/callback
