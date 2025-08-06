@@ -139,6 +139,10 @@ Route::prefix('attendee')->group(function () {
     Route::get('event/ticket/{eventApp}', [AttendeeEventController::class, 'ticket']);
     Route::get('event/speaker/{eventApp}', [AttendeeEventController::class, 'speaker']);
     Route::get('event/contact/{eventApp}', [AttendeeEventController::class, 'contact']);
+    //search
+    Route::get('event/{eventApp}/session-search', [AttendeeEventController::class, 'searchSessions']);
+    Route::get('event/{eventApp}/speaker-search', [AttendeeEventController::class, 'searchSpeakers']);
+
 
     Route::middleware(['auth:sanctum', 'ability:role:attendee'])->group(function () {
 
@@ -205,6 +209,4 @@ Route::prefix('attendee')->group(function () {
         Route::delete('/prayer-requests/{id}', [AttendeePrayerRequestController::class, 'destroy']);
         Route::post('/prayer-request/view/{id}', [AttendeePrayerRequestController::class, 'view']);
     });
-
-
 });

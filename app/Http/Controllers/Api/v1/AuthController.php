@@ -27,13 +27,18 @@ class AuthController extends Controller
                     $query->where('event_app_id', $credentials['event_app_id']);
                 })
                 ->first();
+            if (!$user) {
+                return response()->json([
+                    'message' => 'Account does not exist for this event.'
+                ], 401);
+            }
         } else {
             $user = User::where('email', $credentials['email'])->first();
         }
 
         // Validate password manually because Sanctum does not support attempt()
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
-            return response()->json(['message' => 'Unauthorized'], 401);
+            return response()->json(['message' => 'Invalid email or password.'], 401);
         }
         if ($type === 'attendee') {
             $event = EventApp::findOrFail($user->event_app_id);
