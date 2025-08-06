@@ -370,4 +370,12 @@ class AttendeeController extends Controller
 
         return back()->withSuccess("Import Job Dispatched In Successfully");
     }
+
+    public function returnTicket($id)
+    {
+        // $attendee = Attendee::where('id', $id)->with('attendeePurchasedTickets');
+
+        $attendee = $id;
+        dd($attendee);
+    }
 }

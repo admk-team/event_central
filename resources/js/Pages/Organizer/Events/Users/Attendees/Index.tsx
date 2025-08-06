@@ -15,6 +15,7 @@ import ImportFromEvent from './Component/ImportFromEvent';
 import HasPermission from '../../../../../Components/HasPermission';
 import { Check, CircleCheck, CircleX } from 'lucide-react';
 import EventCheckinButton from './Component/EventCheckinButton';
+import AssignTicketButton from './Component/AssignTicketButton';
 
 function Index({ attendees, eventList }: any) {
 
@@ -167,6 +168,7 @@ function Index({ attendees, eventList }: any) {
                     <HasPermission permission="scan_events">
                         <EventCheckinButton attendee={attendee} />
                     </HasPermission>
+                    <AssignTicketButton attendee={attendee} />
                     <Link title='View attendee details' href={route('organizer.events.attendee.info', { id: attendee.id })} className="link-primary cursor-pointer"><i className="ri-eye-fill"></i></Link>
                     <Link title='View QR Code attendee' href={route('organizer.events.attendee.qrcode', { id: attendee.id })} className="link-primary cursor-pointer"><i className="ri-qr-code-line"></i></Link>
                     <Link title='Purchase ticket for this attendee' href={route('organizer.events.attendee.tickets.assign', attendee.id)} className="link-primary cursor-pointer">

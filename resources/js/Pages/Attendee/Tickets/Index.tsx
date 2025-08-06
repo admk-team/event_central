@@ -131,7 +131,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
                 type: codeObj.discount_type,
                 value: codeObj.discount_value,
             });
-             setDiscountCodeApplied(discountCode);
+            setDiscountCodeApplied(discountCode);
             toast.success("Coupon Code applied successfuly");
             // let disc = parseFloat(codeObj.discount_value);
             // switch (codeObj.discount_type) {
@@ -327,6 +327,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
                                                     handleTicketCardChanged
                                                 }
                                                 onBlockCheckout={setBlockCheckout}
+                                                attendee_id={attendee_id}
                                             ></TicketCard>
                                         ))}
                                     {!organizerView && eventApp.public_tickets.length > 0 &&
@@ -340,6 +341,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
                                                     handleTicketCardChanged
                                                 }
                                                 onBlockCheckout={setBlockCheckout}
+                                                attendee_id={attendee_id}
                                             ></TicketCard>
                                         ))}
                                 </Row>

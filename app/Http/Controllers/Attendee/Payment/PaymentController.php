@@ -58,6 +58,7 @@ class PaymentController extends Controller
         $eventApp = null;
         $attendees = [];
         $lasteventDate = [];
+        $attendee_id = auth()->user()->id;
         //If Page is being visited by Organizer
         if ($organizerView) {
             $eventApp = EventApp::with('dates')->find(session('event_id'));

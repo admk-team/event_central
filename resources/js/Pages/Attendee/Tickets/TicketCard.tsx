@@ -1,4 +1,4 @@
-import { Link } from "@inertiajs/react";
+import { Link, useForm } from "@inertiajs/react";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
@@ -16,13 +16,14 @@ import {
 import TicketDetail from "./TicketDetail";
 import { Minus, Plus } from "lucide-react";
 
-const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckOut, onBlockCheckout }: any) => {
+const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckOut, onBlockCheckout, attendee_id }: any) => {
     const isAddedToCart = ticket.is_added_to_cart;
     const [processing, setProcessing] = useState(false);
     const [ticketQty, setTicketQty] = useState(0);
     const [ticketDetails, setTicketDetails] = useState<any>([]);
     const [removedIds, setRemovedIds] = useState<any>([]);
     const [showAll, setShowAll] = useState(false);
+    const [isWaitList, setIsWaitList] = useState(false);
 
     const sessionsToShow = showAll
         ? ticket.sessions
@@ -112,7 +113,29 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckO
             )
         );
     };
+    const { data, setData, post, put, errors, reset } = useForm({
+        attendee_id: attendee_id,
+        event_app_ticket_id: ticket.id
 
+    });
+
+    const handleWaitingList = () => {
+        post(route('attendee.waitlist.post'), {
+            onSuccess: () => {
+                setIsWaitList(true);
+            }
+        })
+        console.log('testing');
+
+    }
+    // const handleWaitingListUpdate = () => {
+    //     post(route('attendee.delete.waitlist'), {
+    //         onSuccess: () => {
+    //             setIsWaitList(false);
+    //         }
+    //     })
+
+    // }
 
     useEffect(() => {
         onTicketDetailsUpdated(ticketDetails, removedIds);
@@ -120,6 +143,7 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckO
 
     const availableQty = ticket.qty_total - ticket.qty_sold;
     const unlimitedQty = ticket.qty_total === null;
+    console.log('ticket', ticket);
 
     return (
         <Col lg={12}>
@@ -154,6 +178,19 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckO
                                     <span className="fs-5">Available Quantity</span>: <span className="fs-5">{unlimitedQty ? 'Unlimited' : availableQty}</span>
                                 </span>
                             </Col>
+                            {(!unlimitedQty && availableQty <= 0) && (
+                                <Col md={2} lg={2}>
+                                    <span className="ff-secondary fw-bold d-flex justify-content-lg-end">
+                                        <Button size="sm" onClick={() => handleWaitingList()}>Add Waiting List  </Button>
+                                    </span>
+                                    {/* {(isWaitList) && (
+
+                                        < span className="ff-secondary fw-bold d-flex justify-content-lg-end">
+                                            <Button size="sm" onClick={() => handleWaitingListUpdate()}>Remove Waiting List  </Button>
+                                        </span>
+                                    )} */}
+                                </Col>
+                            )}
                             {(availableQty > 0 || unlimitedQty) && (
                                 <Col md={2} lg={2}>
                                     <InputGroup>
@@ -265,7 +302,7 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckO
                     </Accordion.Body>
                 </Accordion.Item>
             </Accordion>
-        </Col>
+        </Col >
     );
 };
 

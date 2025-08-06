@@ -21,6 +21,7 @@ use App\Http\Controllers\Attendee\PrayerRequestController;
 use App\Http\Controllers\Attendee\ProfileController;
 use App\Http\Controllers\Attendee\QrCodeController;
 use App\Http\Controllers\Attendee\QuestionAttendeeController as AttendeeQuestionAttendeeController;
+use App\Http\Controllers\Attendee\WaitingListController;
 use App\Http\Controllers\QuestionAttendeeController;
 use Illuminate\Support\Facades\Route;
 
@@ -77,6 +78,10 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::get('view-tickets', [PaymentController::class, 'viewTickets'])->name('attendee.tickets.get');
         Route::get('purchased-tickets', [PaymentController::class, 'attendeepurchasedTickets'])->name('attendee.tickets.purchased');
         Route::post('submit-ticket-emails', [PaymentController::class, 'submitTicketTransfer'])->name('attendee.tickets.transfer');
+
+        // waitList Attendee
+        Route::post('waitlist-ticket', [WaitingListController::class, 'store'])->name('attendee.waitlist.post');
+        Route::delete('waitlist-ticket', [WaitingListController::class, 'destroy'])->name('attendee.delete.waitlist');
 
         //Refund of Tickets
         Route::get('refund-tickets', [RefundPaymentController::class, 'refundAttendeeTicket'])->name('attendee.tickets.refund');
