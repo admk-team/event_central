@@ -37,7 +37,7 @@ export default function WebsiteUrl() {
                         <Copy size={20} />
                         <span>Copy</span>
                     </Button>
-                    <Button className="d-flex align-items-center gap-1" variant="secondary" onClick={openPreview}>
+                    <Button className="d-flex align-items-center gap-1" onClick={openPreview}>
                         <span>Preview</span>
                     </Button>
                 </div>

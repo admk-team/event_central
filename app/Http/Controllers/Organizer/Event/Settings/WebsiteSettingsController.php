@@ -8,6 +8,8 @@ use App\Models\Footer;
 use App\Models\Header;
 use App\Models\Page;
 use App\Models\EventPartnerCategory;
+use App\Models\EventPartner;
+use App\Models\ReferralLink;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -91,7 +93,7 @@ class WebsiteSettingsController extends Controller
             ]);
         }
     }
-    public function preview($uuid)
+    public function preview(Request $request, $uuid)
     {
         $event = EventApp::where('uuid', $uuid)->first();
 
