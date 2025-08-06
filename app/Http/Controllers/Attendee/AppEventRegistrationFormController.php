@@ -33,11 +33,11 @@ class AppEventRegistrationFormController extends Controller
             abort(404);
         }
 
-        $formFilled = false;
+        $formFilled = $request->form_submitted ? true : false;
         
-        if ($form->submissions()->where('attendee_id', $attendee->id)->count() > 0) {
-            $formFilled = true;
-        }
+        // if ($form->submissions()->where('attendee_id', $attendee->id)->count() > 0) {
+        //     $formFilled = true;
+        // }
 
         return Inertia::render("Attendee/Auth/AppEventRegistrationForm", [
             'form' => $form,
