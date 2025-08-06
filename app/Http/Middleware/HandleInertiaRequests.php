@@ -65,7 +65,12 @@ class HandleInertiaRequests extends Middleware
                 return EventApp::with('dates')->find(session('event_id')) ?? null;
             }),
             'permissions' => function () {
-                return Auth::user()?->getAllPermissions()->pluck('name') ?? [];
+                return array_filter(
+                    Auth::user()?->getAllPermissions()->pluck('name')->toArray() ?? [],
+                    function ($permission) {
+                        return $permission !== 'view_private_registration' || eventSettings()->getValue('private_register', false);
+                    }
+                );
             }
         ];
     }

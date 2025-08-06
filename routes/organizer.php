@@ -34,6 +34,7 @@ use App\Http\Controllers\Organizer\Event\EventPromoCodeController;
 use App\Http\Controllers\Organizer\Event\EventTicketTypeController;
 use App\Http\Controllers\Organizer\Event\FormFieldController;
 use App\Http\Controllers\Organizer\Event\PrayerRequestController;
+use App\Http\Controllers\Organizer\Event\PrivateRegistrationViaEmailController;
 use App\Http\Controllers\Organizer\Event\QuestionnaireFormFieldController;
 use App\Http\Controllers\Organizer\Event\RefferalLinkController;
 use App\Http\Controllers\Organizer\Event\Reports\AttendeesReportController;
@@ -220,6 +221,8 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                     Route::get('generate-link', [EventSettingsController::class, 'generateLink'])->name('link');
                     Route::post('toggle-tracks', [EventSettingsController::class, 'toggleTracks'])->name('toggle-tracks');
                     Route::post('toggle-checkin', [EventSettingsController::class, 'toggleCheckIn'])->name('toggle-checkin');
+                    Route::post('toggle-register', [EventSettingsController::class, 'togglePrivateRegister'])->name('toggle-register');
+                    Route::post('close-open-registration/{event}', [EventSettingsController::class, 'closeOpenRegistration'])->name('close.open.registration');
                 });
 
                 // Payment
@@ -356,4 +359,8 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
     Route::put('prayer-requests/{id}', [PrayerRequestController::class, 'update'])->name('prayer-requests.update');
     Route::delete('prayer-requests/{id}', [PrayerRequestController::class, 'destroy'])->name('prayer-requests.destroy');
     Route::delete('prayer-requests/delete/many', [PrayerRequestController::class, 'destroyMany'])->name('prayer-requests.destroy.many');
+
+    //Private Registration Via Email
+    Route::get('private-registration', [PrivateRegistrationViaEmailController::class, 'index'])->name('private-registration.index');
+    Route::post('/private-registration/send', [PrivateRegistrationViaEmailController::class, 'send'])->name('private-registration.send');
 });
