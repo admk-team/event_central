@@ -15,6 +15,7 @@ class EventAppTicket extends Model
         'name',
         'description',
         'type',
+        'original_price',
         'base_price',
         'qty_total',
         'qty_sold',

@@ -52,9 +52,9 @@ export default function CreateEditModal({
 
             base_price: ticket?.base_price ?? "",
 
-            increment_by: ticket?.increment_by ?? "",
+            // increment_by: ticket?.increment_by ?? "",
             increment_rate: ticket?.increment_rate ?? "",
-            increment_type: ticket?.increment_type ?? "Percentage",
+            increment_type: ticket?.increment_type ?? "Fixed",
             start_increment: ticket?.start_increment ?? "",
             end_increment: ticket?.end_increment ?? "",
             show_on_attendee_side: ticket?.show_on_attendee_side ?? true,
@@ -298,22 +298,23 @@ export default function CreateEditModal({
                                 <Row>
                                     <Col md={6}>
                                         <FormGroup className="mb-3">
-                                            <Form.Label>Increment By</Form.Label>
-                                            <Form.Control
-                                                id="increment_by"
-                                                type="number"
-                                                value={data.increment_by}
+                                            <Form.Label>Increment Type</Form.Label>
+                                            <Form.Select
+                                                value={data.increment_type}
                                                 onChange={(e) =>
                                                     setData(
-                                                        "increment_by",
+                                                        "increment_type",
                                                         e.target.value
                                                     )
                                                 }
-                                                isInvalid={!!errors.increment_by}
-                                            />
-                                            {errors.increment_by && (
+                                                isInvalid={!!errors.increment_type}
+                                            >
+                                                <option value="Fixed">Fixed</option>
+                                                <option value="Percentage">Percentage</option>
+                                            </Form.Select>
+                                            {errors.increment_type && (
                                                 <Form.Control.Feedback type="invalid">
-                                                    {errors.increment_by}
+                                                    {errors.increment_type}
                                                 </Form.Control.Feedback>
                                             )}
                                         </FormGroup>
