@@ -68,6 +68,9 @@ class HandleInertiaRequests extends Middleware
                 return array_filter(
                     Auth::user()?->getAllPermissions()->pluck('name')->toArray() ?? [],
                     function ($permission) {
+                        if(!session('event_id')){
+                            return true;
+                        }
                         return $permission !== 'view_private_registration' || eventSettings()->getValue('private_register', false);
                     }
                 );

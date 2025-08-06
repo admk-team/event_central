@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Organizer\Event;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\SendPrivateInviteEmail;
+use App\Models\EventApp;
 use App\Models\PrivateInvite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,7 +26,7 @@ class PrivateRegistrationViaEmailController extends Controller
     }
     public function send(Request $request)
     {
-        if (!Auth::user()->can('manage_private_registration')) {
+        if (!Auth::user()->can('view_private_registration')) {
             abort(403);
         }
 
@@ -33,11 +35,20 @@ class PrivateRegistrationViaEmailController extends Controller
             'emails.*' => 'email',
         ]);
 
+        $eventAppId = session('event_id');
+        $eventApp = EventApp::findOrFail($eventAppId);
+
         foreach ($validated['emails'] as $email) {
-            PrivateInvite::firstOrCreate([
-                'event_app_id' => session('event_id'),
+            PrivateInvite::create([
+                'event_app_id' => $eventAppId,
                 'email' => $email,
             ]);
+
+            // Generate invite URL for this eventApp
+            $inviteUrl = route('attendee.register', ['eventApp' => $eventApp->id]);
+
+            // Dispatch job to send email
+            SendPrivateInviteEmail::dispatch($email, $eventApp, $inviteUrl);
         }
 
         return back()->withSuccess('Invitations sent successfully.');
