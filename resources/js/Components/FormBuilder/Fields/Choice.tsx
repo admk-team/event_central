@@ -38,7 +38,7 @@ export default function Choice({ name, field }: any) {
                 ))}
             </div>
             {errors[name] && (
-                <Form.Control.Feedback type="invalid">{errors[name]}</Form.Control.Feedback>
+                <Form.Control.Feedback type="invalid" className="d-block">{errors[name]}</Form.Control.Feedback>
             )}
             {field.description && (
                 <div className="form-text">
