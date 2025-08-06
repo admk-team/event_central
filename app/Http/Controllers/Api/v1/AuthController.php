@@ -40,6 +40,9 @@ class AuthController extends Controller
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
             return response()->json(['message' => 'Invalid email or password.'], 401);
         }
+
+        $registration_complete = true;
+
         if ($type === 'attendee') {
             $event = EventApp::findOrFail($user->event_app_id);
             $url = route('organizer.events.website', $event->uuid ?? null);
@@ -47,6 +50,12 @@ class AuthController extends Controller
             $personal_url = $url . '?link=' . $title . '-' . $event->uuid ?? null;
             $user->personal_url = $personal_url;
             $user->save();
+
+            // Check if custom registration form is enabled and not filled
+            $form = $event->form;
+            if ($form && $form->status && $form->submissions()->where('attendee_id', $user->id)->count() === 0) {
+                $registration_complete = false;
+            }
         }
 
         // Assign role-based ability
@@ -61,6 +70,7 @@ class AuthController extends Controller
             'user' => $user->toArray(),
             'role' => $role,
             'token' => $token,
+            'registration_complete' => $registration_complete,
             ...($type !== 'attendee' ? ['permissions' => $user->getAllPermissions()->pluck('name') ?? []] : []),
         ]);
     }
