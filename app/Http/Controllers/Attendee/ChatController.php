@@ -35,7 +35,8 @@ class ChatController extends Controller
                     ->orderByDesc('created_at')
                     ->first();
 
-                $member->last_message = $lastMessage->message;
+                $member->last_message = $lastMessage->message ?? null;
+                $member->last_message_created_at = $lastMessage?->created_at ?? null;
                 return $member;
             });
 
@@ -119,6 +120,17 @@ class ChatController extends Controller
         // Determine receiver type
         $receiver_id = $request->receiver_id;
         $receiver_type = ($receiver_id == $eventId) ? \App\Models\EventApp::class : \App\Models\Attendee::class;
+        // check that both user initiate the chat
+        if ($receiver_type != \App\Models\EventApp::class) {
+            $auth_user = ChatMember::where('event_id', $eventId)->where('user_id', $senderId)->where('participant_id', $receiver_id)->first();
+            $participant_user = ChatMember::where('event_id', $eventId)->where('user_id', $receiver_id)->where('participant_id', $senderId)->first();
+            if (!$auth_user) {
+                $this->initiateChat($eventId, $senderId, \App\Models\Attendee::class, $receiver_id, \App\Models\User::class);
+            }
+            if (!$participant_user) {
+                $this->initiateChat($eventId, $receiver_id, \App\Models\User::class, $senderId, \App\Models\Attendee::class);
+            }
+        } 
 
         $message = ChatMessage::create([
             'event_id' => $eventId,
@@ -126,7 +138,7 @@ class ChatController extends Controller
             'sender_type' => \App\Models\Attendee::class,
             'receiver_id' => $receiver_id,
             'receiver_type' => $receiver_type,
-            'message' => $request->message == 'media' ? null : $request->message,
+            'message' => $request->message ?? null,
             'reply_to' => $request->reply_to,
         ]);
 
@@ -173,7 +185,7 @@ class ChatController extends Controller
     public function markAsRead($chatWithUserId)
     {
         $eventId = Auth::user()->event_app_id;
-        $userId = Auth::id();
+        $userId = Auth::user()->id;
 
         ChatMember::where('event_id', $eventId)
             ->where('participant_id', $userId)
@@ -181,5 +193,16 @@ class ChatController extends Controller
             ->update(['unread_count' => 0]);
 
         return response()->json(['success' => true]);
+    }
+
+    public function initiateChat($event, $user_id, $user_type, $participant_id, $participant_type)
+    {
+        ChatMember::create([
+            'event_id' => $event,
+            'user_id' => $user_id,
+            'user_type' => $user_type,
+            'participant_id' => $participant_id,
+            'participant_type' => $participant_type,
+        ]);
     }
 }

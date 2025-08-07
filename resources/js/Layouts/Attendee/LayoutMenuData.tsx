@@ -18,6 +18,7 @@ const Navdata = () => {
     const [IsPrayerRequest, setIsPrayerRequest] = useState<boolean>(false);
     const [isChat, setIsChat] = useState<boolean>(false);
     const [isFriend, setIsFriend] = useState<boolean>(false);
+    const [isEventStaff, setIsEventStaff] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>("Dashboard");
     // const [IsQA, setIsQA] = useState<boolean>(false);
@@ -68,8 +69,11 @@ const Navdata = () => {
         if (iscurrentState !== "friend") {
             setIsFriend(false);
         }
-         if (iscurrentState !== "PrayerRequest") {
+        if (iscurrentState !== "PrayerRequest") {
             setIsPrayerRequest(false);
+        }
+        if (iscurrentState !== "eventStaff") {
+            setIsEventStaff(false);
         }
         // if (iscurrentState !== "Q&A") {
         //     setIsQA(false);
@@ -90,6 +94,7 @@ const Navdata = () => {
         isUpgradeTicket,
         IsAchievement,
         IsPrayerRequest,
+        isEventStaff
     ]);
 
     const menuItems: any = [
@@ -261,6 +266,19 @@ const Navdata = () => {
             label: "Achievements",
             icon: "bx bxs-medal",
             link: route("attendee.achievement"),
+            stateVariables: isMore,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsMore(!isMore);
+                setIscurrentState("More");
+                updateIconSidebar(e);
+            },
+        },
+        {
+            id: "eventStaff",
+            label: "Event Staff",
+            icon: "bx bx-group",
+            link: route("attendee.event.staff"),
             stateVariables: isMore,
             click: function (e: any) {
                 e.preventDefault();

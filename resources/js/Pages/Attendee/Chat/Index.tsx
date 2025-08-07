@@ -34,7 +34,7 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
   const [Chat_Box_Username, setChat_Box_Username] = useState<any>("Lisa Parker");
   const [user_Status, setUser_Status] = useState<string | null>("online");
   const [Chat_Box_Image, setChat_Box_Image] = useState<any>(avatar2);
-  const [currentRoomId, setCurrentRoomId] = useState<any>(1);
+  const [currentRoomId, setCurrentRoomId] = useState<any>(null);
   const [curMessage, setcurMessage] = useState<string>("");
   const [reply, setReply] = useState<any>(null);
   const [emojiPicker, setemojiPicker] = useState<boolean>(false);
@@ -55,9 +55,10 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
   // Real-time subscription to public channel like "event-app-[id]"
   const eventChannelName = `event-app-${event_data.id}`;
   useEchoPublic(eventChannelName, "EventGroupChat", (e: any) => {
-    // console.log("New message via Echo:", e);
     const newMessage = e.message;
-    setChatMessages(prev  => [...prev , newMessage]);
+    if(currentRoomId === null){
+      setChatMessages(prev  => [...prev , newMessage]);
+    }
   });
 
 
@@ -120,12 +121,13 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
       if(reciever_id == null)
       {
         response = await axios.get(`/attendee/get-chat/${event_data.id}`);
+        setCurrentRoomId(null);
       }else{
         response = await axios.get(`/attendee/private-chat/${reciever_id}`);
+        setCurrentRoomId(reciever_id);
       }
       userChatShow.current.classList.remove("d-none");
       setChat_Box_Username(chats.name ?? chats.participant.name);
-      setCurrentRoomId(reciever_id);
       setChat_Box_Image(chats.image ?? chats.logo_img);
       setUser_Status(chats.status)
       dispatch(onGetMessages());
@@ -274,8 +276,8 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
     
                 {/* EVENT SECTION */}
                 <div className="chat-message-list">
-                  <ul className="list-unstyled chat-list chat-user-list users-list" id="userList">
-                    <li key={event_data.id} className={Chat_Box_Username === event_data.name ? "active" : ""}>
+                  <ul className="list-unstyled chat-list chat-user-list users-list" id="eventList">
+                    <li key={"event-"+event_data.id} className={Chat_Box_Username === event_data.name ? "active" : ""}>
                       <Link href="#!" onClick={(event) => {event.preventDefault();userChatOpen(event_data,null)}} className={"unread-msg-user border-bottom"} id={"msgUser" + event_data.id}>
                         <div className="d-flex align-items-center">
                           <div className={'flex-shrink-0 chat-user-img align-self-center me-2 ms-0'}>
@@ -296,8 +298,8 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
                           <div className="flex-shrink-0" id={"unread-msg-user" + event_data.id}>
                             <span className="badge bg-dark-subtle text-body rounded p-1">
                                 {(() => {
-                                  if (!lastMessage?.created_at) return null;
-                                  const messageDate = new Date(lastMessage.created_at);
+                                  if (!event_data?.last_message_created_at) return null;
+                                  const messageDate = new Date(event_data.last_message_created_at);
                                   const now = new Date();
 
                                   const isToday =
@@ -320,7 +322,7 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
                 <div className="chat-message-list">
                   <ul className="list-unstyled chat-list chat-user-list users-list" id="userList">
                     {(membersList || []).map((chat: any) => (
-                      <li key={chat.id + chat.status} className={Chat_Box_Username === chat.participant.name ? "active" : ""}>
+                      <li key={"user-"+chat.id} className={Chat_Box_Username === chat.participant.name ? "active" : ""}>
                         <Link href="#!" onClick={(event) => { event.preventDefault(); userChatOpen(chat,chat.participant.id); }} className="unread-msg-user border-bottom" id={"msgUser" + chat.participant.id}>
                           <div className="d-flex align-items-center">
                             <div className={`flex-shrink-0 chat-user-img align-self-center me-2 ms-0`}>
@@ -336,10 +338,30 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
                             </div>
                             <div className="flex-grow-1 overflow-hidden">
                               <p className="text-truncate mb-0">{chat.participant.name}</p>
-                              <small className="text-truncate mb-0" id={"last-msg-user" + chat.participant.id}>{chat.last_message ?? 'Media'}</small>
+                              <small className="text-truncate mb-0" id={"last-msg-user" + chat.participant.id}>{chat.last_message == null ? '' : chat.last_message == 'media' ? 'Media' : chat.last_message}</small>
                             </div>
                             <div className="flex-shrink-0" id={"unread-msg-user" + chat.participant.id}>
-                              {chat.unread_count != 0 ? (<span className="badge bg-dark-subtle text-body rounded p-1">{chat.unread_count}</span>) : ("")}
+                               <div>
+                                <span className="badge bg-dark-subtle text-body rounded p-1">
+                                  {(() => {
+                                    if (!chat?.last_message_created_at) return null;
+                                    const messageDate = new Date(chat.last_message_created_at);
+                                    const now = new Date();
+
+                                    const isToday =
+                                      messageDate.getDate() === now.getDate() &&
+                                      messageDate.getMonth() === now.getMonth() &&
+                                      messageDate.getFullYear() === now.getFullYear();
+
+                                    return isToday
+                                      ? messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) // e.g., 10:15 AM
+                                      : messageDate.toLocaleDateString(); // e.g., 7/25/2025
+                                  })()}
+                                </span>
+                              </div>
+                              <div className="text-end">
+                                {chat.unread_count != 0 ? (<span className="badge bg-dark-subtle text-body rounded p-1">{chat.unread_count}</span>) : ("")}
+                              </div>
                             </div>
                           </div>
                         </Link>
@@ -431,7 +453,7 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
                                               <p className="mb-0 small">{msg.reply.message}</p>
                                             </div>
                                           )}
-                                          <p className="mb-0 ctext-content">{msg.message}</p>
+                                          <p className="mb-0 ctext-content">{msg.message == 'media' ? '' :msg.message}</p>
                                           {/* Show attachments */}
                                           {msg.files && msg.files.length > 0 && (
                                             <ChatAttachments files={msg.files} />

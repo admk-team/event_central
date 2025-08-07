@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
@@ -176,6 +177,12 @@ class EventApp extends Model
     public function attendances()
     {
         return $this->hasMany(EventCheckIns::class);
+    }
+
+    public function authorizedUsers(): MorphToMany
+    {
+        return $this->morphToMany(User::class, 'model', 'model_permissions', 'model_id', 'authorizable_id')
+            ->where('authorizable_type', User::class);
     }
 
     public function getFeaturedImageAttribute()
