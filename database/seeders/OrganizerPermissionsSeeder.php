@@ -173,6 +173,7 @@ class OrganizerPermissionsSeeder extends Seeder
         // 'delete_prayer_request',
 
         'view_private_registration',
+        'delete_private_registration',
     ];
 
     public function run(): void
