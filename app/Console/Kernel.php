@@ -2,10 +2,13 @@
 
 namespace App\Console;
 
+use App\Console\Commands\IncreaseTicketPrices;
 use App\Jobs\EventSessionReminder;
 use App\Mail\EventSessionReminderMail;
 use App\Models\AttendeeFavSession;
 use App\Models\EventApp;
+use App\Models\EventAppDate;
+use App\Models\EventAppTicket;
 use App\Models\EventSession;
 use Carbon\Carbon;
 use Illuminate\Console\Scheduling\Schedule;
@@ -19,6 +22,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
+        $schedule->command(IncreaseTicketPrices::class)->daily();
+
         // $schedule->call(function () {
         //     $now = Carbon::now();
         //     $currentDate = Carbon::today();
@@ -61,6 +66,38 @@ class Kernel extends ConsoleKernel
         //         }
         //     }
         // })->everyMinute();
+
+        $schedule->call(function () {
+
+            $eventAppIds = EventApp::pluck('id');
+
+            foreach ($eventAppIds as $eventAppId) {
+                $latestEventDate = EventAppDate::where('event_app_id', $eventAppId)
+                    ->latest('date')
+                    ->first();
+
+                $eventFull = EventAppTicket::where('event_app_id', $eventAppId)->get();
+
+                $allTicketsFull = $eventFull->every(function ($ticket) {
+                    return $ticket->qty_sold >= $ticket->qty_total;
+                });
+
+                if ($latestEventDate && Carbon::parse($latestEventDate->date)->lessThan(Carbon::today())) {
+
+                    $closeRegistration = eventSettings($eventAppId)->getValue('close_registration', false);
+                    eventSettings($eventAppId)->set('close_registration', !$closeRegistration);
+
+                    Log::info("Event ID {$eventAppId} has passed its last date: {$latestEventDate->date}");
+                    
+                } else if ($allTicketsFull) {
+
+                    $closeRegistration = eventSettings($eventAppId)->getValue('close_registration', false);
+                    eventSettings($eventAppId)->set('close_registration', !$closeRegistration);
+
+                    Log::info("All tickets for Event ID {$eventAppId} are sold out.");
+                }
+            }
+        })->daily();
     }
 
     /**

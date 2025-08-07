@@ -34,9 +34,40 @@ const TicketAddonsModal = ({ show, onHide, puchasedTicketId }: any) => {
                         <div className="mb-3" key={index}>
                             <p className='m-2'>{(index + 1) + ". " + addon.full_name}</p>
                             <div className="ps-4">
-                                {Object.entries<[string, string]>(addon.attributes ?? {}).map(([attribute, value]) => (
-                                    <div key={attribute}><b>{attribute}: </b>{value}</div>
-                                ))}
+
+
+                                {addon.attributes && Object.keys(addon.attributes).length > 0 && (
+                                    <>
+                                        <small>
+                                            <strong style={{ fontSize: '16px', textDecoration: 'underline' }}>
+                                                Attributes
+                                            </strong>
+                                        </small>
+                                        <br />
+                                        {Object.entries<[string, string]>(addon.attributes).map(([attribute, value]) => (
+                                            <div key={attribute} className='mb-3'>
+                                                <b>{attribute}:</b> {value}
+                                            </div>
+                                        ))}
+                                    </>
+                                )}
+
+                                {addon.extra_fields_values && Object.keys(addon.extra_fields_values).length > 0 && (
+                                    <>
+                                        <small>
+                                            <strong style={{ fontSize: '16px', textDecoration: 'underline' }}>
+                                                Extra Fields
+                                            </strong>
+                                        </small>
+                                        <br />
+                                        {Object.entries(addon.extra_fields_values).map(([label, value]) => (
+                                            <div key={label}>
+                                                <b>{label}:</b> {value}
+                                            </div>
+                                        ))}
+                                    </>
+                                )}
+
                             </div>
                         </div>
                     ))}

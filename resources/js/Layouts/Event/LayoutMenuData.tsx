@@ -33,6 +33,7 @@ const Navdata = () => {
     const [isContactForm, setIsContactForm] = useState<boolean>(false);
     const [isReport, setIsReport] = useState<boolean>(false);
     const [isPrayerRequest, setIsPrayerRequest] = useState<boolean>(false);
+    const [isPrivateRegister, setIsPrivateRegister] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>("Dashboard");
 
@@ -71,8 +72,9 @@ const Navdata = () => {
         if (iscurrentState !== "ContactForm") setIsContactForm(false);
         if (iscurrentState !== "refferal-link") setIsRefferalLink(false);
         if (iscurrentState !== "event_badge") setIsEventBadge(false);
-         if (iscurrentState !== "prayer_request") setIsPrayerRequest(false);
+        if (iscurrentState !== "prayer_request") setIsPrayerRequest(false);
         if (iscurrentState !== "chat") setIsChat(false);
+        if (iscurrentState !== "private_registration") setIsPrivateRegister(false);
         if (iscurrentState !== "Questionnaire_response")
             setIsQuestionnaireResponse(false);
         // if (iscurrentState !== 'assignTickets') setIsTickets(false);
@@ -173,13 +175,6 @@ const Navdata = () => {
                     link: route("organizer.events.partner.index"),
                     parentId: "Content",
                     hasPermissions: ["view_partner"],
-                },
-                {
-                    id: "promo-codes",
-                    label: "Promo Codes",
-                    link: route("organizer.events.promo-codes.index"),
-                    parentId: "Content",
-                    hasPermissions: ["view_promo_code"],
                 },
             ],
         },
@@ -317,6 +312,13 @@ const Navdata = () => {
                     hasPermissions: [
                         "view_add_on", //To be changed after permission added
                     ],
+                },
+                {
+                    id: "promo-codes",
+                    label: "Promo Codes",
+                    link: route("organizer.events.promo-codes.index"),
+                    parentId: "Content",
+                    hasPermissions: ["view_promo_code"],
                 },
                 {
                     id: "assignTickets",
@@ -601,6 +603,23 @@ const Navdata = () => {
         //         'view_prayer_request'
         //     ],
         // },
+
+          {
+            id: "private_registration",
+            label: "Private Registration",
+            icon: "bx bxs-notepad",
+            link: route('organizer.private-registration.index'),
+            stateVariables: isPrivateRegister,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsPrivateRegister(!isPrivateRegister);
+                setIscurrentState('private_registration');
+                updateIconSidebar(e);
+            },
+            hasPermissions: [
+                'view_private_registration'
+            ],
+        },
 
         // }] : []),
     ];

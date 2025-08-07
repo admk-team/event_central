@@ -9,6 +9,7 @@ use App\Http\Controllers\Attendee\Auth\PasswordController;
 use App\Http\Controllers\Attendee\Auth\RegisteredUserController;
 use App\Http\Controllers\Attendee\BadgeAchievementController;
 use App\Http\Controllers\Attendee\ChatController;
+use App\Http\Controllers\Attendee\EventCalendarController;
 use App\Http\Controllers\Attendee\EventController;
 use App\Http\Controllers\Attendee\EventSessionController;
 use App\Http\Controllers\Attendee\Payment\PaymentController;
@@ -71,6 +72,7 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::get('profile-edit', [ProfileController::class, 'edit'])->name('attendee.profile.edit');
 
         Route::get('dashboard', [EventController::class, 'getEventDetailDashboard'])->name('attendee.event.detail.dashboard');
+        Route::get('calendar/download/{eventApp}', [EventCalendarController::class, 'downloadIcs'])->name('calendar.download');
         Route::get('agenda', [EventController::class, 'getEventDetailAgenda'])->name('attendee.event.detail.agenda');
         Route::get('session/{eventSession}', [EventController::class, 'getEventSessionDetail'])->name('attendee.event.detail.session');
         Route::get('speakers/{eventSpeaker?}', [EventController::class, 'getEventSpeakerDetail'])->name('attendee.event.detail.speakers');
@@ -145,6 +147,8 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::put('/prayer-requests/{id}', [PrayerRequestController::class, 'update'])->name('attendee.prayer.update');
         Route::delete('/prayer-requests/{id}', [PrayerRequestController::class, 'destroy'])->name('attendee.prayer.destroy');
         Route::post('/prayer-request/view/{id}', [PrayerRequestController::class, 'view'])->name('attendee.prayer.view');
+
+        Route::get('/eventcalendar', [EventCalendarController::class, 'index'])->name('event.calendar');
     });
 
     Route::put('/attendee-profile-update/{attendee}', [ProfileController::class, 'update'])->name('attendee.profile.update');

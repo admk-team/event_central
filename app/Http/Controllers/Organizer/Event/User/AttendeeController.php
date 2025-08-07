@@ -221,7 +221,7 @@ class AttendeeController extends Controller
         return Inertia::render('Organizer/Events/Users/Attendees/AttendeeProfile/Profile', compact('attendee', 'user', 'sessions', 'tickets', 'sessionsPurchased'));
     }
 
-    public function getPurchasedTicketAddons(AttendeePurchasedTickets  $attendeePurchasedTicket)
+    public function getPurchasedTicketAddons(AttendeePurchasedTickets $attendeePurchasedTicket)
     {
         $attendeePurchasedTicket->load('purchased_addons');
         $addons = $attendeePurchasedTicket->purchased_addons;
@@ -232,8 +232,13 @@ class AttendeeController extends Controller
                 ->where('addon_id', $addon->id)
                 ->first();
 
-            $variant = AddonVariant::with(['attributeValues' => ['addonAttribute', 'addonAttributeOption']])->find($pivot->addon_variant_id);
-            if (! $variant) continue;
+            // Load addon variant and its attributes
+            $variant = AddonVariant::with(['attributeValues' => ['addonAttribute', 'addonAttributeOption']])
+                ->find($pivot->addon_variant_id);
+
+            $addon->extra_fields_values = $pivot->extra_fields_values ? json_decode($pivot->extra_fields_values, true) : null;
+
+            if (!$variant) continue;
 
             $addon->price = $variant->price;
             $addon_attributes[$addon->id] = [];

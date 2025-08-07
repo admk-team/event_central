@@ -275,6 +275,19 @@ const Navdata = () => {
             },
         },
         {
+            id: "eventCalendar",
+            label: "Event Calendar",
+            icon: "bx bxs-calendar",
+            link: route("event.calendar"),
+            stateVariables: isMore,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsMore(!isMore);
+                setIscurrentState("More");
+                updateIconSidebar(e);
+            },
+        },
+        {
             id: "eventStaff",
             label: "Event Staff",
             icon: "bx bx-group",

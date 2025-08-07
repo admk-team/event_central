@@ -231,10 +231,14 @@ class PaymentController extends Controller
             ]);
 
             foreach ($addons as $addon) {
+                $extraFields = $addon['extraFields'] ?? null;
+                $extraFieldsJson = isset($extraFields) ? json_encode($extraFields) : null;
+
                 DB::table('addon_purchased_ticket')->insert([
                     'attendee_purchased_ticket_id' => $attendee_purchased_ticket->id,
                     'addon_id' => $addon['id'],
                     'addon_variant_id' => isset($addon['selectedVariant']) ? $addon['selectedVariant']['id'] : null,
+                    'extra_fields_values' => $extraFieldsJson,
                 ]);
             }
         }
