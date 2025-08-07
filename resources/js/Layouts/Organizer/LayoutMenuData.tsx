@@ -7,19 +7,20 @@ const Navdata = () => {
     const [isEvents, setIsEvents] = useState<boolean>(false);
     const [isStaff, setIsStaff] = useState<boolean>(false);
     const [isPaymentSettings, setIsPaymentSettings] = useState<boolean>(false);
+    const [isZohoSetting, setIsZohoSetting] = useState<boolean>(false);
 
 
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
 
     function updateIconSidebar(e: any) {
         if (e && e.target && e.target.getAttribute("sub-items")) {
-            const ul : any = document.getElementById("two-column-menu");
-            const iconItems : any = ul.querySelectorAll(".nav-icon.active");
+            const ul: any = document.getElementById("two-column-menu");
+            const iconItems: any = ul.querySelectorAll(".nav-icon.active");
             let activeIconItems = [...iconItems];
             activeIconItems.forEach((item) => {
                 item.classList.remove("active");
                 var id = item.getAttribute("sub-items");
-                const getID : any = document.getElementById(id) as HTMLElement;
+                const getID: any = document.getElementById(id) as HTMLElement;
                 if (getID)
                     getID?.parentElement.classList.remove("show");
             });
@@ -40,13 +41,17 @@ const Navdata = () => {
         if (iscurrentState !== 'PaymentSettings') {
             setIsPaymentSettings(false);
         }
+        if (iscurrentState !== 'ZohoSettings') {
+            setIsZohoSetting(false);
+        }
     }, [
         history,
         iscurrentState,
         isDashboard,
         isEvents,
         isStaff,
-        isPaymentSettings
+        isPaymentSettings,
+        isZohoSetting
     ]);
 
     const menuItems: any = [
@@ -131,6 +136,19 @@ const Navdata = () => {
             hasPermissions: [
                 'edit_payment_settings',
             ]
+        },
+        {
+            id: "zoho_settings",
+            label: "Zoho Settings",
+            icon: "bx bxs-cog",
+            link: route('organizer.zoho.index'),
+            stateVariables: isZohoSetting,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsDashboard(!isZohoSetting);
+                setIscurrentState('ZohoSettings');
+                updateIconSidebar(e);
+            },
         },
     ];
     return <React.Fragment>{menuItems}</React.Fragment>;
