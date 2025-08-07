@@ -428,6 +428,7 @@ class PaymentController extends Controller
     {
         try {
             $attendee = auth()->user();
+            $eventApp = EventApp::find($attendee->event_app_id);
             $attendee->load('payments.purchased_tickets');
             $attendee_purchased_tickets = [];
             foreach ($attendee->payments as $payment) {
@@ -439,7 +440,7 @@ class PaymentController extends Controller
             $emailNotificationList = explode(',', $emailNotificationList);
             if ($emailNotificationList) {
                 foreach ($emailNotificationList as $singleEmail) {
-                    Mail::to($singleEmail)->queue(new EventTicketPurchasedNotification($attendee, $attendee_purchased_tickets));
+                    Mail::to($singleEmail)->queue(new EventTicketPurchasedNotification($attendee, $attendee_purchased_tickets, $eventApp));
                 }
             }
         } catch (Exception $ex) {
