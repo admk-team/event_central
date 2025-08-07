@@ -68,6 +68,7 @@ class EventAppTicketController extends Controller
         $data['sessions'] = $this->transformSessions($data);
         // $data['addons'] = $this->transformAddons($data);
         $data['fees'] = $this->transformFees($data);
+        $data['original_price'] = $data['base_price'];
 
         // Log::info($data['sessions']);
         $ticket = EventAppTicket::create($data);

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Attendee\AppEventQuestionnaireFormController;
+use App\Http\Controllers\Attendee\AppEventRegistrationFormController;
 use App\Http\Controllers\Attendee\AttendeeUpgradeTicketController;
 use App\Http\Controllers\Attendee\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Attendee\Auth\EmailChangeController;
@@ -7,6 +9,7 @@ use App\Http\Controllers\Attendee\Auth\PasswordController;
 use App\Http\Controllers\Attendee\Auth\RegisteredUserController;
 use App\Http\Controllers\Attendee\BadgeAchievementController;
 use App\Http\Controllers\Attendee\ChatController;
+use App\Http\Controllers\Attendee\EventCalendarController;
 use App\Http\Controllers\Attendee\EventController;
 use App\Http\Controllers\Attendee\EventSessionController;
 use App\Http\Controllers\Attendee\Payment\PaymentController;
@@ -38,10 +41,16 @@ Route::middleware('guest')->prefix('attendee')->group(function () {
     );
 });
 
-// Event Registration Form
+// Event Registration Form for Web
 Route::prefix('{eventApp}/event-registration-form')->name('attendee.event-registration-form')->group(function () {
     Route::get('/', [EventRegistrationFormController::class, 'index']);
     Route::post('/', [EventRegistrationFormController::class, 'submit'])->name('.submit');
+});
+
+// Event Registration Form for App
+Route::prefix('app-event-registration-form/{eventApp}')->name('attendee.app-event-registration-form')->group(function () {
+    Route::get('/', [AppEventRegistrationFormController::class, 'index']);
+    Route::post('/', [AppEventRegistrationFormController::class, 'submit'])->name('.submit');
 });
 
 // http://127.0.0.1:8000/google-login/callback
@@ -62,6 +71,7 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::get('profile-edit', [ProfileController::class, 'edit'])->name('attendee.profile.edit');
 
         Route::get('dashboard', [EventController::class, 'getEventDetailDashboard'])->name('attendee.event.detail.dashboard');
+        Route::get('calendar/download/{eventApp}', [EventCalendarController::class, 'downloadIcs'])->name('calendar.download');
         Route::get('agenda', [EventController::class, 'getEventDetailAgenda'])->name('attendee.event.detail.agenda');
         Route::get('session/{eventSession}', [EventController::class, 'getEventSessionDetail'])->name('attendee.event.detail.session');
         Route::get('speakers/{eventSpeaker?}', [EventController::class, 'getEventSpeakerDetail'])->name('attendee.event.detail.speakers');
@@ -107,11 +117,12 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::post('validate-discount-code/{disCode}', [PaymentController::class, 'validateDiscCode'])->name('attendee.validateCode.post');
         Route::get('/payment-success/{paymentUuId}', [PaymentController::class, 'paymentSuccess'])->name('attendee.payment.success');
 
-        // Event questionnaire Form
+        // Event questionnaire Form For Web
         Route::prefix('event-questionnaire-form')->name('attendee.event-questionnaire-form')->group(function () {
             Route::get('/', [EventQuestionnaireFormController::class, 'index']);
             Route::post('/', [EventQuestionnaireFormController::class, 'submit'])->name('.submit');
         });
+
         //Attendee achievement
         Route::get('/achievement', [BadgeAchievementController::class, 'index'])->name('attendee.achievement');
 
@@ -128,6 +139,8 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::put('/prayer-requests/{id}', [PrayerRequestController::class, 'update'])->name('attendee.prayer.update');
         Route::delete('/prayer-requests/{id}', [PrayerRequestController::class, 'destroy'])->name('attendee.prayer.destroy');
         Route::post('/prayer-request/view/{id}', [PrayerRequestController::class, 'view'])->name('attendee.prayer.view');
+
+        Route::get('/eventcalendar', [EventCalendarController::class, 'index'])->name('event.calendar');
     });
 
     Route::put('/attendee-profile-update/{attendee}', [ProfileController::class, 'update'])->name('attendee.profile.update');
@@ -156,4 +169,10 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
     //fav session
     Route::get('/favsession/{sessionid}', [EventController::class, 'favsession'])->name('fav.sessions');
     Route::get('/allfav', [EventController::class, 'allfavouriteSession'])->name('all.fav.sessions');
+});
+
+// Event questionnaire Form For Web
+Route::prefix('app-event-questionnaire-form/{eventApp}')->name('attendee.app-event-questionnaire-form')->group(function () {
+    Route::get('/', [AppEventQuestionnaireFormController::class, 'index']);
+    Route::post('/', [AppEventQuestionnaireFormController::class, 'submit'])->name('.submit');
 });

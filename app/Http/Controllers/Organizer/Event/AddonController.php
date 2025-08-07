@@ -48,6 +48,8 @@ class AddonController extends Controller
             'variants' => 'nullable',
             'deletedAttributes' => 'nullable',
             'deletedOptions' => 'nullable',
+            'newField' => 'nullable|array',
+            'newField.*.input' => 'nullable|string',
         ]);
         $data = $request->all();
         if (!$data['qty_total']) {
@@ -55,6 +57,12 @@ class AddonController extends Controller
         }
         unset($data['attributes']);
         unset($data['variants']);
+
+        $data['extra_fields'] = !empty($request->newField)
+            ? json_encode($request->newField)
+            : null;
+
+
         $addon = Addon::create($data);
         
         $this->createUpdateVariants($addon, $request);
@@ -77,11 +85,19 @@ class AddonController extends Controller
             'qty_total' => 'required|numeric',
             'qty_sold' => 'nullable|numeric',
             'enable_discount' => 'boolean',
+            'newField' => 'nullable|array',
+            'newField.*.input' => 'nullable|string',
         ]);
         $data = $request->all();
         if (!$data['qty_total']) {
             $data['qty_total'] = 0;
         }
+
+        $data['extra_fields'] = !empty($request->newField)
+            ? json_encode($request->newField)
+            : null;
+
+
         $addon->update($data);
 
         $this->createUpdateVariants($addon, $request);
@@ -205,7 +221,6 @@ class AddonController extends Controller
                     ]);
                 }
             }
-            
         }
     }
 }

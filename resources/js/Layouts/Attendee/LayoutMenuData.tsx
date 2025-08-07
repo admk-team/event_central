@@ -68,7 +68,7 @@ const Navdata = () => {
         if (iscurrentState !== "friend") {
             setIsFriend(false);
         }
-         if (iscurrentState !== "PrayerRequest") {
+        if (iscurrentState !== "PrayerRequest") {
             setIsPrayerRequest(false);
         }
         // if (iscurrentState !== "Q&A") {
@@ -261,6 +261,19 @@ const Navdata = () => {
             label: "Achievements",
             icon: "bx bxs-medal",
             link: route("attendee.achievement"),
+            stateVariables: isMore,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsMore(!isMore);
+                setIscurrentState("More");
+                updateIconSidebar(e);
+            },
+        },
+        {
+            id: "eventCalendar",
+            label: "Event Calendar",
+            icon: "bx bxs-calendar",
+            link: route("event.calendar"),
             stateVariables: isMore,
             click: function (e: any) {
                 e.preventDefault();
