@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\EventAppTicket;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class IncreaseTicketPrices extends Command
 {
@@ -26,6 +27,8 @@ class IncreaseTicketPrices extends Command
      */
     public function handle()
     {
+        Log::info("Running ticket increment task");
+        
         $tickets = EventAppTicket::whereColumn('qty_total', '>', 'qty_sold')
             ->whereNotNull('increment_rate')
             ->where('start_increment', '<=', now())
