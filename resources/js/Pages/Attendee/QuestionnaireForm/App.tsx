@@ -14,9 +14,11 @@ interface Form {
 interface IndexProps {
   form: Form;
   submitted: boolean;
+  token: string;
+  eventApp: any;
 }
 
-const Index = ({ form, submitted }: IndexProps) => {
+const App = ({ form, submitted, token, eventApp }: IndexProps) => {
   return (
     <React.Fragment>
       <Head title="Questionnaire Form" />
@@ -41,7 +43,13 @@ const Index = ({ form, submitted }: IndexProps) => {
                 </Card>
               ) : (
                 <Card className="p-4">
-                  <RenderQuestionnaireForm form={form} />
+                  <RenderQuestionnaireForm 
+                    form={form} 
+                    submitRoute={route('attendee.app-event-questionnaire-form', {
+                      eventApp: eventApp.id,
+                      token: token,
+                    })}
+                  />
                 </Card>
               )}
             </Col>
@@ -52,6 +60,4 @@ const Index = ({ form, submitted }: IndexProps) => {
   );
 };
 
-Index.layout = (page: any) => <Layout children={page} />;
-
-export default Index;
+export default App;
