@@ -33,10 +33,6 @@ class EventApp extends Model
         'recurring_type_id',
     ];
 
-    protected $casts = [
-        'is_recurring' => 'boolean',
-        'registration_private' => 'boolean'
-    ];
     protected $appends = [
         'start_date',
         'created_at' => 'created_at_date',
@@ -49,6 +45,13 @@ class EventApp extends Model
         'category',
         'recurring_type'
     ];
+
+    protected $casts = [
+        'is_recurring' => 'boolean',
+        'registration_private' => 'boolean',
+        'start_date' => 'datetime',
+    ];
+
 
 
     public function uniqueIds(): array

@@ -147,6 +147,9 @@
 <body>
     <div class="email-container">
         <h2>Welcome, {{ $attendee->first_name }} {{ $attendee->last_name }}!</h2>
+        <h4>Event Name: </h4><span>{{ $eventApp->name }}</span>
+        <h4>Event Location: </h4><span>{{ $eventApp->location_base }}</span>
+        <h4>Event Start Date: </h4><span>{{ $eventApp->start_date }}</span>
         <p>You have successfully purchased following
             {{ count($attendee_purchased_tickets) > 1 ? count($attendee_purchased_tickets) . ' tickets' : ' ticket' }}:
         </p>
@@ -155,7 +158,7 @@
             <table class="responsive-table">
                 <thead>
                     <tr>
-                        {{-- <th>Ticket Name</th> --}}
+                        <th>Ticket Name</th>
                         <th>Price</th>
                         <th>QR Code</th>
                     </tr>
@@ -163,7 +166,7 @@
                 <tbody>
                     @foreach ($attendee_purchased_tickets as $index => $purchased_ticket)
                         <tr>
-                            {{-- <td>{{ $index + 1 }}. {{ $purchased_ticket->ticket->name }}</td> --}}
+                            <td>{{ $index + 1 }}. {{ $purchased_ticket->ticket->name }}</td>
                             <td>{{ $purchased_ticket->total + $purchased_ticket->purchased_addons()->sum('price') }}
                             </td>
                             <td><img
