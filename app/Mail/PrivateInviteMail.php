@@ -17,12 +17,14 @@ class PrivateInviteMail extends Mailable
     /**
      * Create a new message instance.
      */
-    public $inviteUrl;
-    public $eventapp;
-    public function __construct($eventapp, $inviteUrl)
+    public $eventApp, $inviteUrl, $startDate, $endDate;
+
+    public function __construct($eventApp, $inviteUrl, $startDate, $endDate)
     {
-        $this->eventapp = $eventapp;
+        $this->eventApp = $eventApp;
         $this->inviteUrl = $inviteUrl;
+        $this->startDate = $startDate;
+        $this->endDate = $endDate;
     }
 
     /**
@@ -31,11 +33,11 @@ class PrivateInviteMail extends Mailable
     public function envelope(): Envelope
     {
         $fromEmail = "info@mail.eventcentral.net";
-        $fromName = $this->eventapp->name ?? env('APP_NAME');
+        $fromName = $this->eventApp->name ?? env('APP_NAME');
 
         return new Envelope(
             from: new Address($fromEmail, $fromName),
-            subject: 'You\'re Invited: Register Now for ' . ($this->eventapp->name ?? 'Our Event'),
+            subject: 'You\'re Invited: Register Now for ' . ($this->eventApp->name ?? 'Our Event'),
         );
     }
 
@@ -47,8 +49,10 @@ class PrivateInviteMail extends Mailable
         return new Content(
             view: 'emails.private_registration',
             with: [
-                'events' => $this->eventapp,
+                'events' => $this->eventApp,
                 'inviteUrl' => $this->inviteUrl,
+                'startDate' => $this->startDate,
+                'endDate' => $this->endDate,
             ]
         );
     }

@@ -1,80 +1,116 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>You're Invited to Join Our Event!</title>
+    <meta charset="UTF-8">
+    <title>You're Invited</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-
-        .email-container {
-            max-width: 600px;
-            margin: 20px auto;
-            background: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        h2 {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
             color: #333;
-            text-align: left;
+            padding: 20px;
         }
 
-        p {
+        .container {
+            background-color: #fff;
+            max-width: 600px;
+            margin: 0 auto;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header img {
+            max-width: 180px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-top: 10px;
+            color: #0056b3;
+        }
+
+        .content p {
             font-size: 16px;
-            color: #555;
             line-height: 1.6;
         }
 
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            margin-top: 15px;
-            background: #007bff;
-            color: #ffffff;
-            text-decoration: none;
-            border-radius: 5px;
-            font-size: 16px;
+        .event-details {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f0f8ff;
+            border-left: 4px solid #007bff;
+            border-radius: 4px;
         }
 
-        .btn:hover {
-            background: #0056b3;
+        .event-details p {
+            margin: 6px 0;
+        }
+
+        .btn {
+            display: block;
+            width: fit-content;
+            margin: 20px auto 0 auto;
+            padding: 12px 24px;
+            background-color: #007bff;
+            color: #fff !important;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            text-align: center;
         }
 
         .footer {
             text-align: center;
-            font-size: 14px;
-            color: #777;
-            margin-top: 30px;
+            margin-top: 40px;
+            font-size: 12px;
+            color: #888;
         }
     </style>
 </head>
 
 <body>
-    <div class="email-container">
-        <h2>🎉 You're Invited to Register!</h2>
-        <p>Hello,</p>
+    <div class="container">
+        {{-- Optional logo --}}
+        <div class="header">
+            <img src="{{ asset($events->logo_img ?: 'images/logo.png') }}" alt="Logo">
+            <h1>You're Invited!</h1>
+        </div>
 
-        <p>We're excited to invite you to register for our event
-            <strong>{{ $events->name ?? 'Our Special Event' }}</strong>. Be part of a remarkable experience full of
-            learning, networking, and inspiration.
-        </p>
+        <div class="content">
+            <p>Hello,</p>
 
-        <p>To register, simply click the button below:</p>
+            <p>
+                You have been specially invited to register for
+                <strong>{{ $events->name ?? 'our upcoming event' }}</strong>.
+                Use the link below to complete your private registration.
+            </p>
 
-        <a href="{{ $inviteUrl }}" class="btn">Register Now</a>
+            <div class="event-details">
+                <p><strong>📍 Location:</strong> {{ $events->location_base ?? 'To be announced' }}</p>
+                @if ($startDate)
+                    <p><strong>📅 Start Date:</strong> {{ $startDate }}</p>
+                @endif
+                @if ($endDate)
+                    <p><strong>📅 End Date:</strong> {{ $endDate ?? 'N/A' }}</p>
+                @endif
+                {{--  @if (!empty($events->description))
+                    <p><strong>📝 Description:</strong> {{ $events->description }}</p>
+                @endif  --}}
+            </div>
 
-        <p>If the button doesn't work, copy and paste the following URL into your browser:</p>
-        <p style="word-break: break-all;"><a href="{{ $inviteUrl }}">{{ $inviteUrl }}</a></p>
+            <a href="{{ $inviteUrl }}" class="btn" target="_blank">Register Now</a>
+        </div>
 
         <div class="footer">
-            <p>Blessings</p>
-            <p><strong>{{ $events->name }}</strong></p>
+            If you received this email by mistake, please ignore it.<br>
+            &copy; {{ date('Y') }} {{ $events->name ?? 'Event Central' }}
         </div>
     </div>
 </body>
