@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
+use Illuminate\Support\Facades\Route;
 
 class WebsiteSettingsController extends Controller
 {
@@ -95,16 +96,10 @@ class WebsiteSettingsController extends Controller
     }
     public function preview(Request $request, $uuid)
     {
+       // dd(Route::currentRouteName());
         $event = EventApp::where('uuid', $uuid)->first();
-
-        // if (! $event || !eventSettings($event->id)->getValue('website_status', false)) {
-        //     abort(404);
-        // }
-
         $colors = eventSettings($event->id)->getValue('website_colors', config('event_website.colors'));
         $partnerCategories = EventPartnerCategory::where('event_app_id', $event->id)->with(['partners'])->get();
-
-
         $currentUrl = $request->fullUrl();
         $link = $request->query('link');
         // Check if the session already has the 'visited_url' set
@@ -123,6 +118,8 @@ class WebsiteSettingsController extends Controller
             }
         }
         $exhibitors = EventPartner::where('event_app_id', $event->id)->where('type', 'exhibitor')->orderBy('company_name', 'asc')->get();
-        return view('event-website.index', compact('event', 'colors', 'partnerCategories', 'exhibitors'));
+        $isPreviewMode = Route::currentRouteName() === 'organizer.events.settings.website.preview';
+        //dd($isPreviewMode);
+        return view('event-website.index', compact('event', 'colors', 'partnerCategories', 'exhibitors','isPreviewMode'));
     }
 }
