@@ -200,14 +200,21 @@ class AttendeeController extends Controller
             ->leftJoin('addon_purchased_ticket', 'attendee_purchased_tickets.id', '=', 'addon_purchased_ticket.attendee_purchased_ticket_id')
             ->where('attendee_payments.attendee_id', $id)
             ->where('attendee_payments.status', 'paid')
-            ->groupBy('attendee_purchased_tickets.id', 'attendee_payments.id', 'event_app_tickets.name', 'attendee_payments.payment_method')
+            ->groupBy(
+                'attendee_purchased_tickets.id',
+                'attendee_payments.id',
+                'event_app_tickets.name',
+                'attendee_payments.payment_method',
+                'attendee_purchased_tickets.total'
+            )
             ->select(
+                'attendee_purchased_tickets.total as ticket_total_price',
                 'attendee_purchased_tickets.id as attendee_purchased_ticket_id',
                 'event_app_tickets.name as ticket_name',
                 DB::raw('SUM(attendee_purchased_tickets.qty) as qty'),
-                DB::raw('SUM(attendee_payments.amount_paid) as amount'),
+                DB::raw('MAX(attendee_payments.amount_paid) as amount'),
                 'attendee_payments.payment_method as type',
-                DB::raw('COUNT(attendee_purchased_ticket_id) as addons_count')  // Add count of addons
+                DB::raw('COUNT(addon_purchased_ticket.attendee_purchased_ticket_id) as addons_count')
             )
             ->get();
 

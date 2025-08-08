@@ -59,6 +59,12 @@ export default function CreateEditModal({
             end_increment: ticket?.end_increment ?? "",
             show_on_attendee_side: ticket?.show_on_attendee_side ?? true,
             qty_total: ticket?.qty_total ?? null,
+
+            bulk_purchase_status: ticket?.bulk_purchase_status ?? "",
+            bulk_purchase_discount_type: ticket?.bulk_purchase_discount_type ?? "",
+            bulk_purchase_discount_value: ticket?.bulk_purchase_discount_value ?? "",
+            bulk_purchase_qty: ticket?.bulk_purchase_qty ?? "",
+
         });
 
     const [selectMulti, setselectMulti] = useState<any>(
@@ -186,6 +192,17 @@ export default function CreateEditModal({
     function showModal() {
         setmanageTypesModal(!manageTypesModal);
     }
+
+    const [discountLabel, setDiscountLabel] = useState('Discount Value');
+
+    const handleBluckPurchaseStatus = (event: any) => {
+        if (event.target.checked) {
+            setData("bulk_purchase_status", true);
+        } else {
+            setData("bulk_purchase_status", false);
+        }
+    };
+
 
     return (
         <>
@@ -608,6 +625,99 @@ export default function CreateEditModal({
                                 </FormGroup>
                             </Col>
                         </Row>
+
+
+                        <Row>
+
+                            <Col md={12} lg={12}>
+                                <FormGroup className="mb-3">
+                                    <Form.Check
+                                        // type='check'
+                                        checked={data.bulk_purchase_status}
+                                        label="Bulk Purchase Discount"
+                                        id="bulk-purchase-=discount"
+                                        onChange={handleBluckPurchaseStatus}
+                                    />
+                                </FormGroup>
+                            </Col>
+                        </Row>
+                        {data.bulk_purchase_status !== 0 && (
+                            <Row>
+                                <Col md={4}>
+                                    <FormGroup className="mb-3">
+                                        <Form.Label htmlFor="discount_type" className="form-label text-start w-100">
+                                            Discount Type
+                                        </Form.Label>
+                                        <Form.Select
+                                            id="discount_type"
+                                            aria-label="Select Discount Type"
+                                            className="form-control"
+                                            value={data.bulk_purchase_discount_type}
+                                            onChange={(e) => {
+                                                const value = e.target.value;
+                                                setData('bulk_purchase_discount_type', value);
+                                                if (value === 'percentage') {
+                                                    setDiscountLabel('Discount Percentage');
+                                                } else {
+                                                    setDiscountLabel('Discount Value');
+                                                }
+                                            }}
+                                            isInvalid={!!errors.bulk_purchase_discount_type}
+                                        >
+                                            <option value="">Select Discount Type</option>
+                                            <option value="fixed">Fixed</option>
+                                            <option value="percentage">Percentage</option>
+                                        </Form.Select>
+                                        {errors.bulk_purchase_discount_type && (
+                                            <Form.Control.Feedback type="invalid">
+                                                {errors.bulk_purchase_discount_type}
+                                            </Form.Control.Feedback>
+                                        )}
+                                    </FormGroup>
+                                </Col>
+
+                                <Col md={4}>
+                                    <FormGroup className="mb-3">
+                                        <Form.Label htmlFor="discount_value" className="form-label text-start w-100">
+                                            {discountLabel || 'Discount Value'}
+                                        </Form.Label>
+                                        <Form.Control
+                                            id="discount_value"
+                                            type="number"
+                                            value={data.bulk_purchase_discount_value}
+                                            onChange={(e) => setData('bulk_purchase_discount_value', e.target.value)}
+                                            placeholder="e.g. 10"
+                                            isInvalid={!!errors.bulk_purchase_discount_value}
+                                        />
+                                        {errors.bulk_purchase_discount_value && (
+                                            <Form.Control.Feedback type="invalid">
+                                                {errors.bulk_purchase_discount_value}
+                                            </Form.Control.Feedback>
+                                        )}
+                                    </FormGroup>
+                                </Col>
+                                <Col md={4}>
+                                    <FormGroup className="mb-3">
+                                        <Form.Label htmlFor="bulk_qty" className="form-label text-start w-100">
+                                            Quantity
+                                        </Form.Label>
+                                        <Form.Control
+                                            id="bulk_qty"
+                                            type="number"
+                                            value={data.bulk_purchase_qty}
+                                            onChange={(e) => setData('bulk_purchase_qty', e.target.value)}
+                                            placeholder="e.g. 5"
+                                            isInvalid={!!errors.bulk_purchase_qty}
+                                        />
+                                        {errors.bulk_purchase_qty && (
+                                            <Form.Control.Feedback type="invalid">
+                                                {errors.bulk_purchase_qty}
+                                            </Form.Control.Feedback>
+                                        )}
+                                    </FormGroup>
+                                </Col>
+                            </Row>
+                        )}
                     </Form>
                 </Modal.Body>
 

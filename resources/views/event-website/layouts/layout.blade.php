@@ -41,26 +41,41 @@
 
     <header class="site-header">
         <div class="container">
-            <a href="{{ route('organizer.events.website', $event->uuid) }}">
+            <a
+                href="{{ route('organizer.events.website', $event->uuid) }}{{ $isPreviewMode ?? false ? '?preview=true' : '' }}">
                 <div class="logo">
                     <img src="{{ $event->logo_img }}" alt="logo" />
                 </div>
             </a>
             <nav class="main-nav">
                 <ul class="nav-links">
-                    <li><a href="{{ route('organizer.events.website', $event->uuid) }}">About</a></li>
-                    <li><a href="{{ route('organizer.events.website.speakers', $event->uuid) }}">Speakers</a></li>
-                    <li><a href="{{ route('organizer.events.website', $event->uuid) }}#venue">Venue</a></li>
-                    <li><a href="{{ route('organizer.events.website.sponsors', $event->uuid) }}">Sponsors</a></li>
-                    <li><a href="{{ route('organizer.events.website.exhibitors', $event->uuid) }}">Exhibitors</a></li>
-                    <li><a href="{{ route('organizer.events.website.tickets', $event->uuid) }}">Tickets</a></li>
+                    <li>
+                        <a
+                            href="{{ route('organizer.events.website', $event->uuid) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}">
+                            About
+                        </a>
+                    </li>
+                    <li><a
+                            href="{{ route('organizer.events.website.speakers', $event->uuid) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}">Speakers</a></i>
+                    <li><a
+                            href="{{ route('organizer.events.website', $event->uuid) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}#venue">Venue</a>
+                    </li>
+                    <li><a
+                            href="{{ route('organizer.events.website.sponsors', $event->uuid) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}">Sponsors</a>
+                    </li>
+                    <li><a
+                            href="{{ route('organizer.events.website.exhibitors', $event->uuid) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}">Exhibitors</a>
+                    </li>
+                    <li><a
+                            href="{{ route('organizer.events.website.tickets', $event->uuid) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}">Tickets</a>
+                    </li>
                     <li class="header-actions-mobile">
-                        <a href="{{ route('organizer.events.website.schedule', $event->uuid) }}"
-                            class="btn btn-primary">Schedule</a>
-                        <a href="{{ route('attendee.login', $event) }}" class="btn btn-primary">Login</a>
-                        @if (empty($privateRegister))
-                            <a href="{{ route('attendee.register', $event) }}" class="btn btn-primary">Register Now</a>
-                        @endif
+                        <a href="{{ route('organizer.events.website.schedule', $event->uuid) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}"
+                            class="btn btn-primary">Schedulelknmf;lkj</a>
+                        <a href="{{ route('attendee.login', $event) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}"
+                            class="btn btn-primary">Login</a>
+                        <a href="{{ route('attendee.register', $event) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}"
+                            class="btn btn-primary">Register Now</a>
                     </li>
                 </ul>
             </nav>
@@ -85,12 +100,12 @@
                         <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                     </svg>
                 </button> --}}
-                <a href="{{ route('organizer.events.website.schedule', $event->uuid) }}"
+                <a href="{{ route('organizer.events.website.schedule', $event->uuid) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}"
                     class="btn btn-primary">Schedule</a>
-                <a href="{{ route('attendee.login', $event) }}" class="btn btn-primary">Login</a>
-                @if (empty($privateRegister))
-                    <a href="{{ route('attendee.register', $event) }}" class="btn btn-primary">Register Now</a>
-                @endif
+                <a href="{{ route('attendee.login', $event) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}"
+                    class="btn btn-primary">Login</a>
+                <a href="{{ route('attendee.register', $event) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}"
+                    class="btn btn-primary">Register Now</a>
             </div>
             <button class="menu-toggle" aria-label="Toggle menu">
                 <span></span>

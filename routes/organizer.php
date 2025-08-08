@@ -225,6 +225,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                     Route::post('toggle-tracks', [EventSettingsController::class, 'toggleTracks'])->name('toggle-tracks');
                     Route::post('toggle-checkin', [EventSettingsController::class, 'toggleCheckIn'])->name('toggle-checkin');
                     Route::post('toggle-register', [EventSettingsController::class, 'togglePrivateRegister'])->name('toggle-register');
+                     Route::post('reminder-closer', [EventSettingsController::class, 'changeReminderDays'])->name('reminder-closer');
                     Route::post('close-open-registration/{event}', [EventSettingsController::class, 'closeOpenRegistration'])->name('close.open.registration');
                 });
 
@@ -256,6 +257,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                     Route::get('/', [WebsiteSettingsController::class, 'index'])->name('index');
                     Route::post('/toggle-status', [WebsiteSettingsController::class, 'toggleStatus'])->name('toggle-status');
                     Route::post('/save-colors', [WebsiteSettingsController::class, 'saveColors'])->name('save-colors');
+                    Route::get('/preview/{uuid}', [WebsiteSettingsController::class, 'preview'])->name('preview');
                 });
             });
 
@@ -352,12 +354,12 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
     //Session ratings
     Route::get('/ratings/{eventSession}', [SessionRatingsController::class, 'index'])->name('sessions.ratings.index');
 
-    // Attendee Report 
+    // Attendee Report
     Route::get('/attendees/report', [AttendeesReportController::class, 'index'])->name('attendees.report');
     Route::get('/attendees/report/{id}', [AttendeeController::class, 'showRating'])->name('attendee.report.info');
     Route::get('/ratings/{eventSession}', [SessionRatingsController::class, 'index'])->name('sessions.ratings.index');
 
-    //prayer request 
+    //prayer request
     Route::get('prayer-requests', [PrayerRequestController::class, 'index'])->name('prayer-requests.index');
     Route::put('prayer-requests/{id}', [PrayerRequestController::class, 'update'])->name('prayer-requests.update');
     Route::delete('prayer-requests/{id}', [PrayerRequestController::class, 'destroy'])->name('prayer-requests.destroy');
