@@ -88,9 +88,10 @@ const Chat = ({member,event_data,loged_user}:any) => {
                 if (user.participant.id === e.message.sender_id) {
                   return {
                     ...user,
-                    unread_count: (user.unread_count || 0) + 1
+                    unread_count: (user.unread_count || 0) + 1,
+                    last_message: e.message.message == null ? '' : e.message.message == 'media' ? 'Media' :e.message.message,
+                    last_message_created_at: e.message.created_at,
                   };
-
                 }
                 return user;
               })
@@ -135,6 +136,15 @@ const Chat = ({member,event_data,loged_user}:any) => {
       }else{
         response = await axios.get(`/organizer/events/private-chat/${reciever_id}`);
         setPrivateChatMessages(response.data.messages);
+        // Reset unread count for the opened private chat
+        setMembersList((prevMembers: any) =>
+          prevMembers.map((user: any) => {
+            if (user.participant.id === reciever_id) {
+              return { ...user, unread_count: 0 };
+            }
+            return user;
+          })
+        );
       }
       userChatShow.current.classList.remove("d-none");
       setChat_Box_Username(chats.name ?? chats.participant.name);
@@ -142,6 +152,24 @@ const Chat = ({member,event_data,loged_user}:any) => {
       setUser_Status(chats.status)
       dispatch(onGetMessages());
       setCurrentRoomId(reciever_id);
+
+    // Restore visibility for all chats in both event and user sections
+    const userLists = document.getElementsByClassName("chat-user-list");
+    Array.from(userLists).forEach((userList: any) => {
+      const listItems = userList.getElementsByTagName("li");
+      Array.from(listItems).forEach((li: any) => {
+        const id = li.querySelector("a")?.id?.replace("msgUser", "");
+        const unreadMessage = document.getElementById("unread-msg-user" + id);
+        const lastMessage = document.getElementById("last-msg-user" + id);
+        const msgUser = document.getElementById("msgUser" + id);
+        if (unreadMessage && lastMessage && msgUser) {
+          // Show last message and unread count for all chats
+          lastMessage.style.display = "";
+          unreadMessage.style.display = "";
+          msgUser.classList.add("unread-msg-user");
+        }
+      });
+    });
 
     } catch (error) {
       console.error("Failed to fetch chat messages", error);
@@ -175,6 +203,9 @@ const Chat = ({member,event_data,loged_user}:any) => {
   const addMessage = async (files?: File[]) => {
     try {
       const selectedFilesData = files ?? [];
+      if (!curMessage.trim() && selectedFilesData.length === 0) {
+        return;
+      }
       const formData = new FormData();
       formData.append("receiver_id", currentRoomId ?? event_data.id);
       if (reply?.msg_id) {
