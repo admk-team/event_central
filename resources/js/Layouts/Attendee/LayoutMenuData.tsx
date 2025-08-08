@@ -18,6 +18,7 @@ const Navdata = () => {
     const [IsPrayerRequest, setIsPrayerRequest] = useState<boolean>(false);
     const [isChat, setIsChat] = useState<boolean>(false);
     const [isFriend, setIsFriend] = useState<boolean>(false);
+    const [isEventStaff, setIsEventStaff] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>("Dashboard");
     // const [IsQA, setIsQA] = useState<boolean>(false);
@@ -71,6 +72,9 @@ const Navdata = () => {
         if (iscurrentState !== "PrayerRequest") {
             setIsPrayerRequest(false);
         }
+        if (iscurrentState !== "eventStaff") {
+            setIsEventStaff(false);
+        }
         // if (iscurrentState !== "Q&A") {
         //     setIsQA(false);
         // }
@@ -90,6 +94,7 @@ const Navdata = () => {
         isUpgradeTicket,
         IsAchievement,
         IsPrayerRequest,
+        isEventStaff
     ]);
 
     const menuItems: any = [
@@ -136,32 +141,32 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
-        // {
-        //     id: "chat",
-        //     label: "Chat",
-        //     icon: "bx bx-message-rounded-dots",
-        //     link: route("attendee.event.chat"),
-        //     stateVariables: isChat,
-        //     click: function (e: any) {
-        //         e.preventDefault();
-        //         setIsChat(!isChat);
-        //         setIscurrentState("chat");
-        //         updateIconSidebar(e);
-        //     },
-        // },
-        // {
-        //     id: "friend",
-        //     label: "Freind System",
-        //     icon: "bx bx-info-circle",
-        //     link: route("friend.index"),
-        //     stateVariables: isFriend,
-        //     click: function (e: any) {
-        //         e.preventDefault();
-        //         setIsFriend(!isFriend);
-        //         setIscurrentState("friend");
-        //         updateIconSidebar(e);
-        //     },
-        // },
+        {
+            id: "chat",
+            label: "Chat Room",
+            icon: "bx bx-message-rounded-dots",
+            link: route("attendee.event.chat"),
+            stateVariables: isChat,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsChat(!isChat);
+                setIscurrentState("chat");
+                updateIconSidebar(e);
+            },
+        },
+        {
+            id: "friend",
+            label: "Freind System",
+            icon: "las la-user-friends",
+            link: route("friend.index"),
+            stateVariables: isFriend,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsFriend(!isFriend);
+                setIscurrentState("friend");
+                updateIconSidebar(e);
+            },
+        },
         {
             id: "more",
             label: "Contact",
@@ -274,6 +279,19 @@ const Navdata = () => {
             label: "Event Calendar",
             icon: "bx bxs-calendar",
             link: route("event.calendar"),
+            stateVariables: isMore,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsMore(!isMore);
+                setIscurrentState("More");
+                updateIconSidebar(e);
+            },
+        },
+        {
+            id: "eventStaff",
+            label: "Event Staff",
+            icon: "bx bx-group",
+            link: route("attendee.event.staff"),
             stateVariables: isMore,
             click: function (e: any) {
                 e.preventDefault();

@@ -16,7 +16,7 @@ class EventAppFeeController extends Controller
      */
     public function index()
     {
-        $fees = $this->datatable(auth()->user()->fees());
+        $fees = $this->datatable(EventAppFee::currentEvent());
         return Inertia::render('Organizer/Events/TicketFees/Index', compact('fees'));
     }
 

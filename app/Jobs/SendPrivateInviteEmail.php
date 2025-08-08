@@ -17,23 +17,24 @@ class SendPrivateInviteEmail implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public $inviteUrl;
-    public $email;
-    public $eventapp;
-    public function __construct($email, $eventapp, $inviteUrl)
+  public $email, $eventApp, $inviteUrl, $startDate, $endDate;
+
+    public function __construct($email, $eventApp, $inviteUrl, $startDate, $endDate)
     {
         $this->email = $email;
-        $this->eventapp = $eventapp;
+        $this->eventApp = $eventApp;
         $this->inviteUrl = $inviteUrl;
+        $this->startDate = $startDate;
+        $this->endDate = $endDate;
     }
 
-    /**
-     * Execute the job.
-     */
-    public function handle(): void
+    public function handle()
     {
-        Mail::to($this->email)->send(
-            new PrivateInviteMail($this->eventapp, $this->inviteUrl)
-        );
+        Mail::to($this->email)->send(new PrivateInviteMail(
+            $this->eventApp,
+            $this->inviteUrl,
+            $this->startDate,
+            $this->endDate
+        ));
     }
 }
