@@ -141,14 +141,28 @@ const Navdata = () => {
             id: "zoho_settings",
             label: "Zoho Settings",
             icon: "bx bxs-cog",
-            link: route('organizer.zoho.index'),
+            link: "/#",
             stateVariables: isZohoSetting,
             click: function (e: any) {
                 e.preventDefault();
-                setIsDashboard(!isZohoSetting);
+                setIsZohoSetting(!isZohoSetting);
                 setIscurrentState('ZohoSettings');
                 updateIconSidebar(e);
             },
+            subItems: [
+                {
+                    id: "keys_connect_zoho",
+                    label: "Zoho Keys & Connect",
+                    link: route('organizer.zoho.index'),
+                    parentId: "zoho_settings",
+                },
+                {
+                    id: "sync_page_zoho",
+                    label: "Zoho Sync Data",
+                    link: route('organizer.zoho.sync.page'),
+                    parentId: "zoho_settings",
+                },
+            ],
         },
     ];
     return <React.Fragment>{menuItems}</React.Fragment>;

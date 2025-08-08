@@ -1,80 +1,111 @@
 import React, { useState } from 'react';
-import { Head, useForm } from '@inertiajs/react';
 import Layout from '../../../Layouts/Organizer';
-import { Container, Row, Col, Form, Button, Alert } from 'react-bootstrap';
+import { Head, router } from '@inertiajs/react';
+import { Col, Container, Row, Form, Button, Alert, Spinner } from 'react-bootstrap';
+import BreadCrumb2 from '../../../Components/Common/BreadCrumb2';
 
-type Props = {
-    events: { id: number; name: string }[];
-};
+const ZohoSyncPage = ({ events }: any) => {
+    const [selectedEvent, setSelectedEvent] = useState('');
+    const [module, setModule] = useState('Leads');
+    const [loading, setLoading] = useState(false);
+    const [result, setResult] = useState<any>(null);
 
-const SyncForm = ({ events }: Props) => {
-    const { data, setData, post, processing, errors } = useForm({
-        event_id: '',
-        module: 'Leads',
-    });
+    const handleSync = () => {
+        if (!selectedEvent) {
+            alert('Please select an event first.');
+            return;
+        }
 
-    const [successMessage, setSuccessMessage] = useState<string | null>(null);
+        setLoading(true);
+        setResult(null);
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        post(route('zoho.sync.attendees'), {
-            onSuccess: () => {
-                setSuccessMessage('Attendees synced successfully!');
-            },
-        });
+        router.post(
+            route('organizer.zoho.sync', selectedEvent),
+            { module },
+            {
+                onSuccess: (page) => {
+                    // setResult(page.props.flash?.success || 'Sync completed successfully!');
+                },
+                onError: (errors) => {
+                    setResult(errors);
+                },
+                onFinish: () => setLoading(false),
+                preserveScroll: true
+            }
+        );
     };
 
     return (
-        <>
-            <Head title="Sync Attendees to Zoho CRM" />
-            <Container className="mt-5">
-                <Row className="justify-content-center">
-                    <Col md={8}>
-                        <h2>Sync Attendees to Zoho CRM</h2>
+        <React.Fragment>
+            <Head title="Zoho CRM Sync" />
+            <div className="page-content">
+                <Container fluid>
+                    <BreadCrumb2
+                        title="Zoho CRM Sync"
+                        items={[
+                            { title: 'Settings', link: route('organizer.zoho.index') },
 
-                        {successMessage && <Alert variant="success">{successMessage}</Alert>}
-                        {errors.event_id && <Alert variant="danger">{errors.event_id}</Alert>}
-                        {errors.module && <Alert variant="danger">{errors.module}</Alert>}
+                        ]}
+                    />
+                    <Row className="justify-content-center">
+                        <Col md={8}>
+                            <div className="bg-white p-4 rounded shadow-sm">
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Select Event</Form.Label>
+                                    <Form.Select
+                                        value={selectedEvent}
+                                        onChange={(e) => setSelectedEvent(e.target.value)}
+                                    >
+                                        <option value="">-- Select Event --</option>
+                                        {events.map((event: any) => (
+                                            <option key={event.id} value={event.id}>
+                                                {event.name}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
+                                </Form.Group>
 
-                        <Form onSubmit={handleSubmit}>
-                            <Form.Group className="mb-3">
-                                <Form.Label>Select Event</Form.Label>
-                                <Form.Select
-                                    value={data.event_id}
-                                    onChange={(e) => setData('event_id', e.target.value)}
-                                    required
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Sync as</Form.Label>
+                                    <Form.Select
+                                        value={module}
+                                        onChange={(e) => setModule(e.target.value)}
+                                    >
+                                        <option value="Leads">Leads</option>
+                                        <option value="Contacts">Contacts</option>
+                                    </Form.Select>
+                                </Form.Group>
+
+                                <Button
+                                    variant="primary"
+                                    onClick={handleSync}
+                                    disabled={loading || !selectedEvent}
                                 >
-                                    <option value="">-- Select Event --</option>
-                                    {events.map((event) => (
-                                        <option key={event.id} value={event.id}>
-                                            {event.name}
-                                        </option>
-                                    ))}
-                                </Form.Select>
-                            </Form.Group>
+                                    {loading ? (
+                                        <Spinner animation="border" size="sm" />
+                                    ) : (
+                                        'Sync Now'
+                                    )}
+                                </Button>
 
-                            <Form.Group className="mb-3">
-                                <Form.Label>Sync To Module</Form.Label>
-                                <Form.Select
-                                    value={data.module}
-                                    onChange={(e) => setData('module', e.target.value)}
-                                    required
-                                >
-                                    <option value="Leads">Leads</option>
-                                    <option value="Contacts">Contacts</option>
-                                </Form.Select>
-                            </Form.Group>
-
-                            <Button type="submit" disabled={processing}>
-                                {processing ? 'Syncing...' : 'Sync to Zoho CRM'}
-                            </Button>
-                        </Form>
-                    </Col>
-                </Row>
-            </Container>
-        </>
+                                {result && (
+                                    <Alert variant="info" className="mt-4">
+                                        <pre className="mb-0">
+                                            {typeof result === 'string'
+                                                ? result
+                                                : JSON.stringify(result, null, 2)}
+                                        </pre>
+                                    </Alert>
+                                )}
+                            </div>
+                        </Col>
+                    </Row>
+                </Container>
+            </div>
+        </React.Fragment>
     );
 };
 
-SyncForm.layout = (page: any) => <Layout children={page} />;
-export default SyncForm;
+ZohoSyncPage.layout = (page: any) => <Layout children={page} />;
+
+export default ZohoSyncPage;

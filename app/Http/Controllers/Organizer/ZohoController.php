@@ -108,35 +108,40 @@ class ZohoController extends Controller
         return redirect()->route('organizer.zoho.index')->withSuccess('Zoho Connected!');
     }
 
-    public function sync(EventApp $event)
+    public function sync(Request $request, EventApp $event)
     {
         $integration = ZohoIntegration::firstWhere('organizer_id', auth()->id());
+
+        if (!$integration) {
+            return response()->json(['error' => 'Zoho integration not found'], 404);
+        }
 
         if ($integration->isExpired()) {
             $this->refreshToken($integration);
         }
 
-        $attendees = $event->attendees; // Ensure this relation exists
+        $attendees = $event->attendees; // Ensure relation exists
 
         $payload = [
             'data' => $attendees->map(function ($attendee) {
                 return [
-                    'First_Name' => $attendee->first_name,
-                    'Last_Name' => $attendee->last_name ?? '',
-                    'Email' => $attendee->email,
-                    'Phone' => $attendee->phone,
+                    'First_Name'  => $attendee->first_name,
+                    'Last_Name'   => $attendee->last_name ?? '',
+                    'Email'       => $attendee->email,
+                    'Phone'       => $attendee->phone,
                     'Description' => 'Event Attendee',
                 ];
             })->toArray(),
         ];
 
-        $module = $event->zohoSettings->module ?? 'Leads';
+        $module = $request->input('module', 'Leads'); // Default to Leads if not provided
 
         $response = Http::withToken($integration->access_token)
             ->post("https://www.zohoapis.com/crm/v2/{$module}", $payload);
-
-        return response()->json($response->json());
+        dd($response->json());
+        return redirect()->route('organizer.zoho.index')->withSuccess('Zoho Connected!');
     }
+
 
     protected function refreshToken(ZohoIntegration $integration)
     {
@@ -152,6 +157,17 @@ class ZohoController extends Controller
         $integration->update([
             'access_token' => $data['access_token'],
             'expires_at' => now()->addSeconds($data['expires_in']),
+        ]);
+    }
+
+    public function showSyncPage()
+    {
+        $events = EventApp::where('organizer_id', auth()->id())
+            ->select('id', 'name')
+            ->get();
+
+        return Inertia::render('Organizer/Zoho/SyncForm', [
+            'events' => $events
         ]);
     }
 }

@@ -96,6 +96,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
     Route::post('/zoho/save-keys', [ZohoController::class, 'saveKeys'])->name('zoho.save');
     Route::get('/zoho/connect', [ZohoController::class, 'connect'])->name('zoho.connect');
     Route::get('/zoho/callback', [ZohoController::class, 'callback'])->name('zoho.callback');
+    Route::get('/zoho/sync', [ZohoController::class, 'showSyncPage'])->name('zoho.sync.page');
     Route::post('/zoho/sync/{event}', [ZohoController::class, 'sync'])->name('zoho.sync');
 
 
