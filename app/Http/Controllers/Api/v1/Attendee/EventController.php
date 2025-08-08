@@ -27,7 +27,9 @@ class EventController extends Controller
     public function getEventDetailDashboard(String $eventApp)
     {
         $eventApp = EventApp::find(Auth::user() ? Auth::user()->event_app_id : $eventApp);
-        $eventApp->load(['event_sessions.eventSpeakers', 'event_sessions.eventPlatform']);
+        $eventApp->load(['event_sessions.eventSpeakers', 'event_sessions.eventPlatform', 'dates' => function ($query) {
+            $query->orderBy('date', 'desc');
+        }]);
         $eventApp->setRelation(
             'event_sessions',
             $eventApp->event_sessions->filter(function ($session) {
