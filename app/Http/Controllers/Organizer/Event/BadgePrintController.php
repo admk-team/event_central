@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\Organizer\Event;
 
-use App\Http\Controllers\Controller;
+use Inertia\Inertia;
 use App\Models\Attendee;
 use App\Models\EventApp;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
+use Illuminate\Support\Facades\Storage;
+use chillerlan\QRCode\QROptions;
+use chillerlan\QRCode\Common\EccLevel;
+use chillerlan\QRCode\QRCode;
 
 class BadgePrintController extends Controller
 {
@@ -26,29 +30,57 @@ class BadgePrintController extends Controller
                     'position' => $attendee->position,
                     'location' => $attendee->location,
                     'qr_codes' => $attendee->payments
-                        ->filter(fn($payment) => $payment->status === 'paid') // filter only paid payments
+                        ->filter(fn($payment) => $payment->status === 'paid')
                         ->flatMap(function ($payment) {
                             return $payment->purchased_tickets->map(function ($ticket) {
+
+                                // Check if QR file exists; if not, recreate using existing code
+                                if (
+                                    !empty($ticket->code) &&
+                                    (!Storage::exists($ticket->qr_code) || empty($ticket->qr_code))
+                                ) {
+                                    $qrData = $ticket->code;
+
+                                    $options = new QROptions([
+                                        'eccLevel' => EccLevel::L,
+                                        'scale' => 5,
+                                        'outputType' => QRCode::OUTPUT_IMAGE_PNG,
+                                        'imageBase64' => false,
+                                    ]);
+
+                                    $qrcode = new QRCode($options);
+
+                                    if (ob_get_length()) {
+                                        ob_end_clean();
+                                    }
+
+                                    $path = 'public/qr-codes/' . $ticket->code . '.png';
+
+                                    Storage::put($path, $qrcode->render($qrData));
+
+                                    $ticket->update([
+                                        'qr_code' => 'qr-codes/' . $ticket->code . '.png'
+                                    ]);
+                                }
+
                                 return [
                                     'qr_code' => $ticket->qr_code !== 'EMPTY'
                                         ? asset('storage/' . $ticket->qr_code)
                                         : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s',
                                     'ticket_name' => optional($ticket->ticket)->name,
-                                    'ticket_type_name' => isset($ticket->ticket->ticketType->name) ? $ticket->ticket->ticketType->name : '', // <-- added line
+                                    'ticket_type_name' => optional(optional($ticket->ticket)->ticketType)->name ?? '',
                                 ];
                             });
                         })
-                        ->filter(function ($item) {
-                            return !empty($item['qr_code']); // filter out any truly empty ones
-                        })
+                        ->filter(fn($item) => !empty($item['qr_code']))
                         ->values(),
                 ];
             })
-            ->filter(function ($item) {
-                return $item['qr_codes']->isNotEmpty(); // Optional: only include attendees with QR codes
-            })
+            ->filter(fn($item) => $item['qr_codes']->isNotEmpty())
             ->values();
+
         $eventApp = EventApp::find(session('event_id'));
+
         return Inertia::render('Organizer/Events/BadgePrint/Index', compact(
             'attendees',
             'eventApp'

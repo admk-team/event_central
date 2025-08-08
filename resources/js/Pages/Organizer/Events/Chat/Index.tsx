@@ -15,15 +15,8 @@ import {
 } from "react-bootstrap";
 import SimpleBar from "simplebar-react";
 import EmojiPicker from 'emoji-picker-react';
-
-//Import Icons
-import FeatherIcon from "feather-icons-react";
-
-import { chatContactData } from "../../../../common/data";
-
 //redux
 import { useSelector, useDispatch } from "react-redux";
-
 import avatar2 from "../../../../../images/users/avatar-2.jpg";
 import userDummayImage from "../../../../../images/users/user-dummy-img.jpg";
 
@@ -33,14 +26,32 @@ import { createSelector } from "reselect";
 import Spinners from "../../../../Components/Common/Spinner";
 import { Head, Link } from "@inertiajs/react";
 import Layout from "../../../../Layouts/Event";
-import { onAddMessage, onDeleteMessage, onGetDirectContact, onGetMessages } from "../../../../slices/thunk";
+import { onGetMessages } from "../../../../slices/thunk";
 import axios from 'axios';
 import { useEchoPublic } from '@laravel/echo-react';
+import Attachments from "./Components/Attachments";
+import ChatAttachments from "./Components/ChatAttachments";
 
-const Chat = ({member,event_data,loged_user,unread_count,lastMessage}:any) => {
+const Chat = ({member,event_data,loged_user}:any) => {
   
   const userChatShow: any = useRef();
-
+  const [publicChatMessages, setPublicChatMessages] = useState<any[]>([]);
+  const [privateChatMessages, setPrivateChatMessages] = useState<any[]>([]);
+  const [customActiveTab, setcustomActiveTab] = useState<any>("1");
+  const [membersList, setMembersList] = useState(member || []);
+  const toggleCustom = (tab: any) => {
+    if (customActiveTab !== tab) {
+      setcustomActiveTab(tab);
+    }
+  };
+  const dispatch = useDispatch<any>();
+  const [Chat_Box_Username, setChat_Box_Username] = useState<any>("Lisa Parker");
+  const [user_Status, setUser_Status] = useState<string | null>("online");
+  const [Chat_Box_Image, setChat_Box_Image] = useState<any>(avatar2);
+  const [currentRoomId, setCurrentRoomId] = useState<any>(1);
+  const [curMessage, setcurMessage] = useState<string>("");
+  const [reply, setReply] = useState<any>(null);
+  const [emojiPicker, setemojiPicker] = useState<boolean>(false);
   // hide the chat open section on reload or open 
   useEffect(() => {
     if (userChatShow.current) {
@@ -48,31 +59,53 @@ const Chat = ({member,event_data,loged_user,unread_count,lastMessage}:any) => {
     }
   }, []);
 
-  const [chatmessages, setChatMessages] = useState<any[]>([]);
-  const [customActiveTab, setcustomActiveTab] = useState<any>("1");
-  const toggleCustom = (tab: any) => {
-    if (customActiveTab !== tab) {
-      setcustomActiveTab(tab);
-    }
+  // file attachments in chat
+  const [showFileModal, setShowFileModal] = useState(false);
+  const sendFiles = (files: File[]) => {
+    addMessage(files);
   };
 
-  const dispatch = useDispatch<any>();
-  const [Chat_Box_Username, setChat_Box_Username] = useState<any>("Lisa Parker");
-  const [user_Status, setUser_Status] = useState<string | null>("online");
-  const [Chat_Box_Image, setChat_Box_Image] = useState<any>(avatar2);
-  const [currentRoomId, setCurrentRoomId] = useState<any>(1);
-  const [curMessage, setcurMessage] = useState<string>("");
-  const [reply, setreply] = useState<any>("");
-  const [emojiPicker, setemojiPicker] = useState<boolean>(false);
-
-  // ✅ Real-time subscription to public channel like "event-app-[12]"
+  //Real-time subscription to public channel like "event-app-[12]"
   const eventChannelName = `event-app-${event_data.id}`;
 
   useEchoPublic(eventChannelName, "EventGroupChat", (e: any) => {
-    console.log("New message via Echo:", e);
     const newMessage = e.message;
-    setChatMessages(prev  => [...prev , newMessage]);
+    setPublicChatMessages((prev) => [...prev, newMessage]);
   });
+
+  // for private chat
+  useEffect(() => {
+    const channelName = `attendee-chat-${loged_user}`;
+    const channel = window.Echo.private(channelName)
+        .listen('AttendeeChatMessage', (e: any) => {
+            if (e.message.sender_id == currentRoomId) {
+                setPrivateChatMessages((prev) => [...prev, e.message]);
+                axios.post(`/organizer/events/chat/mark-as-read/${currentRoomId}`);
+            }else {
+            // Message from another chat → increment unread count
+            setMembersList((prevMembers:any) =>
+              prevMembers.map((user:any) => {
+                if (user.participant.id === e.message.sender_id) {
+                  return {
+                    ...user,
+                    unread_count: (user.unread_count || 0) + 1
+                  };
+
+                }
+                return user;
+              })
+            );
+          }
+        })
+        .error((error: any) => {
+            console.error('CHANNEL ERROR:', error);
+        });
+
+    return () => {
+        // Cleanup — leave channel on unmount
+        window.Echo.leave(`private-${channelName}`);
+    };
+  }, [loged_user, currentRoomId]);
 
   const selectChatState = (state: any) => state.Chat;
   const chatProperties = createSelector(
@@ -92,16 +125,23 @@ const Chat = ({member,event_data,loged_user,unread_count,lastMessage}:any) => {
   const [isLoading, setLoading] = useState<any>(loading);
 
   //Use For Chat Box
-  const userChatOpen = async (chats: any) => {
+  const userChatOpen = async (chats: any,reciever_id:any) => {
     try {
-      const response = await axios.get(`/organizer/events/get-chat`);
+      let response: any;
+      if(reciever_id == null)
+      {
+        response = await axios.get(`/organizer/events/get-chat/${event_data.id}`);
+        setPublicChatMessages(response.data.messages);
+      }else{
+        response = await axios.get(`/organizer/events/private-chat/${reciever_id}`);
+        setPrivateChatMessages(response.data.messages);
+      }
       userChatShow.current.classList.remove("d-none");
-      setChat_Box_Username(chats.name);
-      setCurrentRoomId(chats.id);
+      setChat_Box_Username(chats.name ?? chats.participant.name);
       setChat_Box_Image(chats.image ?? chats.logo_img);
       setUser_Status(chats.status)
       dispatch(onGetMessages());
-      setChatMessages(response.data.messages);
+      setCurrentRoomId(reciever_id);
 
     } catch (error) {
       console.error("Failed to fetch chat messages", error);
@@ -109,10 +149,15 @@ const Chat = ({member,event_data,loged_user,unread_count,lastMessage}:any) => {
     if (window.innerWidth < 892) {
       userChatShow.current.classList.add("user-chat-show");
     }
+
+    let idSuffix = reciever_id ?? chats.id;
+    if (reciever_id) {
+      idSuffix = chats.participant.id;
+    }
     // remove unread msg on read in chat
-    var unreadMessage: any = document.getElementById("unread-msg-user" + chats.id);
-    var lastMessage: any = document.getElementById("last-msg-user" + chats.id);
-    var msgUser: any = document.getElementById("msgUser" + chats.id);
+    var unreadMessage: any = document.getElementById("unread-msg-user" + idSuffix);
+    var lastMessage: any = document.getElementById("last-msg-user" + idSuffix);
+    var msgUser: any = document.getElementById("msgUser" + idSuffix);
     if (unreadMessage) {
       unreadMessage.style.display = "none";
       lastMessage.style.display = "none";
@@ -127,17 +172,42 @@ const Chat = ({member,event_data,loged_user,unread_count,lastMessage}:any) => {
   }
 
   // add message
-  const addMessage = async () => {
+  const addMessage = async (files?: File[]) => {
     try {
-      const response = await axios.post('/organizer/events/send-message', {
-        message: curMessage,
-      });
-      // const newMessage = response.data.message;
-      // setChatMessages(prev  => [...prev , newMessage]);
+      const selectedFilesData = files ?? [];
+      const formData = new FormData();
+      formData.append("receiver_id", currentRoomId ?? event_data.id);
+      if (reply?.msg_id) {
+        formData.append("reply_to", reply.msg_id);
+      }
+      if (selectedFilesData && selectedFilesData.length > 0) {
+        Array.from(selectedFilesData).forEach((file) => {
+          formData.append("files[]", file);
+        });
+      }
+      if (curMessage && curMessage.trim() !== "") {
+        formData.append("message", curMessage);
+      } else {
+        formData.append("message", "media");
+      }
+      // Send request with multipart/form-data
+      const response = await axios.post("/organizer/events/send-message",formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        }
+      );
+      // Append to appropriate message state
+      const newMessage = response.data.message;
+      if (currentRoomId != null) {
+        setPrivateChatMessages((prev:any) => [...prev, newMessage]);
+      }
       setcurMessage('');
-      setreply('');
+      setReply(null);
       setemojiPicker(false);
       setemojiArray('');
+
     } catch (error) {
       console.error('Message sending failed:', error);
     }
@@ -148,7 +218,7 @@ const Chat = ({member,event_data,loged_user,unread_count,lastMessage}:any) => {
     if (chatRef.current?.el) {
       chatRef.current.getScrollElement().scrollTop = chatRef.current.getScrollElement().scrollHeight;
     }
-  }, [chatmessages])
+  }, [publicChatMessages, privateChatMessages])
 
   const onKeyPress = (e: any) => {
     const { key, value } = e;
@@ -188,7 +258,8 @@ const Chat = ({member,event_data,loged_user,unread_count,lastMessage}:any) => {
     setemojiArray([...emojiArray, event.emoji]);
     setcurMessage(curMessage + event.emoji);
   };
-
+  // Determine which messages to display based on currentRoomId
+  const currentMessages = currentRoomId == null ? publicChatMessages : privateChatMessages;
   return (
     <React.Fragment>
       <Head title="Chat " />
@@ -218,9 +289,9 @@ const Chat = ({member,event_data,loged_user,unread_count,lastMessage}:any) => {
     
                 {/* EVENT SECTION */}
                 <div className="chat-message-list">
-                  <ul className="list-unstyled chat-list chat-user-list users-list" id="userList">
-                    <li key={event_data.id} className={Chat_Box_Username === event_data.name ? "active" : ""}>
-                      <Link href="#!" onClick={(event) => {event.preventDefault();userChatOpen(event_data)}} className={"unread-msg-user"} id={"msgUser" + event_data.id}>
+                  <ul className="list-unstyled chat-list chat-user-list users-list" id="eventList">
+                    <li key={"event-"+event_data.id} className={Chat_Box_Username === event_data.name ? "active" : ""}>
+                      <Link href="#!" onClick={(event) => {event.preventDefault();userChatOpen(event_data,null)}} className={"unread-msg-user border-bottom"} id={"msgUser" + event_data.id}>
                         <div className="d-flex align-items-center">
                           <div className={'flex-shrink-0 chat-user-img align-self-center me-2 ms-0'}>
                             <div className="avatar-xxs">
@@ -235,13 +306,13 @@ const Chat = ({member,event_data,loged_user,unread_count,lastMessage}:any) => {
                           </div>
                           <div className="flex-grow-1 overflow-hidden">
                             <p className="text-truncate mb-0">{event_data.name}</p>
-                            <small className="text-truncate mb-0" id={"last-msg-user" + event_data.id}>{lastMessage?.message ?? ''}</small>
+                            <small className="text-truncate mb-0" id={"last-msg-user" + event_data.id}>{event_data?.last_message ?? ''}</small>
                           </div>
                           <div className="flex-shrink-0" id={"unread-msg-user" + event_data.id}>
                             <span className="badge bg-dark-subtle text-body rounded p-1">
                                 {(() => {
-                                  if (!lastMessage?.created_at) return null;
-                                  const messageDate = new Date(lastMessage.created_at);
+                                  if (!event_data?.last_message_created_at) return null;
+                                  const messageDate = new Date(event_data.last_message_created_at);
                                   const now = new Date();
 
                                   const isToday =
@@ -261,39 +332,56 @@ const Chat = ({member,event_data,loged_user,unread_count,lastMessage}:any) => {
                   </ul>
                 </div>
                 {/* user SECTION */}
-                {/* <div className="chat-message-list">
+                <div className="chat-message-list">
                   <ul className="list-unstyled chat-list chat-user-list users-list" id="userList">
-                    {(chats || []).map((chatContact: chatContactType) => (
-                      chatContact.direactContact && (chatContact.direactContact || [])?.map((chat) => (
-                        <li key={chat.id + chat.status} className={Chat_Box_Username === chat.name ? "active" : ""}>
-                          <Link href="#!" onClick={(event) => {event.preventDefault();userChatOpen(chat)}} className={chat.badge && chat.badge !== 0 ? "unread-msg-user" : ''} id={"msgUser" + chat.id}>
-                            <div className="d-flex align-items-center">
-                              <div className={`flex-shrink-0 chat-user-img ${chat.status === 'Online' ? "online" : "away"} align-self-center me-2 ms-0`}>
-                                <div className="avatar-xxs">
-                                  {chat.image ? (
-                                    <img src={chat.image} className="rounded-circle img-fluid userprofile" alt="" />
-                                  ) : (
-                                    <div className={"avatar-title rounded-circle bg-" + chat.bgColor + " userprofile"}>
-                                      {chat.name.charAt(0)}
-                                    </div>
-                                  )}
-                                </div>
+                    {(membersList || []).map((chat: any) => (
+                      <li key={"user-"+chat.id} className={Chat_Box_Username === chat.participant.name ? "active" : ""}>
+                        <Link href="#!" onClick={(event) => { event.preventDefault(); userChatOpen(chat,chat.participant.id); }} className="unread-msg-user border-bottom" id={"msgUser" + chat.participant.id}>
+                          <div className="d-flex align-items-center">
+                            <div className={`flex-shrink-0 chat-user-img align-self-center me-2 ms-0`}>
+                              <div className="avatar-xxs">
+                                {chat.participant.avatar_img ? (
+                                  <img src={chat.participant.avatar_img} className="rounded-circle img-fluid userprofile" alt="" />
+                                ) : (
+                                  <div className={"avatar-title rounded-circle bg-dark userprofile"}>
+                                    {chat.participant.name?.charAt(0)}
+                                  </div>
+                                )}
                               </div>
-                              <div className="flex-grow-1 overflow-hidden">
-                                <p className="text-truncate mb-0">{chat.name}</p>
-                              </div>
-                              {chat.badge &&
-                                <div className="flex-shrink-0" id={"unread-msg-user" + chat.id}>
-                                  <span className="badge bg-dark-subtle text-body rounded p-1">{chat.badge}</span>
-                                </div>
-                              }
                             </div>
-                          </Link>
-                        </li>
-                      )))
-                    )}
+                            <div className="flex-grow-1 overflow-hidden">
+                              <p className="text-truncate mb-0">{chat.participant.name}</p>
+                              <small className="text-truncate mb-0" id={"last-msg-user" + chat.participant.id}>{chat.last_message == null ? '' : chat.last_message == 'media' ? 'Media' : chat.last_message}</small>
+                            </div>
+                            <div className="flex-shrink-0" id={"unread-msg-user" + chat.participant.id}>
+                              <div>
+                                <span className="badge bg-dark-subtle text-body rounded p-1">
+                                {(() => {
+                                    if (!chat?.last_message_created_at) return null;
+                                    const messageDate = new Date(chat.last_message_created_at);
+                                    const now = new Date();
+
+                                    const isToday =
+                                      messageDate.getDate() === now.getDate() &&
+                                      messageDate.getMonth() === now.getMonth() &&
+                                      messageDate.getFullYear() === now.getFullYear();
+
+                                    return isToday
+                                      ? messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) // e.g., 10:15 AM
+                                      : messageDate.toLocaleDateString(); // e.g., 7/25/2025
+                                  })()}
+                                </span>
+                              </div>
+                              <div className="text-end">
+                                {chat.unread_count != 0 ? (<span className="badge bg-dark-subtle text-body rounded p-1">{chat.unread_count}</span>) : ("")}
+                              </div>
+                            </div>
+                          </div>
+                        </Link>
+                      </li>
+                    ))}
                   </ul>
-                </div> */}
+                </div>
               </SimpleBar>
             </div>
 
@@ -349,38 +437,66 @@ const Chat = ({member,event_data,loged_user,unread_count,lastMessage}:any) => {
                             :
                             <SimpleBar ref={chatRef} style={{ height: "100%" }}>
                              <ul className="list-unstyled chat-conversation-list" id="users-conversation">
-                              {(chatmessages || []).map((msg: any, index: number) => (
+                              {(currentMessages || []).map((msg: any, index: number) => (
                                 <li
                                   className={msg.sender_id === loged_user ? "chat-list right" : "chat-list left"}
                                   key={index}
                                 >
                                   <div className="conversation-list">
-                                    {/* Avatar if sender is the current user */}
-                                    {msg.sender?.first_name === Chat_Box_Username && (
-                                      msg.sender_id === 1 && (
-                                        <div className="chat-avatar">
-                                          {Chat_Box_Image === undefined ? (
-                                            <img src={userDummayImage} alt="" />
-                                          ) : (
-                                            <img src={Chat_Box_Image} alt="" />
-                                          )}
-                                        </div>
-                                      )
-                                    )}
                                     <div className="user-chat-content">
                                       <div className="ctext-wrap">
                                         <div className="ctext-wrap-content">
-                                          <p className="mb-0 ctext-content">{msg.message}</p>
+                                          {/* Show reply block if this message is replying to another */}
+                                          {msg.reply && (
+                                            <div className="replymessage-block mb-1 p-2 rounded bg-light">
+                                              <strong>{msg.reply.sender?.name}</strong>
+                                              <p className="mb-0 small">{msg.reply.message}</p>
+                                            </div>
+                                          )}
+                                          {/* Show text message */}
+                                          <p className="mb-0 ctext-content">{msg.message == 'media' ? '' :msg.message}</p>
+
+                                          {/* Show attachments */}
+                                          {msg.files && msg.files.length > 0 && (
+                                            <ChatAttachments files={msg.files} />
+                                          )}
                                         </div>
+                                        {/* Three-dot dropdown menu */}
+                                        {msg.files && msg.files.length > 0 ? ("") : (
+                                          <Dropdown className="align-self-start message-box-drop ms-2">
+                                            <Dropdown.Toggle
+                                              href="#"
+                                              className="btn nav-btn arrow-none p-0"
+                                              as="a"
+                                            >
+                                              <i className="ri-more-2-fill"></i>
+                                            </Dropdown.Toggle>
+                                            <Dropdown.Menu>
+                                              <Dropdown.Item
+                                                href="#"
+                                                className="reply-message"
+                                                onClick={() => setReply({
+                                                  sender: msg.sender?.name || "Unknown",
+                                                  msg: msg.message,
+                                                  msg_id : msg.id
+                                                })}
+                                              >
+                                                <i className="ri-reply-line me-2 text-muted align-bottom"></i>
+                                                Reply
+                                              </Dropdown.Item>
+                                              <Dropdown.Item href="#" onClick={() => navigator.clipboard.writeText(msg.message)}>
+                                                <i className="ri-file-copy-line me-2 text-muted align-bottom"></i>
+                                                Copy
+                                              </Dropdown.Item>
+                                            </Dropdown.Menu>
+                                          </Dropdown>
+                                        )}
                                       </div>
                                       <div className="conversation-name">
                                         <span className="text-muted">{msg.sender_id != loged_user ? msg.sender?.name : 'You'}</span>
                                         <small className="text-muted time">
                                           {new Date(msg.created_at).toLocaleTimeString()}
                                         </small>
-                                        {/* <span className="text-success check-message-icon">
-                                          <i className="ri-check-double-line align-bottom"></i>
-                                        </span> */}
                                       </div>
                                     </div>
                                   </div>
@@ -409,9 +525,25 @@ const Chat = ({member,event_data,loged_user,unread_count,lastMessage}:any) => {
                                   <i className="bx bx-smile align-middle"></i>
                                 </button>
                               </div>
+                              <div className="links-list-item">
+                                <button
+                                  type="button"
+                                  className="btn btn-link text-decoration-none file-attach-btn"
+                                  onClick={() => setShowFileModal(true)}
+                                >
+                                  <i className="bx bx-paperclip align-middle" 
+                                   style={{ transform: "rotate(90deg)", display: "inline-block" }}
+                                  ></i>
+                                </button>
+                                <Attachments
+                                  showFileModal={showFileModal}
+                                  setShowFileModal={setShowFileModal}
+                                  sendFiles={sendFiles}
+                                />
+                              </div>
+
                             </div>
                           </div>
-
                           <div className="col">
                             <div className="chat-input-feedback">
                               Please Enter a Message
@@ -442,6 +574,28 @@ const Chat = ({member,event_data,loged_user,unread_count,lastMessage}:any) => {
                           </div>
                         </Row>
                       </form>
+                    </div>
+                    <div className={reply ? "replyCard show" : "replyCard"}>
+                      <Card className="mb-0">
+                        <Card.Body className="py-3">
+                          <div className="replymessage-block mb-0 d-flex align-items-start">
+                            <div className="flex-grow-1">
+                              <h5 className="conversation-name">{reply?.sender || "Unknown"}</h5>
+                              <p className="mb-0">{reply?.msg || ""}</p>
+                            </div>
+                            <div className="flex-shrink-0">
+                              <button
+                                type="button"
+                                id="close_toggle"
+                                className="btn btn-sm btn-link mt-n2 me-n3 fs-18"
+                                onClick={() => setReply(null)}
+                              >
+                                <i className="bx bx-x align-middle"></i>
+                              </button>
+                            </div>
+                          </div>
+                        </Card.Body>
+                      </Card>
                     </div>
                   </div>
                 </div>

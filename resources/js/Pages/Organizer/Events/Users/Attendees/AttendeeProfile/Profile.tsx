@@ -224,7 +224,8 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                                                 <thead>
                                                     <tr>
                                                         <th scope="col">Name</th>
-                                                        <th scope="col">Price</th>
+                                                        <th scope="col">Unit Price</th>
+                                                        <th scope="col">Total Price</th>
                                                         <th scope="col">Quantity</th>
                                                         <th scope="col">Type</th>
                                                         <th scope="col">Status</th>
@@ -236,6 +237,7 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                                                         tickets.map((ticket: any, index: number) => (
                                                             <tr key={index}>
                                                                 <td>{ticket.ticket_name}</td>
+                                                                <td>{ticket.ticket_total_price}</td>
                                                                 <td>{ticket.amount}</td>
                                                                 <td>{ticket.qty}</td>
                                                                 <td>{ticket.type}</td>
