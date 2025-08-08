@@ -63,7 +63,7 @@ class PaymentController extends Controller
             $eventApp = EventApp::with('dates')->find(session('event_id'));
             $lasteventDate = $eventApp->dates()->orderBy('date', 'desc')->get();
 
-            $attendees = $eventApp->attendees()->select(['id as value', DB::raw("CONCAT(first_name, ' ', last_name) as label")])->get();
+            $attendees = $eventApp->attendees()->select(['id as value', DB::raw("CONCAT(first_name, ' ', last_name, ' || ', email) as label")])->get();
         } else {
             $eventApp =  EventApp::with('dates')->find(auth()->user()->event_app_id);
             $lasteventDate = $eventApp->dates()->orderBy('date', 'desc')->get();
