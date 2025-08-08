@@ -21,7 +21,8 @@ import Attachments from "./Components/Attachments";
 const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
   
   const userChatShow: any = useRef();
-  const [chatmessages, setChatMessages] = useState<any[]>([]);
+   const [publicChatMessages, setPublicChatMessages] = useState<any[]>([]);
+    const [privateChatMessages, setPrivateChatMessages] = useState<any[]>([]);
   const [customActiveTab, setcustomActiveTab] = useState<any>("1");
   const [membersList, setMembersList] = useState(member || []);
   const toggleCustom = (tab: any) => {
@@ -56,9 +57,7 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
   const eventChannelName = `event-app-${event_data.id}`;
   useEchoPublic(eventChannelName, "EventGroupChat", (e: any) => {
     const newMessage = e.message;
-    if(currentRoomId === null){
-      setChatMessages(prev  => [...prev , newMessage]);
-    }
+    setPublicChatMessages((prev) => [...prev, newMessage]);
   });
 
 
@@ -68,7 +67,7 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
     const channel = window.Echo.private(channelName)
         .listen('AttendeeChatMessage', (e: any) => {
             if (e.message.sender_id == currentRoomId) {
-                setChatMessages(prev => [...prev, e.message]);
+                setPrivateChatMessages((prev) => [...prev, e.message]);
                 axios.post(`/attendee/chat/mark-as-read/${currentRoomId}`);
             }else {
             // Message from another chat → increment unread count
@@ -121,17 +120,17 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
       if(reciever_id == null)
       {
         response = await axios.get(`/attendee/get-chat/${event_data.id}`);
-        setCurrentRoomId(null);
+        setPublicChatMessages(response.data.messages);
       }else{
         response = await axios.get(`/attendee/private-chat/${reciever_id}`);
-        setCurrentRoomId(reciever_id);
+        setPrivateChatMessages(response.data.messages);
       }
       userChatShow.current.classList.remove("d-none");
       setChat_Box_Username(chats.name ?? chats.participant.name);
       setChat_Box_Image(chats.image ?? chats.logo_img);
       setUser_Status(chats.status)
       dispatch(onGetMessages());
-      setChatMessages(response.data.messages);
+      setCurrentRoomId(reciever_id);
 
     } catch (error) {
       console.error("Failed to fetch chat messages", error);
@@ -186,11 +185,10 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
             "Content-Type": "multipart/form-data"
           }
         });
-      // for private chat
-      if(currentRoomId != null)
-      {
-        const newMessage = response.data.message;
-        setChatMessages(prev  => [...prev , newMessage]);
+      // Append to appropriate message state
+      const newMessage = response.data.message;
+      if (currentRoomId != null) {
+        setPrivateChatMessages((prev:any) => [...prev, newMessage]);
       }
       setcurMessage('');
       setReply(null);
@@ -207,7 +205,7 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
     if (chatRef.current?.el) {
       chatRef.current.getScrollElement().scrollTop = chatRef.current.getScrollElement().scrollHeight;
     }
-  }, [chatmessages])
+  }, [publicChatMessages, privateChatMessages])
 
   const onKeyPress = (e: any) => {
     const { key, value } = e;
@@ -246,7 +244,8 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
     setemojiArray([...emojiArray, event.emoji]);
     setcurMessage(curMessage + event.emoji);
   };
-
+  // Determine which messages to display based on currentRoomId
+  const currentMessages = currentRoomId == null ? publicChatMessages : privateChatMessages;
   return (
     <React.Fragment>
       <Head title="Chat " />
@@ -425,7 +424,7 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
                             :
                             <SimpleBar ref={chatRef} style={{ height: "100%" }}>
                              <ul className="list-unstyled chat-conversation-list" id="users-conversation">
-                              {(chatmessages || []).map((msg: any, index: number) => (
+                              {(currentMessages || []).map((msg: any, index: number) => (
                                 <li
                                   className={msg.sender_id === loged_user ? "chat-list right" : "chat-list left"}
                                   key={index}

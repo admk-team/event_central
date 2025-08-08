@@ -15,7 +15,6 @@ class ChatMember extends Model
         'user_id',
         'user_type',
         'participant_id',
-
         'participant_type',
         'unread_count'
     ];

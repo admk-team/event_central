@@ -130,7 +130,7 @@ class ChatController extends Controller
             if (!$participant_user) {
                 $this->initiateChat($eventId, $receiver_id, \App\Models\User::class, $senderId, \App\Models\Attendee::class);
             }
-        } 
+        }
 
         $message = ChatMessage::create([
             'event_id' => $eventId,
@@ -162,20 +162,18 @@ class ChatController extends Controller
         if ($receiver_type === \App\Models\EventApp::class) {
             // Group chat: increment unread for all other members in the event
             ChatMember::where('event_id', $eventId)
-                ->where(function ($q) use ($senderId) {
-                    $q->where('participant_id', '!=', $senderId)
-                        ->orWhere('user_id', '!=', $senderId);
-                })
+                ->where('user_id', '!=', $senderId)
+                ->where('participant_type', \App\Models\EventApp::class)
                 ->increment('unread_count');
+
             broadcast(new EventGroupChat($message))->toOthers();
         } else {
             // Private chat: increment unread only for the receiver
             ChatMember::where('event_id', $eventId)
-                ->where(function ($q) use ($receiver_id) {
-                    $q->where('participant_id', $receiver_id)
-                        ->orWhere('user_id', $receiver_id);
-                })
+                ->where('user_id', $receiver_id)
+                ->where('participant_id', $senderId)
                 ->increment('unread_count');
+
             broadcast(new AttendeeChatMessage($message))->toOthers();
         }
 
