@@ -174,8 +174,8 @@ class PaymentController extends Controller
         // return $payment;
         if ($payment->status === 'pending') {
             $stripe_pub_key = $this->stripe_service->StripKeys($payment->event_app_id)->stripe_publishable_key;
-            $paypal_client_id = null;
-            // $paypal_client_id = $this->paypal_service->payPalKeys()->paypal_pub;
+            // $paypal_client_id = null;
+            $paypal_client_id = $this->paypal_service->payPalKeys()->paypal_pub;
             return Inertia::render('Attendee/Payment/Index', compact([
                 'payment',
                 'stripe_pub_key',

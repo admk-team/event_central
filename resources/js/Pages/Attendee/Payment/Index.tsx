@@ -99,14 +99,12 @@ const Index = ({
                                                     </Card>
                                                 )}
                                             </Tab>
-                                            {/* <Tab eventKey="paypal" title="Paypal">
+                                            <Tab eventKey="paypal" title="Paypal">
                                             <PayPalButton
-                                                eventId={eventApp.id}
-                                                amount={amount}
-                                                tickets={tickets}
+                                                amount={payment.amount_paid}
                                                 client_id={paypal_client_id}
                                             />
-                                        </Tab> */}
+                                        </Tab>
                                         </Tabs>
                                     </CardBody>
                                 </Card>
