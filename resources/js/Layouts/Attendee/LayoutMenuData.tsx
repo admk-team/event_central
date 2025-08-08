@@ -143,7 +143,7 @@ const Navdata = () => {
         },
         {
             id: "chat",
-            label: "Chat",
+            label: "Chat Room",
             icon: "bx bx-message-rounded-dots",
             link: route("attendee.event.chat"),
             stateVariables: isChat,

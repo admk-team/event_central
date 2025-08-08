@@ -417,7 +417,7 @@ const Navdata = () => {
 
         {
             id: "chat",
-            label: "Chat",
+            label: "Chat Room",
             icon: "bx bx-message-rounded-dots",
             link: route("organizer.events.chat.index"),
             stateVariables: isForm,
