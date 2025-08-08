@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 use App\Models\Attendee;
+use App\Models\EventApp;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -16,13 +17,15 @@ class EventTicketPurchasedNotification extends Mailable
 
     public $attendee;
     public $attendee_purchased_tickets;
+    public $eventApp;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(Attendee $_attendee, $_attendee_purchased_tickets)
+    public function __construct(Attendee $_attendee, $_attendee_purchased_tickets, EventApp $eventApp)
     {
         $this->attendee = $_attendee;
+        $this->eventApp = $eventApp;
         $this->attendee_purchased_tickets = $_attendee_purchased_tickets;
     }
 
@@ -45,6 +48,7 @@ class EventTicketPurchasedNotification extends Mailable
             view: 'emails.organizerTicketPurchased',
             with: [
                 'attendee' => $this->attendee,
+                'eventApp' => $this->eventApp,
                 'purchased_tickets' => $this->attendee_purchased_tickets,
             ]
         );

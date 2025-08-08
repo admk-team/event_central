@@ -26,6 +26,7 @@ use App\Mail\AttendeeTicketPurchasedEmail;
 use chillerlan\QRCode\Common\EccLevel;
 use Illuminate\Support\Facades\Storage;
 use App\Models\AttendeePurchasedTickets;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 class PaymentController extends Controller
@@ -235,11 +236,11 @@ class PaymentController extends Controller
 
             //4. Increment discount code used count
             if ($payment->discount_code) {
-                 $code = PromoCode::where('code', $payment->discount_code)
-                ->where('event_app_id', Auth::user()->event_app_id ?? session('event_id'))
-                ->where('status', 'active')
-                ->whereColumn('used_count', '<', 'usage_limit')
-                ->whereDate('end_date', '>', date('Y-m-d'))->first();
+                $code = PromoCode::where('code', $payment->discount_code)
+                    ->where('event_app_id', Auth::user()->event_app_id ?? session('event_id'))
+                    ->where('status', 'active')
+                    ->whereColumn('used_count', '<', 'usage_limit')
+                    ->whereDate('end_date', '>', date('Y-m-d'))->first();
                 if ($code) {
                     $code->increment('used_count');
                     $code->save();
@@ -283,6 +284,7 @@ class PaymentController extends Controller
 
         $code = PromoCode::where(function ($subQuery) use ($disCode) {
             $subQuery->where('code', $disCode);
+            $subQuery->where('event_app_id', Auth::user()->event_app_id ?? session('event_id'));
             $subQuery->where('status', 'active');
             $subQuery->whereColumn('used_count', '<', 'usage_limit');
             $subQuery->whereDate('end_date', '>', date('Y-m-d'));

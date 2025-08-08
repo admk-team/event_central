@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Jobs\SendPrivateInviteEmail;
 use App\Models\EventApp;
 use App\Models\PrivateInvite;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -34,7 +35,13 @@ class PrivateRegistrationViaEmailController extends Controller
         ]);
 
         $eventAppId = session('event_id');
-        $eventApp = EventApp::findOrFail($eventAppId);
+        $eventApp = EventApp::with('dates')->findOrFail($eventAppId);
+
+        $startDate = optional($eventApp->dates()->orderBy('date', 'asc')->first())->date;
+        $endDate = optional($eventApp->dates()->orderBy('date', 'desc')->first())->date;
+
+        $startDate = $startDate ? \Carbon\Carbon::parse($startDate)->format('F j, Y') : null;
+        $endDate = $endDate ? \Carbon\Carbon::parse($endDate)->format('F j, Y') : null;
 
         foreach ($validated['emails'] as $email) {
             PrivateInvite::create([
@@ -42,10 +49,10 @@ class PrivateRegistrationViaEmailController extends Controller
                 'email' => $email,
             ]);
 
-            // Generate invite URL for this eventApp
             $inviteUrl = route('attendee.register', ['eventApp' => $eventApp->id]);
-            // Dispatch job to send email
-            SendPrivateInviteEmail::dispatch($email, $eventApp, $inviteUrl);
+
+            // Dispatch mail with additional details
+            SendPrivateInviteEmail::dispatch($email, $eventApp, $inviteUrl, $startDate, $endDate);
         }
 
         return back()->withSuccess('Invitations sent successfully.');

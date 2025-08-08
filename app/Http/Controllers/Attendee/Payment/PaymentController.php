@@ -63,7 +63,7 @@ class PaymentController extends Controller
             $eventApp = EventApp::with('dates')->find(session('event_id'));
             $lasteventDate = $eventApp->dates()->orderBy('date', 'desc')->get();
 
-            $attendees = $eventApp->attendees()->select(['id as value', DB::raw("CONCAT(first_name, ' ', last_name) as label")])->get();
+            $attendees = $eventApp->attendees()->select(['id as value', DB::raw("CONCAT(first_name, ' ', last_name, ' || ', email) as label")])->get();
         } else {
             $eventApp =  EventApp::with('dates')->find(auth()->user()->event_app_id);
             $lasteventDate = $eventApp->dates()->orderBy('date', 'desc')->get();
@@ -432,6 +432,7 @@ class PaymentController extends Controller
     {
         try {
             $attendee = auth()->user();
+            $eventApp = EventApp::find($attendee->event_app_id);
             $attendee->load('payments.purchased_tickets');
             $attendee_purchased_tickets = [];
             foreach ($attendee->payments as $payment) {
@@ -443,7 +444,7 @@ class PaymentController extends Controller
             $emailNotificationList = explode(',', $emailNotificationList);
             if ($emailNotificationList) {
                 foreach ($emailNotificationList as $singleEmail) {
-                    Mail::to($singleEmail)->queue(new EventTicketPurchasedNotification($attendee, $attendee_purchased_tickets));
+                    Mail::to($singleEmail)->queue(new EventTicketPurchasedNotification($attendee, $attendee_purchased_tickets, $eventApp));
                 }
             }
         } catch (Exception $ex) {
