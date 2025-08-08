@@ -125,6 +125,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::post('/attendee/checkin', [AttendeeController::class, 'chechIn'])->name('attendee.checkin');
             Route::get('get-attendee-puchased-addons/{attendeePurchasedTicket}', [AttendeeController::class, 'getPurchasedTicketAddons'])->name('attendee.puchased-ticket.adddons');
             Route::post('attendee/import/event', [AttendeeController::class, 'importFromEvent'])->name('attendee.importevent');
+            Route::post('attendee/chat-initiate/{id}', [AttendeeController::class, 'initiateChat'])->name('attendee.chat.initiate');
 
 
             // Wordshop
@@ -172,7 +173,9 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
 
             // Chat
             Route::resource('chat', ChatController::class);
-            Route::get('get-chat', [ChatController::class, 'getMessages'])->name('get-messages');
+            Route::get('get-chat/{id}', [ChatController::class, 'getMessages'])->name('get-messages');
+            Route::get('private-chat/{id}', [ChatController::class, 'getOneToOneChat']);
+            Route::post('chat/mark-as-read/{id}', [ChatController::class, 'markAsRead']);
             Route::post('send-message', [ChatController::class, 'store']);
 
             // Ticket Fees
@@ -222,6 +225,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                     Route::post('toggle-tracks', [EventSettingsController::class, 'toggleTracks'])->name('toggle-tracks');
                     Route::post('toggle-checkin', [EventSettingsController::class, 'toggleCheckIn'])->name('toggle-checkin');
                     Route::post('toggle-register', [EventSettingsController::class, 'togglePrivateRegister'])->name('toggle-register');
+                     Route::post('reminder-closer', [EventSettingsController::class, 'changeReminderDays'])->name('reminder-closer');
                     Route::post('close-open-registration/{event}', [EventSettingsController::class, 'closeOpenRegistration'])->name('close.open.registration');
                 });
 

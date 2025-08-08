@@ -29,36 +29,64 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckO
         : ticket.sessions.slice(0, 5);
 
     useEffect(() => {
-        let list = [];
-        let newIds = [];
-        const ticketDetailsCopy = ticketDetails.map((item) => ({ ...item }));
+        const basePrice = parseFloat(ticket.base_price);
+        const discountValue = parseFloat(ticket.bulk_purchase_discount_value ?? 0);
+        const discountQty = Number(ticket.bulk_purchase_qty ?? 0);
+        const discountType = ticket.bulk_purchase_discount_type;
+        const totalBaseAmount = basePrice * ticketQty;
+        let totalDiscountedAmount;
 
+        if (discountType === 'fixed') {
+            totalDiscountedAmount = Math.max(0, totalBaseAmount - discountValue);
+        } else {
+            totalDiscountedAmount = totalBaseAmount - (totalBaseAmount * (discountValue / 100));
+        }
+        const finalPerTicketPrice = totalDiscountedAmount / ticketQty;
+        const shouldApplyDiscount = discountQty > 0 && discountValue > 0 && ticketQty >= discountQty;
+        const existingTicketsMap = new Map(ticketDetails.map(item => [item.id, item]));
+        const newTicketList = [];
+        const newIds = [];
         for (let i = 0; i < ticketQty; i++) {
-            let id = parseInt(ticket.id + "" + i);
-            const foundItem = ticketDetailsCopy.find((item) => item.id === id);
-            if (foundItem) {
-                list.push(foundItem);
+            const id = parseInt(`${ticket.id}${i}`);
+            const existingTicket = existingTicketsMap.get(id);
+            newIds.push(id);
+            let adjustedBasePrice = basePrice;
+            if (shouldApplyDiscount) {
+                adjustedBasePrice = finalPerTicketPrice;
+            }
+            const newTicketData = {
+                ...ticket,
+                base_price: parseFloat(adjustedBasePrice.toFixed(2)),
+                bulk_purchase_discount_type: discountType,
+                bulk_purchase_discount_value: ticket.bulk_purchase_discount_value,
+                bulk_purchase_qty: discountQty,
+            };
+            const feesSubTotal = calculateFeesSubTotal({ ...ticket, base_price: adjustedBasePrice });
+            if (existingTicket) {
+                newTicketList.push({
+                    ...existingTicket,
+                    ticket: newTicketData,
+                    fees_sub_total: feesSubTotal,
+                });
             } else {
-                list.push({
-                    id: id,
+                newTicketList.push({
+                    id,
                     ticket_no: i + 1,
-                    ticket: { id: ticket.id, base_price: ticket.base_price },
+                    ticket: newTicketData,
                     addons: [],
-                    fees_sub_total: calculateFeesSubTotal(ticket),
+                    fees_sub_total: feesSubTotal,
                     addons_sub_total: 0,
                 });
-                newIds.push(id);
             }
         }
-        let prevIds = ticketDetails.map((item: any) => item.id);
-        let removedIds = prevIds.filter((id: any) => !newIds.includes(id));
+        const prevIds = ticketDetails.map(item => item.id);
+        const removedIds = prevIds.filter(id => !newIds.includes(id));
+        newTicketList.sort((a, b) => a.id - b.id);
+        setTicketDetails(newTicketList);
         setRemovedIds(removedIds);
 
-        //Sort New ticketDetails by id asc
-        list.sort((a, b) => a.id - b.id);
+    }, [ticketQty, ticketDetails]);
 
-        setTicketDetails([...list]);
-    }, [ticketQty]);
 
     const calculateFeesSubTotal = (ticket: any) => {
         let subTotal = 0;
@@ -142,9 +170,22 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckO
                         <Row className="d-flex justify-content-centel align-items-center">
                             <Col md={5} lg={5}>
                                 {/* <h5 className="mb-1 fw-bold">{ticket.name}</h5> */}
-                                <span className="mb-1">
+                                <span className="mb-5">
                                     {ticket.description}
-                                </span>
+                                </span><br />
+
+                                {ticket.bulk_purchase_status !== 0 && (
+                                    <>
+                                        <span className="mt-5 ff-secondary fw-bold text-warning">
+                                            Limited Offer: {ticket.bulk_purchase_qty}+ tickets and Save{" "}
+                                            {ticket.bulk_purchase_discount_type === "fixed"
+                                                ? `$${parseInt(ticket.bulk_purchase_discount_value)}`
+                                                : `${parseInt(ticket.bulk_purchase_discount_value)}%`
+                                            } instantly!
+                                        </span>
+
+                                    </>
+                                )}
                             </Col>
                             <Col md={2} lg={2}>
                                 <sup>
@@ -153,6 +194,18 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckO
                                 <span className="ff-secondary fw-bold fs-3">
                                     {ticket.base_price}
                                 </span>
+                                <br />
+                                {/* {ticket.bulk_purchase_status !== 0 && (
+                                    <>
+                                        <small>
+                                            {ticket.bulk_purchase_discount_type === 'percentage' ? '%' : '$'}
+                                        </small>
+                                        <span className="ff-secondary fs-5">
+                                            {ticket.bulk_purchase_discount_value}
+                                        </span>
+                                    </>
+
+                                )} */}
                             </Col>
                             <Col md={3} lg={3}>
                                 <span className="ff-secondary fw-bold">

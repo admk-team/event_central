@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('chat_members', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('event_id');
+            $table->unsignedBigInteger('user_id'); // App\Models\User or App\Models\Attendee
+            $table->string('user_type');
             $table->unsignedBigInteger('participant_id'); // App\Models\User or App\Models\Attendee
             $table->string('participant_type');
             $table->unsignedInteger('unread_count')->default(0);

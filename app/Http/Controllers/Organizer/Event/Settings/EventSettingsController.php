@@ -25,12 +25,14 @@ class EventSettingsController extends Controller
         $tracks = Track::where('event_app_id', session('event_id'))->latest()->get(); // For Track Manager
         $lasteventDate = $event->dates()->orderBy('date', 'desc')->get();
         $closeRegistration = eventSettings()->getValue('close_registration', false);
+        $reminderDays = eventSettings()->getValue('reminder_days', '7');
 
         return Inertia::render("Organizer/Events/Settings/Event/Index", [
             'event' => $event,
             'enableTracks' => eventSettings()->getValue('enable_tracks', false),
             'enableCheckIn' => eventSettings()->getValue('enable_check_in', false),
             'enablePrivateRegistraion' => eventSettings()->getValue('private_register', false),
+            'reminderDays' => $reminderDays,
             'tracks' => $tracks,
             'lasteventDate' => $lasteventDate,
             'closeRegistration' => $closeRegistration,
@@ -133,5 +135,16 @@ class EventSettingsController extends Controller
         } else {
             return redirect()->route('organizer.events.settings.event.index')->withSuccess('Event registration close successfully');
         }
+    }
+
+    public function changeReminderDays(Request $request)
+    {
+        $request->validate([
+            'days_before_event' => 'required|integer|min:1|max:365',
+        ]);
+
+        eventSettings()->set('reminder_days', $request->days_before_event);
+
+        return back()->with('success', 'Reminder days updated successfully.');
     }
 }

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Organizer;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organizer\UserRequest;
-use App\Models\ChatMember;
 use App\Models\EventApp;
 use App\Models\EventSession;
 use App\Models\ModelPermission;
@@ -63,15 +62,6 @@ class UserController extends Controller
         EventApp::syncModelPermissions($accessibleEvents, $user);
 
         EventSession::syncModelPermissions($accessibleEventSessions, $user);
-
-        // for initiating chat against event
-        foreach ($accessibleEvents as $item) {
-            ChatMember::create([
-                'event_id' => $item,
-                'participant_id' => $user->id,
-                'participant_type' => \App\Models\User::class,
-            ]);
-        }
 
         return back()->withSuccess("Created");
     }
