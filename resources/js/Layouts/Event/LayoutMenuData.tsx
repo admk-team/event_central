@@ -34,6 +34,7 @@ const Navdata = () => {
     const [isReport, setIsReport] = useState<boolean>(false);
     const [isPrayerRequest, setIsPrayerRequest] = useState<boolean>(false);
     const [isPrivateRegister, setIsPrivateRegister] = useState<boolean>(false);
+    const [isDemographic, setIsDemographic] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>("Dashboard");
 
@@ -75,6 +76,7 @@ const Navdata = () => {
         if (iscurrentState !== "prayer_request") setIsPrayerRequest(false);
         if (iscurrentState !== "chat") setIsChat(false);
         if (iscurrentState !== "private_registration") setIsPrivateRegister(false);
+        if (iscurrentState !== "private_registration") setIsDemographic(false);
         if (iscurrentState !== "Questionnaire_response")
             setIsQuestionnaireResponse(false);
         // if (iscurrentState !== 'assignTickets') setIsTickets(false);
@@ -96,6 +98,7 @@ const Navdata = () => {
         isTickets,
         isReport,
         isChat,
+        isDemographic,
         // isAssignTicket,
         // isUpgradeTicket
     ]);
@@ -122,6 +125,32 @@ const Navdata = () => {
             },
             hasPermissions: ["view_event_dashboard"],
         },
+        {
+            id: "demographic_detail",
+            label: "DemoGraphic Detail",
+            icon: "bx bxs-calendar-event",
+            link: route("organizer.events.settings.event.index"),
+            stateVariables: isDemographic,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsEvent(!isDemographic);
+                setIscurrentState("Event");
+                updateIconSidebar(e);
+            },
+            hasPermissions: ["edit_events"],
+        },
+        // {
+        //     id: "demographic_detail",
+        //     label: "DemoGraphic Detail",
+        //     icon: "bx bxs-group",
+        //     link: route("organizer.events.demographic-detail.index"),
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIscurrentState("demographic_detail");
+        //         updateIconSidebar(e);
+        //     },
+        //     hasPermissions: ["view_demographic_detail"],
+        // },
         {
             id: "attendees",
             label: "Event",
