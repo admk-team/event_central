@@ -182,6 +182,11 @@ class EventApp extends Model
         return $this->hasMany(EventCheckIns::class);
     }
 
+    public function liveStreams()
+    {
+        return $this->hasMany(LiveStream::class);
+    }
+
     public function authorizedUsers(): MorphToMany
     {
         return $this->morphToMany(User::class, 'model', 'model_permissions', 'model_id', 'authorizable_id')

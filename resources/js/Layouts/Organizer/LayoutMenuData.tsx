@@ -7,6 +7,7 @@ const Navdata = () => {
     const [isEvents, setIsEvents] = useState<boolean>(false);
     const [isStaff, setIsStaff] = useState<boolean>(false);
     const [isPaymentSettings, setIsPaymentSettings] = useState<boolean>(false);
+    const [isLiveStreamSettings, setIsLiveStreamSettings] = useState<boolean>(false);
 
 
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
@@ -40,13 +41,17 @@ const Navdata = () => {
         if (iscurrentState !== 'PaymentSettings') {
             setIsPaymentSettings(false);
         }
+        if (iscurrentState !== 'LiveStreamSettings') {
+            setIsLiveStreamSettings(false);
+        }
     }, [
         history,
         iscurrentState,
         isDashboard,
         isEvents,
         isStaff,
-        isPaymentSettings
+        isPaymentSettings,
+        isLiveStreamSettings
     ]);
 
     const menuItems: any = [
@@ -130,6 +135,22 @@ const Navdata = () => {
             },
             hasPermissions: [
                 'edit_payment_settings',
+            ]
+        },
+        {
+            id: "liveStreamSettings",
+            label: "Live Stream Settings",
+            icon: "bx bx-broadcast",
+            link: route('organizer.settings.live-stream.index'),
+            stateVariables: isLiveStreamSettings,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsDashboard(!isLiveStreamSettings);
+                setIscurrentState('LiveStreamSettings');
+                updateIconSidebar(e);
+            },
+            hasPermissions: [
+                'edit_live_stream_settings',
             ]
         },
     ];
