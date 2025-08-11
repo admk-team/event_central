@@ -127,17 +127,16 @@ const Navdata = () => {
         },
         {
             id: "demographic_detail",
-            label: "DemoGraphic Detail",
+            label: "Demo Graphic Detail",
             icon: "bx bxs-calendar-event",
-            link: route("organizer.events.settings.event.index"),
-            stateVariables: isDemographic,
-            click: function (e: any) {
+            link: route("organizer.events.demographic", { eventUuid: currentEvent.uuid }),
+            click: (e: React.MouseEvent<HTMLAnchorElement>) => {
                 e.preventDefault();
-                setIsEvent(!isDemographic);
-                setIscurrentState("Event");
+                setIsDemographic(!isDemographic);
+                setIscurrentState("Demographic");
                 updateIconSidebar(e);
             },
-            hasPermissions: ["edit_events"],
+            // hasPermissions: ["view_demographic_detail"], // uncomment if using permissions
         },
         // {
         //     id: "demographic_detail",

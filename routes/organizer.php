@@ -99,6 +99,8 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
         Route::delete('/{event_app}', [EventController::class, 'destroy'])->name('destroy');
         Route::delete('/delete/many', [EventController::class, 'destroyMany'])->name('destroy.many');
         Route::get('{id}/select', [EventController::class, 'selectEvent'])->name('select');
+        Route::get('{eventUuid}/demographic', [EventController::class, 'demographic'])
+            ->name('demographic');
 
         // Event Images
         Route::post('{event_app}/images ', [EventController::class, 'storeImage'])->name('images.store');
