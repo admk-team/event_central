@@ -92,7 +92,7 @@ Route::get('test', function () {
 
     // return $payment;
     return $sessions->pluck('id');
-    dd($payment);
+    //dd($payment);
     // return Inertia::render('Test');
 });
 

@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\AttendeePurchasedTickets;
 use App\Http\Requests\Organizer\Event\User\AttendeeStoreRequest;
 use App\Models\AddonVariant;
+use App\Models\ChatMember;
 use Illuminate\Validation\Rule;
 
 class AttendeeController extends Controller
