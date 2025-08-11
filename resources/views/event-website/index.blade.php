@@ -43,9 +43,9 @@
                     <p class="event-tagline">{{ $event->tagline }}</p>
                 @endisset
                 <div class="hero-cta">
-                    <a href="{{ route('attendee.register', $event) }}" class="btn btn-primary btn-lg">Secure Your
+                    <a href="{{ route('attendee.register', $event) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}" class="btn btn-primary btn-lg">Secure Your
                         Spot</a>
-                    <a href="{{ route('organizer.events.website.schedule', $event->uuid) }}"
+                    <a href="{{ route('organizer.events.website.schedule', $event->uuid)}}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}"
                         class="btn btn-outline btn-lg">Explore Schedule</a>
                 </div>
                 <div class="countdown" id="countdown">
@@ -249,7 +249,7 @@
                                     @endphp
 
                                     @if ($remaining > 0)
-                                        <a href="{{ route('attendee.login', $event) }}">
+                                        <a href="{{ route('attendee.login', $event) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}">
                                             <li class="color_primary">
                                                 {{ $remaining }}+ More
                                             </li>
@@ -263,7 +263,7 @@
                                     </div>
                                 </div>
 
-                                <a href="{{ route('attendee.register', $event) }}"
+                                <a href="{{ route('attendee.register', $event) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}"
                                     class="btn btn-primary btn-block mt-auto">Register Now</a>
                             </div>
                         @endif

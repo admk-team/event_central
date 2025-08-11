@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
@@ -32,10 +33,6 @@ class EventApp extends Model
         'recurring_type_id',
     ];
 
-    protected $casts = [
-        'is_recurring' => 'boolean',
-        'registration_private' => 'boolean'
-    ];
     protected $appends = [
         'start_date',
         'created_at' => 'created_at_date',
@@ -48,6 +45,13 @@ class EventApp extends Model
         'category',
         'recurring_type'
     ];
+
+    protected $casts = [
+        'is_recurring' => 'boolean',
+        'registration_private' => 'boolean',
+        'start_date' => 'datetime',
+    ];
+
 
 
     public function uniqueIds(): array
@@ -181,6 +185,12 @@ class EventApp extends Model
     public function liveStreams()
     {
         return $this->hasMany(LiveStream::class);
+    }
+
+    public function authorizedUsers(): MorphToMany
+    {
+        return $this->morphToMany(User::class, 'model', 'model_permissions', 'model_id', 'authorizable_id')
+            ->where('authorizable_type', User::class);
     }
 
     public function getFeaturedImageAttribute()

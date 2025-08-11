@@ -134,7 +134,7 @@ const EventAppTickets = ({ tickets }: any) => {
                                     data={{ data: tickets, links: [] }}
                                     columns={columns}
                                     title="Payments"
-                                    tableLayoutFixed={true}
+                                    tableLayoutFixed={false}
                                     disableRowSelection={true}
                                 />
                         </Col>

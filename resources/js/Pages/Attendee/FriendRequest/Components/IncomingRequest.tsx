@@ -1,34 +1,28 @@
 import React, { useState } from "react";
-import avatar1 from "../../../../../images/products/img-10.png";
-
-const users = [
-    {
-        id: 1,
-        name: "Anna Adame",
-        position: "Web Developer",
-        avatar: avatar1,
-    },
-    {
-        id: 2,
-        name: "John Doe",
-        position: "Backend Engineer",
-        avatar: avatar1,
-    },
-    {
-        id: 3,
-        name: "Sarah Miller",
-        position: "UI/UX Designer",
-        avatar: avatar1,
-    },
-];
+import avatar1 from "../../../../../images/users/user-dummy-img.jpg";
+import { useForm, usePage } from "@inertiajs/react";
 
 const IncomingRequest = () => {
-    const [search, setSearch] = useState("");
 
+    const attendee = usePage().props.incomingRequests as any;
+    const [search, setSearch] = useState("");
     // Filter users by search input
-    const filteredUsers = users.filter((user) =>
-        user.name.toLowerCase().includes(search.toLowerCase())
+    const filteredUsers = attendee.filter((user:any) =>
+        user.sender.name.toLowerCase().includes(search.toLowerCase())
     );
+
+    const { data, setData, post, reset,processing, errors } = useForm({
+        sender_id: '',
+    })
+
+    function submit(e: any) {
+        e.preventDefault();
+        post(route("friend.accept"), {
+            onSuccess: () => {
+                reset();
+            },
+        });
+    }
 
     return (
         <div className="container">
@@ -42,20 +36,20 @@ const IncomingRequest = () => {
             {/* User Cards */}
             <div className="row">
                 {filteredUsers.length > 0 ? (
-                    filteredUsers.map((user) => (
-                        <div className="col-lg-3 col-md-6 mb-4" key={user.id}>
+                    filteredUsers.map((user:any) => (
+                        <div className="col-lg-3 col-md-6 mb-4" key={user.sender.id}>
                             <div className="card shadow-lg h-100">
                                 <div className="card-body text-center">
                                     <div className="avatar-md mb-3 mx-auto">
                                         <img
-                                            src={user.avatar}
-                                            alt={user.name}
+                                            src={user.sender.avatar_img ?? avatar1}
+                                            alt={user.sender.name}
                                             className="img-thumbnail rounded-circle shadow-none"
                                         />
                                     </div>
 
-                                    <h5 className="mb-0">{user.name}</h5>
-                                    <p className="text-muted">{user.position}</p>
+                                    <h5 className="mb-0">{user.sender.name}</h5>
+                                    <p className="text-muted">{user.sender.position}</p>
 
                                     <div className="d-flex gap-2 justify-content-center mb-3">
                                         <button type="button" className="btn avatar-xs p-0" title="Website">
@@ -82,16 +76,25 @@ const IncomingRequest = () => {
 
 
                                     <div>
-                                        <button type="button" className="btn btn-success rounded-pill w-sm">
-                                            <i className="ri-user-follow-line me-1 align-bottom"></i> Accept
-                                        </button>
+                                        <form onSubmit={submit}>
+                                            <button
+                                                type="submit"
+                                                className="btn btn-success rounded-pill w-sm"
+                                                disabled={processing}
+                                                onClick={() => setData('sender_id',user.sender.id)}
+                                            >
+                                                <i className="ri-user-follow-line me-1 align-bottom"></i>Accept
+                                            </button>
+                                            {errors.sender_id && <div className="text-danger">{errors.sender_id}</div>}
+                                        </form>
+
                                     </div>
                                 </div>
                             </div>
                         </div>
                     ))
                 ) : (
-                    <div className="text-center text-muted">No users found.</div>
+                    <div className="text-center text-muted">No Incoming Request found.</div>
                 )}
             </div>
         </div>

@@ -95,6 +95,15 @@ class EventAppTicketController extends Controller
         // $data['addons'] = $this->transformAddons($data);
         $data['fees'] = $this->transformFees($data);
 
+
+        $data['bulk_purchase_status'] = (bool) $request->bulk_purchase_status;
+
+        if (! $data['bulk_purchase_status']) {
+            $data['bulk_purchase_discount_type'] = 'fixed';
+            $data['bulk_purchase_discount_value'] = 0;
+            $data['bulk_purchase_qty'] = 0;
+        }
+        
         $ticket->update($data);
 
         $ticket->sessions()->sync($data['sessions']);

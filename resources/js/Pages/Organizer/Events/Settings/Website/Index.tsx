@@ -13,7 +13,7 @@ import Colors from './Components/Colors';
 import HasPermission from '../../../../../Components/HasPermission';
 
 function Website() {
-
+    const previewUrl = usePage().props.previewUrl as string;
     return (
         <React.Fragment>
             <Head title='Website Settings' />
@@ -27,6 +27,7 @@ function Website() {
                     />
                     <Row>
                         <Col md={8}>
+                        fdsfdsfdsfdsf
                             <Row>
                                 <Col xs={12}>
                                     <HasPermission permission="view_website">
@@ -59,7 +60,7 @@ function Website() {
                             </Row>
                         </Col>
                     </Row>
-                    
+
                 </Container>
             </div>
         </React.Fragment>

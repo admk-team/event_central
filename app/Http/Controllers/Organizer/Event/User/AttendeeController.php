@@ -21,6 +21,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\AttendeePurchasedTickets;
 use App\Http\Requests\Organizer\Event\User\AttendeeStoreRequest;
 use App\Models\AddonVariant;
+use App\Models\ChatMember;
+use Illuminate\Validation\Rule;
 
 class AttendeeController extends Controller
 {
@@ -44,7 +46,14 @@ class AttendeeController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:attendees,email',
+            'email' => [
+                'required',
+                'string',
+                'lowercase',
+                'email',
+                'max:255',
+                Rule::unique('attendees', 'email')->where('event_app_id', session('event_id')),
+            ],
         ]);
         if (!session()->has('event_id')) {
             return redirect()->back()->withErrors(['error' => 'Event ID not found in session.']);
@@ -60,6 +69,7 @@ class AttendeeController extends Controller
             'bio' => $request->bio,
             'location' => $request->location,
             'password' => Hash::make("12345678"),
+            'is_public' => $request->is_public == 1 ? true : false,
         ]);
         return back()->withSuccess('attendee created successfully.');
     }
@@ -198,14 +208,21 @@ class AttendeeController extends Controller
             ->leftJoin('addon_purchased_ticket', 'attendee_purchased_tickets.id', '=', 'addon_purchased_ticket.attendee_purchased_ticket_id')
             ->where('attendee_payments.attendee_id', $id)
             ->where('attendee_payments.status', 'paid')
-            ->groupBy('attendee_purchased_tickets.id', 'attendee_payments.id', 'event_app_tickets.name', 'attendee_payments.payment_method')
+            ->groupBy(
+                'attendee_purchased_tickets.id',
+                'attendee_payments.id',
+                'event_app_tickets.name',
+                'attendee_payments.payment_method',
+                'attendee_purchased_tickets.total'
+            )
             ->select(
+                'attendee_purchased_tickets.total as ticket_total_price',
                 'attendee_purchased_tickets.id as attendee_purchased_ticket_id',
                 'event_app_tickets.name as ticket_name',
                 DB::raw('SUM(attendee_purchased_tickets.qty) as qty'),
-                DB::raw('SUM(attendee_payments.amount_paid) as amount'),
+                DB::raw('MAX(attendee_payments.amount_paid) as amount'),
                 'attendee_payments.payment_method as type',
-                DB::raw('COUNT(attendee_purchased_ticket_id) as addons_count')  // Add count of addons
+                DB::raw('COUNT(addon_purchased_ticket.attendee_purchased_ticket_id) as addons_count')
             )
             ->get();
 
@@ -359,5 +376,38 @@ class AttendeeController extends Controller
         ImportAttendeeJob::dispatch($fromEventId, $toEventId);
 
         return back()->withSuccess("Import Job Dispatched In Successfully");
+    }
+
+
+    public function initiateChat($id)
+    {
+        $event = EventApp::find(session('event_id'));
+        $attendee = Attendee::find($id);
+
+        if (!$event) {
+            return back()->withError('No active event found.');
+        }
+        if (!$attendee) {
+            return back()->withError('No attendee found.');
+        }
+
+        $existing = ChatMember::where('event_id', $event->id)
+        ->where('user_id', Auth::user()->id)
+        ->where('participant_id', $attendee->id)
+        ->first();
+        
+        if ($existing) {
+            return back()->withError('A chat with this attendee already exists.');
+        }
+
+        ChatMember::create([
+            'event_id' => $event->id,
+            'user_id' => Auth::user()->id,
+            'user_type' => \App\Models\User::class,
+            'participant_id' => $attendee->id,
+            'participant_type' => \App\Models\Attendee::class,
+        ]);
+
+        return back()->withSuccess('Chat initiated successfully.');
     }
 }
