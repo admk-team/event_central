@@ -178,6 +178,11 @@ class EventApp extends Model
         return $this->hasMany(EventCheckIns::class);
     }
 
+    public function liveStreams()
+    {
+        return $this->hasMany(LiveStream::class);
+    }
+
     public function getFeaturedImageAttribute()
     {
         return Cache::remember('event_image_' . $this->id, now()->addMinutes(5), function () {

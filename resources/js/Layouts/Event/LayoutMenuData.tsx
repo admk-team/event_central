@@ -34,6 +34,7 @@ const Navdata = () => {
     const [isReport, setIsReport] = useState<boolean>(false);
     const [isPrayerRequest, setIsPrayerRequest] = useState<boolean>(false);
     const [isPrivateRegister, setIsPrivateRegister] = useState<boolean>(false);
+    const [isLiveStreams, setIsLiveStreams] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>("Dashboard");
 
@@ -75,6 +76,7 @@ const Navdata = () => {
         if (iscurrentState !== "prayer_request") setIsPrayerRequest(false);
         if (iscurrentState !== "chat") setIsChat(false);
         if (iscurrentState !== "private_registration") setIsPrivateRegister(false);
+        if (iscurrentState !== "LiveStreams") setIsPrivateRegister(false);
         if (iscurrentState !== "Questionnaire_response")
             setIsQuestionnaireResponse(false);
         // if (iscurrentState !== 'assignTickets') setIsTickets(false);
@@ -98,6 +100,7 @@ const Navdata = () => {
         isChat,
         // isAssignTicket,
         // isUpgradeTicket
+        isLiveStreams,
     ]);
 
     // Dynamic current date
@@ -604,7 +607,7 @@ const Navdata = () => {
         //     ],
         // },
 
-          {
+        {
             id: "private_registration",
             label: "Private Registration",
             icon: "bx bxs-notepad",
@@ -618,6 +621,22 @@ const Navdata = () => {
             },
             hasPermissions: [
                 'view_private_registration'
+            ],
+        },
+        {
+            id: "liveStreams",
+            label: "Live Streams",
+            icon: "bx bx-broadcast",
+            link: route('organizer.events.live-streams.index'),
+            stateVariables: isLiveStreams,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsLiveStreams(!isLiveStreams);
+                setIscurrentState('LiveStreams');
+                updateIconSidebar(e);
+            },
+            hasPermissions: [
+                'view_live_streams'
             ],
         },
 
