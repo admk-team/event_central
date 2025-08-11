@@ -506,7 +506,6 @@ class PaymentController extends Controller
                     $purchasedTicket->ticket->ticketType->name : '', // <-- added line
             ];
         }
-
         return Inertia::render('Attendee/Tickets/PurchasedTickets', [
             'eventApp' => $eventApp,
             'attendee' => $attendee,
