@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\AttendeePurchasedTickets;
 use App\Http\Requests\Organizer\Event\User\AttendeeStoreRequest;
 use App\Models\AddonVariant;
+use Illuminate\Validation\Rule;
 
 class AttendeeController extends Controller
 {
@@ -44,7 +45,14 @@ class AttendeeController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:attendees,email',
+            'email' => [
+                'required',
+                'string',
+                'lowercase',
+                'email',
+                'max:255',
+                Rule::unique('attendees', 'email')->where('event_app_id', session('event_id')),
+            ],
         ]);
         if (!session()->has('event_id')) {
             return redirect()->back()->withErrors(['error' => 'Event ID not found in session.']);
