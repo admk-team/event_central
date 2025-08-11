@@ -19,7 +19,7 @@ class Kernel extends ConsoleKernel
         $schedule->command(IncreaseTicketPrices::class)->daily();
         $schedule->command(EventCloseRegistration::class)->daily();
         $schedule->command(EventCloserReminder::class)->daily();
-        // $schedule->command(SessionReminder::class)->everyMinute();
+        $schedule->command(SessionReminder::class)->everyMinute();
     }
 
     /**

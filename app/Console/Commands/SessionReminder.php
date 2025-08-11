@@ -64,7 +64,7 @@ class SessionReminder extends Command
             if ($diffInMinutes === 10) {
                 Log::info('Sending reminder for session before 10 minutes of starting time: ' . $session->id);
                 EventSessionReminder::dispatch(
-                    $fav->attendee->email,
+                    $fav->attendee,
                     $event,
                     $matchingDate,
                     $session
