@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Organizer\Event;
 
+use App\Events\UpdateEventDashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organizer\Event\EventSpeakerRequest;
 use App\Models\EventApp;
@@ -58,7 +59,7 @@ class EventSpeakerController extends Controller
             $input['language'] = null;
         }
         EventSpeaker::create($input);
-
+        broadcast(new UpdateEventDashboard(session('event_id'),'New Speaker Created'))->toOthers();
         return redirect()->route('organizer.events.speaker.index')->withSuccess('success', 'Speaker created successfully.');
     }
 
@@ -107,6 +108,7 @@ class EventSpeakerController extends Controller
         }
 
         $speaker->delete();
+        broadcast(new UpdateEventDashboard(session('event_id'),'Speaker Deleted'))->toOthers();
         return back()->withSuccess('Deleted successfully.');
     }
 
@@ -122,5 +124,6 @@ class EventSpeakerController extends Controller
         foreach ($request->ids as $id) {
             EventSpeaker::find($id)->delete();
         }
+        broadcast(new UpdateEventDashboard(session('event_id'),'Speaker Deleted'))->toOthers();
     }
 }

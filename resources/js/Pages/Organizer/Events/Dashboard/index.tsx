@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 
 //import Components
@@ -16,6 +16,9 @@ import Layout from "../../../../Layouts/Event";
 import Widgets1 from "../../../Theme/DashboardCrypto/Widgets1";
 import Widget1 from "./Widget1";
 import HasPermission from "../../../../Components/HasPermission";
+import { router } from "@inertiajs/react";
+import { useEchoPublic } from "@laravel/echo-react";
+import toast, { Toaster } from 'react-hot-toast';
 
 const DashboardAnalytics = ({
     totalAttendee,
@@ -29,7 +32,25 @@ const DashboardAnalytics = ({
     topSession,
     ticketsMetrics,
     top10Attendee,
+    event_id
 }: any) => {
+
+    // Real-time subscription to public channel
+    const eventChannelName = `event-dashboard-${event_id}`;
+    useEchoPublic(eventChannelName, "UpdateEventDashboard", (e: any) => {
+        if (e && e.event_id == event_id) {
+            toast.success(e.message);
+            router.get(
+                route("organizer.events.dashboard"),
+                {},
+                {
+                    preserveScroll: true,
+                    preserveState: true,
+                    replace: true,
+                }
+            );
+        }
+    });
     return (
         <React.Fragment>
             <Head title="Analytics " />

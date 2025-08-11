@@ -45,6 +45,7 @@ class DashboardController extends Controller
     
             $ticketsMetrics = $this->ticketsMetrics();
             $top10Attendee = $this->top10Attendee();
+            $event_id = session('event_id');
             // dd($ticketsMetrics);
             return Inertia::render('Organizer/Events/Dashboard/index', compact(
                 'totalAttendee',
@@ -58,6 +59,7 @@ class DashboardController extends Controller
                 'ticketsMetrics',
                 'top10Attendee',
                 'totalRevenue',
+                'event_id',
             ));
         } else {
             return Inertia::render('Organizer/Events/Dashboard/Empty');

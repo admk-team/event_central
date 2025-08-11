@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Attendee\Payment;
 
+use App\Events\UpdateEventDashboard;
 use Exception;
 use Inertia\Inertia;
 use App\Models\Addon;
@@ -299,6 +300,7 @@ class PaymentController extends Controller
         }
         //Update Attendee Payment status and session etc
         $this->updateAttendeePaymnet($payment->uuid);
+        broadcast(new UpdateEventDashboard($attendee->event_app_id,'New Ticket Purchased'))->toOthers();
         return $payment;
     }
 
