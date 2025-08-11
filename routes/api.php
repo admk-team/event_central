@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\v1\Organizer\AddonController;
 use App\Http\Controllers\Api\v1\Organizer\AssignTicketApiController;
 use App\Http\Controllers\Api\v1\Organizer\QAController;
 use App\Http\Controllers\Api\v1\Organizer\AttendeeController;
+use App\Http\Controllers\Api\v1\Organizer\CustomBadgeController;
 use App\Http\Controllers\Api\v1\Organizer\EmailTemplateController;
 use App\Http\Controllers\Api\v1\Organizer\TicketController;
 use App\Http\Controllers\Api\v1\Organizer\EventPostsController;
@@ -40,6 +41,7 @@ Route::prefix('user')->group(function () {
 
     Route::post('/login', [AuthController::class, 'login'])->defaults('type', 'user');
     Route::post('email-template-update/{EmailTemplate}', [EmailTemplateController::class, 'update'])->name('email.template.update');
+    Route::post('badge-template-update/{EmailTemplate}', [CustomBadgeController::class, 'update'])->name('badge.template.update');
     Route::middleware(['auth:sanctum', 'ability:role:user'])->group(function () {
         Route::delete('delete/{user}', [AuthController::class, 'delete'])->name('user.delete')->defaults('type', 'user');
         Route::get('/me', function (Request $request) {
@@ -119,7 +121,7 @@ Route::prefix('user')->group(function () {
         // Payments
         Route::get('events/{event}/payments', [OrganizerPaymentController::class, 'index']);
         Route::get('/events/{event}/payments/search', [OrganizerPaymentController::class, 'search']);
-        //prayer request 
+        //prayer request
         Route::get('events/organizer/prayer-requests/{event_id}', [PrayerRequestController::class, 'index']);
         Route::put('events/organizer/prayer-requests/update/{id}', [PrayerRequestController::class, 'update']);
         Route::delete('events/organizer/prayer-requests/delete/{id}', [PrayerRequestController::class, 'destroy']);

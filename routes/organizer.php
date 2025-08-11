@@ -26,6 +26,7 @@ use App\Http\Controllers\Organizer\Event\EventBadgeController;
 use App\Http\Controllers\Organizer\Event\ContactFormController;
 use App\Http\Controllers\Organizer\Event\EventAppFeeController;
 use App\Http\Controllers\Organizer\Event\AssignTicketController;
+use App\Http\Controllers\Organizer\Event\CustomBadgeController;
 use App\Http\Controllers\Organizer\Event\EventPartnerController;
 use App\Http\Controllers\Organizer\Event\EventSessionController;
 use App\Http\Controllers\Organizer\Event\EventSpeakerController;
@@ -313,6 +314,8 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
 
             //Email Template
             Route::resource('email-template', EmailTemplateController::class);
+            //Custom Badge Template
+            Route::resource('badge-template', CustomBadgeController::class);
 
             //Email Campaign
             Route::resource('email-campaign', EmailCampaignController::class);
