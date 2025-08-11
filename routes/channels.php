@@ -20,3 +20,7 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 Broadcast::channel('event-app-{eventId}', function ($user, $eventId) {
     return true; // Or check if user is part of the event
 });
+
+Broadcast::channel('attendee-chat-{receiverId}', function ($user, $receiverId) {
+    return true;
+});

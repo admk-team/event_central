@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { Button, Col, Form, Row } from 'react-bootstrap';
+import { Button, Col, Form, Row, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { useForm, usePage } from '@inertiajs/react';
 
 import { FilePond, registerPlugin } from "react-filepond";
@@ -46,7 +46,8 @@ const UserInfo = (props: any) => {
         email: user?.email ?? '',
         image: null,
         avatar: user?.avatar ?? '',
-        imageChanged: false
+        imageChanged: false,
+        is_public: user?.is_public ?? "1",
     });
 
 
@@ -177,6 +178,42 @@ const UserInfo = (props: any) => {
                                 onChange={(e: any) => setData('phone', e.target.value)}
                             />
                             <Form.Control.Feedback type="invalid" className='mt-2 d-block'>{errors.phone}</Form.Control.Feedback>
+                        </Col>
+                    </Row>
+                    <Row className="mt-1">
+                        <Col md={12} lg={12}>
+                            <Form.Label htmlFor="account_type" className="form-label">
+                            Account Type{' '}
+                            <OverlayTrigger
+                                placement="right"
+                                overlay={
+                                <Tooltip id="account-type-tooltip">
+                                    If the account is <strong>Private</strong>, it will not appear in search results for other users.  
+                                    If two users are friends with each other, a private chat will be initiated between them.
+                                </Tooltip>
+                                }
+                            >
+                                <span style={{ cursor: 'pointer', color: '#0d6efd',fontSize:'16px' }}>
+                                    <i className="bx bx-info-circle" />
+                                </span>
+                            </OverlayTrigger>
+                            </Form.Label>
+
+                            <Form.Select
+                            id="account_type"
+                            name="account_type"
+                            value={data.is_public}
+                            className={'mt-1 form-control' + (errors.is_public ? ' is-invalid' : '')}
+                            onChange={(e: any) => setData('is_public', e.target.value)}
+                            >
+                            <option value="">Select Account Type</option>
+                            <option value="1">Public</option>
+                            <option value="0">Private</option>
+                            </Form.Select>
+
+                            <Form.Control.Feedback type="invalid" className="mt-2 d-block">
+                            {errors.is_public}
+                            </Form.Control.Feedback>
                         </Col>
                     </Row>
                     <div>

@@ -16,9 +16,15 @@ return new class extends Migration
             $table->unsignedBigInteger('event_id');
             $table->unsignedBigInteger('sender_id');
             $table->string('sender_type'); // App\Models\User or App\Models\Attendee
-            $table->longText('message');
-            $table->timestamps();
+            $table->unsignedBigInteger('receiver_id');
+            $table->string('receiver_type'); // App\Models\User or App\Models\Attendee
+            $table->longText('message')->nullable();
 
+            // Reply to another message
+            $table->unsignedBigInteger('reply_to')->nullable();
+            $table->foreign('reply_to')->references('id')->on('chat_messages')->onDelete('set null');
+
+            $table->timestamps();
             $table->foreign('event_id')->references('id')->on('event_apps')->onDelete('cascade');
         });
     }

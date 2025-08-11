@@ -8,6 +8,7 @@ const Navdata = () => {
     const [isStaff, setIsStaff] = useState<boolean>(false);
     const [isPaymentSettings, setIsPaymentSettings] = useState<boolean>(false);
     const [isZohoSetting, setIsZohoSetting] = useState<boolean>(false);
+    const [isLiveStreamSettings, setIsLiveStreamSettings] = useState<boolean>(false);
 
 
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
@@ -44,6 +45,9 @@ const Navdata = () => {
         if (iscurrentState !== 'ZohoSettings') {
             setIsZohoSetting(false);
         }
+        if (iscurrentState !== 'LiveStreamSettings') {
+            setIsLiveStreamSettings(false);
+        }
     }, [
         history,
         iscurrentState,
@@ -51,7 +55,8 @@ const Navdata = () => {
         isEvents,
         isStaff,
         isPaymentSettings,
-        isZohoSetting
+        isZohoSetting,
+        isLiveStreamSettings
     ]);
 
     const menuItems: any = [
@@ -163,6 +168,22 @@ const Navdata = () => {
                     parentId: "zoho_settings",
                 },
             ],
+        },
+        {
+            id: "liveStreamSettings",
+            label: "Live Stream Settings",
+            icon: "bx bx-broadcast",
+            link: route('organizer.settings.live-stream.index'),
+            stateVariables: isLiveStreamSettings,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsDashboard(!isLiveStreamSettings);
+                setIscurrentState('LiveStreamSettings');
+                updateIconSidebar(e);
+            },
+            hasPermissions: [
+                'edit_live_stream_settings',
+            ]
         },
     ];
     return <React.Fragment>{menuItems}</React.Fragment>;

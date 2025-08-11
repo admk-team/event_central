@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Organizer\Event\User;
 
+use App\Events\UpdateEventDashboard;
 use Carbon\Carbon;
 use Inertia\Inertia;
 use App\Models\Attendee;
@@ -21,6 +22,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\AttendeePurchasedTickets;
 use App\Http\Requests\Organizer\Event\User\AttendeeStoreRequest;
 use App\Models\AddonVariant;
+use App\Models\ChatMember;
 use Illuminate\Validation\Rule;
 
 class AttendeeController extends Controller
@@ -68,7 +70,9 @@ class AttendeeController extends Controller
             'bio' => $request->bio,
             'location' => $request->location,
             'password' => Hash::make("12345678"),
+            'is_public' => $request->is_public == 1 ? true : false,
         ]);
+        broadcast(new UpdateEventDashboard(session('event_id'),'Attendee Created'))->toOthers();
         return back()->withSuccess('attendee created successfully.');
     }
 
@@ -119,6 +123,7 @@ class AttendeeController extends Controller
         }
 
         $attendee->delete();
+        broadcast(new UpdateEventDashboard(session('event_id'),'Attendee Deleted'))->toOthers();
         return back()->withSuccess('Attendee deleted successfully.');
     }
 
@@ -134,6 +139,7 @@ class AttendeeController extends Controller
         foreach ($request->ids as $id) {
             Attendee::find($id)->delete();
         }
+        broadcast(new UpdateEventDashboard(session('event_id'),'Attendee Deleted'))->toOthers();
         return back()->withSuccess('Attendees deleted successfully.');
     }
 
@@ -206,14 +212,21 @@ class AttendeeController extends Controller
             ->leftJoin('addon_purchased_ticket', 'attendee_purchased_tickets.id', '=', 'addon_purchased_ticket.attendee_purchased_ticket_id')
             ->where('attendee_payments.attendee_id', $id)
             ->where('attendee_payments.status', 'paid')
-            ->groupBy('attendee_purchased_tickets.id', 'attendee_payments.id', 'event_app_tickets.name', 'attendee_payments.payment_method')
+            ->groupBy(
+                'attendee_purchased_tickets.id',
+                'attendee_payments.id',
+                'event_app_tickets.name',
+                'attendee_payments.payment_method',
+                'attendee_purchased_tickets.total'
+            )
             ->select(
+                'attendee_purchased_tickets.total as ticket_total_price',
                 'attendee_purchased_tickets.id as attendee_purchased_ticket_id',
                 'event_app_tickets.name as ticket_name',
                 DB::raw('SUM(attendee_purchased_tickets.qty) as qty'),
-                DB::raw('SUM(attendee_payments.amount_paid) as amount'),
+                DB::raw('MAX(attendee_payments.amount_paid) as amount'),
                 'attendee_payments.payment_method as type',
-                DB::raw('COUNT(attendee_purchased_ticket_id) as addons_count')  // Add count of addons
+                DB::raw('COUNT(addon_purchased_ticket.attendee_purchased_ticket_id) as addons_count')
             )
             ->get();
 
@@ -227,7 +240,7 @@ class AttendeeController extends Controller
         return Inertia::render('Organizer/Events/Users/Attendees/AttendeeProfile/Profile', compact('attendee', 'user', 'sessions', 'tickets', 'sessionsPurchased'));
     }
 
-    public function getPurchasedTicketAddons(AttendeePurchasedTickets  $attendeePurchasedTicket)
+    public function getPurchasedTicketAddons(AttendeePurchasedTickets $attendeePurchasedTicket)
     {
         $attendeePurchasedTicket->load('purchased_addons');
         $addons = $attendeePurchasedTicket->purchased_addons;
@@ -238,8 +251,13 @@ class AttendeeController extends Controller
                 ->where('addon_id', $addon->id)
                 ->first();
 
-            $variant = AddonVariant::with(['attributeValues' => ['addonAttribute', 'addonAttributeOption']])->find($pivot->addon_variant_id);
-            if (! $variant) continue;
+            // Load addon variant and its attributes
+            $variant = AddonVariant::with(['attributeValues' => ['addonAttribute', 'addonAttributeOption']])
+                ->find($pivot->addon_variant_id);
+
+            $addon->extra_fields_values = $pivot->extra_fields_values ? json_decode($pivot->extra_fields_values, true) : null;
+
+            if (!$variant) continue;
 
             $addon->price = $variant->price;
             $addon_attributes[$addon->id] = [];
@@ -362,5 +380,38 @@ class AttendeeController extends Controller
         ImportAttendeeJob::dispatch($fromEventId, $toEventId);
 
         return back()->withSuccess("Import Job Dispatched In Successfully");
+    }
+
+
+    public function initiateChat($id)
+    {
+        $event = EventApp::find(session('event_id'));
+        $attendee = Attendee::find($id);
+
+        if (!$event) {
+            return back()->withError('No active event found.');
+        }
+        if (!$attendee) {
+            return back()->withError('No attendee found.');
+        }
+
+        $existing = ChatMember::where('event_id', $event->id)
+        ->where('user_id', Auth::user()->id)
+        ->where('participant_id', $attendee->id)
+        ->first();
+        
+        if ($existing) {
+            return back()->withError('A chat with this attendee already exists.');
+        }
+
+        ChatMember::create([
+            'event_id' => $event->id,
+            'user_id' => Auth::user()->id,
+            'user_type' => \App\Models\User::class,
+            'participant_id' => $attendee->id,
+            'participant_type' => \App\Models\Attendee::class,
+        ]);
+
+        return back()->withSuccess('Chat initiated successfully.');
     }
 }

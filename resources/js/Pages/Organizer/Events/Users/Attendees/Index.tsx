@@ -15,6 +15,7 @@ import ImportFromEvent from './Component/ImportFromEvent';
 import HasPermission from '../../../../../Components/HasPermission';
 import { Check, CircleCheck, CircleX } from 'lucide-react';
 import EventCheckinButton from './Component/EventCheckinButton';
+import axios from 'axios';
 
 function Index({ attendees, eventList }: any) {
 
@@ -33,6 +34,9 @@ function Index({ attendees, eventList }: any) {
 
     const deleteForm = useForm({
         _method: 'DELETE'
+    });
+    const chatForm = useForm({
+        _method: 'POST'
     });
     const deleteManyForm = useForm<{ _method: string; ids: number[] }>({
         _method: 'DELETE',
@@ -66,6 +70,9 @@ function Index({ attendees, eventList }: any) {
         setShowDeleteManyConfirmation(false);
     }
 
+    const initiateChat = (attendee:any) =>{
+        chatForm.post(route('organizer.events.attendee.chat.initiate', attendee.id));
+    }
     // const exportSchema: any = [
     //     {
     //         column: 'Name',
@@ -173,6 +180,7 @@ function Index({ attendees, eventList }: any) {
                         <i className="bx bxs-coupon"></i>
                     </Link>
                     <a className="link-primary cursor-pointer" onClick={() => editAction(attendee)} ><i className="ri-edit-fill"></i></a>
+                    <a className="link-primary cursor-pointer" onClick={()=>initiateChat(attendee)}><i className="bx bx-message-rounded-dots"></i></a>
                     <a className="link-red cursor-pointer" onClick={() => deleteAction(attendee)}>
                         <i className="ri-delete-bin-5-line"></i>
                     </a>
