@@ -2,7 +2,6 @@
 
 namespace App\Events;
 
-use App\Models\ChatMessage;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -12,19 +11,19 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class AttendeeChatMessage implements ShouldBroadcast 
+class UpdateEventDashboard implements ShouldBroadcast 
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
+    
+    public $eventId;
+    public $message;
     /**
      * Create a new event instance.
      */
-    public $message;
-    public $reciever;
-    public function __construct(ChatMessage $chatMessage)
+    public function __construct($eventId,$msg)
     {
-        $this->message = $chatMessage;
-        $this->reciever = $chatMessage->receiver_id;
+        $this->eventId = $eventId;
+        $this->message = $msg;
     }
 
     /**
@@ -32,18 +31,16 @@ class AttendeeChatMessage implements ShouldBroadcast
      *
      * @return array<int, \Illuminate\Broadcasting\Channel>
      */
-    public function broadcastOn(): array
+    public function broadcastOn()
     {
-        
-        return [
-            new PrivateChannel('attendee-chat-' . $this->reciever),
-        ];
+        return new Channel('event-dashboard-' . $this->eventId);
     }
 
     public function broadcastWith()
     {
         return [
-            'message' => $this->message
+            'message' => $this->message,
+            'event_id' => $this->eventId
         ];
     }
 }

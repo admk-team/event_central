@@ -31,8 +31,10 @@ use App\Http\Controllers\Organizer\Event\EventAppTicketController;
 use App\Http\Controllers\Organizer\Event\EventBadgeController;
 use App\Http\Controllers\Organizer\Event\EventDateController;
 use App\Http\Controllers\Organizer\Event\EventPromoCodeController;
+use App\Http\Controllers\Organizer\Event\EventStore\ProductController;
 use App\Http\Controllers\Organizer\Event\EventTicketTypeController;
 use App\Http\Controllers\Organizer\Event\FormFieldController;
+use App\Http\Controllers\Organizer\Event\LiveStreamController;
 use App\Http\Controllers\Organizer\Event\PrayerRequestController;
 use App\Http\Controllers\Organizer\Event\PrivateRegistrationViaEmailController;
 use App\Http\Controllers\Organizer\Event\QuestionnaireFormFieldController;
@@ -52,6 +54,7 @@ use App\Http\Controllers\Organizer\Event\WebsiteController;
 use App\Http\Controllers\Organizer\Event\WorkshopController;
 use App\Http\Controllers\Organizer\ProfileController;
 use App\Http\Controllers\Organizer\RoleController;
+use App\Http\Controllers\Organizer\Settings\LiveStreamSettingController;
 use App\Http\Controllers\Organizer\Settings\OrganizerPaymentSettingController;
 use App\Http\Controllers\Organizer\UserController;
 use App\Http\Controllers\QuestionController;
@@ -67,6 +70,7 @@ Route::prefix('e/{uuid}')->name('organizer.events.website')->group(function () {
     Route::get('sponsors/{id}', [WebsiteController::class, 'sponsorsSingle'])->name('.sponsors.single');
     Route::get('exhibitors', [WebsiteController::class, 'exhibitors'])->name('.exhibitors');
     Route::get('tickets', [WebsiteController::class, 'tickets'])->name('.tickets');
+    Route::get('products', [WebsiteController::class, 'products'])->name('.products');
     Route::get('privacy-policy', [WebsiteController::class, 'privacypolicy'])->name('.privacy');
     Route::get('contact-us', [WebsiteController::class, 'contactus'])->name('.contactus');
     Route::get('{slug}', [WebsiteController::class, 'page'])->name('.page');
@@ -90,6 +94,13 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
         });
     });
 
+    // Live Stream Settings
+    Route::prefix('settings')->name('settings.')->group(function () {
+        Route::prefix('live-stream')->name('live-stream.')->group(function () {
+            Route::get('/', [LiveStreamSettingController::class, 'index'])->name('index');
+            Route::put('update', [LiveStreamSettingController::class, 'update'])->name('update');
+        });
+    });
 
     //Events
     Route::prefix('events')->name('events.')->group(function () {
@@ -116,6 +127,10 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             // Speakers
             Route::resource('speaker', EventSpeakerController::class);
             Route::delete('speakers/delete/many', [EventSpeakerController::class, 'destroyMany'])->name('speakers.destroy.many');
+
+            // Event Store 
+            Route::resource('products',ProductController::class);
+            Route::post('products/update/{product}',[ProductController::class,'update'])->name('update.product');
 
             // Attendies
             Route::resource('attendees', AttendeeController::class);
@@ -325,6 +340,12 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
         Route::delete('/attendance/{id}', [SessionAttendanceController::class, 'destroy'])->name('attendance.destroy');
         Route::delete('/attendance/destroy/many', [SessionAttendanceController::class, 'destroyMany'])->name('attendance.destroy.many');
         // Route::post('/attendance/destroy/many', [SessionAttendanceController::class, 'destroyMany'])->name('attendance.destroy.many');
+
+        // Live Streams
+        Route::resource('live-streams', LiveStreamController::class);
+        Route::get('live-streams/status/{id}', [LiveStreamController::class, 'status'])->name('live-streams.status');
+        Route::post('live-streams/start', [LivestreamController::class, 'startStream'])->name('live-streams.start');
+        Route::delete('users/delete/many', [LiveStreamController::class, 'destroyMany'])->name('live-streams.destroy.many');
     });
     // Event
     Route::prefix('posts')->name('posts.')->group(function () {

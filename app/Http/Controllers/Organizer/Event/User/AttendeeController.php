@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Organizer\Event\User;
 
+use App\Events\UpdateEventDashboard;
 use Carbon\Carbon;
 use Inertia\Inertia;
 use App\Models\Attendee;
@@ -21,6 +22,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\AttendeePurchasedTickets;
 use App\Http\Requests\Organizer\Event\User\AttendeeStoreRequest;
 use App\Models\AddonVariant;
+use App\Models\ChatMember;
 use Illuminate\Validation\Rule;
 
 class AttendeeController extends Controller
@@ -70,6 +72,7 @@ class AttendeeController extends Controller
             'password' => Hash::make("12345678"),
             'is_public' => $request->is_public == 1 ? true : false,
         ]);
+        broadcast(new UpdateEventDashboard(session('event_id'),'Attendee Created'))->toOthers();
         return back()->withSuccess('attendee created successfully.');
     }
 
@@ -120,6 +123,7 @@ class AttendeeController extends Controller
         }
 
         $attendee->delete();
+        broadcast(new UpdateEventDashboard(session('event_id'),'Attendee Deleted'))->toOthers();
         return back()->withSuccess('Attendee deleted successfully.');
     }
 
@@ -135,6 +139,7 @@ class AttendeeController extends Controller
         foreach ($request->ids as $id) {
             Attendee::find($id)->delete();
         }
+        broadcast(new UpdateEventDashboard(session('event_id'),'Attendee Deleted'))->toOthers();
         return back()->withSuccess('Attendees deleted successfully.');
     }
 

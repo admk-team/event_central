@@ -8,6 +8,7 @@ const Navdata = () => {
     // State data
     const [isDashboard, setIsDashboard] = useState<boolean>(false);
     const [isContent, setIsContent] = useState<boolean>(false);
+    const [isEventStore, setIsEventStore] = useState<boolean>(false);
     const [isEngagement, setIsEngagement] = useState<boolean>(false);
     const [isAttendees, setIsAttendees] = useState<boolean>(false);
     const [isTickets, setIsTickets] = useState<boolean>(false);
@@ -35,6 +36,7 @@ const Navdata = () => {
     const [isPrayerRequest, setIsPrayerRequest] = useState<boolean>(false);
     const [isPrivateRegister, setIsPrivateRegister] = useState<boolean>(false);
     const [isDemographic, setIsDemographic] = useState<boolean>(false);
+    const [isLiveStreams, setIsLiveStreams] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>("Dashboard");
 
@@ -57,6 +59,7 @@ const Navdata = () => {
         if (iscurrentState !== "Dashboard") setIsDashboard(false);
         if (iscurrentState !== "Event") setIsEvent(false);
         if (iscurrentState !== "Content") setIsContent(false);
+        if (iscurrentState !== "EventShop") setIsEventStore(false);
         if (iscurrentState !== "Report") setIsContent(false);
         if (iscurrentState !== "users") setIsAttendees(false);
         if (iscurrentState !== "registrationForm") setIsForm(false);
@@ -77,6 +80,7 @@ const Navdata = () => {
         if (iscurrentState !== "chat") setIsChat(false);
         if (iscurrentState !== "private_registration") setIsPrivateRegister(false);
         if (iscurrentState !== "private_registration") setIsDemographic(false);
+        if (iscurrentState !== "LiveStreams") setIsPrivateRegister(false);
         if (iscurrentState !== "Questionnaire_response")
             setIsQuestionnaireResponse(false);
         // if (iscurrentState !== 'assignTickets') setIsTickets(false);
@@ -94,6 +98,7 @@ const Navdata = () => {
         isBaseTemplate,
         isEmailTemplate,
         isContactForm,
+        isEventStore,
         // isRefundTicket,
         isTickets,
         isReport,
@@ -101,6 +106,7 @@ const Navdata = () => {
         isDemographic,
         // isAssignTicket,
         // isUpgradeTicket
+        isLiveStreams,
     ]);
 
     // Dynamic current date
@@ -203,6 +209,41 @@ const Navdata = () => {
                     link: route("organizer.events.partner.index"),
                     parentId: "Content",
                     hasPermissions: ["view_partner"],
+                },
+            ],
+        },
+        {
+            id: "EventShop",
+            label: "Event Shop",
+            icon: "bx bx-store",
+            link: "/#",
+            stateVariables: isEventStore,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsEventStore(!isEventStore);
+                setIscurrentState("EventShop");
+                updateIconSidebar(e);
+            },
+            // hasAnyPermission: [
+            //     "view_event_sessions",
+            //     "view_speakers",
+            //     "view_partner",
+            //     "view_promo_code",
+            // ],
+            subItems: [
+                {
+                    id: "products",
+                    label: "Products",
+                    link: route("organizer.events.products.index"),
+                    parentId: "EventShop",
+                    // hasPermissions: ["view_event_sessions"],
+                },
+                {
+                    id: "orders",
+                    label: "Orders",
+                    link: route("organizer.events.speaker.index"),
+                    parentId: "EventShop",
+                    // hasPermissions: ["view_speakers"],
                 },
             ],
         },
@@ -632,7 +673,7 @@ const Navdata = () => {
         //     ],
         // },
 
-          {
+        {
             id: "private_registration",
             label: "Private Registration",
             icon: "bx bxs-notepad",
@@ -646,6 +687,22 @@ const Navdata = () => {
             },
             hasPermissions: [
                 'view_private_registration'
+            ],
+        },
+        {
+            id: "liveStreams",
+            label: "Live Streams",
+            icon: "bx bx-broadcast",
+            link: route('organizer.events.live-streams.index'),
+            stateVariables: isLiveStreams,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsLiveStreams(!isLiveStreams);
+                setIscurrentState('LiveStreams');
+                updateIconSidebar(e);
+            },
+            hasPermissions: [
+                'view_live_streams'
             ],
         },
 

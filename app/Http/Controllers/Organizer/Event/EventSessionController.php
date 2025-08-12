@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Organizer\Event;
 
+use App\Events\UpdateEventDashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organizer\Event\EventSessionRequest;
 use App\Models\EventPlatform;
@@ -70,7 +71,7 @@ class EventSessionController extends Controller
         }
 
         $session->tracks()->sync($tracksIds);
-
+        broadcast(new UpdateEventDashboard(session('event_id'),'New Session Created'))->toOthers();
         return back()->withSuccess("Session Created Successfully");
     }
 
@@ -109,6 +110,7 @@ class EventSessionController extends Controller
         }
 
         $schedule->delete();
+        broadcast(new UpdateEventDashboard(session('event_id'),'Session Deleted'))->toOthers();
         return back()->withSuccess("Session Deleted Successfully");
     }
 
@@ -127,5 +129,6 @@ class EventSessionController extends Controller
 
             $eventSession?->delete();
         }
+        broadcast(new UpdateEventDashboard(session('event_id'),'Session Deleted'))->toOthers();
     }
 }

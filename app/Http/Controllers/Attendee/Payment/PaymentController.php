@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Attendee\Payment;
 
+use App\Events\UpdateEventDashboard;
 use Exception;
 use Inertia\Inertia;
 use App\Models\Addon;
@@ -174,8 +175,8 @@ class PaymentController extends Controller
         // return $payment;
         if ($payment->status === 'pending') {
             $stripe_pub_key = $this->stripe_service->StripKeys($payment->event_app_id)->stripe_publishable_key;
-            $paypal_client_id = null;
-            // $paypal_client_id = $this->paypal_service->payPalKeys()->paypal_pub;
+            // $paypal_client_id = null;
+            $paypal_client_id = $this->paypal_service->payPalKeys()->paypal_pub;
             return Inertia::render('Attendee/Payment/Index', compact([
                 'payment',
                 'stripe_pub_key',
@@ -299,6 +300,7 @@ class PaymentController extends Controller
         }
         //Update Attendee Payment status and session etc
         $this->updateAttendeePaymnet($payment->uuid);
+        broadcast(new UpdateEventDashboard($attendee->event_app_id,'New Ticket Purchased'))->toOthers();
         return $payment;
     }
 

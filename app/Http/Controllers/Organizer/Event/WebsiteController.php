@@ -7,6 +7,7 @@ use App\Models\EventApp;
 use App\Models\EventPartner;
 use App\Models\EventPartnerCategory;
 use App\Models\EventPlatform;
+use App\Models\EventProduct;
 use App\Models\Page;
 use App\Models\ReferralLink;
 use App\Models\Track;
@@ -14,6 +15,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
+
 class WebsiteController extends Controller
 {
     public function index(Request $request, $uuid)
@@ -54,7 +56,7 @@ class WebsiteController extends Controller
         return view('event-website.index', compact('event', 'colors', 'partnerCategories', 'exhibitors', 'privateRegister'));
     }
 
-    public function schedule(Request $request,$uuid)
+    public function schedule(Request $request, $uuid)
     {
         $event = EventApp::where('uuid', $uuid)->first();
 
@@ -94,7 +96,7 @@ class WebsiteController extends Controller
         return view('event-website.speakers', compact('event', 'colors', 'privateRegister'));
     }
 
-    public function sponsors(Request $request,$uuid)
+    public function sponsors(Request $request, $uuid)
     {
         $event = EventApp::where('uuid', $uuid)->first();
         // if (! $event || !eventSettings($event->id)->getValue('website_status', false)) {
@@ -116,7 +118,7 @@ class WebsiteController extends Controller
         return view('event-website.sponsors', array_merge($data, compact('partnerCategories', 'exhibitors')));
     }
 
-    public function sponsorsSingle(Request $request,$uuid, $id)
+    public function sponsorsSingle(Request $request, $uuid, $id)
     {
         $event = EventApp::where('uuid', $uuid)->first();
 
@@ -143,7 +145,7 @@ class WebsiteController extends Controller
         return view('event-website.sponsor-single', array_merge($data, compact('partnerCategories', 'partner')));
     }
 
-    public function exhibitors(Request $request,$uuid)
+    public function exhibitors(Request $request, $uuid)
     {
         $event = EventApp::where('uuid', $uuid)->first();
         // if (! $event || !eventSettings($event->id)->getValue('website_status', false)) {
@@ -162,7 +164,7 @@ class WebsiteController extends Controller
         return view('event-website.exhibitors', array_merge($data, compact('exhibitors')));
     }
 
-    public function tickets(Request $request,$uuid)
+    public function tickets(Request $request, $uuid)
     {
         $data = $this->getEventData($uuid);
         $partnerCategories = EventPartnerCategory::where('event_app_id', $data['event']->id)->with(['partners'])->get();
@@ -181,7 +183,19 @@ class WebsiteController extends Controller
         return view('event-website.tickets', array_merge($data, compact('partnerCategories')));
     }
 
-    public function privacypolicy(Request $request,$uuid)
+    public function products(Request $request, $uuid)
+    {
+        $event = EventApp::where('uuid', $uuid)->first();
+        $isPreviewParam = $request->query('preview') === 'true';
+        if (! $event || (!eventSettings($event->id)->getValue('website_status', false) && ! $isPreviewParam)) {
+            abort(404);
+        }
+        $colors = eventSettings($event->id)->getValue('website_colors', config('event_website.colors'));
+        $event_products = EventProduct::where('event_app_id', $event->id)->get();
+        return view('event-website.products', compact('event', 'colors', 'event_products'));
+    }
+
+    public function privacypolicy(Request $request, $uuid)
     {
         $event = EventApp::where('uuid', $uuid)->first();
 
