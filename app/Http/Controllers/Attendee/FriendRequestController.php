@@ -9,15 +9,16 @@ use App\Models\FriendRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use App\Traits\SendsWebPushNotifications;
 
 class FriendRequestController extends Controller
 {
+    use SendsWebPushNotifications; // ✅ Import here
     public function Index()
     {
         $authUser = Auth::user();
         // return the message if account is private 
-        if($authUser->is_public == 0)
-        {
+        if ($authUser->is_public == 0) {
             return back()->withError('Your account is private');
         }
         $attendees = Attendee::where('event_app_id', $authUser->event_app_id)
@@ -30,7 +31,7 @@ class FriendRequestController extends Controller
             });
         $incomingRequests = Auth::user()->receivedFriendRequests()->where('status', 'pending')->with(['sender'])->get();
         $friends = Auth::user()->friends()->get();
-        return Inertia::render('Attendee/FriendRequest/Index', compact('attendees', 'incomingRequests','friends'));
+        return Inertia::render('Attendee/FriendRequest/Index', compact('attendees', 'incomingRequests', 'friends'));
     }
 
     // send friend request 
@@ -69,26 +70,44 @@ class FriendRequestController extends Controller
             'status' => 'pending',
         ]);
 
+        // Send Push Notification via trait
+        $this->sendWebPushNotification(
+            $receiver->id,
+            'Follow Request',
+            "{$sender->name} sent you a follow request",
+            route('friend.index')
+        );
+
         return back()->withSuccess('Friend request sent.');
     }
 
-    // Accept friend request 
     public function AcceptRequest(Request $request)
     {
         $request->validate([
             'sender_id' => 'required|exists:attendees,id'
         ]);
+
         $user = Auth::user();
         $sender = Attendee::findOrFail($request->sender_id);
 
         if ($user->acceptFriendRequest($sender)) {
             // initiate chat between two friends
             $this->chatInitiate($user, $sender);
+
+            // Send Push Notification to the sender
+            $this->sendWebPushNotification(
+                $sender->id,
+                'Follow Request Accepted',
+                "{$user->name} accepted your follow request",
+                route('friend.index')
+            );
+
             return back()->withSuccess('Friend request accepted.');
         }
 
         return back()->withError('Unable to accept request.');
     }
+
 
     // remove friend
     public function remove(Request $request)
@@ -101,6 +120,13 @@ class FriendRequestController extends Controller
         $friend = Attendee::findOrFail($request->friend_id);
 
         if ($user->removeFriend($friend)) {
+            // Send Push Notification to the removed friend
+            $this->sendWebPushNotification(
+                $friend->id,
+                'Friend Removed',
+                "{$user->name} has removed you as a friend.",
+                route('friend.index')
+            );
             return back()->withSuccess('Friend removed successfully.');
         }
 
