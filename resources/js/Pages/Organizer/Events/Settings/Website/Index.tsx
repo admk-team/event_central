@@ -27,7 +27,6 @@ function Website() {
                     />
                     <Row>
                         <Col md={8}>
-                        fdsfdsfdsfdsf
                             <Row>
                                 <Col xs={12}>
                                     <HasPermission permission="view_website">
