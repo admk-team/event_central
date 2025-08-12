@@ -11,7 +11,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class UpdateEventDashboard implements ShouldBroadcastNow 
+class UpdateEventDashboard implements ShouldBroadcast 
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
     
