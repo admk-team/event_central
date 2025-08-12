@@ -41,6 +41,8 @@ class ProductController extends Controller
             $file = $request->file('image');
             $path = $file->store('products', 'public');
             $data['image'] = $path;
+        } else {
+            $data['image'] = $product->image;
         }
         $product->update($data);
         return back()->withSuccess('Product Updated');

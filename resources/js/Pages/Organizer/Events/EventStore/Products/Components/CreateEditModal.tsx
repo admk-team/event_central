@@ -13,7 +13,6 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
         old_price: product?.old_price ?? "",
         stock: product?.stock ?? "",
         image: null,
-        _method: product?.id ? "PUT" : "POST",
     });
 
     useEffect(() => {
@@ -25,7 +24,6 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
                 old_price: product.old_price ?? "",
                 stock: product.stock ?? "",
                 image: null,
-                _method: product.id ? "PUT" : "POST",
             });
             setIsPreview(product.image_url ?? null);
         }
@@ -45,11 +43,12 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
 
     const onSubmit = (e: any) => {
         e.preventDefault();
-        if (data._method == 'PUT') {
-            post(route("organizer.events.products.update", product.id), {
+        if (product && product.id) {
+            post(route("organizer.events.update.product", product.id), {
                 onSuccess: () => {
                     handleClose();
                     reset();
+                    setIsPreview(null);
                 },
             });
         } else {
@@ -57,6 +56,7 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
                 onSuccess: () => {
                     handleClose();
                     reset();
+                    setIsPreview(null);
                 },
             });
         }

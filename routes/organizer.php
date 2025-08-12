@@ -70,6 +70,7 @@ Route::prefix('e/{uuid}')->name('organizer.events.website')->group(function () {
     Route::get('sponsors/{id}', [WebsiteController::class, 'sponsorsSingle'])->name('.sponsors.single');
     Route::get('exhibitors', [WebsiteController::class, 'exhibitors'])->name('.exhibitors');
     Route::get('tickets', [WebsiteController::class, 'tickets'])->name('.tickets');
+    Route::get('products', [WebsiteController::class, 'products'])->name('.products');
     Route::get('privacy-policy', [WebsiteController::class, 'privacypolicy'])->name('.privacy');
     Route::get('contact-us', [WebsiteController::class, 'contactus'])->name('.contactus');
     Route::get('{slug}', [WebsiteController::class, 'page'])->name('.page');
@@ -127,7 +128,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
 
             // Event Store 
             Route::resource('products',ProductController::class);
-            Route::post('update/{id}',[ProductController::class,'update'])->name('products.update');
+            Route::post('products/update/{product}',[ProductController::class,'update'])->name('update.product');
 
             // Attendies
             Route::resource('attendees', AttendeeController::class);
