@@ -19,6 +19,7 @@ const Navdata = () => {
     const [isChat, setIsChat] = useState<boolean>(false);
     const [isFriend, setIsFriend] = useState<boolean>(false);
     const [isEventStaff, setIsEventStaff] = useState<boolean>(false);
+    const [isEventShop, setIsEventShop] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>("Dashboard");
     // const [IsQA, setIsQA] = useState<boolean>(false);
@@ -75,6 +76,9 @@ const Navdata = () => {
         if (iscurrentState !== "eventStaff") {
             setIsEventStaff(false);
         }
+        if (iscurrentState !== "eventShop") {
+            setIsEventShop(false);
+        }
         // if (iscurrentState !== "Q&A") {
         //     setIsQA(false);
         // }
@@ -94,7 +98,8 @@ const Navdata = () => {
         isUpgradeTicket,
         IsAchievement,
         IsPrayerRequest,
-        isEventStaff
+        isEventStaff,
+        isEventShop,
     ]);
 
     const menuItems: any = [
@@ -112,6 +117,19 @@ const Navdata = () => {
                 e.preventDefault();
                 setIsDashboard(!isDashboard);
                 setIscurrentState("Dashboard");
+                updateIconSidebar(e);
+            },
+        },
+        {
+            id: "eventShop",
+            label: "Event Shop",
+            icon: "bx bx-store",
+            link: route("attendee.event.products"),
+            stateVariables: isDashboard,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsEventShop(!isEventShop);
+                setIscurrentState("eventShop");
                 updateIconSidebar(e);
             },
         },
@@ -156,7 +174,7 @@ const Navdata = () => {
         },
         {
             id: "friend",
-            label: "Freind System",
+            label: "Friend System",
             icon: "las la-user-friends",
             link: route("friend.index"),
             stateVariables: isFriend,
