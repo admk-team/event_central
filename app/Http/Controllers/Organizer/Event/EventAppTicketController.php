@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Organizer\Event;
 
+use App\Events\UpdateEventDashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organizer\Event\EventAppTicketRequest;
 use App\Models\Addon;
@@ -68,6 +69,7 @@ class EventAppTicketController extends Controller
         $data['sessions'] = $this->transformSessions($data);
         // $data['addons'] = $this->transformAddons($data);
         $data['fees'] = $this->transformFees($data);
+        $data['original_price'] = $data['base_price'];
 
         // Log::info($data['sessions']);
         $ticket = EventAppTicket::create($data);
@@ -75,7 +77,7 @@ class EventAppTicketController extends Controller
         $ticket->sessions()->sync($data['sessions']);
         $ticket->addons()->sync($data['addons']);
         $ticket->fees()->sync($data['fees']);
-
+        broadcast(new UpdateEventDashboard(session('event_id'),'New Ticket Created'))->toOthers();
         return back()->withSuccess('Ticket created successfully');
     }
 
@@ -94,6 +96,15 @@ class EventAppTicketController extends Controller
         // $data['addons'] = $this->transformAddons($data);
         $data['fees'] = $this->transformFees($data);
 
+
+        $data['bulk_purchase_status'] = (bool) $request->bulk_purchase_status;
+
+        if (! $data['bulk_purchase_status']) {
+            $data['bulk_purchase_discount_type'] = 'fixed';
+            $data['bulk_purchase_discount_value'] = 0;
+            $data['bulk_purchase_qty'] = 0;
+        }
+        
         $ticket->update($data);
 
         $ticket->sessions()->sync($data['sessions']);
@@ -113,6 +124,7 @@ class EventAppTicketController extends Controller
         }
 
         $ticket->delete();
+        broadcast(new UpdateEventDashboard(session('event_id'),'Ticket Deleted'))->toOthers();
         return back()->withSuccess('Ticket Removed Successfully');
     }
 
@@ -130,6 +142,7 @@ class EventAppTicketController extends Controller
         foreach ($ids as $id) {
             EventAppTicket::find($id)?->delete();
         }
+        broadcast(new UpdateEventDashboard(session('event_id'),'Ticket Deleted'))->toOthers();
     }
 
     private function transformSessions($data)

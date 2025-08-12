@@ -33,6 +33,8 @@ const Navdata = () => {
     const [isContactForm, setIsContactForm] = useState<boolean>(false);
     const [isReport, setIsReport] = useState<boolean>(false);
     const [isPrayerRequest, setIsPrayerRequest] = useState<boolean>(false);
+    const [isPrivateRegister, setIsPrivateRegister] = useState<boolean>(false);
+    const [isLiveStreams, setIsLiveStreams] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>("Dashboard");
 
@@ -71,8 +73,10 @@ const Navdata = () => {
         if (iscurrentState !== "ContactForm") setIsContactForm(false);
         if (iscurrentState !== "refferal-link") setIsRefferalLink(false);
         if (iscurrentState !== "event_badge") setIsEventBadge(false);
-         if (iscurrentState !== "prayer_request") setIsPrayerRequest(false);
+        if (iscurrentState !== "prayer_request") setIsPrayerRequest(false);
         if (iscurrentState !== "chat") setIsChat(false);
+        if (iscurrentState !== "private_registration") setIsPrivateRegister(false);
+        if (iscurrentState !== "LiveStreams") setIsPrivateRegister(false);
         if (iscurrentState !== "Questionnaire_response")
             setIsQuestionnaireResponse(false);
         // if (iscurrentState !== 'assignTickets') setIsTickets(false);
@@ -96,6 +100,7 @@ const Navdata = () => {
         isChat,
         // isAssignTicket,
         // isUpgradeTicket
+        isLiveStreams,
     ]);
 
     // Dynamic current date
@@ -173,13 +178,6 @@ const Navdata = () => {
                     link: route("organizer.events.partner.index"),
                     parentId: "Content",
                     hasPermissions: ["view_partner"],
-                },
-                {
-                    id: "promo-codes",
-                    label: "Promo Codes",
-                    link: route("organizer.events.promo-codes.index"),
-                    parentId: "Content",
-                    hasPermissions: ["view_promo_code"],
                 },
             ],
         },
@@ -319,6 +317,13 @@ const Navdata = () => {
                     ],
                 },
                 {
+                    id: "promo-codes",
+                    label: "Promo Codes",
+                    link: route("organizer.events.promo-codes.index"),
+                    parentId: "Content",
+                    hasPermissions: ["view_promo_code"],
+                },
+                {
                     id: "assignTickets",
                     label: "Assign Tickets",
                     link: route(
@@ -413,20 +418,20 @@ const Navdata = () => {
         },
         // ...(isEventStarted ? [{
 
-        // {
-        //     id: "chat",
-        //     label: "Chat",
-        //     icon: "bx bx-message-rounded-dots",
-        //     link: route("organizer.events.chat.index"),
-        //     stateVariables: isForm,
-        //     click: function (e: any) {
-        //         e.preventDefault();
-        //         setIsChat(!isForm);
-        //         setIscurrentState("chat");
-        //         updateIconSidebar(e);
-        //     },
-        //     hasPermissions: ["view_chat"],
-        // },
+        {
+            id: "chat",
+            label: "Chat Room",
+            icon: "bx bx-message-rounded-dots",
+            link: route("organizer.events.chat.index"),
+            stateVariables: isForm,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsChat(!isForm);
+                setIscurrentState("chat");
+                updateIconSidebar(e);
+            },
+            hasPermissions: ["view_chat"],
+        },
         {
             id: "Questionnaire",
             label: "Questionnaire Form",
@@ -601,6 +606,39 @@ const Navdata = () => {
         //         'view_prayer_request'
         //     ],
         // },
+
+        {
+            id: "private_registration",
+            label: "Private Registration",
+            icon: "bx bxs-notepad",
+            link: route('organizer.private-registration.index'),
+            stateVariables: isPrivateRegister,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsPrivateRegister(!isPrivateRegister);
+                setIscurrentState('private_registration');
+                updateIconSidebar(e);
+            },
+            hasPermissions: [
+                'view_private_registration'
+            ],
+        },
+        {
+            id: "liveStreams",
+            label: "Live Streams",
+            icon: "bx bx-broadcast",
+            link: route('organizer.events.live-streams.index'),
+            stateVariables: isLiveStreams,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsLiveStreams(!isLiveStreams);
+                setIscurrentState('LiveStreams');
+                updateIconSidebar(e);
+            },
+            hasPermissions: [
+                'view_live_streams'
+            ],
+        },
 
         // }] : []),
     ];

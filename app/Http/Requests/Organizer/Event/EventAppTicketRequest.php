@@ -34,13 +34,18 @@ class EventAppTicketRequest extends FormRequest
             'addons' => 'array',
             'fees' => 'array',
             'features' => '',
-            'increment_by' => '',
-            'increment_rate' => '',
-            'increment_type' => '',
-            'start_increment' => '',
-            'end_increment' => '',
+            'increment_by' => 'nullable',
+            'increment_rate' => 'nullable',
+            'increment_type' => 'nullable',
+            'start_increment' => 'nullable',
+            'end_increment' => 'nullable',
             'show_on_attendee_side' => '',
             'qty_total' => 'nullable',
+
+            'bulk_purchase_status' => 'required|boolean',
+            'bulk_purchase_discount_type' => 'nullable|in:fixed,percentage',
+            'bulk_purchase_discount_value' => 'nullable|numeric',
+            'bulk_purchase_qty' => 'nullable|integer',
         ];
     }
 

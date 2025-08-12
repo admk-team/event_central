@@ -18,6 +18,7 @@ class Addon extends Model
         'qty_total',
         'qty_sold',
         'enable_discount',
+        'extra_fields'
     ];
 
     protected $appends = ['full_name'];

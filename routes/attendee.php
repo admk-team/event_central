@@ -16,6 +16,7 @@ use App\Http\Controllers\Attendee\Payment\PaymentController;
 use App\Http\Controllers\Attendee\EventPostController;
 use App\Http\Controllers\Attendee\EventQuestionnaireFormController;
 use App\Http\Controllers\Attendee\EventRegistrationFormController;
+use App\Http\Controllers\Attendee\EventStaffController;
 use App\Http\Controllers\Attendee\FriendRequestController;
 use App\Http\Controllers\Attendee\GoogleController;
 use App\Http\Controllers\Attendee\Payment\RefundPaymentController;
@@ -72,6 +73,7 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::get('profile-edit', [ProfileController::class, 'edit'])->name('attendee.profile.edit');
 
         Route::get('dashboard', [EventController::class, 'getEventDetailDashboard'])->name('attendee.event.detail.dashboard');
+        Route::get('calendar/download/{eventApp}', [EventCalendarController::class, 'downloadIcs'])->name('calendar.download');
         Route::get('agenda', [EventController::class, 'getEventDetailAgenda'])->name('attendee.event.detail.agenda');
         Route::get('session/{eventSession}', [EventController::class, 'getEventSessionDetail'])->name('attendee.event.detail.session');
         Route::get('speakers/{eventSpeaker?}', [EventController::class, 'getEventSpeakerDetail'])->name('attendee.event.detail.speakers');
@@ -135,10 +137,17 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
 
         // Chat
         Route::get('chat', [ChatController::class, 'index'])->name('attendee.event.chat');
-        Route::get('get-chat', [ChatController::class, 'getMessages'])->name('attendee.event.get-messages');
+        Route::get('get-chat/{id}', [ChatController::class, 'getMessages'])->name('attendee.event.get-messages');
+        Route::get('private-chat/{id}', [ChatController::class, 'getOneToOneChat']);
+        Route::post('chat/mark-as-read/{id}', [ChatController::class, 'markAsRead']);
         Route::post('send-message', [ChatController::class, 'store']);
+        // Event Staff
+        Route::get('staff', [EventStaffController::class, 'index'])->name('attendee.event.staff');
+        Route::post('initiate-chat', [EventStaffController::class, 'initiateChat'])->name('attendee.event.chat-initate');
         // Friends system
         Route::resource('friend', FriendRequestController::class);
+        Route::post('accept', [FriendRequestController::class,'AcceptRequest'])->name('friend.accept');
+        Route::post('unfollow', [FriendRequestController::class,'remove'])->name('friend.unfollow');
 
         //Prayer Request
         Route::get('/prayer-requests', [PrayerRequestController::class, 'index'])->name('attendee.prayer');

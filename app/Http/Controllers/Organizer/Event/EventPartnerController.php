@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Organizer\Event;
 
+use App\Events\UpdateEventDashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organizer\Event\EventPartnerRequest;
 use App\Models\EventPartner;
@@ -67,6 +68,7 @@ class EventPartnerController extends Controller
             $data['banner_image'] = asset('storage/' . $data['banner_image']);
         }
         EventPartner::create($data);
+        broadcast(new UpdateEventDashboard(session('event_id'),'Partner Created'))->toOthers();
         return redirect()->route('organizer.events.partner.index')->withSuccess('success', 'Partner created successfully.');
     }
 
@@ -122,6 +124,7 @@ class EventPartnerController extends Controller
         }
 
         $partner->delete();
+        broadcast(new UpdateEventDashboard(session('event_id'),'Partner Deleted'))->toOthers();
         return back()->withSuccess('Deleted successfully.');
     }
 
@@ -138,6 +141,7 @@ class EventPartnerController extends Controller
         foreach ($request->ids as $id) {
             EventPartner::find($id)?->delete();
         }
+        broadcast(new UpdateEventDashboard(session('event_id'),'Partner Deleted'))->toOthers();
         return back()->withSuccess('Deleted successfully.');
     }
 }

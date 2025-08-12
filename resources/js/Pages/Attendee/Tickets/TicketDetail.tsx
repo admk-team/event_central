@@ -10,6 +10,8 @@ const TicketDetail = ({ ticket_no, ticket, fees_sub_total, addons_sub_total, onA
     const [fees, setFees] = useState<any>(ticket.fees);
     const [feesOptions, setFeesOptions] = useState<any>([]);
     const [addonVariantErrors, setAddonVariantErrors] = useState<Record<number, string | null>>({});
+    const [addonExtraFieldValues, setAddonExtraFieldValues] = useState<Record<number, Record<string, string>>>({});
+
 
     useEffect(() => {
         createAddonOptions();
@@ -18,8 +20,8 @@ const TicketDetail = ({ ticket_no, ticket, fees_sub_total, addons_sub_total, onA
 
     useEffect(() => {
         createAddonOptions();
-        onAddonsUpdated(selectedAddons, ticket_no);
-    }, [selectedAddons]);
+        onAddonsUpdated(selectedAddons, ticket_no, addonExtraFieldValues);
+    }, [selectedAddons, addonExtraFieldValues]);
 
     const createFeesList: any = () => {
         const listItems: any = [];
@@ -64,11 +66,40 @@ const TicketDetail = ({ ticket_no, ticket, fees_sub_total, addons_sub_total, onA
                                             key={option.id}
                                             className={`border py-1 px-2 cursor-pointer text-black ${isOptionSelected(option, attribute, selectedAddons) ? 'bg-primary text-white border-primary' : ''}`}
                                             onClick={() => selectAddonAttributeOption(addon, attribute, option)}
-                                        >{option.value}</div>
+                                        >
+                                            {option.value}
+                                        </div>
                                     ))}
                                 </div>
                             </div>
                         ))
+                    )}
+
+                    {isAddonSelect(addon, selectedAddons) && addon.extra_fields && (
+                        <div className="ps-4 mt-2 mb-3">
+                            {JSON.parse(addon.extra_fields).map((label: string, idx: number) => {
+                                const inputKey = label;
+
+                                return (
+                                    <div key={inputKey} className="mb-2">
+                                        <Form.Label>{label}</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            value={addonExtraFieldValues[addon.id]?.[inputKey] ?? ''}
+                                            onChange={(e) =>
+                                                setAddonExtraFieldValues((prev) => ({
+                                                    ...prev,
+                                                    [addon.id]: {
+                                                        ...prev[addon.id],
+                                                        [inputKey]: e.target.value,
+                                                    },
+                                                }))
+                                            }
+                                        />
+                                    </div>
+                                );
+                            })}
+                        </div>
                     )}
                 </div>
             );
@@ -141,7 +172,7 @@ const TicketDetail = ({ ticket_no, ticket, fees_sub_total, addons_sub_total, onA
     }
 
     const selectAddonAttributeOption = (addon: any, attribute: any, option: any) => {
-        setSelectedAddons((prev: any) => { 
+        setSelectedAddons((prev: any) => {
             return prev.map((a: any) => {
                 if (a.id === addon.id) {
                     const newState = {
@@ -150,7 +181,7 @@ const TicketDetail = ({ ticket_no, ticket, fees_sub_total, addons_sub_total, onA
                             if (attr.id === attribute.id) {
                                 return {
                                     ...attr,
-                                    options: attr.options.map((o: any) => o.id === option.id ? {...o, isSelected: true} : {...o, isSelected: false})
+                                    options: attr.options.map((o: any) => o.id === option.id ? { ...o, isSelected: true } : { ...o, isSelected: false })
                                 };
                             }
 
@@ -171,7 +202,7 @@ const TicketDetail = ({ ticket_no, ticket, fees_sub_total, addons_sub_total, onA
                     newState.variants.forEach((v: any) => {
                         let valuesMatched = true;
                         v.attribute_values.forEach((av: any) => {
-                            if (! selectedOptionIds.includes(av.addon_attribute_option_id)) {
+                            if (!selectedOptionIds.includes(av.addon_attribute_option_id)) {
                                 valuesMatched = false;
                             }
                         });

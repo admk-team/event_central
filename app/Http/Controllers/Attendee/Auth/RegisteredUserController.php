@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Attendee\Auth;
 
+use App\Events\UpdateEventDashboard;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Models\Attendee;
@@ -40,7 +41,9 @@ class RegisteredUserController extends Controller
     public function create(EventApp $eventApp): Response
     {
         $eventApp->load(['dates']);
-        return Inertia::render('Attendee/Auth/Register', compact('eventApp'));
+        $closeRegistration = eventSettings($eventApp->id)->getValue('close_registration', false);
+
+        return Inertia::render('Attendee/Auth/Register', compact('eventApp', 'closeRegistration'));
     }
 
     /**
@@ -118,6 +121,7 @@ class RegisteredUserController extends Controller
 
         event(new Registered($user));
 
+        broadcast(new UpdateEventDashboard($eventApp->id, 'Attendee Created'))->toOthers();
         Auth::guard('attendee')->login($user);
 
         return redirect(route('attendee.event.detail.dashboard'));

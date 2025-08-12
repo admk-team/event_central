@@ -15,13 +15,14 @@ import DateDifferenceFromToday from "./common/DateDifferenceFromToday";
 import EventSessionsTimeLine from "./common/EventSessionsTimeLine";
 import moment from "moment";
 
-const AttendeeDashboard = ({ eventApp,lasteventDate }: any) => {
+
+const AttendeeDashboard = ({ eventApp, lasteventDate }: any) => {
     const selectedSessions = eventApp.event_sessions.filter(
         (session: any) => session.selected_by_attendee
     );
-    
+
     const isEventAvailable = eventApp && Object.keys(eventApp).length > 0;
-    const formatToUTC = (dateString:any) => {
+    const formatToUTC = (dateString: any) => {
         const date = new Date(dateString); // local time
         return date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
     };
@@ -52,11 +53,11 @@ const AttendeeDashboard = ({ eventApp,lasteventDate }: any) => {
                                                 alt="event default image"
                                             />
                                         </figure>
-                                          
-                                                <DateDifferenceFromToday
-                                                    date1={ eventApp?.dates[0].date}
-                                                ></DateDifferenceFromToday>
-                                          
+
+                                        <DateDifferenceFromToday
+                                            date1={eventApp?.dates[0].date}
+                                        ></DateDifferenceFromToday>
+
                                         <CardBody>
                                             <div className="p-4 pt-0">
                                                 <div className="d-flex align-items-center">
@@ -98,20 +99,45 @@ const AttendeeDashboard = ({ eventApp,lasteventDate }: any) => {
                                     </Card>
                                     <Card>
                                         <CardHeader>
-                                        <CardTitle>Add to Google Calendar</CardTitle>
+                                            <CardTitle>Add to Event Calendar</CardTitle>
                                         </CardHeader>
                                         <CardBody>
-                                        <div className="d-grid grid">
-                                            <Form.Label>Add this event to your Google Calendar.</Form.Label>
-                                            <Button
-                                                disabled={!isEventAvailable}
-                                                variant="primary"
-                                                href={googleCalendarUrl}
-                                                target="_blank"
-                                                rel="noopener noreferrer">
-                                                <i className='bx bxs-calendar-plus'></i> Click to Add
-                                            </Button>
-                                        </div>
+                                            <div className="d-flex">
+                                                <Button
+                                                    disabled={!isEventAvailable}
+                                                    variant="primary"
+                                                    href={googleCalendarUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer">
+                                                    <i className='bx bxs-calendar-plus'></i> Click to Add
+                                                </Button>
+                                                <Button
+                                                    className="mr-6"
+                                                    disabled={!isEventAvailable}
+                                                    variant="primary"
+                                                    href={'/attendee/calendar/download/' + eventApp.id}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer">
+                                                    <i className='bx bxs-calendar-plus'></i> Click to Add
+                                                </Button>
+                                            </div>
+                                        </CardBody>
+                                    </Card>
+                                    <Card>
+                                        <CardHeader>
+                                            <CardTitle>Add to Apple Calendar</CardTitle>
+                                        </CardHeader>
+                                        <CardBody>
+                                            <div className="d-grid grid">
+                                                <Button
+                                                    disabled={!isEventAvailable}
+                                                    variant="primary"
+                                                    href={'/attendee/calendar/download/' + eventApp.id}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer">
+                                                    <i className='bx bxs-calendar-plus'></i> Click to Add
+                                                </Button>
+                                            </div>
                                         </CardBody>
                                     </Card>
                                 </Col>
@@ -121,7 +147,7 @@ const AttendeeDashboard = ({ eventApp,lasteventDate }: any) => {
                                             <div className="p-4 d-flex justify-content-between">
                                                 <h5>My Agenda</h5>
                                                 <h5>
-                                                {" "}{moment(eventApp?.dates[0].date).format("DD MMM YYYY")}{" "}
+                                                    {" "}{moment(eventApp?.dates[0].date).format("DD MMM YYYY")}{" "}
                                                 </h5>
                                             </div>
                                         </CardBody>

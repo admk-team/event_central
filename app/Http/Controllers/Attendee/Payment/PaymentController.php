@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Attendee\Payment;
 
+use App\Events\UpdateEventDashboard;
 use Exception;
 use Inertia\Inertia;
 use App\Models\Addon;
@@ -177,8 +178,8 @@ class PaymentController extends Controller
         // return $payment;
         if ($payment->status === 'pending') {
             $stripe_pub_key = $this->stripe_service->StripKeys($payment->event_app_id)->stripe_publishable_key;
-            $paypal_client_id = null;
-            // $paypal_client_id = $this->paypal_service->payPalKeys()->paypal_pub;
+            // $paypal_client_id = null;
+            $paypal_client_id = $this->paypal_service->payPalKeys()->paypal_pub;
             return Inertia::render('Attendee/Payment/Index', compact([
                 'payment',
                 'stripe_pub_key',
@@ -234,10 +235,14 @@ class PaymentController extends Controller
             ]);
 
             foreach ($addons as $addon) {
+                $extraFields = $addon['extraFields'] ?? null;
+                $extraFieldsJson = isset($extraFields) ? json_encode($extraFields) : null;
+
                 DB::table('addon_purchased_ticket')->insert([
                     'attendee_purchased_ticket_id' => $attendee_purchased_ticket->id,
                     'addon_id' => $addon['id'],
                     'addon_variant_id' => isset($addon['selectedVariant']) ? $addon['selectedVariant']['id'] : null,
+                    'extra_fields_values' => $extraFieldsJson,
                 ]);
             }
         }
@@ -298,6 +303,7 @@ class PaymentController extends Controller
         }
         //Update Attendee Payment status and session etc
         $this->updateAttendeePaymnet($payment->uuid);
+        broadcast(new UpdateEventDashboard($attendee->event_app_id,'New Ticket Purchased'))->toOthers();
         return $payment;
     }
 

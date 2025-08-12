@@ -15,6 +15,7 @@ class EventAppTicket extends Model
         'name',
         'description',
         'type',
+        'original_price',
         'base_price',
         'qty_total',
         'qty_sold',
@@ -23,7 +24,11 @@ class EventAppTicket extends Model
         'increment_type',
         'start_increment',
         'end_increment',
-        'show_on_attendee_side'
+        'show_on_attendee_side',
+        'bulk_purchase_status',
+        'bulk_purchase_discount_type',
+        'bulk_purchase_discount_value',
+        'bulk_purchase_qty'
     ];
 
     protected $casts = [

@@ -10,6 +10,8 @@ import HasPermission from '../../../../../Components/HasPermission';
 import Features from './Components/Features';
 import Images from './Components/Images';
 import AddtoGoogleCalendar from './Components/AddtoGoogleCalendar';
+import RegisterFeatures from './Components/RegisterFeatures';
+import ReminderDays from './Components/ReminderDays';
 
 function Event() {
     return (
@@ -45,6 +47,16 @@ function Event() {
                                 <Col xs={12}>
                                     <HasPermission permission="edit_events">
                                         <Features />
+                                    </HasPermission>
+                                </Col>
+                                 <Col xs={12}>
+                                    <HasPermission permission="edit_events">
+                                        <RegisterFeatures />
+                                    </HasPermission>
+                                </Col>
+                                 <Col xs={12}>
+                                    <HasPermission permission="edit_events">
+                                        <ReminderDays />
                                     </HasPermission>
                                 </Col>
                                 <Col xs={12}>

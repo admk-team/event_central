@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -34,13 +35,14 @@ class Attendee extends Authenticatable
         'location',
         'personal_url',
         'referral_link',
-        'google_id'
+        'google_id',
+        'is_public'
     ];
 
     protected $appends = [
         'avatar' => 'avatar_img',
         'qr_code' => 'qr_code_img',
-        'name'
+        'name',
     ];
 
     protected $hidden = [
@@ -60,7 +62,6 @@ class Attendee extends Authenticatable
     {
         return $this->first_name . " " . $this->last_name;
     }
-
     public function getQrCodeImgAttribute()
     {
         return $this->qr_code != 'EMPTY' ? url(Storage::url($this->qr_code)) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s';

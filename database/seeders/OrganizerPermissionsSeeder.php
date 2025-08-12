@@ -35,6 +35,9 @@ class OrganizerPermissionsSeeder extends Seeder
         // Payments Settings
         'edit_payment_settings',
 
+        // Live Stream Settings
+        'edit_live_stream_settings',
+
         // Event Dashboard
         'view_event_dashboard',
 
@@ -171,6 +174,15 @@ class OrganizerPermissionsSeeder extends Seeder
         // 'view_prayer_request',
         // 'edit_prayer_request',
         // 'delete_prayer_request',
+
+        'view_private_registration',
+        'delete_private_registration',
+
+        // Live Streams
+        'view_live_streams',
+        'create_live_streams',
+        'edit_live_streams',
+        'delete_live_streams',
     ];
 
     public function run(): void

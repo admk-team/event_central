@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Organizer\Event\Engagement;
 
+use App\Events\UpdateEventDashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organizer\Event\Engagement\EventPostRequest;
 use App\Models\EventApp;
@@ -39,6 +40,7 @@ class NewsfeedController extends Controller
             $data['image'] = $data['image']->storeAs('posts/images', $name, 'public');
         }
         EventPost::create($data);
+        broadcast(new UpdateEventDashboard(session('event_id'),'Event Post Created'))->toOthers();
         return back()->withSuccess('Post created successfully');
     }
 
@@ -72,6 +74,7 @@ class NewsfeedController extends Controller
             Storage::disk('public')->delete($post->image);
         }
         $post->delete();
+        broadcast(new UpdateEventDashboard(session('event_id'),'Post Deleted'))->toOthers();
         return back()->withSuccess('Newsfeed deleted successfully');
     }
 
@@ -87,6 +90,7 @@ class NewsfeedController extends Controller
         foreach ($request->ids as $id) {
             EventPost::find($id)?->delete();
         }
+        broadcast(new UpdateEventDashboard(session('event_id'),'Post Deleted'))->toOthers();
         return back()->withSuccess('Newsfeeds deleted successfully');
     }
 }
