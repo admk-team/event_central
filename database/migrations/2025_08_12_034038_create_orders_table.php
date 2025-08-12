@@ -17,6 +17,8 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id')->nullable(); // if you have buyers logged in
             $table->string('status')->default('pending'); // pending, paid, shipped, cancelled
             $table->decimal('total_amount', 10, 2);
+            $table->string('stripe_id')->nullable();
+            $table->string('stripe_intent')->nullable();
             $table->string('payment_method')->nullable();
             $table->timestamps();
             $table->foreign('event_app_id')
