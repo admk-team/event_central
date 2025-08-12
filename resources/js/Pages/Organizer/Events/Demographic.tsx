@@ -14,79 +14,105 @@ interface Props {
     attendees: Attendee[];
 }
 
+// Coordinates for standardized country names
 const countryCoordinates: Record<string, [number, number]> = {
     "United States": [38, -97],
     "Canada": [56, -106],
     "India": [21, 78],
     "United Kingdom": [54, -2],
+    "Brazil": [-14.235, -51.9253],
     // add more countries you expect here
+};
+
+// Mapping for variations → standard names
+const countryNameMap: Record<string, string> = {
+    "USA": "United States",
+    "U S A": "United States",
+    "US": "United States",
+    "United States": "United States",
+    "Brasil": "Brazil",
+    "BR": "Brazil",
+    "U.K.": "United Kingdom",
+    "UK": "United Kingdom",
 };
 
 export default function Demographic({ attendees }: Props) {
     const mapRef = React.useRef<HTMLDivElement>(null);
     const mapInstance = React.useRef<any>(null);
-    // inside your React.useEffect:
-React.useEffect(() => {
-    if (!mapRef.current) return;
 
-    // Aggregate attendees by country with counts and positions
-    const countryGroups = attendees.reduce((acc, attendee) => {
-        if (!countryCoordinates[attendee.country]) return acc;
-        if (!acc[attendee.country]) {
-            acc[attendee.country] = {
-                name: attendee.country,
-                count: 0,
-                positions: new Set<string>(),
-                coords: countryCoordinates[attendee.country],
-            };
-        }
-        acc[attendee.country].count++;
-        acc[attendee.country].positions.add(attendee.position);
-        return acc;
-    }, {} as Record<string, { name: string; count: number; positions: Set<string>; coords: [number, number] }>);
+    React.useEffect(() => {
+        if (!mapRef.current) return;
 
-    const markers = Object.values(countryGroups).map(country => ({
-        name: `${country.name} (${country.count})`,  // just country name + count
-        coords: country.coords,
-    }));
+        // Aggregate attendees by normalized country names
+        const countryGroups = attendees.reduce((acc, attendee) => {
+            const normalizedCountry = countryNameMap[attendee.country] || attendee.country;
+            if (!countryCoordinates[normalizedCountry]) return acc;
 
-    // Destroy previous map instance if any
-    if (mapInstance.current) {
-        mapInstance.current.destroy();
-        mapInstance.current = null;
-    }
+            if (!acc[normalizedCountry]) {
+                acc[normalizedCountry] = {
+                    name: normalizedCountry,
+                    count: 0,
+                    positions: new Set<string>(),
+                    coords: countryCoordinates[normalizedCountry],
+                };
+            }
+            acc[normalizedCountry].count++;
+            acc[normalizedCountry].positions.add(attendee.position);
+            return acc;
+        }, {} as Record<string, { name: string; count: number; positions: Set<string>; coords: [number, number] }>);
 
-    mapInstance.current = new jsVectorMap({
-        selector: mapRef.current,
-        map: "world_merc",
-        markers: markers,
-        labels: {
-            markers: {
-                render: (marker: any) => marker.name,
-            },
-        },
-        markerStyle: {
-            initial: { fill: '#009688' },
-            hover: { fill: '#ff5722', stroke: '#fff', strokeWidth: 2 },
-        },
-        markerLabelStyle: {
-            initial: {
-                fontFamily: 'Poppins',
-                fontSize: 10,
-                fontWeight: 400,
-                fill: 'rgba(53, 55, 62, 0.7)',
-                whiteSpace: 'pre-line',
-            },
-        },
-    });
+        // Create markers — short label only
+        const markers = Object.values(countryGroups).map(country => ({
+            name: `${country.name} (${country.count})`,
+            coords: country.coords,
+        }));
 
-    return () => {
+        // Destroy previous map instance if any
         if (mapInstance.current) {
             mapInstance.current.destroy();
             mapInstance.current = null;
         }
-    };
-}, [attendees]);
+
+        // Initialize map
+        mapInstance.current = new jsVectorMap({
+            selector: mapRef.current,
+            map: "world_merc",
+            markers: markers,
+            labels: {
+                markers: {
+                    render: (marker: any) => marker.name,
+                },
+            },
+            markerStyle: {
+                initial: { fill: '#009688' },
+                hover: { fill: '#ff5722', stroke: '#fff', strokeWidth: 2 },
+            },
+            markerLabelStyle: {
+                initial: {
+                    fontFamily: 'Poppins',
+                    fontSize: 10,
+                    fontWeight: 400,
+                    fill: 'rgba(53, 55, 62, 0.7)',
+                    whiteSpace: 'pre-line',
+                },
+            },
+            onMarkerHover: function (event, index, marker) {
+                const countryName = marker.name.split(' (')[0];
+                const countryData = countryGroups[countryName];
+                if (countryData) {
+                    const fullInfo = `${countryData.name} (${countryData.count})\nPositions: ${[...countryData.positions].join(', ')}`;
+                    (this as any).tooltip.textContent = fullInfo;
+                }
+            },
+        });
+
+        return () => {
+            if (mapInstance.current) {
+                mapInstance.current.destroy();
+                mapInstance.current = null;
+            }
+        };
+    }, [attendees]);
 
     return (
         <Layout>
@@ -102,7 +128,6 @@ React.useEffect(() => {
                     boxSizing: 'border-box',
                 }}
             >
-
                 <div style={{ display: 'flex', gap: '20px' }}>
                     <div ref={mapRef} style={{ width: 700, height: 400 }} />
 
@@ -110,19 +135,21 @@ React.useEffect(() => {
                         <h3>Attendees by Country</h3>
                         <ul>
                             {Object.values(attendees.reduce((acc, attendee) => {
-                                if (!acc[attendee.country]) {
-                                    acc[attendee.country] = {
-                                        country: attendee.country,
+                                const normalizedCountry = countryNameMap[attendee.country] || attendee.country;
+                                if (!acc[normalizedCountry]) {
+                                    acc[normalizedCountry] = {
+                                        country: normalizedCountry,
                                         count: 0,
                                     };
                                 }
-                                acc[attendee.country].count++;
+                                acc[normalizedCountry].count++;
                                 return acc;
-                            }, {} as Record<string, { country: string; count: number }>)).map(({ country, count }) => (
-                                <li key={country}>
-                                    <strong>{country}</strong>: {count} attendees
-                                </li>
-                            ))}
+                            }, {} as Record<string, { country: string; count: number }>))
+                                .map(({ country, count }) => (
+                                    <li key={country}>
+                                        <strong>{country}</strong>: {count} attendees
+                                    </li>
+                                ))}
                         </ul>
                     </div>
                 </div>
