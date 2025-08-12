@@ -241,10 +241,10 @@ const Navdata = () => {
                 {
                     id: "orders",
                     label: "Orders",
-                    link: route("organizer.events.speaker.index"),
+                    link: route("organizer.events.orders.index"), // pass eventApp UUID or ID here
                     parentId: "EventShop",
-                    // hasPermissions: ["view_speakers"],
-                },
+                    // hasPermissions: ["view_orders"],
+                }
             ],
         },
         {

@@ -32,6 +32,7 @@ use App\Http\Controllers\Organizer\Event\EventBadgeController;
 use App\Http\Controllers\Organizer\Event\EventDateController;
 use App\Http\Controllers\Organizer\Event\EventPromoCodeController;
 use App\Http\Controllers\Organizer\Event\EventStore\ProductController;
+use App\Http\Controllers\Organizer\Event\EventStore\EventOrderController;
 use App\Http\Controllers\Organizer\Event\EventTicketTypeController;
 use App\Http\Controllers\Organizer\Event\FormFieldController;
 use App\Http\Controllers\Organizer\Event\LiveStreamController;
@@ -128,10 +129,11 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::resource('speaker', EventSpeakerController::class);
             Route::delete('speakers/delete/many', [EventSpeakerController::class, 'destroyMany'])->name('speakers.destroy.many');
 
-            // Event Store 
+            // Event Store
             Route::resource('products',ProductController::class);
             Route::post('products/update/{product}',[ProductController::class,'update'])->name('update.product');
-
+            // order
+            Route::resource('orders', EventOrderController::class);
             // Attendies
             Route::resource('attendees', AttendeeController::class);
             Route::delete('attendees/delete/many', [AttendeeController::class, 'destroyMany'])->name('attendees.destroy.many');
@@ -392,5 +394,6 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
     Route::get('private-registration', [PrivateRegistrationViaEmailController::class, 'index'])->name('private-registration.index');
     Route::post('/private-registration/send', [PrivateRegistrationViaEmailController::class, 'send'])->name('private-registration.send');
      Route::delete('prayer-requests/{id}', [PrivateRegistrationViaEmailController::class, 'destroy'])->name('private-registration.destroy');
-    Route::delete('prayer-requests/delete/many', [PrivateRegistrationViaEmailController::class, 'destroyMany'])->name('private-registration.destroy.many');
+
+     Route::delete('prayer-requests/delete/many', [PrivateRegistrationViaEmailController::class, 'destroyMany'])->name('private-registration.destroy.many');
 });
