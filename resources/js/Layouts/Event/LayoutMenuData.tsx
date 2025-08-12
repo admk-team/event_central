@@ -8,6 +8,7 @@ const Navdata = () => {
     // State data
     const [isDashboard, setIsDashboard] = useState<boolean>(false);
     const [isContent, setIsContent] = useState<boolean>(false);
+    const [isEventStore, setIsEventStore] = useState<boolean>(false);
     const [isEngagement, setIsEngagement] = useState<boolean>(false);
     const [isAttendees, setIsAttendees] = useState<boolean>(false);
     const [isTickets, setIsTickets] = useState<boolean>(false);
@@ -57,6 +58,7 @@ const Navdata = () => {
         if (iscurrentState !== "Dashboard") setIsDashboard(false);
         if (iscurrentState !== "Event") setIsEvent(false);
         if (iscurrentState !== "Content") setIsContent(false);
+        if (iscurrentState !== "EventShop") setIsEventStore(false);
         if (iscurrentState !== "Report") setIsContent(false);
         if (iscurrentState !== "users") setIsAttendees(false);
         if (iscurrentState !== "registrationForm") setIsForm(false);
@@ -94,6 +96,7 @@ const Navdata = () => {
         isBaseTemplate,
         isEmailTemplate,
         isContactForm,
+        isEventStore,
         // isRefundTicket,
         isTickets,
         isReport,
@@ -178,6 +181,41 @@ const Navdata = () => {
                     link: route("organizer.events.partner.index"),
                     parentId: "Content",
                     hasPermissions: ["view_partner"],
+                },
+            ],
+        },
+        {
+            id: "EventShop",
+            label: "Event Shop",
+            icon: "bx bx-store",
+            link: "/#",
+            stateVariables: isEventStore,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsEventStore(!isEventStore);
+                setIscurrentState("EventShop");
+                updateIconSidebar(e);
+            },
+            // hasAnyPermission: [
+            //     "view_event_sessions",
+            //     "view_speakers",
+            //     "view_partner",
+            //     "view_promo_code",
+            // ],
+            subItems: [
+                {
+                    id: "products",
+                    label: "Products",
+                    link: route("organizer.events.products.index"),
+                    parentId: "EventShop",
+                    // hasPermissions: ["view_event_sessions"],
+                },
+                {
+                    id: "orders",
+                    label: "Orders",
+                    link: route("organizer.events.speaker.index"),
+                    parentId: "EventShop",
+                    // hasPermissions: ["view_speakers"],
                 },
             ],
         },
