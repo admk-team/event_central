@@ -23,6 +23,7 @@ use App\Http\Requests\Organizer\Event\User\AttendeeStoreRequest;
 use App\Models\AddonVariant;
 use App\Mail\AttendeeRegisteration;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Validation\Rule;
 
 class AttendeeController extends Controller
 {
@@ -46,7 +47,6 @@ class AttendeeController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:attendees,email',
             'company' => 'nullable|string|max:255',
             'position' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:20',
@@ -55,7 +55,15 @@ class AttendeeController extends Controller
             'password' => 'required',
             'string',
             'min:8',
-            'confirmed'
+            'confirmed',
+            'email' => [
+                'required',
+                'string',
+                'lowercase',
+                'email',
+                'max:255',
+                Rule::unique('attendees', 'email')->where('event_app_id', session('event_id')),
+            ],
         ]);
         if (!session()->has('event_id')) {
             return redirect()->back()->withErrors(['error' => 'Event ID not found in session.']);
