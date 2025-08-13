@@ -6,6 +6,7 @@ interface Product {
 }
 
 interface OrderItem {
+    id: number;
     quantity: number;
     price: number;
     product?: Product;
@@ -40,12 +41,12 @@ const OrderDetailsModal: React.FC<Props> = ({ show, onClose, order }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {order.items.map((item, index) => (
-                                <tr key={index}>
+                            {order.items.map((item) => (
+                                <tr key={item.id}>
                                     <td>{item.product?.name || "N/A"}</td>
                                     <td>{item.quantity}</td>
-                                    <td>${item.price.toFixed(2)}</td>
-                                    <td>${(item.price * item.quantity).toFixed(2)}</td>
+                                    <td>${Number(item.price).toFixed(2)}</td>
+                                    <td>${(Number(item.price) * Number(item.quantity)).toFixed(2)}</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -53,6 +54,7 @@ const OrderDetailsModal: React.FC<Props> = ({ show, onClose, order }) => {
                 ) : (
                     <p>No items found for this order.</p>
                 )}
+
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={onClose}>

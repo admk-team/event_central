@@ -72,7 +72,7 @@ const Index = ({ orders }: any) => {
                 <div className="hstack gap-3 fs-15">
                     <span
                         className="link-info cursor-pointer"
-                        onClick={() => handleView(order.items)}
+                        onClick={() => handleView(order)}
                     >
                         <i className="ri-eye-fill"></i>
                     </span>

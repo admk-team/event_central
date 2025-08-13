@@ -12,8 +12,8 @@ class EventOrderController extends Controller
 {
     public function index()
     {
-        $orders=  $this->datatable(Order::CurrentEvent()->with('user', 'items'));
-        dd($orders);
+        $orders=  $this->datatable(Order::CurrentEvent()->with('user', 'items.product'));
+        //dd($orders->toArray());
         return Inertia::render('Organizer/Events/EventStore/Orders/Index', compact('orders'));
     }
 }
