@@ -23,10 +23,11 @@ use App\Http\Controllers\Organizer\Event\FormFieldController;
 use App\Http\Controllers\Organizer\Event\BadgePrintController;
 use App\Http\Controllers\Organizer\Event\CustomMenuController;
 use App\Http\Controllers\Organizer\Event\EventBadgeController;
+use App\Http\Controllers\Organizer\Event\LiveStreamController;
 use App\Http\Controllers\Organizer\Event\ContactFormController;
+use App\Http\Controllers\Organizer\Event\CustomBadgeController;
 use App\Http\Controllers\Organizer\Event\EventAppFeeController;
 use App\Http\Controllers\Organizer\Event\AssignTicketController;
-use App\Http\Controllers\Organizer\Event\CustomBadgeController;
 use App\Http\Controllers\Organizer\Event\EventPartnerController;
 use App\Http\Controllers\Organizer\Event\EventSessionController;
 use App\Http\Controllers\Organizer\Event\EventSpeakerController;
@@ -44,8 +45,11 @@ use App\Http\Controllers\Organizer\Event\EventPromoCodeController;
 use App\Http\Controllers\Organizer\Event\SessionRatingsController;
 use App\Http\Controllers\Organizer\Event\EventTicketTypeController;
 use App\Http\Controllers\Organizer\Event\SessionAttendanceController;
+use App\Http\Controllers\Organizer\Event\EventStore\ProductController;
 use App\Http\Controllers\Organizer\Event\Engagement\NewsfeedController;
 use App\Http\Controllers\Organizer\Event\EventPartnerCategoryController;
+use App\Http\Controllers\Organizer\Settings\LiveStreamSettingController;
+use App\Http\Controllers\Organizer\Event\EventStore\EventOrderController;
 use App\Http\Controllers\Organizer\Event\Reports\SessionReportController;
 use App\Http\Controllers\Organizer\Event\Reports\TicketsReportController;
 use App\Http\Controllers\Organizer\Event\QuestionnaireFormFieldController;
@@ -54,12 +58,10 @@ use App\Http\Controllers\Organizer\Event\Reports\AttendeesReportController;
 use App\Http\Controllers\Organizer\Event\Settings\EventAppPaymentController;
 use App\Http\Controllers\Organizer\Event\Settings\WebsiteSettingsController;
 use App\Http\Controllers\Organizer\Event\Reports\RefundTicketReportController;
-use App\Http\Controllers\Organizer\Event\LiveStreamController;
-use App\Http\Controllers\Organizer\Event\PrivateRegistrationViaEmailController;
-use App\Http\Controllers\Organizer\Event\Settings\QuestionnaireFormSettingsController;
-use App\Http\Controllers\Organizer\Event\Settings\RegistrationFormSettingsController;
-use App\Http\Controllers\Organizer\Settings\LiveStreamSettingController;
 use App\Http\Controllers\Organizer\Settings\OrganizerPaymentSettingController;
+use App\Http\Controllers\Organizer\Event\PrivateRegistrationViaEmailController;
+use App\Http\Controllers\Organizer\Event\Settings\RegistrationFormSettingsController;
+use App\Http\Controllers\Organizer\Event\Settings\QuestionnaireFormSettingsController;
 
 // Event Website
 Route::prefix('e/{uuid}')->name('organizer.events.website')->group(function () {
@@ -70,6 +72,7 @@ Route::prefix('e/{uuid}')->name('organizer.events.website')->group(function () {
     Route::get('sponsors/{id}', [WebsiteController::class, 'sponsorsSingle'])->name('.sponsors.single');
     Route::get('exhibitors', [WebsiteController::class, 'exhibitors'])->name('.exhibitors');
     Route::get('tickets', [WebsiteController::class, 'tickets'])->name('.tickets');
+    Route::get('products', [WebsiteController::class, 'products'])->name('.products');
     Route::get('privacy-policy', [WebsiteController::class, 'privacypolicy'])->name('.privacy');
     Route::get('contact-us', [WebsiteController::class, 'contactus'])->name('.contactus');
     Route::get('{slug}', [WebsiteController::class, 'page'])->name('.page');
@@ -118,6 +121,8 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
         Route::delete('/{event_app}', [EventController::class, 'destroy'])->name('destroy');
         Route::delete('/delete/many', [EventController::class, 'destroyMany'])->name('destroy.many');
         Route::get('{id}/select', [EventController::class, 'selectEvent'])->name('select');
+        Route::get('{eventUuid}/demographic', [EventController::class, 'demographic'])
+            ->name('demographic');
 
         // Event Images
         Route::post('{event_app}/images ', [EventController::class, 'storeImage'])->name('images.store');
@@ -134,6 +139,11 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::resource('speaker', EventSpeakerController::class);
             Route::delete('speakers/delete/many', [EventSpeakerController::class, 'destroyMany'])->name('speakers.destroy.many');
 
+            // Event Store
+            Route::resource('products', ProductController::class);
+            Route::post('products/update/{product}', [ProductController::class, 'update'])->name('update.product');
+            // order
+            Route::resource('orders', EventOrderController::class);
             // Attendies
             Route::resource('attendees', AttendeeController::class);
             Route::delete('attendees/delete/many', [AttendeeController::class, 'destroyMany'])->name('attendees.destroy.many');
@@ -145,6 +155,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::get('get-attendee-puchased-addons/{attendeePurchasedTicket}', [AttendeeController::class, 'getPurchasedTicketAddons'])->name('attendee.puchased-ticket.adddons');
             Route::post('attendee/import/event', [AttendeeController::class, 'importFromEvent'])->name('attendee.importevent');
             Route::post('attendee/chat-initiate/{id}', [AttendeeController::class, 'initiateChat'])->name('attendee.chat.initiate');
+            Route::post('attendee/return/ticket/{id}', [AttendeeController::class, 'returnTicket'])->name('attendee.return.ticket');
 
 
             // Wordshop

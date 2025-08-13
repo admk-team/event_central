@@ -12,7 +12,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class AttendeeChatMessage implements ShouldBroadcastNow 
+class AttendeeChatMessage implements ShouldBroadcast 
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

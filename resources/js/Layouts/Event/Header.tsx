@@ -217,6 +217,19 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
                                     <span></span>
                                 </span>
                             </button>
+                            {currentEvent?.uuid && (
+                                <a
+                                    href={route(
+                                        "organizer.events.settings.website.preview",
+                                        currentEvent.uuid
+                                    )}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="d-flex align-items-center gap-1"
+                                >
+                                    <span>Preview Website</span>
+                                </a>
+                            )}
                             {/* <SearchOption /> */}
                         </div>
                         {/* <div style={{ width: '800px' }}>
@@ -282,7 +295,10 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
                                 </Dropdown.Menu>
                             </Dropdown>
 
-                            <ShareEventButton event={currentEvent} className="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle light-dark-mode">
+                            <ShareEventButton
+                                event={currentEvent}
+                                className="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle light-dark-mode"
+                            >
                                 <Share2 size={20} />
                             </ShareEventButton>
 

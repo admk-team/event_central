@@ -19,6 +19,7 @@ const Navdata = () => {
     const [isChat, setIsChat] = useState<boolean>(false);
     const [isFriend, setIsFriend] = useState<boolean>(false);
     const [isEventStaff, setIsEventStaff] = useState<boolean>(false);
+    const [isEventShop, setIsEventShop] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>("Dashboard");
     // const [IsQA, setIsQA] = useState<boolean>(false);
@@ -75,6 +76,9 @@ const Navdata = () => {
         if (iscurrentState !== "eventStaff") {
             setIsEventStaff(false);
         }
+        if (iscurrentState !== "eventShop") {
+            setIsEventShop(false);
+        }
         // if (iscurrentState !== "Q&A") {
         //     setIsQA(false);
         // }
@@ -94,7 +98,8 @@ const Navdata = () => {
         isUpgradeTicket,
         IsAchievement,
         IsPrayerRequest,
-        isEventStaff
+        isEventStaff,
+        isEventShop,
     ]);
 
     const menuItems: any = [
@@ -112,6 +117,19 @@ const Navdata = () => {
                 e.preventDefault();
                 setIsDashboard(!isDashboard);
                 setIscurrentState("Dashboard");
+                updateIconSidebar(e);
+            },
+        },
+        {
+            id: "eventShop",
+            label: "Event Shop",
+            icon: "bx bx-store",
+            link: route("attendee.event.products"),
+            stateVariables: isDashboard,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsEventShop(!isEventShop);
+                setIscurrentState("eventShop");
                 updateIconSidebar(e);
             },
         },
@@ -156,7 +174,7 @@ const Navdata = () => {
         },
         {
             id: "friend",
-            label: "Freind System",
+            label: "Friend System",
             icon: "las la-user-friends",
             link: route("friend.index"),
             stateVariables: isFriend,
@@ -223,17 +241,15 @@ const Navdata = () => {
             id: "upgradeTicket",
             label: "Upgrade Tickets",
             icon: "bx bxs-credit-card",
-            link: route('attendee.tickets.upgrade'),
+            link: route("attendee.tickets.upgrade"),
             stateVariables: isUpgradeTicket,
             click: function (e: any) {
                 e.preventDefault();
                 setPurchaseTickets(!isUpgradeTicket);
-                setIscurrentState('upgradeTicket');
+                setIscurrentState("upgradeTicket");
                 updateIconSidebar(e);
             },
-            hasPermissions: [
-                'refund_ticket'
-            ],
+            hasPermissions: ["refund_ticket"],
         },
         {
             id: "refundtickets",
@@ -300,6 +316,20 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
+        
+        {
+            id: "liveStream",
+            label: "Live Streams",
+            icon: "bx bx-broadcast",
+            link: route("stream.index"),
+            stateVariables: isMore,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsMore(!isMore);
+                setIscurrentState("More");
+                updateIconSidebar(e);
+            },
+        },
         //   {
         //     id: "PrayerRequest",
         //     label: "Prayer Request",
@@ -341,6 +371,7 @@ const Navdata = () => {
         //     },
         // },
     ];
+   
     return <React.Fragment>{menuItems}</React.Fragment>;
 };
 export default Navdata;

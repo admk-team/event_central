@@ -24,9 +24,17 @@ use App\Models\AttendeePurchasedTickets;
 use App\Models\AttendeeTransferedTicket;
 use Illuminate\Support\Facades\DB;
 use Nette\Schema\Expect;
+use App\Services\GroupAttendeeService;
 
 class RegisteredUserController extends Controller
 {
+    protected GroupAttendeeService $groupService;
+
+    public function __construct(GroupAttendeeService $groupService)
+    {
+        $this->groupService = $groupService;
+    }
+
     /**
      * Display the registration view.
      */
@@ -35,7 +43,7 @@ class RegisteredUserController extends Controller
         $eventApp->load(['dates']);
         $closeRegistration = eventSettings($eventApp->id)->getValue('close_registration', false);
 
-        return Inertia::render('Attendee/Auth/Register', compact('eventApp','closeRegistration'));
+        return Inertia::render('Attendee/Auth/Register', compact('eventApp', 'closeRegistration'));
     }
 
     /**
@@ -61,21 +69,46 @@ class RegisteredUserController extends Controller
                 Rule::unique('attendees', 'email')->where('event_app_id', $eventApp->id),
             ],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'is_public' => 'required|in:0,1',
+            'group_emails' => [
+                'nullable',
+                function ($attribute, $value, $fail) {
+                    $emails = array_map('trim', explode(',', $value));
+                    foreach ($emails as $email) {
+                        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                            $fail("One or more emails in $attribute are invalid.");
+                        }
+                    }
+                },
+            ],
         ]);
 
-        $user = Attendee::create([
-            'event_app_id' => $eventApp->id,
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'position' => $request->position,
-            'location' => $request->location,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'referral_link' =>  $referralLink ?? null,
-            'personal_url' => $personal_url ?? null,
-            'is_public' => $request->is_public == 1 ? true : false,
-        ]);
+        DB::beginTransaction();
+        try {
+            $user = Attendee::create([
+                'event_app_id' => $eventApp->id,
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'position' => $request->position,
+                'location' => $request->location,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'referral_link' => $referralLink,
+                'personal_url' => $personal_url,
+            ]);
+            // start group members registration 
+            if ($request->has('group_emails')) {
+                $groupEmails = is_array($request->group_emails)
+                    ? $request->group_emails
+                    : explode(',', $request->group_emails ?? '');
+                $this->groupService->createGroupAttendees($groupEmails, $user, $eventApp, $referralLink, $personal_url);
+                // end group members registration 
+            }
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            report($e);
+            return back()->withErrors(['error' => 'Something went wrong. Please try again.']);
+        }
 
         $this->checkIfTicketTransferCase($request->email, $eventApp, $user);
         $this->eventBadgeDetail('register', $eventApp->id, $user->id, $referralLink);
@@ -86,12 +119,14 @@ class RegisteredUserController extends Controller
             }
         }
 
+
         event(new Registered($user));
-        broadcast(new UpdateEventDashboard($eventApp->id,'Attendee Created'))->toOthers();
+        broadcast(new UpdateEventDashboard($eventApp->id, 'Attendee Created'))->toOthers();
         Auth::guard('attendee')->login($user);
 
         return redirect(route('attendee.event.detail.dashboard'));
     }
+
 
     private function checkIfTicketTransferCase($email, $eventApp, $user)
     {

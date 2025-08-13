@@ -45,6 +45,7 @@ class OrganizerPaymentSettingController extends Controller
 
             'stripe_secret_key' => 'nullable|string',
             'stripe_publishable_key' => 'nullable|string',
+            'currency' => 'nullable|string'
         ]);
         OrganizerPaymentKeys::updateOrCreate(
             ['user_id' => auth()->user()->id],
@@ -54,6 +55,7 @@ class OrganizerPaymentSettingController extends Controller
                 'paypal_secret' => $input['paypal_secret'],
                 'stripe_secret_key' => $input['stripe_secret_key'],
                 'stripe_publishable_key' => $input['stripe_publishable_key'],
+                'currency' => $input['currency'],
             ]
         );
 

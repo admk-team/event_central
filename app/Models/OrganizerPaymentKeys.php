@@ -19,6 +19,8 @@ class OrganizerPaymentKeys extends Model
         'paypal_base_url',
         'paypal_pub',
         'paypal_secret',
+
+        'currency'
     ];
 
     // Encrypt the secret key automatically when saving

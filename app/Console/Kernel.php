@@ -2,18 +2,12 @@
 
 namespace App\Console;
 
+use App\Console\Commands\EventCloseRegistration;
+use App\Console\Commands\EventCloserReminder;
 use App\Console\Commands\IncreaseTicketPrices;
-use App\Jobs\EventSessionReminder;
-use App\Mail\EventSessionReminderMail;
-use App\Models\AttendeeFavSession;
-use App\Models\EventApp;
-use App\Models\EventAppDate;
-use App\Models\EventAppTicket;
-use App\Models\EventSession;
-use Carbon\Carbon;
+use App\Console\Commands\SessionReminder;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -23,115 +17,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         $schedule->command(IncreaseTicketPrices::class)->daily();
-
-        // $schedule->call(function () {
-        //     $now = Carbon::now();
-        //     $currentDate = Carbon::today();
-
-        //     Log::info('now date: ' . $now);
-        //     Log::info('current date: ' . $currentDate);
-
-        //     $favSessions = AttendeeFavSession::with([
-        //         'attendee', 
-        //         'event.dates', 
-        //         'session.eventDate', 
-        //         'session.eventSpeakers', 
-        //         'session.eventPlatform',])
-        //         ->get();
-
-        //     foreach ($favSessions as $fav) {
-
-        //         $event = $fav->event;
-        //         $matchingDate = $event->dates->firstWhere('date', $currentDate->toDateString());
-
-        //         if (!$matchingDate) continue;
-        //         Log::info('Matching date found: ' . $matchingDate->date);
-
-        //         $session = $fav->session;
-
-        //         if (!$session || $session->event_date_id !== $matchingDate->id) continue;
-        //         Log::info('Session found: ' . $session->id);
-
-        //         $startTime = Carbon::parse($session->start_time);
-        //         $diffInMinutes = $now->diffInMinutes($startTime, false);
-
-        //         if ($diffInMinutes === 10) {
-        //             Log::info('Sending reminder for session before 10 minutes of starting time: ' . $session->id);
-        //             EventSessionReminder::dispatch(
-        //                 $fav->attendee->email,
-        //                 $event,
-        //                 $matchingDate,
-        //                 $session
-        //             );
-        //         }
-        //     }
-        // })->everyMinute();
-
-        $schedule->call(function () {
-
-            $eventAppIds = EventApp::pluck('id');
-
-            foreach ($eventAppIds as $eventAppId) {
-                $latestEventDate = EventAppDate::where('event_app_id', $eventAppId)
-                    ->latest('date')
-                    ->first();
-
-                $eventFull = EventAppTicket::where('event_app_id', $eventAppId)->get();
-
-                $allTicketsFull = $eventFull->every(function ($ticket) {
-                    return $ticket->qty_sold >= $ticket->qty_total;
-                });
-
-                if ($latestEventDate && Carbon::parse($latestEventDate->date)->lessThan(Carbon::today())) {
-
-                    $closeRegistration = eventSettings($eventAppId)->getValue('close_registration', false);
-                    eventSettings($eventAppId)->set('close_registration', !$closeRegistration);
-
-                    Log::info("Event ID {$eventAppId} has passed its last date: {$latestEventDate->date}");
-                } else if ($allTicketsFull) {
-
-                    $closeRegistration = eventSettings($eventAppId)->getValue('close_registration', false);
-                    eventSettings($eventAppId)->set('close_registration', !$closeRegistration);
-
-                    Log::info("All tickets for Event ID {$eventAppId} are sold out.");
-                }
-            }
-        })->daily();
-
-        //logic for sending reminder closer to event
-        $schedule->call(function () {
-            Log::info('Event Reminder Scheduler Started');
-
-            $eventApps = \App\Models\EventApp::with('dates')->get();
-            Log::info('Fetched EventApps: ' . $eventApps->count());
-
-            foreach ($eventApps as $eventApp) {
-                Log::info("Checking EventApp ID: {$eventApp->id}");
-
-                $firstDate = optional($eventApp->dates()->orderBy('date', 'asc')->first())->date;
-
-                if (!$firstDate) {
-                    Log::warning("EventApp ID {$eventApp->id} has no start date.");
-                    continue;
-                }
-
-                $reminderDays = (int) eventSettings($eventApp->id)->getValue('reminder_days', 7);
-                Log::info("Reminder days for EventApp ID {$eventApp->id}: {$reminderDays}");
-
-                $eventStart = \Carbon\Carbon::parse($firstDate)->startOfDay();
-                $now = \Carbon\Carbon::now()->startOfDay();
-                $diffDays = $now->diffInDays($eventStart, false);
-
-                Log::info("Today: {$now->toDateString()}, Event Start: {$eventStart->toDateString()}, Diff: {$diffDays} days");
-
-                if ($diffDays === $reminderDays) {
-                    Log::info("Matched reminder days for EventApp ID {$eventApp->id}, dispatching job...");
-                    \App\Jobs\SendEventReminderJob::dispatch($eventApp);
-                }
-            }
-
-            Log::info('Event Reminder Scheduler Completed');
-        })->daily();
+        $schedule->command(EventCloseRegistration::class)->daily();
+        $schedule->command(EventCloserReminder::class)->daily();
+        $schedule->command(SessionReminder::class)->everyMinute();
     }
 
     /**

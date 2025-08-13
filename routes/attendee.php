@@ -16,14 +16,17 @@ use App\Http\Controllers\Attendee\Payment\PaymentController;
 use App\Http\Controllers\Attendee\EventPostController;
 use App\Http\Controllers\Attendee\EventQuestionnaireFormController;
 use App\Http\Controllers\Attendee\EventRegistrationFormController;
+use App\Http\Controllers\Attendee\EventShopController;
 use App\Http\Controllers\Attendee\EventStaffController;
 use App\Http\Controllers\Attendee\FriendRequestController;
 use App\Http\Controllers\Attendee\GoogleController;
+use App\Http\Controllers\Attendee\LiveStreamController;
 use App\Http\Controllers\Attendee\Payment\RefundPaymentController;
 use App\Http\Controllers\Attendee\PrayerRequestController;
 use App\Http\Controllers\Attendee\ProfileController;
 use App\Http\Controllers\Attendee\QrCodeController;
 use App\Http\Controllers\Attendee\QuestionAttendeeController as AttendeeQuestionAttendeeController;
+use App\Http\Controllers\Attendee\WaitingListController;
 use App\Http\Controllers\QuestionAttendeeController;
 use Illuminate\Support\Facades\Route;
 
@@ -79,6 +82,14 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::get('more', [EventController::class, 'getEventDetailMore'])->name('attendee.event.detail.more');
         Route::post('contact-form', [EventController::class, 'submitContectForm'])->name('attendee.event.detail.contact');
 
+        //Event Shop
+        Route::get('products',[EventShopController::class,'index'])->name('attendee.event.products');
+        Route::post('puchase/product', [EventShopController::class, 'checkout'])->name('attendee.product.purchase');
+        Route::post('product/update/{paymentId}', [EventShopController::class, 'updateOrder'])->name('attendee.product.update');
+        Route::get('product/checkout/{data}', [EventShopController::class, 'checkoutPage'])->name('attendee.product.checkout');
+        Route::get('success/checkout', [EventShopController::class, 'paymentSuccess'])->name('attendee.product.checkout.success');
+        Route::get('cancel/checkout', [EventShopController::class, 'paymentCancel'])->name('attendee.product.checkout.cancel');
+
         //QR Routes
         Route::get('/qr-code/{eventApp}', [QrCodeController::class, 'getQrCode'])->name('attendee.qr-code.get');
         Route::post('/qr-code/{eventApp}', [QrCodeController::class, 'postQrCode'])->name('attendee.qr-code.post');
@@ -87,6 +98,10 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::get('view-tickets', [PaymentController::class, 'viewTickets'])->name('attendee.tickets.get');
         Route::get('purchased-tickets', [PaymentController::class, 'attendeepurchasedTickets'])->name('attendee.tickets.purchased');
         Route::post('submit-ticket-emails', [PaymentController::class, 'submitTicketTransfer'])->name('attendee.tickets.transfer');
+
+        // waitList Attendee
+        Route::post('waitlist-ticket', [WaitingListController::class, 'store'])->name('attendee.waitlist.post');
+        Route::delete('waitlist-ticket', [WaitingListController::class, 'destroy'])->name('attendee.delete.waitlist');
 
         //Refund of Tickets
         Route::get('refund-tickets', [RefundPaymentController::class, 'refundAttendeeTicket'])->name('attendee.tickets.refund');
@@ -177,6 +192,10 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
     //fav session
     Route::get('/favsession/{sessionid}', [EventController::class, 'favsession'])->name('fav.sessions');
     Route::get('/allfav', [EventController::class, 'allfavouriteSession'])->name('all.fav.sessions');
+
+    Route::get('/streams/index',[LiveStreamController::class,'index'])->name('stream.index');
+    Route::get('/join/stream/{id}', [LiveStreamController::class, 'joinLiveStreams'])->name('join.live.streams');
+
 });
 
 // Event questionnaire Form For Web
