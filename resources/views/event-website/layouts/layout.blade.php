@@ -69,6 +69,9 @@
                     <li><a
                             href="{{ route('organizer.events.website.tickets', $event->uuid) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}">Tickets</a>
                     </li>
+                    <li><a
+                            href="{{ route('organizer.events.website.products', $event->uuid) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}">Products</a>
+                    </li>
                     <li class="header-actions-mobile">
                         <a href="{{ route('organizer.events.website.schedule', $event->uuid) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}"
                             class="btn btn-primary">Schedulelknmf;lkj</a>
