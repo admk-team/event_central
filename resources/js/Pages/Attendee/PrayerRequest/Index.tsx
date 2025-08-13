@@ -166,6 +166,19 @@ const PrayerRequests = ({ my_requests, public_requests }: Props) => {
                             >
                                 {req.request_type.toUpperCase()}
                             </Badge>
+                            <Badge
+                                bg={
+                                    req.status === "pending"
+                                        ? "success"
+                                        : req.status === "approved"
+                                        ? "secondary"
+                                        : req.status === "rejected"
+                                        ? "danger"
+                                        : "light"
+                                }
+                            >
+                                {req.status.toUpperCase()}
+                            </Badge>
                             {req.request_type === "public" && (
                                 <span className="text-muted small">
                                     👁️ {req.count}

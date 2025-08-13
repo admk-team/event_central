@@ -399,7 +399,7 @@ class AttendeeController extends Controller
         ->where('user_id', Auth::user()->id)
         ->where('participant_id', $attendee->id)
         ->first();
-        
+
         if ($existing) {
             return back()->withError('A chat with this attendee already exists.');
         }

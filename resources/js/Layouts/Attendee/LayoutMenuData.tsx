@@ -1,6 +1,7 @@
 import { usePage } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
-
+// ✅ Correct import for Beams client (no default export)
+import * as PusherPushNotifications from "@pusher/push-notifications-web";
 const Navdata = () => {
     const user: any = usePage().props.auth.user;
     const eventApp: any = usePage().props.eventApp;
@@ -19,6 +20,7 @@ const Navdata = () => {
     const [isChat, setIsChat] = useState<boolean>(false);
     const [isFriend, setIsFriend] = useState<boolean>(false);
     const [isEventStaff, setIsEventStaff] = useState<boolean>(false);
+    const [isEventShop, setIsEventShop] = useState<boolean>(false);
 
     const [iscurrentState, setIscurrentState] = useState<any>("Dashboard");
     // const [IsQA, setIsQA] = useState<boolean>(false);
@@ -75,6 +77,9 @@ const Navdata = () => {
         if (iscurrentState !== "eventStaff") {
             setIsEventStaff(false);
         }
+        if (iscurrentState !== "eventShop") {
+            setIsEventShop(false);
+        }
         // if (iscurrentState !== "Q&A") {
         //     setIsQA(false);
         // }
@@ -94,7 +99,8 @@ const Navdata = () => {
         isUpgradeTicket,
         IsAchievement,
         IsPrayerRequest,
-        isEventStaff
+        isEventStaff,
+        isEventShop,
     ]);
 
     const menuItems: any = [
@@ -112,6 +118,19 @@ const Navdata = () => {
                 e.preventDefault();
                 setIsDashboard(!isDashboard);
                 setIscurrentState("Dashboard");
+                updateIconSidebar(e);
+            },
+        },
+        {
+            id: "eventShop",
+            label: "Event Shop",
+            icon: "bx bx-store",
+            link: route("attendee.event.products"),
+            stateVariables: isDashboard,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsEventShop(!isEventShop);
+                setIscurrentState("eventShop");
                 updateIconSidebar(e);
             },
         },
@@ -156,7 +175,7 @@ const Navdata = () => {
         },
         {
             id: "friend",
-            label: "Freind System",
+            label: "Friend System",
             icon: "las la-user-friends",
             link: route("friend.index"),
             stateVariables: isFriend,
@@ -223,17 +242,15 @@ const Navdata = () => {
             id: "upgradeTicket",
             label: "Upgrade Tickets",
             icon: "bx bxs-credit-card",
-            link: route('attendee.tickets.upgrade'),
+            link: route("attendee.tickets.upgrade"),
             stateVariables: isUpgradeTicket,
             click: function (e: any) {
                 e.preventDefault();
                 setPurchaseTickets(!isUpgradeTicket);
-                setIscurrentState('upgradeTicket');
+                setIscurrentState("upgradeTicket");
                 updateIconSidebar(e);
             },
-            hasPermissions: [
-                'refund_ticket'
-            ],
+            hasPermissions: ["refund_ticket"],
         },
         {
             id: "refundtickets",
@@ -355,6 +372,28 @@ const Navdata = () => {
         //     },
         // },
     ];
+    // ✅ Push Notifications subscription
+    if (user['id']) {
+        const beamsClient = new PusherPushNotifications.Client({
+            instanceId: import.meta.env.VITE_PUSHER_BEAMS_INSTANCE_ID as string,
+        });
+
+        beamsClient
+            .start()
+            .then(() => {
+                console.log("✅ Beams client started");
+                return beamsClient.addDeviceInterest(
+                    `attendee-${user['id']}`
+                );
+            })
+            .then(() => {
+                console.log(
+                    `📢 Subscribed to attendee-${user['id']}`
+                );
+            })
+            .catch(console.error);
+    }
+    console.log("✅ Beams");
     return <React.Fragment>{menuItems}</React.Fragment>;
 };
 export default Navdata;
