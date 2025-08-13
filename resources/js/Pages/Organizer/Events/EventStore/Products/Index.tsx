@@ -116,7 +116,7 @@ const Index = ({ products }: any) => {
                                                     <Button className="btn-danger"
                                                     // onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}
                                                     ><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>
-                                                // </HasPermission>
+                                                </HasPermission>
                                             ),
                                             showOnRowSelection: true,
                                         },
@@ -126,7 +126,7 @@ const Index = ({ products }: any) => {
                                             render: (
                                                 <HasPermission permission="create_product">
                                                     <Button onClick={() => editAction(null)} ><i className="ri-add-fill"></i> Add New</Button>
-                                                // </HasPermission>
+                                                </HasPermission>
                                             )
 
                                         },

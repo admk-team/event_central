@@ -135,7 +135,9 @@ export default function Demographic({ attendees }: Props) {
                         <h3>Attendees by Country</h3>
                         <ul>
                             {Object.values(attendees.reduce((acc, attendee) => {
-                                const normalizedCountry = countryNameMap[attendee.country] || attendee.country;
+                                const normalizedCountry = attendee.country?.trim()
+                                    ? (countryNameMap[attendee.country] || attendee.country)
+                                    : "Unknown";
                                 if (!acc[normalizedCountry]) {
                                     acc[normalizedCountry] = {
                                         country: normalizedCountry,
