@@ -34,6 +34,7 @@ use Illuminate\Console\Scheduling\Event;
 use App\Mail\AttendeeTicketPurchasedEmail;
 use App\Mail\EventTicketPurchasedNotification;
 use App\Http\Requests\Attendee\AttendeeCheckoutRequest;
+use App\Models\OrganizerPaymentKeys;
 
 class PaymentController extends Controller
 {
@@ -59,6 +60,9 @@ class PaymentController extends Controller
         $eventApp = null;
         $attendees = [];
         $lasteventDate = [];
+        $organizerId = EventApp::findOrFail(auth()->user()->event_app_id ?? session('event_id'));
+        $getCurrency = OrganizerPaymentKeys::where('user_id',$organizerId->organizer_id)->value('currency');
+
         //If Page is being visited by Organizer
         if ($organizerView) {
             $eventApp = EventApp::with('dates')->find(session('event_id'));
@@ -131,7 +135,8 @@ class PaymentController extends Controller
             'organizerView',
             'attendees',
             'attendee_id',
-            'lasteventDate'
+            'lasteventDate',
+            'getCurrency',
         ]));
     }
 
@@ -140,7 +145,7 @@ class PaymentController extends Controller
     // Create PayPal Order
     public function createPaypalOrder(Request $request)
     {
-        $order = $this->paypal_service->createOrder($request->amount);
+        $order = $this->paypal_service->createOrder($request->amount, $request->currency);
         return response()->json($order);
     }
 
@@ -174,14 +179,18 @@ class PaymentController extends Controller
         $payment = AttendeePayment::where('uuid', $paymentUuId)->first();
         // return $payment;
         if ($payment->status === 'pending') {
-            $stripe_pub_key = $this->stripe_service->StripKeys($payment->event_app_id)->stripe_publishable_key;
+            $stripe_detail = $this->stripe_service->StripKeys($payment->event_app_id);
+            $stripe_pub_key = $stripe_detail->stripe_publishable_key;
+            $strip_currency = $stripe_detail->currency ?? "USD";
+
             // $paypal_client_id = null;
             $paypal_client_id = $this->paypal_service->payPalKeys()->paypal_pub;
             return Inertia::render('Attendee/Payment/Index', compact([
                 'payment',
                 'stripe_pub_key',
                 'paypal_client_id',
-                'organizerView'
+                'organizerView',
+                'strip_currency'
             ]));
         } else {
             return redirect()->route('attendee.tickets.get')->withError("Payment has already been processed against this Payment ID");
@@ -196,7 +205,11 @@ class PaymentController extends Controller
         $user = auth()->user();
         $attendee = $organizerView ? $attendee : auth()->user();
         $amount = $data['totalAmount'];
-        $stripe_response = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount);
+
+        $organizerId = EventApp::findOrFail(auth()->user()->event_app_id ?? session('event_id'));
+        $getCurrency = OrganizerPaymentKeys::where('user_id',$organizerId->organizer_id)->first();
+
+        $stripe_response = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount, $getCurrency->currency);
         $client_secret = $stripe_response['client_secret'];
         $payment_id = $stripe_response['payment_id'];
 

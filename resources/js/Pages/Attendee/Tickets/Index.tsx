@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import Select, { StylesConfig } from 'react-select';
 
 
-const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate }: any) => {
+const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate, getCurrency }: any) => {
 
     //Set Page Layout as per User [Organizer, Attendee]
     const Layout = organizerView ? EventLayout : AttendeeLayout;
@@ -80,7 +80,8 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
                     // console.log(response);
                     router.visit(route('organizer.events.tickets.checkout.page', response.data.uuid));
                 }).catch((error) => {
-                    console.log(error);
+                    toast.error('Minimum amount required is 50 cents. Please increase the amount.')
+                    // console.log(error);
                 }).finally(() => {
                     setProcessing(false);
                 })
@@ -89,7 +90,8 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
                     // console.log(response);
                     router.visit(route('organizer.events.payment.success', response.data.uuid));
                 }).catch((error) => {
-                    console.log(error);
+                    toast.error('Minimum amount required is 50 cents. Please increase the amount.');
+                    // console.log(error);
                 }).finally(() => {
                     setProcessing(false);
                 })
@@ -98,10 +100,11 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
             if (totalAmount > 0) {
                 //Process Stripe payment for Attendee
                 axios.post(route("attendee.tickets.checkout"), data).then((response) => {
-                    // console.log(response);
+                    console.log(response);
                     router.visit(route('attendee.tickets.checkout.page', response.data.uuid));
                 }).catch((error) => {
-                    //
+                    toast.error('Minimum amount required is 50 cents. Please increase the amount.');
+
                     console.log(error);
                 }).finally(() => {
                     setProcessing(false);
@@ -112,6 +115,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
                     console.log(response);
                     router.visit(route('attendee.payment.success', response.data.uuid));
                 }).catch((error) => {
+                    toast.error('Minimum amount required is 50 cents. Please increase the amount.');
                     console.log(error);
                 }).finally(() => {
                     setProcessing(false);
@@ -320,6 +324,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
                                     {organizerView && eventApp.tickets.length > 0 &&
                                         eventApp.tickets.map((ticket: any) => (
                                             <TicketCard
+                                                getCurrency={getCurrency}
                                                 ticket={ticket}
                                                 key={ticket.id}
                                                 ticket_array={allTicketDetails}
@@ -332,6 +337,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
                                     {!organizerView && eventApp.public_tickets.length > 0 &&
                                         eventApp.public_tickets.map((ticket: any) => (
                                             <TicketCard
+                                                getCurrency={getCurrency}
                                                 ticket={ticket}
                                                 key={ticket.id}
                                                 ticket_array={allTicketDetails}
@@ -381,7 +387,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
                                             </Col>
                                             <Col md={4} lg={4} className="d-flex justify-content-end align-items-center">
                                                 <h5 className="mb-1 pt-2 pb-2 mr-2 text-end fs-4">Discount : <sup>
-                                                    <small>$</small>
+                                                    <small>{getCurrency ?? "USD"}</small>
                                                 </sup>{Math.round(discountAmount).toFixed(2)}</h5>
                                             </Col>
                                         </Row>
@@ -407,7 +413,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
                                                 <h5 className="mb-1 pt-2 pb-2 mr-2 text-end fs-4">
                                                     Total Payable :{" "}
                                                     <sup>
-                                                        <small>$</small>
+                                                        <small>{getCurrency ?? "USD"}</small>
                                                     </sup>
                                                     {totalAmount.toFixed(2)}
                                                 </h5>

@@ -16,7 +16,7 @@ import {
 import TicketDetail from "./TicketDetail";
 import { Minus, Plus } from "lucide-react";
 
-const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckOut, onBlockCheckout }: any) => {
+const TicketCard = ({ getCurrency, ticket, onTicketDetailsUpdated, ticket_array, submitCheckOut, onBlockCheckout }: any) => {
     const isAddedToCart = ticket.is_added_to_cart;
     const [processing, setProcessing] = useState(false);
     const [ticketQty, setTicketQty] = useState(0);
@@ -189,7 +189,7 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckO
                             </Col>
                             <Col md={2} lg={2}>
                                 <sup>
-                                    <small>$</small>
+                                    <small>{getCurrency ?? "USD"}</small>
                                 </sup>
                                 <span className="ff-secondary fw-bold fs-3">
                                     {ticket.base_price}
@@ -306,6 +306,7 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckO
 
                         {ticketDetails.map((ticketDetail: any) => (
                             <TicketDetail
+                                getCurrency={getCurrency}
                                 ticket={ticket}
                                 ticket_no={ticketDetail.ticket_no}
                                 fees_sub_total={ticketDetail.fees_sub_total}

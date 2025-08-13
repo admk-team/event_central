@@ -3,7 +3,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Col, Row, Form } from "react-bootstrap";
 
-const TicketDetail = ({ ticket_no, ticket, fees_sub_total, addons_sub_total, onAddonsUpdated, onBlockCheckout }: any) => {
+const TicketDetail = ({ getCurrency,ticket_no, ticket, fees_sub_total, addons_sub_total, onAddonsUpdated, onBlockCheckout }: any) => {
     const [selectedAddons, setSelectedAddons] = useState<any>([]);
     const [addonOptions, setAddonsOptions] = useState<any>([]);
     const [addons, setAddons] = useState<any>(ticket.addons);
@@ -255,7 +255,7 @@ const TicketDetail = ({ ticket_no, ticket, fees_sub_total, addons_sub_total, onA
                 {feesOptions}
                 <span className="fs-5 fw-bold mt-1">
                     Fees Sub Total :
-                    <sup><small>$</small></sup>
+                    <sup><small>{ getCurrency ?? "USD" }</small></sup>
                     {fees_sub_total}</span>
             </Col>
             <Col md={6} lg={6}>
@@ -263,7 +263,7 @@ const TicketDetail = ({ ticket_no, ticket, fees_sub_total, addons_sub_total, onA
                 {addonOptions}
                 <span className="fs-5 fw-bold mt-1">
                     Addons Sub Total :
-                    <sup><small>$</small></sup>
+                    <sup><small>{ getCurrency ?? "USD" }</small></sup>
                     {addons_sub_total}
                 </span>
             </Col>
