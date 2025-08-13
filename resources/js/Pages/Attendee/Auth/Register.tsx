@@ -18,7 +18,7 @@ export default function Register() {
         position: '',
         location: '',
         password_confirmation: "",
-        group_emails: ''
+        group_emails: '',
         is_public: "1",
     });
 
