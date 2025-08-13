@@ -16,17 +16,8 @@ class LiveStreamController extends Controller
         $eventAppId = Auth::user()->event_app_id;
 
         $liveStreams = $this->datatable(
-            LiveStream::where('event_app_id', $eventAppId)
-                ->where(function ($query) {
-                    $query->where('status', '!=', 'created')
-                        ->where('status','!=','completed')
-                        ->orWhere(function ($q) {
-                            $q->where('status', 'created')
-                                ->where('start_time', '>', Carbon::now());
-                        });
-                })
+            LiveStream::where('event_app_id', $eventAppId)->where('status', '!=', 'completed')
         );
-
         return Inertia::render('Attendee/LiveStreams/Index', [
             'liveStreams' => $liveStreams,
         ]);
