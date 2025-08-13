@@ -1,15 +1,24 @@
-import { useForm, usePage } from '@inertiajs/react';
+import { useForm, usePage } from "@inertiajs/react";
 import { Form, FormGroup, Modal, Spinner } from "react-bootstrap";
 import Flatpickr from "react-flatpickr";
+import { DateTime } from "luxon"; // npm install luxon
 
-export default function CreateEditModal({ show, onHide, liveStream }: { show: boolean; onHide: () => void; liveStream: any | null }) {
+export default function CreateEditModal({
+    show,
+    onHide,
+    liveStream,
+}: {
+    show: boolean;
+    onHide: () => void;
+    liveStream: any | null;
+}) {
     const isEdit = liveStream != null ? true : false;
 
     const { data, setData, post, processing, errors, reset } = useForm({
         _method: isEdit ? "PUT" : "POST",
-        title: liveStream?.title ?? '',
-        resolution: liveStream?.resolution ?? '1080p',
-        start_time: liveStream?.start_time ?? '',
+        title: liveStream?.title ?? "",
+        resolution: liveStream?.resolution ?? "1080p",
+        start_time: liveStream?.start_time ?? "",
         // thumbnail: '',
     });
 
@@ -17,30 +26,28 @@ export default function CreateEditModal({ show, onHide, liveStream }: { show: bo
         e.preventDefault();
 
         if (isEdit) {
-            post(route('organizer.events.live-streams.update', liveStream.id), {
+            post(route("organizer.events.live-streams.update", liveStream.id), {
                 preserveScroll: true,
                 onSuccess: () => {
                     reset();
                     onHide();
-                }
+                },
             });
         } else {
-            post(route('organizer.events.live-streams.store'), {
+            post(route("organizer.events.live-streams.store"), {
                 preserveScroll: true,
                 onSuccess: () => {
                     reset();
                     onHide();
-                }
+                },
             });
         }
-    }
+    };
 
     return (
         <Modal show={show} onHide={onHide} centered>
             <Modal.Header className="bg-light p-3" closeButton>
-                <h5 className="modal-title">
-                    Create Live Stream
-                </h5>
+                <h5 className="modal-title">Create Live Stream</h5>
             </Modal.Header>
 
             <Form onSubmit={submit} className="tablelist-form">
@@ -51,20 +58,26 @@ export default function CreateEditModal({ show, onHide, liveStream }: { show: bo
                             type="text"
                             className="form-control"
                             value={data.title}
-                            onChange={(e) => setData('title', e.target.value)}
+                            onChange={(e) => setData("title", e.target.value)}
                             isInvalid={!!errors.title}
                         />
                         {errors.title && (
-                            <Form.Control.Feedback type="invalid">{errors.title}</Form.Control.Feedback>
+                            <Form.Control.Feedback type="invalid">
+                                {errors.title}
+                            </Form.Control.Feedback>
                         )}
                     </FormGroup>
                     {isEdit || (
                         <FormGroup className="mb-3">
-                            <Form.Label className="form-label">Resolution</Form.Label>
-                            <Form.Select 
+                            <Form.Label className="form-label">
+                                Resolution
+                            </Form.Label>
+                            <Form.Select
                                 className="form-control"
                                 value={data.resolution}
-                                onChange={(e) => setData('resolution', e.target.value)}
+                                onChange={(e) =>
+                                    setData("resolution", e.target.value)
+                                }
                             >
                                 <option value="240p">240p</option>
                                 <option value="360p">360p</option>
@@ -75,12 +88,16 @@ export default function CreateEditModal({ show, onHide, liveStream }: { show: bo
                                 <option value="1440p">1440p</option>
                             </Form.Select>
                             {errors.resolution && (
-                                <Form.Control.Feedback type="invalid">{errors.resolution}</Form.Control.Feedback>
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.resolution}
+                                </Form.Control.Feedback>
                             )}
                         </FormGroup>
                     )}
                     <FormGroup className="mb-3">
-                        <Form.Label className="form-label">Start Time</Form.Label>
+                        <Form.Label className="form-label">
+                            Start Time
+                        </Form.Label>
                         <Flatpickr
                             options={{
                                 altInput: true,
@@ -88,11 +105,29 @@ export default function CreateEditModal({ show, onHide, liveStream }: { show: bo
                                 altFormat: "d M Y, H:i",
                                 dateFormat: "Y-m-d H:i:s",
                             }}
-                            value={data.start_time}
-                            onChange={([
-                                selectedDate,
-                            ]: Date[]) => {
-                                setData('start_time', selectedDate.toLocaleDateString("en-CA").split("T")[0]);
+                            value={
+                                data.start_time
+                                    ? // Try parsing as SQL, fallback to ISO
+                                      DateTime.fromSQL(data.start_time, {
+                                          zone: "America/New_York",
+                                      }).isValid
+                                        ? DateTime.fromSQL(data.start_time, {
+                                              zone: "America/New_York",
+                                          }).toJSDate()
+                                        : DateTime.fromISO(data.start_time, {
+                                              zone: "America/New_York",
+                                          }).toJSDate()
+                                    : null
+                            }
+                            onChange={([selectedDate]: Date[]) => {
+                                if (selectedDate) {
+                                    const formattedDateTime =
+                                        DateTime.fromJSDate(selectedDate, {
+                                            zone: "America/New_York",
+                                        }).toFormat("yyyy-LL-dd HH:mm:ss");
+
+                                    setData("start_time", formattedDateTime);
+                                }
                             }}
                         />
                     </FormGroup>
@@ -107,7 +142,11 @@ export default function CreateEditModal({ show, onHide, liveStream }: { show: bo
                             Close
                         </button>
 
-                        <button type="submit" className="btn btn-success" disabled={processing}>
+                        <button
+                            type="submit"
+                            className="btn btn-success"
+                            disabled={processing}
+                        >
                             {processing ? (
                                 <span className="d-flex gap-1 align-items-center">
                                     <Spinner
@@ -117,15 +156,15 @@ export default function CreateEditModal({ show, onHide, liveStream }: { show: bo
                                         role="status"
                                         aria-hidden="true"
                                     />
-                                    {isEdit ? 'Updating' : 'Creating'}
+                                    {isEdit ? "Updating" : "Creating"}
                                 </span>
                             ) : (
-                                <span>{isEdit ? 'Update' : 'Create'}</span>
+                                <span>{isEdit ? "Update" : "Create"}</span>
                             )}
                         </button>
                     </div>
                 </div>
             </Form>
         </Modal>
-    )
+    );
 }

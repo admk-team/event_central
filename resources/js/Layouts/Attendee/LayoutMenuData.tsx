@@ -317,6 +317,20 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
+        
+        {
+            id: "liveStream",
+            label: "Live Streams",
+            icon: "bx bx-broadcast",
+            link: route("stream.index"),
+            stateVariables: isMore,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsMore(!isMore);
+                setIscurrentState("More");
+                updateIconSidebar(e);
+            },
+        },
         //   {
         //     id: "PrayerRequest",
         //     label: "Prayer Request",
