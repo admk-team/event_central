@@ -142,20 +142,8 @@ const Navdata = () => {
                 setIscurrentState("Demographic");
                 updateIconSidebar(e);
             },
-            // hasPermissions: ["view_demographic_detail"], // uncomment if using permissions
+            hasPermissions: ["view_demographic_detail"], // uncomment if using permissions
         },
-        // {
-        //     id: "demographic_detail",
-        //     label: "DemoGraphic Detail",
-        //     icon: "bx bxs-group",
-        //     link: route("organizer.events.demographic-detail.index"),
-        //     click: function (e: any) {
-        //         e.preventDefault();
-        //         setIscurrentState("demographic_detail");
-        //         updateIconSidebar(e);
-        //     },
-        //     hasPermissions: ["view_demographic_detail"],
-        // },
         {
             id: "attendees",
             label: "Event",
@@ -224,26 +212,24 @@ const Navdata = () => {
                 setIscurrentState("EventShop");
                 updateIconSidebar(e);
             },
-            // hasAnyPermission: [
-            //     "view_event_sessions",
-            //     "view_speakers",
-            //     "view_partner",
-            //     "view_promo_code",
-            // ],
+            hasAnyPermission: [
+                "view_product",
+                "view_order",
+            ],
             subItems: [
                 {
                     id: "products",
                     label: "Products",
                     link: route("organizer.events.products.index"),
                     parentId: "EventShop",
-                    // hasPermissions: ["view_event_sessions"],
+                    hasPermissions: ["view_product"],
                 },
                 {
                     id: "orders",
                     label: "Orders",
                     link: route("organizer.events.orders.index"), // pass eventApp UUID or ID here
                     parentId: "EventShop",
-                    // hasPermissions: ["view_orders"],
+                    hasPermissions: ["view_orders"],
                 }
             ],
         },

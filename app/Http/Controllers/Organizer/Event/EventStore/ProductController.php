@@ -8,17 +8,24 @@ use App\Models\EventProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
     public function index()
     {
+        if (! Auth::user()->can('view_product')) {
+            abort(403);
+        }
         $products = $this->datatable(EventProduct::CurrentEvent());
         return Inertia::render('Organizer/Events/EventStore/Products/Index', compact('products'));
     }
 
     public function store(EventProductRequest $request)
     {
+        if (! Auth::user()->can('create_products')) {
+            abort(403);
+        }
         $data = $request->validated();
         $data['event_app_id'] = session('event_id');
         if ($request->hasFile('image')) {
@@ -32,6 +39,9 @@ class ProductController extends Controller
 
     public function update(EventProductRequest $request, EventProduct $product)
     {
+        if (! Auth::user()->can('delete_product')) {
+            abort(403);
+        }
         $data = $request->validated();
 
         if ($request->hasFile('image')) {
@@ -50,9 +60,9 @@ class ProductController extends Controller
 
     public function destroy(EventProduct $product)
     {
-        // if (! Auth::user()->can('delete_users')) {
-        //     abort(403);
-        // }
+        if (! Auth::user()->can('delete_users')) {
+            abort(403);
+        }
         if ($product->image) {
             Storage::disk('public')->delete($product->image);
         }

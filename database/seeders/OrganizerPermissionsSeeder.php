@@ -157,7 +157,7 @@ class OrganizerPermissionsSeeder extends Seeder
         'create_event_badge',
         'delete_event_badge',
         'edit_event_badge',
-        //Reports 
+        //Reports
         'view_attendees_report',
 
         //contact forms
@@ -169,7 +169,7 @@ class OrganizerPermissionsSeeder extends Seeder
         'view_session_report',
         'view_ticket_report',
         'view_refund_ticket_report',
-        
+
         // //Prayer Request
         // 'view_prayer_request',
         // 'edit_prayer_request',
@@ -183,6 +183,19 @@ class OrganizerPermissionsSeeder extends Seeder
         'create_live_streams',
         'edit_live_streams',
         'delete_live_streams',
+
+        // Event store product
+        'view_product',
+        'create_product',
+        'edit_product',
+        'delete_product',
+
+        //Event store order
+        'view_orders',
+        'delete_orders',
+
+        //demo graphic detail
+        'view_demographic_detail',
     ];
 
     public function run(): void

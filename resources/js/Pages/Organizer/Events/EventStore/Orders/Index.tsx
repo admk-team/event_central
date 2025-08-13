@@ -6,7 +6,7 @@ import BreadCrumb from "../../../../../Components/Common/BreadCrumb";
 import DataTable, { ColumnDef } from "../../../../../Components/DataTable";
 import OrderDetailsModal from "./Components/OrderDetailsModal";
 import DeleteModal from "../../../../../Components/Common/DeleteModal";
-
+import HasPermission from "../../../../../Components/HasPermission";
 const Index = ({ orders }: any) => {
     const [showAddUpdateModal, setShowAddUpdateModal] = useState(false);
     const [deleteProduct, setDeleteProduct] = useState<any>(null);
@@ -36,7 +36,7 @@ const Index = ({ orders }: any) => {
     };
 
     const handleDelete = () => {
-        deleteForm.post(route("organizer.events.products.destroy", deleteProduct.id));
+        deleteForm.post(route("organizer.events.orders.destroy", deleteProduct.id));
         setShowDeleteConfirmation(false);
     };
 
@@ -70,18 +70,22 @@ const Index = ({ orders }: any) => {
             header: () => "Action",
             cell: (order) => (
                 <div className="hstack gap-3 fs-15">
+                    <HasPermission permission="view_orders">
                     <span
                         className="link-info cursor-pointer"
                         onClick={() => handleView(order)}
                     >
                         <i className="ri-eye-fill"></i>
                     </span>
+                    </HasPermission>
+                    <HasPermission permission="delete_orders">
                     <span
                         className="link-danger cursor-pointer"
                         onClick={() => deleteAction(order)}
                     >
                         <i className="ri-delete-bin-5-line"></i>
                     </span>
+                    </HasPermission>
                 </div>
             ),
         },
@@ -95,6 +99,7 @@ const Index = ({ orders }: any) => {
                     <BreadCrumb title="Event Orders" pageTitle="Dashboard" />
                     <Row>
                         <Col xs={12}>
+                            <HasPermission permission="delete_orders">
                             <DataTable
                                 data={orders}
                                 columns={columns}
@@ -111,6 +116,7 @@ const Index = ({ orders }: any) => {
                                     },
                                 ]}
                             />
+                            </HasPermission>
                         </Col>
                     </Row>
                 </Container>
