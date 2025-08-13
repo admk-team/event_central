@@ -57,7 +57,7 @@ const AttendeeSpeakerDetail = ({ eventApp, eventSpeaker }: any) => {
     }, []);
 
     useEffect(() => {
-        setSessions(currentSpeaker.event_sessions);
+        setSessions(currentSpeaker?.event_sessions);
     }, [currentSpeaker]);
 
     return (

@@ -32,4 +32,8 @@ class Order extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function scopeCurrentEvent($query)
+    {
+        $query->where('event_app_id', session('event_id'));
+    }
 }

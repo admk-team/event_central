@@ -6,7 +6,7 @@ import BreadCrumb from "../../../../../Components/Common/BreadCrumb";
 import DataTable, { ColumnDef } from "../../../../../Components/DataTable";
 import CreateEditModal from "./Components/CreateEditModal";
 import DeleteModal from "../../../../../Components/Common/DeleteModal";
-
+import HasPermission from "../../../../../Components/HasPermission";
 const Index = ({ products }: any) => {
 
 
@@ -73,23 +73,23 @@ const Index = ({ products }: any) => {
             header: () => "Action",
             cell: (product) => (
                 <div className="hstack gap-3 fs-15">
-                    {/* <HasPermission permission="edit_partner"> */}
+                    <HasPermission permission="edit_product">
                         <span
                             className="link-primary cursor-pointer"
                             onClick={() => editAction(product)}
                         >
                             <i className="ri-edit-fill"></i>
                         </span>
-                    {/* </HasPermission> */}
+                    </HasPermission>
 
-                    {/* <HasPermission permission="delete_partner"> */}
+                    <HasPermission permission="delete_product">
                         <span
                             className="link-danger cursor-pointer"
                             onClick={() => deleteAction(product)}
                         >
                             <i className="ri-delete-bin-5-line"></i>
                         </span>
-                    {/* </HasPermission> */}
+                    </HasPermission>
                 </div>
             ),
         },
@@ -103,7 +103,7 @@ const Index = ({ products }: any) => {
                     <BreadCrumb title="Event Products" pageTitle="Dashboard" />
                     <Row>
                         <Col xs={12}>
-                            {/* <HasPermission permission="view_partner"> */}
+                            <HasPermission permission="view_product">
                                 <DataTable
                                     data={products}
                                     columns={columns}
@@ -112,8 +112,8 @@ const Index = ({ products }: any) => {
                                         // Delete multiple
                                         {
                                             render: (dataTable) => (
-                                                // <HasPermission permission="delete_partner">
-                                                    <Button className="btn-danger" 
+                                                <HasPermission permission="delete_product">
+                                                    <Button className="btn-danger"
                                                     // onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}
                                                     ><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>
                                                 // </HasPermission>
@@ -124,7 +124,7 @@ const Index = ({ products }: any) => {
                                         // Add new
                                         {
                                             render: (
-                                                // <HasPermission permission="create_partner">
+                                                <HasPermission permission="create_product">
                                                     <Button onClick={() => editAction(null)} ><i className="ri-add-fill"></i> Add New</Button>
                                                 // </HasPermission>
                                             )
@@ -133,7 +133,7 @@ const Index = ({ products }: any) => {
 
                                     ]}
                                 />
-                            {/* </HasPermission> */}
+                            </HasPermission>
                         </Col>
                     </Row>
                 </Container>
