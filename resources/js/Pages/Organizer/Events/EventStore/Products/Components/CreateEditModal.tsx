@@ -14,10 +14,12 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
         image: null,
     });
 
-    // Runs when product changes
+    // Only run when modal is opened or product changes
     useEffect(() => {
+        if (!show) return;
+
         if (product && product.id) {
-            // Edit mode → populate fields
+            // Edit mode
             setData({
                 name: product.name ?? "",
                 description: product.description ?? "",
@@ -28,14 +30,15 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
             });
             setIsPreview(product.image_url ?? null);
         } else {
-            // Add mode → reset everything
+            // Add mode
             reset();
             setIsPreview(null);
         }
-    }, [product, reset, setData]);
+    }, [show, product]);
 
     const handleChange = (e: any) => {
         const { name, files, value } = e.target;
+
         if (name === "image" && files && files[0]) {
             const file = files[0];
             setData("image", file);
@@ -47,11 +50,11 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
 
     const onSubmit = (e: any) => {
         e.preventDefault();
-        const routeName = product?.id
+        const url = product?.id
             ? route("organizer.events.update.product", product.id)
             : route("organizer.events.products.store");
 
-        post(routeName, {
+        post(url, {
             onSuccess: () => {
                 handleClose();
                 reset();
@@ -77,7 +80,7 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
                             type="text"
                             name="name"
                             value={data.name}
-                            onChange={(e) => setData("name", e.target.value)}
+                            onChange={(event) => setData("name", event.target.value)}
                             placeholder="Enter product name"
                         />
                         {errors.name && (
@@ -94,7 +97,7 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
                             rows={3}
                             name="description"
                             value={data.description}
-                            onChange={(e) => setData("description", e.target.value)}
+                            onChange={(event) => setData("description", event.target.value)}
                             placeholder="Enter description"
                         />
                         {errors.description && (
@@ -112,7 +115,7 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
                                     type="number"
                                     name="price"
                                     value={data.price}
-                                    onChange={(e) => setData("price", e.target.value)}
+                                    onChange={(event) => setData("price", event.target.value)}
                                     placeholder="Enter price"
                                 />
                                 {errors.price && (
@@ -129,7 +132,7 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
                                     type="number"
                                     name="old_price"
                                     value={data.old_price}
-                                    onChange={(e) => setData("old_price", e.target.value)}
+                                    onChange={(event) => setData("old_price", event.target.value)}
                                     placeholder="Enter old price"
                                 />
                                 {errors.old_price && (
@@ -147,7 +150,7 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
                             type="number"
                             name="stock"
                             value={data.stock}
-                            onChange={(e) => setData("stock", e.target.value)}
+                            onChange={(event) => setData("stock", event.target.value)}
                             placeholder="Enter stock quantity"
                         />
                         {errors.stock && (
@@ -159,17 +162,12 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
 
                     <Form.Group className="mb-3">
                         <Form.Label>Image</Form.Label>
-                        <Form.Control
-                            type="file"
-                            name="image"
-                            onChange={handleChange}
-                        />
+                        <Form.Control type="file" name="image" onChange={handleChange} />
                         {errors.image && (
                             <Form.Control.Feedback type="invalid" className="d-block mt-2">
                                 {errors.image}
                             </Form.Control.Feedback>
                         )}
-
                         {isPreview && (
                             <div className="mt-3 text-center">
                                 <Image
