@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Modal, Button, Form, Alert, ModalBody, Row, Col,OverlayTrigger, Tooltip } from "react-bootstrap";
-import { useForm } from "@inertiajs/react";
+import { useForm, usePage } from "@inertiajs/react";
 
 const AddAttendee = ({ show, handleClose }: any) => {
-
+    const { countries } = usePage().props;
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
@@ -107,7 +107,7 @@ const AddAttendee = ({ show, handleClose }: any) => {
                                 placement="right"
                                 overlay={
                                 <Tooltip id="account-type-tooltip">
-                                    If the account is <strong>Private</strong>, it will not appear in search results for other users.  
+                                    If the account is <strong>Private</strong>, it will not appear in search results for other users.
                                     If two users are friends with each other, a private chat will be initiated between them.
                                 </Tooltip>
                                 }
@@ -136,10 +136,21 @@ const AddAttendee = ({ show, handleClose }: any) => {
                         </Col>
                     </Row>
                     <Form.Group className="mb-3">
-                        <Form.Label>Location</Form.Label>
-                        <Form.Control type="text" placeholder="Enter City, State/Province, Country" onChange={(e) => setData('location', e.target.value)} />
+                        <Form.Label>Location (Country)</Form.Label>
+                        <Form.Select
+                            value={data.location || ""} // this ensures the selected country stays set
+                            onChange={(e) => setData('location', e.target.value)}
+                        >
+                            <option value="">Select a country</option>
+                            {countries.map((country) => (
+                                <option key={country.code} value={country.title}>
+                                    {country.title}
+                                </option>
+                            ))}
+                        </Form.Select>
+
                         <Form.Control.Feedback type="invalid" className="d-block mt-2">
-                            {" "} {errors.location}{" "}
+                            {errors.location}
                         </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group className="mb-3">

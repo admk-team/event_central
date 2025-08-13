@@ -156,7 +156,7 @@ export default function Register() {
                                         placement="right"
                                         overlay={
                                         <Tooltip id="account-type-tooltip">
-                                            If the account is <strong>Private</strong>, it will not appear in search results for other users.  
+                                            If the account is <strong>Private</strong>, it will not appear in search results for other users.
                                             If two users are friends with each other, a private chat will be initiated between them.
                                         </Tooltip>
                                         }
@@ -184,22 +184,30 @@ export default function Register() {
                                     </Form.Control.Feedback>
                                 </Col>
                             </Row>
-                            <Row className="mt-1">
-                                <Col md={12} lg={12} >
-                                    <Form.Label htmlFor="location" value="location" className='form-label'> Location </Form.Label>
-                                    <Form.Control
-                                        id="location"
-                                        type="text"
-                                        name="location"
-                                        placeholder="Enter City, State/Province, Country"
-                                        value={data.location}
-                                        className={'mt-1 form-control' + (errors.location ? 'is-invalid' : '')}
-                                        autoComplete="location"
-                                        onChange={(e: any) => setData('location', e.target.value)}
-                                    />
-                                    <Form.Control.Feedback type="invalid" className='mt-2 d-block'>{errors.location}</Form.Control.Feedback>
-                                </Col>
-                            </Row>
+                                <Row className="mt-1">
+                                    <Col md={12} lg={12}>
+                                        <Form.Label htmlFor="location" className="form-label">Location (Country)</Form.Label>
+                                        <Form.Select
+                                            id="location"
+                                            name="location"
+                                            value={data.location || ""}
+                                            className={"mt-1 form-control" + (errors.location ? " is-invalid" : "")}
+                                            autoComplete="location"
+                                            onChange={(e: any) => setData("location", e.target.value)}
+                                        >
+                                            <option value="">Select a country</option>
+                                            {usePage().props.countries.map((country: any) => (
+                                                <option key={country.code} value={country.title}>
+                                                    {country.title}
+                                                </option>
+                                            ))}
+                                        </Form.Select>
+
+                                        <Form.Control.Feedback type="invalid" className="mt-2 d-block">
+                                            {errors.location}
+                                        </Form.Control.Feedback>
+                                    </Col>
+                                </Row>
                             <div className="mt-1">
                                 <Form.Label
                                     htmlFor="email"

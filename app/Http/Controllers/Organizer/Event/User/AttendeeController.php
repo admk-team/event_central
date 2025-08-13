@@ -23,6 +23,7 @@ use App\Models\AttendeePurchasedTickets;
 use App\Http\Requests\Organizer\Event\User\AttendeeStoreRequest;
 use App\Models\AddonVariant;
 use App\Models\ChatMember;
+use App\Models\Country;
 use Illuminate\Validation\Rule;
 
 class AttendeeController extends Controller
@@ -34,7 +35,9 @@ class AttendeeController extends Controller
         }
         $eventList = EventApp::ofOwner()->where('id', '!=', session('event_id'))->get();
         $attendees = $this->datatable(Attendee::currentEvent()->with('eventCheckin'));
-        return Inertia::render('Organizer/Events/Users/Attendees/Index', compact('attendees', 'eventList'));
+        $countries = Country::orderBy('title')->get();
+        //dd($countries);
+        return Inertia::render('Organizer/Events/Users/Attendees/Index', compact('attendees', 'eventList','countries'));
     }
 
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form, Alert, Row, Col,OverlayTrigger, Tooltip } from "react-bootstrap";
 import { useForm } from "@inertiajs/react";
-
+import { usePage } from "@inertiajs/react";
 const EditAttendee = ({ show, handleClose, user, isEdit }: any) => {
     const [preview, setPreview] = useState<any>(user?.avatar ?? null);
     const [password, setPassword] = useState("");
@@ -182,7 +182,7 @@ const EditAttendee = ({ show, handleClose, user, isEdit }: any) => {
                                 placement="right"
                                 overlay={
                                 <Tooltip id="account-type-tooltip">
-                                    If the account is <strong>Private</strong>, it will not appear in search results for other users.  
+                                    If the account is <strong>Private</strong>, it will not appear in search results for other users.
                                     If two users are friends with each other, a private chat will be initiated between them.
                                 </Tooltip>
                                 }
@@ -211,14 +211,19 @@ const EditAttendee = ({ show, handleClose, user, isEdit }: any) => {
                         </Col>
                     </Row>
                     <Form.Group className="mb-3">
-                        <Form.Label>Location</Form.Label>
-                        <Form.Control
-                            type="text"
+                        <Form.Label>Location (Country)</Form.Label>
+                        <Form.Select
                             name="location"
-                            value={data.location}
-                            placeholder="Enter City, State/Province, Country"
+                            value={data.location || ""}
                             onChange={handleChange}
-                        />
+                        >
+                            <option value="">Select a country</option>
+                            {usePage().props.countries.map((country) => (
+                                <option key={country.code} value={country.title}>
+                                    {country.title}
+                                </option>
+                            ))}
+                        </Form.Select>
                     </Form.Group>
                     <Form.Group className="mb-3">
                         <Form.Label>Bio</Form.Label>

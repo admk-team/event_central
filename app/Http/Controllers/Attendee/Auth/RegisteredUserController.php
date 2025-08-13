@@ -22,6 +22,7 @@ use Illuminate\Auth\Events\Registered;
 use App\Providers\RouteServiceProvider;
 use App\Models\AttendeePurchasedTickets;
 use App\Models\AttendeeTransferedTicket;
+use App\Models\Country;
 use Illuminate\Support\Facades\DB;
 use Nette\Schema\Expect;
 
@@ -34,8 +35,9 @@ class RegisteredUserController extends Controller
     {
         $eventApp->load(['dates']);
         $closeRegistration = eventSettings($eventApp->id)->getValue('close_registration', false);
-
-        return Inertia::render('Attendee/Auth/Register', compact('eventApp','closeRegistration'));
+        $countries = Country::orderBy('title')->get();
+       // dd($countries);
+        return Inertia::render('Attendee/Auth/Register', compact('eventApp','closeRegistration','countries'));
     }
 
     /**
