@@ -16,10 +16,10 @@ class OrganizerAttendeeObserver
      */
     public function created(Attendee $attendee): void
     {
-        $event_app = EventApp::where('id',$attendee->event_app_id)->first();
+        $event_app = EventApp::where('id', $attendee->event_app_id)->first();
         $url = route('organizer.events.website', $event_app->uuid);
         try {
-            Mail::to($attendee->email)->send(new AttendeeRegisteration($attendee->first_name, $attendee->last_name, "12345678", $attendee->email, $event_app,$url));
+            Mail::to($attendee->email)->send(new AttendeeRegisteration($attendee->first_name, $attendee->last_name, "12345678", $attendee->email, $event_app, $url));
         } catch (Exception $ex) {
             Log::info($ex->getMessage());
         }

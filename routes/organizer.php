@@ -130,8 +130,8 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::delete('speakers/delete/many', [EventSpeakerController::class, 'destroyMany'])->name('speakers.destroy.many');
 
             // Event Store
-            Route::resource('products',ProductController::class);
-            Route::post('products/update/{product}',[ProductController::class,'update'])->name('update.product');
+            Route::resource('products', ProductController::class);
+            Route::post('products/update/{product}', [ProductController::class, 'update'])->name('update.product');
             // order
             Route::resource('orders', EventOrderController::class);
             // Attendies
@@ -145,6 +145,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::get('get-attendee-puchased-addons/{attendeePurchasedTicket}', [AttendeeController::class, 'getPurchasedTicketAddons'])->name('attendee.puchased-ticket.adddons');
             Route::post('attendee/import/event', [AttendeeController::class, 'importFromEvent'])->name('attendee.importevent');
             Route::post('attendee/chat-initiate/{id}', [AttendeeController::class, 'initiateChat'])->name('attendee.chat.initiate');
+            Route::post('attendee/return/ticket/{id}', [AttendeeController::class, 'returnTicket'])->name('attendee.return.ticket');
 
 
             // Wordshop
@@ -244,7 +245,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                     Route::post('toggle-tracks', [EventSettingsController::class, 'toggleTracks'])->name('toggle-tracks');
                     Route::post('toggle-checkin', [EventSettingsController::class, 'toggleCheckIn'])->name('toggle-checkin');
                     Route::post('toggle-register', [EventSettingsController::class, 'togglePrivateRegister'])->name('toggle-register');
-                     Route::post('reminder-closer', [EventSettingsController::class, 'changeReminderDays'])->name('reminder-closer');
+                    Route::post('reminder-closer', [EventSettingsController::class, 'changeReminderDays'])->name('reminder-closer');
                     Route::post('close-open-registration/{event}', [EventSettingsController::class, 'closeOpenRegistration'])->name('close.open.registration');
                 });
 
@@ -393,7 +394,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
     //Private Registration Via Email
     Route::get('private-registration', [PrivateRegistrationViaEmailController::class, 'index'])->name('private-registration.index');
     Route::post('/private-registration/send', [PrivateRegistrationViaEmailController::class, 'send'])->name('private-registration.send');
-     Route::delete('prayer-requests/{id}', [PrivateRegistrationViaEmailController::class, 'destroy'])->name('private-registration.destroy');
+    Route::delete('prayer-requests/{id}', [PrivateRegistrationViaEmailController::class, 'destroy'])->name('private-registration.destroy');
 
-     Route::delete('prayer-requests/delete/many', [PrivateRegistrationViaEmailController::class, 'destroyMany'])->name('private-registration.destroy.many');
+    Route::delete('prayer-requests/delete/many', [PrivateRegistrationViaEmailController::class, 'destroyMany'])->name('private-registration.destroy.many');
 });

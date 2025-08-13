@@ -61,8 +61,9 @@ class PaymentController extends Controller
         $attendees = [];
         $lasteventDate = [];
         $organizerId = EventApp::findOrFail(auth()->user()->event_app_id ?? session('event_id'));
-        $getCurrency = OrganizerPaymentKeys::where('user_id',$organizerId->organizer_id)->value('currency');
+        $getCurrency = OrganizerPaymentKeys::where('user_id', $organizerId->organizer_id)->value('currency');
 
+        $attendee_id = auth()->user()->id;
         //If Page is being visited by Organizer
         if ($organizerView) {
             $eventApp = EventApp::with('dates')->find(session('event_id'));
@@ -207,7 +208,7 @@ class PaymentController extends Controller
         $amount = $data['totalAmount'];
 
         $organizerId = EventApp::findOrFail(auth()->user()->event_app_id ?? session('event_id'));
-        $getCurrency = OrganizerPaymentKeys::where('user_id',$organizerId->organizer_id)->first();
+        $getCurrency = OrganizerPaymentKeys::where('user_id', $organizerId->organizer_id)->first();
 
         $stripe_response = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount, $getCurrency->currency);
         $client_secret = $stripe_response['client_secret'];
@@ -313,7 +314,7 @@ class PaymentController extends Controller
         }
         //Update Attendee Payment status and session etc
         $this->updateAttendeePaymnet($payment->uuid);
-        broadcast(new UpdateEventDashboard($attendee->event_app_id,'New Ticket Purchased'))->toOthers();
+        broadcast(new UpdateEventDashboard($attendee->event_app_id, 'New Ticket Purchased'))->toOthers();
         return $payment;
     }
 

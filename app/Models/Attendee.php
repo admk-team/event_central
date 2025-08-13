@@ -14,6 +14,7 @@ class Attendee extends Authenticatable
     use HasFactory, HasApiTokens;
 
     protected $fillable = [
+        'parent_id',
         'email',
         'password',
         'event_app_id',
