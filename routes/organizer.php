@@ -322,7 +322,8 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::get('base-template', [EmailTemplateController::class, 'baseTemplate'])->name('base.template');
             Route::get('base-template/{baseTemplate}', [EmailTemplateController::class, 'viewBaseTemplate'])->name('base.template.view');
             Route::post('use-template/{baseTemplate}', [EmailTemplateController::class, 'setEmailTemplate'])->name('use.template');
-
+            Route::post('use-badge/{baseTemplate}', [CustomBadgeController::class, 'setBadgeTemplate'])->name('use.badge.design');
+            Route::get('print-badge', [BadgePrintController::class, 'customBadgePrint'])->name('print.badge.design');
             //Email Template
             Route::resource('email-template', EmailTemplateController::class);
             //Custom Badge Template

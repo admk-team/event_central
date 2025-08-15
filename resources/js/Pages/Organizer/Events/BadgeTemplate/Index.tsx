@@ -8,9 +8,9 @@ const Index = ({ baseTemplate }: any) => {
     const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
 
     const useTemplate = (id: number) => {
-        // get(route('organizer.events.email-campaign.create', {
-        //     templateId: id
-        // }));
+        post(route('organizer.events.use.badge.design', {
+            baseTemplate: id
+        }));
     };
 
     const previewTemplate = (id: number) => {

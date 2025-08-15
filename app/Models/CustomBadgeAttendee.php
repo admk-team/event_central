@@ -18,4 +18,9 @@ class CustomBadgeAttendee extends Model
         'thumbnail',
         'custom_code'
     ];
+
+    public function eventBadgeDesign()
+    {
+        return $this->hasOne(EventBadgeDesign::class);
+    }
 }

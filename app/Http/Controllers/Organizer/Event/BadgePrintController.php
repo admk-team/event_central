@@ -7,6 +7,7 @@ use App\Models\Attendee;
 use App\Models\EventApp;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\EventBadgeDesign;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use chillerlan\QRCode\QROptions;
@@ -80,10 +81,97 @@ class BadgePrintController extends Controller
             ->values();
 
         $eventApp = EventApp::find(session('event_id'));
-
+        $customDesign = $eventApp->load(['badgeDesign.customBadgeAttendee']);
+        $customBadgeDesign = null;
+        if ($customDesign->badgeDesign && $customDesign->badgeDesign->customBadgeAttendee) {
+            $customBadgeDesign = $customDesign->badgeDesign->customBadgeAttendee;
+        }
         return Inertia::render('Organizer/Events/BadgePrint/Index', compact(
             'attendees',
-            'eventApp'
+            'eventApp',
+            'customBadgeDesign'
         ));
+    }
+
+    public function customBadgePrint(Request $request)
+    {
+        $search = request('search'); // from request/query param
+
+        $attendees = Attendee::currentEvent()
+            ->with(['payments.purchased_tickets.ticket.ticketType'])
+            ->when($search, function ($query) use ($search) {
+                $query->where(function ($q) use ($search) {
+                    // Search attendee full name
+                    $q->whereRaw("CONCAT(first_name, ' ', last_name) LIKE ?", ["%{$search}%"])
+                        // Or search ticket name
+                        ->orWhereHas('payments.purchased_tickets.ticket', function ($q2) use ($search) {
+                            $q2->where('name', 'like', "%{$search}%");
+                        });
+                });
+            })
+            ->get()
+            ->map(function ($attendee) {
+                return [
+                    'name' => $attendee->first_name . ' ' . $attendee->last_name,
+                    'position' => $attendee->position,
+                    'location' => $attendee->location,
+                    'qr_codes' => $attendee->payments
+                        ->filter(fn($payment) => $payment->status === 'paid')
+                        ->flatMap(function ($payment) {
+                            return $payment->purchased_tickets->map(function ($ticket) {
+
+                                // Ensure QR exists
+                                if (
+                                    !empty($ticket->code) &&
+                                    (!Storage::exists($ticket->qr_code) || empty($ticket->qr_code))
+                                ) {
+                                    $qrData = $ticket->code;
+
+                                    $options = new QROptions([
+                                        'eccLevel' => EccLevel::L,
+                                        'scale' => 5,
+                                        'outputType' => QRCode::OUTPUT_IMAGE_PNG,
+                                        'imageBase64' => false,
+                                    ]);
+
+                                    $qrcode = new QRCode($options);
+
+                                    if (ob_get_length()) {
+                                        ob_end_clean();
+                                    }
+
+                                    $path = 'public/qr-codes/' . $ticket->code . '.png';
+                                    Storage::put($path, $qrcode->render($qrData));
+
+                                    $ticket->update([
+                                        'qr_code' => 'qr-codes/' . $ticket->code . '.png'
+                                    ]);
+                                }
+
+                                return [
+                                    'qr_code' => $ticket->qr_code !== 'EMPTY'
+                                        ? asset('storage/' . $ticket->qr_code)
+                                        : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s',
+                                    'ticket_name' => optional($ticket->ticket)->name,
+                                    'ticket_type_name' => optional(optional($ticket->ticket)->ticketType)->name ?? '',
+                                ];
+                            });
+                        })
+                        ->filter(fn($item) => !empty($item['qr_code']))
+                        ->values(),
+                ];
+            })
+            ->filter(fn($item) => $item['qr_codes']->isNotEmpty())
+            ->values();
+
+
+        $eventApp = EventApp::find(session('event_id'));
+        $customDesign = $eventApp->load(['badgeDesign.customBadgeAttendee']);
+        $customBadgeDesign = null;
+        if ($customDesign->badgeDesign && $customDesign->badgeDesign->customBadgeAttendee) {
+            $customBadgeDesign = $customDesign->badgeDesign->customBadgeAttendee;
+        }
+
+        return view()
     }
 }

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Organizer\Event;
 
 use Inertia\Inertia;
+use App\Models\BaseTemplate;
+use App\Models\EventBadgeDesign;
 use Illuminate\Support\Facades\DB;
 use App\Models\CustomBadgeAttendee;
 use App\Http\Controllers\Controller;
@@ -109,5 +111,19 @@ class CustomBadgeController extends Controller
         }, 2);
 
         return redirect()->route('organizer.events.badge-template.index')->with('success', 'Badge template Updated successfully.');
+    }
+
+    public function setBadgeTemplate(BaseTemplate $baseTemplate)
+    {
+        if (! Auth::user()->can('create_default_email_template')) {
+            abort(403);
+        }
+        EventBadgeDesign::create([
+            'user_id' => auth()->id(),
+            'event_app_id' => session('event_id'),
+            'custom_badge_attendee_id' => $baseTemplate->id,
+        ]);
+
+        return redirect()->route('organizer.events.badge-template.index')->with('success', 'Badge template Selected successfully.');
     }
 }
