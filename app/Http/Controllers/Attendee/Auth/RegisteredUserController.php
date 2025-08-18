@@ -54,6 +54,7 @@ class RegisteredUserController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
+            'country'=> 'required',
             'email' => [
                 'required',
                 'string',
@@ -72,6 +73,7 @@ class RegisteredUserController extends Controller
             'last_name' => $request->last_name,
             'position' => $request->position,
             'location' => $request->location,
+            'country' => $request->country,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'referral_link' =>  $referralLink ?? null,

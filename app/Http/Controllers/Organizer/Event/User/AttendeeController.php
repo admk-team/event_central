@@ -42,7 +42,7 @@ class AttendeeController extends Controller
 
 
     public function store(Request $request)
-    {
+    {//dd($request);
         if (! Auth::user()->can('create_attendees')) {
             abort(403);
         }
@@ -50,6 +50,7 @@ class AttendeeController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
+            'country'=> 'required',
             'email' => [
                 'required',
                 'string',
@@ -68,6 +69,7 @@ class AttendeeController extends Controller
             'last_name' => $request->last_name,
             'email' => $request->email,
             'company' => $request->company,
+            'country'=>$request->country,
             'position' => $request->position,
             'phone' => $request->phone,
             'bio' => $request->bio,

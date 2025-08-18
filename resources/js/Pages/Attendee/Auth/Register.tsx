@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import GuestLayout from "../../../Layouts/Attendee/GuestLayout";
 import { Head, Link, useForm, usePage } from "@inertiajs/react";
-import { Button, Col, Container, Form, Row, Spinner,OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Button, Col, Container, Form, Row, Spinner, OverlayTrigger, Tooltip } from "react-bootstrap";
 import logoLight from "../../../../images/logo-white.png";
 
 export default function Register() {
@@ -151,63 +151,65 @@ export default function Register() {
                             <Row className="mt-1">
                                 <Col md={12} lg={12}>
                                     <Form.Label htmlFor="account_type" className="form-label">
-                                    Account Type{' '}
-                                    <OverlayTrigger
-                                        placement="right"
-                                        overlay={
-                                        <Tooltip id="account-type-tooltip">
-                                            If the account is <strong>Private</strong>, it will not appear in search results for other users.
-                                            If two users are friends with each other, a private chat will be initiated between them.
-                                        </Tooltip>
-                                        }
-                                    >
-                                        <span style={{ cursor: 'pointer', color: '#0d6efd',fontSize:'16px' }}>
-                                            <i className="bx bx-info-circle" />
-                                        </span>
-                                    </OverlayTrigger>
+                                        Account Type{' '}
+                                        <OverlayTrigger
+                                            placement="right"
+                                            overlay={
+                                                <Tooltip id="account-type-tooltip">
+                                                    If the account is <strong>Private</strong>, it will not appear in search results for other users.
+                                                    If two users are friends with each other, a private chat will be initiated between them.
+                                                </Tooltip>
+                                            }
+                                        >
+                                            <span style={{ cursor: 'pointer', color: '#0d6efd', fontSize: '16px' }}>
+                                                <i className="bx bx-info-circle" />
+                                            </span>
+                                        </OverlayTrigger>
                                     </Form.Label>
 
                                     <Form.Select
-                                    id="account_type"
-                                    name="account_type"
-                                    value={data.is_public}
-                                    className={'mt-1 form-control' + (errors.is_public ? ' is-invalid' : '')}
-                                    onChange={(e: any) => setData('is_public', e.target.value)}
+                                        id="account_type"
+                                        name="account_type"
+                                        value={data.is_public}
+                                        className={'mt-1 form-control' + (errors.is_public ? ' is-invalid' : '')}
+                                        onChange={(e: any) => setData('is_public', e.target.value)}
                                     >
-                                    <option value="">Select Account Type</option>
-                                    <option value="1">Public</option>
-                                    <option value="0">Private</option>
+                                        <option value="">Select Account Type</option>
+                                        <option value="1">Public</option>
+                                        <option value="0">Private</option>
                                     </Form.Select>
 
                                     <Form.Control.Feedback type="invalid" className="mt-2 d-block">
-                                    {errors.is_public}
+                                        {errors.is_public}
+                                    </Form.Control.Feedback>
+                                </Col>
+                                <Form.Group className="mb-1"> <Form.Label>Location</Form.Label> <Form.Control type="text" placeholder="Enter City, State/Province, Country" onChange={(e) => setData('location', e.target.value)} /> <Form.Control.Feedback type="invalid" className="d-block mt-2"> {" "} {errors.location}{" "} </Form.Control.Feedback> </Form.Group>
+                            </Row>
+                            <Row className="mt-1">
+                                <Col md={12} lg={12}>
+                                    <Form.Label htmlFor="country" className="form-label">Country</Form.Label>
+                                    <span className="text-danger ms-1">*</span>
+                                    <Form.Select
+                                        id="country"
+                                        name="country"
+                                        value={data.country || ""}
+                                        className={"mt-1 form-control" + (errors.country ? " is-invalid" : "")}
+                                        autoComplete="country"
+                                        onChange={(e: any) => setData("country", e.target.value)}
+                                    >
+                                        <option value="">Select a country</option>
+                                        {usePage().props.countries.map((country: any) => (
+                                            <option key={country.code} value={country.title}>
+                                                {country.title}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
+
+                                    <Form.Control.Feedback type="invalid" className="mt-2 d-block">
+                                        {errors.country}
                                     </Form.Control.Feedback>
                                 </Col>
                             </Row>
-                                <Row className="mt-1">
-                                    <Col md={12} lg={12}>
-                                        <Form.Label htmlFor="location" className="form-label">Location (Country)</Form.Label>
-                                        <Form.Select
-                                            id="location"
-                                            name="location"
-                                            value={data.location || ""}
-                                            className={"mt-1 form-control" + (errors.location ? " is-invalid" : "")}
-                                            autoComplete="location"
-                                            onChange={(e: any) => setData("location", e.target.value)}
-                                        >
-                                            <option value="">Select a country</option>
-                                            {usePage().props.countries.map((country: any) => (
-                                                <option key={country.code} value={country.title}>
-                                                    {country.title}
-                                                </option>
-                                            ))}
-                                        </Form.Select>
-
-                                        <Form.Control.Feedback type="invalid" className="mt-2 d-block">
-                                            {errors.location}
-                                        </Form.Control.Feedback>
-                                    </Col>
-                                </Row>
                             <div className="mt-1">
                                 <Form.Label
                                     htmlFor="email"

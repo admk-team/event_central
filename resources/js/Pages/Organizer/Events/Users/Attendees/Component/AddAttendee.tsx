@@ -134,12 +134,14 @@ const AddAttendee = ({ show, handleClose }: any) => {
                             {errors.is_public}
                             </Form.Control.Feedback>
                         </Col>
+                         <Form.Group className="mb-1"> <Form.Label>Location</Form.Label> <Form.Control type="text" placeholder="Enter City, State/Province, Country" onChange={(e) => setData('location', e.target.value)} /> <Form.Control.Feedback type="invalid" className="d-block mt-2"> {" "} {errors.location}{" "} </Form.Control.Feedback> </Form.Group>
                     </Row>
                     <Form.Group className="mb-3">
-                        <Form.Label>Location (Country)</Form.Label>
+                        <Form.Label>Country</Form.Label>
+                        <span className="text-danger ms-1">*</span>
                         <Form.Select
-                            value={data.location || ""} // this ensures the selected country stays set
-                            onChange={(e) => setData('location', e.target.value)}
+                            value={data.country || ""} // this ensures the selected country stays set
+                            onChange={(e) => setData('country', e.target.value)}
                         >
                             <option value="">Select a country</option>
                             {countries.map((country) => (

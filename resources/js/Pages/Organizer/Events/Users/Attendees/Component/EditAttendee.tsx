@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Button, Form, Alert, Row, Col,OverlayTrigger, Tooltip } from "react-bootstrap";
+import { Modal, Button, Form, Alert, Row, Col, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { useForm } from "@inertiajs/react";
 import { usePage } from "@inertiajs/react";
 const EditAttendee = ({ show, handleClose, user, isEdit }: any) => {
@@ -177,44 +177,48 @@ const EditAttendee = ({ show, handleClose, user, isEdit }: any) => {
                     <Row className="mt-1">
                         <Col md={12} lg={12}>
                             <Form.Label htmlFor="account_type" className="form-label">
-                            Account Type{' '}
-                            <OverlayTrigger
-                                placement="right"
-                                overlay={
-                                <Tooltip id="account-type-tooltip">
-                                    If the account is <strong>Private</strong>, it will not appear in search results for other users.
-                                    If two users are friends with each other, a private chat will be initiated between them.
-                                </Tooltip>
-                                }
-                            >
-                                <span style={{ cursor: 'pointer', color: '#0d6efd',fontSize:'16px' }}>
-                                    <i className="bx bx-info-circle" />
-                                </span>
-                            </OverlayTrigger>
+                                Account Type{' '}
+                                <OverlayTrigger
+                                    placement="right"
+                                    overlay={
+                                        <Tooltip id="account-type-tooltip">
+                                            If the account is <strong>Private</strong>, it will not appear in search results for other users.
+                                            If two users are friends with each other, a private chat will be initiated between them.
+                                        </Tooltip>
+                                    }
+                                >
+                                    <span style={{ cursor: 'pointer', color: '#0d6efd', fontSize: '16px' }}>
+                                        <i className="bx bx-info-circle" />
+                                    </span>
+                                </OverlayTrigger>
                             </Form.Label>
 
                             <Form.Select
-                            id="account_type"
-                            name="account_type"
-                            value={data.is_public}
-                            className={'mt-1 form-control' + (errors.is_public ? ' is-invalid' : '')}
-                            onChange={(e: any) => setData('is_public', e.target.value)}
+                                id="account_type"
+                                name="account_type"
+                                value={data.is_public}
+                                className={'mt-1 form-control' + (errors.is_public ? ' is-invalid' : '')}
+                                onChange={(e: any) => setData('is_public', e.target.value)}
                             >
-                            <option value="">Select Account Type</option>
-                            <option value="1">Public</option>
-                            <option value="0">Private</option>
+                                <option value="">Select Account Type</option>
+                                <option value="1">Public</option>
+                                <option value="0">Private</option>
                             </Form.Select>
 
                             <Form.Control.Feedback type="invalid" className="mt-2 d-block">
-                            {errors.is_public}
+                                {errors.is_public}
                             </Form.Control.Feedback>
                         </Col>
                     </Row>
+                    <Form.Group className="mb-1"> <Form.Label>Location</Form.Label> <Form.Control type="text" placeholder="Enter City, State/Province, Country"
+                        value={data.location || ""}
+                        onChange={(e) => setData('location', e.target.value)} /> <Form.Control.Feedback type="invalid" className="d-block mt-2"> {" "} {errors.location}{" "} </Form.Control.Feedback> </Form.Group>
                     <Form.Group className="mb-3">
-                        <Form.Label>Location (Country)</Form.Label>
+                        <Form.Label>Country</Form.Label>
+                        <span className="text-danger ms-1">*</span>
                         <Form.Select
-                            name="location"
-                            value={data.location || ""}
+                            name="country"
+                            value={data.country || ""}
                             onChange={handleChange}
                         >
                             <option value="">Select a country</option>
