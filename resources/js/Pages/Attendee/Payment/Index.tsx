@@ -23,7 +23,8 @@ const Index = ({
     payment,
     stripe_pub_key,
     paypal_client_id,
-    organizerView
+    organizerView,
+    strip_currency
 }: any) => {
 
     const Layout = organizerView ? EventLayout : AttendeeLayout;
@@ -91,6 +92,7 @@ const Index = ({
                                                                 }}
                                                             >
                                                                 <StripeCheckoutForm
+                                                                    strip_currency={strip_currency}
                                                                     payment={payment}
                                                                     organizerView={organizerView}
                                                                 />

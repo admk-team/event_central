@@ -5,7 +5,7 @@ import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import axios from "axios";
 import { router } from "@inertiajs/react";
 
-export default function CheckoutForm({ payment}: any) {
+export default function CheckoutForm({ payment, currency}: any) {
     const stripe = useStripe();
     const elements = useElements();
 
@@ -77,7 +77,7 @@ export default function CheckoutForm({ payment}: any) {
                     type="submit"
                 >
                     <span id="button-text">
-                        {isProcessing ? "Processing ... " : "Pay $" + payment.total_amount}
+                        {isProcessing ? "Processing ... " :  currency + " " + payment.total_amount}
                     </span>
                 </Button>}
             </div>

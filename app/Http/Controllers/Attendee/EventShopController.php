@@ -7,6 +7,7 @@ use App\Models\EventApp;
 use App\Models\EventProduct;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\OrganizerPaymentKeys;
 use App\Services\StripeService;
 use Exception;
 use Illuminate\Http\Request;
@@ -25,19 +26,27 @@ class EventShopController extends Controller
     public function index()
     {
         $products = EventProduct::where('event_app_id', Auth::user()->event_app_id)->get();
-        return Inertia::render('Attendee/EventShop/Index', compact('products'));
+
+        $eventApp = EventApp::findOrFail(Auth::user()->event_app_id);
+        $getCurrency = OrganizerPaymentKeys::where('user_id',$eventApp->organizer_id)->value('currency');
+
+        return Inertia::render('Attendee/EventShop/Index', compact('products','getCurrency'));
     }
 
     public function checkoutPage($paymentId)
     {
         $payment = Order::where('id', $paymentId)->first();
         if ($payment->status === 'pending') {
-            $stripe_pub_key = $this->stripe_service->StripKeys($payment->event_app_id)->stripe_publishable_key;
+            $stripe_key = $this->stripe_service->StripKeys($payment->event_app_id);
+            $stripe_pub_key = $stripe_key->stripe_publishable_key;
+            $currency = $stripe_key->currency;
+
             $paypal_client_id = null;
             return Inertia::render('Attendee/ProductPayment/Index', compact([
                 'payment',
                 'stripe_pub_key',
-                'paypal_client_id'
+                'paypal_client_id',
+                'currency'
             ]));
         } else {
             return redirect()->route('attendee.tickets.get')->withError("Payment has already been processed against this Payment ID");
@@ -55,7 +64,7 @@ class EventShopController extends Controller
         }
         $attendee = auth()->user();
         $amount = $product->price;
-        $stripe_response = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount);
+        $stripe_response = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount, $request->currency);
         $client_secret = $stripe_response['client_secret'];
         $payment_id = $stripe_response['payment_id'];
 

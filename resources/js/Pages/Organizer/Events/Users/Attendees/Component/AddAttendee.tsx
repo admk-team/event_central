@@ -22,10 +22,12 @@ const AddAttendee = ({ show, handleClose }: any) => {
     });
 
     const handleSubmit = (e: any) => {
-         if (password.trim() != "" || confirmPassword.trim() != "") {
+        if (password.trim() != "" || confirmPassword.trim() != "") {
             if (password !== confirmPassword) {
                 setError("Passwords do not match");
+                e.preventDefault();
                 return;
+
             }
         }
         setError("");
@@ -174,6 +176,9 @@ const AddAttendee = ({ show, handleClose }: any) => {
                                     }
                                     name="password"
                                 />
+                                <Form.Control.Feedback type="invalid" className="d-block mt-2">
+                                    {" "} {errors.password}{" "}
+                                </Form.Control.Feedback>
                             </Form.Group>
                         </Col>
                         <Col md={6} lg={6}>

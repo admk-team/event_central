@@ -25,6 +25,8 @@ use App\Models\AddonVariant;
 use App\Models\ChatMember;
 use App\Models\Country;
 use Illuminate\Validation\Rule;
+use App\Mail\AttendeeRegisteration;
+use Illuminate\Support\Facades\Mail;
 
 class AttendeeController extends Controller
 {
@@ -59,10 +61,22 @@ class AttendeeController extends Controller
                 'max:255',
                 Rule::unique('attendees', 'email')->where('event_app_id', session('event_id')),
             ],
+            'company' => 'nullable|string|max:255',
+            'position' => 'nullable|string|max:255',
+            'phone' => 'nullable|string|max:20',
+            'bio' => 'nullable|string|max:500',
+            'location' => 'nullable|string|max:255',
+            'password' => 'required',
+            'string',
+            'min:8',
+            'confirmed'
         ]);
         if (!session()->has('event_id')) {
             return redirect()->back()->withErrors(['error' => 'Event ID not found in session.']);
         }
+        $event_app = EventApp::where('id', session('event_id'))->first();
+        $url = route('organizer.events.website', $event_app->uuid);
+
         $user = Attendee::create([
             'event_app_id' => session('event_id'),
             'first_name' => $request->first_name,
@@ -74,10 +88,11 @@ class AttendeeController extends Controller
             'phone' => $request->phone,
             'bio' => $request->bio,
             'location' => $request->location,
-            'password' => Hash::make("12345678"),
+            'password' => Hash::make($request->password),
             'is_public' => $request->is_public == 1 ? true : false,
         ]);
-        broadcast(new UpdateEventDashboard(session('event_id'),'Attendee Created'))->toOthers();
+        broadcast(new UpdateEventDashboard(session('event_id'), 'Attendee Created'))->toOthers();
+        Mail::to($user->email)->send(new AttendeeRegisteration($user->first_name, $user->last_name, $request->password, $user->email, $event_app, $url));
         return back()->withSuccess('attendee created successfully.');
     }
 
@@ -128,7 +143,7 @@ class AttendeeController extends Controller
         }
 
         $attendee->delete();
-        broadcast(new UpdateEventDashboard(session('event_id'),'Attendee Deleted'))->toOthers();
+        broadcast(new UpdateEventDashboard(session('event_id'), 'Attendee Deleted'))->toOthers();
         return back()->withSuccess('Attendee deleted successfully.');
     }
 
@@ -144,7 +159,7 @@ class AttendeeController extends Controller
         foreach ($request->ids as $id) {
             Attendee::find($id)->delete();
         }
-        broadcast(new UpdateEventDashboard(session('event_id'),'Attendee Deleted'))->toOthers();
+        broadcast(new UpdateEventDashboard(session('event_id'), 'Attendee Deleted'))->toOthers();
         return back()->withSuccess('Attendees deleted successfully.');
     }
 
@@ -401,9 +416,9 @@ class AttendeeController extends Controller
         }
 
         $existing = ChatMember::where('event_id', $event->id)
-        ->where('user_id', Auth::user()->id)
-        ->where('participant_id', $attendee->id)
-        ->first();
+            ->where('user_id', Auth::user()->id)
+            ->where('participant_id', $attendee->id)
+            ->first();
 
         if ($existing) {
             return back()->withError('A chat with this attendee already exists.');
@@ -418,5 +433,12 @@ class AttendeeController extends Controller
         ]);
 
         return back()->withSuccess('Chat initiated successfully.');
+    }
+    public function returnTicket($id)
+    {
+        // $attendee = Attendee::where('id', $id)->with('attendeePurchasedTickets');
+
+        $attendee = $id;
+        dd($attendee);
     }
 }

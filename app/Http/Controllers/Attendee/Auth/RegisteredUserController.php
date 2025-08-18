@@ -25,9 +25,17 @@ use App\Models\AttendeeTransferedTicket;
 use App\Models\Country;
 use Illuminate\Support\Facades\DB;
 use Nette\Schema\Expect;
+use App\Services\GroupAttendeeService;
 
 class RegisteredUserController extends Controller
 {
+    protected GroupAttendeeService $groupService;
+
+    public function __construct(GroupAttendeeService $groupService)
+    {
+        $this->groupService = $groupService;
+    }
+
     /**
      * Display the registration view.
      */
@@ -64,7 +72,17 @@ class RegisteredUserController extends Controller
                 Rule::unique('attendees', 'email')->where('event_app_id', $eventApp->id),
             ],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'is_public' => 'required|in:0,1',
+            'group_emails' => [
+                'nullable',
+                function ($attribute, $value, $fail) {
+                    $emails = array_map('trim', explode(',', $value));
+                    foreach ($emails as $email) {
+                        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                            $fail("One or more emails in $attribute are invalid.");
+                        }
+                    }
+                },
+            ],
         ]);
 
         $user = Attendee::create([
@@ -90,12 +108,14 @@ class RegisteredUserController extends Controller
             }
         }
 
+
         event(new Registered($user));
-        broadcast(new UpdateEventDashboard($eventApp->id,'Attendee Created'))->toOthers();
+        broadcast(new UpdateEventDashboard($eventApp->id, 'Attendee Created'))->toOthers();
         Auth::guard('attendee')->login($user);
 
         return redirect(route('attendee.event.detail.dashboard'));
     }
+
 
     private function checkIfTicketTransferCase($email, $eventApp, $user)
     {

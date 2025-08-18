@@ -7,10 +7,12 @@ export default function CreateEditModal({
     show,
     onHide,
     liveStream,
+    eventTickets
 }: {
     show: boolean;
     onHide: () => void;
     liveStream: any | null;
+    eventTickets: any | null;
 }) {
     const isEdit = liveStream != null ? true : false;
 
@@ -19,6 +21,7 @@ export default function CreateEditModal({
         title: liveStream?.title ?? "",
         resolution: liveStream?.resolution ?? "1080p",
         start_time: liveStream?.start_time ?? "",
+        eventTickets: liveStream?.event_ticket_id ?? "",
         // thumbnail: '',
     });
 
@@ -47,7 +50,7 @@ export default function CreateEditModal({
     return (
         <Modal show={show} onHide={onHide} centered>
             <Modal.Header className="bg-light p-3" closeButton>
-                <h5 className="modal-title">Create Live Stream</h5>
+                <h5 className="modal-title"> {  isEdit ? 'Edit Live Stream' : 'Create Live Stream' }</h5>
             </Modal.Header>
 
             <Form onSubmit={submit} className="tablelist-form">
@@ -130,6 +133,27 @@ export default function CreateEditModal({
                                 }
                             }}
                         />
+                    </FormGroup>
+                    <FormGroup className="mb-3">
+                        <Form.Label className="form-label">Event Ticket</Form.Label>
+                        <Form.Select
+                            className="form-control"
+                            value={data.eventTickets}
+                            onChange={(e) => setData("eventTickets", e.target.value)}
+                        >
+                            <option value="">-- Select Ticket --</option>
+                            {eventTickets && eventTickets.length > 0 ? (
+                                eventTickets.map((ticket: any) => (
+                                    <option key={ticket.id} value={ticket.id}>
+                                        {ticket.name} ({ticket.price ? `$${ticket.price}` : "Free"})
+                                    </option>
+                                ))
+                            ) : (
+                                <option value="" disabled>
+                                    No tickets available
+                                </option>
+                            )}
+                        </Form.Select>
                     </FormGroup>
                 </Modal.Body>
                 <div className="modal-footer">

@@ -16,6 +16,7 @@ import HasPermission from '../../../../../Components/HasPermission';
 import { Check, CircleCheck, CircleX } from 'lucide-react';
 import EventCheckinButton from './Component/EventCheckinButton';
 import axios from 'axios';
+import AssignTicketButton from './Component/AssignTicketButton';
 
 function Index({ attendees, eventList }: any) {
 
@@ -70,7 +71,7 @@ function Index({ attendees, eventList }: any) {
         setShowDeleteManyConfirmation(false);
     }
 
-    const initiateChat = (attendee:any) =>{
+    const initiateChat = (attendee: any) => {
         chatForm.post(route('organizer.events.attendee.chat.initiate', attendee.id));
     }
     // const exportSchema: any = [
@@ -174,13 +175,14 @@ function Index({ attendees, eventList }: any) {
                     <HasPermission permission="scan_events">
                         <EventCheckinButton attendee={attendee} />
                     </HasPermission>
+                    <AssignTicketButton attendee={attendee} />
                     <Link title='View attendee details' href={route('organizer.events.attendee.info', { id: attendee.id })} className="link-primary cursor-pointer"><i className="ri-eye-fill"></i></Link>
                     <Link title='View QR Code attendee' href={route('organizer.events.attendee.qrcode', { id: attendee.id })} className="link-primary cursor-pointer"><i className="ri-qr-code-line"></i></Link>
                     <Link title='Purchase ticket for this attendee' href={route('organizer.events.attendee.tickets.assign', attendee.id)} className="link-primary cursor-pointer">
                         <i className="bx bxs-coupon"></i>
                     </Link>
                     <a className="link-primary cursor-pointer" onClick={() => editAction(attendee)} ><i className="ri-edit-fill"></i></a>
-                    <a className="link-primary cursor-pointer" onClick={()=>initiateChat(attendee)}><i className="bx bx-message-rounded-dots"></i></a>
+                    <a className="link-primary cursor-pointer" onClick={() => initiateChat(attendee)}><i className="bx bx-message-rounded-dots"></i></a>
                     <a className="link-red cursor-pointer" onClick={() => deleteAction(attendee)}>
                         <i className="ri-delete-bin-5-line"></i>
                     </a>

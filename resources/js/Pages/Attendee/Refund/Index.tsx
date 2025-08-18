@@ -7,7 +7,7 @@ import DataTable, { ColumnDef } from '../../../Components/DataTable';
 import RefundTicketModal from './RefundTicketModal';
 import moment from 'moment';
 import toast from 'react-hot-toast';
-function RefundTickets({ payments }: any) {
+function RefundTickets({ payments, getCurrency }: any) {
 
     console.log(payments);
 
@@ -39,7 +39,7 @@ function RefundTickets({ payments }: any) {
         },
         {
             header: () => 'Total Amount',
-            cell: (payment) => '$' + payment.amount_paid,
+            cell: (payment) => getCurrency + " " + payment.amount_paid,
         },
         {
             header: () => 'Payment Status',
@@ -63,7 +63,7 @@ function RefundTickets({ payments }: any) {
         },
         {
             header: () => 'Amount Requested',
-            cell: (payment) => (payment.refund_tickets && payment.refund_tickets?.refund_requested_amount > 0 ? "$" : "") + (payment.refund_tickets?.refund_requested_amount ?? ''),
+            cell: (payment) => (payment.refund_tickets && payment.refund_tickets?.refund_requested_amount > 0 ? getCurrency + " " : "") + (payment.refund_tickets?.refund_requested_amount ?? ''),
         },
         {
             header: () => 'Refund Reason',

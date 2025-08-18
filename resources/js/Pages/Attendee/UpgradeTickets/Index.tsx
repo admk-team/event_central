@@ -28,7 +28,7 @@ type AttendeeOption = {
     label: string;
 };
 
-const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, purchasedTickets }: any) => {
+const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, purchasedTickets, getCurrency }: any) => {
 
     // console.log(organizerView, attendees, attendee_id, sessions, purchasedTickets);
 
@@ -264,7 +264,7 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                         ),
                         {
                             amount: totalAmount,
-                            currency: "usd",
+                            currency: getCurrency,
                         }
                     )
                     .then((response) => {
@@ -313,7 +313,7 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                 axios
                     .post(route("attendee.upgrade.ticket.proceed.checkout", [currentAttendee]), {
                         amount: totalAmount,
-                        currency: "usd",
+                        currency: getCurrency,
                     })
                     .then((response) => {
                         console.log(response);
@@ -650,7 +650,7 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
 
                                             <h5 className="fw-bold fs-5 mb-2">
                                                 Total Amount : <sup>
-                                                    <small>$</small>
+                                                    <small>{getCurrency ?? "USD"}</small>
                                                 </sup>{grandTotal}
                                             </h5>
                                         </div>
@@ -673,7 +673,7 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                                                 label={
                                                                     s.name +
                                                                     (s.price
-                                                                        ? "  ($" +
+                                                                        ? "  (" + (getCurrency ?? "USD")  +
                                                                         s.price +
                                                                         ")"
                                                                         : "  (free)")
@@ -688,7 +688,7 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                                                 label={
                                                                     s.name +
                                                                     (s.price
-                                                                        ? "  ($" +
+                                                                        ? "  (" + (getCurrency ?? "USD") +
                                                                         s.price +
                                                                         ")"
                                                                         : "  (free)")
@@ -758,7 +758,7 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                                 <h5 className="mb-1 pt-2 pb-2 mr-2 text-end fs-5">
                                                     Discount :{" "}
                                                     <sup>
-                                                        <small>$</small>
+                                                        <small>{ getCurrency ?? "USD" }</small>
                                                     </sup>
                                                     {discount}
                                                 </h5>
@@ -803,7 +803,7 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                                 <h5 className="mb-1 pt-2 pb-2 mr-2 text-end fs-5">
                                                     Total Payable :{" "}
                                                     <sup>
-                                                        <small>$</small>
+                                                        <small>{getCurrency ?? "USD"}</small>
                                                     </sup>
                                                     {totalAmount}
                                                 </h5>
@@ -844,6 +844,7 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                         }}
                                     >
                                         <StripeCheckoutForm
+                                            currency={getCurrency}
                                             amount={totalAmount}
                                             onPaymentSuccess={
                                                 handlePaymentSuccess

@@ -24,7 +24,7 @@ interface AudiencesMetricsProps {
     ticketsMetrics: TicketsMetrics;
 }
 
-const AudiencesMetrics = ({ ticketsMetrics }: AudiencesMetricsProps) => {
+const AudiencesMetrics = ({ ticketsMetrics, getCurrency  }: AudiencesMetricsProps & {getCurrency: string}) => {
     const [chartData, setChartData] = useState<{ name: string; data: number[] }[]>([]);
 
     console.log(ticketsMetrics);
@@ -76,7 +76,7 @@ const AudiencesMetrics = ({ ticketsMetrics }: AudiencesMetricsProps) => {
                                                 end={ticketsMetrics.totalRevenue}
                                                 duration={3}
                                                 separator=","
-                                                prefix="$"
+                                                prefix={getCurrency}
                                             />
                                         </h5>
                                         <p className="text-muted mb-0">Total Revenue</p>

@@ -11,7 +11,7 @@ import { ongetAllData } from '../../../../slices/thunk';
 import TopPages from './TopPages';
 import TopReferrals from './TopReferrals';
 
-const LiveUsers  = ({sessionAttendance,top10Attendee}: any) => {
+const LiveUsers  = ({sessionAttendance,top10Attendee, getCurrency}: any) => {
     const dispatch: any = useDispatch();
 
     const [countryData, setcountryData] = useState<any>([]);
@@ -41,7 +41,7 @@ const LiveUsers  = ({sessionAttendance,top10Attendee}: any) => {
         <React.Fragment>
             <Col xxl={7}>
                 <Row className="h-100">
-                <TopReferrals top10Attendee = {top10Attendee}/>
+                <TopReferrals top10Attendee = {top10Attendee} getCurrency={getCurrency}/>
                     {/* <Col xl={6}>
                         <Card className="card-height-100">
                             <div className="card-header align-items-center d-flex">

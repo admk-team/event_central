@@ -18,7 +18,7 @@ import axios from "axios";
 import Layout from "../../../Layouts/Attendee";
 import { Head } from "@inertiajs/react";
 
-const Index = ({ payment, stripe_pub_key, paypal_client_id }: any) => {
+const Index = ({ payment, stripe_pub_key, paypal_client_id, currency }: any) => {
 
     const [stripePromise, setStripePromise] = useState(
         loadStripe(stripe_pub_key)
@@ -82,6 +82,7 @@ const Index = ({ payment, stripe_pub_key, paypal_client_id }: any) => {
                                                             }}
                                                         >
                                                             <StripeCheckoutForm
+                                                                currency={currency}
                                                                 payment={
                                                                     payment
                                                                 }
