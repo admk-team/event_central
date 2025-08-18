@@ -154,7 +154,7 @@ const AddAttendee = ({ show, handleClose }: any) => {
                         </Form.Select>
 
                         <Form.Control.Feedback type="invalid" className="d-block mt-2">
-                            {errors.location}
+                            {errors.country}
                         </Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group className="mb-3">
