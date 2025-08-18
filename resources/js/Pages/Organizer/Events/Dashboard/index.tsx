@@ -83,11 +83,11 @@ const DashboardAnalytics = ({
                                 totalSpeakers={totalSpeakers}
                                 totalPartners={totalPartners}
                                 totalRevenue={totalRevenue}
-                                getCurrency={getCurrency}
+                                getCurrency={getCurrency.currency_symbol}
                             />
                         </Col>
                         <LiveUsers
-                                getCurrency={getCurrency}
+                                getCurrency={getCurrency.currency_symbol}
                             sessionAttendance={sessionAttendance}
                             top10Attendee={top10Attendee}
                         />
@@ -96,7 +96,7 @@ const DashboardAnalytics = ({
                         <TopPages topSession={topSession} />
                         <AudiencesMetrics
                         ticketsMetrics={ticketsMetrics}
-                        getCurrency={getCurrency}
+                        getCurrency={getCurrency.currency_symbol}
                         />
 
                         {/* <AudiencesSessions /> */}

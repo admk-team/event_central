@@ -3,7 +3,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Col, Row, Form } from "react-bootstrap";
 
-const TicketDetail = ({ getCurrency, ticket_no, ticket, fees_sub_total, addons_sub_total, onAddonsUpdated, onBlockCheckout }: any) => {
+const TicketDetail = ({ currency_symbol, ticket_no, ticket, fees_sub_total, addons_sub_total, onAddonsUpdated, onBlockCheckout }: any) => {
     const [selectedAddons, setSelectedAddons] = useState<any>([]);
     const [addonOptions, setAddonsOptions] = useState<any>([]);
     const [addons, setAddons] = useState<any>(ticket.addons);
@@ -34,7 +34,7 @@ const TicketDetail = ({ getCurrency, ticket_no, ticket, fees_sub_total, addons_s
                         {fee.name}
                         <i className="fw-bold">
                             {fee.fee_type === 'flat'
-                                ? " (" + (getCurrency ?? "USD") + fee.fee_amount + ")"
+                                ? " (" + currency_symbol + fee.fee_amount + ")"
                                 : " (" + fee.fee_amount + "%)"}
                         </i>
 
@@ -133,7 +133,7 @@ const TicketDetail = ({ getCurrency, ticket_no, ticket, fees_sub_total, addons_s
                 };
             });
         }
-        
+
         setSelectedAddons(
             (prev: any) =>
                 isAddonSelect(addon, prev)
@@ -211,7 +211,7 @@ const TicketDetail = ({ getCurrency, ticket_no, ticket, fees_sub_total, addons_s
                                 valuesMatched = false;
                             }
                         });
-                        
+
                         if (valuesMatched) {
                             selectedVariant = v;
                         }
@@ -260,7 +260,7 @@ const TicketDetail = ({ getCurrency, ticket_no, ticket, fees_sub_total, addons_s
                 {feesOptions}
                 <span className="fs-5 fw-bold mt-1">
                     Fees Sub Total :
-                    <sup><small>{getCurrency ?? "USD"}</small></sup>
+                    <sup><small>{currency_symbol}</small></sup>
                     {fees_sub_total}</span>
             </Col>
             <Col md={6} lg={6}>
@@ -268,7 +268,7 @@ const TicketDetail = ({ getCurrency, ticket_no, ticket, fees_sub_total, addons_s
                 {addonOptions}
                 <span className="fs-5 fw-bold mt-1">
                     Addons Sub Total :
-                    <sup><small>{getCurrency ?? "USD"}</small></sup>
+                    <sup><small>{currency_symbol}</small></sup>
                     {addons_sub_total}
                 </span>
             </Col>
