@@ -21,6 +21,7 @@ class EventSession extends Model
         'type',
         'description',
         'capacity',
+        'current_capacity',
         'start_time',
         'end_time',
         'qa_status',
