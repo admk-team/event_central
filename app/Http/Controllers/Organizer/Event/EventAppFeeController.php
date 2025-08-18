@@ -6,6 +6,8 @@ use App\Models\EventAppFee;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organizer\Event\EventAppFeeRequest;
+use App\Models\EventApp;
+use App\Models\OrganizerPaymentKeys;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
@@ -16,8 +18,13 @@ class EventAppFeeController extends Controller
      */
     public function index()
     {
+
         $fees = $this->datatable(EventAppFee::currentEvent());
-        return Inertia::render('Organizer/Events/TicketFees/Index', compact('fees'));
+
+         $organizerId = EventApp::findOrFail(auth()->user()->event_app_id ?? session('event_id'));
+        $getCurrency = OrganizerPaymentKeys::where('user_id', $organizerId->organizer_id)->value('currency');
+
+        return Inertia::render('Organizer/Events/TicketFees/Index', compact('fees','getCurrency'));
     }
 
 

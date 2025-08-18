@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Organizer\Event;
 
 use App\Http\Controllers\Controller;
+use App\Models\EventAppTicket;
 use App\Models\LiveStream;
 use App\Models\LiveStreamSetting;
 use Illuminate\Http\Request;
@@ -25,9 +26,11 @@ class LiveStreamController extends Controller
         $liveStreams = $this->datatable(
             LiveStream::where('event_app_id', session('event_id'))
         );
+        $eventTickets = EventAppTicket::where('event_app_id',session('event_id'))->get();
 
         return Inertia::render('Organizer/Events/LiveStreams/Index', [
             'liveStreams' => $liveStreams,
+            'eventTickets' => $eventTickets,
         ]);
     }
 
@@ -44,6 +47,7 @@ class LiveStreamController extends Controller
             'title'    =>  'required|string',
             'resolution' => 'required|string',
             'start_time' => 'nullable',
+            'eventTickets' => 'nullable',
         ]);
 
         $liveStreamSettings = LiveStreamSetting::where('organizer_id', Auth::user()->owner_id)->first();
@@ -87,6 +91,7 @@ class LiveStreamController extends Controller
             'stream_url' => $cleaned_url,
             'playback_url' => $responseOutput['output']['playback_url'],
             'start_time' => $input['start_time'],
+            'event_ticket_id' => $input['eventTickets'],
         ]);
 
         return back()->withSuccess("Created");
@@ -104,10 +109,12 @@ class LiveStreamController extends Controller
         $input = $request->validate([
             'title'    =>  'required|string',
             'start_time' => 'nullable',
+            'eventTickets' => 'nullable',
         ]);
 
         $liveStream->title = $input['title'];
         $liveStream->start_time = $input['start_time'];
+        $liveStream->event_ticket_id = $input['eventTickets'];
         $liveStream->save();
 
         return back()->withSuccess("Updated");
@@ -233,7 +240,7 @@ class LiveStreamController extends Controller
             ])->post("https://api.gumlet.com/v1/video/live/assets/" . $livestream->live_asset_id. "/start");
             $livestream->status = 'preparing';
             $livestream->save();
-            
+
             return back()->withSuccess('Livestream started');
         }
 

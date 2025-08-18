@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Attendee;
 
 use App\Http\Controllers\Controller;
+use App\Models\AttendeePayment;
+use App\Models\AttendeePurchasedTickets;
 use Illuminate\Http\Request;
 use App\Models\LiveStream;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +18,13 @@ class LiveStreamController extends Controller
         $eventAppId = Auth::user()->event_app_id;
 
         $liveStreams = $this->datatable(
-            LiveStream::where('event_app_id', $eventAppId)->where('status', '!=', 'completed')
+            LiveStream::with('eventTickets')
+                ->where('event_app_id', $eventAppId)
+                ->where('status', '!=', 'completed')
+                ->whereHas('eventTickets.sold_tickets.payment', function ($query) {
+                    $query->where('attendee_id', Auth::user()->id);
+                    $query->where('status', 'paid');
+                })
         );
         return Inertia::render('Attendee/LiveStreams/Index', [
             'liveStreams' => $liveStreams,
@@ -27,8 +35,13 @@ class LiveStreamController extends Controller
     {
         $join_live_stream = LiveStream::findOrFail($id);
 
+        $playbackUrlParts = explode('/', $join_live_stream->playback_url);
+        $playbackKey = $playbackUrlParts[count($playbackUrlParts) - 2];
+        $playbackKey = "https://play.gumlet.io/embed/live/".$playbackKey;
+
         return Inertia::render('Attendee/LiveStreams/JoinLiveStream', [
-            'liveStream' => $join_live_stream
+            'liveStream' => $join_live_stream,
+            'playBackKey' => $playbackKey,
         ]);
     }
 }

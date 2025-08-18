@@ -7,6 +7,7 @@ use App\Http\Requests\Attendee\UpgradeTicketRequest;
 use App\Models\Attendee;
 use App\Models\AttendeeEventSession;
 use App\Models\EventApp;
+use App\Models\OrganizerPaymentKeys;
 use App\Services\StripeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -31,8 +32,11 @@ class AttendeeUpgradeTicketController extends Controller
         if ($organizerView) {
             $eventApp = EventApp::find(session('event_id'));
             $attendees = $eventApp->attendees()->select(['id as value', DB::raw("CONCAT(first_name, ' ', last_name) as label")])->get();
+            $getCurrency = OrganizerPaymentKeys::where('user_id',auth()->user()->id)->value('currency');
+
         } else {
             $eventApp =  EventApp::find(auth()->user()->event_app_id);
+            $getCurrency = OrganizerPaymentKeys::where('user_id',$eventApp->organizer_id)->value('currency');
             $purchasedTickets = auth()->user()->purchased_tickets();
             $attendee_id = auth()->user()->id;
         }
@@ -43,7 +47,8 @@ class AttendeeUpgradeTicketController extends Controller
             'attendees',
             'attendee_id',
             'sessions',
-            'purchasedTickets'
+            'purchasedTickets',
+            'getCurrency'
         ]));
     }
 
@@ -146,7 +151,7 @@ class AttendeeUpgradeTicketController extends Controller
     public function getStripPaymentIntent(Attendee $attendee, Request $request, $organizerView = false)
     {
         $amount = $request->input('amount');
-        $stripe_response = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount);
+        $stripe_response = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount,$request->input('currency'));
         $stripe_pub_key = $this->stripe_service->StripKeys($attendee->event_app_id)->stripe_publishable_key;
 
         Log::info($stripe_response);

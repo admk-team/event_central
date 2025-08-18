@@ -5,7 +5,7 @@ import AttendeeLayout from "../../../Layouts/Attendee";
 import { Button } from "../../../Components/ui/button";
 import axios from "axios";
 
-const Index = ({products}:any) => {
+const Index = ({products, getCurrency}:any) => {
 
     const [search, setSearch] = useState("");
     // Filter users by search input
@@ -16,6 +16,7 @@ const Index = ({products}:any) => {
     function submit(id: number) {
         const data = {
             product_id: id,
+            currency: getCurrency,
         };
         if (id > 0) {
             axios.post(route("attendee.product.purchase"), data).then((response) => {
@@ -56,10 +57,10 @@ const Index = ({products}:any) => {
                                             <h5 className="card-title">{product.name}</h5>
                                             <p className="card-text">{product.description}</p>
                                             <div className="d-flex justify-content-between align-items-center mb-2">
-                                                <span className="h5 text-success">${product.price}</span>
+                                                <span className="h5 text-success"> { getCurrency } {product.price}</span>
                                                 {product.old_price > 0 && (
                                                     <small className="text-muted">
-                                                        <s>${product.old_price}</s>
+                                                        <s>{ getCurrency } {product.old_price}</s>
                                                     </small>
                                                 )}
                                             </div>
@@ -80,7 +81,7 @@ const Index = ({products}:any) => {
                 </div>
             </div>
         </React.Fragment>
-       
+
     );
 };
 
