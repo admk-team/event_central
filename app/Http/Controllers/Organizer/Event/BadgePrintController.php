@@ -170,8 +170,56 @@ class BadgePrintController extends Controller
         $customBadgeDesign = null;
         if ($customDesign->badgeDesign && $customDesign->badgeDesign->customBadgeAttendee) {
             $customBadgeDesign = $customDesign->badgeDesign->customBadgeAttendee;
+            // Now replace mail_content for each attendee
+            $content = $customBadgeDesign->mail_content;
+
+            $content = $customBadgeDesign->mail_content;
+
+            // Extract <head> (if exists)
+            preg_match('/<head.*?>(.*?)<\/head>/is', $content, $headMatch);
+            $head = $headMatch[1] ?? '';
+
+            // Extract <body> content (template for one badge)
+            preg_match('/<body.*?>(.*?)<\/body>/is', $content, $bodyMatch);
+            $bodyTemplate = $bodyMatch[1] ?? $content;
+
+            // Build the final HTML
+            $finalHtml = '
+<html>
+    <head>
+        ' . $head . '
+        <link rel="stylesheet" href="' . asset('assets/passes.css') . '">
+    </head>
+    <body>
+        <div class="printable">
+';
+
+            foreach ($attendees as $attendee) {
+                foreach ($attendee['qr_codes'] as $qr) {
+                    // Shortcode replacements
+                    $replacements = [
+                        '{{ $attendeename }}' => e($attendee['name']),
+                        '{{ $attendeeposition }}' => e($attendee['position'] ?? ''),
+                        '{{ $eventlocation }}' => e($attendee['location'] ?? ''),
+                        '{{ $ticketname }}' => e($qr['ticket_name'] ?? ''),
+                        '{{ $tickettype }}' => e($qr['ticket_type_name'] ?? ''),
+                        '{{ $ticketqrcode }}' => '<img class="qr-code-img" style=" margin-left:200px; font-size: 14px;line-height: 140%;text-align: center;word-wrap: break-word;" src="' . $qr['qr_code'] . '" alt="QR Code" />',
+                    ];
+
+                    $badgeHtml = str_replace(array_keys($replacements), array_values($replacements), $bodyTemplate);
+
+                    // Wrap with print classes for sizing + page breaks
+                    $finalHtml .= '<div class="passWrapper"><div class="badgeContent">' . $badgeHtml . '</div></div>';
+                }
+            }
+
+            $finalHtml .= '
+        </div>
+    </body>
+</html>
+';
         }
 
-        return view()
+        return view('custombadge.index', compact('customBadgeDesign', 'finalHtml'));
     }
 }
