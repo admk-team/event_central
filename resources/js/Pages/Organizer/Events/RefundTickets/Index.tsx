@@ -9,7 +9,7 @@ import moment from 'moment';
 import toast from 'react-hot-toast';
 
 
-function Index({ refundPayments }: any) {
+function Index({ refundPayments, getCurrency }: any) {
     // console.log(refundPayments);
 
     const [showRefundActionModal, setShowRefundActionModal] = useState(false);
@@ -37,7 +37,7 @@ function Index({ refundPayments }: any) {
         },
         {
             header: () => <span className='w-100 d-block text-end'>{'Total Amount'}</span>,
-            cell: (refund) => <span className='w-100 d-block text-end fw-bold'>{refund?.attendee_payment ? '$' + refund?.attendee_payment?.amount_paid : ''}</span>,
+            cell: (refund) => <span className='w-100 d-block text-end fw-bold'>{refund?.attendee_payment ? getCurrency.currency_symbol + " " + refund?.attendee_payment?.amount_paid : ''}</span>,
         },
         {
             header: () => 'Payment Method',
@@ -54,7 +54,7 @@ function Index({ refundPayments }: any) {
         },
         {
             header: () => <span className='d-block w-100 text-end'>{'Amount Requested'}</span>,
-            cell: (refund) => <span className='d-block w-100 fw-bold text-end'>{"$" + refund.refund_requested_amount}</span>,
+            cell: (refund) => <span className='d-block w-100 fw-bold text-end'>{getCurrency.currency_symbol + " " + refund.refund_requested_amount}</span>,
         },
         {
             header: () => 'Refund Reason',
@@ -72,7 +72,7 @@ function Index({ refundPayments }: any) {
         },
         {
             header: () => <span className='d-block text-end w-100'>{'Refund Approved'}</span>,
-            cell: (refund) => <span className='d-block text-end w-100 fw-bold'>{refund.refund_approved_amount > 0 ? '$' + refund.refund_approved_amount : ''}</span>,
+            cell: (refund) => <span className='d-block text-end w-100 fw-bold'>{refund.refund_approved_amount > 0 ? getCurrency.currency_symbol + ' ' + refund.refund_approved_amount : ''}</span>,
         },
         {
             header: () => <span className='d-block w-100 text-center'>Status</span>,

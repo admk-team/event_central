@@ -7,7 +7,8 @@ export default function CheckoutForm({
     amount,
     onPaymentSuccess,
     organizerView,
-    currency
+    currency,
+    currency_symbol
 }: any) {
     const stripe = useStripe();
     const elements = useElements();
@@ -79,7 +80,7 @@ export default function CheckoutForm({
                             <span id="button-text">
                                 {isProcessing
                                     ? "Processing ... "
-                                    : currency + " " + amount}
+                                    : currency_symbol + " " + amount}
                             </span>
                         </Button>
                     )}

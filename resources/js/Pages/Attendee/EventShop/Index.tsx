@@ -16,7 +16,7 @@ const Index = ({products, getCurrency}:any) => {
     function submit(id: number) {
         const data = {
             product_id: id,
-            currency: getCurrency,
+            currency: getCurrency.currency,
         };
         if (id > 0) {
             axios.post(route("attendee.product.purchase"), data).then((response) => {
@@ -57,10 +57,10 @@ const Index = ({products, getCurrency}:any) => {
                                             <h5 className="card-title">{product.name}</h5>
                                             <p className="card-text">{product.description}</p>
                                             <div className="d-flex justify-content-between align-items-center mb-2">
-                                                <span className="h5 text-success"> { getCurrency } {product.price}</span>
+                                                <span className="h5 text-success"> { getCurrency.currency_symbol } {product.price}</span>
                                                 {product.old_price > 0 && (
                                                     <small className="text-muted">
-                                                        <s>{ getCurrency } {product.old_price}</s>
+                                                        <s>{ getCurrency.currency_symbol } {product.old_price}</s>
                                                     </small>
                                                 )}
                                             </div>

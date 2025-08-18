@@ -29,18 +29,16 @@ class AttendeeUpgradeTicketController extends Controller
         $attendees = [];
         $purchasedTickets = [];
         //If Page is being visited by Organizer
+            $eventApp = EventApp::find(session('event_id') ?? auth()->user()->event_app_id);
         if ($organizerView) {
-            $eventApp = EventApp::find(session('event_id'));
             $attendees = $eventApp->attendees()->select(['id as value', DB::raw("CONCAT(first_name, ' ', last_name) as label")])->get();
-            $getCurrency = OrganizerPaymentKeys::where('user_id',auth()->user()->id)->value('currency');
 
         } else {
-            $eventApp =  EventApp::find(auth()->user()->event_app_id);
-            $getCurrency = OrganizerPaymentKeys::where('user_id',$eventApp->organizer_id)->value('currency');
             $purchasedTickets = auth()->user()->purchased_tickets();
             $attendee_id = auth()->user()->id;
         }
         $sessions = $eventApp->sessions;
+        $getCurrency = OrganizerPaymentKeys::getCurrencyForUser($eventApp->organizer_id);
 
         return Inertia::render('Attendee/UpgradeTickets/Index', compact([
             'organizerView',

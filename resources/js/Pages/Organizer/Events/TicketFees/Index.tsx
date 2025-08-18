@@ -98,7 +98,7 @@ function Index({ fees, getCurrency }: any) {
             cell: (fee) => {
                 switch (fee.fee_type) {
                     case "flat":
-                        return <span className='d-block text-start' style={{ width: '50px' }}>{getCurrency} {fee.fee_amount + " "}</span>
+                        return <span className='d-block text-start' style={{ width: '50px' }}>{getCurrency.currency_symbol } {fee.fee_amount + " "}</span>
                     case "percentage":
                         return <span className='d-block text-start' style={{ width: '50px' }}>{fee.fee_amount + " "}%</span>
                 }

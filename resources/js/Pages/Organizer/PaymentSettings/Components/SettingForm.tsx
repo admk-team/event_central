@@ -251,8 +251,12 @@ export default function SettingForm({ keys }: any) {
                 <CardBody>
                     <InputGroup className="mb-3">
                         <CurrencySelect
-                            value={data.currency}
-                            onChange={(val) => setData({ ...data, currency: val })}
+                            value={data.currency} // now an object like { code: "ZWL", symbol: "Z$" }
+                            onChange={(val) => setData({
+                                ...data,
+                                currency_code: val.code,
+                                currency_symbol: val.symbol
+                            })}
                             error={errors.currency}
                         />
                     </InputGroup>
