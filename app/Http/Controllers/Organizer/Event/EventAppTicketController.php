@@ -73,9 +73,10 @@ class EventAppTicketController extends Controller
 
         $data['bulk_purchase_status'] = (bool) $request->bulk_purchase_status;
 
-        $data['bulk_purchase_discount_type'] = $data['bulk_purchase_status'] ? 'fixed' : 'fixed';
-        $data['bulk_purchase_discount_value'] = $data['bulk_purchase_status'] ? 0 : 0;
-        $data['bulk_purchase_qty'] = $data['bulk_purchase_status'] ? 0 : 0;
+        if($data['bulk_purchase_discount_type'] == null)
+        {
+            $data['bulk_purchase_discount_type'] = 'fixed';
+        }
 
 
 
@@ -107,7 +108,7 @@ class EventAppTicketController extends Controller
 
         $data['bulk_purchase_status'] = (bool) $request->bulk_purchase_status;
 
-        if (! $data['bulk_purchase_status']) {
+        if ($data['bulk_purchase_discount_type'] == null) {
             $data['bulk_purchase_discount_type'] = $data['bulk_purchase_status'] ? 'fixed' : 'fixed';
             $data['bulk_purchase_discount_value'] = $data['bulk_purchase_status'] ? 0 : 0;
             $data['bulk_purchase_qty'] = $data['bulk_purchase_status'] ? 0 : 0;
