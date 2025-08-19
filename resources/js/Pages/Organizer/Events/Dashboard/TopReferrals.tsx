@@ -22,7 +22,7 @@ interface TopReferralsProps {
     top10Attendee: Top10Attendee;
 }
 
-const TopReferrals = ({ top10Attendee }: TopReferralsProps) => {
+const TopReferrals = ({ top10Attendee, getCurrency }: TopReferralsProps & {getCurrency: String}) => {
     // Calculate total amount paid for progress bar (for visualization)
     const totalAmountPaid = top10Attendee.attendeeData.reduce((sum, attendee) => sum + attendee.amountPaid, 0);
     const maxAmount = top10Attendee.attendeeData[0]?.amountPaid || 1; // Avoid division by zero
@@ -40,9 +40,9 @@ const TopReferrals = ({ top10Attendee }: TopReferralsProps) => {
                             <Row className="align-items-center">
                                 <Col xs={6}>
                                     <h6 className="text-muted text-uppercase fw-semibold text-truncate fs-12 mb-3">
-                                    Total Revenue  
+                                    Total Revenue
                                     </h6>
-                                    <h4 className="fs- mb-0">${top10Attendee.totalRevenue}</h4>
+                                    <h4 className="fs- mb-0">{ getCurrency } {top10Attendee.totalRevenue}</h4>
                                     <p className="mb-0 mt-2 text-muted">
                                         <span className="badge bg-success-subtle text-success mb-0">
                                             <i className="ri-arrow-up-line align-middle"></i> {top10Attendee.totalAttendees.toLocaleString()}
@@ -57,7 +57,7 @@ const TopReferrals = ({ top10Attendee }: TopReferralsProps) => {
                                     </div>
                                 </Col>
                             </Row>
-                             <PieChart 
+                             <PieChart
                                 dataColors='["#4e79a7", "#59a14f", "#f28e2b", "#e15759", "#af7aa1", "#76b7b2", "#ff9da7", "#edc948", "#17becf", "#9c755f"]'
                                 data={top10Attendee.attendeeData.map((attendee: any) => ({
                                     name: `${attendee.first_name}`,

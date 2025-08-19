@@ -2,10 +2,7 @@ import React from 'react';
 import { Head } from '@inertiajs/react';
 import Layout from "../../../Layouts/Attendee"
 
-function JoinLiveStream({ liveStream }: any) {
-    const playbackUrlParts = liveStream.playback_url.split('/');
-    const playbackKey = playbackUrlParts[playbackUrlParts.length - 2];
-
+function JoinLiveStream({ liveStream, playBackKey }: any) {
     return (
         <React.Fragment>
             <Head>
@@ -57,7 +54,7 @@ function JoinLiveStream({ liveStream }: any) {
                     <iframe
                         loading="lazy"
                         title="Gumlet video player"
-                        src={`https://play.gumlet.io/embed/live/${playbackKey}`}
+                        src={playBackKey}
                         style={{
                             border: 'none',
                             position: 'absolute',

@@ -186,21 +186,31 @@ export default function Register() {
                                         {errors.is_public}
                                     </Form.Control.Feedback>
                                 </Col>
+                                <Form.Group className="mb-1"> <Form.Label>Location</Form.Label> <Form.Control type="text" placeholder="Enter City, State/Province, Country" onChange={(e) => setData('location', e.target.value)} /> <Form.Control.Feedback type="invalid" className="d-block mt-2"> {" "} {errors.location}{" "} </Form.Control.Feedback> </Form.Group>
                             </Row>
                             <Row className="mt-1">
-                                <Col md={12} lg={12} >
-                                    <Form.Label htmlFor="location" value="location" className='form-label'> Location </Form.Label>
-                                    <Form.Control
-                                        id="location"
-                                        type="text"
-                                        name="location"
-                                        placeholder="Enter City, State/Province, Country"
-                                        value={data.location}
-                                        className={'mt-1 form-control' + (errors.location ? 'is-invalid' : '')}
-                                        autoComplete="location"
-                                        onChange={(e: any) => setData('location', e.target.value)}
-                                    />
-                                    <Form.Control.Feedback type="invalid" className='mt-2 d-block'>{errors.location}</Form.Control.Feedback>
+                                <Col md={12} lg={12}>
+                                    <Form.Label htmlFor="country" className="form-label">Country</Form.Label>
+                                    <span className="text-danger ms-1">*</span>
+                                    <Form.Select
+                                        id="country"
+                                        name="country"
+                                        value={data.country || ""}
+                                        className={"mt-1 form-control" + (errors.country ? " is-invalid" : "")}
+                                        autoComplete="country"
+                                        onChange={(e: any) => setData("country", e.target.value)}
+                                    >
+                                        <option value="">Select a country</option>
+                                        {usePage().props.countries.map((country: any) => (
+                                            <option key={country.code} value={country.title}>
+                                                {country.title}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
+
+                                    <Form.Control.Feedback type="invalid" className="mt-2 d-block">
+                                        {errors.country}
+                                    </Form.Control.Feedback>
                                 </Col>
                             </Row>
                             <div className="mt-1">

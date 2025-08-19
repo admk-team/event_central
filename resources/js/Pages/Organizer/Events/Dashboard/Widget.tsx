@@ -13,6 +13,7 @@ const Widget = ({
     totalPartners,
     totalSpeakers,
     totalRevenue,
+    getCurrency
 }: any) => {
     return (
         <React.Fragment>
@@ -31,7 +32,7 @@ const Widget = ({
                                                 className="counter-value"
                                                 data-target="97.66"
                                             >
-                                            $<CountUp
+                                            {getCurrency} <CountUp
                                                     key={totalRevenue.totalRevenue}
                                                     start={0}
                                                     end={Number(totalRevenue.totalRevenue)}
@@ -46,7 +47,7 @@ const Widget = ({
                                                             ).toFixed(1) + "K"
                                                             : value
                                                     }
-                                                /> 
+                                                />
                                             </span>
                                         </h2>
                                         {/* <p className="mb-0 text-muted text-truncate ">
@@ -101,7 +102,7 @@ const Widget = ({
                                                             : value
                                                     }
                                                 /> */}
-                                            $0
+                                            {getCurrency} 0
                                             </span>
                                         </h2>
                                         {/* <p className="mb-0 text-muted text-truncate ">

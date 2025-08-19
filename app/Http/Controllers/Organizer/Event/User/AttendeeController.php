@@ -23,6 +23,7 @@ use App\Models\AttendeePurchasedTickets;
 use App\Http\Requests\Organizer\Event\User\AttendeeStoreRequest;
 use App\Models\AddonVariant;
 use App\Models\ChatMember;
+use App\Models\Country;
 use Illuminate\Validation\Rule;
 use App\Mail\AttendeeRegisteration;
 use Illuminate\Support\Facades\Mail;
@@ -36,12 +37,14 @@ class AttendeeController extends Controller
         }
         $eventList = EventApp::ofOwner()->where('id', '!=', session('event_id'))->get();
         $attendees = $this->datatable(Attendee::currentEvent()->with('eventCheckin'));
-        return Inertia::render('Organizer/Events/Users/Attendees/Index', compact('attendees', 'eventList'));
+        $countries = Country::orderBy('title')->get();
+        //dd($countries);
+        return Inertia::render('Organizer/Events/Users/Attendees/Index', compact('attendees', 'eventList','countries'));
     }
 
 
     public function store(Request $request)
-    {
+    {//dd($request);
         if (! Auth::user()->can('create_attendees')) {
             abort(403);
         }
@@ -49,6 +52,7 @@ class AttendeeController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
+            'country'=> 'required',
             'email' => [
                 'required',
                 'string',
@@ -79,6 +83,7 @@ class AttendeeController extends Controller
             'last_name' => $request->last_name,
             'email' => $request->email,
             'company' => $request->company,
+            'country'=>$request->country,
             'position' => $request->position,
             'phone' => $request->phone,
             'bio' => $request->bio,

@@ -324,7 +324,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate,
                                     {organizerView && eventApp.tickets.length > 0 &&
                                         eventApp.tickets.map((ticket: any) => (
                                             <TicketCard
-                                                getCurrency={getCurrency}
+                                                currency_symbol={getCurrency.currency_symbol}
                                                 ticket={ticket}
                                                 key={ticket.id}
                                                 ticket_array={allTicketDetails}
@@ -338,7 +338,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate,
                                     {!organizerView && eventApp.public_tickets.length > 0 &&
                                         eventApp.public_tickets.map((ticket: any) => (
                                             <TicketCard
-                                                getCurrency={getCurrency}
+                                                currency_symbol={getCurrency.currency_symbol}
                                                 ticket={ticket}
                                                 key={ticket.id}
                                                 ticket_array={allTicketDetails}
@@ -389,7 +389,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate,
                                             </Col>
                                             <Col md={4} lg={4} className="d-flex justify-content-end align-items-center">
                                                 <h5 className="mb-1 pt-2 pb-2 mr-2 text-end fs-4">Discount : <sup>
-                                                    <small>{getCurrency ?? "USD"}</small>
+                                                    <small>{getCurrency.currency_symbol}</small>
                                                 </sup>{Math.round(discountAmount).toFixed(2)}</h5>
                                             </Col>
                                         </Row>
@@ -415,7 +415,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate,
                                                 <h5 className="mb-1 pt-2 pb-2 mr-2 text-end fs-4">
                                                     Total Payable :{" "}
                                                     <sup>
-                                                        <small>{getCurrency ?? "USD"}</small>
+                                                        <small>{getCurrency.currency_symbol}</small>
                                                     </sup>
                                                     {totalAmount.toFixed(2)}
                                                 </h5>

@@ -61,7 +61,7 @@ class PaymentController extends Controller
         $attendees = [];
         $lasteventDate = [];
         $organizerId = EventApp::findOrFail(auth()->user()->event_app_id ?? session('event_id'));
-        $getCurrency = OrganizerPaymentKeys::where('user_id', $organizerId->organizer_id)->value('currency');
+        $getCurrency = OrganizerPaymentKeys::getCurrencyForUser($organizerId->organizer_id);
 
         $attendee_id = auth()->user()->id;
         //If Page is being visited by Organizer
@@ -180,9 +180,9 @@ class PaymentController extends Controller
         $payment = AttendeePayment::where('uuid', $paymentUuId)->first();
         // return $payment;
         if ($payment->status === 'pending') {
-            $stripe_detail = $this->stripe_service->StripKeys($payment->event_app_id);
-            $stripe_pub_key = $stripe_detail->stripe_publishable_key;
-            $strip_currency = $stripe_detail->currency ?? "USD";
+            $stripe_pub_key = $this->stripe_service->StripKeys($payment->event_app_id)->stripe_publishable_key;
+            $eventApp =  EventApp::find(auth()->user()->event_app_id ?? session('event_id'));
+            $getCurrency = OrganizerPaymentKeys::getCurrencyForUser($eventApp->organizer_id);
 
             // $paypal_client_id = null;
             $paypal_client_id = $this->paypal_service->payPalKeys()->paypal_pub;
@@ -191,7 +191,7 @@ class PaymentController extends Controller
                 'stripe_pub_key',
                 'paypal_client_id',
                 'organizerView',
-                'strip_currency'
+                'getCurrency'
             ]));
         } else {
             return redirect()->route('attendee.tickets.get')->withError("Payment has already been processed against this Payment ID");
@@ -208,7 +208,7 @@ class PaymentController extends Controller
         $amount = $data['totalAmount'];
 
         $organizerId = EventApp::findOrFail(auth()->user()->event_app_id ?? session('event_id'));
-        $getCurrency = OrganizerPaymentKeys::where('user_id', $organizerId->organizer_id)->first();
+        $getCurrency = OrganizerPaymentKeys::getCurrencyForUser($organizerId->organizer_id);
 
         $stripe_response = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount, $getCurrency->currency);
         $client_secret = $stripe_response['client_secret'];
