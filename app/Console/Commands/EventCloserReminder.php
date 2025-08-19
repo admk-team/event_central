@@ -49,10 +49,16 @@ class EventCloserReminder extends Command
             $now = \Carbon\Carbon::now()->startOfDay();
             $diffDays = $now->diffInDays($eventStart, false);
 
+            $diffDays = $now->diffInDays($eventStart, false);
+
             Log::info("Today: {$now->toDateString()}, Event Start: {$eventStart->toDateString()}, Diff: {$diffDays} days");
 
-            if ($diffDays === $reminderDays) {
-                Log::info("Matched reminder days for EventApp ID {$eventApp->id}, dispatching job...");
+            if ($diffDays < 0) {
+                Log::info("EventApp ID {$eventApp->id} already passed. Skipping reminder...");
+                continue;
+            }
+            if ($diffDays <= $reminderDays) {
+                Log::info("Event is {$diffDays} days away for EventApp ID {$eventApp->id}, sending reminder...");
                 \App\Jobs\SendEventReminderJob::dispatch($eventApp);
             }
         }
