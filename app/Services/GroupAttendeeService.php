@@ -31,6 +31,7 @@ class GroupAttendeeService
                 'first_name' => $first_name,
                 'last_name' => $last_name,
                 'position' => $parent->position,
+                'country' => $parent->country,
                 'location' => $parent->location,
                 'email' => $email,
                 'password' => Hash::make($password),

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Organizer\Event\User;
 
-use App\Events\UpdateEventDashboard;
 use Carbon\Carbon;
 use Inertia\Inertia;
 use App\Models\Attendee;
@@ -22,10 +21,10 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\AttendeePurchasedTickets;
 use App\Http\Requests\Organizer\Event\User\AttendeeStoreRequest;
 use App\Models\AddonVariant;
+use App\Mail\AttendeeRegisteration;
 use App\Models\ChatMember;
 use App\Models\Country;
 use Illuminate\Validation\Rule;
-use App\Mail\AttendeeRegisteration;
 use Illuminate\Support\Facades\Mail;
 
 class AttendeeController extends Controller
@@ -39,12 +38,12 @@ class AttendeeController extends Controller
         $attendees = $this->datatable(Attendee::currentEvent()->with('eventCheckin'));
         $countries = Country::orderBy('title')->get();
         //dd($countries);
-        return Inertia::render('Organizer/Events/Users/Attendees/Index', compact('attendees', 'eventList','countries'));
+        return Inertia::render('Organizer/Events/Users/Attendees/Index', compact('attendees', 'eventList', 'countries'));
     }
 
 
     public function store(Request $request)
-    {//dd($request);
+    { //dd($request);
         if (! Auth::user()->can('create_attendees')) {
             abort(403);
         }
@@ -52,7 +51,7 @@ class AttendeeController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'country'=> 'required',
+            'country' => 'required',
             'email' => [
                 'required',
                 'string',
@@ -69,7 +68,7 @@ class AttendeeController extends Controller
             'password' => 'required',
             'string',
             'min:8',
-            'confirmed'
+            'confirmed',
         ]);
         if (!session()->has('event_id')) {
             return redirect()->back()->withErrors(['error' => 'Event ID not found in session.']);
@@ -83,7 +82,7 @@ class AttendeeController extends Controller
             'last_name' => $request->last_name,
             'email' => $request->email,
             'company' => $request->company,
-            'country'=>$request->country,
+            'country' => $request->country,
             'position' => $request->position,
             'phone' => $request->phone,
             'bio' => $request->bio,
@@ -232,21 +231,14 @@ class AttendeeController extends Controller
             ->leftJoin('addon_purchased_ticket', 'attendee_purchased_tickets.id', '=', 'addon_purchased_ticket.attendee_purchased_ticket_id')
             ->where('attendee_payments.attendee_id', $id)
             ->where('attendee_payments.status', 'paid')
-            ->groupBy(
-                'attendee_purchased_tickets.id',
-                'attendee_payments.id',
-                'event_app_tickets.name',
-                'attendee_payments.payment_method',
-                'attendee_purchased_tickets.total'
-            )
+            ->groupBy('attendee_purchased_tickets.id', 'attendee_payments.id', 'event_app_tickets.name', 'attendee_payments.payment_method')
             ->select(
-                'attendee_purchased_tickets.total as ticket_total_price',
                 'attendee_purchased_tickets.id as attendee_purchased_ticket_id',
                 'event_app_tickets.name as ticket_name',
                 DB::raw('SUM(attendee_purchased_tickets.qty) as qty'),
-                DB::raw('MAX(attendee_payments.amount_paid) as amount'),
+                DB::raw('SUM(attendee_payments.amount_paid) as amount'),
                 'attendee_payments.payment_method as type',
-                DB::raw('COUNT(addon_purchased_ticket.attendee_purchased_ticket_id) as addons_count')
+                DB::raw('COUNT(attendee_purchased_ticket_id) as addons_count')  // Add count of addons
             )
             ->get();
 
@@ -260,7 +252,7 @@ class AttendeeController extends Controller
         return Inertia::render('Organizer/Events/Users/Attendees/AttendeeProfile/Profile', compact('attendee', 'user', 'sessions', 'tickets', 'sessionsPurchased'));
     }
 
-    public function getPurchasedTicketAddons(AttendeePurchasedTickets $attendeePurchasedTicket)
+    public function getPurchasedTicketAddons(AttendeePurchasedTickets  $attendeePurchasedTicket)
     {
         $attendeePurchasedTicket->load('purchased_addons');
         $addons = $attendeePurchasedTicket->purchased_addons;
@@ -271,13 +263,8 @@ class AttendeeController extends Controller
                 ->where('addon_id', $addon->id)
                 ->first();
 
-            // Load addon variant and its attributes
-            $variant = AddonVariant::with(['attributeValues' => ['addonAttribute', 'addonAttributeOption']])
-                ->find($pivot->addon_variant_id);
-
-            $addon->extra_fields_values = $pivot->extra_fields_values ? json_decode($pivot->extra_fields_values, true) : null;
-
-            if (!$variant) continue;
+            $variant = AddonVariant::with(['attributeValues' => ['addonAttribute', 'addonAttributeOption']])->find($pivot->addon_variant_id);
+            if (! $variant) continue;
 
             $addon->price = $variant->price;
             $addon_attributes[$addon->id] = [];

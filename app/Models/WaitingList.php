@@ -12,4 +12,9 @@ class WaitingList extends Model
         'attendee_id',
         'event_app_ticket_id'
     ];
+
+    public function attendee()
+    {
+        return $this->belongsTo(Attendee::class, 'id');
+    }
 }

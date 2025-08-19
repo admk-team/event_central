@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Button, Form } from 'react-bootstrap';
 import { router } from '@inertiajs/react';
 import '../../../css/passes.css';
+import CancelTicketButton from "./Components/CancelTicket";
 
 interface AttendeePassProps {
     event: {
@@ -73,6 +74,7 @@ const PaymentSuccess = ({ eventApp, attendee, image = [], hasTickets }) => {
                                         <p className="attendee-name">{img.ticket_type_name}</p>
                                     </div>
 
+
                                     {/* Conditional: Only show input if transfer_check is false */}
                                     {!img.transfer_check && (
                                         <>
@@ -80,7 +82,7 @@ const PaymentSuccess = ({ eventApp, attendee, image = [], hasTickets }) => {
                                                 Transfer Ticket <span className="text-danger ms-1">*</span>
                                             </label>
                                             <input
-                                                className="input-email-qrcode"
+                                                className="input-email-qrcode mb-3"
                                                 id={`email-${img.purchased_id}`}
                                                 type="text"
                                                 name={`email-${img.purchased_id}`}
@@ -93,6 +95,7 @@ const PaymentSuccess = ({ eventApp, attendee, image = [], hasTickets }) => {
                                                     setEmails(newEmails);
                                                 }}
                                             />
+                                            <CancelTicketButton purchased_id={img.purchased_id} />
                                         </>
                                     )}
                                 </div>

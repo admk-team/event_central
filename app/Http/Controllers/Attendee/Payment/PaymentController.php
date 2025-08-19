@@ -34,6 +34,8 @@ use Illuminate\Console\Scheduling\Event;
 use App\Mail\AttendeeTicketPurchasedEmail;
 use App\Mail\EventTicketPurchasedNotification;
 use App\Http\Requests\Attendee\AttendeeCheckoutRequest;
+use App\Mail\AvailableTicketMail;
+use App\Models\WaitingList;
 use App\Models\OrganizerPaymentKeys;
 
 class PaymentController extends Controller
@@ -562,5 +564,46 @@ class PaymentController extends Controller
         }
 
         return redirect()->back()->withSuccess('Emails submitted successfully!');
+    }
+
+
+
+    public function cancelTicket($id)
+    {
+        DB::beginTransaction();
+        try {
+            $attendee = Auth::user();
+            $AttendeeTicket = AttendeePurchasedTickets::where('attendee_id', $attendee->id)
+                ->where('id', $id)
+                ->where('event_app_id', $attendee->event_app_id)
+                ->firstOrFail();
+            $eventTicket = EventAppTicket::where('id', $AttendeeTicket->event_app_ticket_id)
+                ->where('event_app_id', $attendee->event_app_id)
+                ->first();
+            if ($eventTicket) {
+                $eventTicket->decrement('qty_sold'); // Better than manual subtraction
+            }
+
+            $waiting_attendees = WaitingList::with('attendee')
+                ->where('event_app_ticket_id', $AttendeeTicket->event_app_ticket_id)
+                ->get();
+
+            foreach ($waiting_attendees as $waiting) {
+                $ticketUrl = url('/') . '/attendee' . '/' . $eventTicket->event_app_id . '/login';
+                if ($waiting->attendee?->email) {
+                    Mail::to($waiting->attendee->email)->queue(
+                        new AvailableTicketMail($waiting->attendee, $eventTicket, $ticketUrl)
+                    );
+                }
+            }
+
+            $AttendeeTicket->delete();
+            DB::commit();
+            return back()->withSuccess('Ticket cancelled and waiting list notified.');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            Log::error('Failed to cancel ticket: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Failed to process cancellation.']);
+        }
     }
 }
