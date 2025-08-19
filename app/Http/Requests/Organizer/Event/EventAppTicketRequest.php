@@ -42,7 +42,7 @@ class EventAppTicketRequest extends FormRequest
             'show_on_attendee_side' => '',
             'qty_total' => 'nullable',
 
-            'bulk_purchase_status' => 'required|boolean',
+            'bulk_purchase_status' => 'nullable|boolean',
             'bulk_purchase_discount_type' => 'nullable|in:fixed,percentage',
             'bulk_purchase_discount_value' => 'nullable|numeric',
             'bulk_purchase_qty' => 'nullable|integer',
