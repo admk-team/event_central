@@ -52,7 +52,7 @@ class EventSessionController extends Controller
             $data['rating_status'] = false;
         }
         $data['event_app_id'] = session('event_id');
-        $data['current_capacity'] = max(0, $data['capacity'] - 1);
+        $data['current_capacity'] = $data['capacity'];
         // Remove event_speaker_id from main data since we'll handle it separately
         $speakers = $data['event_speaker_id'] ?? [];
         unset($data['event_speaker_id']);

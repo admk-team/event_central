@@ -32,7 +32,10 @@ class EventSession extends Model
     ];
 
     // Removed event_speaker_id from fillable since we're using a pivot table
-
+    public function eventApp()
+    {
+        return $this->belongsTo(EventApp::class, 'event_app_id');
+    }
     public function scopeCurrentEvent($query)
     {
         $query->where('event_app_id', session('event_id'));

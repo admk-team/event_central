@@ -66,6 +66,7 @@ export default function CreateEditModal({
             bulk_purchase_qty: ticket?.bulk_purchase_qty ?? "",
 
         });
+    console.log('error',errors)
 
     const [selectMulti, setselectMulti] = useState<any>(
         ticket?.selected_sessions ?? null
