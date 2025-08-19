@@ -22,7 +22,7 @@ class EventAppFeeController extends Controller
         $fees = $this->datatable(EventAppFee::currentEvent());
 
          $organizerId = EventApp::findOrFail(auth()->user()->event_app_id ?? session('event_id'));
-        $getCurrency = OrganizerPaymentKeys::where('user_id', $organizerId->organizer_id)->value('currency');
+        $getCurrency = OrganizerPaymentKeys::getCurrencyForUser($organizerId->organizer_id);
 
         return Inertia::render('Organizer/Events/TicketFees/Index', compact('fees','getCurrency'));
     }

@@ -17,8 +17,8 @@ class RefundPaymentController extends Controller
     {
         $attendee = auth()->user();
 
-        $organizerId = EventApp::findOrFail($attendee->event_app_id ?? session('event_id'));
-        $getCurrency = OrganizerPaymentKeys::where('user_id', $organizerId->organizer_id)->value('currency');
+        $eventApp =  EventApp::find(auth()->user()->event_app_id);
+        $getCurrency = OrganizerPaymentKeys::getCurrencyForUser($eventApp->organizer_id);
 
         $payments = $this->datatable(AttendeePayment::where('attendee_id', $attendee->id)
             ->where('status', 'paid')->with('refund_tickets'));

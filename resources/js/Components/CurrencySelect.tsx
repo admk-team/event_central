@@ -156,11 +156,15 @@ const currencies = [
 export default function CurrencySelect({ value, onChange, error }) {
   return (
     <Form.Select
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
+      value={value?.code || value || ""}
+      onChange={(e) => {
+        const selected = currencies.find(c => c.code === e.target.value);
+        if (selected) {
+          onChange(selected);
+        }
+      }}
       isInvalid={!!error}
     >
-      <option value="">Select Currency</option>
       {currencies.map((c) => (
         <option key={c.code} value={c.code}>
           {c.name} ({c.symbol})

@@ -642,7 +642,7 @@ export default function CreateEditModal({
                                 </FormGroup>
                             </Col>
                         </Row>
-                        {data.bulk_purchase_status !== 0 && (
+                        {data.bulk_purchase_status != 0 && (
                             <Row>
                                 <Col md={4}>
                                     <FormGroup className="mb-3">

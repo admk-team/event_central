@@ -28,13 +28,15 @@ class EventShopController extends Controller
         $products = EventProduct::where('event_app_id', Auth::user()->event_app_id)->get();
 
         $eventApp = EventApp::findOrFail(Auth::user()->event_app_id);
-        $getCurrency = OrganizerPaymentKeys::where('user_id',$eventApp->organizer_id)->value('currency');
+        $getCurrency = OrganizerPaymentKeys::getCurrencyForUser($eventApp->organizer_id);
 
         return Inertia::render('Attendee/EventShop/Index', compact('products','getCurrency'));
     }
 
     public function checkoutPage($paymentId)
     {
+        $eventApp = EventApp::findOrFail(Auth::user()->event_app_id);
+        $getCurrency = OrganizerPaymentKeys::getCurrencyForUser($eventApp->organizer_id);
         $payment = Order::where('id', $paymentId)->first();
         if ($payment->status === 'pending') {
             $stripe_key = $this->stripe_service->StripKeys($payment->event_app_id);
@@ -46,7 +48,8 @@ class EventShopController extends Controller
                 'payment',
                 'stripe_pub_key',
                 'paypal_client_id',
-                'currency'
+                'currency',
+                'getCurrency'
             ]));
         } else {
             return redirect()->route('attendee.tickets.get')->withError("Payment has already been processed against this Payment ID");

@@ -50,7 +50,7 @@ class DashboardController extends Controller
 
 
             $organizerId = EventApp::findOrFail($event_id);
-            $getCurrency = OrganizerPaymentKeys::where('user_id', $organizerId->organizer_id)->value('currency');
+            $getCurrency = OrganizerPaymentKeys::getCurrencyForUser($organizerId->organizer_id);
 
             // dd($ticketsMetrics);
             return Inertia::render('Organizer/Events/Dashboard/index', compact(

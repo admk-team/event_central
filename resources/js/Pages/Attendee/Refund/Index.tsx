@@ -39,7 +39,7 @@ function RefundTickets({ payments, getCurrency }: any) {
         },
         {
             header: () => 'Total Amount',
-            cell: (payment) => getCurrency + " " + payment.amount_paid,
+            cell: (payment) => getCurrency.currency_symbol + " " + payment.amount_paid,
         },
         {
             header: () => 'Payment Status',
@@ -63,7 +63,7 @@ function RefundTickets({ payments, getCurrency }: any) {
         },
         {
             header: () => 'Amount Requested',
-            cell: (payment) => (payment.refund_tickets && payment.refund_tickets?.refund_requested_amount > 0 ? getCurrency + " " : "") + (payment.refund_tickets?.refund_requested_amount ?? ''),
+            cell: (payment) => (payment.refund_tickets && payment.refund_tickets?.refund_requested_amount > 0 ? getCurrency.currency_symbol + " " : "") + (payment.refund_tickets?.refund_requested_amount ?? ''),
         },
         {
             header: () => 'Refund Reason',

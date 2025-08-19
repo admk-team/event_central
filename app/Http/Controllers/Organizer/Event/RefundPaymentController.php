@@ -7,9 +7,12 @@ use App\Http\Requests\Organizer\Event\OrganizerRefundRequest;
 use App\Models\Attendee;
 use App\Models\AttendeePayment;
 use App\Models\AttendeeRefundTicket;
+use App\Models\EventApp;
+use App\Models\OrganizerPaymentKeys;
 use App\Services\StripeService;
 use Error;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
@@ -27,9 +30,11 @@ class RefundPaymentController extends Controller
 
     public function refundTickets()
     {
+        $eventApp = EventApp::findOrFail(Auth::user()->event_app_id ?? session('event_id'));
+        $getCurrency = OrganizerPaymentKeys::getCurrencyForUser($eventApp->organizer_id);
         $refundPayments = $this->datatable(AttendeeRefundTicket::currentEvent()->with('attendee', 'attendeePayment'));
         // dd($refundPayments);
-        return Inertia::render('Organizer/Events/RefundTickets/Index', compact('refundPayments'));
+        return Inertia::render('Organizer/Events/RefundTickets/Index', compact('refundPayments','getCurrency'));
     }
 
     public function attendeeRefund(OrganizerRefundRequest $request)

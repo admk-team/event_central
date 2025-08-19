@@ -5,12 +5,14 @@ import BreadCrumb from '../../../../../Components/Common/BreadCrumb';
 import Layout from '../../../../../Layouts/Event';
 import DataTable, { ColumnDef } from '../../../../../Components/DataTable';
 import HasPermission from '../../../../../Components/HasPermission';
+import { exportToCSV } from '../../../../../Components/ExportToCSV';
 
 function Index({ attendees }: any) {
 
 
     const columns: ColumnDef<typeof attendees.data[0]> = [
         {
+            exportValue: (attendee) => attendee.id,
             header: () => 'ID',
             headerStyle: { width: '70px' },
             cell: (attendee) => attendee.id,
@@ -22,6 +24,7 @@ function Index({ attendees }: any) {
             cell: (attendee) => (
                 <img src={attendee.avatar_img} alt={attendee.name} width="50" height="50" className="rounded-circle" />
             ),
+            exportable: false,
         },
         {
             accessorKey: 'first_name',
@@ -48,36 +51,42 @@ function Index({ attendees }: any) {
             searchable: true,
         },
         {
+            accessorKey: 'position',
             header: () => 'Position',
             headerStyle: { width: '200px', textWrap: 'wrap' ,textAlign:'center' },
             cell: (attendee) => attendee.position,
             cellStyle: { width: '200px', textWrap: 'wrap' ,textAlign:'center' },
         },
         {
+            exportValue: (attendee) => attendee.attendee_event_sessions.length,
             header: () => 'Sessions',
             headerStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
             cell: (attendee) => attendee.attendee_event_sessions.length,
             cellStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
         },
         {
+            exportValue: (attendee) => attendee.attendee_fav_session.length,
             header: () => 'Favorite Sessions',
             headerStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
             cell: (attendee) => attendee.attendee_fav_session.length,
             cellStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
         },
         {
+            exportValue: (attendee) => attendee.event_selected_sessions.length,
             header: () => 'Selected Sessions',
             headerStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
             cell: (attendee) => attendee.event_selected_sessions.length,
             cellStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
         },
         {
+            accessorKey: 'payments',
             header: () => 'Payments',
             headerStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
             cell: (attendee) => attendee.payments.length,
             cellStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
         },
         {
+            exportValue: (attendee) => attendee.attendee_purchased_tickets.length,
             header: () => 'Tickets',
             headerStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
             cell: (attendee) => attendee.attendee_purchased_tickets.length,
@@ -90,9 +99,11 @@ function Index({ attendees }: any) {
                     <Link title='View attendee details' href={route('organizer.events.attendee.info', { id: attendee.id })} className="link-primary cursor-pointer"><i className="ri-eye-fill"></i></Link>
                 </div>
             ),
+            exportable: false,
         },
     ];
 
+    const [visibleColumns, setVisibleColumns] = useState<ColumnDef<typeof attendees.data[0]>[]>([]);
 
     return (
         <React.Fragment>
@@ -118,6 +129,7 @@ function Index({ attendees }: any) {
                                 <DataTable
                                     data={attendees}
                                     columns={columns}
+                                    onVisibleColumnsChange={setVisibleColumns}
                                     title="Attendees"
                                     tableLayoutFixed={true}
                                     searchCombinations={[['first_name', 'last_name']]}
@@ -131,7 +143,19 @@ function Index({ attendees }: any) {
                                         //     ),
                                         //     showOnRowSelection: true,
                                         // },
+                                        {
+                                            render: (dataTable: any) => (
+                                                <Button
+                                                    variant="outline-primary"
+                                                    className="me-2"
+                                                    onClick={() => exportToCSV(dataTable.getCurrentPageRows(), visibleColumns.length ? visibleColumns : columns, "attendee")}
+                                                >
+                                                    Export Attendee
+                                                </Button>
 
+                                            ),
+                                            showOnRowSelection: false,
+                                        }
                                     ]}
                                 />
                             </HasPermission>

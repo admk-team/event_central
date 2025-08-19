@@ -72,6 +72,15 @@ class EventAppTicketController extends Controller
         $data['fees'] = $this->transformFees($data);
         $data['original_price'] = $data['base_price'];
 
+        $data['bulk_purchase_status'] = (bool) $request->bulk_purchase_status;
+
+        if($data['bulk_purchase_discount_type'] == null)
+        {
+            $data['bulk_purchase_discount_type'] = 'fixed';
+        }
+
+
+
         // Log::info($data['sessions']);
         $ticket = EventAppTicket::create($data);
 
@@ -115,12 +124,9 @@ class EventAppTicketController extends Controller
 
         $data['bulk_purchase_status'] = (bool) $request->bulk_purchase_status;
 
-        if (! $data['bulk_purchase_status']) {
-            $data['bulk_purchase_discount_type'] = 'fixed';
-            $data['bulk_purchase_discount_value'] = 0;
-            $data['bulk_purchase_qty'] = 0;
+        if ($data['bulk_purchase_discount_type'] == null) {
+            $data['bulk_purchase_discount_type'] = $data['bulk_purchase_status'] ? 'fixed' : 'fixed';
         }
-
         $ticket->update($data);
 
         $ticket->sessions()->sync($data['sessions']);
