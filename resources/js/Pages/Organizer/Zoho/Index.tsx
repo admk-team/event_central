@@ -31,6 +31,10 @@ const ZohoSettings = ({ keys }: any) => {
                                             <strong>Enter Zoho CRM Credentials</strong><br />
                                             Fill in <em>Client ID</em>, <em>Client Secret</em>, and <em>Redirect URI</em> exactly as shown in your Zoho API console. Click <span className="badge bg-danger text-white">Save Keys</span>.
                                         </li>
+                                        <li className="mb-2">
+                                            <strong>Redirect URI</strong><br />
+                                            <span>https://eventcentral.net/organizer/zoho/callback</span> <em>For this you need to be logged in as Organizer</em>
+                                        </li>
 
                                         <li className="mb-2">
                                             <strong>Connect to Zoho</strong><br />

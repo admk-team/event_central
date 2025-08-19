@@ -138,8 +138,7 @@ class ZohoController extends Controller
 
         $response = Http::withToken($integration->access_token)
             ->post("https://www.zohoapis.com/crm/v2/{$module}", $payload);
-        dd($response->json());
-        return redirect()->route('organizer.zoho.index')->withSuccess('Zoho Connected!');
+        return redirect()->route('organizer.zoho.index')->withSuccess('Zoho Synced!');
     }
 
 
