@@ -110,8 +110,6 @@ class EventAppTicketController extends Controller
 
         if ($data['bulk_purchase_discount_type'] == null) {
             $data['bulk_purchase_discount_type'] = $data['bulk_purchase_status'] ? 'fixed' : 'fixed';
-            $data['bulk_purchase_discount_value'] = $data['bulk_purchase_status'] ? 0 : 0;
-            $data['bulk_purchase_qty'] = $data['bulk_purchase_status'] ? 0 : 0;
         }
         $ticket->update($data);
 
