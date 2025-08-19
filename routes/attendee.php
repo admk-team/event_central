@@ -16,9 +16,11 @@ use App\Http\Controllers\Attendee\Payment\PaymentController;
 use App\Http\Controllers\Attendee\EventPostController;
 use App\Http\Controllers\Attendee\EventQuestionnaireFormController;
 use App\Http\Controllers\Attendee\EventRegistrationFormController;
+use App\Http\Controllers\Attendee\EventShopController;
 use App\Http\Controllers\Attendee\EventStaffController;
 use App\Http\Controllers\Attendee\FriendRequestController;
 use App\Http\Controllers\Attendee\GoogleController;
+use App\Http\Controllers\Attendee\LiveStreamController;
 use App\Http\Controllers\Attendee\Payment\RefundPaymentController;
 use App\Http\Controllers\Attendee\PrayerRequestController;
 use App\Http\Controllers\Attendee\ProfileController;
@@ -79,6 +81,14 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::get('speakers/{eventSpeaker?}', [EventController::class, 'getEventSpeakerDetail'])->name('attendee.event.detail.speakers');
         Route::get('more', [EventController::class, 'getEventDetailMore'])->name('attendee.event.detail.more');
         Route::post('contact-form', [EventController::class, 'submitContectForm'])->name('attendee.event.detail.contact');
+
+        //Event Shop
+        Route::get('products',[EventShopController::class,'index'])->name('attendee.event.products');
+        Route::post('puchase/product', [EventShopController::class, 'checkout'])->name('attendee.product.purchase');
+        Route::post('product/update/{paymentId}', [EventShopController::class, 'updateOrder'])->name('attendee.product.update');
+        Route::get('product/checkout/{data}', [EventShopController::class, 'checkoutPage'])->name('attendee.product.checkout');
+        Route::get('success/checkout', [EventShopController::class, 'paymentSuccess'])->name('attendee.product.checkout.success');
+        Route::get('cancel/checkout', [EventShopController::class, 'paymentCancel'])->name('attendee.product.checkout.cancel');
 
         //QR Routes
         Route::get('/qr-code/{eventApp}', [QrCodeController::class, 'getQrCode'])->name('attendee.qr-code.get');
@@ -185,6 +195,10 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
     //fav session
     Route::get('/favsession/{sessionid}', [EventController::class, 'favsession'])->name('fav.sessions');
     Route::get('/allfav', [EventController::class, 'allfavouriteSession'])->name('all.fav.sessions');
+
+    Route::get('/streams/index',[LiveStreamController::class,'index'])->name('stream.index');
+    Route::get('/join/stream/{id}', [LiveStreamController::class, 'joinLiveStreams'])->name('join.live.streams');
+
 });
 
 // Event questionnaire Form For Web

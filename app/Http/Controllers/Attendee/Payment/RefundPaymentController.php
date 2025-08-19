@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Attendee\RefundTicketRequest;
 use App\Models\AttendeePayment;
 use App\Models\AttendeeRefundTicket;
+use App\Models\EventApp;
+use App\Models\OrganizerPaymentKeys;
 use Inertia\Inertia;
 
 
@@ -14,12 +16,17 @@ class RefundPaymentController extends Controller
     public function refundAttendeeTicket()
     {
         $attendee = auth()->user();
+
+        $eventApp =  EventApp::find(auth()->user()->event_app_id);
+        $getCurrency = OrganizerPaymentKeys::getCurrencyForUser($eventApp->organizer_id);
+
         $payments = $this->datatable(AttendeePayment::where('attendee_id', $attendee->id)
             ->where('status', 'paid')->with('refund_tickets'));
 
         // return $payments;
         return Inertia::render('Attendee/Refund/Index', [
             'payments' => $payments,
+            'getCurrency' => $getCurrency,
         ]);
     }
 

@@ -22,8 +22,10 @@ use App\Models\AttendeePurchasedTickets;
 use App\Http\Requests\Organizer\Event\User\AttendeeStoreRequest;
 use App\Models\AddonVariant;
 use App\Mail\AttendeeRegisteration;
-use Illuminate\Support\Facades\Mail;
+use App\Models\ChatMember;
+use App\Models\Country;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Mail;
 
 class AttendeeController extends Controller
 {
@@ -34,12 +36,14 @@ class AttendeeController extends Controller
         }
         $eventList = EventApp::ofOwner()->where('id', '!=', session('event_id'))->get();
         $attendees = $this->datatable(Attendee::currentEvent()->with('eventCheckin'));
-        return Inertia::render('Organizer/Events/Users/Attendees/Index', compact('attendees', 'eventList'));
+        $countries = Country::orderBy('title')->get();
+        //dd($countries);
+        return Inertia::render('Organizer/Events/Users/Attendees/Index', compact('attendees', 'eventList', 'countries'));
     }
 
 
     public function store(Request $request)
-    {
+    { //dd($request);
         if (! Auth::user()->can('create_attendees')) {
             abort(403);
         }
@@ -47,6 +51,15 @@ class AttendeeController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
+            'country' => 'required',
+            'email' => [
+                'required',
+                'string',
+                'lowercase',
+                'email',
+                'max:255',
+                Rule::unique('attendees', 'email')->where('event_app_id', session('event_id')),
+            ],
             'company' => 'nullable|string|max:255',
             'position' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:20',
@@ -56,14 +69,6 @@ class AttendeeController extends Controller
             'string',
             'min:8',
             'confirmed',
-            'email' => [
-                'required',
-                'string',
-                'lowercase',
-                'email',
-                'max:255',
-                Rule::unique('attendees', 'email')->where('event_app_id', session('event_id')),
-            ],
         ]);
         if (!session()->has('event_id')) {
             return redirect()->back()->withErrors(['error' => 'Event ID not found in session.']);
@@ -77,12 +82,15 @@ class AttendeeController extends Controller
             'last_name' => $request->last_name,
             'email' => $request->email,
             'company' => $request->company,
+            'country' => $request->country,
             'position' => $request->position,
             'phone' => $request->phone,
             'bio' => $request->bio,
             'location' => $request->location,
             'password' => Hash::make($request->password),
+            'is_public' => $request->is_public == 1 ? true : false,
         ]);
+        broadcast(new UpdateEventDashboard(session('event_id'), 'Attendee Created'))->toOthers();
         Mail::to($user->email)->send(new AttendeeRegisteration($user->first_name, $user->last_name, $request->password, $user->email, $event_app, $url));
         return back()->withSuccess('attendee created successfully.');
     }
@@ -134,6 +142,7 @@ class AttendeeController extends Controller
         }
 
         $attendee->delete();
+        broadcast(new UpdateEventDashboard(session('event_id'), 'Attendee Deleted'))->toOthers();
         return back()->withSuccess('Attendee deleted successfully.');
     }
 
@@ -149,6 +158,7 @@ class AttendeeController extends Controller
         foreach ($request->ids as $id) {
             Attendee::find($id)->delete();
         }
+        broadcast(new UpdateEventDashboard(session('event_id'), 'Attendee Deleted'))->toOthers();
         return back()->withSuccess('Attendees deleted successfully.');
     }
 
@@ -379,6 +389,38 @@ class AttendeeController extends Controller
         return back()->withSuccess("Import Job Dispatched In Successfully");
     }
 
+
+    public function initiateChat($id)
+    {
+        $event = EventApp::find(session('event_id'));
+        $attendee = Attendee::find($id);
+
+        if (!$event) {
+            return back()->withError('No active event found.');
+        }
+        if (!$attendee) {
+            return back()->withError('No attendee found.');
+        }
+
+        $existing = ChatMember::where('event_id', $event->id)
+            ->where('user_id', Auth::user()->id)
+            ->where('participant_id', $attendee->id)
+            ->first();
+
+        if ($existing) {
+            return back()->withError('A chat with this attendee already exists.');
+        }
+
+        ChatMember::create([
+            'event_id' => $event->id,
+            'user_id' => Auth::user()->id,
+            'user_type' => \App\Models\User::class,
+            'participant_id' => $attendee->id,
+            'participant_type' => \App\Models\Attendee::class,
+        ]);
+
+        return back()->withSuccess('Chat initiated successfully.');
+    }
     public function returnTicket($id)
     {
         // $attendee = Attendee::where('id', $id)->with('attendeePurchasedTickets');

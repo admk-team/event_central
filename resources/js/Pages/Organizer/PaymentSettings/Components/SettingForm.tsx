@@ -17,6 +17,8 @@ import {
 import stripe from "../../../../../images/stripe.png";
 import paypal from "../../../../../images/paypal.png";
 import toast from "react-hot-toast";
+import CurrencySelect from "../../../../Components/CurrencySelect";
+
 
 export default function SettingForm({ keys }: any) {
     // console.log(keys);
@@ -32,6 +34,7 @@ export default function SettingForm({ keys }: any) {
         //Stripe fields
         stripe_publishable_key: keys?.stripe_publishable_key ?? "",
         stripe_secret_key: keys?.stripe_secret_key ?? "",
+        currency: keys?.currency ?? "",
     });
 
     const submit: React.FormEventHandler<HTMLFormElement> = (e) => {
@@ -234,7 +237,34 @@ export default function SettingForm({ keys }: any) {
                     </InputGroup>
                 </CardBody>
             </Card>
-            <Row className="justify-content-center">
+            <Card>
+                <CardHeader className="d-flex justify-content-between align-items-center gap-2">
+                    <div>
+                        <CardTitle>
+                            <strong>Currency</strong>
+                        </CardTitle>
+                        <CardText>
+                            Edit global Currency Setting for all events.
+                        </CardText>
+                    </div>
+                </CardHeader>
+                <CardBody>
+                    <InputGroup className="mb-3">
+                        <CurrencySelect
+                            value={data.currency} // now an object like { code: "ZWL", symbol: "Z$" }
+                            onChange={(val) => setData({
+                                ...data,
+                                currency_code: val.code,
+                                currency_symbol: val.symbol
+                            })}
+                            error={errors.currency}
+                        />
+                    </InputGroup>
+
+                </CardBody>
+            </Card>
+
+            <Row className="justify-content-center mb-3">
                 <Col md={6} lg={6}>
                     <Button
                         type="submit"

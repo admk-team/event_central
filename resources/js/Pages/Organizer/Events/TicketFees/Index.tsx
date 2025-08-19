@@ -11,7 +11,7 @@ import HasPermission from '../../../../Components/HasPermission';
 import CreateEditModal from './CreateEditModal';
 
 
-function Index({ fees }: any) {
+function Index({ fees, getCurrency }: any) {
 
     // console.log(fees);
 
@@ -98,7 +98,7 @@ function Index({ fees }: any) {
             cell: (fee) => {
                 switch (fee.fee_type) {
                     case "flat":
-                        return <span className='d-block text-start' style={{ width: '50px' }}>$ {fee.fee_amount + " "}</span>
+                        return <span className='d-block text-start' style={{ width: '50px' }}>{getCurrency.currency_symbol } {fee.fee_amount + " "}</span>
                     case "percentage":
                         return <span className='d-block text-start' style={{ width: '50px' }}>{fee.fee_amount + " "}%</span>
                 }

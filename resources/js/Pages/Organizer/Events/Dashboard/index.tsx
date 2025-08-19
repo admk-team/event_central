@@ -32,7 +32,8 @@ const DashboardAnalytics = ({
     topSession,
     ticketsMetrics,
     top10Attendee,
-    event_id
+    event_id,
+    getCurrency
 }: any) => {
 
     // Real-time subscription to public channel
@@ -82,16 +83,21 @@ const DashboardAnalytics = ({
                                 totalSpeakers={totalSpeakers}
                                 totalPartners={totalPartners}
                                 totalRevenue={totalRevenue}
+                                getCurrency={getCurrency.currency_symbol}
                             />
                         </Col>
                         <LiveUsers
+                                getCurrency={getCurrency.currency_symbol}
                             sessionAttendance={sessionAttendance}
                             top10Attendee={top10Attendee}
                         />
                     </Row>
                     <Row>
                         <TopPages topSession={topSession} />
-                        <AudiencesMetrics ticketsMetrics={ticketsMetrics} />
+                        <AudiencesMetrics
+                        ticketsMetrics={ticketsMetrics}
+                        getCurrency={getCurrency.currency_symbol}
+                        />
 
                         {/* <AudiencesSessions /> */}
                     </Row>

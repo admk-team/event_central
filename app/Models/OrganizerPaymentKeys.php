@@ -19,6 +19,9 @@ class OrganizerPaymentKeys extends Model
         'paypal_base_url',
         'paypal_pub',
         'paypal_secret',
+
+        'currency',
+        'currency_symbol'
     ];
 
     // Encrypt the secret key automatically when saving
@@ -53,5 +56,17 @@ class OrganizerPaymentKeys extends Model
             Log::error('Error decrypting paypal secret key: ' . $e->getMessage());
             return '';
         }
+    }
+
+    public static function getCurrencyForUser($userId)
+    {
+        $currency = self::where('user_id', $userId)
+            ->select('currency', 'currency_symbol')
+            ->first();
+
+        return $currency ?? (object)[
+            'currency' => 'USD',
+            'currency_symbol' => '$'
+        ];
     }
 }

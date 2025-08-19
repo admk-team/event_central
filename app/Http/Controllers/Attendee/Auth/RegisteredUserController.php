@@ -22,6 +22,7 @@ use Illuminate\Auth\Events\Registered;
 use App\Providers\RouteServiceProvider;
 use App\Models\AttendeePurchasedTickets;
 use App\Models\AttendeeTransferedTicket;
+use App\Models\Country;
 use Illuminate\Support\Facades\DB;
 use Nette\Schema\Expect;
 use App\Services\GroupAttendeeService;
@@ -42,8 +43,9 @@ class RegisteredUserController extends Controller
     {
         $eventApp->load(['dates']);
         $closeRegistration = eventSettings($eventApp->id)->getValue('close_registration', false);
-
-        return Inertia::render('Attendee/Auth/Register', compact('eventApp', 'closeRegistration'));
+        $countries = Country::orderBy('title')->get();
+        // dd($countries);
+        return Inertia::render('Attendee/Auth/Register', compact('eventApp', 'closeRegistration', 'countries'));
     }
 
     /**
@@ -60,6 +62,7 @@ class RegisteredUserController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
+            'country' => 'required',
             'email' => [
                 'required',
                 'string',
@@ -72,6 +75,10 @@ class RegisteredUserController extends Controller
             'group_emails' => [
                 'nullable',
                 function ($attribute, $value, $fail) {
+                    if (empty($value)) {
+                        return; // Skip validation if no emails provided
+                    }
+
                     $emails = array_map('trim', explode(',', $value));
                     foreach ($emails as $email) {
                         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -90,10 +97,12 @@ class RegisteredUserController extends Controller
                 'last_name' => $request->last_name,
                 'position' => $request->position,
                 'location' => $request->location,
+                'country' => $request->country,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
-                'referral_link' => $referralLink,
-                'personal_url' => $personal_url,
+                'referral_link' =>  $referralLink ?? null,
+                'personal_url' => $personal_url ?? null,
+                'is_public' => $request->is_public == 1 ? true : false,
             ]);
             // start group members registration 
             if ($request->has('group_emails')) {
@@ -120,7 +129,6 @@ class RegisteredUserController extends Controller
         }
 
         event(new Registered($user));
-
         broadcast(new UpdateEventDashboard($eventApp->id, 'Attendee Created'))->toOthers();
         Auth::guard('attendee')->login($user);
 

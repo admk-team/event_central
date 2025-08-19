@@ -16,7 +16,8 @@ import {
 import TicketDetail from "./TicketDetail";
 import { Minus, Plus } from "lucide-react";
 
-const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckOut, onBlockCheckout, attendee_id }: any) => {
+
+const TicketCard = ({currency_symbol, ticket, onTicketDetailsUpdated, ticket_array, submitCheckOut, onBlockCheckout, attendee_id }: any) => {
     const isAddedToCart = ticket.is_added_to_cart;
     const [processing, setProcessing] = useState(false);
     const [ticketQty, setTicketQty] = useState(0);
@@ -203,7 +204,7 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckO
                                         <span className="mt-5 ff-secondary fw-bold text-warning">
                                             Limited Offer: {ticket.bulk_purchase_qty}+ tickets and Save{" "}
                                             {ticket.bulk_purchase_discount_type === "fixed"
-                                                ? `$${parseInt(ticket.bulk_purchase_discount_value)}`
+                                                ? `${currency_symbol} ${parseInt(ticket.bulk_purchase_discount_value)}`
                                                 : `${parseInt(ticket.bulk_purchase_discount_value)}%`
                                             } instantly!
                                         </span>
@@ -213,7 +214,7 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckO
                             </Col>
                             <Col md={2} lg={2}>
                                 <sup>
-                                    <small>$</small>
+                                    <small>{currency_symbol}</small>
                                 </sup>
                                 <span className="ff-secondary fw-bold fs-3">
                                     {ticket.base_price}
@@ -343,6 +344,7 @@ const TicketCard = ({ ticket, onTicketDetailsUpdated, ticket_array, submitCheckO
 
                         {ticketDetails.map((ticketDetail: any) => (
                             <TicketDetail
+                                currency_symbol={currency_symbol}
                                 ticket={ticket}
                                 ticket_no={ticketDetail.ticket_no}
                                 fees_sub_total={ticketDetail.fees_sub_total}

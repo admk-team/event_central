@@ -31,6 +31,8 @@ use App\Http\Controllers\Organizer\Event\EventAppTicketController;
 use App\Http\Controllers\Organizer\Event\EventBadgeController;
 use App\Http\Controllers\Organizer\Event\EventDateController;
 use App\Http\Controllers\Organizer\Event\EventPromoCodeController;
+use App\Http\Controllers\Organizer\Event\EventStore\ProductController;
+use App\Http\Controllers\Organizer\Event\EventStore\EventOrderController;
 use App\Http\Controllers\Organizer\Event\EventTicketTypeController;
 use App\Http\Controllers\Organizer\Event\FormFieldController;
 use App\Http\Controllers\Organizer\Event\LiveStreamController;
@@ -69,6 +71,7 @@ Route::prefix('e/{uuid}')->name('organizer.events.website')->group(function () {
     Route::get('sponsors/{id}', [WebsiteController::class, 'sponsorsSingle'])->name('.sponsors.single');
     Route::get('exhibitors', [WebsiteController::class, 'exhibitors'])->name('.exhibitors');
     Route::get('tickets', [WebsiteController::class, 'tickets'])->name('.tickets');
+    Route::get('products', [WebsiteController::class, 'products'])->name('.products');
     Route::get('privacy-policy', [WebsiteController::class, 'privacypolicy'])->name('.privacy');
     Route::get('contact-us', [WebsiteController::class, 'contactus'])->name('.contactus');
     Route::get('{slug}', [WebsiteController::class, 'page'])->name('.page');
@@ -108,6 +111,8 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
         Route::delete('/{event_app}', [EventController::class, 'destroy'])->name('destroy');
         Route::delete('/delete/many', [EventController::class, 'destroyMany'])->name('destroy.many');
         Route::get('{id}/select', [EventController::class, 'selectEvent'])->name('select');
+        Route::get('{eventUuid}/demographic', [EventController::class, 'demographic'])
+            ->name('demographic');
 
         // Event Images
         Route::post('{event_app}/images ', [EventController::class, 'storeImage'])->name('images.store');
@@ -124,6 +129,11 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::resource('speaker', EventSpeakerController::class);
             Route::delete('speakers/delete/many', [EventSpeakerController::class, 'destroyMany'])->name('speakers.destroy.many');
 
+            // Event Store
+            Route::resource('products', ProductController::class);
+            Route::post('products/update/{product}', [ProductController::class, 'update'])->name('update.product');
+            // order
+            Route::resource('orders', EventOrderController::class);
             // Attendies
             Route::resource('attendees', AttendeeController::class);
             Route::delete('attendees/delete/many', [AttendeeController::class, 'destroyMany'])->name('attendees.destroy.many');
@@ -134,8 +144,10 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::post('/attendee/checkin', [AttendeeController::class, 'chechIn'])->name('attendee.checkin');
             Route::get('get-attendee-puchased-addons/{attendeePurchasedTicket}', [AttendeeController::class, 'getPurchasedTicketAddons'])->name('attendee.puchased-ticket.adddons');
             Route::post('attendee/import/event', [AttendeeController::class, 'importFromEvent'])->name('attendee.importevent');
+
             Route::post('attendee/return/ticket/{id}', [AttendeeController::class, 'returnTicket'])->name('attendee.return.ticket');
             Route::post('attendee/chat-initiate/{id}', [AttendeeController::class, 'initiateChat'])->name('attendee.chat.initiate');
+
 
 
             // Wordshop

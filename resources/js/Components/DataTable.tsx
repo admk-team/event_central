@@ -62,6 +62,7 @@ export default function DataTable<T>({
     const dataTable: DataTable<T> = {
         data: data.data,
         getSelectedRows: rowSelector.getSelectedRows,
+        getCurrentPageRows: () => data.data
     };
     // toggle the columns
     const [visibleColumnsIndexes, setVisibleColumnsIndexes] = useState<number[]>([]);

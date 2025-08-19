@@ -6,6 +6,7 @@ import Layout from '../../../../Layouts/Event';
 import DeleteModal from '../../../../Components/Common/DeleteModal';
 import DeleteManyModal from '../../../../Components/Common/DeleteManyModal';
 import DataTable, { ColumnDef } from '../../../../Components/DataTable';
+import { exportToCSV } from  '../../../../Components/ExportToCSV';
 
 interface Attendance {
     id: number;
@@ -94,6 +95,7 @@ function Index({ attendance: initialAttendance, eventSession: initialSessions }:
             header: () => 'ID',
             cell: (attendance) => attendance.id,
             cellClass: 'fw-medium',
+            accessorKey: 'id',
         },
         {
             header: () => 'Attendee Name',
@@ -111,14 +113,17 @@ function Index({ attendance: initialAttendance, eventSession: initialSessions }:
                     {attendance.attendee.first_name} {attendance.attendee.last_name}
                 </>
             ),
+            exportValue: (attendance) => `${attendance.attendee.first_name} ${attendance.attendee.last_name}`,
         },
         {
             header: () => 'Session Name',
             cell: (attendance) => attendance.session.name,
+            accessorKey: 'session.name',
         },
         {
             header: () => 'Check In',
             cell: (attendance) => attendance.checked_in || 'Not checked in',
+            exportValue: (attendance) => attendance.checked_in || 'Not checked in',
         },
         // {
         //     header: () => 'Check Out',
@@ -133,6 +138,7 @@ function Index({ attendance: initialAttendance, eventSession: initialSessions }:
                     </span>
                 </div>
             ),
+            exportable: false,
         },
     ];
 
@@ -165,6 +171,7 @@ function Index({ attendance: initialAttendance, eventSession: initialSessions }:
             setFilteredAttendance(initialAttendance); // Fallback to initial data
         }
     };
+    const [visibleColumns, setVisibleColumns] = useState<ColumnDef<typeof attendees.data[0]>[]>([]);
 
     return (
         <React.Fragment>
@@ -215,6 +222,18 @@ function Index({ attendance: initialAttendance, eventSession: initialSessions }:
                                         ),
                                         showOnRowSelection: true,
                                     },
+                                    {
+                                        render: (dataTable: any) => (
+                                            <Button
+                                                variant="outline-primary"
+                                                className="me-2"
+                                                onClick={() => exportToCSV(dataTable.getCurrentPageRows(), visibleColumns.length ? visibleColumns : columns, "session")}
+                                            >
+                                                Export Session
+                                            </Button>
+                                        ),
+                                        showOnRowSelection: false,
+                                    }
                                 ]}
                             />
                         </Col>

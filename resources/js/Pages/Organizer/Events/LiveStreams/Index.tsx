@@ -11,7 +11,7 @@ import CreateEditModal from './Components/CreateEditModal';
 import CopyTextBox from '../../../../Components/CopyTextBox';
 import moment from 'moment';
 
-function Index({ liveStreams }: any) {
+function Index({ liveStreams,eventTickets }: any) {
     const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
     const [editLiveStream, setEditLiveStream] = React.useState<any>(null);
     const [deleteLiveStream, setDeleteLiveStream] = React.useState<any>(null);
@@ -154,7 +154,7 @@ function Index({ liveStreams }: any) {
             <Head title='Live Streams' />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb2 
+                    <BreadCrumb2
                         title="Live Streams"
                     />
                     <Row>
@@ -193,6 +193,7 @@ function Index({ liveStreams }: any) {
                     show={showCreateEditModal}
                     onHide={() => setShowCreateEditModal(false)}
                     liveStream={editLiveStream}
+                    eventTickets={eventTickets}
                 />
             )}
 

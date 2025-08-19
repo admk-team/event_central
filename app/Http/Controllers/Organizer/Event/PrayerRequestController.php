@@ -9,9 +9,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
+use App\Traits\SendsWebPushNotifications;
 
 class PrayerRequestController extends Controller
 {
+    use SendsWebPushNotifications;
     public function index(Request $request)
     {
         if (! Auth::user()->can('view_prayer_request')) {
@@ -44,7 +46,15 @@ class PrayerRequestController extends Controller
             if ($prayerRequest && $prayerRequest->attendee && $prayerRequest->attendee->email) {
                 Mail::to($prayerRequest->attendee->email)->send(new PrayerRequestStatusUpdated($prayerRequest));
             }
+            // Send Push Notification to the sender (attendee)
+            $this->sendWebPushNotification(
+                $prayerRequest->attendee->id,
+                'Prayer Request',
+                "Your prayer request has been " . ucfirst($prayerRequest->status) . ".",
+                route('attendee.prayer')
+            );
         }
+
 
         return back()->withSuccess("Updated successfully");
     }

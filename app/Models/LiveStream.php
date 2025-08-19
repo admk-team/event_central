@@ -21,6 +21,7 @@ class LiveStream extends Model
         'playback_url',
         'thumbnail',
         'start_time',
+        'event_ticket_id'
     ];
 
     protected $casts = [
@@ -30,5 +31,10 @@ class LiveStream extends Model
     public function event()
     {
         return $this->belongsTo(EventApp::class);
+    }
+
+    public function eventTickets()
+    {
+        return $this->belongsTo(EventAppTicket::class,'event_ticket_id','id');
     }
 }

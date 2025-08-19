@@ -18,6 +18,7 @@ import EventCheckinButton from './Component/EventCheckinButton';
 import AssignTicketButton from './Component/AssignTicketButton';
 import axios from 'axios';
 
+
 function Index({ attendees, eventList }: any) {
 
     const [deleteAttendee, setDeleteAttendee] = React.useState<any>(null);
