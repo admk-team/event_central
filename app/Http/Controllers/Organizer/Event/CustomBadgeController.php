@@ -118,10 +118,29 @@ class CustomBadgeController extends Controller
         if (! Auth::user()->can('create_default_email_template')) {
             abort(403);
         }
-        EventBadgeDesign::create([
+        EventBadgeDesign::updateOrCreate([
             'user_id' => auth()->id(),
             'event_app_id' => session('event_id'),
+        ], [
             'custom_badge_attendee_id' => $baseTemplate->id,
+        ]);
+
+        return redirect()->route('organizer.events.badge-template.index')->with('success', 'Badge template Selected successfully.');
+    }
+
+    public function setBaseBadgeTemplate(BaseTemplate $baseTemplate)
+    {
+        if (! Auth::user()->can('create_default_email_template')) {
+            abort(403);
+        }
+
+        CustomBadgeAttendee::create([
+            'user_id' => auth()->id(),
+            'event_app_id' => session('event_id'),
+            'name' => $baseTemplate->name,
+            'editor_content' => $baseTemplate->editor_content,
+            'mail_content' => $baseTemplate->mail_content,
+            'thumbnail' => $baseTemplate->thumbnail,
         ]);
 
         return redirect()->route('organizer.events.badge-template.index')->with('success', 'Badge template Selected successfully.');

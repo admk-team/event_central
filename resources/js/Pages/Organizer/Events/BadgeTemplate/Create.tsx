@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import EmailEditor, { EditorRef } from 'react-email-editor';
 import { Head, router, useForm } from '@inertiajs/react';
 import Layout from '../../../../Layouts/Event';
@@ -15,6 +15,30 @@ const Create = () => {
     });
 
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    // --- Shortcodes (matched to Edit page) ---
+    const [selectedShortcodes, setSelectedShortcodes] = useState<string[]>([]);
+    const shortcodes = [
+        { name: 'Attendee Name', code: "{{ $attendeename }}" },
+        { name: 'Ticket Name', code: "{{ $ticketname }}" },
+        { name: 'Ticket Type', code: "{{ $tickettype }}" },
+        { name: 'Attendee Position', code: "{{ $attendeeposition }}" },
+        { name: 'Event Location', code: "{{ $eventlocation }}" },
+        { name: 'Event Logo', code: "{{ $eventlogo }}" },
+        { name: 'Ticket QR Code', code: "{{ $ticketqrcode }}" },
+    ];
+
+    const toggleShortcode = async (code: string) => {
+        setSelectedShortcodes((prev) =>
+            prev.includes(code) ? prev.filter((c) => c !== code) : [...prev, code]
+        );
+        try {
+            await navigator.clipboard.writeText(code);
+        } catch {
+            // no-op if clipboard unavailable
+        }
+    };
+    // --- /Shortcodes ---
 
     const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0] || null;
@@ -35,7 +59,7 @@ const Create = () => {
             });
 
             const html: string = await new Promise((resolve) => {
-                emailEditorRef.current?.editor?.exportHtml((data: { html: string }) => resolve(data.html));
+                emailEditorRef.current?.editor?.exportHtml((res: { html: string }) => resolve(res.html));
             });
 
             const formData = new FormData();
@@ -43,6 +67,10 @@ const Create = () => {
             formData.append('role', data.role);
             formData.append('editor_content', JSON.stringify(design));
             formData.append('mail_content', html);
+
+            // include selected shortcodes (same as Edit page behavior)
+            formData.append('selected_shortcodes', JSON.stringify(selectedShortcodes));
+
             if (data.thumbnail) {
                 formData.append('thumbnail', data.thumbnail);
             }
@@ -85,6 +113,7 @@ const Create = () => {
                                     {isSubmitting ? 'Saving...' : 'Create'}
                                 </Button>
                             </Card.Header>
+
                             <Card.Body>
                                 <Row className="mb-4">
                                     <Col xxl={6} md={6}>
@@ -120,6 +149,46 @@ const Create = () => {
                                             )}
                                         </Form.Group>
                                     </Col>
+                                </Row>
+
+                                {/* Shortcode Selector (same UX as Edit) */}
+                                <Row className="mb-4 text-center">
+                                    <h4>Use below short codes to insert dynamic data in template</h4>
+                                    <Row className="mt-3 w-100 m-0">
+                                        {shortcodes.map((item, idx) => (
+                                            <Col
+                                                key={idx}
+                                                md={2}
+                                                sm={4}
+                                                xs={6}
+                                                className="mb-3 d-flex flex-column align-items-center"
+                                            >
+                                                <div
+                                                    className={`border rounded p-2 shadow-sm w-100 ${selectedShortcodes.includes(item.code)
+                                                        ? 'bg-success text-white'
+                                                        : 'bg-light'
+                                                        }`}
+                                                    style={{ cursor: 'pointer' }}
+                                                    onClick={() => toggleShortcode(item.code)}
+                                                >
+                                                    <span className="fw-bold d-block mb-2">{item.name}</span>
+                                                    <Button
+                                                        variant={
+                                                            selectedShortcodes.includes(item.code)
+                                                                ? 'light'
+                                                                : 'outline-primary'
+                                                        }
+                                                        size="sm"
+                                                        className="w-100"
+                                                    >
+                                                        {selectedShortcodes.includes(item.code)
+                                                            ? 'Selected'
+                                                            : 'Copy'}
+                                                    </Button>
+                                                </div>
+                                            </Col>
+                                        ))}
+                                    </Row>
                                 </Row>
 
                                 <Col xxl={12}>

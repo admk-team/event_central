@@ -10,6 +10,10 @@ const Index = ({ baseTemplate }: any) => {
         post(route('organizer.events.use.template', id));
     };
 
+    const useBadgeTemplate = (id: any) => {
+        post(route('organizer.events.use.badge.template', id));
+    };
+
     const previewTemplate = (id: any) => {
         const url = route("organizer.events.base.template.view", id);
         const win = window.open(url, '_blank');
@@ -44,6 +48,9 @@ const Index = ({ baseTemplate }: any) => {
                                 <div className="hoverButtons">
                                     <button className="btn btn-outline-light mb-2" onClick={() => useTemplate(template.id)}>
                                         Use Template
+                                    </button>
+                                    <button className="btn btn-outline-light mb-2" onClick={() => useBadgeTemplate(template.id)}>
+                                        Use Badge Template
                                     </button>
                                     <button className="btn btn-outline-light mb-2" onClick={() => previewTemplate(template.id)}>
                                         Preview
