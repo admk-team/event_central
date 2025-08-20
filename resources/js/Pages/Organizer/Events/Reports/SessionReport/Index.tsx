@@ -19,52 +19,52 @@ function Index({ sessions }: any) {
         {
             accessorKey: 'name',
             header: () => 'Name',
-            headerStyle: { width: '200px', textWrap: 'wrap' ,textAlign:'center' },
+            headerStyle: { width: '200px', textWrap: 'wrap', textAlign: 'center' },
             cell: (session) => session.name,
-            cellStyle: { width: '200px', textWrap: 'wrap' ,textAlign:'center' },
+            cellStyle: { width: '200px', textWrap: 'wrap', textAlign: 'center' },
             searchable: true,
         },
         {
             header: () => 'Type',
-            headerStyle: { width: '100px', textWrap: 'wrap' ,textAlign:'center' },
+            headerStyle: { width: '100px', textWrap: 'wrap', textAlign: 'center' },
             cell: (session) => session.type,
-            cellStyle: { width: '100px', textWrap: 'wrap' ,textAlign:'center' },
+            cellStyle: { width: '100px', textWrap: 'wrap', textAlign: 'center' },
         },
         {
             header: () => 'Capacity',
-            headerStyle: { width: '100px', textWrap: 'wrap' ,textAlign:'center' },
+            headerStyle: { width: '100px', textWrap: 'wrap', textAlign: 'center' },
             cell: (session) => session.capacity ?? 0,
-            cellStyle: { width: '100px', textWrap: 'wrap' ,textAlign:'center' },
+            cellStyle: { width: '100px', textWrap: 'wrap', textAlign: 'center' },
         },
         {
             header: () => 'Attendees',
-            headerStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
+            headerStyle: { width: '150px', textWrap: 'wrap', textAlign: 'center' },
             cell: (session) => session.attendees.length,
-            cellStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
+            cellStyle: { width: '150px', textWrap: 'wrap', textAlign: 'center' },
         },
         {
             header: () => 'Attendances',
-            headerStyle: { width: '200px', textWrap: 'wrap' ,textAlign:'center' },
+            headerStyle: { width: '200px', textWrap: 'wrap', textAlign: 'center' },
             cell: (session) => session.attendances.length,
-            cellStyle: { width: '200px', textWrap: 'wrap' ,textAlign:'center' },
+            cellStyle: { width: '200px', textWrap: 'wrap', textAlign: 'center' },
         },
         {
             header: () => 'Favorite By',
-            headerStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
+            headerStyle: { width: '150px', textWrap: 'wrap', textAlign: 'center' },
             cell: (session) => session.fav_sessions.length,
-            cellStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
+            cellStyle: { width: '150px', textWrap: 'wrap', textAlign: 'center' },
         },
         {
             header: () => 'Rated by',
-            headerStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
+            headerStyle: { width: '150px', textWrap: 'wrap', textAlign: 'center' },
             cell: (session) => session.attendees_rating.length,
-            cellStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
+            cellStyle: { width: '150px', textWrap: 'wrap', textAlign: 'center' },
         },
         {
             header: () => 'Tickets',
-            headerStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
+            headerStyle: { width: '150px', textWrap: 'wrap', textAlign: 'center' },
             cell: (session) => session.tickets.length,
-            cellStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
+            cellStyle: { width: '150px', textWrap: 'wrap', textAlign: 'center' },
         },
         // {
         //     header: () => "Actions",
@@ -76,7 +76,10 @@ function Index({ sessions }: any) {
         // },
     ];
 
-
+    const handleExport = async () => {
+        const url = route('organizer.events.report.export.session.data');
+        window.location.href = url;
+    };
     return (
         <React.Fragment>
             <Head>
@@ -115,6 +118,19 @@ function Index({ sessions }: any) {
                                         //     showOnRowSelection: true,
                                         // },
 
+                                        {
+                                            render: (dataTable: any) => (
+                                                <Button
+                                                    variant="outline-primary"
+                                                    className="me-2"
+                                                    onClick={() => handleExport()}
+                                                >
+                                                    Export Session
+                                                </Button>
+
+                                            ),
+                                            showOnRowSelection: false,
+                                        }
                                     ]}
                                 />
                             </HasPermission>

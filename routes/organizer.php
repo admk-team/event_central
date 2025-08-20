@@ -287,6 +287,11 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                 Route::resource('session', SessionReportController::class);
                 Route::resource('ticket', TicketsReportController::class);
                 Route::resource('refund-ticket', RefundTicketReportController::class);
+
+                Route::get("attendee-data",[AttendeesReportController::class,'exportAttendeeData'])->name('export.attendee.data');
+                Route::get("session-data",[SessionReportController::class,'exportSessionData'])->name('export.session.data');
+                Route::get("ticket-data",[TicketsReportController::class,'exportTicketData'])->name('export.ticket.data');
+                Route::get("refund-ticket-data",[RefundTicketReportController::class,'exportRefundTicketData'])->name('export.refund.ticket.data');
             });
 
             Route::post('import/{importType}', [ImportController::class, 'import'])->name('import');
@@ -343,6 +348,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
         Route::delete('/attendance/{id}', [SessionAttendanceController::class, 'destroy'])->name('attendance.destroy');
         Route::delete('/attendance/destroy/many', [SessionAttendanceController::class, 'destroyMany'])->name('attendance.destroy.many');
         // Route::post('/attendance/destroy/many', [SessionAttendanceController::class, 'destroyMany'])->name('attendance.destroy.many');
+        Route::get('export-data/{session_id?}', [SessionAttendanceController::class, 'exportData'])->name('attendance.export.data');
 
         // Live Streams
         Route::resource('live-streams', LiveStreamController::class);

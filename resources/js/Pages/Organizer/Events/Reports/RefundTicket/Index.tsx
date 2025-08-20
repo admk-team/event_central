@@ -19,45 +19,45 @@ function Index({ refundPayments }: any) {
         {
             // accessorKey: 'name',
             header: () => 'Attendee Name',
-            headerStyle: { width: '200px', textWrap: 'wrap' ,textAlign:'center' },
+            headerStyle: { width: '200px', textWrap: 'wrap', textAlign: 'center' },
             cell: (refund) => refund?.attendee ? refund?.attendee?.first_name + ' ' + refund?.attendee?.last_name : '',
-            cellStyle: { width: '200px', textWrap: 'wrap' ,textAlign:'center' },
+            cellStyle: { width: '200px', textWrap: 'wrap', textAlign: 'center' },
             // searchable: true,
         },
         {
             header: () => 'Total Amount',
-            headerStyle: { width: '100px', textWrap: 'wrap' ,textAlign:'center' },
+            headerStyle: { width: '100px', textWrap: 'wrap', textAlign: 'center' },
             cell: (refund) => refund?.attendee_payment ? '$' + refund?.attendee_payment?.amount_paid : 0,
-            cellStyle: { width: '100px', textWrap: 'wrap' ,textAlign:'center' },
+            cellStyle: { width: '100px', textWrap: 'wrap', textAlign: 'center' },
         },
         {
             header: () => 'Payment Method',
-            headerStyle: { width: '100px', textWrap: 'wrap' ,textAlign:'center' },
+            headerStyle: { width: '100px', textWrap: 'wrap', textAlign: 'center' },
             cell: (refund) => refund?.attendee_payment ? refund?.attendee_payment?.payment_method : '',
-            cellStyle: { width: '100px', textWrap: 'wrap' ,textAlign:'center' },
+            cellStyle: { width: '100px', textWrap: 'wrap', textAlign: 'center' },
         },
         {
             header: () => 'Amount Requested',
-            headerStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
+            headerStyle: { width: '150px', textWrap: 'wrap', textAlign: 'center' },
             cell: (refund) => "$" + refund.refund_requested_amount,
-            cellStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
+            cellStyle: { width: '150px', textWrap: 'wrap', textAlign: 'center' },
         },
         {
             header: () => 'Refund Approved',
-            headerStyle: { width: '200px', textWrap: 'wrap' ,textAlign:'center' },
+            headerStyle: { width: '200px', textWrap: 'wrap', textAlign: 'center' },
             cell: (refund) => refund.refund_approved_amount > 0 ? '$' + refund.refund_approved_amount : 0,
-            cellStyle: { width: '200px', textWrap: 'wrap' ,textAlign:'center' },
+            cellStyle: { width: '200px', textWrap: 'wrap', textAlign: 'center' },
         },
         {
             header: () => 'Status',
-            headerStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
-            cell: (refund) =>  
+            headerStyle: { width: '150px', textWrap: 'wrap', textAlign: 'center' },
+            cell: (refund) =>
                 <>
                     {refund.status === 'approved' && <span className='w-100 fw-bold text-secondary  text-capitalize p-2'>{refund?.status ? refund.status : ""}</span>}
                     {refund.status === 'rejected' && <span className='w-100 fw-bold text-warning text-dark text-capitalize p-2'>{refund?.status ? refund.status : ""}</span>}
                     {refund.status === 'pending' && <span className='w-100 fw-bold text-primary text-capitalize p-2'>{refund?.status ? refund.status : ""}</span>}
                 </>,
-            cellStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
+            cellStyle: { width: '150px', textWrap: 'wrap', textAlign: 'center' },
         },
         // {
         //     header: () => "Actions",
@@ -69,7 +69,10 @@ function Index({ refundPayments }: any) {
         // },
     ];
 
-
+    const handleExport = async () => {
+        const url = route('organizer.events.report.export.refund.ticket.data');
+        window.location.href = url;
+    };
     return (
         <React.Fragment>
             <Head>
@@ -107,7 +110,19 @@ function Index({ refundPayments }: any) {
                                         //     ),
                                         //     showOnRowSelection: true,
                                         // },
+                                        {
+                                            render: (dataTable: any) => (
+                                                <Button
+                                                    variant="outline-primary"
+                                                    className="me-2"
+                                                    onClick={() => handleExport()}
+                                                >
+                                                    Export Refund Ticket
+                                                </Button>
 
+                                            ),
+                                            showOnRowSelection: false,
+                                        }
                                     ]}
                                 />
                             </HasPermission>
