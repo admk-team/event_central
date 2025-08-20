@@ -278,21 +278,21 @@ const Navdata = () => {
         },
         ...(isEventStarted
             ? [
-                  {
-                      id: "sessionAttendance",
-                      label: "Sessions Attendance",
-                      icon: "bx bx-calendar-check",
-                      link: route("organizer.events.attendance.index"),
-                      stateVariables: IsSessionAttendance,
-                      click: function (e: any) {
-                          e.preventDefault();
-                          setIsSessionAttendance(!IsSessionAttendance);
-                          setIscurrentState("sessionAttendance");
-                          updateIconSidebar(e);
-                      },
-                      hasPermissions: ["view_session_attendence"],
-                  },
-              ]
+                {
+                    id: "sessionAttendance",
+                    label: "Sessions Attendance",
+                    icon: "bx bx-calendar-check",
+                    link: route("organizer.events.attendance.index"),
+                    stateVariables: IsSessionAttendance,
+                    click: function (e: any) {
+                        e.preventDefault();
+                        setIsSessionAttendance(!IsSessionAttendance);
+                        setIscurrentState("sessionAttendance");
+                        updateIconSidebar(e);
+                    },
+                    hasPermissions: ["view_session_attendence"],
+                },
+            ]
             : []),
         {
             id: "website",
@@ -539,6 +539,18 @@ const Navdata = () => {
             hasPermissions: ["view_default_email_template"],
         },
         {
+            id: "BadgeTemplate",
+            label: "Badge Template",
+            icon: "bx bxs-envelope",
+            link: route("organizer.events.badge-template.index"),
+            click: function (e: any) {
+                e.preventDefault();
+                setIscurrentState("BadgeTemplate");
+                updateIconSidebar(e);
+            },
+            hasPermissions: ["view_email_template"],
+        },
+        {
             id: "EmailTemplate",
             label: "Email Template",
             icon: "bx bxs-envelope",
@@ -593,7 +605,7 @@ const Navdata = () => {
             hasPermissions: [
                 'view_event_badge'
             ],
-        },{
+        }, {
             id: "Report",
             label: "Reports",
             icon: "bx bxs-report",

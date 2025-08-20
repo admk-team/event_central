@@ -33,7 +33,7 @@ class AppEventRegistrationFormController extends Controller
         }
 
         $formFilled = $request->form_submitted ? true : false;
-        
+
         // if ($form->submissions()->where('attendee_id', $attendee->id)->count() > 0) {
         //     $formFilled = true;
         // }
@@ -104,7 +104,7 @@ class AppEventRegistrationFormController extends Controller
         return to_route('attendee.app-event-registration-form', [
             'eventApp' => $eventApp->id,
             'token' => $request->token,
-            'form_submitted' => 1, 
+            'form_submitted' => 1,
         ]);
     }
 }

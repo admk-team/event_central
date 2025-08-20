@@ -245,8 +245,14 @@ class EventApp extends Model
             }
         });
     }
+
     public function prayerRequest()
     {
         return $this->hasMany(PrayerRequest::class);
+    }
+
+    public function badgeDesign()
+    {
+        return $this->hasOne(EventBadgeDesign::class);
     }
 }

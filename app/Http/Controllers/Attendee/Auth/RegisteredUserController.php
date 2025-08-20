@@ -44,8 +44,8 @@ class RegisteredUserController extends Controller
         $eventApp->load(['dates']);
         $closeRegistration = eventSettings($eventApp->id)->getValue('close_registration', false);
         $countries = Country::orderBy('title')->get();
-       // dd($countries);
-        return Inertia::render('Attendee/Auth/Register', compact('eventApp','closeRegistration','countries'));
+        // dd($countries);
+        return Inertia::render('Attendee/Auth/Register', compact('eventApp', 'closeRegistration', 'countries'));
     }
 
     /**
@@ -62,7 +62,7 @@ class RegisteredUserController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'country'=> 'required',
+            'country' => 'required',
             'email' => [
                 'required',
                 'string',
@@ -75,6 +75,10 @@ class RegisteredUserController extends Controller
             'group_emails' => [
                 'nullable',
                 function ($attribute, $value, $fail) {
+                    if (empty($value)) {
+                        return; // Skip validation if no emails provided
+                    }
+
                     $emails = array_map('trim', explode(',', $value));
                     foreach ($emails as $email) {
                         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -85,19 +89,35 @@ class RegisteredUserController extends Controller
             ],
         ]);
 
-        $user = Attendee::create([
-            'event_app_id' => $eventApp->id,
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'position' => $request->position,
-            'location' => $request->location,
-            'country' => $request->country,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'referral_link' =>  $referralLink ?? null,
-            'personal_url' => $personal_url ?? null,
-            'is_public' => $request->is_public == 1 ? true : false,
-        ]);
+        DB::beginTransaction();
+        try {
+            $user = Attendee::create([
+                'event_app_id' => $eventApp->id,
+                'first_name' => $request->first_name,
+                'last_name' => $request->last_name,
+                'position' => $request->position,
+                'location' => $request->location,
+                'country' => $request->country,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'referral_link' =>  $referralLink ?? null,
+                'personal_url' => $personal_url ?? null,
+                'is_public' => $request->is_public == 1 ? true : false,
+            ]);
+            // start group members registration 
+            if ($request->has('group_emails')) {
+                $groupEmails = is_array($request->group_emails)
+                    ? $request->group_emails
+                    : explode(',', $request->group_emails ?? '');
+                $this->groupService->createGroupAttendees($groupEmails, $user, $eventApp, $referralLink, $personal_url);
+                // end group members registration 
+            }
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            report($e);
+            return back()->withErrors(['error' => 'Something went wrong. Please try again.']);
+        }
 
         $this->checkIfTicketTransferCase($request->email, $eventApp, $user);
         $this->eventBadgeDetail('register', $eventApp->id, $user->id, $referralLink);
@@ -107,7 +127,6 @@ class RegisteredUserController extends Controller
                 $this->eventBadgeDetail('referral_link', $eventApp->id, $referralUser, $user->id);
             }
         }
-
 
         event(new Registered($user));
         broadcast(new UpdateEventDashboard($eventApp->id, 'Attendee Created'))->toOthers();

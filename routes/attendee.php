@@ -99,6 +99,9 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::get('purchased-tickets', [PaymentController::class, 'attendeepurchasedTickets'])->name('attendee.tickets.purchased');
         Route::post('submit-ticket-emails', [PaymentController::class, 'submitTicketTransfer'])->name('attendee.tickets.transfer');
 
+        // Cancel Ticket
+        Route::post('cancel-ticket/{id}', [PaymentController::class, 'cancelTicket'])->name('attendee.tickets.cancel');
+
         // waitList Attendee
         Route::post('waitlist-ticket', [WaitingListController::class, 'store'])->name('attendee.waitlist.post');
         Route::delete('waitlist-ticket', [WaitingListController::class, 'destroy'])->name('attendee.delete.waitlist');

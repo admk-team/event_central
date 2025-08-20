@@ -295,4 +295,8 @@ class Attendee extends Authenticatable
     {
         return $this->hasMany(PrayerRequest::class);
     }
+    public function waitingAttendee()
+    {
+        return $this->hasMany(WaitingList::class);
+    }
 }
