@@ -76,6 +76,8 @@ class SessionReportController extends Controller
 
     public function exportSessionData()
     {
+        ini_set('max_execution_time', 300);
+        ini_set('memory_limit', '1024M');
         $sessions = EventSession::currentEvent()
             ->with(['attendees', 'attendances', 'favSessions', 'tickets', 'attendeesRating'])
             ->get()
