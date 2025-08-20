@@ -1,66 +1,67 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AnswerController;
-use App\Http\Controllers\Organizer\Event\RefundPaymentController;
-use App\Http\Controllers\Organizer\Event\AddonController;
-use App\Http\Controllers\Organizer\Event\AssignTicketController;
-use App\Http\Controllers\Organizer\Event\BadgePrintController;
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\Organizer\RoleController;
+use App\Http\Controllers\Organizer\UserController;
+use App\Http\Controllers\Organizer\ZohoController;
+use App\Http\Controllers\Organizer\ProfileController;
 use App\Http\Controllers\Organizer\Event\ChatController;
-use App\Http\Controllers\Organizer\Event\ContactFormController;
-use App\Http\Controllers\Organizer\Event\CustomMenuController;
-use App\Http\Controllers\Organizer\Event\DashboardController;
-use App\Http\Controllers\Organizer\Event\EmailCampaignController;
-use App\Http\Controllers\Organizer\Event\EmailTemplateController;
-use App\Http\Controllers\Organizer\Event\Engagement\NewsfeedController;
-use App\Http\Controllers\Organizer\Event\EventAppFeeController;
+use App\Http\Controllers\Organizer\Event\PageController;
+use App\Http\Controllers\Organizer\Event\AddonController;
 use App\Http\Controllers\Organizer\Event\EventController;
-use App\Http\Controllers\Organizer\Event\EventPartnerCategoryController;
-use App\Http\Controllers\Organizer\Event\EventPartnerController;
-use App\Http\Controllers\Organizer\Event\EventPlatformController;
-use App\Http\Controllers\Organizer\Event\EventSessionController;
-use App\Http\Controllers\Organizer\Event\EventSpeakerController;
-use App\Http\Controllers\Organizer\Event\EventTicketsController;
+use App\Http\Controllers\Organizer\Event\TrackController;
 use App\Http\Controllers\Organizer\Event\FooterController;
 use App\Http\Controllers\Organizer\Event\HeaderController;
 use App\Http\Controllers\Organizer\Event\ImportController;
-use App\Http\Controllers\Organizer\Event\PageController;
-use App\Http\Controllers\Organizer\Event\Settings\EventAppPaymentController;
-use App\Http\Controllers\Organizer\Event\Settings\EventSettingsController;
-use App\Http\Controllers\Organizer\Event\User\AttendeeController;
-use App\Http\Controllers\Organizer\Event\EventAppTicketController;
-use App\Http\Controllers\Organizer\Event\EventBadgeController;
-use App\Http\Controllers\Organizer\Event\EventDateController;
-use App\Http\Controllers\Organizer\Event\EventPromoCodeController;
-use App\Http\Controllers\Organizer\Event\EventStore\ProductController;
-use App\Http\Controllers\Organizer\Event\EventStore\EventOrderController;
-use App\Http\Controllers\Organizer\Event\EventTicketTypeController;
-use App\Http\Controllers\Organizer\Event\FormFieldController;
-use App\Http\Controllers\Organizer\Event\LiveStreamController;
-use App\Http\Controllers\Organizer\Event\PrayerRequestController;
-use App\Http\Controllers\Organizer\Event\PrivateRegistrationViaEmailController;
-use App\Http\Controllers\Organizer\Event\QuestionnaireFormFieldController;
-use App\Http\Controllers\Organizer\Event\RefferalLinkController;
-use App\Http\Controllers\Organizer\Event\Reports\AttendeesReportController;
-use App\Http\Controllers\Organizer\Event\Reports\RefundTicketReportController;
-use App\Http\Controllers\Organizer\Event\Reports\SessionReportController;
-use App\Http\Controllers\Organizer\Event\Reports\TicketsReportController;
-use App\Http\Controllers\Organizer\Event\SessionAttendanceController;
-use App\Http\Controllers\Organizer\Event\SessionRatingsController;
-use App\Http\Controllers\Organizer\Event\Settings\QuestionnaireFormSettingsController;
-use App\Http\Controllers\Organizer\Event\Settings\RegistrationFormSettingsController;
-use App\Http\Controllers\Organizer\Event\Settings\WebsiteSettingsController;
-use App\Http\Controllers\Organizer\Event\TrackController;
-use App\Http\Controllers\Organizer\Event\UpgradeTicketController;
 use App\Http\Controllers\Organizer\Event\WebsiteController;
 use App\Http\Controllers\Organizer\Event\WorkshopController;
-use App\Http\Controllers\Organizer\ProfileController;
-use App\Http\Controllers\Organizer\RoleController;
+use App\Http\Controllers\Organizer\Event\DashboardController;
+use App\Http\Controllers\Organizer\Event\EventDateController;
+use App\Http\Controllers\Organizer\Event\FormFieldController;
+use App\Http\Controllers\Organizer\Event\BadgePrintController;
+use App\Http\Controllers\Organizer\Event\CustomMenuController;
+use App\Http\Controllers\Organizer\Event\EventBadgeController;
+use App\Http\Controllers\Organizer\Event\LiveStreamController;
+use App\Http\Controllers\Organizer\Event\ContactFormController;
+use App\Http\Controllers\Organizer\Event\CustomBadgeController;
+use App\Http\Controllers\Organizer\Event\EventAppFeeController;
+use App\Http\Controllers\Organizer\Event\AssignTicketController;
+use App\Http\Controllers\Organizer\Event\EventPartnerController;
+use App\Http\Controllers\Organizer\Event\EventSessionController;
+use App\Http\Controllers\Organizer\Event\EventSpeakerController;
+use App\Http\Controllers\Organizer\Event\EventTicketsController;
+use App\Http\Controllers\Organizer\Event\RefferalLinkController;
+use App\Http\Controllers\Organizer\Event\EmailCampaignController;
+use App\Http\Controllers\Organizer\Event\EmailTemplateController;
+use App\Http\Controllers\Organizer\Event\EventPlatformController;
+use App\Http\Controllers\Organizer\Event\PrayerRequestController;
+use App\Http\Controllers\Organizer\Event\RefundPaymentController;
+use App\Http\Controllers\Organizer\Event\UpgradeTicketController;
+use App\Http\Controllers\Organizer\Event\User\AttendeeController;
+use App\Http\Controllers\Organizer\Event\EventAppTicketController;
+use App\Http\Controllers\Organizer\Event\EventPromoCodeController;
+use App\Http\Controllers\Organizer\Event\SessionRatingsController;
+use App\Http\Controllers\Organizer\Event\EventTicketTypeController;
+use App\Http\Controllers\Organizer\Event\SessionAttendanceController;
+use App\Http\Controllers\Organizer\Event\EventStore\ProductController;
+use App\Http\Controllers\Organizer\Event\Engagement\NewsfeedController;
+use App\Http\Controllers\Organizer\Event\EventPartnerCategoryController;
 use App\Http\Controllers\Organizer\Settings\LiveStreamSettingController;
+use App\Http\Controllers\Organizer\Event\EventStore\EventOrderController;
+use App\Http\Controllers\Organizer\Event\Reports\SessionReportController;
+use App\Http\Controllers\Organizer\Event\Reports\TicketsReportController;
+use App\Http\Controllers\Organizer\Event\QuestionnaireFormFieldController;
+use App\Http\Controllers\Organizer\Event\Settings\EventSettingsController;
+use App\Http\Controllers\Organizer\Event\Reports\AttendeesReportController;
+use App\Http\Controllers\Organizer\Event\Settings\EventAppPaymentController;
+use App\Http\Controllers\Organizer\Event\Settings\WebsiteSettingsController;
+use App\Http\Controllers\Organizer\Event\Reports\RefundTicketReportController;
 use App\Http\Controllers\Organizer\Settings\OrganizerPaymentSettingController;
-use App\Http\Controllers\Organizer\UserController;
-use App\Http\Controllers\QuestionController;
-use App\Http\Middleware\CheckAttendeeRegistrationForm;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Organizer\Event\PrivateRegistrationViaEmailController;
+use App\Http\Controllers\Organizer\Event\Settings\RegistrationFormSettingsController;
+use App\Http\Controllers\Organizer\Event\Settings\QuestionnaireFormSettingsController;
 
 // Event Website
 Route::prefix('e/{uuid}')->name('organizer.events.website')->group(function () {
@@ -94,6 +95,15 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::put('update', [OrganizerPaymentSettingController::class, 'update'])->name('update');
         });
     });
+
+    Route::get('/zoho/settings', [ZohoController::class, 'index'])->name('zoho.index');
+    Route::post('/zoho/store', [ZohoController::class, 'store'])->name('zoho.store');
+    Route::get('/zoho/form', [ZohoController::class, 'form'])->name('zoho.form');
+    Route::post('/zoho/save-keys', [ZohoController::class, 'saveKeys'])->name('zoho.save');
+    Route::get('/zoho/connect', [ZohoController::class, 'connect'])->name('zoho.connect');
+    Route::get('/zoho/callback', [ZohoController::class, 'callback'])->name('zoho.callback');
+    Route::get('/zoho/sync', [ZohoController::class, 'showSyncPage'])->name('zoho.sync.page');
+    Route::post('/zoho/sync/{event}', [ZohoController::class, 'sync'])->name('zoho.sync');
 
     // Live Stream Settings
     Route::prefix('settings')->name('settings.')->group(function () {
@@ -319,9 +329,13 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::get('base-template', [EmailTemplateController::class, 'baseTemplate'])->name('base.template');
             Route::get('base-template/{baseTemplate}', [EmailTemplateController::class, 'viewBaseTemplate'])->name('base.template.view');
             Route::post('use-template/{baseTemplate}', [EmailTemplateController::class, 'setEmailTemplate'])->name('use.template');
-
+            Route::post('use-base-badge/{baseTemplate}', [CustomBadgeController::class, 'setBaseBadgeTemplate'])->name('use.badge.template');
+            Route::post('use-badge/{baseTemplate}', [CustomBadgeController::class, 'setBadgeTemplate'])->name('use.badge.design');
+            Route::get('print-badge', [BadgePrintController::class, 'customBadgePrint'])->name('print.badge.design');
             //Email Template
             Route::resource('email-template', EmailTemplateController::class);
+            //Custom Badge Template
+            Route::resource('badge-template', CustomBadgeController::class);
 
             //Email Campaign
             Route::resource('email-campaign', EmailCampaignController::class);

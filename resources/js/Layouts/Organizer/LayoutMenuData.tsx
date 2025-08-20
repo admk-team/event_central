@@ -7,6 +7,7 @@ const Navdata = () => {
     const [isEvents, setIsEvents] = useState<boolean>(false);
     const [isStaff, setIsStaff] = useState<boolean>(false);
     const [isPaymentSettings, setIsPaymentSettings] = useState<boolean>(false);
+    const [isZohoSetting, setIsZohoSetting] = useState<boolean>(false);
     const [isLiveStreamSettings, setIsLiveStreamSettings] = useState<boolean>(false);
 
 
@@ -14,13 +15,13 @@ const Navdata = () => {
 
     function updateIconSidebar(e: any) {
         if (e && e.target && e.target.getAttribute("sub-items")) {
-            const ul : any = document.getElementById("two-column-menu");
-            const iconItems : any = ul.querySelectorAll(".nav-icon.active");
+            const ul: any = document.getElementById("two-column-menu");
+            const iconItems: any = ul.querySelectorAll(".nav-icon.active");
             let activeIconItems = [...iconItems];
             activeIconItems.forEach((item) => {
                 item.classList.remove("active");
                 var id = item.getAttribute("sub-items");
-                const getID : any = document.getElementById(id) as HTMLElement;
+                const getID: any = document.getElementById(id) as HTMLElement;
                 if (getID)
                     getID?.parentElement.classList.remove("show");
             });
@@ -41,6 +42,9 @@ const Navdata = () => {
         if (iscurrentState !== 'PaymentSettings') {
             setIsPaymentSettings(false);
         }
+        if (iscurrentState !== 'ZohoSettings') {
+            setIsZohoSetting(false);
+        }
         if (iscurrentState !== 'LiveStreamSettings') {
             setIsLiveStreamSettings(false);
         }
@@ -51,6 +55,7 @@ const Navdata = () => {
         isEvents,
         isStaff,
         isPaymentSettings,
+        isZohoSetting,
         isLiveStreamSettings
     ]);
 
@@ -136,6 +141,33 @@ const Navdata = () => {
             hasPermissions: [
                 'edit_payment_settings',
             ]
+        },
+        {
+            id: "zoho_settings",
+            label: "Zoho Settings",
+            icon: "bx bxs-cog",
+            link: "/#",
+            stateVariables: isZohoSetting,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsZohoSetting(!isZohoSetting);
+                setIscurrentState('ZohoSettings');
+                updateIconSidebar(e);
+            },
+            subItems: [
+                {
+                    id: "keys_connect_zoho",
+                    label: "Zoho Keys & Connect",
+                    link: route('organizer.zoho.index'),
+                    parentId: "zoho_settings",
+                },
+                {
+                    id: "sync_page_zoho",
+                    label: "Zoho Sync Data",
+                    link: route('organizer.zoho.sync.page'),
+                    parentId: "zoho_settings",
+                },
+            ],
         },
         {
             id: "liveStreamSettings",

@@ -1,11 +1,11 @@
 import Layout from "../../../../Layouts/Event";
 import React, { useState } from "react";
-import { Head } from "@inertiajs/react";
+import { Head, router, useForm } from "@inertiajs/react";
 import { Col, Container, Form, Row } from "react-bootstrap";
 import BreadCrumb from "../../../../Components/Common/BreadCrumb";
 import "../../../../css/passes.css";
 
-function Index({ attendees, eventApp }: { attendees: any; eventApp: any }) {
+function Index({ attendees, eventApp, customBadgeDesign }: { attendees: any; eventApp: any; customBadgeDesign: any }) {
     const [search, setSearch] = useState("");
     const [isFlipped, setIsFlipped] = useState(false);
 
@@ -17,6 +17,15 @@ function Index({ attendees, eventApp }: { attendees: any; eventApp: any }) {
 
     const [showLogo, setShowLogo] = useState(true);
     const [showGradient, setShowGradient] = useState(true);
+
+    const printBadge = () => {
+        if (customBadgeDesign.mail_content) {
+            const url = route('organizer.events.print.badge.design', { search });
+            window.open(url, '_blank');
+        } else {
+            window.print();
+        }
+    }
 
     return (
         <React.Fragment>
@@ -37,7 +46,7 @@ function Index({ attendees, eventApp }: { attendees: any; eventApp: any }) {
                         </Col>
                         <Col md={6} className="mt-4">
                             <div className="d-flex flex-column flex-md-row justify-content-md-end align-items-stretch gap-2">
-                                <button type="button" className="btn btn-success w-100 w-md-auto" onClick={() => window.print()}>
+                                <button type="button" className="btn btn-success w-100 w-md-auto" onClick={printBadge}>
                                     🖨️ Print All Badges
                                 </button>
 
