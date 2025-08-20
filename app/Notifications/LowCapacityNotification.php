@@ -33,13 +33,21 @@ class LowCapacityNotification extends Notification implements ShouldQueue
     /**
      * Get the mail representation of the notification.
      */
-    public function toMail(object $notifiable): MailMessage
+    // public function toMail(object $notifiable): MailMessage
+    // {
+    //     return (new MailMessage)
+    //         ->subject('Low Capacity Alert')
+    //         ->line("The session **{$this->session->name}** is running low on capacity.")
+    //         ->line("Total capacity: {$this->session->capacity}")
+    //         ->line("Remaining seats: {$this->session->current_capacity}")
+    //         ->line('Please take action if needed.');
+    // }
+    public function toMail($notifiable)
     {
         return (new MailMessage)
             ->subject('Low Capacity Alert')
-            ->line("The session **{$this->session->name}** is running low on capacity.")
-            ->line("Total capacity: {$this->session->capacity}")
-            ->line("Remaining seats: {$this->session->current_capacity}")
-            ->line('Please take action if needed.');
+            ->view('emails.low-capacity-notification', [
+                'session' => $this->session,
+            ]);
     }
 }
