@@ -19,47 +19,47 @@ function Index({ tickets }: any) {
         {
             accessorKey: 'name',
             header: () => 'Name',
-            headerStyle: { width: '200px', textWrap: 'wrap' ,textAlign:'center' },
+            headerStyle: { width: '200px', textWrap: 'wrap', textAlign: 'center' },
             cell: (ticket) => ticket.name,
-            cellStyle: { width: '200px', textWrap: 'wrap' ,textAlign:'center' },
+            cellStyle: { width: '200px', textWrap: 'wrap', textAlign: 'center' },
             searchable: true,
         },
         {
             header: () => 'Price',
-            headerStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
+            headerStyle: { width: '150px', textWrap: 'wrap', textAlign: 'center' },
             cell: (ticket) => ticket.base_price ?? 0,
-            cellStyle: { width: '100px', textWrap: 'wrap' ,textAlign:'center' },
+            cellStyle: { width: '100px', textWrap: 'wrap', textAlign: 'center' },
         },
         {
             header: () => 'Session',
-            headerStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center'},
+            headerStyle: { width: '150px', textWrap: 'wrap', textAlign: 'center' },
             cell: (ticket) => ticket.selected_sessions.length,
-            cellStyle: { width: '150px', textWrap: 'wrap', textAlign:'center' },
+            cellStyle: { width: '150px', textWrap: 'wrap', textAlign: 'center' },
             searchable: true,
         },
         {
             header: () => 'Addon',
-            headerStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
+            headerStyle: { width: '150px', textWrap: 'wrap', textAlign: 'center' },
             cell: (ticket) => ticket.selected_addons.length,
-            cellStyle: { width: '200px', textWrap: 'wrap' ,textAlign:'center' },
+            cellStyle: { width: '200px', textWrap: 'wrap', textAlign: 'center' },
         },
         {
             header: () => 'Promo Code',
-            headerStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
+            headerStyle: { width: '150px', textWrap: 'wrap', textAlign: 'center' },
             cell: (ticket) => ticket.promo_codes.length,
-            cellStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
+            cellStyle: { width: '150px', textWrap: 'wrap', textAlign: 'center' },
         },
         {
             header: () => 'Sold ticket',
-            headerStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
+            headerStyle: { width: '150px', textWrap: 'wrap', textAlign: 'center' },
             cell: (ticket) => ticket.sold_tickets.length,
-            cellStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
+            cellStyle: { width: '150px', textWrap: 'wrap', textAlign: 'center' },
         },
         {
             header: () => 'Revenue',
-            headerStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
-            cell: (ticket) => "$ "+ticket.total_revenue,
-            cellStyle: { width: '150px', textWrap: 'wrap' ,textAlign:'center' },
+            headerStyle: { width: '150px', textWrap: 'wrap', textAlign: 'center' },
+            cell: (ticket) => "$ " + ticket.total_revenue,
+            cellStyle: { width: '150px', textWrap: 'wrap', textAlign: 'center' },
         },
         // {
         //     header: () => "Actions",
@@ -71,7 +71,10 @@ function Index({ tickets }: any) {
         // },
     ];
 
-
+    const handleExport = async () => {
+        const url = route('organizer.events.report.export.ticket.data');
+        window.location.href = url;
+    };
     return (
         <React.Fragment>
             <Head>
@@ -109,6 +112,19 @@ function Index({ tickets }: any) {
                                         //     ),
                                         //     showOnRowSelection: true,
                                         // },
+                                        {
+                                            render: (dataTable: any) => (
+                                                <Button
+                                                    variant="outline-primary"
+                                                    className="me-2"
+                                                    onClick={() => handleExport()}
+                                                >
+                                                    Export Ticket
+                                                </Button>
+
+                                            ),
+                                            showOnRowSelection: false,
+                                        }
 
                                     ]}
                                 />

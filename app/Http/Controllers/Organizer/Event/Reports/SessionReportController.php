@@ -7,6 +7,7 @@ use App\Models\EventSession;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use App\Helpers\CsvExporter;
 
 class SessionReportController extends Controller
 {
@@ -71,5 +72,42 @@ class SessionReportController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function exportSessionData()
+    {
+        $sessions = EventSession::currentEvent()
+            ->with(['attendees', 'attendances', 'favSessions', 'tickets', 'attendeesRating'])
+            ->get()
+            ->map(function ($session) {
+                return [
+                    $session->id,
+                    $session->name,
+                    $session->type,
+                    $session->capacity ?? 0,
+                    $session->attendees->count(),
+                    $session->attendances->count(),
+                    $session->favSessions->count(),
+                    $session->attendeesRating->avg('rating') ?? 0,
+                    $session->tickets->count(),
+                ];
+            })->toArray();
+
+        return CsvExporter::export('sessions_report.csv', [
+            [
+                'columns' => [
+                    'ID',
+                    'Name',
+                    'Type',
+                    'Capacity',
+                    'Attendees',
+                    'Attendances',
+                    'Favorites',
+                    'Avg Rating',
+                    'Tickets',
+                ],
+                'rows' => $sessions,
+            ]
+        ]);
     }
 }
