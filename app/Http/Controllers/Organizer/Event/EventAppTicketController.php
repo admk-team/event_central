@@ -11,6 +11,7 @@ use App\Models\EventAppTicket;
 use App\Models\EventSession;
 use App\Models\EventTicketType;
 use App\Models\TicketFeature;
+use App\Notifications\LowCapacityNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -85,6 +86,21 @@ class EventAppTicketController extends Controller
         $ticket->sessions()->sync($data['sessions']);
         $ticket->addons()->sync($data['addons']);
         $ticket->fees()->sync($data['fees']);
+
+        foreach ($data['sessions'] as $sessionId) {
+
+            $session = EventSession::find($sessionId);
+            //dd($session);
+            if ($session && $session->current_capacity > 0) {
+                $session->decrement('current_capacity');
+                $threshold = ceil($session->capacity * 0.10);
+                if ($session->current_capacity <= $threshold) {
+                    if ($session->eventApp && $session->eventApp->organiser) {
+                        $session->eventApp->organiser->notify(new LowCapacityNotification($session));
+                    }
+                }
+            }
+        }
         broadcast(new UpdateEventDashboard(session('event_id'), 'New Ticket Created'))->toOthers();
         return back()->withSuccess('Ticket created successfully');
     }

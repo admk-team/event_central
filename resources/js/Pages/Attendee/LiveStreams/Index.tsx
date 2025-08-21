@@ -20,6 +20,12 @@ function RefundTickets({ liveStreams }: any) {
             enableSorting: true,
         },
         {
+            accessorKey: 'ticket',
+            header: () => 'Ticket Purchased',
+            cell: (liveStream) => liveStream?.event_tickets?.name ?? '—',
+            enableSorting: true,
+        },
+        {
             accessorKey: 'title',
             header: () => 'Title',
             cell: (liveStream) => liveStream.title,
@@ -55,7 +61,7 @@ function RefundTickets({ liveStreams }: any) {
                 <div className="hstack gap-3 fs-15">
                     {(liveStream.status === 'preparing' || liveStream.status === 'started') && (
                         <Link
-                            href={route('join.live.streams',liveStream.id)}
+                            href={route('join.live.streams', liveStream.id)}
                             className='btn btn-secondary'
                         >
                             Join

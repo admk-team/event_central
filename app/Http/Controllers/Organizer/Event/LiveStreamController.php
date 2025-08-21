@@ -24,7 +24,7 @@ class LiveStreamController extends Controller
         }
 
         $liveStreams = $this->datatable(
-            LiveStream::where('event_app_id', session('event_id'))
+            LiveStream::with('eventTickets')->where('event_app_id', session('event_id'))
         );
         $eventTickets = EventAppTicket::where('event_app_id',session('event_id'))->get();
 

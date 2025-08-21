@@ -11,7 +11,8 @@ import CreateEditModal from './Components/CreateEditModal';
 import CopyTextBox from '../../../../Components/CopyTextBox';
 import moment from 'moment';
 
-function Index({ liveStreams,eventTickets }: any) {
+function Index({ liveStreams, eventTickets }: any) {
+    console.log("live stream", liveStreams);
     const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
     const [editLiveStream, setEditLiveStream] = React.useState<any>(null);
     const [deleteLiveStream, setDeleteLiveStream] = React.useState<any>(null);
@@ -50,7 +51,7 @@ function Index({ liveStreams,eventTickets }: any) {
     }
 
     const deleteManyAction = (ids: number[]) => {
-        deleteManyForm.setData(data => ({...data, ids: ids}));
+        deleteManyForm.setData(data => ({ ...data, ids: ids }));
         setShowDeleteManyConfirmation(true);
     }
 
@@ -65,6 +66,12 @@ function Index({ liveStreams,eventTickets }: any) {
             header: () => 'ID',
             cell: (liveStream) => liveStream.id,
             cellClass: "fw-medium",
+            enableSorting: true,
+        },
+        {
+            accessorKey: 'ticket',
+            header: () => 'Ticket',
+            cell: (liveStream) => liveStream?.event_tickets?.name ?? '—',
             enableSorting: true,
         },
         {

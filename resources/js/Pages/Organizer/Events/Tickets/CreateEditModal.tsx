@@ -65,6 +65,7 @@ export default function CreateEditModal({
             // expects array of { name, quantity }
             extra_services: ticket?.extra_services ?? [],
         });
+    console.log('error',errors)
 
     const [selectMulti, setselectMulti] = useState<any>(
         ticket?.selected_sessions ?? null

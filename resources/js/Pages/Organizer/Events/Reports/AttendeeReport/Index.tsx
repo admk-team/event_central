@@ -103,7 +103,10 @@ function Index({ attendees }: any) {
         },
     ];
 
-    const [visibleColumns, setVisibleColumns] = useState<ColumnDef<typeof attendees.data[0]>[]>([]);
+    const handleExport = async () => {
+        const url = route('organizer.events.report.export.attendee.data');
+        window.location.href = url;
+    };
 
     return (
         <React.Fragment>
@@ -129,7 +132,6 @@ function Index({ attendees }: any) {
                                 <DataTable
                                     data={attendees}
                                     columns={columns}
-                                    onVisibleColumnsChange={setVisibleColumns}
                                     title="Attendees"
                                     tableLayoutFixed={true}
                                     searchCombinations={[['first_name', 'last_name']]}
@@ -148,7 +150,7 @@ function Index({ attendees }: any) {
                                                 <Button
                                                     variant="outline-primary"
                                                     className="me-2"
-                                                    onClick={() => exportToCSV(dataTable.getCurrentPageRows(), visibleColumns.length ? visibleColumns : columns, "attendee")}
+                                                    onClick={() => handleExport()}
                                                 >
                                                     Export Attendee
                                                 </Button>

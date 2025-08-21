@@ -171,7 +171,18 @@ function Index({ attendance: initialAttendance, eventSession: initialSessions }:
             setFilteredAttendance(initialAttendance); // Fallback to initial data
         }
     };
-    const [visibleColumns, setVisibleColumns] = useState<ColumnDef<typeof attendees.data[0]>[]>([]);
+
+    const handleExport = async (sessionId: number | null) => {
+        const url = sessionId
+            ? route('organizer.events.attendance.export.data', sessionId)
+            : route('organizer.events.attendance.export.data');
+
+        const response = await fetch(url, {
+            method: 'GET',
+        });
+
+         window.location.href = url;
+    };
 
     return (
         <React.Fragment>
@@ -227,7 +238,7 @@ function Index({ attendance: initialAttendance, eventSession: initialSessions }:
                                             <Button
                                                 variant="outline-primary"
                                                 className="me-2"
-                                                onClick={() => exportToCSV(dataTable.getCurrentPageRows(), visibleColumns.length ? visibleColumns : columns, "session")}
+                                                onClick={() => handleExport(selectedSessionId)}
                                             >
                                                 Export Session
                                             </Button>
