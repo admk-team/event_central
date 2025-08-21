@@ -1,8 +1,9 @@
 @extends('event-website.layouts.layout')
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+@section('style')
+    @vite(['resources/css/website-styles.css'])
+@endsection
 @section('header')
-    @include('event-website.themes.design1.header')
+    @include('event-website.themes.default.header')
 @endsection
 @section('content')
     <section id="register" class="register register--grid">
