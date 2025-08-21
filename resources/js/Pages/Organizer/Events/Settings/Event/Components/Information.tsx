@@ -18,6 +18,7 @@ export default function Information() {
         logo: event.logo_img,
         name: event.name,
         tagline: event.tagline ?? '',
+        custom_theme: event.custom_theme ?? '',
         description: event.description ?? '',
         location_base: event.location_base,
         registration_private: event?.registration_private ?? 0,
@@ -166,6 +167,25 @@ export default function Information() {
                                 <Form.Control.Feedback type="invalid">{errors.tagline}</Form.Control.Feedback>
                             )}
                         </FormGroup>
+                        <FormGroup className="mb-3">
+                            <Form.Label className="form-label">Custom Theme</Form.Label>
+                            <Form.Select
+                            className="form-control"
+                            value={data.custom_theme}
+                            onChange={(e) => setData({ ...data, custom_theme: e.target.value })}
+                            isInvalid={!!errors.custom_theme}
+                        >
+                            <option value="default">Default</option>
+                            <option value="design1">Design 1</option>
+                            <option value="design2">Design 2</option>
+                            <option value="design3">Design 3</option>
+                            </Form.Select>
+                            {errors.custom_theme && (
+                                <Form.Control.Feedback type="invalid">
+                                    {errors.custom_theme}
+                                </Form.Control.Feedback>
+                            )}
+                         </FormGroup>
                         <FormGroup className="mb-3">
                             <Form.Label className="form-label">Event Description</Form.Label>
                             <div className={!!errors.description ? "is-invalid" : ""}>
