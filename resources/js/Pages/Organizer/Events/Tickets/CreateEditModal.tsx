@@ -35,8 +35,6 @@ export default function CreateEditModal({
     fees: any;
     event_ticket_type: any;
 }) {
-    // console.log(fees);
-
     const isEdit = ticket != null ? true : false;
 
     const { data, setData, post, put, processing, errors, reset, transform } =
@@ -44,15 +42,12 @@ export default function CreateEditModal({
             _method: isEdit ? "PUT" : "POST",
             event_app_id: ticket?.event_app_id ?? "",
             sessions: ticket?.selected_sessions ?? [],
-            addons: ticket?.selected_addons.map((item: any) => item.value) ?? [],
+            addons: ticket?.selected_addons?.map((item: any) => item.value) ?? [],
             fees: ticket?.fees ?? [],
             name: ticket?.name ?? "",
             description: ticket?.description ?? "",
             type: ticket?.ticket_type?.id ?? "",
-
             base_price: ticket?.base_price ?? "",
-
-            // increment_by: ticket?.increment_by ?? "",
             increment_rate: ticket?.increment_rate ?? "",
             increment_type: ticket?.increment_type ?? "Fixed",
             start_increment: ticket?.start_increment ?? "",
@@ -65,6 +60,10 @@ export default function CreateEditModal({
             bulk_purchase_discount_value: ticket?.bulk_purchase_discount_value ?? "",
             bulk_purchase_qty: ticket?.bulk_purchase_qty ?? "",
 
+            // NEW FIELDS
+            extra_service_name: ticket?.extra_service_name ?? "",
+            // expects array of { name, quantity }
+            extra_services: ticket?.extra_services ?? [],
         });
 
     const [selectMulti, setselectMulti] = useState<any>(
@@ -75,14 +74,58 @@ export default function CreateEditModal({
     const [selectAllAddons, setSelectAllAddons] = useState<any>(false);
     const [selectedFees, setSelectedFees] = useState<any>(ticket?.fees ?? []);
 
+    // ---- Extra Services (dynamic rows) ----
+    type ExtraService = { name: string; quantity: string };
+
+    const [extraServices, setExtraServices] = useState<ExtraService[]>(
+        Array.isArray(ticket?.extra_services) && ticket?.extra_services.length > 0
+            ? ticket.extra_services
+            : [{ name: "", quantity: "" }]
+    );
+
+    // keep useForm's data in sync with local rows
+    useEffect(() => {
+        setData("extra_services", extraServices);
+    }, [extraServices]);
+
+    const addExtraServiceRow = () => {
+        setExtraServices((prev) => [...prev, { name: "", quantity: "" }]);
+    };
+
+    const removeExtraServiceRow = (idx: number) => {
+        setExtraServices((prev) => prev.filter((_, i) => i !== idx));
+    };
+
+    const updateExtraServiceField = (
+        idx: number,
+        field: keyof ExtraService,
+        value: string
+    ) => {
+        setExtraServices((prev) =>
+            prev.map((row, i) => (i === idx ? { ...row, [field]: value } : row))
+        );
+    };
+
     const submit = (e: any) => {
         e.preventDefault();
 
-        transform((data) => ({
-            ...data,
-            fees: [...selectedFees],
-        }));
-        console.log(data);
+        // ensure fees + extra services are cleanly shaped
+        transform((formData) => {
+            const cleanedServices = (extraServices || [])
+                .map((r) => ({
+                    name: (r.name ?? "").trim(),
+                    quantity: (r.quantity ?? "").toString().trim(),
+                }))
+                .filter((r) => r.name !== "" || r.quantity !== "");
+
+            return {
+                ...formData,
+                fees: [...selectedFees],
+                extra_service_name: formData.extra_service_name ?? "",
+                extra_services: cleanedServices,
+            };
+        });
+
         if (isEdit) {
             post(route("organizer.events.tickets.update", ticket.id), {
                 onSuccess: () => {
@@ -113,7 +156,10 @@ export default function CreateEditModal({
 
     const handleCheckChangeAddon = (event: any) => {
         if (event.target.checked) {
-            setData("addons", addons.map((item: any) => item.value));
+            setData(
+                "addons",
+                addons.map((item: any) => item.value)
+            );
             setSelectAllAddons(true);
         } else {
             setData("addons", []);
@@ -130,7 +176,6 @@ export default function CreateEditModal({
     };
 
     const handleFeeCheckChanged = (e: any, fee: any) => {
-        // e.preventDefault();
         let list = [...selectedFees];
         if (e.target.checked) {
             if (!list.some((f) => f.id === fee.id)) {
@@ -144,17 +189,12 @@ export default function CreateEditModal({
         }
         setSelectedFees([...list]);
         setData("fees", [...list]);
-        console.log(list, fee.id);
     };
 
     const handleSelectAllFeesChecked = (e: any) => {
-        let list = Array<any>();
+        let list: any[] = [];
         if (e.target.checked) {
-            fees.forEach((fee: any) => {
-                list.push(fee);
-            });
-        } else {
-            list = [];
+            fees.forEach((fee: any) => list.push(fee));
         }
         setSelectedFees([...list]);
         setData("fees", [...list]);
@@ -167,18 +207,13 @@ export default function CreateEditModal({
 
     // Style for Select 2
     const customStyles = {
-        multiValue: (styles: any, { data }: any) => {
-            return {
-                ...styles,
-                // backgroundColor: "#3762ea",
-            };
-        },
-        multiValueLabel: (styles: any, { data }: any) => ({
+        multiValue: (styles: any) => ({ ...styles }),
+        multiValueLabel: (styles: any) => ({
             ...styles,
             backgroundColor: "var(--vz-secondary-bg-subtle)",
             color: "black",
         }),
-        multiValueRemove: (styles: any, { data }: any) => ({
+        multiValueRemove: (styles: any) => ({
             ...styles,
             color: "black",
             backgroundColor: "var(--vz-secondary-bg-subtle)",
@@ -187,13 +222,14 @@ export default function CreateEditModal({
                 color: "dark",
             },
         }),
-    };
+    } as StylesConfig;
+
     const [manageTypesModal, setmanageTypesModal] = useState(false);
     function showModal() {
         setmanageTypesModal(!manageTypesModal);
     }
 
-    const [discountLabel, setDiscountLabel] = useState('Discount Value');
+    const [discountLabel, setDiscountLabel] = useState("Discount Value");
 
     const handleBluckPurchaseStatus = (event: any) => {
         if (event.target.checked) {
@@ -202,7 +238,6 @@ export default function CreateEditModal({
             setData("bulk_purchase_status", false);
         }
     };
-
 
     return (
         <>
@@ -222,9 +257,7 @@ export default function CreateEditModal({
                                     <Form.Control
                                         type="text"
                                         value={data.name}
-                                        onChange={(e) =>
-                                            setData("name", e.target.value)
-                                        }
+                                        onChange={(e) => setData("name", e.target.value)}
                                         isInvalid={!!errors.name}
                                     />
                                     {errors.name && (
@@ -240,9 +273,7 @@ export default function CreateEditModal({
                                     <Form.Control
                                         type="number"
                                         value={data.base_price}
-                                        onChange={(e) =>
-                                            setData("base_price", e.target.value)
-                                        }
+                                        onChange={(e) => setData("base_price", e.target.value)}
                                         isInvalid={!!errors.base_price}
                                     />
                                     {errors.base_price && (
@@ -253,18 +284,16 @@ export default function CreateEditModal({
                                 </FormGroup>
                             </Col>
                         </Row>
+
                         <Row>
                             <Col md={12} lg={12}>
                                 <FormGroup className="mb-3">
                                     <Form.Label>Description</Form.Label>
                                     <Form.Control
                                         as="textarea"
-                                        type="text"
                                         rows={5}
                                         value={data.description}
-                                        onChange={(e) =>
-                                            setData("description", e.target.value)
-                                        }
+                                        onChange={(e) => setData("description", e.target.value)}
                                         isInvalid={!!errors.description}
                                     />
                                     {errors.description && (
@@ -275,24 +304,20 @@ export default function CreateEditModal({
                                 </FormGroup>
                             </Col>
                         </Row>
+
                         <Row>
                             <Col md={8}>
                                 <FormGroup className="mb-3">
                                     <Form.Label>Ticket Type</Form.Label>
                                     <Form.Select
                                         value={data.type}
-                                        onChange={(e) =>
-                                            setData("type", e.target.value)
-                                        }
+                                        onChange={(e) => setData("type", e.target.value)}
                                         isInvalid={!!errors.type}
                                     >
                                         <option value={"0"}>No Type</option>
                                         {event_ticket_type &&
                                             event_ticket_type.map((type: any) => (
-                                                <option
-                                                    key={type.id || type}
-                                                    value={type.id || type}
-                                                >
+                                                <option key={type.id || type} value={type.id || type}>
                                                     {type.name || type}
                                                 </option>
                                             ))}
@@ -305,11 +330,16 @@ export default function CreateEditModal({
                                 </FormGroup>
                             </Col>
                             <Col md={4} className="d-flex align-items-end">
-                                <Button variant="secondary" className="mb-3" onClick={() => showModal()}>
+                                <Button
+                                    variant="secondary"
+                                    className="mb-3"
+                                    onClick={() => showModal()}
+                                >
                                     Manage Type
                                 </Button>
                             </Col>
                         </Row>
+
                         <Row>
                             <Col md={6} lg={6}>
                                 <Row>
@@ -319,10 +349,7 @@ export default function CreateEditModal({
                                             <Form.Select
                                                 value={data.increment_type}
                                                 onChange={(e) =>
-                                                    setData(
-                                                        "increment_type",
-                                                        e.target.value
-                                                    )
+                                                    setData("increment_type", e.target.value)
                                                 }
                                                 isInvalid={!!errors.increment_type}
                                             >
@@ -344,10 +371,7 @@ export default function CreateEditModal({
                                                 type="number"
                                                 value={data.increment_rate}
                                                 onChange={(e) =>
-                                                    setData(
-                                                        "increment_rate",
-                                                        e.target.value
-                                                    )
+                                                    setData("increment_rate", e.target.value)
                                                 }
                                                 isInvalid={!!errors.increment_rate}
                                             />
@@ -360,6 +384,7 @@ export default function CreateEditModal({
                                     </Col>
                                 </Row>
                             </Col>
+
                             <Col md={6} lg={6}>
                                 <Row>
                                     <Col md={6}>
@@ -370,22 +395,17 @@ export default function CreateEditModal({
                                                 options={{
                                                     altInput: true,
                                                     enableTime: true,
-                                                    // altFormat: "M d, Y h:i K",
                                                     altFormat: "M d, Y",
                                                     dateFormat: "Y-m-d",
                                                 }}
                                                 value={data.start_increment}
-                                                onChange={([
-                                                    selectedDate,
-                                                ]: Date[]) => {
-                                                    setData((prevData) => ({
-                                                        ...prevData,
-                                                        start_increment:
-                                                            selectedDate
-                                                                .toLocaleDateString(
-                                                                    "en-CA"
-                                                                )
-                                                                .split("T")[0],
+                                                onChange={([selectedDate]: any) => {
+                                                    if (!selectedDate) return;
+                                                    const d = new Date(selectedDate);
+                                                    const iso = d.toISOString().slice(0, 10);
+                                                    setData((prev: any) => ({
+                                                        ...prev,
+                                                        start_increment: iso,
                                                     }));
                                                 }}
                                             />
@@ -409,16 +429,13 @@ export default function CreateEditModal({
                                                     minDate: data.start_increment,
                                                 }}
                                                 value={data.end_increment}
-                                                onChange={([
-                                                    selectedDate,
-                                                ]: Date[]) => {
-                                                    setData((prevData) => ({
-                                                        ...prevData,
-                                                        end_increment: selectedDate
-                                                            .toLocaleDateString(
-                                                                "en-CA"
-                                                            )
-                                                            .split("T")[0],
+                                                onChange={([selectedDate]: any) => {
+                                                    if (!selectedDate) return;
+                                                    const d = new Date(selectedDate);
+                                                    const iso = d.toISOString().slice(0, 10);
+                                                    setData((prev: any) => ({
+                                                        ...prev,
+                                                        end_increment: iso,
                                                     }));
                                                 }}
                                             />
@@ -432,21 +449,19 @@ export default function CreateEditModal({
                                 </Row>
                             </Col>
                         </Row>
+
                         <Row className="mt-4">
                             <Col md={6}>
                                 <FormGroup className="mb-3">
-                                    <Form.Label>Total Quantity (leave empty for unlimited)</Form.Label>
+                                    <Form.Label>
+                                        Total Quantity (leave empty for unlimited)
+                                    </Form.Label>
                                     <Form.Control
                                         type="number"
                                         step={1}
                                         min={0}
                                         value={data.qty_total}
-                                        onChange={(e) =>
-                                            setData(
-                                                "qty_total",
-                                                e.target.value
-                                            )
-                                        }
+                                        onChange={(e) => setData("qty_total", e.target.value)}
                                         isInvalid={!!errors.qty_total}
                                     />
                                     {errors.qty_total && (
@@ -469,12 +484,9 @@ export default function CreateEditModal({
                                 </FormGroup>
                             </Col>
                         </Row>
+
                         <Row className="mt-4">
-                            <Col
-                                md={3}
-                                lg={3}
-                                className="d-flex align-items-center"
-                            >
+                            <Col md={3} lg={3} className="d-flex align-items-center">
                                 <FormGroup className="mb-3">
                                     <Form.Check
                                         type="checkbox"
@@ -486,7 +498,6 @@ export default function CreateEditModal({
                             </Col>
                             <Col md={9} lg={9}>
                                 <FormGroup className="mb-3">
-                                    {/* <Form.Label>Sessions</Form.Label> */}
                                     <Select
                                         placeholder="Select Event Sessions"
                                         className={errors.sessions && "is-invalid"}
@@ -498,8 +509,7 @@ export default function CreateEditModal({
                                         }}
                                         options={sessions}
                                         classNamePrefix={
-                                            errors.sessions &&
-                                            "multi-select is-invalid "
+                                            errors.sessions && "multi-select is-invalid "
                                         }
                                         styles={customStyles}
                                     />
@@ -525,19 +535,22 @@ export default function CreateEditModal({
                             </Col>
                             <Col md={9} lg={9}>
                                 <FormGroup className="mb-3">
-                                    {/* <Form.Label>Sessions</Form.Label> */}
                                     <Select
                                         placeholder="Select Add-ons"
                                         className={errors.addons && "is-invalid"}
-                                        value={addons.filter((item: any) => data.addons.includes(item.value))}
+                                        value={addons.filter((item: any) =>
+                                            data.addons.includes(item.value)
+                                        )}
                                         isMulti={true}
                                         onChange={(list: any) => {
-                                            setData("addons", list.map((item: any) => item.value));
+                                            setData(
+                                                "addons",
+                                                list.map((item: any) => item.value)
+                                            );
                                         }}
                                         options={addons}
                                         classNamePrefix={
-                                            errors.addons &&
-                                            "multi-select is-invalid "
+                                            errors.addons && "multi-select is-invalid "
                                         }
                                         styles={customStyles}
                                     />
@@ -549,6 +562,113 @@ export default function CreateEditModal({
                                 </FormGroup>
                             </Col>
                         </Row>
+
+                        {/* --- NEW: Extra Service Name (simple text field) --- */}
+                        <Row className="mt-4">
+                            <Col md={12}>
+                                <FormGroup className="mb-3">
+                                    <Form.Label>Extra Service Name</Form.Label>
+                                    <Form.Control
+                                        type="text"
+                                        value={data.extra_service_name}
+                                        onChange={(e) =>
+                                            setData("extra_service_name", e.target.value)
+                                        }
+                                        placeholder="e.g. Hospitality Package"
+                                        isInvalid={!!errors.extra_service_name}
+                                    />
+                                    {errors.extra_service_name && (
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.extra_service_name}
+                                        </Form.Control.Feedback>
+                                    )}
+                                </FormGroup>
+                            </Col>
+                        </Row>
+
+                        {/* --- NEW: Extra Services dynamic rows (Name + Quantity) --- */}
+                        <Row className="mt-2">
+                            <Col md={12}>
+                                <FormGroup className="mb-2">
+                                    <Form.Label className="mb-2">Extra Services</Form.Label>
+
+                                    {/* Header (desktop only) */}
+                                    <div className="d-none d-md-flex fw-semibold mb-2">
+                                        <div className="me-2" style={{ width: "55%" }}>
+                                            Name
+                                        </div>
+                                        <div className="me-2" style={{ width: "25%" }}>
+                                            Quantity
+                                        </div>
+                                        <div style={{ width: "20%" }}>&nbsp;</div>
+                                    </div>
+
+                                    {extraServices.map((row, idx) => (
+                                        <div
+                                            key={idx}
+                                            className="d-flex flex-column flex-md-row align-items-stretch align-items-md-center gap-2 mb-2"
+                                        >
+                                            <Form.Control
+                                                type="text"
+                                                placeholder="Name"
+                                                value={row.name}
+                                                onChange={(e) =>
+                                                    updateExtraServiceField(idx, "name", e.target.value)
+                                                }
+                                                className="me-md-2"
+                                                style={{
+                                                    width: "100%",
+                                                    maxWidth: "none",
+                                                    flex: "0 0 55%",
+                                                }}
+                                            />
+
+                                            <Form.Control
+                                                type="text"
+                                                inputMode="numeric"
+                                                placeholder="Quantity"
+                                                value={row.quantity}
+                                                onChange={(e) =>
+                                                    updateExtraServiceField(
+                                                        idx,
+                                                        "quantity",
+                                                        e.target.value
+                                                    )
+                                                }
+                                                className="me-md-2"
+                                                style={{
+                                                    width: "100%",
+                                                    maxWidth: "none",
+                                                    flex: "0 0 25%",
+                                                }}
+                                            />
+
+                                            <div style={{ flex: "0 0 10%" }}>
+                                                <Button
+                                                    variant="outline-danger"
+                                                    className="w-100"
+                                                    onClick={() => removeExtraServiceRow(idx)}
+                                                    disabled={extraServices.length === 1}
+                                                >
+                                                    Remove
+                                                </Button>
+                                            </div>
+                                        </div>
+                                    ))}
+
+                                    <Button variant="outline-primary" onClick={addExtraServiceRow}>
+                                        + Add more
+                                    </Button>
+
+                                    {errors.extra_services && (
+                                        <div className="invalid-feedback d-block">
+                                            {errors.extra_services}
+                                        </div>
+                                    )}
+                                </FormGroup>
+                            </Col>
+                        </Row>
+
                         <Row className="mt-4">
                             <Col md={3} lg={3} className="d-flex align-items-start">
                                 <FormGroup className="mb-3">
@@ -564,9 +684,7 @@ export default function CreateEditModal({
                                 <table className="table table-sm table-bordered">
                                     <thead className="table-primary ">
                                         <tr>
-                                            <th className="d-flex justify-content-center">
-                                                Select
-                                            </th>
+                                            <th className="d-flex justify-content-center">Select</th>
                                             <th>Fee Name</th>
                                             <th>Value</th>
                                             <th>Type</th>
@@ -584,19 +702,9 @@ export default function CreateEditModal({
                                                     <td className="d-flex justify-content-center">
                                                         <Form.Check
                                                             type="checkbox"
-                                                            id={
-                                                                "select-all-fee-" +
-                                                                fee.id
-                                                            }
-                                                            checked={checkFeeIsSelected(
-                                                                fee
-                                                            )}
-                                                            onChange={(e) =>
-                                                                handleFeeCheckChanged(
-                                                                    e,
-                                                                    fee
-                                                                )
-                                                            }
+                                                            id={"select-all-fee-" + fee.id}
+                                                            checked={checkFeeIsSelected(fee)}
+                                                            onChange={(e) => handleFeeCheckChanged(e, fee)}
                                                         />
                                                     </td>
                                                     <td>{fee.name}</td>
@@ -612,11 +720,11 @@ export default function CreateEditModal({
                                 </table>
                             </Col>
                         </Row>
+
                         <Row>
                             <Col md={12} lg={12}>
                                 <FormGroup className="mb-3">
                                     <Form.Check
-                                        // type='check'
                                         checked={data.show_on_attendee_side}
                                         label="Show to Attendees for Purchase"
                                         id="check-show-to-attendee"
@@ -626,13 +734,10 @@ export default function CreateEditModal({
                             </Col>
                         </Row>
 
-
                         <Row>
-
                             <Col md={12} lg={12}>
                                 <FormGroup className="mb-3">
                                     <Form.Check
-                                        // type='check'
                                         checked={data.bulk_purchase_status}
                                         label="Bulk Purchase Discount"
                                         id="bulk-purchase-=discount"
@@ -641,11 +746,15 @@ export default function CreateEditModal({
                                 </FormGroup>
                             </Col>
                         </Row>
+
                         {data.bulk_purchase_status != 0 && (
                             <Row>
                                 <Col md={4}>
                                     <FormGroup className="mb-3">
-                                        <Form.Label htmlFor="discount_type" className="form-label text-start w-100">
+                                        <Form.Label
+                                            htmlFor="discount_type"
+                                            className="form-label text-start w-100"
+                                        >
                                             Discount Type
                                         </Form.Label>
                                         <Form.Select
@@ -655,11 +764,11 @@ export default function CreateEditModal({
                                             value={data.bulk_purchase_discount_type}
                                             onChange={(e) => {
                                                 const value = e.target.value;
-                                                setData('bulk_purchase_discount_type', value);
-                                                if (value === 'percentage') {
-                                                    setDiscountLabel('Discount Percentage');
+                                                setData("bulk_purchase_discount_type", value);
+                                                if (value === "percentage") {
+                                                    setDiscountLabel("Discount Percentage");
                                                 } else {
-                                                    setDiscountLabel('Discount Value');
+                                                    setDiscountLabel("Discount Value");
                                                 }
                                             }}
                                             isInvalid={!!errors.bulk_purchase_discount_type}
@@ -678,14 +787,19 @@ export default function CreateEditModal({
 
                                 <Col md={4}>
                                     <FormGroup className="mb-3">
-                                        <Form.Label htmlFor="discount_value" className="form-label text-start w-100">
-                                            {discountLabel || 'Discount Value'}
+                                        <Form.Label
+                                            htmlFor="discount_value"
+                                            className="form-label text-start w-100"
+                                        >
+                                            {discountLabel || "Discount Value"}
                                         </Form.Label>
                                         <Form.Control
                                             id="discount_value"
                                             type="number"
                                             value={data.bulk_purchase_discount_value}
-                                            onChange={(e) => setData('bulk_purchase_discount_value', e.target.value)}
+                                            onChange={(e) =>
+                                                setData("bulk_purchase_discount_value", e.target.value)
+                                            }
                                             placeholder="e.g. 10"
                                             isInvalid={!!errors.bulk_purchase_discount_value}
                                         />
@@ -698,14 +812,19 @@ export default function CreateEditModal({
                                 </Col>
                                 <Col md={4}>
                                     <FormGroup className="mb-3">
-                                        <Form.Label htmlFor="bulk_qty" className="form-label text-start w-100">
+                                        <Form.Label
+                                            htmlFor="bulk_qty"
+                                            className="form-label text-start w-100"
+                                        >
                                             Quantity
                                         </Form.Label>
                                         <Form.Control
                                             id="bulk_qty"
                                             type="number"
                                             value={data.bulk_purchase_qty}
-                                            onChange={(e) => setData('bulk_purchase_qty', e.target.value)}
+                                            onChange={(e) =>
+                                                setData("bulk_purchase_qty", e.target.value)
+                                            }
                                             placeholder="e.g. 5"
                                             isInvalid={!!errors.bulk_purchase_qty}
                                         />
@@ -748,9 +867,12 @@ export default function CreateEditModal({
                     </button>
                 </div>
             </Modal>
-            <ManageTypes manageTypesModal={manageTypesModal}
-                        showModal={showModal}
-                            partnerCategories={event_ticket_type}/>
+
+            <ManageTypes
+                manageTypesModal={manageTypesModal}
+                showModal={showModal}
+                partnerCategories={event_ticket_type}
+            />
         </>
     );
 }
