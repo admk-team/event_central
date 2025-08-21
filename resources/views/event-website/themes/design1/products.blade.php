@@ -7,7 +7,7 @@
     @include('event-website.themes.design1.header')
 @endsection
 @section('content')
-    <section id="register" class="register register--grid mt-5">
+    <section id="register" class="register register--grid mt-2">
         <div class="container">
             <div class="section-header light">
                 <span class="section-tag">Event Shop</span>
