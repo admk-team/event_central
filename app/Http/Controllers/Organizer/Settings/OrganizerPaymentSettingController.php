@@ -56,8 +56,8 @@ class OrganizerPaymentSettingController extends Controller
                 'paypal_secret' => $input['paypal_secret'],
                 'stripe_secret_key' => $input['stripe_secret_key'],
                 'stripe_publishable_key' => $input['stripe_publishable_key'],
-                'currency' => $input['currency_code'],
-                'currency_symbol' => $input['currency_symbol'],
+                'currency' => $input['currency_code'] ?? 'USD',
+                'currency_symbol' => $input['currency_symbol'] ?? "$",
             ]
         );
 
