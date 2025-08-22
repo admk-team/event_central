@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('organizer_payment_keys', function (Blueprint $table) {
-            $table->string('currency_symbol')->nullable()->after('currency');
+            $table->string('currency_symbol')->default('$')->after('currency');
 
         });
     }

@@ -12,6 +12,7 @@ import Images from './Components/Images';
 import AddtoGoogleCalendar from './Components/AddtoGoogleCalendar';
 import RegisterFeatures from './Components/RegisterFeatures';
 import ReminderDays from './Components/ReminderDays';
+import AfterEvent from './Components/AfterEvent';
 
 function Event() {
     return (
@@ -49,14 +50,19 @@ function Event() {
                                         <Features />
                                     </HasPermission>
                                 </Col>
-                                 <Col xs={12}>
+                                <Col xs={12}>
                                     <HasPermission permission="edit_events">
                                         <RegisterFeatures />
                                     </HasPermission>
                                 </Col>
-                                 <Col xs={12}>
+                                <Col xs={12}>
                                     <HasPermission permission="edit_events">
                                         <ReminderDays />
+                                    </HasPermission>
+                                </Col>
+                                <Col xs={12}>
+                                    <HasPermission permission="edit_events">
+                                        <AfterEvent />
                                     </HasPermission>
                                 </Col>
                                 <Col xs={12}>
