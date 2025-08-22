@@ -64,9 +64,13 @@ class OrganizerPaymentKeys extends Model
             ->select('currency', 'currency_symbol')
             ->first();
 
-        return $currency ?? (object)[
-            'currency' => 'USD',
-            'currency_symbol' => '$'
-        ];
+         if (!$currency || !$currency->currency) {
+            return (object)[
+                'currency' => 'USD',
+                'currency_symbol' => '$'
+            ];
+        }
+
+        return $currency;
     }
 }
