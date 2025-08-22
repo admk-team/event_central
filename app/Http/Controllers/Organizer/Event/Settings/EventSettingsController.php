@@ -26,16 +26,19 @@ class EventSettingsController extends Controller
         $lasteventDate = $event->dates()->orderBy('date', 'desc')->get();
         $closeRegistration = eventSettings()->getValue('close_registration', false);
         $reminderDays = eventSettings()->getValue('reminder_days', '7');
-
+        $after_days = eventSettings()->getValue('after_days', '7');
+        $follow_up_event = eventSettings()->getValue('follow_up_event', false);
         return Inertia::render("Organizer/Events/Settings/Event/Index", [
             'event' => $event,
             'enableTracks' => eventSettings()->getValue('enable_tracks', false),
             'enableCheckIn' => eventSettings()->getValue('enable_check_in', false),
             'enablePrivateRegistraion' => eventSettings()->getValue('private_register', false),
             'reminderDays' => $reminderDays,
+            'after_days' => $after_days,
             'tracks' => $tracks,
             'lasteventDate' => $lasteventDate,
             'closeRegistration' => $closeRegistration,
+            'follow_up_event' => $follow_up_event,
         ]);
     }
 
@@ -145,6 +148,21 @@ class EventSettingsController extends Controller
 
         eventSettings()->set('reminder_days', $request->days_before_event);
 
-        return back()->with('success', 'Reminder days updated successfully.');
+        return back()->withSuccess('Reminder days updated successfully.');
+    }
+    public function changeAfterEvent(Request $request)
+    {
+        $request->validate([
+            'days_after_event' => 'required|integer|min:1|max:365',
+        ]);
+        eventSettings()->set('after_days', $request->days_after_event);
+
+        return back()->withSuccess('After Event days updated successfully.');
+    }
+    public function followUpToggle(Request $request)
+    {
+        $follow_up_event = eventSettings()->getValue('follow_up_event', false);
+        eventSettings()->set('follow_up_event', !$follow_up_event);
+        return back()->withSuccess('After Event days updated successfully.');
     }
 }

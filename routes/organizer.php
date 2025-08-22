@@ -258,6 +258,8 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                     Route::post('toggle-checkin', [EventSettingsController::class, 'toggleCheckIn'])->name('toggle-checkin');
                     Route::post('toggle-register', [EventSettingsController::class, 'togglePrivateRegister'])->name('toggle-register');
                     Route::post('reminder-closer', [EventSettingsController::class, 'changeReminderDays'])->name('reminder-closer');
+                    Route::post('after-event', [EventSettingsController::class, 'changeAfterEvent'])->name('after-event');
+                    Route::post('follow-up-event', [EventSettingsController::class, 'followUpToggle'])->name('follow-up-event');
                     Route::post('close-open-registration/{event}', [EventSettingsController::class, 'closeOpenRegistration'])->name('close.open.registration');
                 });
 
@@ -300,10 +302,10 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                 Route::resource('ticket', TicketsReportController::class);
                 Route::resource('refund-ticket', RefundTicketReportController::class);
 
-                Route::get("attendee-data",[AttendeesReportController::class,'exportAttendeeData'])->name('export.attendee.data');
-                Route::get("session-data",[SessionReportController::class,'exportSessionData'])->name('export.session.data');
-                Route::get("ticket-data",[TicketsReportController::class,'exportTicketData'])->name('export.ticket.data');
-                Route::get("refund-ticket-data",[RefundTicketReportController::class,'exportRefundTicketData'])->name('export.refund.ticket.data');
+                Route::get("attendee-data", [AttendeesReportController::class, 'exportAttendeeData'])->name('export.attendee.data');
+                Route::get("session-data", [SessionReportController::class, 'exportSessionData'])->name('export.session.data');
+                Route::get("ticket-data", [TicketsReportController::class, 'exportTicketData'])->name('export.ticket.data');
+                Route::get("refund-ticket-data", [RefundTicketReportController::class, 'exportRefundTicketData'])->name('export.refund.ticket.data');
             });
 
             Route::post('import/{importType}', [ImportController::class, 'import'])->name('import');
