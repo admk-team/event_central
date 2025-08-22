@@ -27,9 +27,6 @@ class StripeService
     public function createPaymentIntent($event_app_id, $amount, $currency)
     {
         try {
-
-            $currency = $currency ?? "USD";
-
             $stripe = new \Stripe\StripeClient($this->StripKeys($event_app_id)->stripe_secret_key);
 
             $paymentIntent = $stripe->paymentIntents->create([
