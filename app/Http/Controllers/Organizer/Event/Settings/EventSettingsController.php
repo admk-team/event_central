@@ -56,6 +56,7 @@ class EventSettingsController extends Controller
             'location_base' => 'required',
             'registration_private' => 'required',
             'registration_link' => $request->get('registration_private') == 1 ? 'required' : '',
+            'custom_theme' => 'required',
         ]);
 
         $event = EventApp::find(session('event_id'));
