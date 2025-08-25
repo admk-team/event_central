@@ -168,7 +168,7 @@ export default function Information() {
                             )}
                         </FormGroup>
                         <FormGroup className="mb-3">
-                            <Form.Label className="form-label">Custom Theme</Form.Label>
+                            <Form.Label className="form-label">Event Website Theme</Form.Label>
                             <Form.Select
                             className="form-control"
                             value={data.custom_theme}
