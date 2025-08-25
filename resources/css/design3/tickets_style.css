@@ -1,0 +1,208 @@
+/* ============================
+   Register / Tickets Section
+============================ */
+.register {
+    padding: var(--spacing-section-padding);
+    background: var(--color-primary);
+    font-family: var(--font-primary);
+    min-height: 100vh;
+    position: relative;
+    color: var(--color-light-text);
+    overflow: hidden;
+}
+
+.register .section-header {
+    text-align: center;
+    margin-bottom: 80px;
+    margin-top: 8%;
+}
+
+.register .section-header .section-tag {
+    display: inline-block;
+    font-size: 4rem;
+    font-weight: 800;
+    color: var(--color-light-text);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.register .section-header .section-title {
+    font-size: 44px;
+    font-weight: 900;
+    color: var(--color-light-heading);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    display: inline-block;
+    padding-bottom: 15px;
+    margin-top: 0%;
+}
+
+/* Pricing Cards */
+.pricing-tiers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    justify-content: center;
+}
+
+.pricing-card {
+    flex: 0 0 calc(33.333% - 26.66px);
+    max-width: 400px;
+    background: var(--color-card-bg);
+    border-radius: var(--radius-card);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: var(--transition-card);
+    position: relative;
+    border-top: 8px solid transparent;
+}
+
+.pricing-card:hover {
+    transform: translateY(-12px);
+    box-shadow: var(--shadow-card-hover);
+    border-top: 8px solid;
+    border-image: var(--gradient-card-hover) 1;
+}
+
+/* Card Header */
+.pricing-header {
+    text-align: center;
+    padding: var(--spacing-card-padding);
+    border-bottom: 1px solid var(--color-muted-lighter);
+}
+
+.pricing-header h3 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+    color: var(--color-muted-dark);
+}
+
+.pricing-header .pricing .price {
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--color-primary);
+}
+
+/* Card Features */
+.pricing-features {
+    list-style: none;
+    padding: 30px 25px;
+    flex-grow: 1;
+}
+
+.pricing-features li {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+    color: var(--color-muted-dark);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.pricing-features li:hover {
+    color: var(--color-primary);
+}
+
+.pricing-features li svg {
+    stroke: var(--color-primary);
+}
+
+/* Description */
+.description-header {
+    padding: 0 25px 30px;
+    font-size: 13px;
+}
+
+.description-header h6 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--color-muted-dark);
+    margin-bottom: 12px;
+}
+
+.description span {
+    font-size: 1.3rem;
+    color: var(--color-muted-dark);
+}
+
+/* Buttons */
+.btn.btn-primary {
+    margin: 25px;
+    background: var(--color-primary);
+    border: none;
+    border-radius: var(--radius-btn);
+    padding: 20px 0;
+    font-size: 1.6rem;
+    font-weight: 900;
+    transition: var(--transition-btn);
+    color: var(--color-primary-foreground);
+}
+
+.btn.btn-primary:hover {
+    background: var(--gradient-btn-hover);
+    transform: translateY(-4px);
+}
+
+/* Modal */
+.modal-content {
+    border-radius: var(--radius-modal);
+    padding: 50px;
+    background: var(--color-card-bg);
+}
+
+.modal-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 30px;
+    color: var(--color-primary);
+}
+
+.modal-body p {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: var(--color-muted-dark);
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .pricing-card {
+        flex: 0 0 48%;
+    }
+
+    .pricing-header h3 {
+        font-size: 2.2rem;
+    }
+
+    .pricing-header .pricing .price {
+        font-size: 2.5rem;
+    }
+
+    .pricing-features li {
+        font-size: 1.3rem;
+    }
+
+    .description-header h6 {
+        font-size: 13px;
+    }
+
+    .description span {
+        font-size: 12px;
+    }
+
+    .btn.btn-primary {
+        font-size: 13px;
+        padding: 18px 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .pricing-card {
+        flex: 0 0 100%;
+    }
+}

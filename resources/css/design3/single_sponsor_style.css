@@ -1,0 +1,232 @@
+/* ==== Single Sponsor Section ==== */
+.single-sponsors {
+    padding: 100px 30px;
+    background: var(--color-primary);
+    font-family: var(--font-primary);
+    min-height: 100vh;
+    position: relative;
+    color: var(--color-light);
+    overflow: hidden;
+}
+
+.single-sponsors .section-header {
+    text-align: center;
+    margin-top: 8%;
+}
+
+.single-sponsors .section-tag {
+    font-size: 44px;
+    font-weight: 900;
+    color: var(--color-light);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: inline-block;
+    padding-bottom: 15px;
+}
+
+/* Sponsor Banner */
+.single-sponsors-tiers .sponsor-logo {
+    box-shadow: var(--shadow-lg);
+}
+
+.single-sponsors-tiers .sponsor-logo img {
+    width: 100%;
+    max-width: 300px;
+    height: auto;
+    object-fit: contain;
+    box-shadow: var(--shadow-lg);
+}
+
+/* ================= Banner Image ================= */
+#banner-image {
+    display: block;
+    margin: 0 auto 30px auto;
+    width: 100%;
+    max-height: 400px;
+    height: auto;
+    object-fit: contain; /* pura image fit karega */
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* ================= Responsive Banner ================= */
+@media (max-width: 992px) {
+    #banner-image {
+        max-height: 280px;
+    }
+}
+
+@media (max-width: 768px) {
+    #banner-image {
+        max-height: 220px;
+    }
+}
+
+@media (max-width: 480px) {
+    #banner-image {
+        max-height: 180px;
+        border-radius: 12px;
+    }
+}
+
+
+/* Sponsor Grid */
+.single-sponsors-grid {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+    background: var(--color-white);
+    padding: 30px;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+}
+
+/* Logo Container */
+.sponsor-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Sponsor Details */
+.single-sponsors-grid .text-center {
+    flex: 1;
+    text-align: left;
+}
+
+.single-sponsors-grid h5 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-dark);
+    margin-bottom: 8px;
+}
+
+.single-sponsors-grid p {
+    margin-bottom: 6px;
+    font-size: 15px;
+    color: #555;
+}
+
+/* Social Icons */
+.single-sponsors-grid a i {
+    font-size: 22px;
+    margin-right: 10px;
+    transition: var(--transition);
+}
+
+.single-sponsors-grid a i.bi-globe:hover {
+    color: var(--color-primary);
+}
+
+.single-sponsors-grid a i.bi-facebook:hover {
+    color: #1877f2;
+}
+
+.single-sponsors-grid a i.bi-twitter-x:hover {
+    color: var(--color-black);
+}
+
+.single-sponsors-grid a i.bi-linkedin:hover {
+    color: #0077b5;
+}
+
+.single-sponsors-grid a i.bi-youtube:hover {
+    color: var(--color-danger);
+}
+
+.single-sponsors-grid a i.bi-instagram:hover {
+    color: #e4405f;
+}
+
+.single-sponsors-grid a i.bi-tiktok:hover {
+    color: var(--color-black);
+}
+
+/* Description with Show More */
+.description-container {
+    margin-top: 12px;
+}
+
+.description-text {
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.show-more-btn {
+    background: none;
+    border: none;
+    color: var(--color-primary);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.show-more-btn:hover {
+    color: var(--color-secondary);
+}
+
+/* Modal Style */
+.modal-content {
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    text-align: center;
+}
+
+.modal-content img {
+    max-height: 120px;
+    margin-bottom: 15px;
+}
+
+.modal-content h5 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.modal-content p {
+    font-size: 14px;
+    color: #555;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .single-sponsors-grid {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .sponsor-logo {
+        width: 180px;
+        height: 180px;
+    }
+}
+
+/* Responsive Social Icon Buttons */
+.social-icons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.social-icons a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: clamp(32px, 5vw, 44px);
+    height: clamp(32px, 5vw, 44px);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    color: var(--color-danger);
+    transition: var(--transition);
+    font-size: clamp(14px, 2vw, 18px);
+}
+
+.social-icons a:hover {
+    background: var(--color-white);
+    color: var(--color-dark);
+    transform: scale(1.15);
+}

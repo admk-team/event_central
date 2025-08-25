@@ -1,0 +1,79 @@
+:root {
+    /* ================= Fonts ================= */
+    --font-primary: 'Exo', sans-serif;
+    --font-secondary: 'Open Sans', sans-serif;
+
+    /* ================= Colors ================= */
+    --color-bg-dark: #0f172a;
+    --color-card-bg: #ffffff;
+    --color-bg-mid: #1e293b;
+    --color-bg-darker: #111827;
+    --color-light-text: #f9fafb;
+    --color-light-heading: #f1f5f9;
+    --color-text-dark: #111;
+    --color-muted-dark: #555;
+    --color-muted: #666;
+    --color-muted-light: #64748b;
+    --color-muted-lighter: #e5e7eb;
+    --color-white: #ffffff;
+    --color-black: #000000;
+    --color-accent-start: #ff6f61;
+    --color-accent-end: #ffbc61;
+    --color-accent: #22d3ee;
+    --color-pink: #ec4899;
+    --color-yellow: #facc15;
+    --color-gray-light: rgba(255, 255, 255, 0.05);
+    --color-gray-lighter: rgba(255, 255, 255, 0.07);
+    --color-gray-border: rgba(255, 255, 255, 0.06);
+    /* ================= Gradients ================= */
+    --gradient-dark: linear-gradient(135deg, var(--color-bg-dark), var(--color-bg-mid), var(--color-bg-darker));
+    --gradient-accent: linear-gradient(90deg, var(--color-secondary, var(--color-pink)), var(--color-primary, var(--color-bg-dark)), var(--color-accent));
+    --gradient-card-hover: linear-gradient(90deg, var(--color-accent-start), var(--color-accent-end));
+    --gradient-btn: linear-gradient(90deg, var(--color-accent-start), var(--color-accent-end));
+    --gradient-btn-hover: linear-gradient(90deg, var(--color-accent-end), var(--color-accent-start));
+    --gradient-neon-border: linear-gradient(135deg, var(--color-pink), #6366f1, var(--color-accent), var(--color-pink));
+    --gradient-placeholder: linear-gradient(135deg, #3e5484, #99101f);
+
+    /* ================= Shadows ================= */
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.15);
+    --shadow-card: 0 8px 20px rgba(0, 0, 0, 0.06);
+    --shadow-card-md: 0 12px 30px rgba(0, 0, 0, 0.4);
+    --shadow-card-hover: 0 15px 35px rgba(0, 0, 0, 0.12);
+    --shadow-card-hover-lg: 0 18px 40px rgba(0, 0, 0, 0.6);
+    --shadow-inset: inset 0 0 0 1px var(--color-gray-lighter);
+    --shadow-inner: inset 0 4px 10px rgba(0, 0, 0, 0.4);
+    --shadow-img: 0 4px 10px rgba(0, 0, 0, 0.45);
+    --shadow-img-hover: 0 6px 15px rgba(236, 72, 153, 0.7);
+    --shadow-btn-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
+    --shadow-modal: 0 30px 80px rgba(0, 0, 0, 0.6);
+
+    /* ================= Border Radius ================= */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --radius-card: 16px;
+    --radius-card-lg: 20px;
+    --radius-btn: 50px;
+    --radius-modal: 25px;
+    --radius-placeholder: 12px;
+
+    /* ================= Spacing ================= */
+    --spacing-section-padding: 100px 30px;
+    --spacing-section-padding-sm: 70px 20px;
+    --spacing-card-padding: 30px 25px;
+    --spacing-card-padding-md: 50px 25px 30px;
+    --spacing-card-padding-sm: 20px;
+    --spacing-header-margin: 50px;
+
+    /* ================= Transitions ================= */
+    --transition: all 0.3s ease;
+    --transition-card: transform 0.4s ease, box-shadow 0.4s ease;
+    --transition-card-md: transform 0.3s ease, box-shadow 0.3s ease;
+    --transition-btn: background 0.4s, transform 0.3s;
+    --transition-features: color 0.3s;
+    --transition-img: transform 0.4s ease, filter 0.4s ease;
+    --transition-icon: transform 0.3s ease, color 0.3s ease;
+}
