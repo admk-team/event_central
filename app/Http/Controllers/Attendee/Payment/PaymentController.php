@@ -210,9 +210,9 @@ class PaymentController extends Controller
         $amount = $data['totalAmount'];
 
         $organizerId = EventApp::findOrFail(auth()->user()->event_app_id ?? session('event_id'));
-       $getCurrency = OrganizerPaymentKeys::getCurrencyForUser($organizerId->organizer_id);
+        $getCurrency = OrganizerPaymentKeys::getCurrencyForUser($organizerId->organizer_id);
 
-       $currency_code = $getCurrency->currency ?? 'USD';
+        $currency_code = $getCurrency->currency ?? 'USD';
         $stripe_response = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount, $currency_code);
         $client_secret = $stripe_response['client_secret'];
         $payment_id = $stripe_response['payment_id'];
