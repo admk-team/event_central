@@ -178,7 +178,7 @@ export default function Information() {
                             <option value="default">Default</option>
                             <option value="design1">Design 1</option>
                             <option value="design2">Design 2</option>
-                            <option value="design3">Design 3</option>
+                            {/* <option value="design3">Design 3</option> */}
                             </Form.Select>
                             {errors.custom_theme && (
                                 <Form.Control.Feedback type="invalid">
