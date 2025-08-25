@@ -269,7 +269,7 @@
                                                                                     alt="{{ $speaker->name }}">
                                                                             </div>
                                                                             <div class="px-4 text-center">
-                                                                                <h5>{{ $speaker->name }}</h5>
+                                                                                <h5 class="text-muted">{{ $speaker->name }}</h5>
                                                                                 @if ($speaker->email)
                                                                                     <p class="text-muted mb-0">
                                                                                         {{ $speaker->email }}</p>
