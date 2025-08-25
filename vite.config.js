@@ -8,7 +8,26 @@ export default defineConfig({
             input: [
                 "resources/js/app.tsx",
                 "resources/js/website-script.js", // Add this
-                "resources/css/website-styles.css", // Ensure this is included
+                "resources/css/website-styles.css",
+                //Design1 css
+                "resources/css/design1/index_styles.css",
+                "resources/css/design1/exhibitors_styles.css",
+                "resources/css/design1/products_styles.css",
+                "resources/css/design1/schedule_styles.css",
+                "resources/css/design1/speakers_styles.css",
+                "resources/css/design1/sponsor_single_styles.css",
+                "resources/css/design1/sponsors_styles.css",
+
+                //Design2 css
+                "resources/css/design2/index_styles.css",
+                "resources/css/design2/exhibitors_styles.css",
+                "resources/css/design2/products_styles.css",
+                "resources/css/design2/schedule_styles.css",
+                "resources/css/design2/speakers_styles.css",
+                "resources/css/design2/sponsor_single_styles.css",
+                "resources/css/design2/sponsors_styles.css",
+
+                 // Ensure this is included
             ],
             refresh: true,
         }),
