@@ -9,7 +9,7 @@
   --shadow: 0 14px 34px rgba(0,0,0,.28);
 }
 
-html,body{background:linear-gradient(180deg,var(--bg-1),var(--bg-2));color:var(--ink)}
+html,body{background:linear-gradient(180deg,var(--bg-1));color:var(--ink)}
 img{max-width:100%;display:block}
 
 /* ======= RAIL (desktop) ======= */

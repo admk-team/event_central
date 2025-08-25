@@ -89,8 +89,16 @@
                 </div>
             </div>
         </section>
+    @else
+        <section id="register" class="tickets">
+            <div class="container">
+                <div class="section-head">
+                    <span class="eyebrow">Our Sponsors</span>
+                    <h2>Currently Unavailable</h2>
+                </div>
+            </div>
+        </section>
     @endif
-
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const showMoreButtons = document.querySelectorAll('.show-more-btn');

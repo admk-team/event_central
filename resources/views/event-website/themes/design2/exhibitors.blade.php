@@ -69,5 +69,14 @@
                 </div>
             </div>
         </section>
+        @else
+         <section id="register" class="tickets">
+            <div class="container">
+                <div class="section-head">
+                    <span class="eyebrow">Our Exhibitors</span>
+                    <h2>Currently Unavailable</h2>
+                </div>
+            </div>
+        </section>
     @endif
 @endsection
