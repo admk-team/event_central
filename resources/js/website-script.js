@@ -131,31 +131,31 @@ document.addEventListener("DOMContentLoaded", () => {
       })
     }
   
-    // Smooth scrolling for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-      anchor.addEventListener("click", function (e) {
-        if (this.getAttribute("href") !== "#") {
-          e.preventDefault()
+    // // Smooth scrolling for anchor links
+    // document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    //   anchor.addEventListener("click", function (e) {
+    //     if (this.getAttribute("href") !== "#") {
+    //       e.preventDefault()
   
-          const targetId = this.getAttribute("href")
-          const targetElement = document.querySelector(targetId)
+    //       const targetId = this.getAttribute("href")
+    //       const targetElement = document.querySelector(targetId)
   
-          if (targetElement) {
-            // Close mobile menu if open
-            if (navLinks && navLinks.classList.contains("active")) {
-              navLinks.classList.remove("active")
-              navLinks.style.display = ""
-            }
+    //       if (targetElement) {
+    //         // Close mobile menu if open
+    //         if (navLinks && navLinks.classList.contains("active")) {
+    //           navLinks.classList.remove("active")
+    //           navLinks.style.display = ""
+    //         }
   
-            // Scroll to target
-            window.scrollTo({
-              top: targetElement.offsetTop - 80, // Adjust for header height
-              behavior: "smooth",
-            })
-          }
-        }
-      })
-    })
+    //         // Scroll to target
+    //         window.scrollTo({
+    //           top: targetElement.offsetTop - 80, // Adjust for header height
+    //           behavior: "smooth",
+    //         })
+    //       }
+    //     }
+    //   })
+    // })
   
     // Animation on scroll
     const animateOnScroll = () => {
@@ -175,13 +175,13 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("load", animateOnScroll)
     window.addEventListener("scroll", animateOnScroll)
   
-    // Resize handler for mobile menu
-    window.addEventListener("resize", () => {
-      if (window.innerWidth >= 1024 && navLinks) {
-        navLinks.style = ""
-        navLinks.classList.remove("active")
-      }
-    })
+    // // Resize handler for mobile menu
+    // window.addEventListener("resize", () => {
+    //   if (window.innerWidth >= 1024 && navLinks) {
+    //     navLinks.style = ""
+    //     navLinks.classList.remove("active")
+    //   }
+    // })
   })
   
   
