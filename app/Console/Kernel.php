@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\AfterEventClosed;
 use App\Console\Commands\EventCloseRegistration;
 use App\Console\Commands\EventCloserReminder;
 use App\Console\Commands\IncreaseTicketPrices;
@@ -19,6 +20,7 @@ class Kernel extends ConsoleKernel
         $schedule->command(IncreaseTicketPrices::class)->daily();
         $schedule->command(EventCloseRegistration::class)->daily();
         $schedule->command(EventCloserReminder::class)->daily();
+        $schedule->command(AfterEventClosed::class)->daily();
         $schedule->command(SessionReminder::class)->everyMinute();
     }
 

@@ -1,10 +1,7 @@
 import { Link, useForm } from "@inertiajs/react";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
-    Card,
     Col,
-    Container,
     Row,
     Button,
     Form,
@@ -16,244 +13,433 @@ import {
 import TicketDetail from "./TicketDetail";
 import { Minus, Plus } from "lucide-react";
 
+type Fee = { id: number; name: string; fee_amount: number | string; fee_type: "flat" | "percentage" };
+type Addon = any; // keep as any to match your data
+type Ticket = any;
 
-const TicketCard = ({currency_symbol, ticket, onTicketDetailsUpdated, ticket_array, submitCheckOut, onBlockCheckout, attendee_id }: any) => {
+const TicketCard = ({
+    currency_symbol,
+    ticket,
+    onTicketDetailsUpdated,
+    ticket_array,
+    submitCheckOut,
+    onBlockCheckout,
+    attendee_id,
+}: {
+    currency_symbol: string;
+    ticket: Ticket;
+    onTicketDetailsUpdated?: (details: any[], removedIds: number[]) => void;
+    ticket_array: any[];
+    submitCheckOut: () => void;
+    onBlockCheckout?: (blocked: boolean) => void;
+    attendee_id: number | string;
+}) => {
     const isAddedToCart = ticket.is_added_to_cart;
     const [processing, setProcessing] = useState(false);
     const [ticketQty, setTicketQty] = useState(0);
-    const [ticketDetails, setTicketDetails] = useState<any>([]);
-    const [removedIds, setRemovedIds] = useState<any>([]);
+    const [ticketDetails, setTicketDetails] = useState<any[]>([]);
+    const [removedIds, setRemovedIds] = useState<number[]>([]);
     const [showAll, setShowAll] = useState(false);
     const [isWaitList, setIsWaitList] = useState(false);
 
-    const sessionsToShow = showAll
-        ? ticket.sessions
-        : ticket.sessions.slice(0, 5);
+    // addon UI state
+    const [addonVariantErrors, setAddonVariantErrors] = useState<Record<number, string | null>>({});
+    const [addonExtraFieldValues, setAddonExtraFieldValues] = useState<Record<number, Record<string, string>>>({});
+    const [selectedAddons, setSelectedAddons] = useState<any[]>([]);
+
+    const sessionsToShow = showAll ? ticket.sessions : ticket.sessions.slice(0, 5);
+
+    // ---------- helpers ----------
+    const calculateFeesSubTotal = (t: Ticket) => {
+        let subTotal = 0;
+        const ticket_base_price = Number(t.base_price) || 0;
+        (t.fees || []).forEach((fee: Fee) => {
+            const amt = Number(fee.fee_amount) || 0;
+            subTotal += fee.fee_type === "flat" ? amt : (ticket_base_price * amt) / 100;
+        });
+        return Number(subTotal.toFixed(2));
+    };
+
+    const calculateAddonsSubTotal = (selAddons: any[]) => {
+        let subTotal = 0;
+        (selAddons || []).forEach((addon: any) => {
+            subTotal += Number(addon.selectedVariant?.price ?? addon.price ?? 0);
+        });
+        return Number(subTotal.toFixed(2));
+    };
+
+    // ----- addon helpers -----
+    const isAddonSelect = (addon: any) => selectedAddons.some((a: any) => a.id === addon.id);
+
+    const isOptionSelected = (option: any, attribute: any) =>
+        selectedAddons.some((a: any) =>
+            (a.attributes || []).some(
+                (attr: any) =>
+                    attr.id === attribute.id &&
+                    (attr.options || []).some((o: any) => o.id === option.id && o.isSelected)
+            )
+        );
+
+    const handleCheckChanged = (_e: any, addon: any) => {
+        // Select first variant by default
+        if (addon.variants?.length) {
+            addon.selectedVariant = addon.variants[0];
+            addon.attributes = (addon.attributes || []).map((attr: any) => ({
+                ...attr,
+                options: (attr.options || []).map((option: any) => {
+                    for (const attrValue of addon.selectedVariant.attribute_values || []) {
+                        if (option.id === attrValue.addon_attribute_option_id) {
+                            return { ...option, isSelected: true };
+                        }
+                    }
+                    return option;
+                }),
+            }));
+        }
+        setSelectedAddons((prev: any[]) =>
+            isAddonSelect(addon) ? prev.filter((i: any) => i.id !== addon.id) : [...prev, addon]
+        );
+    };
+
+    const selectAddonAttributeOption = (addon: any, attribute: any, option: any) => {
+        setSelectedAddons((prev: any[]) =>
+            prev.map((a: any) => {
+                if (a.id !== addon.id) return a;
+
+                const newState = {
+                    ...a,
+                    attributes: (a.attributes || []).map((attr: any) => {
+                        if (attr.id !== attribute.id) return attr;
+                        return {
+                            ...attr,
+                            options: (attr.options || []).map((o: any) =>
+                                o.id === option.id ? { ...o, isSelected: true } : { ...o, isSelected: false }
+                            ),
+                        };
+                    }),
+                };
+
+                const selectedOptionIds: number[] = [];
+                for (const attr of newState.attributes || []) {
+                    for (const o of attr.options || []) {
+                        if (o.isSelected) selectedOptionIds.push(o.id);
+                    }
+                }
+
+                let selectedVariant: any = null;
+                (newState.variants || []).forEach((v: any) => {
+                    let valuesMatched = true;
+                    (v.attribute_values || []).forEach((av: any) => {
+                        if (!selectedOptionIds.includes(av.addon_attribute_option_id)) {
+                            valuesMatched = false;
+                        }
+                    });
+                    if (valuesMatched) selectedVariant = v;
+                });
+
+                newState.selectedVariant = selectedVariant;
+
+                if (
+                    newState.selectedVariant &&
+                    newState.selectedVariant.qty_sold >= newState.selectedVariant.qty
+                ) {
+                    setAddonVariantErrors((prevErrs) => ({
+                        ...prevErrs,
+                        [newState.id]: "This variant is sold out. Please select another variant",
+                    }));
+                } else {
+                    setAddonVariantErrors((prevErrs) => ({
+                        ...prevErrs,
+                        [newState.id]: null,
+                    }));
+                }
+
+                return newState;
+            })
+        );
+    };
+
+    // ---------- FIX 1: derive fees/addons UI with useMemo (no setState loop) ----------
+    const feesOptions = useMemo(() => {
+        return (ticket.fees ?? []).map((fee: Fee) => {
+            const id = `${ticket.id}-fee-${fee.id}`;
+            return (
+                <Col md={12} lg={12} key={`col-${id}`} className="d-flex flex-row">
+                    <i className="ri-checkbox-circle-fill text-success fs-15 align-middle mr-2"></i>
+                    <p key={id} className="m-0">
+                        {fee.name}
+                        <i className="fw-bold">
+                            {fee.fee_type === "flat"
+                                ? ` (${currency_symbol}${fee.fee_amount})`
+                                : ` (${fee.fee_amount}%)`}
+                        </i>
+                    </p>
+                </Col>
+            );
+        });
+    }, [ticket.id, ticket.fees, currency_symbol]);
+
+    const addonOptions = useMemo(() => {
+        return (ticket.addons ?? []).map((addon: any) => {
+            const id = `${ticket.id}-addon-${addon.id}`;
+            const labelPrice =
+                addon.selectedVariant?.price ?? addon.variants?.[0]?.price ?? addon.price ?? 0;
+
+            return (
+                <div key={id}>
+                    <Form.Check
+                        id={id}
+                        type="checkbox"
+                        label={addon.full_name.replace(/\([^)]*\)/g, `(${labelPrice})`)}
+                        onChange={(e) => handleCheckChanged(e, addon)}
+                        checked={isAddonSelect(addon)}
+                    />
+                    {addonVariantErrors[addon.id] && (
+                        <p className="text-danger ps-4">{addonVariantErrors[addon.id]}</p>
+                    )}
+
+                    {isAddonSelect(addon) &&
+                        (addon.attributes || []).map((attribute: any) => (
+                            <div key={attribute.id} className="ps-4 mt-2 mb-3">
+                                <Form.Label className="fw-bold mb-1">{attribute.name}:</Form.Label>
+                                <div className="d-flex gap-2 flex-wrap">
+                                    {(attribute.options || []).map((option: any) => (
+                                        <div
+                                            key={option.id}
+                                            className={`border py-1 px-2 cursor-pointer text-black ${isOptionSelected(option, attribute)
+                                                ? "bg-primary text-white border-primary"
+                                                : ""
+                                                }`}
+                                            onClick={() => selectAddonAttributeOption(addon, attribute, option)}
+                                        >
+                                            {option.value}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+
+                    {isAddonSelect(addon) && addon.extra_fields && (
+                        <div className="ps-4 mt-2 mb-3">
+                            {JSON.parse(addon.extra_fields).map((label: string) => {
+                                const inputKey = label;
+                                return (
+                                    <div key={inputKey} className="mb-2">
+                                        <Form.Label>{label}</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            value={addonExtraFieldValues[addon.id]?.[inputKey] ?? ""}
+                                            onChange={(e) =>
+                                                setAddonExtraFieldValues((prev) => ({
+                                                    ...prev,
+                                                    [addon.id]: {
+                                                        ...prev[addon.id],
+                                                        [inputKey]: e.target.value,
+                                                    },
+                                                }))
+                                            }
+                                        />
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
+            );
+        });
+        // include the reactive bits we actually read here
+    }, [
+        ticket.id,
+        ticket.addons,
+        addonVariantErrors,
+        addonExtraFieldValues,
+        selectedAddons,
+    ]);
+
+    // ---------- FIX 2: rebuild ticketDetails WITHOUT depending on ticketDetails ----------
+    useEffect(() => {
+        setTicketDetails((prevDetails: any[]) => {
+            const basePrice = Number(ticket.base_price) || 0;
+            const discountValue = Number(ticket.bulk_purchase_discount_value || 0);
+            const discountQty = Number(ticket.bulk_purchase_qty || 0);
+            const discountType = ticket.bulk_purchase_discount_type;
+            const totalBaseAmount = basePrice * ticketQty;
+
+            const shouldApplyDiscount = discountQty > 0 && discountValue > 0 && ticketQty >= discountQty;
+
+            let finalPerTicketPrice = basePrice;
+            if (shouldApplyDiscount && ticketQty > 0) {
+                const totalDiscountedAmount =
+                    discountType === "fixed"
+                        ? Math.max(0, totalBaseAmount - discountValue)
+                        : totalBaseAmount - totalBaseAmount * (discountValue / 100);
+                finalPerTicketPrice = Number((totalDiscountedAmount / ticketQty).toFixed(2));
+            }
+
+            const existingMap = new Map(prevDetails.map((it) => [it.id, it]));
+            const newList: any[] = [];
+            const newIds: number[] = [];
+
+            for (let i = 0; i < ticketQty; i++) {
+                const id = Number(`${ticket.id}${i}`);
+                newIds.push(id);
+
+                const adjustedBasePrice = shouldApplyDiscount ? finalPerTicketPrice : basePrice;
+
+                const newTicketData = {
+                    ...ticket,
+                    base_price: adjustedBasePrice,
+                    bulk_purchase_discount_type: discountType,
+                    bulk_purchase_discount_value: discountValue,
+                    bulk_purchase_qty: discountQty,
+                };
+
+                const fees_sub_total = calculateFeesSubTotal({
+                    ...ticket,
+                    base_price: adjustedBasePrice,
+                });
+
+                const existing = existingMap.get(id);
+                if (existing) {
+                    newList.push({
+                        ...existing,
+                        ticket: newTicketData,
+                        fees_sub_total,
+                    });
+                } else {
+                    newList.push({
+                        id,
+                        ticket_no: i + 1,
+                        ticket: newTicketData,
+                        addons: [],
+                        fees_sub_total,
+                        addons_sub_total: 0,
+                    });
+                }
+            }
+
+            newList.sort((a, b) => a.id - b.id);
+
+            const prevIds = prevDetails.map((it) => it.id);
+            const removed = prevIds.filter((id) => !newIds.includes(id));
+            setRemovedIds(removed);
+
+            return newList;
+        });
+    }, [
+        ticketQty,
+        ticket.id,
+        ticket.base_price,
+        ticket.bulk_purchase_discount_type,
+        ticket.bulk_purchase_discount_value,
+        ticket.bulk_purchase_qty,
+        // not: ticket (object) or ticketDetails
+    ]);
+
+    // ---------- FIX 3: call parent via ref (avoid depending on new function identity) ----------
+    const onChangeRef = useRef<typeof onTicketDetailsUpdated>();
+    useEffect(() => {
+        onChangeRef.current = onTicketDetailsUpdated;
+    }, [onTicketDetailsUpdated]);
 
     useEffect(() => {
-        const basePrice = parseFloat(ticket.base_price);
-        const discountValue = parseFloat(ticket.bulk_purchase_discount_value ?? 0);
-        const discountQty = Number(ticket.bulk_purchase_qty ?? 0);
-        const discountType = ticket.bulk_purchase_discount_type;
-        const totalBaseAmount = basePrice * ticketQty;
-        let totalDiscountedAmount;
+        onChangeRef.current?.(ticketDetails, removedIds);
+    }, [ticketDetails, removedIds]);
 
-        if (discountType === 'fixed') {
-            totalDiscountedAmount = Math.max(0, totalBaseAmount - discountValue);
-        } else {
-            totalDiscountedAmount = totalBaseAmount - (totalBaseAmount * (discountValue / 100));
-        }
-        const finalPerTicketPrice = totalDiscountedAmount / ticketQty;
-        const shouldApplyDiscount = discountQty > 0 && discountValue > 0 && ticketQty >= discountQty;
-        const existingTicketsMap = new Map(ticketDetails.map(item => [item.id, item]));
-        const newTicketList = [];
-        const newIds = [];
-        for (let i = 0; i < ticketQty; i++) {
-            const id = parseInt(`${ticket.id}${i}`);
-            const existingTicket = existingTicketsMap.get(id);
-            newIds.push(id);
-            let adjustedBasePrice = basePrice;
-            if (shouldApplyDiscount) {
-                adjustedBasePrice = finalPerTicketPrice;
-            }
-            const newTicketData = {
-                ...ticket,
-                base_price: parseFloat(adjustedBasePrice.toFixed(2)),
-                bulk_purchase_discount_type: discountType,
-                bulk_purchase_discount_value: ticket.bulk_purchase_discount_value,
-                bulk_purchase_qty: discountQty,
-            };
-            const feesSubTotal = calculateFeesSubTotal({ ...ticket, base_price: adjustedBasePrice });
-            if (existingTicket) {
-                newTicketList.push({
-                    ...existingTicket,
-                    ticket: newTicketData,
-                    fees_sub_total: feesSubTotal,
-                });
-            } else {
-                newTicketList.push({
-                    id,
-                    ticket_no: i + 1,
-                    ticket: newTicketData,
-                    addons: [],
-                    fees_sub_total: feesSubTotal,
-                    addons_sub_total: 0,
-                });
-            }
-        }
-        const prevIds = ticketDetails.map(item => item.id);
-        const removedIds = prevIds.filter(id => !newIds.includes(id));
-        newTicketList.sort((a, b) => a.id - b.id);
-        setTicketDetails(newTicketList);
-        setRemovedIds(removedIds);
-
-    }, [ticketQty, ticketDetails]);
-
-
-    const calculateFeesSubTotal = (ticket: any) => {
-        let subTotal = 0;
-        let ticket_base_price = ticket.base_price;
-        ticket.fees.forEach((fee: any) => {
-            if (fee.fee_type === "flat") {
-                subTotal += parseFloat(fee.fee_amount);
-            } else {
-                //Percentage
-                subTotal +=
-                    (parseFloat(ticket_base_price) *
-                        parseFloat(fee.fee_amount)) /
-                    100;
-            }
-        });
-        subTotal = parseFloat(subTotal.toFixed(2));
-        return subTotal;
-    };
-
-    const calculateAddonsSubTotal = (addons: any) => {
-        let subTotal = 0;
-        addons.forEach((addon: any) => {
-            subTotal += parseFloat(addon.selectedVariant?.price ?? addon.price);
-        });
-        subTotal = parseFloat(subTotal.toFixed(2));
-        return subTotal;
-    };
-
-    const createQtyOptions = (items: any, ticket: any) => {
-        const listItems = [];
-        for (let i = 0; i < items; i++) {
-            listItems.push(
-                <option value={i} key={i + "-" + ticket.id}>
-                    {i}
-                </option>
-            );
-        }
-        return listItems;
-    };
-
-    const handleAddonUpdated = (addons: any, ticket_no: any, extraFieldValues: any) => {
+    // ----- addons updated coming from TicketDetail -----
+    const handleAddonUpdated = (selAddons: any, ticket_no: any, extraFieldValues: any) => {
         setTicketDetails((prevItems: any) =>
             prevItems.map((item: any) => {
                 if (item.ticket_no === ticket_no) {
-                    const updatedAddons = addons.map((addon: any) => ({
+                    const updatedAddons = selAddons.map((addon: any) => ({
                         ...addon,
                         extraFields: extraFieldValues[addon.id] || {},
                     }));
                     return {
                         ...item,
                         addons: updatedAddons,
-                        addons_sub_total: calculateAddonsSubTotal(addons),
+                        addons_sub_total: calculateAddonsSubTotal(selAddons),
                     };
                 }
                 return item;
             })
         );
     };
-    const { data, setData, post, put, errors, reset } = useForm({
-        attendee_id: attendee_id,
-        event_app_ticket_id: ticket.id
 
+    const { post } = useForm({
+        attendee_id: attendee_id,
+        event_app_ticket_id: ticket.id,
     });
 
     const handleWaitingList = () => {
-        post(route('attendee.waitlist.post'), {
-            onSuccess: () => {
-                setIsWaitList(true);
-            }
-        })
-        console.log('testing');
+        post(route("attendee.waitlist.post"), {
+            onSuccess: () => setIsWaitList(true),
+        });
+    };
 
-    }
-    // const handleWaitingListUpdate = () => {
-    //     post(route('attendee.delete.waitlist'), {
-    //         onSuccess: () => {
-    //             setIsWaitList(false);
-    //         }
-    //     })
-
-    // }
-
-    useEffect(() => {
-        onTicketDetailsUpdated(ticketDetails, removedIds);
-    }, [ticketDetails]);
-
-    const availableQty = ticket.qty_total - ticket.qty_sold;
+    const availableQty =
+        ticket.qty_total === null ? Infinity : Math.max(0, ticket.qty_total - ticket.qty_sold);
     const unlimitedQty = ticket.qty_total === null;
-    console.log('ticket', ticket);
-
     return (
         <Col lg={12}>
             <Accordion>
                 <Accordion.Item eventKey="1">
                     <Accordion.Header>
                         <div className="d-flex justify-content-between align-items-center w-100">
-                            <h5 className="mb-1 fw-bold">{ticket.name} {ticketQty > 0 ? ' x ' + ticketQty : ''}</h5>
-                            {(!unlimitedQty && availableQty <= 0) && (
+                            <h5 className="mb-1 fw-bold">
+                                {ticket.name} {ticketQty > 0 ? " x " + ticketQty : ""}
+                            </h5>
+                            {!unlimitedQty && availableQty <= 0 && (
                                 <div className="me-5 fw-bold text-danger">Sold Out</div>
                             )}
                         </div>
                     </Accordion.Header>
+
                     <Accordion.Body>
                         <Row className="d-flex justify-content-centel align-items-center">
                             <Col md={5} lg={5}>
-                                {/* <h5 className="mb-1 fw-bold">{ticket.name}</h5> */}
-                                <span className="mb-5">
-                                    {ticket.description}
-                                </span><br />
-
+                                <span className="mb-5">{ticket.description}</span>
+                                <br />
                                 {ticket.bulk_purchase_status !== 0 && (
-                                    <>
-                                        <span className="mt-5 ff-secondary fw-bold text-warning">
-                                            Limited Offer: {ticket.bulk_purchase_qty}+ tickets and Save{" "}
-                                            {ticket.bulk_purchase_discount_type === "fixed"
-                                                ? `${currency_symbol} ${parseInt(ticket.bulk_purchase_discount_value)}`
-                                                : `${parseInt(ticket.bulk_purchase_discount_value)}%`
-                                            } instantly!
-                                        </span>
-
-                                    </>
+                                    <span className="mt-5 ff-secondary fw-bold text-warning">
+                                        Limited Offer: {ticket.bulk_purchase_qty}+ tickets and Save{" "}
+                                        {ticket.bulk_purchase_discount_type === "fixed"
+                                            ? `${currency_symbol} ${parseInt(ticket.bulk_purchase_discount_value)}`
+                                            : `${parseInt(ticket.bulk_purchase_discount_value)}%`}{" "}
+                                        instantly!
+                                    </span>
                                 )}
                             </Col>
+
                             <Col md={2} lg={2}>
                                 <sup>
                                     <small>{currency_symbol}</small>
                                 </sup>
-                                <span className="ff-secondary fw-bold fs-3">
-                                    {ticket.base_price}
-                                </span>
-                                <br />
-                                {/* {ticket.bulk_purchase_status !== 0 && (
-                                    <>
-                                        <small>
-                                            {ticket.bulk_purchase_discount_type === 'percentage' ? '%' : '$'}
-                                        </small>
-                                        <span className="ff-secondary fs-5">
-                                            {ticket.bulk_purchase_discount_value}
-                                        </span>
-                                    </>
-
-                                )} */}
+                                <span className="ff-secondary fw-bold fs-3">{ticket.base_price}</span>
                             </Col>
+
                             <Col md={3} lg={3}>
                                 <span className="ff-secondary fw-bold">
-                                    <span className="fs-5">Available Quantity</span>: <span className="fs-5">{unlimitedQty ? 'Unlimited' : availableQty}</span>
+                                    <span className="fs-5">Available Quantity</span>:{" "}
+                                    <span className="fs-5">{unlimitedQty ? "Unlimited" : availableQty}</span>
                                 </span>
                             </Col>
-                            {(!unlimitedQty && availableQty <= 0) && (
+
+                            {!unlimitedQty && availableQty <= 0 ? (
                                 <Col md={2} lg={2}>
                                     <span className="ff-secondary fw-bold d-flex justify-content-lg-end">
-                                        <Button size="sm" onClick={() => handleWaitingList()}>Add Waiting List  </Button>
+                                        <Button size="sm" onClick={handleWaitingList}>
+                                            Add Waiting List
+                                        </Button>
                                     </span>
-                                    {/* {(isWaitList) && (
-
-                                        < span className="ff-secondary fw-bold d-flex justify-content-lg-end">
-                                            <Button size="sm" onClick={() => handleWaitingListUpdate()}>Remove Waiting List  </Button>
-                                        </span>
-                                    )} */}
                                 </Col>
-                            )}
-                            {(availableQty > 0 || unlimitedQty) && (
+                            ) : (
                                 <Col md={2} lg={2}>
                                     <InputGroup>
-                                        <Button size="sm" onClick={e => setTicketQty(prev => prev === 0 ? prev : --prev)}><Minus size={20} /></Button>
+                                        <Button size="sm" onClick={() => setTicketQty((prev) => Math.max(0, prev - 1))}>
+                                            <Minus size={20} />
+                                        </Button>
+
                                         <FormControl
                                             type="number"
                                             className="text-center"
@@ -263,28 +449,28 @@ const TicketCard = ({currency_symbol, ticket, onTicketDetailsUpdated, ticket_arr
                                             disabled={isAddedToCart}
                                             value={ticketQty}
                                             onChange={(e: any) => {
-                                                if (unlimitedQty || parseInt(e.target.value) <= (availableQty)) {
-                                                    setTicketQty(parseInt(e.target.value))
+                                                const val = Number(e.target.value);
+                                                if (!Number.isFinite(val)) return;
+                                                if (unlimitedQty || val <= availableQty) {
+                                                    setTicketQty(Math.max(0, val));
                                                 }
                                             }}
                                         />
-                                        <Button size="sm" onClick={e => setTicketQty(prev => prev >= (availableQty) && !unlimitedQty ? prev : ++prev)}><Plus size={20} /></Button>
+
+                                        <Button
+                                            size="sm"
+                                            onClick={() =>
+                                                setTicketQty((prev) => (unlimitedQty || prev < availableQty ? prev + 1 : prev))
+                                            }
+                                        >
+                                            <Plus size={20} />
+                                        </Button>
                                     </InputGroup>
-                                    {/* <Form.Select
-                                        aria-label="Ticket Qty"
-                                        disabled={isAddedToCart}
-                                        name="ticket_quantity"
-                                        value={ticketQty}
-                                        onChange={(e: any) =>
-                                            setTicketQty(parseInt(e.target.value))
-                                        }
-                                    >
-                                        {createQtyOptions(50, ticket)}
-                                    </Form.Select> */}
                                 </Col>
                             )}
                         </Row>
-                        <Row className="mt-2 p-2  bg-light">
+
+                        <Row className="mt-2 p-2 bg-light">
                             <Col md={12} lg={12}>
                                 <h5 className="mb-1 fw-bold ">Sessions</h5>
                                 <ul className="list-unstyled text-muted vstack gap-1 m-0">
@@ -295,42 +481,29 @@ const TicketCard = ({currency_symbol, ticket, onTicketDetailsUpdated, ticket_arr
                                                     <div className="flex-shrink-0 text-success me-1">
                                                         <i className="ri-checkbox-circle-fill fs-15 align-middle"></i>
                                                     </div>
-                                                    <div className="flex-grow-1">
-                                                        {session.name}
-                                                    </div>
+                                                    <div className="flex-grow-1">{session.name}</div>
                                                 </div>
                                             </li>
                                         ))}
+
                                     {ticket.sessions.length > 5 && (
                                         <button
                                             className="btn btn-link p-0 m-0 mt-2"
-                                            onClick={() =>
-                                                setShowAll((prev) => !prev)
-                                            }
+                                            onClick={() => setShowAll((prev) => !prev)}
                                         >
-                                            {showAll
-                                                ? "Show less"
-                                                : "Show more"}
+                                            {showAll ? "Show less" : "Show more"}
                                         </button>
                                     )}
+
                                     {(() => {
                                         const ticketExists = ticket_array.some((t: any) => t.ticket.id === ticket.id);
                                         if (!ticketExists) return null;
                                         return (
                                             <Col md={4} lg={4}>
-                                                <Button
-                                                    disabled={processing}
-                                                    onClick={submitCheckOut}
-                                                    className="btn btn-success w-100"
-                                                >
+                                                <Button disabled={processing} onClick={submitCheckOut} className="btn btn-success w-100">
                                                     Checkout
                                                     {processing && (
-                                                        <Spinner
-                                                            animation="border"
-                                                            role="status"
-                                                            className="ml-3"
-                                                            size="sm"
-                                                        >
+                                                        <Spinner animation="border" role="status" className="ml-3" size="sm">
                                                             <span className="visually-hidden">Loading...</span>
                                                         </Spinner>
                                                     )}
@@ -349,20 +522,15 @@ const TicketCard = ({currency_symbol, ticket, onTicketDetailsUpdated, ticket_arr
                                 ticket_no={ticketDetail.ticket_no}
                                 fees_sub_total={ticketDetail.fees_sub_total}
                                 addons_sub_total={ticketDetail.addons_sub_total}
-                                key={
-                                    "ticketDetail-" +
-                                    ticket.id +
-                                    "-" +
-                                    ticketDetail.ticket_no
-                                }
+                                key={`ticketDetail-${ticket.id}-${ticketDetail.ticket_no}`}
                                 onAddonsUpdated={handleAddonUpdated}
                                 onBlockCheckout={onBlockCheckout}
-                            ></TicketDetail>
+                            />
                         ))}
                     </Accordion.Body>
                 </Accordion.Item>
             </Accordion>
-        </Col >
+        </Col>
     );
 };
 

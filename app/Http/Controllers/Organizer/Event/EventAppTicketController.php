@@ -74,8 +74,7 @@ class EventAppTicketController extends Controller
 
         $data['bulk_purchase_status'] = (bool) $request->bulk_purchase_status;
 
-        if($data['bulk_purchase_discount_type'] == null)
-        {
+        if ($data['bulk_purchase_discount_type'] == null) {
             $data['bulk_purchase_discount_type'] = 'fixed';
         }
 
@@ -102,7 +101,7 @@ class EventAppTicketController extends Controller
                 }
             }
         }
-        broadcast(new UpdateEventDashboard(session('event_id'),'New Ticket Created'))->toOthers();
+        broadcast(new UpdateEventDashboard(session('event_id'), 'New Ticket Created'))->toOthers();
         return back()->withSuccess('Ticket created successfully');
     }
 
@@ -146,7 +145,7 @@ class EventAppTicketController extends Controller
         }
 
         $ticket->delete();
-        broadcast(new UpdateEventDashboard(session('event_id'),'Ticket Deleted'))->toOthers();
+        broadcast(new UpdateEventDashboard(session('event_id'), 'Ticket Deleted'))->toOthers();
         return back()->withSuccess('Ticket Removed Successfully');
     }
 
@@ -164,7 +163,7 @@ class EventAppTicketController extends Controller
         foreach ($ids as $id) {
             EventAppTicket::find($id)?->delete();
         }
-        broadcast(new UpdateEventDashboard(session('event_id'),'Ticket Deleted'))->toOthers();
+        broadcast(new UpdateEventDashboard(session('event_id'), 'Ticket Deleted'))->toOthers();
     }
 
     private function transformSessions($data)
