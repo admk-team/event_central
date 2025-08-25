@@ -11,7 +11,7 @@
         --color-primary-foreground: {{ $colors['light']['primary']['primary_foreground'] }};
     
         /* Accent colors */
-        --color-accent: #f43f5e;
+        --color-accent: {{ $colors['light']['primary']['primary_light'] }};
         --color-accent-light: #fb7185;
         --color-accent-dark: #e11d48;
         --color-accent-foreground: #ffffff;

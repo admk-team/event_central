@@ -9,7 +9,7 @@
   --shadow: 0 14px 34px rgba(0,0,0,.28);
 }
 
-html,body{background:linear-gradient(180deg,var(--bg-1),var(--bg-2));color:var(--ink)}
+html,body{background:linear-gradient(180deg,var(--bg-1));color:var(--ink)}
 img{max-width:100%;display:block}
 
 /* ======= RAIL (desktop) ======= */
@@ -20,7 +20,7 @@ img{max-width:100%;display:block}
   display: grid; grid-template-rows: auto 1fr auto; align-items: start;
   z-index: 40; padding: .6rem .4rem;
 }
-.rail__brand{display:flex;align-items:center;justify-content:center;padding:.35rem 0; background: white;}
+.rail__brand{display:flex;align-items:center;justify-content:center;padding:.35rem 0;}
 .rail__brand img{width:auto;object-fit:contain}
 .rail__nav{display:flex;flex-direction:column;gap:.35rem;align-items:center;margin-top:.4rem}
 .rail__link{
