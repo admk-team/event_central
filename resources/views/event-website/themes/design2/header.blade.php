@@ -1,7 +1,7 @@
   {{-- Rail (desktop ≥992px) --}}
     <aside class="rail" aria-label="Primary">
         <a class="rail__brand"
-            href="{{ route('organizer.events.website', $event->uuid) }}{{ $isPreviewMode ?? false ? '?preview=true' : '' }}"
+            href="{{ route('organizer.events.website', $event->uuid) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}"
             title="Home">
             <img src="{{ $event->logo_img }}" alt="logo">
         </a>
