@@ -367,16 +367,17 @@ const TicketDetail: React.FC<Props> = ({
 
                     {extraRows.map((row, idx) => {
                         const id = `extra-${ticket?.id}-${ticket_no}-${idx}`;
-                        return (
-                            <div key={id} className="d-flex align-items-center gap-3 mb-2">
-                                <Form.Check
-                                    id={id}
-                                    type="checkbox"
-                                    label={row.name}
-                                    checked={row.selected}
-                                    onChange={(e) => toggleExtra(idx, e.target.checked)}
-                                />
-                                <div className="d-flex align-items-center gap-2">
+                        if (row.max > 0) {
+                            return (
+                                <div key={id} className="d-flex align-items-center gap-3 mb-2">
+                                    <Form.Check
+                                        id={id}
+                                        type="checkbox"
+                                        label={row.name}
+                                        checked={row.selected}
+                                        onChange={(e) => toggleExtra(idx, e.target.checked)}
+                                    />
+                                    {/* <div className="d-flex align-items-center gap-2">
                                     <Form.Label htmlFor={`${id}-qty`} className="m-0">
                                         Quantity
                                     </Form.Label>
@@ -391,9 +392,13 @@ const TicketDetail: React.FC<Props> = ({
                                         disabled={!row.selected}
                                     />
                                     {row.max > 0 && <small className="text-muted">max {row.max}</small>}
+                                </div> */}
                                 </div>
-                            </div>
-                        );
+                            );
+                        } else {
+                            null;
+                        }
+
                     })}
                 </Col>
             )}

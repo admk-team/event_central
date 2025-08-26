@@ -485,6 +485,8 @@ class PaymentController extends Controller
         if ($payment) {
             foreach ($payment->purchased_tickets as $ticket_purchased) {
                 $purchasedticket = AttendeePurchasedTickets::find($ticket_purchased->id);
+
+
                 $code = $purchasedticket->generateUniqueKey();
                 $qrData = $code;
 
@@ -511,6 +513,34 @@ class PaymentController extends Controller
                     'qr_code' => 'qr-codes/' . $code . '.png',
                     'code' => $code
                 ]);
+
+                // ✅ Handle extra_services quantity decrease
+                $extraServices = $payment->extra_services;
+
+                if (is_array($extraServices)) {
+                    foreach ($extraServices as $service) {
+                        // Get the event ticket linked to purchased ticket
+                        $ticket = EventAppTicket::find($purchasedticket->event_app_ticket_id);
+
+                        if ($ticket) {
+                            $EventTicketExtraServices = $ticket->extra_services;
+
+                            if (is_array($EventTicketExtraServices)) {
+                                foreach ($EventTicketExtraServices as &$extra) {
+                                    if ($extra['name'] === $service['name']) {
+                                        // Decrease the quantity
+                                        $extra['quantity'] = max(0, $extra['quantity'] - $service['quantity']);
+                                    }
+                                }
+
+                                // Save updated services back into ticket
+                                $ticket->update([
+                                    'extra_services' => $EventTicketExtraServices
+                                ]);
+                            }
+                        }
+                    }
+                }
             }
         }
     }
