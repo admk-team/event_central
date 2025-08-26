@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Col, Row, Form } from "react-bootstrap";
 
-/** ---------- Types (loose to match your data) ---------- */
 type ExtraService = { name: string; quantity: number | string };
 
 function normalizeExtraServices(val: unknown): ExtraService[] {
@@ -22,7 +21,21 @@ const toInt = (v: any, fallback = 0) => {
     return Number.isFinite(n) ? n : fallback;
 };
 
-const TicketDetail = ({
+type Props = {
+    currency_symbol: string;
+    ticket_no: number;
+    ticket: any;
+    fees_sub_total: number;
+    addons_sub_total: number;
+    onAddonsUpdated?: (selectedAddons: any[], ticket_no: number, extraFieldValues: Record<number, Record<string, string>>) => void;
+    onBlockCheckout?: (blocked: boolean) => void;
+
+    // NEW: pass current selection from parent row and receive updates back
+    initialExtras?: Array<{ name: string; quantity: number }>;
+    onExtraServicesUpdated?: (extras: Array<{ name: string; quantity: number }>, ticket_no: number) => void;
+};
+
+const TicketDetail: React.FC<Props> = ({
     currency_symbol,
     ticket_no,
     ticket,
@@ -30,47 +43,55 @@ const TicketDetail = ({
     addons_sub_total,
     onAddonsUpdated,
     onBlockCheckout,
-}: any) => {
+
+    initialExtras = [],
+    onExtraServicesUpdated,
+}) => {
     /** ---------------- Add-ons & fees state ---------------- */
     const [selectedAddons, setSelectedAddons] = useState<any[]>([]);
     const [addonVariantErrors, setAddonVariantErrors] = useState<Record<number, string | null>>({});
-    const [addonExtraFieldValues, setAddonExtraFieldValues] = useState<
-        Record<number, Record<string, string>>
-    >({});
+    const [addonExtraFieldValues, setAddonExtraFieldValues] = useState<Record<number, Record<string, string>>>({});
 
     /** --------------- Extra services state ----------------- */
     type ExtraRow = { name: string; max: number; selected: boolean; qty: number };
 
-    // Memoize normalized extras to avoid re-parsing on every render
+    // Memoize extras configured on ticket
     const normalizedExtras = useMemo(
         () => normalizeExtraServices(ticket?.extra_services),
         [ticket?.extra_services]
     );
 
-    // Keep a JSON snapshot so we only reset rows when content really changes
-    const extrasSnapshotRef = useRef<string>("");
-    const [extraRows, setExtraRows] = useState<ExtraRow[]>(() => {
-        const snap = JSON.stringify(normalizedExtras);
-        extrasSnapshotRef.current = snap;
+    // Build rows from ticket extras but mark selection/qty from parent-provided initialExtras
+    const buildRows = (init: Array<{ name: string; quantity: number }>) => {
+        const selectedMap = new Map(init.map(e => [e.name, toInt(e.quantity, 0)]));
         return normalizedExtras.map((e) => {
             const max = Math.max(0, toInt(e.quantity, 0));
-            return { name: e.name ?? "", max, selected: false, qty: max > 0 ? 1 : 0 };
+            const selQty = selectedMap.get(e.name) ?? 0;
+            return {
+                name: e.name ?? "",
+                max,
+                selected: selQty > 0,
+                qty: selQty > 0 ? Math.min(selQty, max || selQty) : 0, // default 0 until user types
+            };
         });
+    };
+
+    // Keep a JSON snapshot so we only reset rows when content/initial changes
+    const extrasSnapshotRef = useRef<string>("");
+    const [extraRows, setExtraRows] = useState<ExtraRow[]>(() => {
+        const snap = JSON.stringify({ normalizedExtras, initialExtras });
+        extrasSnapshotRef.current = snap;
+        return buildRows(initialExtras);
     });
 
-    // Reset extra rows if the extras content actually changed (or ticket id changed)
+    // Rehydrate when ticket extras OR initial selection from parent changes
     useEffect(() => {
-        const snap = JSON.stringify(normalizedExtras);
-        if (snap !== extrasSnapshotRef.current || String(ticket?.id ?? "") === "") {
+        const snap = JSON.stringify({ normalizedExtras, initialExtras });
+        if (snap !== extrasSnapshotRef.current) {
             extrasSnapshotRef.current = snap;
-            setExtraRows(
-                normalizedExtras.map((e) => {
-                    const max = Math.max(0, toInt(e.quantity, 0));
-                    return { name: e.name ?? "", max, selected: false, qty: max > 0 ? 1 : 0 };
-                })
-            );
+            setExtraRows(buildRows(initialExtras));
         }
-    }, [ticket?.id, normalizedExtras]);
+    }, [ticket?.id, normalizedExtras, initialExtras]);
 
     /** ---------------- Derived UI for fees ------------------ */
     const feesOptions = useMemo(() => {
@@ -105,7 +126,6 @@ const TicketDetail = ({
         );
 
     const handleCheckChanged = (_e: any, addon: any) => {
-        // Preselect first variant if present
         if (addon.variants?.length) {
             addon.selectedVariant = addon.variants[0];
             addon.attributes = (addon.attributes || []).map((attr: any) => ({
@@ -256,14 +276,13 @@ const TicketDetail = ({
         selectedAddons,
     ]);
 
-    /** --------- Callbacks via refs to avoid loops ---------- */
+    /** --------- Emit callbacks (use refs to avoid render loops) ---------- */
     const addonsUpdatedRef = useRef<typeof onAddonsUpdated>();
     useEffect(() => {
         addonsUpdatedRef.current = onAddonsUpdated;
     }, [onAddonsUpdated]);
 
     useEffect(() => {
-        // Only fire when the actual addon selection/extra fields change
         addonsUpdatedRef.current?.(selectedAddons, ticket_no, addonExtraFieldValues);
     }, [selectedAddons, addonExtraFieldValues, ticket_no]);
 
@@ -277,11 +296,24 @@ const TicketDetail = ({
         blockCheckoutRef.current?.(blocked);
     }, [addonVariantErrors]);
 
+    // NEW: emit the actual user-selected extra services (checked + qty)
+    const extraUpdatedRef = useRef<typeof onExtraServicesUpdated>();
+    useEffect(() => {
+        extraUpdatedRef.current = onExtraServicesUpdated;
+    }, [onExtraServicesUpdated]);
+
+    useEffect(() => {
+        const payload = extraRows
+            .filter((r) => r.selected && r.qty > 0)
+            .map((r) => ({ name: r.name, quantity: r.qty })); // quantity as number
+        extraUpdatedRef.current?.(payload, ticket_no);
+    }, [extraRows, ticket_no]);
+
     /** ---------------- Extra services handlers ---------------- */
     const toggleExtra = (idx: number, checked: boolean) => {
         setExtraRows((prev) =>
             prev.map((r, i) =>
-                i === idx ? { ...r, selected: checked, qty: checked ? Math.max(1, r.qty || 1) : 0 } : r
+                i === idx ? { ...r, selected: checked, qty: checked ? (r.qty || 1) : 0 } : r
             )
         );
     };
@@ -309,9 +341,7 @@ const TicketDetail = ({
                 {feesOptions}
                 <span className="fs-5 fw-bold mt-1">
                     Fees Sub Total :{" "}
-                    <sup>
-                        <small>{currency_symbol}</small>
-                    </sup>
+                    <sup><small>{currency_symbol}</small></sup>
                     {fees_sub_total}
                 </span>
             </Col>
@@ -322,9 +352,7 @@ const TicketDetail = ({
                 {addonOptions}
                 <span className="fs-5 fw-bold mt-1">
                     Addons Sub Total :{" "}
-                    <sup>
-                        <small>{currency_symbol}</small>
-                    </sup>
+                    <sup><small>{currency_symbol}</small></sup>
                     {addons_sub_total}
                 </span>
             </Col>
@@ -348,7 +376,6 @@ const TicketDetail = ({
                                     checked={row.selected}
                                     onChange={(e) => toggleExtra(idx, e.target.checked)}
                                 />
-
                                 <div className="d-flex align-items-center gap-2">
                                     <Form.Label htmlFor={`${id}-qty`} className="m-0">
                                         Quantity
