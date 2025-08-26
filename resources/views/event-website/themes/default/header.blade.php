@@ -8,12 +8,12 @@
           </a>
           <nav class="main-nav">
               <ul class="nav-links">
-                  <li>
+                  {{--  <li>
                       <a
                           href="{{ route('organizer.events.website', $event->uuid) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}">
                           About
                       </a>
-                  </li>
+                  </li>  --}}
                   <li><a
                           href="{{ route('organizer.events.website.speakers', $event->uuid) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}">Speakers</a>
                   </li>

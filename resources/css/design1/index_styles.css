@@ -1,11 +1,11 @@
 :root {
     /* fallbacks if brand tokens are missing */
-    --_bg-hero-1: var(--color-neutral-900);
+    --_bg-hero-1: var(--color-background);
     --_bg-hero-2: var(--color-neutral-800);
-    --_ink: var(--color-neutral-50);
-    --_ink-2: var(--color-neutral-200);
-    --_muted: var(--color-neutral-400);
-    --_line: var(--color-neutral-200);
+    --_ink: var(--color-primary-light);
+    --_ink-2: var(--color-primary-light);
+    --_muted: var(--color-primary-light);
+    --_line: var(--color-primary-light);
     --_brand: var(--color-primary);
     --_brand-2: var(--color-primary-light);
     --_accent: var(--color-accent);
@@ -99,7 +99,7 @@ section {
 }
 
 .nav-links a:hover {
-    background: var(--color-neutral-100)
+    background: var(--_brand)
 }
 
 .nav-links .header-actions-mobile {
@@ -526,8 +526,8 @@ body.nav-locked {
    4) ABOUT
 ---------------------------------------------- */
 .about.about--mosaic {
-    background: var(--color-neutral-50);
-    color: var(--color-foreground);
+    background: var(--color-foreground);
+    color: var(--color-primary-dark);
     padding: 2.4rem 0
 }
 
@@ -540,14 +540,14 @@ body.nav-locked {
     font-size: var(--font-size-xs);
     letter-spacing: .06em;
     text-transform: uppercase;
-    background: var(--color-primary-light);
-    color: var(--color-primary-foreground);
+    background: var(--_brand);
+    color: var(--_ink);
     border-radius: 999px;
     padding: .35rem .6rem;
 }
 
 .section-title {
-    color: var(--color-primary-foreground);
+    color: var(--_brand);
     margin: .35rem 0 0;
     font-size: clamp(1.6rem, 2.6vw, 2.2rem)
 }
@@ -581,7 +581,7 @@ body.nav-locked {
    5) VENUE
 ---------------------------------------------- */
 .venue.venue--centered {
-    background: var(--color-background);
+    background: var(--color-foreground);
     padding: 2.4rem 0
 }
 
@@ -589,7 +589,7 @@ body.nav-locked {
    6) REGISTER / TICKETS
 ---------------------------------------------- */
 .register.register--grid {
-    background: linear-gradient(180deg, var(--color-neutral-900), var(--color-neutral-800));
+    background: linear-gradient(180deg, var(--color-background), var(--_brand));
     color: var(--_ink);
     padding: 2.6rem 0;
 }

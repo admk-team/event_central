@@ -6,11 +6,11 @@
             <img src="{{ $event->logo_img }}" alt="logo">
         </a>
         <nav class="rail__nav" aria-label="Main">
-            <a class="rail__link {{ request()->routeIs('organizer.events.website') ? 'active' : '' }}"
+            {{--  <a class="rail__link {{ request()->routeIs('organizer.events.website') ? 'active' : '' }}"
                 href="{{ route('organizer.events.website', $event->uuid) }}{{ request('preview') == 'true' || ($isPreviewMode ?? false) ? '?preview=true' : '' }}"
                 data-label="About">
                 <i class="bi bi-info-circle"></i>
-            </a>
+            </a>  --}}
             <a class="rail__link {{ request()->routeIs('organizer.events.website.speakers') ? 'active' : '' }}"
                 href="{{ route('organizer.events.website.speakers', $event->uuid) }}{{ request('preview') == 'true' || ($isPreviewMode ?? false) ? '?preview=true' : '' }}"
                 data-label="Speakers">
@@ -65,8 +65,8 @@
                 <img src="{{ $event->logo_img }}" alt="logo">
             </div>
             <nav class="sheet__nav">
-                <a class="{{ request()->routeIs('organizer.events.website') ? 'active' : '' }}"
-                    href="{{ route('organizer.events.website', $event->uuid) }}{{ request('preview') == 'true' || ($isPreviewMode ?? false) ? '?preview=true' : '' }}">About</a>
+                {{--  <a class="{{ request()->routeIs('organizer.events.website') ? 'active' : '' }}"
+                    href="{{ route('organizer.events.website', $event->uuid) }}{{ request('preview') == 'true' || ($isPreviewMode ?? false) ? '?preview=true' : '' }}">About</a>  --}}
                 <a class="{{ request()->routeIs('organizer.events.website.speakers') ? 'active' : '' }}"
                     href="{{ route('organizer.events.website.speakers', $event->uuid) }}{{ request('preview') == 'true' || ($isPreviewMode ?? false) ? '?preview=true' : '' }}">Speakers</a>
                 <a class="{{ str_contains(url()->current(), '#venue') ? 'active' : '' }}"

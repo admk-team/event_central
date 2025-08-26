@@ -5,19 +5,19 @@
 ========================================================= */
 
 :root{
-  --sch-ink-1: var(--ink-1, #f6f7fb);
-  --sch-ink-2: var(--ink-2, #cfd2e0);
+  --sch-ink-1: var(--ink);
+  --sch-ink-2: var(--ink);
 
-  --sch-glass-a: rgba(255,255,255,.08);
+  --sch-glass-a: var(--color-background);
   --sch-glass-b: rgba(255,255,255,.03);
-  --sch-bd: rgba(255,255,255,.16);
+  --sch-bd: var(--ink);
 
   --sch-shadow: 0 16px 40px rgba(0,0,0,.35);
   --sch-radius: 18px;
 
   --sch-brand: var(--color-primary, #6a5df6);
   --sch-brand-2: color-mix(in srgb, var(--sch-brand), white 18%);
-  --sch-accent: var(--color-accent, #ff7a59);
+  --sch-accent: var(--color-background, #ff7a59);
 }
 
 /* Section shell (keeps your classes) */
@@ -92,7 +92,7 @@
   color: var(--sch-ink-2); font-weight:800;
 }
 .btn-clear{
-  background: rgba(255,255,255,.06);
+  /* background: rgba(255,255,255,.06); */
   border: 1px solid rgba(255,255,255,.25);
   color:#fff; font-weight:800; border-radius: 10px; padding:.35rem .6rem;
 }
@@ -110,7 +110,7 @@
 /* Tracks */
 .tracks-filter{ display:flex; flex-wrap:wrap; gap:.5rem; }
 .tracks .btn.btn-secondary{
-  background: rgba(255,255,255,.06);
+  /* background: rgba(255,255,255,.06); */
   border:1px solid rgba(255,255,255,.25);
   color:#fff;
 }

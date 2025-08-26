@@ -36,7 +36,7 @@
                 @endif
             </div>
             <div class="marquee">
-                <div class="marquee__track">
+                <div class="marquee__track chip--muted">
                     <span><i class="bi bi-calendar-week"></i> {{ $event->dates->count() }}
                         Day{{ $event->dates->count() > 1 ? 's' : '' }}</span>
                     <span><i class="bi bi-easel3"></i> {{ $event->event_sessions->count() }}
@@ -67,7 +67,7 @@
                 @endphp
 
                 <div class="chips">
-                    <span class="chip">
+                    <span class="chip chip--muted">
                         @if ($startDate->isSameDay($endDate))
                             {{ $startDate->format('F j, Y') }}
                         @else
@@ -77,7 +77,7 @@
                     <span class="chip chip--muted"><i class="bi bi-geo-alt"></i> {{ $event->location_base }}</span>
                 </div>
 
-                <h1 class="title">
+                <h1 class="title chip--muted">
                     <span class="eyebrow">{{ $event->tagline ?? 'Live. In person.' }}</span>
                     {{ $event->name }} <em>{{ date('Y', strtotime($event->dates[0]->date)) }}</em>
                 </h1>
@@ -89,7 +89,7 @@
                         class="btn btn-ghost btn-lg">View Schedule</a>
                 </div>
 
-                <div class="countdown" id="countdown">
+                <div class="countdown chip--muted" id="countdown">
                     <div class="unit"><span id="countdown-days">00</span><small>Days</small></div>
                     <div class="unit"><span id="countdown-hours">00</span><small>Hours</small></div>
                     <div class="unit"><span id="countdown-minutes">00</span><small>Minutes</small></div>

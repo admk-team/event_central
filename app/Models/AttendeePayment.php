@@ -34,6 +34,10 @@ class AttendeePayment extends Model
         'transfered_amount'
     ];
 
+    protected $casts = [
+        'extra_services' => 'json',
+    ];
+
     public function purchased_tickets()
     {
         return $this->hasMany(AttendeePurchasedTickets::class);
