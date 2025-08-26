@@ -21,7 +21,7 @@
         --color-accent: {{ $colors['light']['primary']['primary_light'] }};
         --color-accent-light: #fb7185;
         --color-accent-dark: #e11d48;
-        --color-accent-foreground: #ffffff;
+        --color-accent-foreground: {{ $colors['light']['primary']['primary_dark'] }};
 
         /* Neutral colors */
         --color-neutral-50: #f9fafb;
