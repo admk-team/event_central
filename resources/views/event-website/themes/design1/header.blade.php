@@ -1,7 +1,7 @@
 <header class="site-header">
     <div class="container">
         <a
-            href="{{ route('organizer.events.website', $event->uuid) }}{{ $isPreviewMode ?? false ? '?preview=true' : '' }}">
+            href="{{ route('organizer.events.website', $event->uuid) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}">
             <div class="logo">
                 <img src="{{ $event->logo_img }}" alt="logo" />
             </div>
