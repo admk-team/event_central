@@ -35,8 +35,8 @@
 }
 
 .speaker-meta{ padding: .85rem .9rem }
-.speaker-name{ margin: 0; font-weight: 800; font-size: 1.05rem; color: var(--ink-1, #f6f7fb) }
-.speaker-role{ margin: .2rem 0 0; color: var(--ink-2, #cfd2e0); font-size: .95rem }
+.speaker-name{ margin: 0; font-weight: 800; font-size: 1.05rem; color: var(--ink-1) }
+.speaker-role{ margin: .2rem 0 0; color: var(--ink-1); font-size: .95rem }
 
 /* modal tweaks to feel on-brand */
 .modal-content{

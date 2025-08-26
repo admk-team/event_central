@@ -60,7 +60,7 @@
                 @if($speaker->email)<p class="text-muted mb-0">{{ $speaker->email }}</p>@endif
                 @if($speaker->phone)<p class="text-muted">{{ $speaker->phone }}</p>@endif
                 @if($speaker->company)<p class="mb-0">{{ $speaker->company }}</p>@endif
-                @if($speaker->position)<p class="text-muted">{{ $speaker->position }}</p>@endif>
+                @if($speaker->position)<p class="text-muted">{{ $speaker->position }}</p>@endif
 
                 {{-- Bio w/ show more --}}
                 <div class="bio-container mt-2">

@@ -123,7 +123,7 @@
 
 .exhibitor-name {
     margin: 0;
-    color: var(--color-neutral-50);
+    color: var(--color-primary-light);
     font-size: 1.05rem;
     font-weight: 900;
     letter-spacing: .2px;
@@ -166,7 +166,7 @@
     border-radius: 10px;
     background: color-mix(in srgb, #ffffff 8%, transparent);
     border: 1px solid color-mix(in srgb, var(--color-neutral-200), transparent 35%);
-    color: var(--color-neutral-50);
+    color: var(--color-primary-light);
     transition: background 160ms ease, transform 160ms ease;
 }
 
