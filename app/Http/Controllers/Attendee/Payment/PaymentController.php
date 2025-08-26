@@ -216,6 +216,7 @@ class PaymentController extends Controller
         $stripe_response = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount, $currency_code);
         $client_secret = $stripe_response['client_secret'];
         $payment_id = $stripe_response['payment_id'];
+        $extra_services = $data['ticketsDetails'][0]['extra_services'] ?? null;
 
         $payment = $user->attendeePayments()->create([
             'uuid' => Str::uuid(),
@@ -230,6 +231,7 @@ class PaymentController extends Controller
             'status' => 'pending',
             'organizer_payment_note' => $data['organizer_payment_note'] ?? null,
             'payment_method' => $organizerView ? $payment_method : 'stripe',
+            'extra_services' => $extra_services
         ]);
 
         foreach ($data['ticketsDetails'] as $ticketsDetail) {
@@ -288,6 +290,7 @@ class PaymentController extends Controller
             'status' => 'pending',
             'organizer_payment_note' => $data['organizer_payment_note'] ?? null,
             'payment_method' => $organizerView ? $payment_method : 'stripe',
+            'extra_services' => $data['extra_services'] ?? null,
         ]);
 
         foreach ($data['ticketsDetails'] as $ticketsDetail) {
