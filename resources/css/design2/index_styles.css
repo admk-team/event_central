@@ -90,7 +90,7 @@ img{max-width:100%;display:block}
 .countdown .unit small{display:block;color:var(--ink-2);font-size:.85rem}
 
 /* ======= SECTIONS ======= */
-.about,.venue,.tickets{padding: clamp(2rem, 5vw, 3.4rem) 0}
+.about,.venue,.tickets{padding: clamp(2rem, 5vw, 3.4rem) 0;}
 .card.glass{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:18px;padding:1.1rem;box-shadow:var(--shadow);backdrop-filter: blur(8px)}
 .card__h{color: var(--brand);  margin:0 0 .6rem}
 .prose{color:var(--ink);line-height:1.8}
