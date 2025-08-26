@@ -10,7 +10,7 @@
     @case('design3')
         @include('event-website.themes.design3.index')
         @break
-
     @default
-        @include('event-website.themes.default.index')
+      @include('event-website.themes.design4.index')
+        {{-- @include('event-website.themes.default.index') --}}
 @endswitch
