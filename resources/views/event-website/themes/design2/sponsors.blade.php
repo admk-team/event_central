@@ -1,7 +1,7 @@
 @extends('event-website.layouts.layout')
 @section('style')
     @vite(['resources/css/design2/index_styles.css'])
-    @vite(['resources/css/design1/sponsors_styles.css'])
+    @vite(['resources/css/design2/sponsors_styles.css'])
 @endsection
 @section('header')
     @include('event-website.themes.design2.header')
