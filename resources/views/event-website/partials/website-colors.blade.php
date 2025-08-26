@@ -1,8 +1,8 @@
 <style>
     :root {
         /* Base colors */
-        --color-background: #ffffff;
-        --color-foreground: #111827;
+        --color-background: {{ $colors['light']['primary']['primary_dark'] }};
+        --color-foreground: {{ $colors['light']['primary']['primary_foreground'] }};
         /*  primary: "Primary Theme Active",
         primary_light: "Primary Text Color",
         primary_dark: "Primary Background Color",
