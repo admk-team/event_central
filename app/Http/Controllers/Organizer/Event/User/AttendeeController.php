@@ -231,17 +231,27 @@ class AttendeeController extends Controller
             ->leftJoin('addon_purchased_ticket', 'attendee_purchased_tickets.id', '=', 'addon_purchased_ticket.attendee_purchased_ticket_id')
             ->where('attendee_payments.attendee_id', $id)
             ->where('attendee_payments.status', 'paid')
-            ->groupBy('attendee_purchased_tickets.id', 'attendee_payments.id', 'event_app_tickets.name', 'attendee_payments.payment_method')
+            ->groupBy(
+                'attendee_purchased_tickets.id',
+                'attendee_payments.id',
+                'event_app_tickets.name',
+                'attendee_payments.payment_method',
+                'attendee_payments.extra_services',
+                // add this line to satisfy ONLY_FULL_GROUP_BY
+                'event_app_tickets.extra_service_name'
+            )
             ->select(
                 'attendee_purchased_tickets.id as attendee_purchased_ticket_id',
                 'event_app_tickets.name as ticket_name',
                 DB::raw('SUM(attendee_purchased_tickets.qty) as qty'),
                 DB::raw('SUM(attendee_payments.amount_paid) as amount'),
                 'attendee_payments.payment_method as type',
-                DB::raw('COUNT(attendee_purchased_ticket_id) as addons_count')  // Add count of addons
+                'attendee_payments.extra_services',
+                // pick the name from event_app_tickets
+                'event_app_tickets.extra_service_name as ticket_extra_service_name',
+                DB::raw('COUNT(attendee_purchased_ticket_id) as addons_count')
             )
             ->get();
-
 
         if (! Auth::user()->can('view_attendees')) {
             abort(403);
