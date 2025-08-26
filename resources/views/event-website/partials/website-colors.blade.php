@@ -1,12 +1,16 @@
 <style>
     :root {
         /* Base colors */
-        --color-background: #ffffff;
-        --color-foreground: #111827;
-        /*  primary: "Primary Theme Active",
-        primary_light: "Primary Text Color",
-        primary_dark: "Primary Background Color",
-        primary_foreground: "Primary Foreground Color" */
+        @switch($event->custom_theme)
+            @case('default')
+                --color-background: #ffffff;
+                --color-foreground: #111827;
+            @break
+            @default
+                --color-background: {{ $colors['light']['primary']['primary_dark'] }};
+                --color-foreground: {{ $colors['light']['primary']['primary_foreground'] }};
+        @endswitch
+
         /* Brand colors */
         --color-primary: {{ $colors['light']['primary']['primary'] }};
         --color-primary-light: {{ $colors['light']['primary']['primary_light'] }};
@@ -31,15 +35,16 @@
         --color-neutral-800: #1f2937;
         --color-neutral-900: #111827;
 
-        /* Success/Error colors */
+        /* State colors */
         --color-success: #10b981;
         --color-error: #ef4444;
         --color-warning: #f59e0b;
         --color-info: #3b82f6;
 
         /* Typography */
-        --font-family: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
-            "Helvetica Neue", sans-serif;
+        --font-family: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+            Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+
         --font-size-xs: 0.75rem;
         --font-size-sm: 0.875rem;
         --font-size-base: 1rem;
@@ -101,9 +106,12 @@
 
         /* Shadows */
         --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                     0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                     0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                     0 10px 10px -5px rgba(0, 0, 0, 0.04);
         --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
 
