@@ -1,4 +1,4 @@
-import { Link, useForm } from "@inertiajs/react";
+import { useForm } from "@inertiajs/react";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import {
     Col,
@@ -14,8 +14,8 @@ import TicketDetail from "./TicketDetail";
 import { Minus, Plus } from "lucide-react";
 
 type Fee = { id: number; name: string; fee_amount: number | string; fee_type: "flat" | "percentage" };
-type Addon = any; // keep as any to match your data
 type Ticket = any;
+type ExtraServiceSel = { name: string; quantity: number };
 
 const TicketCard = ({
     currency_symbol,
@@ -30,7 +30,7 @@ const TicketCard = ({
     ticket: Ticket;
     onTicketDetailsUpdated?: (details: any[], removedIds: number[]) => void;
     ticket_array: any[];
-    submitCheckOut: () => void;
+    submitCheckOut?: () => void;
     onBlockCheckout?: (blocked: boolean) => void;
     attendee_id: number | string;
 }) => {
@@ -42,7 +42,7 @@ const TicketCard = ({
     const [showAll, setShowAll] = useState(false);
     const [isWaitList, setIsWaitList] = useState(false);
 
-    // addon UI state
+    // addon UI state (local to this card)
     const [addonVariantErrors, setAddonVariantErrors] = useState<Record<number, string | null>>({});
     const [addonExtraFieldValues, setAddonExtraFieldValues] = useState<Record<number, Record<string, string>>>({});
     const [selectedAddons, setSelectedAddons] = useState<any[]>([]);
@@ -81,16 +81,13 @@ const TicketCard = ({
         );
 
     const handleCheckChanged = (_e: any, addon: any) => {
-        // Select first variant by default
         if (addon.variants?.length) {
             addon.selectedVariant = addon.variants[0];
             addon.attributes = (addon.attributes || []).map((attr: any) => ({
                 ...attr,
                 options: (attr.options || []).map((option: any) => {
-                    for (const attrValue of addon.selectedVariant.attribute_values || []) {
-                        if (option.id === attrValue.addon_attribute_option_id) {
-                            return { ...option, isSelected: true };
-                        }
+                    for (const av of addon.selectedVariant.attribute_values || []) {
+                        if (option.id === av.addon_attribute_option_id) return { ...option, isSelected: true };
                     }
                     return option;
                 }),
@@ -128,30 +125,19 @@ const TicketCard = ({
 
                 let selectedVariant: any = null;
                 (newState.variants || []).forEach((v: any) => {
-                    let valuesMatched = true;
+                    let ok = true;
                     (v.attribute_values || []).forEach((av: any) => {
-                        if (!selectedOptionIds.includes(av.addon_attribute_option_id)) {
-                            valuesMatched = false;
-                        }
+                        if (!selectedOptionIds.includes(av.addon_attribute_option_id)) ok = false;
                     });
-                    if (valuesMatched) selectedVariant = v;
+                    if (ok) selectedVariant = v;
                 });
 
                 newState.selectedVariant = selectedVariant;
 
-                if (
-                    newState.selectedVariant &&
-                    newState.selectedVariant.qty_sold >= newState.selectedVariant.qty
-                ) {
-                    setAddonVariantErrors((prevErrs) => ({
-                        ...prevErrs,
-                        [newState.id]: "This variant is sold out. Please select another variant",
-                    }));
+                if (newState.selectedVariant && newState.selectedVariant.qty_sold >= newState.selectedVariant.qty) {
+                    setAddonVariantErrors((prevErrs) => ({ ...prevErrs, [newState.id]: "This variant is sold out. Please select another variant" }));
                 } else {
-                    setAddonVariantErrors((prevErrs) => ({
-                        ...prevErrs,
-                        [newState.id]: null,
-                    }));
+                    setAddonVariantErrors((prevErrs) => ({ ...prevErrs, [newState.id]: null }));
                 }
 
                 return newState;
@@ -159,7 +145,7 @@ const TicketCard = ({
         );
     };
 
-    // ---------- FIX 1: derive fees/addons UI with useMemo (no setState loop) ----------
+    // ---------- derived UI (memoized) ----------
     const feesOptions = useMemo(() => {
         return (ticket.fees ?? []).map((fee: Fee) => {
             const id = `${ticket.id}-fee-${fee.id}`;
@@ -169,9 +155,7 @@ const TicketCard = ({
                     <p key={id} className="m-0">
                         {fee.name}
                         <i className="fw-bold">
-                            {fee.fee_type === "flat"
-                                ? ` (${currency_symbol}${fee.fee_amount})`
-                                : ` (${fee.fee_amount}%)`}
+                            {fee.fee_type === "flat" ? ` (${currency_symbol}${fee.fee_amount})` : ` (${fee.fee_amount}%)`}
                         </i>
                     </p>
                 </Col>
@@ -182,8 +166,7 @@ const TicketCard = ({
     const addonOptions = useMemo(() => {
         return (ticket.addons ?? []).map((addon: any) => {
             const id = `${ticket.id}-addon-${addon.id}`;
-            const labelPrice =
-                addon.selectedVariant?.price ?? addon.variants?.[0]?.price ?? addon.price ?? 0;
+            const labelPrice = addon.selectedVariant?.price ?? addon.variants?.[0]?.price ?? addon.price ?? 0;
 
             return (
                 <div key={id}>
@@ -194,9 +177,7 @@ const TicketCard = ({
                         onChange={(e) => handleCheckChanged(e, addon)}
                         checked={isAddonSelect(addon)}
                     />
-                    {addonVariantErrors[addon.id] && (
-                        <p className="text-danger ps-4">{addonVariantErrors[addon.id]}</p>
-                    )}
+                    {addonVariantErrors[addon.id] && <p className="text-danger ps-4">{addonVariantErrors[addon.id]}</p>}
 
                     {isAddonSelect(addon) &&
                         (addon.attributes || []).map((attribute: any) => (
@@ -206,9 +187,7 @@ const TicketCard = ({
                                     {(attribute.options || []).map((option: any) => (
                                         <div
                                             key={option.id}
-                                            className={`border py-1 px-2 cursor-pointer text-black ${isOptionSelected(option, attribute)
-                                                ? "bg-primary text-white border-primary"
-                                                : ""
+                                            className={`border py-1 px-2 cursor-pointer text-black ${isOptionSelected(option, attribute) ? "bg-primary text-white border-primary" : ""
                                                 }`}
                                             onClick={() => selectAddonAttributeOption(addon, attribute, option)}
                                         >
@@ -218,45 +197,12 @@ const TicketCard = ({
                                 </div>
                             </div>
                         ))}
-
-                    {isAddonSelect(addon) && addon.extra_fields && (
-                        <div className="ps-4 mt-2 mb-3">
-                            {JSON.parse(addon.extra_fields).map((label: string) => {
-                                const inputKey = label;
-                                return (
-                                    <div key={inputKey} className="mb-2">
-                                        <Form.Label>{label}</Form.Label>
-                                        <Form.Control
-                                            type="text"
-                                            value={addonExtraFieldValues[addon.id]?.[inputKey] ?? ""}
-                                            onChange={(e) =>
-                                                setAddonExtraFieldValues((prev) => ({
-                                                    ...prev,
-                                                    [addon.id]: {
-                                                        ...prev[addon.id],
-                                                        [inputKey]: e.target.value,
-                                                    },
-                                                }))
-                                            }
-                                        />
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    )}
                 </div>
             );
         });
-        // include the reactive bits we actually read here
-    }, [
-        ticket.id,
-        ticket.addons,
-        addonVariantErrors,
-        addonExtraFieldValues,
-        selectedAddons,
-    ]);
+    }, [ticket.id, ticket.addons, addonVariantErrors, selectedAddons]);
 
-    // ---------- FIX 2: rebuild ticketDetails WITHOUT depending on ticketDetails ----------
+    // ---------- rebuild ticketDetails (PRESERVE extra_services) ----------
     useEffect(() => {
         setTicketDetails((prevDetails: any[]) => {
             const basePrice = Number(ticket.base_price) || 0;
@@ -276,8 +222,8 @@ const TicketCard = ({
                 finalPerTicketPrice = Number((totalDiscountedAmount / ticketQty).toFixed(2));
             }
 
-            const existingMap = new Map(prevDetails.map((it) => [it.id, it]));
-            const newList: any[] = [];
+            const byId = new Map(prevDetails.map((it) => [it.id, it]));
+            const next: any[] = [];
             const newIds: number[] = [];
 
             for (let i = 0; i < ticketQty; i++) {
@@ -299,32 +245,36 @@ const TicketCard = ({
                     base_price: adjustedBasePrice,
                 });
 
-                const existing = existingMap.get(id);
+                const existing = byId.get(id);
                 if (existing) {
-                    newList.push({
+                    next.push({
                         ...existing,
                         ticket: newTicketData,
                         fees_sub_total,
+                        // ✅ preserve extra services selection for this row
+                        extra_services: existing.extra_services ?? [],
                     });
                 } else {
-                    newList.push({
+                    next.push({
                         id,
                         ticket_no: i + 1,
                         ticket: newTicketData,
                         addons: [],
                         fees_sub_total,
                         addons_sub_total: 0,
+                        // ✅ start empty; child will emit user’s selection
+                        extra_services: [],
                     });
                 }
             }
 
-            newList.sort((a, b) => a.id - b.id);
+            next.sort((a, b) => a.id - b.id);
 
             const prevIds = prevDetails.map((it) => it.id);
             const removed = prevIds.filter((id) => !newIds.includes(id));
             setRemovedIds(removed);
 
-            return newList;
+            return next;
         });
     }, [
         ticketQty,
@@ -333,10 +283,9 @@ const TicketCard = ({
         ticket.bulk_purchase_discount_type,
         ticket.bulk_purchase_discount_value,
         ticket.bulk_purchase_qty,
-        // not: ticket (object) or ticketDetails
     ]);
 
-    // ---------- FIX 3: call parent via ref (avoid depending on new function identity) ----------
+    // ---------- notify parent safely ----------
     const onChangeRef = useRef<typeof onTicketDetailsUpdated>();
     useEffect(() => {
         onChangeRef.current = onTicketDetailsUpdated;
@@ -346,40 +295,43 @@ const TicketCard = ({
         onChangeRef.current?.(ticketDetails, removedIds);
     }, [ticketDetails, removedIds]);
 
-    // ----- addons updated coming from TicketDetail -----
-    const handleAddonUpdated = (selAddons: any, ticket_no: any, extraFieldValues: any) => {
-        setTicketDetails((prevItems: any) =>
-            prevItems.map((item: any) => {
-                if (item.ticket_no === ticket_no) {
-                    const updatedAddons = selAddons.map((addon: any) => ({
-                        ...addon,
-                        extraFields: extraFieldValues[addon.id] || {},
-                    }));
-                    return {
-                        ...item,
-                        addons: updatedAddons,
+    // ----- addons updated from child -----
+    const handleAddonUpdated = (
+        selAddons: any[],
+        ticket_no: number,
+        extraFieldValues: Record<number, Record<string, string>>
+    ) => {
+        setTicketDetails((prev: any[]) =>
+            prev.map((row) =>
+                row.ticket_no === ticket_no
+                    ? {
+                        ...row,
+                        addons: selAddons.map((a: any) => ({ ...a, extraFields: extraFieldValues[a.id] || {} })),
                         addons_sub_total: calculateAddonsSubTotal(selAddons),
-                    };
-                }
-                return item;
-            })
+                    }
+                    : row
+            )
         );
     };
 
-    const { post } = useForm({
-        attendee_id: attendee_id,
-        event_app_ticket_id: ticket.id,
-    });
+    // ----- EXTRA SERVICES updated from child (THIS IS WHAT FEEDS THE PAYLOAD) -----
+    const handleExtraServicesUpdated = (extras: ExtraServiceSel[], ticket_no: number) => {
+        console.log("TicketCard: received updated extra services for ticket_no", ticket_no, extras);
+        setTicketDetails((prev: any[]) =>
+            prev.map((row) => (row.ticket_no === ticket_no ? { ...row, extra_services: extras } : row))
+        );
+    };
 
+    // ----- waiting list -----
+    const { post } = useForm({ attendee_id, event_app_ticket_id: ticket.id });
     const handleWaitingList = () => {
-        post(route("attendee.waitlist.post"), {
-            onSuccess: () => setIsWaitList(true),
-        });
+        post(route("attendee.waitlist.post"), { onSuccess: () => setIsWaitList(true) });
     };
 
     const availableQty =
         ticket.qty_total === null ? Infinity : Math.max(0, ticket.qty_total - ticket.qty_sold);
     const unlimitedQty = ticket.qty_total === null;
+
     return (
         <Col lg={12}>
             <Accordion>
@@ -412,9 +364,7 @@ const TicketCard = ({
                             </Col>
 
                             <Col md={2} lg={2}>
-                                <sup>
-                                    <small>{currency_symbol}</small>
-                                </sup>
+                                <sup><small>{currency_symbol}</small></sup>
                                 <span className="ff-secondary fw-bold fs-3">{ticket.base_price}</span>
                             </Col>
 
@@ -428,9 +378,7 @@ const TicketCard = ({
                             {!unlimitedQty && availableQty <= 0 ? (
                                 <Col md={2} lg={2}>
                                     <span className="ff-secondary fw-bold d-flex justify-content-lg-end">
-                                        <Button size="sm" onClick={handleWaitingList}>
-                                            Add Waiting List
-                                        </Button>
+                                        <Button size="sm" onClick={handleWaitingList}>Add Waiting List</Button>
                                     </span>
                                 </Col>
                             ) : (
@@ -439,7 +387,6 @@ const TicketCard = ({
                                         <Button size="sm" onClick={() => setTicketQty((prev) => Math.max(0, prev - 1))}>
                                             <Minus size={20} />
                                         </Button>
-
                                         <FormControl
                                             type="number"
                                             className="text-center"
@@ -451,17 +398,12 @@ const TicketCard = ({
                                             onChange={(e: any) => {
                                                 const val = Number(e.target.value);
                                                 if (!Number.isFinite(val)) return;
-                                                if (unlimitedQty || val <= availableQty) {
-                                                    setTicketQty(Math.max(0, val));
-                                                }
+                                                if (unlimitedQty || val <= availableQty) setTicketQty(Math.max(0, val));
                                             }}
                                         />
-
                                         <Button
                                             size="sm"
-                                            onClick={() =>
-                                                setTicketQty((prev) => (unlimitedQty || prev < availableQty ? prev + 1 : prev))
-                                            }
+                                            onClick={() => setTicketQty((prev) => (unlimitedQty || prev < availableQty ? prev + 1 : prev))}
                                         >
                                             <Plus size={20} />
                                         </Button>
@@ -487,17 +429,14 @@ const TicketCard = ({
                                         ))}
 
                                     {ticket.sessions.length > 5 && (
-                                        <button
-                                            className="btn btn-link p-0 m-0 mt-2"
-                                            onClick={() => setShowAll((prev) => !prev)}
-                                        >
+                                        <button className="btn btn-link p-0 m-0 mt-2" onClick={() => setShowAll((prev) => !prev)}>
                                             {showAll ? "Show less" : "Show more"}
                                         </button>
                                     )}
 
                                     {(() => {
                                         const ticketExists = ticket_array.some((t: any) => t.ticket.id === ticket.id);
-                                        if (!ticketExists) return null;
+                                        if (!ticketExists || !submitCheckOut) return null;
                                         return (
                                             <Col md={4} lg={4}>
                                                 <Button disabled={processing} onClick={submitCheckOut} className="btn btn-success w-100">
@@ -515,16 +454,19 @@ const TicketCard = ({
                             </Col>
                         </Row>
 
-                        {ticketDetails.map((ticketDetail: any) => (
+                        {ticketDetails.map((row: any) => (
                             <TicketDetail
+                                key={`ticketDetail-${ticket.id}-${row.ticket_no}`}
                                 currency_symbol={currency_symbol}
                                 ticket={ticket}
-                                ticket_no={ticketDetail.ticket_no}
-                                fees_sub_total={ticketDetail.fees_sub_total}
-                                addons_sub_total={ticketDetail.addons_sub_total}
-                                key={`ticketDetail-${ticket.id}-${ticketDetail.ticket_no}`}
+                                ticket_no={row.ticket_no}
+                                fees_sub_total={row.fees_sub_total}
+                                addons_sub_total={row.addons_sub_total}
                                 onAddonsUpdated={handleAddonUpdated}
                                 onBlockCheckout={onBlockCheckout}
+                                // ✅ EXTRA SERVICES: hydrate & receive updates
+                                initialExtras={row.extra_services}
+                                onExtraServicesUpdated={handleExtraServicesUpdated}
                             />
                         ))}
                     </Accordion.Body>

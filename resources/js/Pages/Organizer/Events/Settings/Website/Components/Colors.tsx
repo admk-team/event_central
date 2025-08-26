@@ -2,7 +2,6 @@ import { useForm, usePage } from '@inertiajs/react'
 import { Key } from 'lucide-react';
 import React from 'react'
 import { Button, Card, CardBody, CardHeader, CardTitle, Col, Form, FormGroup, ListGroup, ListGroupItem, Row, Spinner } from 'react-bootstrap'
-import { object } from 'yup';
 
 export default function Colors() {
     const colors = usePage().props.colors as any;
@@ -18,6 +17,14 @@ export default function Colors() {
             preserveScroll: true,
         });
     }
+
+    // 🔹 Mapping for friendly labels
+    const colorLabels: Record<string, string> = {
+        primary: "Primary Theme Active",
+        primary_light: "Primary Text Color",
+        primary_dark: "Primary Background Color",
+        primary_foreground: "Primary Foreground Color"
+    };
 
     return (
         <Form onSubmit={submit}>
@@ -49,12 +56,14 @@ export default function Colors() {
                             {Object.entries(groupColors).map(([name, value]) => (
                                 <ListGroupItem className="py-2" key={name}>
                                     <Row>
-                                        <Col lg={2}>
+                                        <Col lg={3}>
                                             <div className="d-flex align-items-center h-100">
-                                                <Form.Label className="form-label mb-0 text-capitalize">{name.replaceAll('_', ' ')}</Form.Label>
+                                                <Form.Label className="form-label mb-0">
+                                                    {colorLabels[name] ?? name.replaceAll('_', ' ')}
+                                                </Form.Label>
                                             </div>
                                         </Col>
-                                        <Col md={10}>
+                                        <Col md={9}>
                                             <Form.Control
                                                 type="color"
                                                 className="form-control"

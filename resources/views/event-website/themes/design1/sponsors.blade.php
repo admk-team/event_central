@@ -98,7 +98,6 @@
                 </div>
         </section>
     @endif
-    @endif
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
