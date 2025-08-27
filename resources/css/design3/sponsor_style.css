@@ -1,54 +1,44 @@
-
-
 /* ================= Sponsors Section – Advanced Professional Look ================= */
 .sponsors {
-    padding: var(--spacing-section-padding);
-    background: var(--color-primary);
-    font-family: var(--font-primary);
+    padding: 100px 30px;
+    background: linear-gradient(135deg, var(--color-primary-foreground), var(--color-primary));
     min-height: 100vh;
-    color: var(--color-light-text);
     position: relative;
     overflow: hidden;
 }
 
-/* Animated Background Overlay */
-.sponsors::before {
-    content: "";
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle at center, rgba(37,99,235,0.1), transparent 70%),
-                radial-gradient(circle at 30% 70%, rgba(236,72,153,0.1), transparent 80%),
-                radial-gradient(circle at 70% 30%, rgba(250,204,21,0.1), transparent 80%);
-    animation: moveBg 15s infinite linear;
-    z-index: 0;
-}
-
 @keyframes moveBg {
-    0% { transform: translate(0,0) rotate(0deg); }
-    50% { transform: translate(-10%, -10%) rotate(180deg); }
-    100% { transform: translate(0,0) rotate(360deg); }
-}
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+    }
 
+    50% {
+        transform: translate(-10%, -10%) rotate(180deg);
+    }
+
+    100% {
+        transform: translate(0, 0) rotate(360deg);
+    }
+}
+.tier-title{
+    color: var(--color-primary-light);
+    font-size: 3rem;
+    font-weight: 800;
+}
 /* Section Header */
 .section-header {
     text-align: center;
-    margin-bottom: 70px;
+    margin-top: -2%;
     position: relative;
     z-index: 1;
 }
+
 .section-header h2 {
-    font-size: 44px;
-    font-weight: 900;
-    color: var(--color-primary-foreground);
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--color-primary-light);
     text-transform: uppercase;
-    letter-spacing: 1px;
     position: relative;
-    display: inline-block;
-    padding-bottom: 15px;
-    margin-top: -2%;
 }
 
 /* Sponsors Grid */
@@ -62,7 +52,7 @@
 
 /* Sponsor Card */
 .sponsor-logo {
-    background: var(--color-gray-light);
+    background: var(--color-primary-dark);
     backdrop-filter: blur(14px);
     border-radius: var(--radius-card);
     padding: var(--spacing-card-padding);
@@ -86,7 +76,7 @@
     inset: 0;
     border-radius: var(--radius-card);
     padding: 1px;
-    background: var(--gradient-neon-border);
+    background: radial-gradient(circle, var(--color-primary-foreground) 0%, var(--color-primary-dark) 80%);
     background-size: 300% 300%;
     mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
     -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
@@ -97,9 +87,17 @@
 }
 
 @keyframes borderGlow {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 /* Logo Styling */
@@ -178,11 +176,11 @@
 .modal-content {
     border-radius: var(--radius-modal);
     padding: 40px 30px;
-    background: rgba(30,41,59,0.95);
+    background: rgba(30, 41, 59, 0.95);
     backdrop-filter: blur(16px);
     color: var(--color-light-text);
     box-shadow: var(--shadow-modal);
-    border: 1px solid rgba(255,255,255,0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     animation: fadeInScale 0.4s ease;
 }
 
@@ -212,8 +210,15 @@
 
 /* Animations */
 @keyframes fadeInScale {
-    from { opacity: 0; transform: scale(0.9); }
-    to { opacity: 1; transform: scale(1); }
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 /* Responsive Tweaks */
@@ -221,9 +226,16 @@
     .sponsors {
         padding: var(--spacing-section-padding-sm);
     }
-    .section-header h2 {
-        font-size: 30px;
+
+    .section-header{
+            margin-top: 19%;
+
     }
+
+    .section-header h2 {
+        font-size: 3rem;
+    }
+
     .sponsor-logo {
         min-height: 220px;
         padding: 20px;

@@ -1,16 +1,19 @@
 @extends('event-website.layouts.layout')
 
 @section('style')
-    <!-- Dependency Styles -->
     <link id="style-bundle" rel="stylesheet" href="{{ asset('design3/bundle.css') }}" type="text/css" />
 
     <link
         href="https://fonts.googleapis.com/css2?family=Exo:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700;800&display=swap"
         rel="stylesheet" />
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
 
     @vite(['resources/css/design3/index.css'])
+
     @vite(['resources/css/design3/variables.css'])
+
     @vite(['resources/css/design3/tickets_style.css'])
 @endsection
 
@@ -35,9 +38,16 @@
 
                 <div class="banner__content">
                     <h1 class="banner__title">
-                        <span class="banner__title--main">{{ $event->name }}</span>
-                        <span class="banner__title--sub">{{ date('Y', strtotime($event->dates[0]->date)) }}</span>
-                        {{ $event->tagline }}
+                        <div class="col-md-12">
+                            <span class="banner__title--main">{{ $event->name }}</span>
+                            <span class="banner__title--sub">{{ date('Y', strtotime($event->dates[0]->date)) }}</span>
+                        </div>
+                        <div class="col-md-12">
+                            <span class="banner__title--tagline">
+                                {{ $event->tagline }}
+                            </span>
+                        </div>
+
                     </h1>
 
                     <p class="banner__event-date">
@@ -65,13 +75,12 @@
                     </p>
                     <!-- /.banner__event-date -->
 
-                    <div class="row justify-content-center mt-100">
+                    <div class="row justify-content-center" style="margin-top: 6%;">
                         <div class="col-md-10">
                             <div class="cbx-countdown-main">
                                 <div class="cbx-countdown-container">
                                     <div class="cbx-countdown-countdown-container" id="countdown">
 
-                                        <!-- days -->
                                         <div
                                             class="cbx-countdown-clock-item cbx-countdown-clock-days cbx-countdown-countdown-time-value">
                                             <div class="cbx-countdown-wrap">
@@ -130,8 +139,7 @@
                                                         class="cbx-countdown-clock-canvas">
                                                     </div>
                                                     <div class="cbx-countdown-text">
-                                                        <p style="font-weight: 800;color: #fff;font-size: 50px;font-size: 5rem;line-height: 1;"
-                                                            id="countdown-seconds">0</p>
+                                                        <p class="cbx-countdown-seconds" id="countdown-seconds">0</p>
                                                         <p class="cbx-countdown-type-seconds cbx-countdown-type-time">
                                                             Seconds </p>
                                                     </div>
@@ -236,7 +244,7 @@
                             </div>
                         </div>
                         <div class="about-text">
-                            <h2 class="section-tag">About the Event</h2>
+                            <span class="section-tag">About the Event</span>
                             <span class="section-title">{{ $event->name }}</span>
                             <p>{!! $event->description !!}</p>
                         </div>
@@ -248,7 +256,7 @@
         <section id="venue" class="venue">
             <div class="container">
                 <div class="section-header">
-                    <h2 class="section-tag">Event Location</h2>
+                    <span class="section-tag">Event Location</span>
                     <span class="section-title">{{ $event->location_base }}</span>
                     <!-- <p class="section-subtitle">500 E Cesar Chavez St, Austin, TX 78701</p> -->
                 </div>
@@ -263,13 +271,13 @@
         <section id="register" class="register">
             <div class="container">
                 <div class="section-header light">
-                    <span class="section-tag">Register Now</span>
+                    <span class="section-tag">Register Now</span><br>
                     <h2 class="section-title">Tickets</h2>
                 </div>
                 <div class="pricing-tiers">
                     @foreach ($event->tickets ?? [] as $ticket)
                         @if ($ticket->show_on_attendee_side)
-                            <div class="pricing-card d-flex flex-column h-100">
+                            <div class="pricing-card d-flex flex-column">
                                 <div class="pricing-header">
                                     <h3>{{ $ticket->name }}</h3>
                                     <div class="pricing">
@@ -286,7 +294,7 @@
                                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                 <polyline points="20 6 9 17 4 12"></polyline>
                                             </svg>
-                                            <span style="font-size: 13px">{{ $session->name }}</span>
+                                            <span>{{ $session->name }}</span>
                                         </li>
                                     @endforeach
 
@@ -298,7 +306,7 @@
                                     @if ($remaining > 0)
                                         <a
                                             href="{{ route('attendee.login', $event) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}">
-                                            <li class="" style="color: var(--color-primary)">
+                                            <li class="register-see-more">
                                                 {{ $remaining }}+ More
                                             </li>
                                         </a>
@@ -331,8 +339,8 @@
                                             <div class="text-center">
                                                 <p>{{ $session->type }}</p>
                                                 <p>{{ $session->capacity }}</p>
-                                                <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                                        viewBox="0 0 24 24"
+                                                <p><svg class="model-svg" xmlns="http://www.w3.org/2000/svg"
+                                                        width="24" height="24" viewBox="0 0 24 24"
                                                         style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
                                                         <path
                                                             d="M12.25 2c-5.514 0-10 4.486-10 10s4.486 10 10 10 10-4.486 10-10-4.486-10-10-10zM18 13h-6.75V6h2v5H18v2z">
@@ -345,7 +353,7 @@
                                         </div>
                                         <!-- <div class="modal-footer">
 
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                </div> -->
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    </div> -->
                                     </div>
                                 </div>
                             </div>

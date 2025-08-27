@@ -8,6 +8,7 @@
         href="https://fonts.googleapis.com/css2?family=Exo:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700;800&display=swap"
         rel="stylesheet" />
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     @vite(['resources/css/design3/variables.css'])
     @vite(['resources/css/design3/index.css'])
@@ -25,13 +26,14 @@
         <section id="register" class="register">
             <div class="container">
                 <div class="section-header light">
+                    <h2 class="section-tag">Register Now</h2><br>
                     <h2 class="section-title">Tickets</h2>
                     {{-- <p class="section-subtitle">Early bird pricing available until June 30, 2025</p> --}}
                 </div>
                 <div class="pricing-tiers">
                     @foreach ($event->tickets ?? [] as $ticket)
                         @if ($ticket->show_on_attendee_side)
-                            <div class="pricing-card d-flex flex-column h-100">
+                            <div class="pricing-card d-flex flex-column">
                                 <div class="pricing-header">
                                     <h3>{{ $ticket->name }}</h3>
                                     <div class="pricing">
@@ -45,7 +47,7 @@
                                             data-bs-target="#sessionModal{{ $session->id }}">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
                                                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                                stroke-linecap="round" stroke-linejoin="round">
+                                                stroke-linecap="round" stroke-linejoin="round" style="">
                                                 <polyline points="20 6 9 17 4 12"></polyline>
                                             </svg>
                                             <span>{{ $session->name }}</span>
@@ -94,7 +96,7 @@
                                             <div class="text-center">
                                                 <p>{{ $session->type }}</p>
                                                 <p>{{ $session->capacity }}</p>
-                                                <p><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                                                <p><svg class="model-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                         viewBox="0 0 24 24"
                                                         style="fill: rgba(0, 0, 0, 1);transform: ;msFilter:;">
                                                         <path
@@ -107,7 +109,7 @@
                                         </div>
                                         <!-- <div class="modal-footer">
 
-                                                    </div> -->
+                                                        </div> -->
                                     </div>
                                 </div>
                             </div>

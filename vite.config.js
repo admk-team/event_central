@@ -27,7 +27,17 @@ export default defineConfig({
                 "resources/css/design2/sponsor_single_styles.css",
                 "resources/css/design2/sponsors_styles.css",
 
-                 // Ensure this is included
+                //Design3 css
+                "resources/css/design3/index.css",
+                "resources/css/design3/exhibitors_style.css",
+                "resources/css/design3/product_style.css",
+                "resources/css/design3/schedule_style.css",
+                "resources/css/design3/speakers_style.css",
+                "resources/css/design3/sponsor_style.css",
+                "resources/css/design3/single_sponsor_style.css",
+                "resources/css/design3/tickets_style.css",
+
+                // Ensure this is included
             ],
             refresh: true,
         }),

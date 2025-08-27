@@ -8,6 +8,8 @@
         href="https://fonts.googleapis.com/css2?family=Exo:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700;800&display=swap"
         rel="stylesheet" />
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     @vite(['resources/css/design3/variables.css'])
 
     @vite(['resources/css/design3/index.css'])
@@ -93,9 +95,9 @@
             }
         }">
             <div class="container">
-                <div class="section-header">
-                    <h2 class="section-tag" style="color: var(--color-primary-foreground);">Event Schedule</h2>
-                    <h2 class="section-title">Schedule</h2>
+                <div class="schedule-section-header">
+                    <h2 class="schedule-section-tag">Event Schedule</h2>
+                    <h2 class="schedule-section-title">Schedule</h2>
                     {{-- <p class="section-subtitle">Plan your DevCon experience with our comprehensive schedule</p> --}}
                 </div>
                 <div class="schedule-tabs">
@@ -106,7 +108,7 @@
                 </div>
                 @if ($enableTracks)
                     <div class="tracks">
-                        <h2 style="color: var(--color-primary-foreground);">Tracks:</h2>
+                        <h2 class="tracks-title">Tracks:</h2>
                         <div class="tracks-filter">
                             @foreach ($tracks as $track)
                                 <button @click="toggleTrackSelection({{ $track->id }})"
@@ -125,7 +127,7 @@
                     </div>
                 @endif
                 <div class="locations">
-                    <h4 style="color: var(--color-primary-foreground);">Locations:</h4>
+                    <h4 class="location-title">Locations:</h4>
                     <div class="locations-filter">
                         @foreach ($eventPlatforms as $platform)
                             <button @click="togglePlatformSelection({{ $platform->id }})" class="platform-btn"

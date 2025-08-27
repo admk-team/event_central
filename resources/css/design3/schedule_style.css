@@ -1,4 +1,3 @@
-
 :root {
     /* Fonts */
     --font-primary: 'Exo', sans-serif;
@@ -15,8 +14,8 @@
     --color-accent: #22d3ee;
     --color-accent-hover: #1d4ed8;
     --color-white: #ffffff;
-    --color-gray-light: rgba(255,255,255,0.05);
-    --color-gray-lighter: rgba(255,255,255,0.08);
+    --color-gray-light: rgba(255, 255, 255, 0.05);
+    --color-gray-lighter: rgba(255, 255, 255, 0.08);
 
 
     /* Gradients */
@@ -24,9 +23,9 @@
     --gradient-accent: linear-gradient(90deg, var(--color-accent), var(--color-primary));
 
     /* Shadows */
-    --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
-    --shadow-md: 0 6px 18px rgba(0,0,0,0.08);
-    --shadow-lg: 0 12px 28px rgba(0,0,0,0.15);
+    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 12px 28px rgba(0, 0, 0, 0.15);
     --shadow-img-hover: 0 6px 15px rgba(37, 99, 235, 0.3);
 
     /* Border Radius */
@@ -50,8 +49,7 @@
 ========================= */
 .schedule {
     padding: var(--spacing-section-padding);
-    background: var(--color-primary);
-    font-family: var(--font-primary);
+    background: linear-gradient(135deg, var(--color-primary-foreground), var(--color-primary));
     min-height: 100vh;
     line-height: 1.6;
 }
@@ -83,8 +81,8 @@
 
 .schedule .tab-btn {
     border: 1px solid transparent;
-    background: var(--color-primary);
-    color: var(--color-primary-foreground);
+    background: var(--color-primary-foreground);
+    color: var(--color-primary-light);
     padding: 0.875rem 1.75rem;
     border-radius: var(--radius-md);
     font-weight: 500;
@@ -97,8 +95,8 @@
 }
 
 .schedule .tab-btn span {
-    background: var(--color-primary);
-    color: var(--color-primary-foreground);
+    background: var(--color-primary-foreground);
+    color: var(--color-primary-light);
     padding: 0.25rem 0.5rem;
     border-radius: var(--radius-xl);
     font-size: 0.75rem;
@@ -106,13 +104,36 @@
     text-align: center;
 }
 
+.schedule-section-header {
+    text-align: center;
+    margin-top: 4%;
+    color: white;
+}
+
+.schedule-section-header .schedule-section-tag {
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--color-primary-light);
+    text-transform: uppercase;
+}
+
+.schedule-section-header .schedule-section-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--color-primary-light);
+    text-transform: uppercase;
+    margin-bottom: 70px;
+}
+
 .schedule .tab-btn:hover {
-    background: var(--color-white);
-    color: var(--color-muted-dark);
+    background: var(--color-primary-foreground);
+    color: var(--color-primary-light);
     transform: translateY(-1px);
 }
 
 .schedule .tab-btn.active {
+    font-size: 2.5rem;
+    font-weight: 800;
     background: var(--color-primary);
     color: var(--color-white);
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
@@ -130,6 +151,19 @@
     flex-wrap: wrap;
     gap: 0.75rem;
     justify-content: center;
+}
+
+.location-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--color-primary-light);
+}
+
+.tracks-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--color-primary-light);
+
 }
 
 .tracks-filter .btn,
@@ -321,6 +355,7 @@
         opacity: 0;
         transform: translateY(30px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -332,27 +367,39 @@
     .schedule {
         padding: 2rem 1rem;
     }
+
     .schedule h1 {
         font-size: 2rem;
         margin-bottom: 2rem;
     }
+
     .schedule-timeline {
         grid-template-columns: 1fr;
         gap: 1.5rem;
     }
+
     .timeline-item {
         padding: 1.5rem;
     }
+
     .session-details {
         flex-direction: column;
         align-items: flex-start;
         gap: 1rem;
     }
+
     .timeline-time {
         font-size: 1.125rem;
     }
+
     .session-title {
         font-size: 1.25rem;
+    }
+
+    .schedule-section-header {
+        text-align: center;
+        margin-top: 35%;
+        color: white;
     }
 }
 
@@ -362,16 +409,25 @@
         align-items: stretch;
         padding: 0.5rem;
     }
+
     .schedule .tab-btn {
         text-align: center;
         justify-content: center;
     }
+
     .tracks-filter,
     .locations-filter {
         justify-content: center;
     }
+
     .timeline-item {
         padding: 1.25rem;
+    }
+
+    .schedule-section-header {
+        text-align: center;
+        margin-top: 35%;
+        color: white;
     }
 }
 

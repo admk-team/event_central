@@ -7,12 +7,14 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Exo:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700;800&display=swap"
         rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     @vite(['resources/css/design3/variables.css'])
 
     @vite(['resources/css/design3/index.css'])
 
     @vite(['resources/css/design3/sponsor_style.css'])
+
 @endsection
 
 <div id="main_content" class="main-content">
@@ -33,7 +35,7 @@
                         @foreach ($partnerCategories ?? [] as $category)
                             @if ($category->partners->count() > 0)
                                 <div class="sponsors-tier">
-                                    <h3 class="tier-title" style="color: var(--color-primary-foreground)">
+                                    <h3 class="tier-title mt-5">
                                         {{ $category->name }}</h3>
                                     <div class="sponsors-grid gold">
                                         @foreach ($category->partners ?? [] as $partner)

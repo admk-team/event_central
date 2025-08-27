@@ -10,6 +10,8 @@
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
     @vite(['resources/css/design3/variables.css', 'resources/css/design3/index.css', 'resources/css/design3/single_sponsor_style.css'])
 @endsection
 
@@ -23,7 +25,7 @@
         <section id="single-sponsors" class="single-sponsors">
             <div class="container">
                 <div class="section-header">
-                    <h2 class="section-tag" style="color: var(--color-primary-foreground);">{{ $partner->company_name }}
+                    <h2 class="section-tag">{{ $partner->company_name }}
                     </h2>
                 </div>
                 <div class="single-sponsors-tiers">
@@ -48,10 +50,10 @@
                             <div class="col-md-6">
                                 <div class=" text-center">
                                     <h5>{{ $partner->type }}</h5>
-                                    <p class="text-muted mb-0">{{ $partner->email }}</p>
-                                    <p class="text-muted">{{ $partner->phone }}</p>
+                                    <p class=" mb-0">{{ $partner->email }}</p>
+                                    <p class="">{{ $partner->phone }}</p>
                                     <p class="mb-0">{{ $partner->company_name }}</p>
-                                    <p class="text-muted">{{ $partner->exhibitor_booth_no }}</p>
+                                    <p class="">{{ $partner->exhibitor_booth_no }}</p>
                                     @if ($partner->web)
                                         <div class="social-icons">
                                             <a target="_blank" href="{{ $partner->web }}">
@@ -78,7 +80,7 @@
 
                                         </div>
                                     @endif
-                                    <p class="text-muted">{{ $partner->address }}</p>
+                                    <p class="">{{ $partner->address }}</p>
 
                                     <!-- Description with Show More functionality -->
                                     <div class="description-container">
@@ -86,13 +88,13 @@
                                             <p class="description-text short-description"
                                                 id="shortPartnerDesc{{ $partner->id }}">
                                                 {{ substr($partner->description, 0, 100) }}...</p>
-                                            <p class="description-text full-description text-muted d-none"
+                                            <p class="description-text full-description d-none"
                                                 id="fullPartnerDesc{{ $partner->id }}">{{ $partner->description }}</p>
                                             <button class="btn show-more-btn p-0"
                                                 data-partner-id="{{ $partner->id }}">Show
                                                 More</button>
                                         @else
-                                            <p class="text-muted">{{ $partner->description }}</p>
+                                            <p class="">{{ $partner->description }}</p>
                                         @endif
                                     </div>
                                 </div>

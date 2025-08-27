@@ -7,6 +7,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Exo:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700;800&display=swap"
         rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 
     @vite(['resources/css/design3/variables.css'])
@@ -30,9 +31,23 @@
 
                 <div class="event-shop-grid">
                     @foreach ($event_products as $item)
+                        @php
+                            $hasOld = !empty($item->old_price) && $item->old_price > 0;
+                            $onSale = $hasOld && $item->old_price > $item->price;
+                            $offPct = $onSale ? round((1 - $item->price / $item->old_price) * 100) : 0;
+                        @endphp
                         <div class="event-shop-card">
                             <div class="event-shop-card-image">
-                                <img src="{{ $item->image_url }}" alt="{{ $item->name }}">
+                                @if (!empty($item->image_url))
+                                    <img src="{{ $item->image_url }}" alt="{{ $item->name }}">
+                                @else
+                                    <div class="d2s-product__placeholder">
+                                        {{ Str::of($item->name)->substr(0, 2)->upper() }}
+                                    </div>
+                                @endif
+                                @if ($onSale)
+                                    <span class="d2s-badge d2s-badge--off">-{{ $offPct }}%</span>
+                                @endif
                             </div>
                             <div class="event-shop-card-body">
                                 <h3 class="event-shop-card-title">{{ $item->name }}</h3>

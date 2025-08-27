@@ -7,7 +7,7 @@
                  <div class="site-logo">
                      <a
                          href="{{ route('organizer.events.website', $event->uuid) }}{{ $isPreviewMode ?? false ? '?preview=true' : '' }}"class="logo">
-                         <img src="{{ $event->logo_img }}" class="w-25">
+                         <img src="{{ $event->logo_img }}">
                      </a>
                  </div>
                  <div class="burger-menu">
@@ -20,7 +20,7 @@
                          <div class="mobile-offcanvas-logo">
                              <a href="{{ route('organizer.events.website', $event->uuid) }}{{ $isPreviewMode ?? false ? '?preview=true' : '' }}"
                                  class="mobile-logo">
-                                 <img src="{{ $event->logo_img }}" class="w-50">
+                                 <img src="{{ $event->logo_img }}">
                              </a>
                          </div>
                          <div class="close-menu menu-close" id="page-close-main-menu">
@@ -28,9 +28,9 @@
                          </div>
                      </div>
                      <ul class="codeboxr-main-menu">
-                         <li><a class="gotome"
+                         {{-- <li><a class="gotome"
                                  href="{{ route('organizer.events.website', $event->uuid) }}{{ $isPreviewMode ?? false ? '?preview=true' : '' }}">About</a>
-                         </li>
+                         </li> --}}
                          <li><a class="gotome"
                                  href="{{ route('organizer.events.website.speakers', $event->uuid) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}">Speakers</a>
                          </li>
@@ -51,28 +51,28 @@
                                  href="{{ route('organizer.events.website.products', $event->uuid) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}">Products</a>
                          </li>
                      </ul>
-                     <a style="background-color: var(--color-primary);color: var(--color-primary-foreground);"
+                     <a
                          class="cbx-btn btn-brand btn-show-md"href="{{ route('organizer.events.website.schedule', $event->uuid) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}">Schedule</a>
                      <a class="cbx-btn btn-brand btn-show-md"
-                         style="background-color: var(--color-primary);color: var(--color-primary-foreground);"
+
                          href="{{ route('attendee.login', $event) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}">Login</a>
 
                      <a class="cbx-btn btn-brand btn-show-md"
-                         style="background-color: var(--color-primary);color: var(--color-primary-foreground);"
+
                          href="{{ route('attendee.register', $event) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}">Register
                          Now</a>
 
                  </div>
                  <!-- /.menu-wrapper -->
                  <a class="cbx-btn btn-brand btn-hide-md"
-                     style="background-color: var(--color-primary);color: var(--color-primary-foreground);"
+                     style=""
                      href="{{ route('organizer.events.website.schedule', $event->uuid) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}">Schedule</a>
                  <a class="cbx-btn btn-brand btn-hide-md"
-                     style="background-color: var(--color-primary);color: var(--color-primary-foreground);"
+
                      href="{{ route('attendee.login', $event) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}">Login</a>
 
                  <a class="cbx-btn btn-brand btn-hide-md"
-                     style="background-color: var(--color-primary);color: var(--color-primary-foreground);"
+
                      href="{{ route('attendee.register', $event) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}">Register
                      Now</a>
 

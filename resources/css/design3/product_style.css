@@ -1,9 +1,7 @@
-
 /* ===== Event Shop Section ===== */
 .event-shop-section {
     padding: var(--spacing-section-padding);
-    background: var(--color-primary);
-    font-family: var(--font-primary);
+    background: linear-gradient(135deg, var(--color-primary-foreground), var(--color-primary));
     min-height: 100vh;
     position: relative;
     color: var(--color-light-text);
@@ -14,7 +12,7 @@
 .event-shop-header {
     text-align: center;
     margin-bottom: var(--spacing-header-margin);
-    margin-top: 4%;
+    margin-top: -1.4%;
     font-weight: 700;
 }
 
@@ -27,16 +25,32 @@
     margin-bottom: 10px;
 }
 
+.d2s-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 1.4rem;
+    font-weight: bold;
+    z-index: 2;
+}
+
+.d2s-badge--off {
+    background: linear-gradient(180deg,
+            var(--color-accent, #ff7a59),
+            color-mix(in srgb, var(--color-accent, #ff7a59), black 20%));
+    border: 1px solid color-mix(in srgb, var(--color-accent, #ff7a59), black 25%);
+}
+
 .event-shop-title {
-    font-size: 44px;
-    font-weight: 900;
-    color: var(--color-light-text);
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--color-primary-light);
+
     text-transform: uppercase;
-    letter-spacing: 1px;
     position: relative;
-    display: inline-block;
-    padding-bottom: 15px;
-    margin-top: 1%;
 }
 
 /* Grid Layout */
@@ -51,7 +65,7 @@
 
 /* New Card Styles */
 .event-shop-card {
-    background: var(--color-white);
+    background: var(--color-primary-dark);
     border-radius: var(--radius-card);
     overflow: hidden;
     box-shadow: var(--shadow-card);
@@ -73,6 +87,7 @@
     width: 100%;
     height: 180px;
     overflow: hidden;
+    position: relative;
 }
 
 .event-shop-card-image img {
@@ -94,17 +109,14 @@
 }
 
 .event-shop-card-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--color-text-dark);
-    margin-bottom: 8px;
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: var(--color-primary-light);
 }
 
 .event-shop-card-description {
     font-size: 14px;
-    color: var(--color-muted);
-    margin-bottom: 15px;
-    line-height: 1.5;
+    color: var(--color-primary-light);
 }
 
 /* Card Footer */
@@ -123,30 +135,33 @@
 
 .current-price {
     font-size: 18px;
-    font-weight: 700;
-    color: var(--color-pink);
+    font-weight: 800;
+    color: var(--color-primary-foreground);
+    margin-left: -29%;
 }
 
 .old-price {
-    font-size: 13px;
+    font-size: 1.5rem;
     text-decoration: line-through;
-    color: var(--color-gray-lighter);
+    color: var(--color-primary-light);
+    font-weight: 800;
+    margin-left: -29%;
 }
 
 /* Button */
 .btn-event-shop {
     padding: 8px 16px;
-    background: var(--color-primary);
+    background: var(--color-primary-foreground);
     color: var(--color-white);
     border-radius: var(--radius-btn);
     font-weight: 600;
     font-size: 14px;
     transition: var(--transition-btn);
-    color: var(--color-primary-foreground);
+    color: var(--color-primary-light);
 }
 
 .btn-event-shop:hover {
-    background: var(--gradient-btn-hover);
+    background: radial-gradient(circle, var(--color-primary-foreground) 0%, var(--color-primary-dark));
     transform: translateY(-2px);
     box-shadow: var(--shadow-btn-hover);
 }

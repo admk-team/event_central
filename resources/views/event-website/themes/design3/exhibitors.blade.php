@@ -7,6 +7,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Exo:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700;800&display=swap"
         rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     @vite(['resources/css/design3/variables.css'])
 
@@ -43,16 +44,16 @@
                                     </div>
                                 @endif
                                 <div>
-                                    <b>Name: </b> {{ $exhibitor->company_name }}
+                                    <b class="list-group-name">Name: </b> <span>{{ $exhibitor->company_name }}</span>
                                 </div>
                                 @if ($exhibitor->phone)
                                     <div>
-                                        <b>Phone: </b> {{ $exhibitor->phone }}
+                                        <b class="list-group-phone">Phone: </b> <span>{{ $exhibitor->phone }}</span>
                                     </div>
                                 @endif
                                 @if ($exhibitor->exhibitor_booth_no)
                                     <div>
-                                        <b>Booth number: </b> {{ $exhibitor->exhibitor_booth_no }}
+                                        <b class="list-group-b-number">Booth number: </b> <span>{{ $exhibitor->exhibitor_booth_no }}</span>
                                     </div>
                                 @endif
                                 @if ($exhibitor->web)

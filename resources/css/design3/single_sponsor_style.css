@@ -1,8 +1,7 @@
 /* ==== Single Sponsor Section ==== */
 .single-sponsors {
     padding: 100px 30px;
-    background: var(--color-primary);
-    font-family: var(--font-primary);
+    background: linear-gradient(135deg, var(--color-primary-foreground), var(--color-primary));
     min-height: 100vh;
     position: relative;
     color: var(--color-light);
@@ -11,22 +10,26 @@
 
 .single-sponsors .section-header {
     text-align: center;
-    margin-top: 8%;
+    margin-top: -2%;
+    margin-bottom: 35px;
 }
 
 .single-sponsors .section-tag {
-    font-size: 44px;
-    font-weight: 900;
+    font-size: 3.5rem;
+    font-weight: 800;
     color: var(--color-light);
     text-transform: uppercase;
-    letter-spacing: 1px;
-    display: inline-block;
-    padding-bottom: 15px;
+    color: var(--color-primary-light);
 }
 
+.single-sponsors-tier {
+    background-color: var(--color-primary-dark);
+        border-radius: 10px;
+}
 /* Sponsor Banner */
 .single-sponsors-tiers .sponsor-logo {
     box-shadow: var(--shadow-lg);
+    border-radius: 10px;
 }
 
 .single-sponsors-tiers .sponsor-logo img {
@@ -35,6 +38,7 @@
     height: auto;
     object-fit: contain;
     box-shadow: var(--shadow-lg);
+    background-color: #ffffff;
 }
 
 /* ================= Banner Image ================= */
@@ -77,9 +81,10 @@
     align-items: flex-start;
     justify-content: center;
     flex-wrap: wrap;
-    background: var(--color-white);
+    background: var(--color-primary-dark);
     padding: 30px;
-    border-radius: var(--radius-lg);
+
+    border-radius: 90px;
     box-shadow: var(--shadow-md);
 }
 
@@ -97,22 +102,23 @@
 }
 
 .single-sponsors-grid h5 {
-    font-size: 20px;
-    font-weight: 600;
-    color: var(--color-dark);
+
+    font-size: 3rem;
+    font-weight: 800;
+    color: var(--color-primary-light);
     margin-bottom: 8px;
 }
 
 .single-sponsors-grid p {
     margin-bottom: 6px;
-    font-size: 15px;
-    color: #555;
+    font-size: 2.5rem;
+    color: var(--color-primary-light);
 }
 
 /* Social Icons */
 .single-sponsors-grid a i {
     font-size: 22px;
-    margin-right: 10px;
+    margin-right: -2px;
     transition: var(--transition);
 }
 
