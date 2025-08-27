@@ -6,7 +6,7 @@
 
                  <div class="site-logo">
                      <a
-                         href="{{ route('organizer.events.website', $event->uuid) }}{{ $isPreviewMode ?? false ? '?preview=true' : '' }}"class="logo">
+                         href="{{ route('organizer.events.website', $event->uuid) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}"class="logo">
                          <img src="{{ $event->logo_img }}">
                      </a>
                  </div>
@@ -18,7 +18,7 @@
                  <div class="menu-wrapper main-nav-container canvas-menu-wrapper" id="mega-menu-wrap">
                      <div class="canvas-header">
                          <div class="mobile-offcanvas-logo">
-                             <a href="{{ route('organizer.events.website', $event->uuid) }}{{ $isPreviewMode ?? false ? '?preview=true' : '' }}"
+                             <a href="{{ route('organizer.events.website', $event->uuid) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}"
                                  class="mobile-logo">
                                  <img src="{{ $event->logo_img }}">
                              </a>

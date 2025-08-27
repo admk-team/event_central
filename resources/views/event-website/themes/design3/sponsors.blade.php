@@ -39,7 +39,7 @@
                                         {{ $category->name }}</h3>
                                     <div class="sponsors-grid gold">
                                         @foreach ($category->partners ?? [] as $partner)
-                                            <a href="{{ route('organizer.events.website.sponsors.single', ['uuid' => $event->uuid, 'id' => $partner->id]) }}"
+                                            <a href="{{ route('organizer.events.website.sponsors.single', ['uuid' => $event->uuid, 'id' => $partner->id]) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}"
                                                 class="sponsor-logo">
                                                 <img src="{{ $partner->exhibitor_logo }}" alt="{{ $partner->name }}">
                                             </a>
