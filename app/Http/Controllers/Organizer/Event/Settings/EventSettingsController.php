@@ -47,6 +47,13 @@ class EventSettingsController extends Controller
         if (! Auth::user()->can('edit_events')) {
             abort(403);
         }
+        $event = EventApp::find(session('event_id'));
+
+        if ($request->filled('custom_theme')) {
+            $event->update([
+                'custom_theme' => $request->custom_theme,
+            ]);
+        }
 
         $input = $request->validate([
             'logo' => 'nullable',
@@ -59,7 +66,6 @@ class EventSettingsController extends Controller
             'custom_theme' => 'required',
         ]);
 
-        $event = EventApp::find(session('event_id'));
         // Log::info($input);
 
         eventSettings()->set('registration_private', $input['registration_private']);
