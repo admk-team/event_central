@@ -15,7 +15,7 @@
 @endsection
 
 @section('content')
-    <main class="page">
+    <main>
         {{-- ===== HERO ===== --}}
         <section class="hero">
 

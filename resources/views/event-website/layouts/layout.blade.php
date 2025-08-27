@@ -41,7 +41,7 @@
 <body>
     <div class="noise-overlay"></div>
     @yield('header')
-    <main>
+    <main class="page">
         @yield('content')
     </main>
     @yield('script')

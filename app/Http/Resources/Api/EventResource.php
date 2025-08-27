@@ -16,6 +16,7 @@ class EventResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $privateRegister = eventSettings($this->id)->getValue('private_register', false);
         return [
             'id' => $this->id,
             'organizer_id' => $this->organizer_id,
@@ -35,6 +36,7 @@ class EventResource extends JsonResource
             'dates' => EventDateResource::collection($this->whenLoaded('dates')),
             'featured_image' => $this->featured_image,
             'logo_img' => $this->logo_img,
+            'private_register' => $privateRegister ?? false,
             // 'applicant_answer' => AnswerResource::collection($this->whenLoaded('applicantAnswer')),
         ];
     }
