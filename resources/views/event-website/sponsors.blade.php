@@ -12,5 +12,5 @@
         @break
 
     @default
-        @include('event-website.themes.default.sponsors')
+        @include('event-website.themes.design4.sponsors')
 @endswitch

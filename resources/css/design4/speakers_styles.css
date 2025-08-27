@@ -1,0 +1,140 @@
+/* speakers_styles.css */
+
+/* Container adjustments */
+.speakers-section {
+    position: relative;
+    z-index: 1;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}
+
+/* Grid spacing */
+.speakers-section .grid {
+    gap: 2rem;
+    /* horizontal & vertical spacing */
+}
+
+/* Card styles */
+.speakers-section .speaker-card {
+    background-color: #ffffff;
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    border: 1px solid #e5e7eb;
+    /* subtle border */
+    margin-bottom: 1.5rem;
+    /* spacing between rows */
+}
+
+.speakers-section .speaker-card:hover {
+    transform: translateY(-6px) scale(1.03);
+    /* subtle lift */
+    background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+    /* light gradient */
+    color: #1e3a8a;
+    /* dark text for contrast */
+    box-shadow: 0 10px 25px rgba(191, 219, 254, 0.5);
+    /* soft glow */
+}
+
+/* Inner text color on hover */
+.speakers-section .speaker-card:hover h3,
+.speakers-section .speaker-card:hover p {
+    color: #1e3a8a;
+}
+
+/* Speaker Image hover */
+.speakers-section .speaker-card .relative img {
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.speakers-section .speaker-card:hover .relative img {
+    filter: brightness(1.1);
+    transform: scale(1.02);
+}
+
+/* Social Icons */
+.speakers-section .speaker-card .absolute a {
+    transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+
+.speakers-section .speaker-card:hover .absolute a {
+    transform: scale(1.15);
+    background-color: rgba(255, 255, 255, 0.3);
+    color: #1e3a8a;
+}
+
+/* Button hover inside card */
+.speakers-section .speaker-card button {
+    transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.speakers-section .speaker-card:hover button {
+    background-color: #ffffff;
+    color: #3b82f6;
+    /* light blue accent */
+    box-shadow: 0 4px 15px rgba(191, 219, 254, 0.5);
+}
+
+/* Modal image */
+.speakers-section .modal-body img {
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Line clamp for bio */
+.speakers-section .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Modal social icons */
+.speakers-section .modal-body .flex a {
+    margin-right: 0.75rem;
+    transition: transform 0.2s ease;
+}
+
+.speakers-section .modal-body .flex a:hover {
+    transform: scale(1.1);
+}
+
+/* Buttons hover */
+.speakers-section .modal-footer button {
+    transition: all 0.3s ease;
+}
+
+.speakers-section .modal-footer button:hover {
+    transform: translateY(-2px);
+    background-color: #e0f2fe;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .speakers-section .modal-body.flex {
+        flex-direction: column !important;
+    }
+
+    .speakers-section .modal-body img {
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .speakers-section .speaker-card img {
+        height: 14rem;
+    }
+}
+
+/* Optional: Gradient overlay on card image for effect */
+.speakers-section .speaker-card .relative::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 40%;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.15), transparent);
+    border-radius: 0 0 1rem 1rem;
+}

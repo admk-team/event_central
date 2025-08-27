@@ -1,118 +1,90 @@
 @extends('event-website.layouts.layout')
 @section('style')
-    @vite(['resources/css/website-styles.css'])
+   @vite(['resources/css/design4/sponsors_styles.css'])
 @endsection
 @section('header')
-    @include('event-website.themes.default.header')
+   @include('event-website.themes.design4.header')
 @endsection
 
 @section('content')
-    @if ($partnerCategories->count() > 0 && $event->partners->count() > 0)
-        <section id="sponsors" class="sponsors">
-            <div class="container">
-                <div class="section-header">
-                    <span class="section-tag">Our Sponsors</span>
-                </div>
-                <div class="sponsors-tiers">
-                    @foreach ($partnerCategories ?? [] as $category)
-                        @if ($category->partners->count() > 0)
-                            <div class="sponsors-tier">
-                                <h3 class="tier-title">{{ $category->name }}</h3>
-                                <div class="sponsors-grid gold">
-                                    @foreach ($category->partners ?? [] as $partner)
-                                        <a href="{{ route('organizer.events.website.sponsors.single', ['uuid' => $event->uuid, 'id' => $partner->id]) }}"
-                                            class="sponsor-logo">
-                                            <img src="{{ $partner->exhibitor_logo }}" alt="{{ $partner->name }}">
-                                        </a>
-                                        <!-- Modal -->
-                                        <div class="modal fade" id="partnerModal{{ $partner->id }}" tabindex="-1"
-                                            aria-labelledby="modalLabel{{ $partner->id }}" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered">
-                                                <div class="modal-content py-3 px-4">
-                                                    <div class="d-flex justify-content-center">
-                                                        <img src="{{ $partner->exhibitor_logo }}" alt="{{ $partner->type }}"
-                                                            style="height: 120px;">
-                                                    </div>
-                                                    <div class=" text-center">
-                                                        <h5>{{ $partner->type }}</h5>
-                                                        <p class="text-muted mb-0">{{ $partner->email }}</p>
-                                                        <p class="text-muted">{{ $partner->phone }}</p>
-                                                        <p class="mb-0">{{ $partner->company_name }}</p>
-                                                        <p class="text-muted">{{ $partner->exhibitor_booth_no }}</p>
-                                                        @if ($partner->web)
-                                                            <a target="_blank" href="{{ $partner->web }}">
-                                                                <i class="bi bi-globe"></i>
-                                                            </a>
-                                                            <a target="_blank" href="{{ $partner->facebook }}">
-                                                                <i class="bi bi-facebook"></i>
-                                                            </a>
-                                                            <a style="text-decoration: none; color:black" target="_blank"
-                                                                href="{{ $partner->twitter }}">
-                                                                <i class="bi bi-twitter-x"></i>
-                                                            </a>
-                                                            <a target="_blank" href="{{ $partner->linkedin }}">
-                                                                <i class="bi bi-linkedin"></i>
-                                                            </a>
-                                                            <a style="text-decoration: none; color:red" target="_blank"
-                                                                href="{{ $partner->youtube }}">
-                                                                <i class="bi bi-youtube"></i>
-                                                            </a>
-                                                        @endif
-                                                        <p class="text-muted">{{ $partner->address }}</p>
+@if ($partnerCategories->count() > 0 && $event->partners->count() > 0)
+<section id="sponsors" class="sponsors-modern py-12 bg-gray-50">
+    <div class="container mx-auto px-4">
 
-                                                        <!-- Description with Show More functionality -->
-                                                        <div class="description-container">
-                                                            @if (strlen($partner->description) > 100)
-                                                                <p class="description-text short-description"
-                                                                    id="shortPartnerDesc{{ $partner->id }}">
-                                                                    {{ substr($partner->description, 0, 100) }}...</p>
-                                                                <p class="description-text full-description text-muted d-none"
-                                                                    id="fullPartnerDesc{{ $partner->id }}">
-                                                                    {{ $partner->description }}</p>
-                                                                <button class="btn show-more-btn p-0"
-                                                                    data-partner-id="{{ $partner->id }}">Show
-                                                                    More</button>
-                                                            @else
-                                                                <p class="text-muted">{{ $partner->description }}</p>
-                                                            @endif
-                                                        </div>
+        <!-- Section Heading -->
+        <div class="text-center mb-12" data-aos="fade-down">
+            <span class="text-indigo-600 font-semibold uppercase">Our Sponsors</span>
+            <h2 class="text-4xl font-extrabold text-gray-900 mt-2">Supporting Partners</h2>
+            <p class="mt-3 text-gray-600 max-w-2xl mx-auto">
+                Meet the organizations powering our event and driving innovation.
+            </p>
+        </div>
+
+        <!-- Sponsor Categories -->
+        @foreach ($partnerCategories ?? [] as $category)
+            @if ($category->partners->count() > 0)
+                <div class="sponsor-tier mb-12">
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-6">{{ $category->name }}</h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+                        @foreach ($category->partners ?? [] as $partner)
+                            <div class="sponsor-card group" data-bs-toggle="modal" data-bs-target="#partnerModal{{ $partner->id }}">
+                                <!-- Sponsor Logo -->
+                                <div class="sponsor-logo-container">
+                                    <img src="{{ $partner->exhibitor_logo }}" alt="{{ $partner->name }}">
+                                </div>
+                                <!-- Sponsor Info -->
+                                <div class="sponsor-info">
+                                    <h5>{{ $partner->company_name }}</h5>
+                                    <span>{{ $partner->type }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Modal -->
+                            <div class="modal fade" id="partnerModal{{ $partner->id }}" tabindex="-1" aria-labelledby="modalLabel{{ $partner->id }}" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered modal-lg">
+                                    <div class="modal-content rounded-2xl shadow-xl">
+                                        <div class="modal-header border-0 bg-indigo-600 text-white">
+                                            <h5 class="modal-title" id="modalLabel{{ $partner->id }}">
+                                                {{ $partner->company_name }}
+                                            </h5>
+                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body p-6">
+                                            <div class="flex flex-col md:flex-row gap-6">
+                                                <div class="text-center md:w-1/3">
+                                                    <img src="{{ $partner->exhibitor_logo }}" class="mx-auto h-32 object-contain">
+                                                    <p class="mt-2 text-gray-500">{{ $partner->type }}</p>
+                                                </div>
+                                                <div class="flex-1 space-y-2">
+                                                    <p><strong>Email:</strong> {{ $partner->email }}</p>
+                                                    <p><strong>Phone:</strong> {{ $partner->phone }}</p>
+                                                    <p><strong>Booth:</strong> {{ $partner->exhibitor_booth_no }}</p>
+                                                    <p>{{ $partner->description }}</p>
+                                                    <div class="flex space-x-4 mt-3">
+                                                        @if ($partner->web)<a href="{{ $partner->web }}" target="_blank" class="text-gray-700 hover:text-indigo-600"><i class="bi bi-globe fa-lg"></i></a>@endif
+                                                        @if ($partner->facebook)<a href="{{ $partner->facebook }}" target="_blank" class="text-blue-600 hover:text-blue-800"><i class="bi bi-facebook fa-lg"></i></a>@endif
+                                                        @if ($partner->twitter)<a href="{{ $partner->twitter }}" target="_blank" class="text-blue-400 hover:text-blue-600"><i class="bi bi-twitter-x fa-lg"></i></a>@endif
+                                                        @if ($partner->linkedin)<a href="{{ $partner->linkedin }}" target="_blank" class="text-blue-700 hover:text-blue-900"><i class="bi bi-linkedin fa-lg"></i></a>@endif
+                                                        @if ($partner->youtube)<a href="{{ $partner->youtube }}" target="_blank" class="text-red-600 hover:text-red-800"><i class="bi bi-youtube fa-lg"></i></a>@endif
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    @endforeach
+                                        <div class="modal-footer border-0">
+                                            <button type="button" class="px-5 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition duration-300" data-bs-dismiss="modal">
+                                                Close
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        @endif
-                    @endforeach
+
+                        @endforeach
+                    </div>
                 </div>
-            </div>
-        </section>
-    @endif
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const showMoreButtons = document.querySelectorAll('.show-more-btn');
-
-            showMoreButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const partnerId = this.getAttribute('data-partner-id');
-                    const shortDesc = document.getElementById(`shortPartnerDesc${partnerId}`);
-                    const fullDesc = document.getElementById(`fullPartnerDesc${partnerId}`);
-
-                    if (fullDesc.classList.contains('d-none')) {
-                        // Show full description
-                        shortDesc.classList.add('d-none');
-                        fullDesc.classList.remove('d-none');
-                        this.textContent = 'Show Less';
-                    } else {
-                        // Show short description
-                        shortDesc.classList.remove('d-none');
-                        fullDesc.classList.add('d-none');
-                        this.textContent = 'Show More';
-                    }
-                });
-            });
-        });
-    </script>
+            @endif
+        @endforeach
+    </div>
+</section>
+@endif
 @endsection

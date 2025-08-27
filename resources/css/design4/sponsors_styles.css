@@ -1,0 +1,152 @@
+/* Container adjustments */
+.sponsors-modern .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: 2rem;
+    /* adds space from left */
+    padding-right: 2rem;
+    /* right space from page edge */
+    padding-top: 4rem;
+    /* optional top space */
+    padding-bottom: 4rem;
+    /* optional bottom space */
+}
+
+/* Sponsor Card */
+.sponsor-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    background-color: #ffffff;
+    border-radius: 1rem;
+    border: 1px solid #e5e7eb;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    cursor: pointer;
+    height: 260px;
+    /* consistent card height */
+    padding: 1rem;
+    overflow: hidden;
+    gap: 0.5rem;
+}
+
+/* Logo Container */
+.sponsor-logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 120px;
+    /* fixed logo height */
+    background-color: #f9fafb;
+    border-radius: 0.75rem;
+    padding: 0.5rem;
+    overflow: hidden;
+}
+
+.sponsor-logo-container img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    /* ensures logo scales proportionally */
+}
+
+/* Hover effect */
+.sponsor-card:hover {
+    transform: translateY(-5px) scale(1.03);
+    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+    box-shadow: 0 15px 30px rgba(191, 219, 254, 0.5);
+}
+
+.sponsor-card:hover .sponsor-logo-container {
+    transform: scale(1.1);
+}
+
+/* Info Section */
+.sponsor-info h5 {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.sponsor-info span {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+/* Grid adjustments */
+.sponsor-tier .grid {
+    gap: 2rem;
+    /* space between cards */
+}
+
+/* Modal adjustments */
+.modal-content {
+    border-radius: 1rem;
+    overflow: hidden;
+}
+
+.modal-body img {
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .modal-body .flex {
+        flex-direction: column !important;
+    }
+
+    .modal-body img {
+        margin-bottom: 1rem;
+        height: 120px;
+    }
+}
+.sponsors-modern .sponsor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    /* responsive columns */
+    gap: 2rem;
+    /* horizontal and vertical space between sponsor cards */
+}
+
+/* Sponsor card styling */
+.sponsors-modern .sponsor-card {
+    padding: 1rem;
+    background: #ffffff;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sponsors-modern .sponsor-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+}
+/* Make sure the sponsor grid inside each category has proper spacing */
+.sponsor-tier>.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 2rem;
+    /* space between individual sponsor cards */
+    margin-top: 1rem;
+}
+
+/* Optional: add spacing between cards vertically if needed */
+.sponsor-card {
+    margin-bottom: 1rem;
+}
+
+/* Hover effect for active card */
+.sponsor-card:hover {
+    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+    box-shadow: 0 15px 30px rgba(191, 219, 254, 0.5);
+    transform: translateY(-5px) scale(1.03);
+}
+
+/* Optional: change info color on hover */
+.sponsor-card:hover .sponsor-info h5,
+.sponsor-card:hover .sponsor-info span {
+    color: #1e40af;
+    /* darker blue */
+}

@@ -12,5 +12,5 @@
         @break
 
     @default
-        @include('event-website.themes.default.speakers')
+        @include('event-website.themes.design4.speakers')
 @endswitch

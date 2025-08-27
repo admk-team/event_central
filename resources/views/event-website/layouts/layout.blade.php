@@ -30,6 +30,22 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     @include('event-website.partials.website-colors')
     @yield('style')
+    <!-- AOS CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" />
+
+    <!-- AOS JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            AOS.init({
+                duration: 800, // Animation duration in ms
+                easing: "ease-in-out", // Smoothness
+                once: true, // Animate only once
+                offset: 80, // Trigger point from top
+            });
+        });
+    </script>
+
     {{--  @vite(['resources/css/website-styles.css'])  --}}
 
     <script>

@@ -1,0 +1,82 @@
+/* Container adjustments */
+.exhibitors-section .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+/* Exhibitor Card */
+.exhibitor-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+    background-color: #ffffff;
+    border-radius: 1rem;
+    border: 1px solid #e5e7eb;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+/* Logo Container */
+.exhibitor-logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 128px;
+    background-color: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 0.5rem;
+}
+
+.exhibitor-logo-container img {
+    max-height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+}
+
+/* Card hover effect */
+.exhibitor-card:hover {
+    transform: translateY(-6px) scale(1.03);
+    background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+    box-shadow: 0 15px 30px rgba(191, 219, 254, 0.5);
+}
+
+.exhibitor-card:hover h3,
+.exhibitor-card:hover p {
+    color: #1e3a8a;
+}
+
+/* Info section */
+.exhibitor-card h3 {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.exhibitor-card p {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+}
+
+/* Social icons */
+.exhibitor-card .flex a {
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.exhibitor-card .flex a:hover {
+    transform: scale(1.2);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .exhibitors-section .grid {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    }
+
+    .exhibitor-logo-container {
+        height: 100px;
+    }
+}

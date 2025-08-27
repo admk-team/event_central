@@ -12,5 +12,5 @@
         @break
 
     @default
-        @include('event-website.themes.default.exhibitors')
+        @include('event-website.themes.design4.exhibitors')
 @endswitch

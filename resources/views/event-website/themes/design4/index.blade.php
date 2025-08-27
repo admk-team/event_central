@@ -71,77 +71,78 @@
             @endforeach
         </div>
     </section> --}}
-<section class="hero-diagonal">
-    <!-- Background gradient overlay -->
-    <div class="hero-bg"></div>
+    <section class="hero-diagonal">
+        <!-- Background gradient overlay -->
+        <div class="hero-bg"></div>
 
-    <div class="container hero-diagonal-container">
-        <!-- Left Text Overlay -->
-        <div class="hero-left">
-            {{-- Event Dates --}}
+        <div class="container hero-diagonal-container">
+            <!-- Left Text Overlay -->
+            <div class="hero-left">
+                {{-- Event Dates --}}
+                @php
+                    $startDate = \Carbon\Carbon::parse($event->dates()->orderBy('date', 'asc')->first()->date);
+                    $endDate = \Carbon\Carbon::parse($event->dates()->orderBy('date', 'desc')->first()->date);
+                @endphp
+                <div class="event-dates">
+                    @if ($startDate->isSameDay($endDate))
+                        {{ $startDate->format('F j, Y') }}
+                    @else
+                        {{ $startDate->format('F j, Y') }} → {{ $endDate->format('F j, Y') }}
+                    @endif
+                </div>
+
+                {{-- Title --}}
+                <h1 class="hero-title">{{ $event->name }}</h1>
+
+                {{-- Tagline --}}
+                @isset($event->tagline)
+                    <p class="hero-tagline">{{ $event->tagline }}</p>
+                @endisset
+
+                {{-- Countdown --}}
+                <div class="hero-countdown">
+                    @foreach (['Days' => 'days', 'Hours' => 'hours', 'Minutes' => 'minutes', 'Seconds' => 'seconds'] as $label => $id)
+                        <div class="countdown-block">
+                            <span id="countdown-{{ $id }}" class="number">00</span>
+                            <span class="label">{{ $label }}</span>
+                        </div>
+                    @endforeach
+                </div>
+
+                {{-- CTA Buttons --}}
+                <div class="hero-cta">
+                    <a href="{{ route('attendee.register', $event) }}" class="btn btn-primary">Register</a>
+                    <a href="{{ route('organizer.events.website.schedule', $event->uuid) }}"
+                        class="btn btn-outline">Schedule</a>
+                </div>
+            </div>
+
+            <!-- Right Tilted Event Card -->
+            <div class="hero-right">
+                <div class="hero-card-tilt">
+                    <img src="{{ $event->images[0]->image_url ?? '' }}" alt="{{ $event->name }}">
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Floating Diagonal -->
+        <div class="hero-stats-diagonal">
             @php
-                $startDate = \Carbon\Carbon::parse($event->dates()->orderBy('date','asc')->first()->date);
-                $endDate = \Carbon\Carbon::parse($event->dates()->orderBy('date','desc')->first()->date);
+                $stats = [
+                    ['icon' => 'calendar', 'number' => $event->dates->count(), 'label' => 'Days'],
+                    ['icon' => 'document', 'number' => $event->event_sessions->count(), 'label' => 'Sessions'],
+                    ['icon' => 'microphone', 'number' => $event->event_speakers->count(), 'label' => 'Speakers'],
+                ];
             @endphp
-            <div class="event-dates">
-                @if($startDate->isSameDay($endDate))
-                    {{ $startDate->format('F j, Y') }}
-                @else
-                    {{ $startDate->format('F j, Y') }} → {{ $endDate->format('F j, Y') }}
-                @endif
-            </div>
-
-            {{-- Title --}}
-            <h1 class="hero-title">{{ $event->name }}</h1>
-
-            {{-- Tagline --}}
-            @isset($event->tagline)
-                <p class="hero-tagline">{{ $event->tagline }}</p>
-            @endisset
-
-            {{-- Countdown --}}
-            <div class="hero-countdown">
-                @foreach(['Days'=>'days','Hours'=>'hours','Minutes'=>'minutes','Seconds'=>'seconds'] as $label=>$id)
-                    <div class="countdown-block">
-                        <span id="countdown-{{ $id }}" class="number">00</span>
-                        <span class="label">{{ $label }}</span>
-                    </div>
-                @endforeach
-            </div>
-
-            {{-- CTA Buttons --}}
-            <div class="hero-cta">
-                <a href="{{ route('attendee.register', $event) }}" class="btn btn-primary">Register</a>
-                <a href="{{ route('organizer.events.website.schedule', $event->uuid) }}" class="btn btn-outline">Schedule</a>
-            </div>
+            @foreach ($stats as $stat)
+                <div class="stat-card-diagonal">
+                    <i class="icon-{{ $stat['icon'] }}"></i>
+                    <div class="number">{{ $stat['number'] }}</div>
+                    <div class="label">{{ $stat['label'] }}</div>
+                </div>
+            @endforeach
         </div>
-
-        <!-- Right Tilted Event Card -->
-        <div class="hero-right">
-            <div class="hero-card-tilt">
-                <img src="{{ $event->images[0]->image_url ?? '' }}" alt="{{ $event->name }}">
-            </div>
-        </div>
-    </div>
-
-    <!-- Stats Floating Diagonal -->
-    <div class="hero-stats-diagonal">
-        @php
-            $stats = [
-                ['icon'=>'calendar','number'=>$event->dates->count(),'label'=>'Days'],
-                ['icon'=>'document','number'=>$event->event_sessions->count(),'label'=>'Sessions'],
-                ['icon'=>'microphone','number'=>$event->event_speakers->count(),'label'=>'Speakers'],
-            ];
-        @endphp
-        @foreach($stats as $stat)
-            <div class="stat-card-diagonal">
-                <i class="icon-{{ $stat['icon'] }}"></i>
-                <div class="number">{{ $stat['number'] }}</div>
-                <div class="label">{{ $stat['label'] }}</div>
-            </div>
-        @endforeach
-    </div>
-</section>
+    </section>
 
     @isset($event->description)
         <section id="about" class="about-modern">
@@ -232,9 +233,9 @@
 
             <!-- Tickets Grid -->
             <div class="tickets-grid">
-                @foreach ($event->tickets ?? [] as $ticket)
+                @foreach ($event->tickets ?? [] as $index => $ticket)
                     @if ($ticket->show_on_attendee_side)
-                        <div class="ticket-card">
+                        <div class="ticket-card" data-aos="fade-up" data-aos-delay="{{ $index * 100 }}">
                             <div class="ticket-header">
                                 <h3>{{ $ticket->name }}</h3>
                                 <div class="ticket-price">${{ $ticket->base_price }}</div>
@@ -276,8 +277,7 @@
                         </div>
                     @endif
                 @endforeach
-            </div>
-
+                    </div>
             <!-- Session Modals -->
             @foreach ($event->tickets ?? [] as $ticket)
                 @foreach ($ticket->sessions ?? [] as $session)
