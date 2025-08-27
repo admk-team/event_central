@@ -28,6 +28,7 @@ export default defineConfig({
                 "resources/css/design2/sponsors_styles.css",
 
                 //Design3 css
+                "resources/css/design3/variables.css",
                 "resources/css/design3/index.css",
                 "resources/css/design3/exhibitors_style.css",
                 "resources/css/design3/product_style.css",
