@@ -12,6 +12,9 @@ const Index = ({ baseTemplate }: any) => {
             baseTemplate: id
         }));
     };
+    const useDefaultTemplate = () => {
+        get(route('organizer.events.badge.template.default'));
+    };
 
     const previewTemplate = (id: number) => {
         const url = route('organizer.events.badge-template.show', id);
@@ -44,6 +47,12 @@ const Index = ({ baseTemplate }: any) => {
                         onClick={() => router.visit(route('organizer.events.badge-template.create'))}
                     >
                         Create New Template
+                    </button>
+                    <button
+                        className="btn btn-primary mb-3 ms-3"
+                        onClick={() => useDefaultTemplate()}
+                    >
+                        Use Default Template
                     </button>
                 </div>
             </div>

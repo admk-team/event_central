@@ -17,7 +17,7 @@ class CustomBadgeController extends Controller
     protected $templateService;
     public function __construct(CustomBadgeService $templateService)
     {
-        $this->templateService = $templateService;
+        $this->templateService = $templateService ? $templateService : null;
     }
 
     /**
@@ -62,7 +62,7 @@ class CustomBadgeController extends Controller
         $input['event_app_id'] = session('event_id');
 
         $templateService = $this->templateService->store($input);
-        return redirect()->route('organizer.events.badge-template.index')->with('success', 'Badge template created successfully.');
+        return redirect()->route('organizer.events.badge-template.index')->withSuccess('Badge template created successfully.');
     }
 
     /**
@@ -110,7 +110,7 @@ class CustomBadgeController extends Controller
             $this->templateService->update($badgeTemplate, $input);
         }, 2);
 
-        return redirect()->route('organizer.events.badge-template.index')->with('success', 'Badge template Updated successfully.');
+        return redirect()->route('organizer.events.badge-template.index')->withSuccess('Badge template Updated successfully.');
     }
 
     public function setBadgeTemplate(BaseTemplate $baseTemplate)
@@ -125,7 +125,7 @@ class CustomBadgeController extends Controller
             'custom_badge_attendee_id' => $baseTemplate->id,
         ]);
 
-        return redirect()->route('organizer.events.badge-template.index')->with('success', 'Badge template Selected successfully.');
+        return redirect()->route('organizer.events.badge-template.index')->withSuccess('Badge template Selected successfully.');
     }
 
     public function setBaseBadgeTemplate(BaseTemplate $baseTemplate)
@@ -143,6 +143,17 @@ class CustomBadgeController extends Controller
             'thumbnail' => $baseTemplate->thumbnail,
         ]);
 
-        return redirect()->route('organizer.events.badge-template.index')->with('success', 'Badge template Selected successfully.');
+        return redirect()->route('organizer.events.badge-template.index')->withSuccess('Badge template Selected successfully.');
+    }
+
+    public function defaultBadge()
+    {
+        $currentTemplate = EventBadgeDesign::where('event_app_id', session('event_id'))->first();
+
+        if ($currentTemplate) {
+            $currentTemplate->delete();
+        }
+
+        return redirect()->route('organizer.events.badge-template.index')->withSuccess('Default Badge template Selected successfully.');
     }
 }
