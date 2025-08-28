@@ -19,7 +19,7 @@ function Index({ attendees, eventApp, customBadgeDesign }: { attendees: any; eve
     const [showGradient, setShowGradient] = useState(true);
 
     const printBadge = () => {
-        if (customBadgeDesign.mail_content) {
+        if (customBadgeDesign && customBadgeDesign.mail_content) {
             const url = route('organizer.events.print.badge.design', { search });
             window.open(url, '_blank');
         } else {
