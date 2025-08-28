@@ -14,7 +14,7 @@ class LiveStreamController extends Controller
     {
         $eventAppId = Auth::user()->event_app_id;
 
-        $liveStreams = LiveStream::with(['eventTickets','attendeePayments'])
+        $liveStreams = LiveStream::with(['eventTickets'])
                 ->where('event_app_id', $eventAppId)
                 ->where('status', '!=', 'completed')
                 ->whereHas('eventTickets.sold_tickets.payment', function ($query) {
