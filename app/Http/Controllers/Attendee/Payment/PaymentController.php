@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Attendee\Payment;
 
-use App\Events\UpdateEventDashboard;
 use Exception;
 use Inertia\Inertia;
 use App\Models\Addon;
 use App\Models\Attendee;
 use App\Models\EventApp;
 use App\Models\PromoCode;
+use App\Models\WaitingList;
 use Illuminate\Support\Str;
 use App\Models\AddonVariant;
 
@@ -16,14 +16,18 @@ use Illuminate\Http\Request;
 use chillerlan\QRCode\QRCode;
 use App\Models\EventAppTicket;
 use App\Models\AttendeePayment;
-use App\Services\PayPalService;
+use App\Models\EventTicketCard;
 
+use App\Services\PayPalService;
 use App\Services\StripeService;
 use chillerlan\QRCode\QROptions;
+use App\Mail\AvailableTicketMail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Events\UpdateEventDashboard;
 use App\Http\Controllers\Controller;
 use App\Models\AttendeeRefundTicket;
+use App\Models\OrganizerPaymentKeys;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use chillerlan\QRCode\Common\EccLevel;
@@ -34,9 +38,6 @@ use Illuminate\Console\Scheduling\Event;
 use App\Mail\AttendeeTicketPurchasedEmail;
 use App\Mail\EventTicketPurchasedNotification;
 use App\Http\Requests\Attendee\AttendeeCheckoutRequest;
-use App\Mail\AvailableTicketMail;
-use App\Models\WaitingList;
-use App\Models\OrganizerPaymentKeys;
 
 class PaymentController extends Controller
 {
@@ -560,6 +561,9 @@ class PaymentController extends Controller
                 'ticket_name' => $purchasedTicket->ticket?->name ?? '',
                 'ticket_type_name' => isset($purchasedTicket->ticket->ticketType->name) ?
                     $purchasedTicket->ticket->ticketType->name : '', // <-- added line
+                'name_on_ticket' => $purchasedTicket->eventTicketCard?->name ?? null,
+                'position_on_ticket' => $purchasedTicket->eventTicketCard?->position ?? null,
+                'location_on_ticket' => $purchasedTicket->eventTicketCard?->location ?? null,
             ];
         }
         return Inertia::render('Attendee/Tickets/PurchasedTickets', [
@@ -570,6 +574,16 @@ class PaymentController extends Controller
         ]);
     }
 
+    public function updateTicketDetails(Request $request)
+    {
+        $data = $request->all();
+        $ticket_id = $data['purchased_id'];
+        unset($data['purchased_id']);
+
+        EventTicketCard::updateOrCreate(['attendee_purchased_ticket_id' => $ticket_id], $data);
+
+        return redirect()->back()->withSuccess('Ticket details updated successfully.');
+    }
 
     public function submitTicketTransfer(Request $request)
     {
