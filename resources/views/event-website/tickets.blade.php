@@ -12,5 +12,5 @@
         @break
 
     @default
-        @include('event-website.themes.default.tickets')
+        @include('event-website.themes.design4.tickets')
 @endswitch

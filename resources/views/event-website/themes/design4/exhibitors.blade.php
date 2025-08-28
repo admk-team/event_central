@@ -8,52 +8,64 @@
 
 @section('content')
 @if ($exhibitors->count() > 0)
-<section id="exhibitors" class="exhibitors-section py-12 bg-gray-50">
+<section id="exhibitors" class="exhibitors-section">
     <div class="container mx-auto px-4">
         <!-- Section Header -->
-        <div class="text-center mb-12" data-aos="fade-down">
-            <h2 class="text-4xl font-extrabold text-gray-900 tracking-tight uppercase">
-                Our <span class="text-indigo-600">Exhibitors</span>
+        <div class="section-header" data-aos="fade-down">
+            <h2>
+                Meet Our <span>Exhibitors</span>
             </h2>
-            <p class="mt-3 text-lg text-gray-600 max-w-2xl mx-auto">
-                Discover the companies showcasing their innovations at our event.
+            <p>
+                Explore the companies showcasing cutting-edge innovations and solutions at our event.
             </p>
         </div>
 
         <!-- Exhibitors Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+        <div class="exhibitors-grid">
             @foreach ($exhibitors ?? [] as $exhibitor)
-            <div class="exhibitor-card group bg-white rounded-2xl shadow-md overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-xl" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
+            <div class="exhibitor-card" data-aos="fade-up" data-aos-delay="{{ $loop->index * 100 }}">
                 <!-- Logo -->
-                <div class="exhibitor-logo-container p-4 bg-gray-100">
+                <div class="exhibitor-logo">
                     @if ($exhibitor->exhibitor_logo)
-                        <img src="{{ $exhibitor->exhibitor_logo }}" alt="{{ $exhibitor->company_name }}" class="w-full h-32 object-contain">
+                        <img src="{{ $exhibitor->exhibitor_logo }}" alt="{{ $exhibitor->company_name }}">
+                    @else
+                        <div class="no-logo">
+                            <i class="bi bi-building"></i>
+                        </div>
                     @endif
                 </div>
 
-                <!-- Info -->
-                <div class="p-5 text-center flex flex-col justify-between h-full">
-                    <div>
-                        <h3 class="text-xl font-semibold text-gray-900">{{ $exhibitor->company_name }}</h3>
-                        @if($exhibitor->phone)
-                            <p class="text-gray-500 text-sm mt-1">Phone: {{ $exhibitor->phone }}</p>
-                        @endif
-                        @if($exhibitor->exhibitor_booth_no)
-                            <p class="text-gray-500 text-sm">Booth: {{ $exhibitor->exhibitor_booth_no }}</p>
-                        @endif
-                    </div>
+                <!-- Booth Badge -->
+                @if($exhibitor->exhibitor_booth_no)
+                    <span class="booth-badge">Booth {{ $exhibitor->exhibitor_booth_no }}</span>
+                @endif
 
-                    <!-- Socials -->
-                    <div class="mt-4 flex justify-center space-x-3">
-                        @if ($exhibitor->web)<a href="{{ $exhibitor->web }}" target="_blank" class="text-gray-700 hover:text-indigo-600"><i class="bi bi-globe fa-lg"></i></a>@endif
-                        @if ($exhibitor->facebook)<a href="{{ $exhibitor->facebook }}" target="_blank" class="text-blue-600 hover:text-blue-800"><i class="bi bi-facebook fa-lg"></i></a>@endif
-                        @if ($exhibitor->twitter)<a href="{{ $exhibitor->twitter }}" target="_blank" class="text-blue-400 hover:text-blue-600"><i class="bi bi-twitter-x fa-lg"></i></a>@endif
-                        @if ($exhibitor->linkedin)<a href="{{ $exhibitor->linkedin }}" target="_blank" class="text-blue-700 hover:text-blue-900"><i class="bi bi-linkedin fa-lg"></i></a>@endif
-                        @if ($exhibitor->youtube)<a href="{{ $exhibitor->youtube }}" target="_blank" class="text-red-600 hover:text-red-800"><i class="bi bi-youtube fa-lg"></i></a>@endif
-                    </div>
+                <!-- Info -->
+                <div class="exhibitor-info">
+                    <h3>{{ $exhibitor->company_name }}</h3>
+                    @if($exhibitor->phone)
+                        <p class="phone">📞 {{ $exhibitor->phone }}</p>
+                    @endif
+                </div>
+
+                <!-- Social Icons -->
+                <div class="social-icons">
+                    @if ($exhibitor->web)<a href="{{ $exhibitor->web }}" target="_blank" class="web"><i class="bi bi-globe2"></i></a>@endif
+                    @if ($exhibitor->facebook)<a href="{{ $exhibitor->facebook }}" target="_blank" class="facebook"><i class="bi bi-facebook"></i></a>@endif
+                    @if ($exhibitor->twitter)<a href="{{ $exhibitor->twitter }}" target="_blank" class="twitter"><i class="bi bi-twitter-x"></i></a>@endif
+                    @if ($exhibitor->linkedin)<a href="{{ $exhibitor->linkedin }}" target="_blank" class="linkedin"><i class="bi bi-linkedin"></i></a>@endif
+                    @if ($exhibitor->youtube)<a href="{{ $exhibitor->youtube }}" target="_blank" class="youtube"><i class="bi bi-youtube"></i></a>@endif
                 </div>
             </div>
             @endforeach
+        </div>
+
+        <!-- CTA -->
+        <div class="exhibitors-cta" data-aos="fade-up">
+            <p>
+                Interested in exhibiting?
+                <a href="#contact">Become an Exhibitor →</a>
+            </p>
         </div>
     </div>
 </section>

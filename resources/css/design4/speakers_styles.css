@@ -138,3 +138,73 @@
     background: linear-gradient(to top, rgba(0, 0, 0, 0.15), transparent);
     border-radius: 0 0 1rem 1rem;
 }
+/* ---------- FIXED SPEAKER IMAGE SIZE ---------- */
+
+/* Speaker image container */
+.speakers-section .speaker-card .flex-shrink-0 {
+    width: 128px;
+    /* Standard width (same as w-32) */
+    height: 128px;
+    /* Standard height (same as h-32) */
+    overflow: hidden;
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    /* vertical center */
+    justify-content: center;
+    /* horizontal center */
+}
+
+/* Speaker image itself */
+.speakers-section .speaker-card .flex-shrink-0 img {
+    width: 100%;
+    /* fill container width */
+    height: 100%;
+    /* fill container height */
+    object-fit: cover;
+    /* crop without distortion */
+    display: block;
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+/* Optional: Slight hover zoom effect */
+.speakers-section .speaker-card:hover .flex-shrink-0 img {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .speakers-section .speaker-card .flex-shrink-0 {
+        width: 96px;
+        height: 96px;
+    }
+}
+/* Top image for vertical card */
+.speakers-section .speaker-card .relative {
+    width: 100%;       /* full width of card */
+    height: 12rem;     /* nice standard height */
+    overflow: hidden;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+}
+
+.speakers-section .speaker-card .relative img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.speakers-section .speaker-card:hover .relative img {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
+/* Center the social icons below text */
+.speakers-section .speaker-card .mt-3.flex {
+    justify-content: center;
+}

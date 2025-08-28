@@ -32,11 +32,13 @@
     display: flex;
     align-items: center;
 }
+
 .nav-links {
     display: flex;
     gap: 1.5rem;
     list-style: none;
 }
+
 .nav-links li a {
     text-decoration: none;
     font-weight: 600;
@@ -63,17 +65,28 @@
 .btn-accent {
     background: #ff4081;
     color: #fff;
+    box-shadow: 0 0 10px rgba(255, 64, 129, 0.3);
+    transition: all 0.3s ease-in-out;
+}
+.btn-accent:hover {
+    background: #ff4081;
+    box-shadow: 0 0 15px rgba(255, 64, 129, 0.7),
+                0 0 25px rgba(255, 64, 129, 0.5),
+                0 0 40px rgba(255, 64, 129, 0.3);
+    transform: scale(1.05);
 }
 .btn:hover {
     opacity: 0.85;
 }
 
-/* Mobile Styles */
+/* Hamburger Menu */
 .menu-toggle {
     display: none;
     flex-direction: column;
     cursor: pointer;
     gap: 5px;
+    background: none;
+    border: none;
 }
 .menu-toggle span {
     width: 25px;
@@ -88,7 +101,7 @@
     .nav-links {
         display: none;
         flex-direction: column;
-        background: white;
+        background: #fff;
         position: absolute;
         top: 100%;
         left: 0;
@@ -97,16 +110,19 @@
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         border-top: 2px solid #eee;
         animation: slideDown 0.3s ease;
+        z-index: 999;
     }
 
     .nav-links.active {
         display: flex;
     }
 
+    /* Hide header buttons on mobile */
     .header-actions {
         display: none;
     }
 
+    /* Show hamburger */
     .menu-toggle {
         display: flex;
     }

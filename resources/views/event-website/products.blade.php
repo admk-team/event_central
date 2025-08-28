@@ -12,5 +12,5 @@
         @break
 
     @default
-        @include('event-website.themes.default.products')
+        @include('event-website.themes.design4.products')
 @endswitch

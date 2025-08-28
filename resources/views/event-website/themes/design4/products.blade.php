@@ -1,9 +1,9 @@
 @extends('event-website.layouts.layout')
 @section('style')
-    @vite(['resources/css/website-styles.css'])
+    @vite(['resources/css/design4/products_styles.css'])
 @endsection
 @section('header')
-    @include('event-website.themes.default.header')
+    @include('event-website.themes.design4.header')
 @endsection
 
 @section('content')
@@ -16,20 +16,20 @@
             <div class="row g-4">
                 @foreach ($event_products as $item)
                     <div class="col-lg-3 col-md-6 col-sm-12">
-                        <div class="card h-100">
-                            <img src="{{ $item->image_url }}" class="card-img-top" alt="Wireless Headphones"
-                                style="height: 200px; width: 100%; object-fit: cover;">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ $item->name }}</h5>
-                                <p class="card-text">{{ $item->description }}</p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <span class="h5 text-success">${{ $item->price }}</span>
+                        <div class="product-card">
+                            <div class="product-image">
+                                <img src="{{ $item->image_url }}" alt="{{ $item->name }}">
+                            </div>
+                            <div class="product-body">
+                                <h5 class="product-title">{{ $item->name }}</h5>
+                                <p class="product-description">{{ $item->description }}</p>
+                                <div class="product-price">
+                                    <span class="current-price">${{ $item->price }}</span>
                                     @if ($item->old_price > 0)
-                                        <small class="text-muted"><s>${{ $item->old_price }}</s></small>
+                                        <span class="old-price"><s>${{ $item->old_price }}</s></span>
                                     @endif
                                 </div>
-                                <a href="{{ route('attendee.register', $event) }}"
-                                    class="btn btn-primary btn-block mt-auto">Register Now</a>
+                                <a href="{{ route('attendee.register', $event) }}" class="btn btn-product">Register Now</a>
                             </div>
                         </div>
                     </div>

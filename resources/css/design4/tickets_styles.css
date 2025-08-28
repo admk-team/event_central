@@ -1,19 +1,16 @@
 /* Tickets Grid */
 .tickets-grid-glass {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     gap: 30px;
     padding: 60px 20px;
-    /* added horizontal padding for mobile */
 }
 
-/* Ticket Card */
+/* Ticket Card - Dark Modern Theme */
 .ticket-card-glass {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(15px);
+    background: linear-gradient(145deg, #1f1f1f, #2c2c2c);
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
     color: #fff;
     padding: 25px 20px;
     display: flex;
@@ -21,12 +18,13 @@
     justify-content: space-between;
     position: relative;
     overflow: hidden;
-    transition: transform 0.4s ease, box-shadow 0.4s ease;
+    transition: transform 0.4s ease, box-shadow 0.4s ease, background 0.3s ease;
 }
 
 .ticket-card-glass:hover {
-    transform: translateY(-8px) rotateX(1deg);
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+    transform: translateY(-8px);
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+    background: linear-gradient(145deg, #272727, #3a3a3a);
 }
 
 /* Header */
@@ -38,12 +36,14 @@
 .ticket-card-glass .ticket-header h3 {
     font-size: 22px;
     font-weight: 700;
+    color: #ffd700;
+    /* Gold title for premium look */
 }
 
 .ticket-card-glass .ticket-price {
     font-size: 20px;
-    font-weight: 600;
-    color: #ffd700;
+    font-weight: 700;
+    color: #ffae00;
 }
 
 /* Features List */
@@ -57,27 +57,32 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    font-size: 13px;
-    margin-bottom: 8px;
-    transition: transform 0.3s ease;
+    font-size: 14px;
+    margin-bottom: 10px;
+    padding-left: 5px;
+    cursor: pointer;
+    transition: transform 0.3s ease, color 0.3s ease;
+    color: #ccc;
 }
 
 .ticket-card-glass .ticket-features li:hover {
     transform: translateX(5px);
+    color: #ffd700;
 }
 
 /* Description */
 .ticket-card-glass .ticket-description {
     font-size: 13px;
-    opacity: 0.85;
+    opacity: 0.9;
     margin-bottom: 15px;
+    line-height: 1.4;
+    color: #e0e0e0;
 }
 
-/* Glass Button */
+/* Button */
 .btn-glass {
-    background: rgba(255, 255, 255, 0.25);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    color: #fff;
+    background: #ffd700;
+    color: #000;
     font-weight: 600;
     border-radius: 50px;
     padding: 12px 0;
@@ -86,9 +91,9 @@
 }
 
 .btn-glass:hover {
-    background: #ffd700;
-    color: #000;
+    background: #ffb700;
     transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
 }
 
 /* Responsive Adjustments */
@@ -131,11 +136,7 @@
     }
 
     .ticket-card-glass .ticket-features li {
-        font-size: 12px;
-    }
-
-    .ticket-card-glass .ticket-description {
-        font-size: 12px;
+        font-size: 13px;
     }
 }
 
@@ -156,35 +157,5 @@
     .btn-glass {
         padding: 10px 0;
         font-size: 14px;
-    }
-}
-/* Updated Tickets Grid for full responsiveness */
-.tickets-grid-glass {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 20px;
-    padding: 40px 15px;
-    /* horizontal padding for very small screens */
-}
-
-/* Card adjustments */
-.ticket-card-glass {
-    min-width: 0;
-    /* allow card to shrink below original min-width */
-    width: 100%;
-    /* take full width of the grid cell */
-    box-sizing: border-box;
-    /* include padding in width */
-}
-
-/* Responsive tweaks */
-@media (max-width: 480px) {
-    .tickets-grid-glass {
-        grid-template-columns: 1fr;
-        padding: 20px 10px;
-    }
-
-    .ticket-card-glass {
-        padding: 12px 10px;
     }
 }
