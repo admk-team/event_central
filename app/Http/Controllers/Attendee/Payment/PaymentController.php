@@ -212,9 +212,11 @@ class PaymentController extends Controller
         $organizerId = EventApp::findOrFail(auth()->user()->event_app_id ?? session('event_id'));
         $getCurrency = OrganizerPaymentKeys::getCurrencyForUser($organizerId->organizer_id);
 
-        $stripe_response = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount, $getCurrency->currency);
+        $currency_code = $getCurrency->currency ?? 'USD';
+        $stripe_response = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount, $currency_code);
         $client_secret = $stripe_response['client_secret'];
         $payment_id = $stripe_response['payment_id'];
+        $extra_services = $data['ticketsDetails'][0]['extra_services'] ?? null;
 
         $payment = $user->attendeePayments()->create([
             'uuid' => Str::uuid(),
@@ -229,6 +231,7 @@ class PaymentController extends Controller
             'status' => 'pending',
             'organizer_payment_note' => $data['organizer_payment_note'] ?? null,
             'payment_method' => $organizerView ? $payment_method : 'stripe',
+            'extra_services' => $extra_services
         ]);
 
         foreach ($data['ticketsDetails'] as $ticketsDetail) {
@@ -287,6 +290,7 @@ class PaymentController extends Controller
             'status' => 'pending',
             'organizer_payment_note' => $data['organizer_payment_note'] ?? null,
             'payment_method' => $organizerView ? $payment_method : 'stripe',
+            'extra_services' => $data['extra_services'] ?? null,
         ]);
 
         foreach ($data['ticketsDetails'] as $ticketsDetail) {
@@ -481,6 +485,8 @@ class PaymentController extends Controller
         if ($payment) {
             foreach ($payment->purchased_tickets as $ticket_purchased) {
                 $purchasedticket = AttendeePurchasedTickets::find($ticket_purchased->id);
+
+
                 $code = $purchasedticket->generateUniqueKey();
                 $qrData = $code;
 
@@ -507,6 +513,34 @@ class PaymentController extends Controller
                     'qr_code' => 'qr-codes/' . $code . '.png',
                     'code' => $code
                 ]);
+
+                // ✅ Handle extra_services quantity decrease
+                $extraServices = $payment->extra_services;
+
+                if (is_array($extraServices)) {
+                    foreach ($extraServices as $service) {
+                        // Get the event ticket linked to purchased ticket
+                        $ticket = EventAppTicket::find($purchasedticket->event_app_ticket_id);
+
+                        if ($ticket) {
+                            $EventTicketExtraServices = $ticket->extra_services;
+
+                            if (is_array($EventTicketExtraServices)) {
+                                foreach ($EventTicketExtraServices as &$extra) {
+                                    if ($extra['name'] === $service['name']) {
+                                        // Decrease the quantity
+                                        $extra['quantity'] = max(0, $extra['quantity'] - $service['quantity']);
+                                    }
+                                }
+
+                                // Save updated services back into ticket
+                                $ticket->update([
+                                    'extra_services' => $EventTicketExtraServices
+                                ]);
+                            }
+                        }
+                    }
+                }
             }
         }
     }

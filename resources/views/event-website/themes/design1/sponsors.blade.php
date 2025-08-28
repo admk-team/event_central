@@ -21,7 +21,7 @@
                                 <h3 class="tier-title">{{ $category->name }}</h3>
                                 <div class="sponsors-grid gold">
                                     @foreach ($category->partners ?? [] as $partner)
-                                        <a href="{{ route('organizer.events.website.sponsors.single', ['uuid' => $event->uuid, 'id' => $partner->id]) }}"
+                                        <a href="{{ route('organizer.events.website.sponsors.single', ['uuid' => $event->uuid, 'id' => $partner->id]) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}"
                                             class="sponsor-logo">
                                             <img src="{{ $partner->exhibitor_logo }}" alt="{{ $partner->name }}">
                                         </a>
@@ -88,6 +88,14 @@
                     @endforeach
                 </div>
             </div>
+        </section>
+   @else
+         <section id="register" class="register register--grid mt-2">
+            <div class="container">
+                <div class="section-header light">
+                    <span class="section-tag">Our Sponsors</span>
+                    <h1 class="section-title">Currently Unavailable </h1>
+                </div>
         </section>
     @endif
 

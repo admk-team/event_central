@@ -1,21 +1,28 @@
 <style>
     :root {
         /* Base colors */
-        --color-background: #ffffff;
-        --color-foreground: #111827;
-    
+        @switch($event->custom_theme)
+            @case('default')
+                --color-background: #ffffff;
+                --color-foreground: #111827;
+            @break
+            @default
+                --color-background: {{ $colors['light']['primary']['primary_dark'] }};
+                --color-foreground: {{ $colors['light']['primary']['primary_foreground'] }};
+        @endswitch
+
         /* Brand colors */
         --color-primary: {{ $colors['light']['primary']['primary'] }};
         --color-primary-light: {{ $colors['light']['primary']['primary_light'] }};
         --color-primary-dark: {{ $colors['light']['primary']['primary_dark'] }};
         --color-primary-foreground: {{ $colors['light']['primary']['primary_foreground'] }};
-    
+
         /* Accent colors */
-        --color-accent: #f43f5e;
+        --color-accent: {{ $colors['light']['primary']['primary_light'] }};
         --color-accent-light: #fb7185;
         --color-accent-dark: #e11d48;
-        --color-accent-foreground: #ffffff;
-    
+        --color-accent-foreground: {{ $colors['light']['primary']['primary_dark'] }};
+
         /* Neutral colors */
         --color-neutral-50: #f9fafb;
         --color-neutral-100: #f3f4f6;
@@ -27,16 +34,17 @@
         --color-neutral-700: #374151;
         --color-neutral-800: #1f2937;
         --color-neutral-900: #111827;
-    
-        /* Success/Error colors */
+
+        /* State colors */
         --color-success: #10b981;
         --color-error: #ef4444;
         --color-warning: #f59e0b;
         --color-info: #3b82f6;
-    
+
         /* Typography */
-        --font-family: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
-        "Helvetica Neue", sans-serif;
+        --font-family: "Outfit", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+            Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+
         --font-size-xs: 0.75rem;
         --font-size-sm: 0.875rem;
         --font-size-base: 1rem;
@@ -49,7 +57,7 @@
         --font-size-6xl: 3.75rem;
         --font-size-7xl: 4.5rem;
         --font-size-8xl: 6rem;
-    
+
         /* Font weights */
         --font-weight-light: 300;
         --font-weight-normal: 400;
@@ -57,7 +65,7 @@
         --font-weight-semibold: 600;
         --font-weight-bold: 700;
         --font-weight-extrabold: 800;
-    
+
         /* Line heights */
         --line-height-none: 1;
         --line-height-tight: 1.25;
@@ -65,7 +73,7 @@
         --line-height-normal: 1.5;
         --line-height-relaxed: 1.625;
         --line-height-loose: 2;
-    
+
         /* Spacing */
         --spacing-0: 0;
         --spacing-1: 0.25rem;
@@ -85,7 +93,7 @@
         --spacing-48: 12rem;
         --spacing-56: 14rem;
         --spacing-64: 16rem;
-    
+
         /* Border radius */
         --radius-none: 0;
         --radius-sm: 0.125rem;
@@ -95,20 +103,23 @@
         --radius-2xl: 1rem;
         --radius-3xl: 1.5rem;
         --radius-full: 9999px;
-    
+
         /* Shadows */
         --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+                     0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+                     0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                     0 10px 10px -5px rgba(0, 0, 0, 0.04);
         --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
-    
+
         /* Transitions */
         --transition-fast: 150ms;
         --transition-normal: 250ms;
         --transition-slow: 350ms;
-    
+
         /* Z-index */
         --z-0: 0;
         --z-10: 10;
@@ -117,7 +128,7 @@
         --z-40: 40;
         --z-50: 50;
         --z-auto: auto;
-    
+
         /* Container */
         --container-padding: 1.5rem;
         --container-max-width: 1280px;

@@ -11,6 +11,7 @@ import WebsiteHeaders from './Components/WebsiteHeaders';
 import WebsiteFooters from './Components/WebsiteFooters';
 import Colors from './Components/Colors';
 import HasPermission from '../../../../../Components/HasPermission';
+import WebsiteThemeDesgin from './Components/WebsiteThemeDesgin';
 
 function Website() {
     const previewUrl = usePage().props.previewUrl as string;
@@ -55,6 +56,9 @@ function Website() {
                                     <HasPermission permission="edit_website">
                                         <WebsiteStatus />
                                     </HasPermission>
+                                </Col>
+                                <Col>
+                                    <WebsiteThemeDesgin />
                                 </Col>
                             </Row>
                         </Col>

@@ -38,6 +38,7 @@ class WebsiteSettingsController extends Controller
             // 'homePageSelected' => $currentEvent->pages()->homePage()->count() !== 0,
             'previewUrl' => route('organizer.events.settings.website.preview', $currentEvent->uuid),
             'colors' => eventSettings()->getValue('website_colors', config('event_website.colors')),
+            'event' => $currentEvent,
         ]);
     }
 

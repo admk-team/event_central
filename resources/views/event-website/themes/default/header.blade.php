@@ -1,19 +1,19 @@
   <header class="site-header">
       <div class="container">
           <a
-              href="{{ route('organizer.events.website', $event->uuid) }}{{ $isPreviewMode ?? false ? '?preview=true' : '' }}">
+              href="{{ route('organizer.events.website', $event->uuid) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}">
               <div class="logo">
                   <img src="{{ $event->logo_img }}" alt="logo" />
               </div>
           </a>
           <nav class="main-nav">
               <ul class="nav-links">
-                  <li>
+                  {{--  <li>
                       <a
                           href="{{ route('organizer.events.website', $event->uuid) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}">
                           About
                       </a>
-                  </li>
+                  </li>  --}}
                   <li><a
                           href="{{ route('organizer.events.website.speakers', $event->uuid) }}{{ ($isPreviewMode ?? false) || request('preview') == 'true' ? '?preview=true' : '' }}">Speakers</a>
                   </li>

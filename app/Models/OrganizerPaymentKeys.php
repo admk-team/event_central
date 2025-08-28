@@ -59,14 +59,20 @@ class OrganizerPaymentKeys extends Model
     }
 
     public static function getCurrencyForUser($userId)
-    {
-        $currency = self::where('user_id', $userId)
-            ->select('currency', 'currency_symbol')
-            ->first();
+{
+    $currency = self::where('user_id', $userId)
+        ->select('currency', 'currency_symbol')
+        ->first();
 
-        return $currency ?? (object)[
+    if (!$currency || !$currency->currency) {
+        // Return as stdClass object, not array
+        return (object)[
             'currency' => 'USD',
             'currency_symbol' => '$'
         ];
     }
+
+    return $currency; // still an object
+}
+
 }
