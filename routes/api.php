@@ -25,6 +25,7 @@ use App\Http\Controllers\Api\v1\Organizer\PasswordController;
 use App\Http\Controllers\Api\v1\Organizer\PaymentController as OrganizerPaymentController;
 use App\Http\Controllers\Api\v1\Organizer\PrayerRequestController;
 use App\Http\Controllers\Api\v1\Organizer\ProfileController as OrganizerProfileController;
+use App\Http\Controllers\Api\v1\Attendee\LiveStreamController;
 
 /*
 |--------------------------------------------------------------------------
@@ -210,5 +211,9 @@ Route::prefix('attendee')->group(function () {
         Route::put('/prayer-requests/{id}', [AttendeePrayerRequestController::class, 'update']);
         Route::delete('/prayer-requests/{id}', [AttendeePrayerRequestController::class, 'destroy']);
         Route::post('/prayer-request/view/{id}', [AttendeePrayerRequestController::class, 'view']);
+
+        Route::get('/live/stream',[LiveStreamController::class,'index']);
+        Route::get('/join/stream/{id}', [LiveStreamController::class, 'joinLiveStreams']);
+
     });
 });
