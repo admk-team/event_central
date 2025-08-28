@@ -338,7 +338,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::resource('email-template', EmailTemplateController::class);
             //Custom Badge Template
             Route::resource('badge-template', CustomBadgeController::class);
-
+            Route::get('eventbadgetemplate/default', [CustomBadgeController::class, 'defaultBadge'])->name('badge.template.default');
             //Email Campaign
             Route::resource('email-campaign', EmailCampaignController::class);
 
