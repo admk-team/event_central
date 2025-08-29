@@ -138,8 +138,8 @@ function Index({ attendees, eventApp, customBadgeDesign }: { attendees: any; eve
                                             <div className="eventlogodiv"></div>
                                         )}
                                         <p className="event-location">{eventApp?.location_base}</p>
-                                        <h1 className="attendee-name">{attendee?.name}</h1>
-                                        <h3 className="attendee-name">{attendee?.position}</h3>
+                                        <h1 className="attendee-name">{attendee.qr_codes[idx]?.display_name}</h1>
+                                        <h3 className="attendee-name">{attendee.qr_codes[idx]?.display_position}</h3>
                                     </div>
 
                                     <div className="qrWrapper">
