@@ -2,10 +2,10 @@ import { useForm, usePage } from '@inertiajs/react'
 import { Key } from 'lucide-react';
 import React from 'react'
 import { Button, Card, CardBody, CardHeader, CardTitle, Col, Form, FormGroup, ListGroup, ListGroupItem, Row, Spinner } from 'react-bootstrap'
-
+import { useLaravelReactI18n } from 'laravel-react-i18n'
 export default function Colors() {
     const colors = usePage().props.colors as any;
-
+ const { t } = useLaravelReactI18n()
     const { data, setData, post, processing } = useForm({
         'colors': colors,
     });
@@ -30,7 +30,7 @@ export default function Colors() {
         <Form onSubmit={submit}>
             <Card>
                 <CardHeader className="d-flex justify-content-between align-items-center gap-2">
-                    <CardTitle className="mb-0">Colors</CardTitle>
+                    <CardTitle className="mb-0">{t('Colors')}</CardTitle>
                     <div>
                         <Button type="submit" disabled={processing}>
                             {processing ? (
@@ -45,7 +45,7 @@ export default function Colors() {
                                     Saving
                                 </span>
                             ) : (
-                                <span>Save</span>
+                                <span>{t('Save')}</span>
                             )}
                         </Button>
                     </div>

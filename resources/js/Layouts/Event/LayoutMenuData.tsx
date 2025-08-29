@@ -1,8 +1,9 @@
 import { usePage } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 const Navdata = () => {
     const currentEvent = usePage().props.currentEvent as any;
+    const { t } = useLaravelReactI18n();
     // console.log("Event Start Date:", currentEvent?.dates[0]?.date);
 
     // State data
@@ -78,7 +79,8 @@ const Navdata = () => {
         if (iscurrentState !== "event_badge") setIsEventBadge(false);
         if (iscurrentState !== "prayer_request") setIsPrayerRequest(false);
         if (iscurrentState !== "chat") setIsChat(false);
-        if (iscurrentState !== "private_registration") setIsPrivateRegister(false);
+        if (iscurrentState !== "private_registration")
+            setIsPrivateRegister(false);
         if (iscurrentState !== "private_registration") setIsDemographic(false);
         if (iscurrentState !== "LiveStreams") setIsPrivateRegister(false);
         if (iscurrentState !== "Questionnaire_response")
@@ -119,7 +121,7 @@ const Navdata = () => {
     const menuItems: any = [
         {
             id: "dashboard",
-            label: "Dashboard",
+            label: t('Dashboard'),
             icon: "bx bxs-dashboard",
             link: route("organizer.events.dashboard"),
             stateVariables: isDashboard,
@@ -135,7 +137,9 @@ const Navdata = () => {
             id: "demographic_detail",
             label: "Demo Graphic Detail",
             icon: "bx bxs-calendar-event",
-            link: route("organizer.events.demographic", { eventUuid: currentEvent.uuid }),
+            link: route("organizer.events.demographic", {
+                eventUuid: currentEvent.uuid,
+            }),
             click: (e: React.MouseEvent<HTMLAnchorElement>) => {
                 e.preventDefault();
                 setIsDemographic(!isDemographic);
@@ -212,10 +216,7 @@ const Navdata = () => {
                 setIscurrentState("EventShop");
                 updateIconSidebar(e);
             },
-            hasAnyPermission: [
-                "view_product",
-                "view_order",
-            ],
+            hasAnyPermission: ["view_product", "view_order"],
             subItems: [
                 {
                     id: "products",
@@ -230,7 +231,7 @@ const Navdata = () => {
                     link: route("organizer.events.orders.index"), // pass eventApp UUID or ID here
                     parentId: "EventShop",
                     hasPermissions: ["view_orders"],
-                }
+                },
             ],
         },
         {
@@ -278,21 +279,21 @@ const Navdata = () => {
         },
         ...(isEventStarted
             ? [
-                {
-                    id: "sessionAttendance",
-                    label: "Sessions Attendance",
-                    icon: "bx bx-calendar-check",
-                    link: route("organizer.events.attendance.index"),
-                    stateVariables: IsSessionAttendance,
-                    click: function (e: any) {
-                        e.preventDefault();
-                        setIsSessionAttendance(!IsSessionAttendance);
-                        setIscurrentState("sessionAttendance");
-                        updateIconSidebar(e);
-                    },
-                    hasPermissions: ["view_session_attendence"],
-                },
-            ]
+                  {
+                      id: "sessionAttendance",
+                      label: "Sessions Attendance",
+                      icon: "bx bx-calendar-check",
+                      link: route("organizer.events.attendance.index"),
+                      stateVariables: IsSessionAttendance,
+                      click: function (e: any) {
+                          e.preventDefault();
+                          setIsSessionAttendance(!IsSessionAttendance);
+                          setIscurrentState("sessionAttendance");
+                          updateIconSidebar(e);
+                      },
+                      hasPermissions: ["view_session_attendence"],
+                  },
+              ]
             : []),
         {
             id: "website",
@@ -578,34 +579,31 @@ const Navdata = () => {
             id: "refferal_link",
             label: "Referral Link",
             icon: "bx bx-share-alt",
-            link: route('organizer.events.refferal-link.index'),
+            link: route("organizer.events.refferal-link.index"),
             stateVariables: isRefferalLink,
             click: function (e: any) {
                 e.preventDefault();
                 setIsRefferalLink(!isRefferalLink);
-                setIscurrentState('refferal-link');
+                setIscurrentState("refferal-link");
                 updateIconSidebar(e);
             },
-            hasPermissions: [
-                'view_referral_link'
-            ],
+            hasPermissions: ["view_referral_link"],
         },
         {
             id: "event_badge",
             label: "Event Badges",
             icon: "bx bx-badge",
-            link: route('organizer.events.badge.index'),
+            link: route("organizer.events.badge.index"),
             stateVariables: isEventBadge,
             click: function (e: any) {
                 e.preventDefault();
                 setIsRefferalLink(!isEventBadge);
-                setIscurrentState('event_badge');
+                setIscurrentState("event_badge");
                 updateIconSidebar(e);
             },
-            hasPermissions: [
-                'view_event_badge'
-            ],
-        }, {
+            hasPermissions: ["view_event_badge"],
+        },
+        {
             id: "Report",
             label: "Reports",
             icon: "bx bxs-report",
@@ -675,33 +673,29 @@ const Navdata = () => {
             id: "private_registration",
             label: "Private Registration",
             icon: "bx bxs-notepad",
-            link: route('organizer.private-registration.index'),
+            link: route("organizer.private-registration.index"),
             stateVariables: isPrivateRegister,
             click: function (e: any) {
                 e.preventDefault();
                 setIsPrivateRegister(!isPrivateRegister);
-                setIscurrentState('private_registration');
+                setIscurrentState("private_registration");
                 updateIconSidebar(e);
             },
-            hasPermissions: [
-                'view_private_registration'
-            ],
+            hasPermissions: ["view_private_registration"],
         },
         {
             id: "liveStreams",
             label: "Live Streams",
             icon: "bx bx-broadcast",
-            link: route('organizer.events.live-streams.index'),
+            link: route("organizer.events.live-streams.index"),
             stateVariables: isLiveStreams,
             click: function (e: any) {
                 e.preventDefault();
                 setIsLiveStreams(!isLiveStreams);
-                setIscurrentState('LiveStreams');
+                setIscurrentState("LiveStreams");
                 updateIconSidebar(e);
             },
-            hasPermissions: [
-                'view_live_streams'
-            ],
+            hasPermissions: ["view_live_streams"],
         },
 
         // }] : []),
