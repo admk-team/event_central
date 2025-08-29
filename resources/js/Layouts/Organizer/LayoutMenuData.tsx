@@ -110,7 +110,7 @@ const Navdata = () => {
                 },
                 {
                     id: "roles",
-                    label: "Roles",
+                    label: t('Roles'),
                     link: route("organizer.roles.index"),
                     parentId: "Staff",
                     hasPermissions: ["view_roles"],
@@ -119,7 +119,7 @@ const Navdata = () => {
         },
         {
             id: "payment_settings",
-            label: "Payment Settings",
+            label: t('Payment Settings'),
             icon: "bx bxs-cog",
             link: route("organizer.settings.payment.index"),
             stateVariables: isPaymentSettings,
@@ -160,7 +160,7 @@ const Navdata = () => {
         },
         {
             id: "liveStreamSettings",
-            label: "Live Stream Settings",
+            label: t('Live Stream Settings'),
             icon: "bx bx-broadcast",
             link: route("organizer.settings.live-stream.index"),
             stateVariables: isLiveStreamSettings,
