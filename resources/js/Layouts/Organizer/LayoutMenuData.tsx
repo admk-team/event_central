@@ -133,7 +133,7 @@ const Navdata = () => {
         },
         {
             id: "zoho_settings",
-            label: "Zoho Settings",
+            label: t('Zoho Settings'),
             icon: "bx bxs-cog",
             link: "/#",
             stateVariables: isZohoSetting,
@@ -146,13 +146,13 @@ const Navdata = () => {
             subItems: [
                 {
                     id: "keys_connect_zoho",
-                    label: "Zoho Keys & Connect",
+                    label: t('Zoho Keys & Connect'),
                     link: route("organizer.zoho.index"),
                     parentId: "zoho_settings",
                 },
                 {
                     id: "sync_page_zoho",
-                    label: "Zoho Sync Data",
+                    label: t('Zoho Sync Data'),
                     link: route("organizer.zoho.sync.page"),
                     parentId: "zoho_settings",
                 },
