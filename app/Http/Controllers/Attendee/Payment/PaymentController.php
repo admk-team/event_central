@@ -431,7 +431,7 @@ class PaymentController extends Controller
     {
         try {
             $attendee = auth()->user();
-            $attendee->load('payments.purchased_tickets');
+            $attendee->load(['payments.purchased_tickets.purchased_addons']);
             $attendee_purchased_tickets = [];
             foreach ($attendee->payments as $payment) {
                 foreach ($payment->purchased_tickets as $ticket)

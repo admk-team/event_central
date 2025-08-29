@@ -156,6 +156,8 @@
                     <tr>
                         <th>Ticket Name</th>
                         <th>Price</th>
+                        <th>Extra Service</th>
+                        <th>Addons</th>
                         <th>QR Code</th>
                     </tr>
                 </thead>
@@ -165,8 +167,36 @@
                             <td>{{ $index + 1 }}. {{ $purchased_ticket->ticket->name }}</td>
                             <td>{{ $purchased_ticket->total + $purchased_ticket->purchased_addons()->sum('price') }}
                             </td>
-                            <td><img
-                                    src="{{ $message->embed(storage_path('app/public/' . $purchased_ticket->qr_code)) }}">
+                            <td>
+                                @php
+                                    $payment = $purchased_ticket->payment;
+                                    $extra_services = [];
+
+                                    if ($payment && $payment->extra_services) {
+                                        if (is_string($payment->extra_services)) {
+                                            $extra_services = json_decode($payment->extra_services, true);
+                                        } elseif (is_array($payment->extra_services)) {
+                                            $extra_services = $payment->extra_services;
+                                        }
+                                    }
+                                @endphp
+
+                                @if (!empty($extra_services))
+                                    @foreach ($extra_services as $service)
+                                        {{ $service['name'] }} ,
+                                    @endforeach
+                                @endif
+                            </td>
+                            <td>
+                                @foreach ($purchased_ticket->purchased_addons as $addon)
+                                    {{ $addon->name }} ,
+                                @endforeach
+                            </td>
+                            <td>
+                                @if ($purchased_ticket->qr_code)
+                                    <img
+                                         src="{{ $message->embed(storage_path('app/public/' . $purchased_ticket->qr_code)) }}">
+                                @endif
                             </td>
                         </tr>
                     @endforeach
