@@ -135,7 +135,7 @@ const Navdata = () => {
         },
         {
             id: "demographic_detail",
-            label: "Demo Graphic Detail",
+            label: t('Demo Graphic Detail'),
             icon: "bx bxs-calendar-event",
             link: route("organizer.events.demographic", {
                 eventUuid: currentEvent.uuid,
@@ -150,7 +150,7 @@ const Navdata = () => {
         },
         {
             id: "attendees",
-            label: "Event",
+            label: t('Event'),
             icon: "bx bxs-calendar-event",
             link: route("organizer.events.settings.event.index"),
             stateVariables: isEvent,
@@ -164,7 +164,7 @@ const Navdata = () => {
         },
         {
             id: "Content",
-            label: "Content",
+            label: t('Content'),
             icon: "bx bx-book-content",
             link: "/#",
             stateVariables: isContent,
@@ -183,21 +183,21 @@ const Navdata = () => {
             subItems: [
                 {
                     id: "schedule",
-                    label: "Schedule",
+                    label: t('Schedule'),
                     link: route("organizer.events.schedule.index"),
                     parentId: "Content",
                     hasPermissions: ["view_event_sessions"],
                 },
                 {
                     id: "speakers",
-                    label: "Speakers",
+                    label: t('Speakers'),
                     link: route("organizer.events.speaker.index"),
                     parentId: "Content",
                     hasPermissions: ["view_speakers"],
                 },
                 {
                     id: "partners",
-                    label: "Partners",
+                    label: t('Partners'),
                     link: route("organizer.events.partner.index"),
                     parentId: "Content",
                     hasPermissions: ["view_partner"],
@@ -206,7 +206,7 @@ const Navdata = () => {
         },
         {
             id: "EventShop",
-            label: "Event Shop",
+            label: t('Event Shop'),
             icon: "bx bx-store",
             link: "/#",
             stateVariables: isEventStore,
@@ -220,14 +220,14 @@ const Navdata = () => {
             subItems: [
                 {
                     id: "products",
-                    label: "Products",
+                    label: t('Products'),
                     link: route("organizer.events.products.index"),
                     parentId: "EventShop",
                     hasPermissions: ["view_product"],
                 },
                 {
                     id: "orders",
-                    label: "Orders",
+                    label: t('Orders'),
                     link: route("organizer.events.orders.index"), // pass eventApp UUID or ID here
                     parentId: "EventShop",
                     hasPermissions: ["view_orders"],
@@ -236,7 +236,7 @@ const Navdata = () => {
         },
         {
             id: "attendees",
-            label: "Attendees",
+            label: t('Attendees'),
             icon: "bx bxs-user-account",
             link: route("organizer.events.attendees.index"),
             stateVariables: isAttendees,
@@ -250,7 +250,7 @@ const Navdata = () => {
         },
         {
             id: "payments",
-            label: "Payments",
+            label: t('Payments'),
             icon: "bx bxs-credit-card",
             link: route("organizer.events.payments"),
             stateVariables: isAttendees,
@@ -265,7 +265,7 @@ const Navdata = () => {
 
         {
             id: "registrationForm",
-            label: "Registration Form",
+            label: t('Registration Form'),
             icon: "bx bxs-user-plus",
             link: route("organizer.events.settings.registration-form.index"),
             stateVariables: isForm,
@@ -281,7 +281,7 @@ const Navdata = () => {
             ? [
                   {
                       id: "sessionAttendance",
-                      label: "Sessions Attendance",
+                      label: t('Sessions Attendance'),
                       icon: "bx bx-calendar-check",
                       link: route("organizer.events.attendance.index"),
                       stateVariables: IsSessionAttendance,
@@ -297,7 +297,7 @@ const Navdata = () => {
             : []),
         {
             id: "website",
-            label: "Website",
+            label: t('Website'),
             icon: "bx bx-globe",
             link: route("organizer.events.settings.website.index"),
             stateVariables: IsWebsite,
@@ -327,7 +327,7 @@ const Navdata = () => {
         // },
         {
             id: "tickets",
-            label: "Tickets",
+            label: t('Tickets'),
             icon: "bx bxs-server",
             link: "/#",
             stateVariables: isTickets,
@@ -346,14 +346,14 @@ const Navdata = () => {
             subItems: [
                 {
                     id: "tickets",
-                    label: "Tickets",
+                    label: t('Tickets'),
                     link: route("organizer.events.tickets.index"),
                     parentId: "Content",
                     hasPermissions: ["view_tickets"],
                 },
                 {
                     id: "ticket-fees",
-                    label: "Ticket Fees",
+                    label: t('Ticket Fees'),
                     link: route("organizer.events.ticket-fees.index"),
                     parentId: "Content",
                     hasPermissions: [
@@ -362,7 +362,7 @@ const Navdata = () => {
                 },
                 {
                     id: "ticket-addons",
-                    label: "Ticket Add-ons",
+                    label: t('Ticket Add-ons'),
                     link: route("organizer.events.addon.index"),
                     parentId: "Content",
                     hasPermissions: [
@@ -371,14 +371,14 @@ const Navdata = () => {
                 },
                 {
                     id: "promo-codes",
-                    label: "Promo Codes",
+                    label: t('Promo Codes'),
                     link: route("organizer.events.promo-codes.index"),
                     parentId: "Content",
                     hasPermissions: ["view_promo_code"],
                 },
                 {
                     id: "assignTickets",
-                    label: "Assign Tickets",
+                    label: t('Assign Tickets'),
                     link: route(
                         "organizer.events.attendee.tickets.assign",
                         null
@@ -388,21 +388,21 @@ const Navdata = () => {
                 },
                 {
                     id: "upgradeTicket",
-                    label: "Upgrade Tickets",
+                    label: t('Upgrade Tickets'),
                     link: route("organizer.events.tickets.upgrade"),
                     parentId: "tickets",
                     hasPermissions: ["refund_ticket"],
                 },
                 {
                     id: "refundTicket",
-                    label: "Refund Tickets",
+                    label: t('Refund Tickets'),
                     link: route("organizer.events.refund.tickets"),
                     parentId: "tickets",
                     hasPermissions: ["refund_ticket"],
                 },
                 {
                     id: "purchasedNotification",
-                    label: "Purchased Notification",
+                    label: t('Purchased Notification'),
                     link: route(
                         "organizer.events.purchased-ticket.notification"
                     ),
@@ -460,7 +460,7 @@ const Navdata = () => {
         // },
         {
             id: "badgePrinting",
-            label: "Badge Printing",
+            label: t('Badge Printing'),
             icon: "bx bxs-printer",
             link: route("organizer.events.badge.print"),
             click: function (e: any) {
@@ -473,7 +473,7 @@ const Navdata = () => {
 
         {
             id: "chat",
-            label: "Chat Room",
+            label: t('Chat Room'),
             icon: "bx bx-message-rounded-dots",
             link: route("organizer.events.chat.index"),
             stateVariables: isForm,
@@ -487,7 +487,7 @@ const Navdata = () => {
         },
         {
             id: "Questionnaire",
-            label: "Questionnaire Form",
+            label: t('Questionnaire Form'),
             icon: "bx bxs-notepad",
             link: route("organizer.events.settings.questionnaire-form.index"),
             stateVariables: isForm,
@@ -501,7 +501,7 @@ const Navdata = () => {
         },
         {
             id: "Questionnaire_response",
-            label: "Questionnaire Response",
+            label: t('Questionnaire Response'),
             icon: "bx bxs-notepad",
             link: route(
                 "organizer.events.settings.questionnaire-form.response"
@@ -517,7 +517,7 @@ const Navdata = () => {
         },
         {
             id: "EmailCampaign",
-            label: "Email Campaign",
+            label: t('Email Campaign'),
             icon: "bx bxs-envelope",
             link: route("organizer.events.email-campaign.index"),
             click: function (e: any) {
@@ -529,7 +529,7 @@ const Navdata = () => {
         },
         {
             id: "BaseTemplate",
-            label: "Default Email Template",
+            label: t('Default Email Template'),
             icon: "bx bxs-envelope",
             link: route("organizer.events.base.template"),
             click: function (e: any) {
@@ -541,7 +541,7 @@ const Navdata = () => {
         },
         {
             id: "BadgeTemplate",
-            label: "Badge Template",
+            label: t('Badge Template'),
             icon: "bx bxs-envelope",
             link: route("organizer.events.badge-template.index"),
             click: function (e: any) {
@@ -553,7 +553,7 @@ const Navdata = () => {
         },
         {
             id: "EmailTemplate",
-            label: "Email Template",
+            label: t('Email Template'),
             icon: "bx bxs-envelope",
             link: route("organizer.events.email-template.index"),
             click: function (e: any) {
@@ -565,7 +565,7 @@ const Navdata = () => {
         },
         {
             id: "ContactForm",
-            label: "Contact Form",
+            label: t('Contact Form'),
             icon: "bx  bxs-contact",
             link: route("organizer.events.contact-forms.index"),
             click: function (e: any) {
@@ -577,7 +577,7 @@ const Navdata = () => {
         },
         {
             id: "refferal_link",
-            label: "Referral Link",
+            label: t("Referral Link"),
             icon: "bx bx-share-alt",
             link: route("organizer.events.refferal-link.index"),
             stateVariables: isRefferalLink,
@@ -591,7 +591,7 @@ const Navdata = () => {
         },
         {
             id: "event_badge",
-            label: "Event Badges",
+            label: t('Event Badges'),
             icon: "bx bx-badge",
             link: route("organizer.events.badge.index"),
             stateVariables: isEventBadge,
@@ -605,7 +605,7 @@ const Navdata = () => {
         },
         {
             id: "Report",
-            label: "Reports",
+            label: t('Reports'),
             icon: "bx bxs-report",
             link: "/#",
             stateVariables: isReport,
@@ -624,28 +624,28 @@ const Navdata = () => {
             subItems: [
                 {
                     id: "attendeeReport",
-                    label: "Attendee",
+                    label: t('Attendee'),
                     link: route("organizer.events.report.attendee.index"),
                     parentId: "Report",
                     hasPermissions: ["view_attendee_report"],
                 },
                 {
                     id: "sessionReport",
-                    label: "Session",
+                    label: t('Session'),
                     link: route("organizer.events.report.session.index"),
                     parentId: "Report",
                     hasPermissions: ["view_session_report"],
                 },
                 {
                     id: "ticketReport",
-                    label: "Ticket",
+                    label: t('Ticket'),
                     link: route("organizer.events.report.ticket.index"),
                     parentId: "Report",
                     hasPermissions: ["view_ticket_report"],
                 },
                 {
                     id: "refundTicketReport",
-                    label: "Refund Ticket",
+                    label: t('Refund Ticket'),
                     link: route("organizer.events.report.refund-ticket.index"),
                     parentId: "Report",
                     hasPermissions: ["view_refund_ticket_report"],
@@ -671,7 +671,7 @@ const Navdata = () => {
 
         {
             id: "private_registration",
-            label: "Private Registration",
+            label: t('Private Registration'),
             icon: "bx bxs-notepad",
             link: route("organizer.private-registration.index"),
             stateVariables: isPrivateRegister,
@@ -685,7 +685,7 @@ const Navdata = () => {
         },
         {
             id: "liveStreams",
-            label: "Live Streams",
+            label: t('Live Streams'),
             icon: "bx bx-broadcast",
             link: route("organizer.events.live-streams.index"),
             stateVariables: isLiveStreams,
