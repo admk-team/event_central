@@ -1,9 +1,9 @@
 @extends('event-website.layouts.layout')
 @section('style')
-     @vite(['resources/css/design4/tickets_styles.css'])
+    @vite(['resources/css/design4/tickets_styles.css'])
 @endsection
 @section('header')
-   @include('event-website.themes.design4.header')
+    @include('event-website.themes.design4.header')
 @endsection
 @section('content')
     <section id="register" class="register register--grid">
@@ -14,36 +14,37 @@
             </div>
 
             <div class="tickets-grid-glass">
-    @foreach ($event->tickets ?? [] as $ticket)
-        @if ($ticket->show_on_attendee_side)
-            <div class="ticket-card-glass" data-aos="fade-up">
-                <div class="ticket-header">
-                    <h3>{{ $ticket->name }}</h3>
-                    <div class="ticket-price">${{ $ticket->base_price }}</div>
-                </div>
+                @foreach ($event->tickets ?? [] as $ticket)
+                    @if ($ticket->show_on_attendee_side)
+                        <div class="ticket-card-glass" data-aos="fade-up">
+                            <div class="ticket-header">
+                                <h3>{{ $ticket->name }}</h3>
+                                <div class="ticket-price">${{ $ticket->base_price }}</div>
+                            </div>
 
-                <ul class="ticket-features">
-                    @foreach ($ticket->sessions->take(5) ?? [] as $session)
-                        <li type="button" data-bs-toggle="modal" data-bs-target="#sessionModal{{ $session->id }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
-                            </svg>
-                            <span>{{ $session->name }}</span>
-                        </li>
-                    @endforeach
-                </ul>
+                            <ul class="ticket-features">
+                                @foreach ($ticket->sessions->take(5) ?? [] as $session)
+                                    <li type="button" data-bs-toggle="modal"
+                                        data-bs-target="#sessionModal{{ $session->id }}">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12"></polyline>
+                                        </svg>
+                                        <span>{{ $session->name }}</span>
+                                    </li>
+                                @endforeach
+                            </ul>
 
-                <div class="ticket-description">
-                    <p>{{ $ticket->description }}</p>
-                </div>
+                            <div class="ticket-description">
+                                <p>{{ $ticket->description }}</p>
+                            </div>
 
-                <a href="{{ route('attendee.register', $event) }}"
-                    class="btn btn-glass">Register Now</a>
+                            <a href="{{ route('attendee.register', $event) }}" class="btn btn-glass">Register Now</a>
+                        </div>
+                    @endif
+                @endforeach
             </div>
-        @endif
-    @endforeach
-</div>
 
             <!-- Session Modals -->
             @foreach ($event->tickets ?? [] as $ticket)
