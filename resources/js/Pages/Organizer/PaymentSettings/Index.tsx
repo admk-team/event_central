@@ -5,19 +5,21 @@ import { Col, Container, Row } from 'react-bootstrap';
 import BreadCrumb2 from '../../../Components/Common/BreadCrumb2';
 import SettingForm from './Components/SettingForm';
 import StripeSetting from './Components/SettingForm';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 
 const Index = ({ keys }: any) => {
     // console.log(keys);
+       const { t } = useLaravelReactI18n();
     return (
         <React.Fragment>
-            <Head title='Payment Settings' />
+            <Head title={t('Payment Settings')} />
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb2
-                        title="Payment Settings"
+                        title={t("Payment Settings")}
                         items={[
-                            { title: "Settings", link: route('organizer.events.settings.payment.index') }
+                            { title: t("Settings"), link: route('organizer.events.settings.payment.index') }
                         ]}
                     />
                     <Row className='justify-content-center'>

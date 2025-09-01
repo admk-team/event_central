@@ -18,6 +18,7 @@ import {
 } from "react-bootstrap";
 import toast from "react-hot-toast";
 import gumletLogo from "../../../../images/gumlet-logo.svg";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 
 const Index = ({ settings }: any) => {
@@ -26,6 +27,7 @@ const Index = ({ settings }: any) => {
         gumlet_api_key: settings?.gumlet_api_key ?? "",
         gumlet_live_source_id: settings?.gumlet_live_source_id ?? "",
     });
+       const { t } = useLaravelReactI18n();
 
     const submit: React.FormEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
@@ -46,13 +48,13 @@ const Index = ({ settings }: any) => {
 
     return (
         <React.Fragment>
-            <Head title='Payment Settings' />
+            <Head title={t('Payment Settings')} />
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb2
-                        title="Payment Settings"
+                        title={t("Payment Settings")}
                         items={[
-                            { title: "Settings", link: route('organizer.events.settings.payment.index') }
+                            { title: t("Settings"), link: route('organizer.events.settings.payment.index') }
                         ]}
                     />
                     <Row className='justify-content-center'>
@@ -71,7 +73,7 @@ const Index = ({ settings }: any) => {
                                                 )}
                                             </CardTitle>
                                             <CardText>
-                                                Edit global Live Stream Settings for all events.
+                                               {t("Live Stream Info")}
                                             </CardText>
                                         </div>
                                     </CardHeader>
@@ -154,10 +156,10 @@ const Index = ({ settings }: any) => {
                                                         role="status"
                                                         aria-hidden="true"
                                                     />
-                                                    Saving
+                                                    {t("Saving")}
                                                 </span>
                                             ) : (
-                                                <span>Save</span>
+                                                <span>{t("Save")}</span>
                                             )}
                                         </Button>
                                     </Col>

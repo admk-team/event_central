@@ -8,6 +8,7 @@ import DataTable, { ColumnDef } from '../../../Components/DataTable';
 import BreadCrumb2 from '../../../Components/Common/BreadCrumb2';
 import DeleteManyModal from '../../../Components/Common/DeleteManyModal';
 import HasPermission from '../../../Components/HasPermission';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 function Index({ users }: any) {
     const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
@@ -15,6 +16,7 @@ function Index({ users }: any) {
     const [deleteUser, setDeleteUser] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
+    const { t } = useLaravelReactI18n();
 
     const setShowCreateEditModal = (state: boolean) => {
         _setShowCreateEditModal(state);
@@ -102,24 +104,24 @@ function Index({ users }: any) {
 
     return (
         <React.Fragment>
-            <Head title='Users' />
+            <Head title={t('Users')} />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb2 
-                        title="Users"
+                    <BreadCrumb2
+                        title={t("Users")}
                     />
                     <Row>
                         <Col xs={12}>
                             <DataTable
                                 data={users}
                                 columns={columns}
-                                title="Users"
+                                title={t("Users")}
                                 actions={[
                                     // Delete multiple
                                     {
                                         render: (dataTable) => (
                                             <HasPermission permission="delete_users">
-                                                <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>
+                                                <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> {t("Delete")} ({dataTable.getSelectedRows().length})</Button>
                                             </HasPermission>
                                         ),
                                         showOnRowSelection: true,
@@ -128,7 +130,7 @@ function Index({ users }: any) {
                                     {
                                         render: (
                                             <HasPermission permission="create_users">
-                                                <Button onClick={() => setShowCreateEditModal(true)}><i className="ri-add-fill"></i> Add New</Button>
+                                                <Button onClick={() => setShowCreateEditModal(true)}><i className="ri-add-fill"></i> {t("Add New")}</Button>
                                             </HasPermission>
                                         )
                                     },
