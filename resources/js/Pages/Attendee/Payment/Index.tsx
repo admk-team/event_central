@@ -103,6 +103,7 @@ const Index = ({
                                             </Tab>
                                             <Tab eventKey="paypal" title="Paypal">
                                             <PayPalButton
+                                                currency_code={getCurrency.currency}
                                                 amount={payment.amount_paid}
                                                 client_id={paypal_client_id}
                                             />

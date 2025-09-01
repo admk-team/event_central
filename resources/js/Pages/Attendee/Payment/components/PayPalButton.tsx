@@ -1,11 +1,11 @@
 import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import axios from "axios";
 
-const PayPalButton = ({ amount, client_id }: any) => {
+const PayPalButton = ({currency_code ,amount, client_id }: any) => {
     const createOrder = async () => {
         try {
             const response = await axios.post("/attendee/paypal/create-order", {
-                amount,
+                amount,currency_code
             });
             return response.data.id; // Return order ID
         } catch (error) {
@@ -31,6 +31,7 @@ const PayPalButton = ({ amount, client_id }: any) => {
         <PayPalScriptProvider
             options={{
                 clientId: client_id,
+                currency: currency_code,
             }}
         >
             <PayPalButtons

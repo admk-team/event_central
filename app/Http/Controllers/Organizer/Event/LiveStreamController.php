@@ -50,19 +50,19 @@ class LiveStreamController extends Controller
             'eventTickets' => 'nullable',
         ]);
 
-        $liveStreamSettings = LiveStreamSetting::where('organizer_id', Auth::user()->owner_id)->first();
+        // $liveStreamSettings = LiveStreamSetting::where('organizer_id', Auth::user()->owner_id)->first();
 
-        if (! $liveStreamSettings?->gumlet_api_key) {
-            return back()->withError("Please add gumlet api key in live stream settings");
-        }
+        // if (! $liveStreamSettings?->gumlet_api_key) {
+        //     return back()->withError("Please add gumlet api key in live stream settings");
+        // }
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $liveStreamSettings?->gumlet_api_key,
+            'Authorization' => 'Bearer ' . env('GUMLET_API_KEY'),
             'accept' => 'application/json',
             'content-type' => 'application/json',
             'accept' => 'application/json',
         ])->post("https://api.gumlet.com/v1/video/live/assets", [
-            'live_source_id' => $liveStreamSettings?->gumlet_live_source_id,
+            'live_source_id' => env('GUMLET_SOURCE_ID'),
             "resolution" => $input['resolution'],
         ]);
 
@@ -131,14 +131,14 @@ class LiveStreamController extends Controller
 
         $stream = LiveStream::findOrFail($id);
 
-        $liveStreamSettings = LiveStreamSetting::where('organizer_id', Auth::user()->owner_id)->first();
+        // $liveStreamSettings = LiveStreamSetting::where('organizer_id', Auth::user()->owner_id)->first();
 
-        if (! $liveStreamSettings?->gumlet_api_key) {
-            return back()->withError("Please add gumlet api key in live stream settings");
-        }
+        // if (! $liveStreamSettings?->gumlet_api_key) {
+        //     return back()->withError("Please add gumlet api key in live stream settings");
+        // }
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $liveStreamSettings?->gumlet_api_key,
+            'Authorization' => 'Bearer ' . env('GUMLET_API_KEY'),
             'accept' => 'application/json',
             'content-type' => 'application/json',
             'accept' => 'application/json',
@@ -162,17 +162,17 @@ class LiveStreamController extends Controller
             abort(403);
         }
 
-        $liveStreamSettings = LiveStreamSetting::where('organizer_id', Auth::user()->owner_id)->first();
+        // $liveStreamSettings = LiveStreamSetting::where('organizer_id', Auth::user()->owner_id)->first();
 
-        if (! $liveStreamSettings?->gumlet_api_key) {
-            return back()->withError("Please add gumlet api key in live stream settings");
-        }
+        // if (! $liveStreamSettings?->gumlet_api_key) {
+        //     return back()->withError("Please add gumlet api key in live stream settings");
+        // }
 
         foreach ($request->ids as $id) {
             $stream = LiveStream::findOrFail($id);
 
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $liveStreamSettings?->gumlet_api_key,
+                'Authorization' => 'Bearer ' . env('GUMLET_API_KEY'),
                 'accept' => 'application/json',
                 'content-type' => 'application/json',
                 'accept' => 'application/json',
@@ -199,14 +199,14 @@ class LiveStreamController extends Controller
 
         $stream = LiveStream::findOrFail($id);
 
-        $liveStreamSettings = LiveStreamSetting::where('organizer_id', Auth::user()->owner_id)->first();
+        // $liveStreamSettings = LiveStreamSetting::where('organizer_id', Auth::user()->owner_id)->first();
 
-        if (! $liveStreamSettings?->gumlet_api_key) {
-            return back()->withError("Please add gumlet api key in live stream settings");
-        }
+        // if (! $liveStreamSettings?->gumlet_api_key) {
+        //     return back()->withError("Please add gumlet api key in live stream settings");
+        // }
 
         $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . $liveStreamSettings?->gumlet_api_key,
+            'Authorization' => 'Bearer ' . env('GUMLET_API_KEY'),
             'accept' => 'application/json',
             'content-type' => 'application/json',
         ])->post("https://api.gumlet.com/v1/video/live/assets/" . $stream->live_asset_id . "/complete");
@@ -226,15 +226,14 @@ class LiveStreamController extends Controller
 
         $livestream = LiveStream::where('id', $Id)->first();
 
-        $liveStreamSettings = LiveStreamSetting::where('organizer_id', Auth::user()->owner_id)->first();
+        // $liveStreamSettings = LiveStreamSetting::where('organizer_id', Auth::user()->owner_id)->first();
 
-        if (! $liveStreamSettings?->gumlet_api_key) {
-            return back()->withError("Please add gumlet api key in live stream settings");
-        }
-
+        // if (! $liveStreamSettings?->gumlet_api_key) {
+        //     return back()->withError("Please add gumlet api key in live stream settings");
+        // }
         if ($livestream) {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $liveStreamSettings?->gumlet_api_key,
+                'Authorization' => 'Bearer ' . env('GUMLET_API_KEY'),
                 'accept' => 'application/json',
                 'content-type' => 'application/json',
             ])->post("https://api.gumlet.com/v1/video/live/assets/" . $livestream->live_asset_id. "/start");

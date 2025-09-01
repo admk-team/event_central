@@ -158,20 +158,22 @@ const Navdata = () => {
                 },
             ],
         },
-        {
-            id: "liveStreamSettings",
-            label: t('Live Stream Settings'),
-            icon: "bx bx-broadcast",
-            link: route("organizer.settings.live-stream.index"),
-            stateVariables: isLiveStreamSettings,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsDashboard(!isLiveStreamSettings);
-                setIscurrentState("LiveStreamSettings");
-                updateIconSidebar(e);
-            },
-            hasPermissions: ["edit_live_stream_settings"],
-        },
+        // {
+        //     id: "liveStreamSettings",
+        //     label: "Live Stream Settings",
+        //     icon: "bx bx-broadcast",
+        //     link: route('organizer.settings.live-stream.index'),
+        //     stateVariables: isLiveStreamSettings,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIsDashboard(!isLiveStreamSettings);
+        //         setIscurrentState('LiveStreamSettings');
+        //         updateIconSidebar(e);
+        //     },
+        //     hasPermissions: [
+        //         'edit_live_stream_settings',
+        //     ]
+        // },
     ];
     return <React.Fragment>{menuItems}</React.Fragment>;
 };
