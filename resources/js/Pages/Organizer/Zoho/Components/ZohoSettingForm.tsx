@@ -1,8 +1,10 @@
 import React from 'react';
 import { useForm } from '@inertiajs/react';
 import { Button, Card, Form } from 'react-bootstrap';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 const ZohoSettingForm = ({ keys }: any) => {
+    const { t } = useLaravelReactI18n();
     const { data, setData, post, processing, errors } = useForm({
         client_id: keys?.client_id || '',
         client_secret: keys?.client_secret || '',
@@ -17,10 +19,10 @@ const ZohoSettingForm = ({ keys }: any) => {
     return (
         <Card>
             <Card.Body>
-                <h5 className="mb-4">Zoho CRM Credentials</h5>
+                <h5 className="mb-4">{t('Zoho CRM Credentials')}</h5>
                 <Form onSubmit={handleSubmit}>
                     <Form.Group className="mb-3" controlId="client_id">
-                        <Form.Label>Client ID</Form.Label>
+                        <Form.Label>{t("Client ID")}</Form.Label>
                         <Form.Control
                             type="text"
                             value={data.client_id}
@@ -33,7 +35,7 @@ const ZohoSettingForm = ({ keys }: any) => {
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="client_secret">
-                        <Form.Label>Client Secret</Form.Label>
+                        <Form.Label>{t('Client Secret')}</Form.Label>
                         <Form.Control
                             type="text"
                             value={data.client_secret}
@@ -46,7 +48,7 @@ const ZohoSettingForm = ({ keys }: any) => {
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="redirect_uri">
-                        <Form.Label>Redirect URI</Form.Label>
+                        <Form.Label>{t('Redirect URI')}</Form.Label>
                         <Form.Control
                             type="text"
                             value={data.redirect_uri}
@@ -60,10 +62,10 @@ const ZohoSettingForm = ({ keys }: any) => {
 
                     <div className='d-flex'>
                         <Button variant="primary" type="submit" disabled={processing}>
-                            Save Keys
+                            {t('Save Keys')}
                         </Button>
                         <Button variant="primary" type="submit" className='ms-4' onClick={() => window.location.href = route('organizer.zoho.connect')}>
-                            Connect
+                            {t('Connect')}
                         </Button>
                     </div>
                 </Form>

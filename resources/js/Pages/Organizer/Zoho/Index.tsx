@@ -5,14 +5,16 @@ import { Col, Container, Row } from 'react-bootstrap';
 import BreadCrumb2 from '../../../Components/Common/BreadCrumb2';
 import ZohoSettingForm from './Components/ZohoSettingForm';
 import { Button } from 'react-bootstrap';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 const ZohoSettings = ({ keys }: any) => {
+    const { t } = useLaravelReactI18n();
     return (
         <React.Fragment>
-            <Head title="Zoho CRM Settings" />
+            <Head title={t("Zoho CRM Settings")} />
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb2
-                        title="Zoho CRM Settings"
+                        title={t("Zoho CRM Settings")}
                         items={[
                             { title: "Settings", link: route('organizer.zoho.index') }
                         ]}
@@ -24,36 +26,37 @@ const ZohoSettings = ({ keys }: any) => {
                             {/* Instructions Card */}
                             <div className="card shadow-sm mt-4" id="zoho-instructions">
                                 <div className="card-body">
-                                    <h5 className="card-title mb-3">How to Connect and Sync with Zoho CRM</h5>
+                                    <h5 className="card-title mb-3">{t('How to Connect and Sync with Zoho CRM')}</h5>
 
                                     <ol className="ps-3">
                                         <li className="mb-2">
-                                            <strong>Enter Zoho CRM Credentials</strong><br />
-                                            Fill in <em>Client ID</em>, <em>Client Secret</em>, and <em>Redirect URI</em> exactly as shown in your Zoho API console. Click <span className="badge bg-danger text-white">Save Keys</span>.
+                                            <strong>{t('Enter Zoho CRM Credentials')}</strong><br />
+                                            {t("Enter Credentials Instruction")}
                                         </li>
                                         <li className="mb-2">
-                                            <strong>Redirect URI</strong><br />
-                                            <span>https://eventcentral.net/organizer/zoho/callback</span> <em>For this you need to be logged in as Organizer</em>
+                                            <strong>{t('Redirect URI')}</strong><br />
+                                            <span> {t('Redirect URI Instruction')} </span>
                                         </li>
 
                                         <li className="mb-2">
-                                            <strong>Connect to Zoho</strong><br />
-                                            Click the <span className="badge bg-danger text-white">Connect</span> button. Sign in to Zoho and approve access — you will be redirected back when successful.
+                                            <strong>{t('Connect to Zoho')}</strong><br />
+                                            <span dangerouslySetInnerHTML={{ __html: t('Connect to Zoho Instruction') }} />
                                         </li>
 
                                         <li className="mb-2">
-                                            <strong>Sync Event Data</strong><br />
-                                            Go to <em>Zoho Sync Data</em>, select an event, choose to sync as <em>Leads</em> or <em>Contacts</em>, then click <span className="badge bg-danger text-white">Sync Now</span>.
-                                        </li>
+                                            <strong>{t('Sync Event Data')}</strong><br />
+                                            <span dangerouslySetInnerHTML={{ __html: t('Sync Event Data Instruction') }} />
+                                         </li>
                                     </ol>
 
                                     <p className="small text-muted mb-0">
-                                        Note: The Redirect URI must match exactly what you registered in Zoho (including protocol and trailing slash).
+
+                                        {t('Redirect Note')}
                                     </p>
 
                                     <div className="mt-3">
                                         <small className="text-muted">
-                                            Quick: Save Keys → Connect → Settings → Zoho Sync Data → Select Event → Sync Now.
+                                            {t('Quick Steps')}
                                         </small>
                                     </div>
                                 </div>
