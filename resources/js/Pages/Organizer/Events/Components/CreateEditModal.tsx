@@ -31,7 +31,6 @@ const center = { lat: 37.778519, lng: -122.40564 };
 const second = { lat: 54.526, lng: 15.2551 };
 const third = { lat: 8.7832, lng: 34.5085 };
 const fourth = { lat: 19.076, lng: 72.8777 };
-const { t } = useLaravelReactI18n();
 type EventImage = {
     image_url: string | ArrayBuffer | null;
     id: string;
@@ -53,6 +52,7 @@ function CreateEditModal({
     recurring_types: any;
     event_category_types: any;
 }) {
+    const { t } = useLaravelReactI18n();
     const fileInput = useRef<HTMLInputElement>(null);
     const logoFileInput = useRef<HTMLInputElement>(null);
     const [imageHash, setImageHash] = useState(Date.now()); //Causing image to be reloaded (overriding cache)

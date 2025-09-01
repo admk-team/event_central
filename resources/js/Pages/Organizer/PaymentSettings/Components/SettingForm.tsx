@@ -18,11 +18,13 @@ import stripe from "../../../../../images/stripe.png";
 import paypal from "../../../../../images/paypal.png";
 import toast from "react-hot-toast";
 import CurrencySelect from "../../../../Components/CurrencySelect";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 
 export default function SettingForm({ keys }: any) {
     // console.log(keys);
 
+    const { t } = useLaravelReactI18n();
     const { data, setData, post, processing, errors } = useForm({
         _method: "PUT",
 
@@ -71,7 +73,7 @@ export default function SettingForm({ keys }: any) {
                             )}
                         </CardTitle>
                         <CardText>
-                            Edit global Stripe Setting for all events.
+                            {t("Stripe Info")}
                         </CardText>
                     </div>
                 </CardHeader>
@@ -149,7 +151,7 @@ export default function SettingForm({ keys }: any) {
                             )}
                         </CardTitle>
                         <CardText>
-                            Edit global Paypal Setting for all events.
+                            {t("PayPal Info")}
                         </CardText>
                     </div>
                 </CardHeader>
@@ -241,10 +243,10 @@ export default function SettingForm({ keys }: any) {
                 <CardHeader className="d-flex justify-content-between align-items-center gap-2">
                     <div>
                         <CardTitle>
-                            <strong>Currency</strong>
+                            <strong>{t("Currency")}</strong>
                         </CardTitle>
                         <CardText>
-                            Edit global Currency Setting for all events.
+                            {t("Currency Info")}
                         </CardText>
                     </div>
                 </CardHeader>
@@ -280,10 +282,10 @@ export default function SettingForm({ keys }: any) {
                                     role="status"
                                     aria-hidden="true"
                                 />
-                                Saving
+                                {t("Saving")}
                             </span>
                         ) : (
-                            <span>Save</span>
+                            <span>{t("Save")}</span>
                         )}
                     </Button>
                 </Col>

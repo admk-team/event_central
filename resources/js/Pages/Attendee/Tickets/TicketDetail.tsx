@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Col, Row, Form } from "react-bootstrap";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 type ExtraService = { name: string; quantity: number | string };
 
@@ -47,6 +48,8 @@ const TicketDetail: React.FC<Props> = ({
     initialExtras = [],
     onExtraServicesUpdated,
 }) => {
+    const { t } = useLaravelReactI18n();
+
     /** ---------------- Add-ons & fees state ---------------- */
     const [selectedAddons, setSelectedAddons] = useState<any[]>([]);
     const [addonVariantErrors, setAddonVariantErrors] = useState<Record<number, string | null>>({});
@@ -184,7 +187,7 @@ const TicketDetail: React.FC<Props> = ({
                 if (newState.selectedVariant && newState.selectedVariant.qty_sold >= newState.selectedVariant.qty) {
                     setAddonVariantErrors((prevErrs) => ({
                         ...prevErrs,
-                        [newState.id]: "This variant is sold out. Please select another variant",
+                        [newState.id]: t("This variant is sold out. Please select another variant"),
                     }));
                 } else {
                     setAddonVariantErrors((prevErrs) => ({
@@ -332,15 +335,15 @@ const TicketDetail: React.FC<Props> = ({
 
     return (
         <Row className="mt-2 p-2 bg-light">
-            <p className="mb-1 fs-4 fw-bold bg-light">Ticket # {ticket_no} Details</p>
+            <p className="mb-1 fs-4 fw-bold bg-light">{t("Ticket #")} {ticket_no} {t("Details")}</p>
             <hr className="mt-0 mb-1" />
 
             {/* Fees */}
             <Col md={6} lg={6}>
-                <p className="fs-5 fw-bold mb-1">Fees applicable</p>
+                <p className="fs-5 fw-bold mb-1">{t("Fees applicable")}</p>
                 {feesOptions}
                 <span className="fs-5 fw-bold mt-1">
-                    Fees Sub Total :{" "}
+                    {t("Fees Sub Total :")}{" "}
                     <sup><small>{currency_symbol}</small></sup>
                     {fees_sub_total}
                 </span>
@@ -348,10 +351,10 @@ const TicketDetail: React.FC<Props> = ({
 
             {/* Add-ons */}
             <Col md={6} lg={6}>
-                <p className="fs-5 fw-bold mb-1">Ticket Add-ons</p>
+                <p className="fs-5 fw-bold mb-1">{t("Ticket Add-ons")}</p>
                 {addonOptions}
                 <span className="fs-5 fw-bold mt-1">
-                    Addons Sub Total :{" "}
+                    {t("Addons Sub Total :")}{" "}
                     <sup><small>{currency_symbol}</small></sup>
                     {addons_sub_total}
                 </span>
@@ -361,9 +364,9 @@ const TicketDetail: React.FC<Props> = ({
             {(ticket?.extra_service_name || normalizedExtras.length > 0) && (
                 <Col md={12} className="mt-3">
                     <hr className="mt-2 mb-2" />
-                    <p className="fs-5 fw-bold mb-2">{ticket?.extra_service_name || "Extra Services"}</p>
+                    <p className="fs-5 fw-bold mb-2">{ticket?.extra_service_name || t("Extra Services")}</p>
 
-                    {extraRows.length === 0 && <div className="text-muted">No extra services available.</div>}
+                    {extraRows.length === 0 && <div className="text-muted">{t("No extra services available.")}</div>}
 
                     {extraRows.map((row, idx) => {
                         const id = `extra-${ticket?.id}-${ticket_no}-${idx}`;

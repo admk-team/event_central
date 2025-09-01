@@ -2,10 +2,12 @@ import React, { useRef } from 'react';
 import { useForm } from '@inertiajs/react';
 import { Transition } from '@headlessui/react';
 import { Button, Card, Col, Form, Row } from 'react-bootstrap';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 export default function UpdatePasswordForm({ className = '' }) {
     const passwordInput: any = useRef();
     const currentPasswordInput: any = useRef();
+    const { t } = useLaravelReactI18n();
 
     const { data, setData, errors, put, reset, processing, recentlySuccessful } = useForm({
         current_password: '',
@@ -36,16 +38,16 @@ export default function UpdatePasswordForm({ className = '' }) {
     return (
         <React.Fragment>
             <Col>
-                <h2 >Update Password</h2>
+                <h2 >{t("Update Password")}</h2>
                 <Card>
                     <p className="text-muted p-2">
-                        Ensure your account is using a long, random password to stay secure.
+                        {t("Update Password Info")}.
                     </p>
                     <Card.Body>
                         <Form onSubmit={updatePassword} className="mt-6 space-y-6">
                             <Row>
                                 <Col lg={6}>
-                                    <Form.Label htmlFor="current_password" value="Current Password" className='form-label'> Current Password</Form.Label>
+                                    <Form.Label htmlFor="current_password" value="Current Password" className='form-label'> {t("Current Password")}</Form.Label>
 
                                     <Form.Control
                                         id="current_password"
@@ -61,7 +63,7 @@ export default function UpdatePasswordForm({ className = '' }) {
                                 </Col>
 
                                 <Col lg={6}>
-                                    <Form.Label htmlFor="password" value="New Password">New Password</Form.Label>
+                                    <Form.Label htmlFor="password" value="New Password">{t("New Password")}</Form.Label>
 
                                     <Form.Control
                                         id="password"
@@ -78,7 +80,7 @@ export default function UpdatePasswordForm({ className = '' }) {
                             </Row>
 
                             <Col lg={6}>
-                                <Form.Label htmlFor="password_confirmation" value="Confirm Password" className="mt-2">Confirm Password</Form.Label>
+                                <Form.Label htmlFor="password_confirmation" value="Confirm Password" className="mt-2">{t("Confirm Password")}</Form.Label>
 
                                 <Form.Control
                                     id="password_confirmation"
@@ -93,7 +95,7 @@ export default function UpdatePasswordForm({ className = '' }) {
                             </Col>
 
                             <div className="flex items-center gap-4 mt-3">
-                                <Button variant='success' disabled={processing} type='submit' className='btn btn-success'>Save</Button>
+                                <Button variant='success' disabled={processing} type='submit' className='btn btn-success'>{t("Save")}</Button>
 
                                 <Transition
                                     show={recentlySuccessful}
