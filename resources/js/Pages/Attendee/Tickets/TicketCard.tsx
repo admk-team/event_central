@@ -12,6 +12,7 @@ import {
 } from "react-bootstrap";
 import TicketDetail from "./TicketDetail";
 import { Minus, Plus } from "lucide-react";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 type Fee = { id: number; name: string; fee_amount: number | string; fee_type: "flat" | "percentage" };
 type Ticket = any;
@@ -34,6 +35,8 @@ const TicketCard = ({
     onBlockCheckout?: (blocked: boolean) => void;
     attendee_id: number | string;
 }) => {
+    const { t } = useLaravelReactI18n();
+
     const isAddedToCart = ticket.is_added_to_cart;
     const [processing, setProcessing] = useState(false);
     const [ticketQty, setTicketQty] = useState(0);
@@ -50,10 +53,10 @@ const TicketCard = ({
     const sessionsToShow = showAll ? ticket.sessions : ticket.sessions.slice(0, 5);
 
     // ---------- helpers ----------
-    const calculateFeesSubTotal = (t: Ticket) => {
+    const calculateFeesSubTotal = (tkt: Ticket) => {
         let subTotal = 0;
-        const ticket_base_price = Number(t.base_price) || 0;
-        (t.fees || []).forEach((fee: Fee) => {
+        const ticket_base_price = Number(tkt.base_price) || 0;
+        (tkt.fees || []).forEach((fee: Fee) => {
             const amt = Number(fee.fee_amount) || 0;
             subTotal += fee.fee_type === "flat" ? amt : (ticket_base_price * amt) / 100;
         });
@@ -135,7 +138,7 @@ const TicketCard = ({
                 newState.selectedVariant = selectedVariant;
 
                 if (newState.selectedVariant && newState.selectedVariant.qty_sold >= newState.selectedVariant.qty) {
-                    setAddonVariantErrors((prevErrs) => ({ ...prevErrs, [newState.id]: "This variant is sold out. Please select another variant" }));
+                    setAddonVariantErrors((prevErrs) => ({ ...prevErrs, [newState.id]: t("This variant is sold out. Please select another variant") }));
                 } else {
                     setAddonVariantErrors((prevErrs) => ({ ...prevErrs, [newState.id]: null }));
                 }
@@ -342,7 +345,7 @@ const TicketCard = ({
                                 {ticket.name} {ticketQty > 0 ? " x " + ticketQty : ""}
                             </h5>
                             {!unlimitedQty && availableQty <= 0 && (
-                                <div className="me-5 fw-bold text-danger">Sold Out</div>
+                                <div className="me-5 fw-bold text-danger">{t("Sold Out")}</div>
                             )}
                         </div>
                     </Accordion.Header>
@@ -354,11 +357,11 @@ const TicketCard = ({
                                 <br />
                                 {ticket.bulk_purchase_status !== 0 && (
                                     <span className="mt-5 ff-secondary fw-bold text-warning">
-                                        Limited Offer: {ticket.bulk_purchase_qty}+ tickets and Save{" "}
+                                        {t("Limited Offer:")} {ticket.bulk_purchase_qty}+ {t("tickets and Save")}{" "}
                                         {ticket.bulk_purchase_discount_type === "fixed"
                                             ? `${currency_symbol} ${parseInt(ticket.bulk_purchase_discount_value)}`
                                             : `${parseInt(ticket.bulk_purchase_discount_value)}%`}{" "}
-                                        instantly!
+                                        {t("instantly!")}
                                     </span>
                                 )}
                             </Col>
@@ -370,15 +373,15 @@ const TicketCard = ({
 
                             <Col md={3} lg={3}>
                                 <span className="ff-secondary fw-bold">
-                                    <span className="fs-5">Available Quantity</span>:{" "}
-                                    <span className="fs-5">{unlimitedQty ? "Unlimited" : availableQty}</span>
+                                    <span className="fs-5">{t("Available Quantity")}</span>:{" "}
+                                    <span className="fs-5">{unlimitedQty ? t("Unlimited") : availableQty}</span>
                                 </span>
                             </Col>
 
                             {!unlimitedQty && availableQty <= 0 ? (
                                 <Col md={2} lg={2}>
                                     <span className="ff-secondary fw-bold d-flex justify-content-lg-end">
-                                        <Button size="sm" onClick={handleWaitingList}>Add Waiting List</Button>
+                                        <Button size="sm" onClick={handleWaitingList}>{t("Add Waiting List")}</Button>
                                     </span>
                                 </Col>
                             ) : (
@@ -414,7 +417,7 @@ const TicketCard = ({
 
                         <Row className="mt-2 p-2 bg-light">
                             <Col md={12} lg={12}>
-                                <h5 className="mb-1 fw-bold ">Sessions</h5>
+                                <h5 className="mb-1 fw-bold ">{t("Sessions")}</h5>
                                 <ul className="list-unstyled text-muted vstack gap-1 m-0">
                                     {ticket.sessions.length > 0 &&
                                         sessionsToShow.map((session: any) => (
@@ -430,20 +433,20 @@ const TicketCard = ({
 
                                     {ticket.sessions.length > 5 && (
                                         <button className="btn btn-link p-0 m-0 mt-2" onClick={() => setShowAll((prev) => !prev)}>
-                                            {showAll ? "Show less" : "Show more"}
+                                            {showAll ? t("Show less") : t("Show more")}
                                         </button>
                                     )}
 
                                     {(() => {
-                                        const ticketExists = ticket_array.some((t: any) => t.ticket.id === ticket.id);
+                                        const ticketExists = ticket_array.some((tkt: any) => tkt.ticket.id === ticket.id);
                                         if (!ticketExists || !submitCheckOut) return null;
                                         return (
                                             <Col md={4} lg={4}>
                                                 <Button disabled={processing} onClick={submitCheckOut} className="btn btn-success w-100">
-                                                    Checkout
+                                                    {t("Checkout")}
                                                     {processing && (
                                                         <Spinner animation="border" role="status" className="ml-3" size="sm">
-                                                            <span className="visually-hidden">Loading...</span>
+                                                            <span className="visually-hidden">{t("Loading...")}</span>
                                                         </Spinner>
                                                     )}
                                                 </Button>
