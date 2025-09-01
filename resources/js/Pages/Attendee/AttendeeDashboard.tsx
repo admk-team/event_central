@@ -3,7 +3,11 @@ import {
     Col,
     Container,
     Row,
-    Card, CardBody, CardHeader, CardTitle, Form,
+    Card,
+    CardBody,
+    CardHeader,
+    CardTitle,
+    Form,
     Button,
 } from "react-bootstrap";
 
@@ -14,9 +18,10 @@ import defaultEventIcon from "../../../images/default-event-image.png";
 import DateDifferenceFromToday from "./common/DateDifferenceFromToday";
 import EventSessionsTimeLine from "./common/EventSessionsTimeLine";
 import moment from "moment";
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 const AttendeeDashboard = ({ eventApp, lasteventDate }: any) => {
+    const { t } = useLaravelReactI18n();
     const selectedSessions = eventApp.event_sessions.filter(
         (session: any) => session.selected_by_attendee
     );
@@ -31,10 +36,13 @@ const AttendeeDashboard = ({ eventApp, lasteventDate }: any) => {
         start: formatToUTC(eventApp.start_date),
         end: formatToUTC(lasteventDate[0].date),
         details: eventApp.description,
-        location: eventApp.location_base
+        location: eventApp.location_base,
     };
-    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${event.start}/${event.end}&details=${encodeURIComponent(event.details)}&location=${encodeURIComponent(event.location)}`;
-
+    const googleCalendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(
+        event.title
+    )}&dates=${event.start}/${event.end}&details=${encodeURIComponent(
+        event.details
+    )}&location=${encodeURIComponent(event.location)}`;
 
     return (
         <React.Fragment>
@@ -78,7 +86,9 @@ const AttendeeDashboard = ({ eventApp, lasteventDate }: any) => {
                                                         <p className="text-dark-gray p-0 m-0">
                                                             {" "}
                                                             {moment(
-                                                                eventApp?.dates[0].date
+                                                                eventApp
+                                                                    ?.dates[0]
+                                                                    .date
                                                             ).format(
                                                                 "DD MMM YYYY"
                                                             )}{" "}
@@ -91,15 +101,18 @@ const AttendeeDashboard = ({ eventApp, lasteventDate }: any) => {
                                                         display:
                                                             "-webkit - box",
                                                     }}
-                                                    dangerouslySetInnerHTML={{ __html: eventApp.description }}
-                                                >
-                                                </div>
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: eventApp.description,
+                                                    }}
+                                                ></div>
                                             </div>
                                         </CardBody>
                                     </Card>
                                     <Card>
                                         <CardHeader>
-                                            <CardTitle>Add to Event Calendar</CardTitle>
+                                            <CardTitle>
+                                                {t("Add to Event Calendar")}
+                                            </CardTitle>
                                         </CardHeader>
                                         <CardBody>
                                             <div className="d-flex">
@@ -108,34 +121,48 @@ const AttendeeDashboard = ({ eventApp, lasteventDate }: any) => {
                                                     variant="primary"
                                                     href={googleCalendarUrl}
                                                     target="_blank"
-                                                    rel="noopener noreferrer">
-                                                    <i className='bx bxs-calendar-plus'></i> Click to Add
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    <i className="bx bxs-calendar-plus"></i>{" "}
+                                                    {t("Click to Add")}
                                                 </Button>
                                                 <Button
                                                     className="mr-6"
                                                     disabled={!isEventAvailable}
                                                     variant="primary"
-                                                    href={'/attendee/calendar/download/' + eventApp.id}
+                                                    href={
+                                                        "/attendee/calendar/download/" +
+                                                        eventApp.id
+                                                    }
                                                     target="_blank"
-                                                    rel="noopener noreferrer">
-                                                    <i className='bx bxs-calendar-plus'></i> Click to Add
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    <i className="bx bxs-calendar-plus"></i>{" "}
+                                                    {t("Click to Add")}
                                                 </Button>
                                             </div>
                                         </CardBody>
                                     </Card>
                                     <Card>
                                         <CardHeader>
-                                            <CardTitle>Add to Apple Calendar</CardTitle>
+                                            <CardTitle>
+                                                {t("Add to Apple Calendar")}
+                                            </CardTitle>
                                         </CardHeader>
                                         <CardBody>
                                             <div className="d-grid grid">
                                                 <Button
                                                     disabled={!isEventAvailable}
                                                     variant="primary"
-                                                    href={'/attendee/calendar/download/' + eventApp.id}
+                                                    href={
+                                                        "/attendee/calendar/download/" +
+                                                        eventApp.id
+                                                    }
                                                     target="_blank"
-                                                    rel="noopener noreferrer">
-                                                    <i className='bx bxs-calendar-plus'></i> Click to Add
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    <i className="bx bxs-calendar-plus"></i>{" "}
+                                                    {t("Click to Add")}
                                                 </Button>
                                             </div>
                                         </CardBody>
@@ -145,9 +172,14 @@ const AttendeeDashboard = ({ eventApp, lasteventDate }: any) => {
                                     <Card>
                                         <CardBody>
                                             <div className="p-4 d-flex justify-content-between">
-                                                <h5>My Agenda</h5>
+                                                <h5>{t("My Agenda")}</h5>
                                                 <h5>
-                                                    {" "}{moment(eventApp?.dates[0].date).format("DD MMM YYYY")}{" "}
+                                                    {" "}
+                                                    {moment(
+                                                        eventApp?.dates[0].date
+                                                    ).format(
+                                                        "DD MMM YYYY"
+                                                    )}{" "}
                                                 </h5>
                                             </div>
                                         </CardBody>
@@ -170,7 +202,7 @@ const AttendeeDashboard = ({ eventApp, lasteventDate }: any) => {
                                             }}
                                             variant="success"
                                         >
-                                            Event Agenda
+                                            {t("Event Agenda")}
                                         </Button>
                                     </div>
                                 </Col>

@@ -16,9 +16,9 @@ import defaultEventIcon from "../../../images/default-event-image.png";
 import DateDifferenceFromToday from "../common/DateDifferenceFromToday";
 import EventSessionsTimeLine from "../common/EventSessionsTimeLine";
 import moment from "moment";
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 const Index = ({ eventApp }: any) => {
-
+    const { t } = useLaravelReactI18n();
     const selectedSessions = eventApp.event_sessions.filter(
         (session: any) => session.is_favourite
     );
@@ -67,7 +67,9 @@ const Index = ({ eventApp }: any) => {
                                                         <p className="text-dark-gray p-0 m-0">
                                                             {" "}
                                                             {moment(
-                                                                eventApp?.dates[0].date
+                                                                eventApp
+                                                                    ?.dates[0]
+                                                                    .date
                                                             ).format(
                                                                 "DD MMM YYYY"
                                                             )}{" "}
@@ -91,9 +93,14 @@ const Index = ({ eventApp }: any) => {
                                     <Card>
                                         <CardBody>
                                             <div className="p-4 d-flex justify-content-between">
-                                                <h5>My Favorites</h5>
+                                                <h5>{t("My Favorites")}</h5>
                                                 <h5>
-                                                    {" "}{moment(eventApp?.dates[0].date).format("DD MMM YYYY")}{" "}
+                                                    {" "}
+                                                    {moment(
+                                                        eventApp?.dates[0].date
+                                                    ).format(
+                                                        "DD MMM YYYY"
+                                                    )}{" "}
                                                 </h5>
                                             </div>
                                         </CardBody>
@@ -116,7 +123,7 @@ const Index = ({ eventApp }: any) => {
                                             }}
                                             variant="success"
                                         >
-                                            Event Agenda
+                                            {t("Event Agenda")}
                                         </Button>
                                     </div>
                                 </Col>
