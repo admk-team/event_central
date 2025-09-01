@@ -13,6 +13,7 @@ use App\Http\Controllers\Api\v1\Attendee\ProfileController;
 use App\Http\Controllers\Api\v1\Attendee\RegisterController;
 use App\Http\Controllers\Api\v1\Organizer\EventSessionController;
 use App\Http\Controllers\Api\v1\Attendee\EventController as AttendeeEventController;
+use App\Http\Controllers\Api\v1\Attendee\FriendRequestController;
 use App\Http\Controllers\Api\v1\Attendee\PrayerRequestController as AttendeePrayerRequestController;
 use App\Http\Controllers\Api\v1\Attendee\QuestionAttendeeController as AttendeeQuestionAttendeeController;
 use App\Http\Controllers\Api\v1\Organizer\AddonController;
@@ -230,5 +231,10 @@ Route::prefix('attendee')->group(function () {
         Route::get('/chat/one-to-one/{participant_id}/{event}', [ChatController::class, 'getOneToOneChat']);
         Route::post('/chat/send/{event}', [ChatController::class, 'store']);
         Route::post('/chat/mark-as-read/{chatWithUserId}/{event}', [ChatController::class, 'markAsRead']);
+        // Friend Request
+        Route::get('/friends', [FriendRequestController::class, 'index']);
+        Route::post('/friends/send', [FriendRequestController::class, 'store']);
+        Route::post('/friends/accept', [FriendRequestController::class, 'accept']);
+        Route::post('/friends/remove', [FriendRequestController::class, 'remove']);
     });
 });
