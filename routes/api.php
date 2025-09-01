@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\v1\Attendee\BadgeAchievementController;
+use App\Http\Controllers\Api\v1\Attendee\ChatController;
+use App\Http\Controllers\Api\v1\Organizer\ChatController as OrganizerChatController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\v1\AuthController;
@@ -126,6 +128,13 @@ Route::prefix('user')->group(function () {
         Route::get('events/organizer/prayer-requests/{event_id}', [PrayerRequestController::class, 'index']);
         Route::put('events/organizer/prayer-requests/update/{id}', [PrayerRequestController::class, 'update']);
         Route::delete('events/organizer/prayer-requests/delete/{id}', [PrayerRequestController::class, 'destroy']);
+
+        // chats (private + group)
+        Route::get('/chat/{event}', [OrganizerChatController::class, 'index']);
+        Route::get('/chat/messages/{event}', [OrganizerChatController::class, 'getMessages']);
+        Route::get('/chat/one-to-one/{participant_id}/{event}', [OrganizerChatController::class, 'getOneToOneChat']);
+        Route::post('/chat/send/{event}', [OrganizerChatController::class, 'store']);
+        Route::post('/chat/mark-as-read/{chatWithUserId}/{event}', [OrganizerChatController::class, 'markAsRead']);
     });
 });
 
@@ -212,8 +221,14 @@ Route::prefix('attendee')->group(function () {
         Route::delete('/prayer-requests/{id}', [AttendeePrayerRequestController::class, 'destroy']);
         Route::post('/prayer-request/view/{id}', [AttendeePrayerRequestController::class, 'view']);
 
-        Route::get('/live/stream',[LiveStreamController::class,'index']);
+        Route::get('/live/stream', [LiveStreamController::class, 'index']);
         Route::get('/join/stream/{id}', [LiveStreamController::class, 'joinLiveStreams']);
 
+        // chats (private + group)
+        Route::get('/chat/{event}', [ChatController::class, 'index']);
+        Route::get('/chat/messages/{event}', [ChatController::class, 'getMessages']);
+        Route::get('/chat/one-to-one/{participant_id}/{event}', [ChatController::class, 'getOneToOneChat']);
+        Route::post('/chat/send/{event}', [ChatController::class, 'store']);
+        Route::post('/chat/mark-as-read/{chatWithUserId}/{event}', [ChatController::class, 'markAsRead']);
     });
 });
