@@ -4,7 +4,7 @@ import CountUp from "react-countup";
 import { Link } from '@inertiajs/react';
 //Import Icons
 import FeatherIcon from "feather-icons-react";
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 const Widget1 = ({
     totalSession,
     totalTickets,
@@ -14,6 +14,7 @@ const Widget1 = ({
     totalSpeakers,
     ticketsMetrics,
 }: any) => {
+    const { t } = useLaravelReactI18n();
     return (
         <React.Fragment>
             <Row>
@@ -24,7 +25,7 @@ const Widget1 = ({
                                 <div className="d-flex justify-content-between">
                                     <div>
                                         <p className="fw-medium text-muted mb-0">
-                                            Sessions
+                                            {t("Sessions")}
                                         </p>
                                         <h2 className="fs-22 mt-4 ff-secondary fw-semibold">
                                             <span
@@ -79,7 +80,7 @@ const Widget1 = ({
                                 <div className="d-flex justify-content-between">
                                     <div>
                                         <p className="fw-medium text-muted mb-0">
-                                            Total Ticket
+                                            {t("Total Ticket")}
                                         </p>
                                         <h2 className="fs-22 mt-4 ff-secondary fw-semibold">
                                             <span
@@ -134,7 +135,7 @@ const Widget1 = ({
                                 <div className="d-flex justify-content-between">
                                     <div>
                                         <p className="fw-medium text-muted mb-0">
-                                            Sold Ticket
+                                            {t("Sold Ticket")}
                                         </p>
                                         <h2 className="mt-4 ff-secondary fw-semibold">
                                             <span className="counter-value">
