@@ -104,7 +104,7 @@ const Navdata = () => {
 
     const menuItems: any = [
         {
-            label: "Menu",
+            label: t('Menu'),
             isHeader: true,
         },
         {
