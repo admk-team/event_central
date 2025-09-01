@@ -1,153 +1,152 @@
-import React, { useState } from 'react';
-import { Badge, Button, Col, Container, Form, InputGroup, Row, Table, Spinner } from 'react-bootstrap';
-import { Head, Link, useForm } from '@inertiajs/react';
-import Layout from '../../../../Layouts/Event';
-import DeleteModal from '../../../../Components/Common/DeleteModal';
-import DataTable, { ColumnDef } from '../../../../Components/DataTable';
-import BreadCrumb2 from '../../../../Components/Common/BreadCrumb2';
-import DeleteManyModal from '../../../../Components/Common/DeleteManyModal';
-import HasPermission from '../../../../Components/HasPermission';
-import CreateEditModal from './Components/CreateEditModal';
-import CopyTextBox from '../../../../Components/CopyTextBox';
-import moment from 'moment';
+import React, { useState } from "react";
+import {
+    Badge,
+    Button,
+    Col,
+    Container,
+    Row,
+    Spinner,
+} from "react-bootstrap";
+import { Head, useForm } from "@inertiajs/react";
+import Layout from "../../../../Layouts/Event";
+import DeleteModal from "../../../../Components/Common/DeleteModal";
+import DeleteManyModal from "../../../../Components/Common/DeleteManyModal";
+import DataTable, { ColumnDef } from "../../../../Components/DataTable";
+import BreadCrumb2 from "../../../../Components/Common/BreadCrumb2";
+import HasPermission from "../../../../Components/HasPermission";
+import CreateEditModal from "./Components/CreateEditModal";
+import CopyTextBox from "../../../../Components/CopyTextBox";
+import moment from "moment";
 
 function Index({ liveStreams, eventTickets }: any) {
-    console.log("live stream", liveStreams);
-    const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
-    const [editLiveStream, setEditLiveStream] = React.useState<any>(null);
-    const [deleteLiveStream, setDeleteLiveStream] = React.useState<any>(null);
+    const [showCreateEditModal, setShowCreateEditModal] = useState(false);
+    const [editLiveStream, setEditLiveStream] = useState<any>(null);
+    const [deleteLiveStream, setDeleteLiveStream] = useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-    const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
+    const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] =
+        useState(false);
 
-    const setShowCreateEditModal = (state: boolean) => {
-        _setShowCreateEditModal(state);
-        if (state === false) {
-            setEditLiveStream(null);
-        }
-    }
-
-    const deleteForm = useForm({
-        _method: 'DELETE'
-    });
-
+    const deleteForm = useForm({ _method: "DELETE" });
     const deleteManyForm = useForm<{ _method: string; ids: number[] }>({
-        _method: 'DELETE',
+        _method: "DELETE",
         ids: [],
     });
 
-    const editAction = (liveStream: any) => {
+    const handleEdit = (liveStream: any) => {
         setEditLiveStream(liveStream);
         setShowCreateEditModal(true);
-    }
-
-    const deleteAction = (liveStream: any) => {
-        setDeleteLiveStream(liveStream);
-        setShowDeleteConfirmation(true);
-    }
+    };
 
     const handleDelete = () => {
-        deleteForm.delete(route('organizer.events.live-streams.destroy', deleteLiveStream.id));
-        setShowDeleteConfirmation(false);
-    }
-
-    const deleteManyAction = (ids: number[]) => {
-        deleteManyForm.setData(data => ({ ...data, ids: ids }));
-        setShowDeleteManyConfirmation(true);
-    }
+        if (deleteLiveStream) {
+            deleteForm.delete(
+                route("organizer.events.live-streams.destroy", deleteLiveStream.id)
+            );
+            setShowDeleteConfirmation(false);
+        }
+    };
 
     const handleDeleteMany = () => {
-        deleteManyForm.delete(route('organizer.events.live-streams.destroy.many'));
+        deleteManyForm.delete(
+            route("organizer.events.live-streams.destroy.many")
+        );
         setShowDeleteManyConfirmation(false);
-    }
+    };
 
     const columns: ColumnDef<typeof liveStreams.data[0]> = [
         {
-            accessorKey: 'id',
-            header: () => 'ID',
-            cell: (liveStream) => liveStream.id,
+            accessorKey: "id",
+            header: () => "ID",
+            cell: (row) => row.id,
             cellClass: "fw-medium",
             enableSorting: true,
         },
         {
-            accessorKey: 'ticket',
-            header: () => 'Ticket',
-            cell: (liveStream) => liveStream?.event_tickets?.name ?? '—',
+            accessorKey: "ticket",
+            header: () => "Ticket",
+            cell: (row) => row?.event_tickets?.name ?? "—",
             enableSorting: true,
         },
         {
-            accessorKey: 'title',
-            header: () => 'Title',
-            cell: (liveStream) => liveStream.title,
+            accessorKey: "title",
+            header: () => "Title",
+            cell: (row) => row.title,
             enableSorting: true,
         },
         {
-            accessorKey: 'stream_key',
-            header: () => 'Stream Key',
-            cell: (liveStream) => <CopyTextBox text={liveStream.stream_key} />,
-        },
-        // {
-        //     accessorKey: 'live_asset_id',
-        //     header: () => 'Live Asset Id',
-        //     cell: (liveStream) => liveStream.live_asset_id,
-        // },
-        // {
-        //     accessorKey: 'live_video_source_id',
-        //     header: () => 'Live Video Source Id',
-        //     cell: (liveStream) => liveStream.live_video_source_id,
-        // },
-        {
-            accessorKey: 'resolution',
-            header: () => 'Resolution',
-            cell: (liveStream) => liveStream.resolution,
+            accessorKey: "stream_key",
+            header: () => "Stream Key",
+            cell: (row) => <CopyTextBox text={row.stream_key} />,
         },
         {
-            accessorKey: 'stream_url',
-            header: () => 'Stream Url',
-            cell: (liveStream) => <CopyTextBox text={liveStream.stream_url} />,
+            accessorKey: "resolution",
+            header: () => "Resolution",
+            cell: (row) => row.resolution,
         },
         {
-            accessorKey: 'playback_url',
-            header: () => 'Playback Url',
-            cell: (liveStream) => <CopyTextBox text={liveStream.playback_url} />,
+            accessorKey: "stream_url",
+            header: () => "Stream URL",
+            cell: (row) => <CopyTextBox text={row.stream_url} />,
         },
         {
-            accessorKey: 'start_time',
-            header: () => 'Start Time',
-            cell: (liveStream) => liveStream.start_time ? moment(liveStream.start_time).format('DD MMM YYYY, HH:mm') : '',
+            accessorKey: "playback_url",
+            header: () => "Playback URL",
+            cell: (row) => <CopyTextBox text={row.playback_url} />,
         },
         {
-            accessorKey: 'status',
-            header: () => 'Status',
-            cell: (liveStream) => {
-                switch (liveStream.status) {
-                    case 'created':
-                        return <Badge bg="secondary" className="fs-6">{liveStream.status}</Badge>;
-                    case 'started':
-                        return <Badge bg="success" className="fs-6">{liveStream.status}</Badge>;
-                    case 'completed':
-                        return <Badge bg="info" className="fs-6">{liveStream.status}</Badge>;
-                }
+            accessorKey: "start_time",
+            header: () => "Start Time",
+            cell: (row) =>
+                row.start_time
+                    ? moment(row.start_time).format("DD MMM YYYY, HH:mm")
+                    : "",
+        },
+        {
+            accessorKey: "status",
+            header: () => "Status",
+            cell: (row) => {
+                const statusColors: Record<string, string> = {
+                    created: "secondary",
+                    started: "success",
+                    completed: "info",
+                };
+                return (
+                    <Badge bg={statusColors[row.status]} className="fs-6">
+                        {row.status}
+                    </Badge>
+                );
             },
         },
         {
-            header: () => 'Action',
-            cell: (liveStream) => (
+            header: () => "Action",
+            cell: (row) => (
                 <div className="hstack gap-3 fs-15">
-                    {liveStream.status === 'created' && (
+                    {row.status === "created" && (
                         <HasPermission permission="edit_live_streams">
-                            <StartStreamButton liveStream={liveStream} />
+                            <StartStreamButton liveStream={row} />
                         </HasPermission>
                     )}
-                    {(liveStream.status === 'preparing' || liveStream.status === 'started') && (
+                    {(row.status === "preparing" || row.status === "started") && (
                         <HasPermission permission="edit_live_streams">
-                            <EndStreamButton liveStream={liveStream} />
+                            <EndStreamButton liveStream={row} />
                         </HasPermission>
                     )}
                     <HasPermission permission="edit_live_streams">
-                        <span className="link-primary cursor-pointer" onClick={() => editAction(liveStream)}><i className="ri-edit-fill"></i></span>
+                        <span
+                            className="link-primary cursor-pointer"
+                            onClick={() => handleEdit(row)}
+                        >
+                            <i className="ri-edit-fill"></i>
+                        </span>
                     </HasPermission>
                     <HasPermission permission="delete_live_streams">
-                        <span className="link-danger cursor-pointer" onClick={() => deleteAction(liveStream)}>
+                        <span
+                            className="link-danger cursor-pointer"
+                            onClick={() => {
+                                setDeleteLiveStream(row);
+                                setShowDeleteConfirmation(true);
+                            }}
+                        >
                             <i className="ri-delete-bin-5-line"></i>
                         </span>
                     </HasPermission>
@@ -157,13 +156,11 @@ function Index({ liveStreams, eventTickets }: any) {
     ];
 
     return (
-        <React.Fragment>
-            <Head title='Live Streams' />
+        <>
+            <Head title="Live Streams" />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb2
-                        title="Live Streams"
-                    />
+                    <BreadCrumb2 title="Live Streams" />
                     <Row>
                         <Col xs={12}>
                             <DataTable
@@ -171,22 +168,40 @@ function Index({ liveStreams, eventTickets }: any) {
                                 columns={columns}
                                 title="Live Streams"
                                 actions={[
-                                    // Delete multiple
                                     {
                                         render: (dataTable) => (
                                             <HasPermission permission="delete_live_streams">
-                                                <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>
+                                                <Button
+                                                    className="btn-danger"
+                                                    onClick={() =>
+                                                        deleteManyForm.setData({
+                                                            ...deleteManyForm.data,
+                                                            ids: dataTable
+                                                                .getSelectedRows()
+                                                                .map((row) => row.id),
+                                                        }) ||
+                                                        setShowDeleteManyConfirmation(true)
+                                                    }
+                                                >
+                                                    <i className="ri-delete-bin-5-line"></i> Delete (
+                                                    {dataTable.getSelectedRows().length})
+                                                </Button>
                                             </HasPermission>
                                         ),
                                         showOnRowSelection: true,
                                     },
-                                    // Add new
                                     {
                                         render: (
                                             <HasPermission permission="create_live_streams">
-                                                <Button onClick={() => setShowCreateEditModal(true)}><i className="ri-add-fill"></i> Add New</Button>
+                                                <Button
+                                                    onClick={() =>
+                                                        setShowCreateEditModal(true)
+                                                    }
+                                                >
+                                                    <i className="ri-add-fill"></i> Add New
+                                                </Button>
                                             </HasPermission>
-                                        )
+                                        ),
                                     },
                                 ]}
                             />
@@ -207,69 +222,51 @@ function Index({ liveStreams, eventTickets }: any) {
             <DeleteModal
                 show={showDeleteConfirmation}
                 onDeleteClick={handleDelete}
-                onCloseClick={() => { setShowDeleteConfirmation(false) }}
+                onCloseClick={() => setShowDeleteConfirmation(false)}
             />
 
             <DeleteManyModal
                 show={showDeleteManyConfirmation}
                 onDeleteClick={handleDeleteMany}
-                onCloseClick={() => { setShowDeleteManyConfirmation(false) }}
+                onCloseClick={() => setShowDeleteManyConfirmation(false)}
             />
-        </React.Fragment>
-    )
+        </>
+    );
 }
 
 Index.layout = (page: any) => <Layout children={page} />;
-
 export default Index;
 
-
+// Start Stream Button
 function StartStreamButton({ liveStream }: any) {
-    const { post, processing } = useForm({
-        id: liveStream.id,
-    });
+    const { post, processing } = useForm({ id: liveStream.id });
 
-    const startStream = (id: number) => {
-        post(route('organizer.events.live-streams.start'), {
+    const startStream = () => {
+        post(route("organizer.events.live-streams.start"), {
             preserveScroll: true,
-        })
-    }
+        });
+    };
 
     return (
-        <Button size="sm" onClick={() => startStream(liveStream.id)} disabled={processing}>
-            {processing ? (
-                <Spinner
-                    as="span"
-                    animation="border"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
-                />
-            ) : 'Start'}
+        <Button size="sm" onClick={startStream} disabled={processing}>
+            {processing ? <Spinner size="sm" animation="border" /> : "Start"}
         </Button>
-    )
+    );
 }
 
+// End Stream Button
 function EndStreamButton({ liveStream }: any) {
     const { get, processing } = useForm();
 
-    const endStream = (id: number) => {
-        get(route('organizer.events.live-streams.status', liveStream.id), {
+    const endStream = () => {
+        get(route("organizer.events.live-streams.status", liveStream.id), {
             preserveScroll: true,
-        })
-    }
+        });
+    };
 
     return (
-        <Button size="sm" onClick={() => endStream(liveStream.id)} disabled={processing}>
-            {processing ? (
-                <Spinner
-                    as="span"
-                    animation="border"
-                    size="sm"
-                    role="status"
-                    aria-hidden="true"
-                />
-            ) : 'End'}
+        <Button size="sm" onClick={endStream} disabled={processing}>
+            {processing ? <Spinner size="sm" animation="border" /> : "End"}
         </Button>
-    )
+    );
 }

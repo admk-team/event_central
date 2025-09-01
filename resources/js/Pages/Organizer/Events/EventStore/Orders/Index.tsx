@@ -7,7 +7,11 @@ import DataTable, { ColumnDef } from "../../../../../Components/DataTable";
 import OrderDetailsModal from "./Components/OrderDetailsModal";
 import DeleteModal from "../../../../../Components/Common/DeleteModal";
 import HasPermission from "../../../../../Components/HasPermission";
+import { useLaravelReactI18n } from "laravel-react-i18n";
+
 const Index = ({ orders }: any) => {
+    const { t } = useLaravelReactI18n();
+
     const [showAddUpdateModal, setShowAddUpdateModal] = useState(false);
     const [deleteProduct, setDeleteProduct] = useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
@@ -19,8 +23,7 @@ const Index = ({ orders }: any) => {
         _method: "DELETE",
     });
 
-    const handleView = (order:any) => {
-        console.log(order);
+    const handleView = (order: any) => {
         setSelectedOrder(order);
         setShowModal(true);
     };
@@ -42,49 +45,51 @@ const Index = ({ orders }: any) => {
 
     const columns: ColumnDef<(typeof orders.data)[0]> = [
         {
-            header: () => "Id",
+            header: () => t("Id"),
             cell: (order) => order.id,
         },
         {
-            header: () => "Name",
+            header: () => t("Name"),
             cell: (order) => order.user.name,
             cellStyle: { width: "300px", textWrap: "wrap" },
         },
         {
-            header: () => "Email",
+            header: () => t("Email"),
             cell: (order) => order.user.email,
         },
         {
-            header: () => "Amount",
+            header: () => t("Amount"),
             cell: (order) => order.total_amount,
         },
         {
-            header: () => "Payment Method",
+            header: () => t("Payment Method"),
             cell: (order) => order.payment_method,
         },
         {
-            header: () => "Status",
+            header: () => t("Status"),
             cell: (order) => order.status,
         },
         {
-            header: () => "Action",
+            header: () => t("Action"),
             cell: (order) => (
                 <div className="hstack gap-3 fs-15">
                     <HasPermission permission="view_orders">
-                    <span
-                        className="link-info cursor-pointer"
-                        onClick={() => handleView(order)}
-                    >
-                        <i className="ri-eye-fill"></i>
-                    </span>
+                        <span
+                            className="link-info cursor-pointer"
+                            onClick={() => handleView(order)}
+                            title={t("View Order")}
+                        >
+                            <i className="ri-eye-fill"></i>
+                        </span>
                     </HasPermission>
                     <HasPermission permission="delete_orders">
-                    <span
-                        className="link-danger cursor-pointer"
-                        onClick={() => deleteAction(order)}
-                    >
-                        <i className="ri-delete-bin-5-line"></i>
-                    </span>
+                        <span
+                            className="link-danger cursor-pointer"
+                            onClick={() => deleteAction(order)}
+                            title={t("Delete Order")}
+                        >
+                            <i className="ri-delete-bin-5-line"></i>
+                        </span>
                     </HasPermission>
                 </div>
             ),
@@ -93,29 +98,29 @@ const Index = ({ orders }: any) => {
 
     return (
         <React.Fragment>
-            <Head title="Orders" />
+            <Head title={t("Orders")} />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Event Orders" pageTitle="Dashboard" />
+                    <BreadCrumb title={t("Event Orders")} pageTitle={t("Dashboard")} />
                     <Row>
                         <Col xs={12}>
                             <HasPermission permission="delete_orders">
-                            <DataTable
-                                data={orders}
-                                columns={columns}
-                                title="Orders"
-                                actions={[
-                                    {
-                                        render: (dataTable) => (
-                                            <Button className="btn-danger">
-                                                <i className="ri-delete-bin-5-line"></i>{" "}
-                                                Delete ({dataTable.getSelectedRows().length})
-                                            </Button>
-                                        ),
-                                        showOnRowSelection: true,
-                                    },
-                                ]}
-                            />
+                                <DataTable
+                                    data={orders}
+                                    columns={columns}
+                                    title={t("Orders")}
+                                    actions={[
+                                        {
+                                            render: (dataTable) => (
+                                                <Button className="btn-danger">
+                                                    <i className="ri-delete-bin-5-line"></i>{" "}
+                                                    {t("Delete")} ({dataTable.getSelectedRows().length})
+                                                </Button>
+                                            ),
+                                            showOnRowSelection: true,
+                                        },
+                                    ]}
+                                />
                             </HasPermission>
                         </Col>
                     </Row>
