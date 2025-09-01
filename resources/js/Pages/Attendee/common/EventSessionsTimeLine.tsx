@@ -2,9 +2,10 @@ import React, { useState, useMemo } from 'react';
 import { Col, Row, Card, CardBody } from 'react-bootstrap';
 import { Link, usePage, useForm } from '@inertiajs/react';
 import moment from 'moment';
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 const EventSessionsTimeLine: React.FC<EventSessionsTimeLineProps> = ({ eventApp, sessions }) => {
+      const { t } = useLaravelReactI18n();
     // Get props from Inertia's usePage
     const eventdates = usePage().props.eventdates || [];
     const enableTracks = usePage().props.enableTracks || false;
@@ -149,7 +150,7 @@ const EventSessionsTimeLine: React.FC<EventSessionsTimeLineProps> = ({ eventApp,
             {/* Tracks Filter */}
             {(enableTracks && tracks.length) > 0 && (
                 <div className="tracks text-center mt-4">
-                    <h4>Tracks:</h4>
+                    <h4>{t("Tracks:")}</h4>
                     <div className="tracks-filter d-flex flex-wrap justify-content-center gap-2">
                         {tracks.map((track: Track) => (
                             <button
@@ -180,7 +181,7 @@ const EventSessionsTimeLine: React.FC<EventSessionsTimeLineProps> = ({ eventApp,
 
             {/* Platforms Filter */}
             <div className="locations text-center mt-4">
-                <h4>Locations:</h4>
+                <h4>{t("Locations:")}</h4>
                 <div className="locations-filter d-flex flex-wrap justify-content-center gap-2">
                     {eventPlatforms?.map((platform: object) => (
                         <button

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import avatar1 from "../../../../../images/users/user-dummy-img.jpg";
 import { useForm, usePage } from "@inertiajs/react";
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 const IncomingRequest = () => {
-
+ const { t } = useLaravelReactI18n();
     const attendee = usePage().props.incomingRequests as any;
     const [search, setSearch] = useState("");
     // Filter users by search input
@@ -28,7 +28,7 @@ const IncomingRequest = () => {
         <div className="container">
             {/* Search Bar */}
             <div className="search-box mb-5">
-                <input type="text" className="form-control bg-light border-light" autoComplete="off" placeholder="Search by name..." value={search}
+                <input type="text" className="form-control bg-light border-light" autoComplete="off"  placeholder={t("Search by name...")}  value={search}
                     onChange={(e) => setSearch(e.target.value)} />
                 <i className="ri-search-line search-icon"></i>
             </div>
@@ -83,7 +83,7 @@ const IncomingRequest = () => {
                                                 disabled={processing}
                                                 onClick={() => setData('sender_id',user.sender.id)}
                                             >
-                                                <i className="ri-user-follow-line me-1 align-bottom"></i>Accept
+                                                <i className="ri-user-follow-line me-1 align-bottom"></i>{t("Accept")}
                                             </button>
                                             {errors.sender_id && <div className="text-danger">{errors.sender_id}</div>}
                                         </form>
@@ -94,7 +94,7 @@ const IncomingRequest = () => {
                         </div>
                     ))
                 ) : (
-                    <div className="text-center text-muted">No Incoming Request found.</div>
+                    <div className="text-center text-muted">{t("No Incoming Request found.")}</div>
                 )}
             </div>
         </div>

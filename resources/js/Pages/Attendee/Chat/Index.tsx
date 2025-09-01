@@ -17,9 +17,9 @@ import axios from 'axios';
 import { useEcho, useEchoPublic } from '@laravel/echo-react';
 import ChatAttachments from "./Components/ChatAttachments";
 import Attachments from "./Components/Attachments";
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
-  
+  const { t } = useLaravelReactI18n();
   const userChatShow: any = useRef();
    const [publicChatMessages, setPublicChatMessages] = useState<any[]>([]);
     const [privateChatMessages, setPrivateChatMessages] = useState<any[]>([]);
@@ -289,7 +289,7 @@ const Chat = ({member,event_data,loged_user,lastMessage}:any) => {
               <div className="px-4 pt-4 mb-3">
                 <div className="d-flex align-items-start">
                   <div className="flex-grow-1">
-                    <h5 className="mb-4">Chats</h5>
+                    <h5 className="mb-4">{t("Chats")}</h5>
                   </div>
                 </div>
                 <div className="search-box">
