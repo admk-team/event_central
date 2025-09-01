@@ -8,9 +8,9 @@ import DataTable, { ColumnDef } from '../../../../Components/DataTable';
 import DeleteManyModal from '../../../../Components/Common/DeleteManyModal';
 import HasPermission from '../../../../Components/HasPermission';
 import { Check, CircleCheck, CircleX } from 'lucide-react';
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 function Index({ contactForm }: any) {
-
+    const { t } = useLaravelReactI18n();
     const [deleteContactForm, setDeleteContactForm] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
@@ -42,39 +42,39 @@ function Index({ contactForm }: any) {
         setShowDeleteManyConfirmation(false);
     }
 
-  
+
     const columns: ColumnDef<typeof contactForm.data[0]> = [
         {
-            header: () => 'ID',
+            header: () => t('ID'),
             headerStyle: { width: '200px' },
             cell: (contactForm) => contactForm.id,
         },
         {
-            header: () => 'Name',
+            header: () => t('Name'),
             headerStyle: { width: '200px', textWrap: 'wrap' },
             cell: (contactForm) => contactForm.attendee.first_name + " " +contactForm.attendee.last_name,
             cellStyle: { width: '200px', textWrap: 'wrap' },
         },
         {
-            header: () => 'Email',
+            header: () => t('Email'),
             headerStyle: { width: '200px', textWrap: 'wrap' },
             cell: (contactForm) => contactForm.attendee.email,
             cellStyle: { width: '200px', textWrap: 'wrap' },
         },
         {
-            header: () => 'Subject',
+            header: () => t('Subject'),
             headerStyle: { width: '200px', textWrap: 'wrap' },
             cell: (contactForm) => contactForm.subject,
             cellStyle: { width: '200px', textWrap: 'wrap' },
         },
         {
-            header: () => 'Contant',
+            header: () => t('Contant'),
             headerStyle: { width: '200px', textWrap: 'wrap' },
             cell: (contactForm) => contactForm.content,
             cellStyle: { width: '200px', textWrap: 'wrap' },
         },
         {
-            header: () => "Actions",
+            header: () => t("Actions"),
             cell: (contactForm) => (
                 <div className="hstack gap-4 fs-15 text-center">
                     <a className="link-red cursor-pointer" onClick={() => deleteAction(contactForm)}>
@@ -89,7 +89,7 @@ function Index({ contactForm }: any) {
     return (
         <React.Fragment>
             <Head>
-                <title>Contact Forms</title>
+                <title>{t("Contact Forms")}</title>
                 <meta name="description" content="Manage event Contact Form records from the organizer's dashboard." />
                 <meta name="keywords" content="event attendees, attendee management, conference attendees, admin dashboard" />
                 <meta name="robots" content="index, follow" />
@@ -103,20 +103,20 @@ function Index({ contactForm }: any) {
 
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Contact Form" pageTitle="Dashboard" />
+                    <BreadCrumb title="Contact Form" pageTitle={t("Dashboard")} />
                     <Row>
                         <Col xs={12}>
                             <HasPermission permission="view_contact_form">
                                 <DataTable
                                     data={contactForm}
                                     columns={columns}
-                                    title="Contact Forms"
+                                    title={t("Contact Forms")}
                                     actions={[
                                         // Delete multiple
                                         {
                                             render: (dataTable) => (
                                                 <HasPermission permission="delete_attendees">
-                                                    <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>
+                                                    <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> {t("Delete")} ({dataTable.getSelectedRows().length})</Button>
                                                 </HasPermission>
                                             ),
                                             showOnRowSelection: true,

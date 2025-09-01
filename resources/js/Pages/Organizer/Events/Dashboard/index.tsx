@@ -19,7 +19,7 @@ import HasPermission from "../../../../Components/HasPermission";
 import { router } from "@inertiajs/react";
 import { useEchoPublic } from "@laravel/echo-react";
 import toast, { Toaster } from 'react-hot-toast';
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 const DashboardAnalytics = ({
     totalAttendee,
     totalSession,
