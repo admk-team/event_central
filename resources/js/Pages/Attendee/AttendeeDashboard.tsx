@@ -127,7 +127,7 @@ const AttendeeDashboard = ({ eventApp, lasteventDate }: any) => {
                                                     {t("Click to Add")}
                                                 </Button>
                                                 <Button
-                                                    className="mr-6"
+                                                    className="mr-6 ms-2"
                                                     disabled={!isEventAvailable}
                                                     variant="primary"
                                                     href={
