@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import { useForm } from "@inertiajs/react"; // or '@inertiajs/react' based on your setup
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 const CheckInModal = ({ show, onHide, attendee, purchasedSession }: any) => {
 
@@ -18,20 +19,21 @@ const CheckInModal = ({ show, onHide, attendee, purchasedSession }: any) => {
             }
         });
     };
+    const { t } = useLaravelReactI18n();
 
     return (
         <Modal show={show} onHide={onHide} centered>
             <Modal.Header closeButton>
-                <Modal.Title>Check In to Session</Modal.Title>
+                <Modal.Title>{t("Check In to Session")}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form.Group>
-                    <Form.Label>Select a session</Form.Label>
+                    <Form.Label>{t("Select a session")}</Form.Label>
                     <Form.Select
                         value={data.event_session_id}
                         onChange={(e) => setData('event_session_id',e.target.value)}
                     >
-                        <option value="">-- Select Session --</option>
+                        <option value="">-- {t("Select Session")} --</option>
                         {Object.entries(purchasedSession).map(([date, sessions]) => (
                             <optgroup key={date} label={date} className="border-b-1">
                                 {sessions.map((session: any) => {
@@ -75,9 +77,9 @@ const CheckInModal = ({ show, onHide, attendee, purchasedSession }: any) => {
                 </Form.Group>
             </Modal.Body>
             <Modal.Footer>
-                <Button variant="light" onClick={onHide}>Cancel</Button>
+                <Button variant="light" onClick={onHide}>{t("Cancel")}</Button>
                 <Button variant="primary" onClick={handleCheckIn} disabled={!data.event_session_id}>
-                    Check In
+                    {t("Check In")}
                 </Button>
             </Modal.Footer>
         </Modal>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Modal, Button, Form, Spinner } from 'react-bootstrap';
 import { useForm } from "@inertiajs/react"; // or '@inertiajs/react' based on your setup
 import axios from 'axios';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 const TicketAddonsModal = ({ show, onHide, puchasedTicketId }: any) => {
 
@@ -21,11 +22,12 @@ const TicketAddonsModal = ({ show, onHide, puchasedTicketId }: any) => {
             })
         }
     }, [puchasedTicketId])
+    const { t } = useLaravelReactI18n();
 
     return (
         <Modal show={show} onHide={onHide} centered>
             <Modal.Header closeButton >
-                <Modal.Title>Puchased Addons</Modal.Title>
+                <Modal.Title>{t("Puchased Addons")}</Modal.Title>
             </Modal.Header>
             <hr className='mb-0' />
             <Modal.Body>
@@ -40,7 +42,7 @@ const TicketAddonsModal = ({ show, onHide, puchasedTicketId }: any) => {
                                     <>
                                         <small>
                                             <strong style={{ fontSize: '16px', textDecoration: 'underline' }}>
-                                                Attributes
+                                                {t("Attributes")}
                                             </strong>
                                         </small>
                                         <br />
@@ -56,7 +58,7 @@ const TicketAddonsModal = ({ show, onHide, puchasedTicketId }: any) => {
                                     <>
                                         <small>
                                             <strong style={{ fontSize: '16px', textDecoration: 'underline' }}>
-                                                Extra Fields
+                                                {t("Extra Fields")}
                                             </strong>
                                         </small>
                                         <br />
@@ -77,7 +79,7 @@ const TicketAddonsModal = ({ show, onHide, puchasedTicketId }: any) => {
                             role="status"
                         >
                             <span className="visually-hidden">
-                                Loading...
+                                {t("Loading")}
                             </span>
                         </Spinner>
                     </div>}

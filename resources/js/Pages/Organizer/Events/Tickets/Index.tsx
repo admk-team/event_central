@@ -10,6 +10,7 @@ import HasPermission from "../../../../Components/HasPermission";
 import CreateEditModal from "./CreateEditModal";
 import moment from "moment";
 import { DialogBackdrop } from "@headlessui/react";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 function Index({ tickets, sessions, addonsAll, fees, event_ticket_type }: any) {
     // console.log('tickets', tickets);
@@ -66,7 +67,7 @@ function Index({ tickets, sessions, addonsAll, fees, event_ticket_type }: any) {
 
     const columns: ColumnDef<(typeof tickets.data)[0]> = [
         {
-            header: () => "ID",
+            header: () => t("ID"),
             cell: (ticket) => ticket.id,
             cellClass: "fw-medium",
         },
@@ -87,7 +88,7 @@ function Index({ tickets, sessions, addonsAll, fees, event_ticket_type }: any) {
         //     ),
         // },
         {
-            header: () => "Name",
+            header: () => t("Name"),
             cell: (ticket) => ticket.name,
         },
         // {
@@ -99,15 +100,15 @@ function Index({ tickets, sessions, addonsAll, fees, event_ticket_type }: any) {
         //     ),
         // },
         {
-            header: () => "Type",
+            header: () => t("Type"),
             cell: (ticket) => ticket.ticket_type?.name || "No Type",
         },
         {
-            header: () => "Base Price",
+            header: () => t("Base Price"),
             cell: (ticket) => ticket.base_price,
         },
         {
-            header: () => "Sessions",
+            header: () => t("Sessions"),
             cell: (ticket) => (
                 <div className="d-flex flex-column">
                     {ticket.sessions.map((session, index) => {
@@ -154,46 +155,46 @@ function Index({ tickets, sessions, addonsAll, fees, event_ticket_type }: any) {
             ),
         },
         {
-            header: () => "Increment By",
+            header: () => t("Increment By"),
             cell: (ticket) => ticket.increment_by ?? 'N/A',
         },
         {
-            header: () => "Increment Rate",
+            header: () => t("Increment Rate"),
             cell: (ticket) => ticket.increment_rate ?? 'N/A',
         },
         {
-            header: () => "Start Increment",
+            header: () => t("Start Increment"),
             cell: (ticket) =>
                 ticket.start_increment
                     ? moment(ticket.start_increment).format("MMM DD, YYYY")
                     : "N/A",
         },
         {
-            header: () => "End Increment",
+            header: () => t("End Increment"),
             cell: (ticket) =>
                 ticket.end_increment
                     ? moment(ticket.end_increment).format("MMM DD, YYYY")
                     : "N/A",
         },
         {
-            header: () => "Show To Attendee",
+            header: () => t("Show To Attendee"),
             cell: (ticket) => (
                 <div className="w-100 text-center">
                     {ticket.show_on_attendee_side && (
                         <span className="w-50 badge rounded-pill bg-secondary border border-secondary text-white text-capitalize fs-6 mt-1">
-                            Yes
+                            {t("Yes")}
                         </span>
                     )}
                     {!ticket.show_on_attendee_side && (
                         <span className="w-50 badge rounded-pill bg-light border border-secondary text-black text-capitalize fs-6 mt-1">
-                            No
+                            {t("No")}
                         </span>
                     )}
                 </div>
             ),
         },
         {
-            header: () => "Action",
+            header: () => t("Action"),
             cell: (ticket) => (
                 <div className="hstack gap-3 fs-15">
                     <HasPermission permission="edit_tickets">
@@ -216,6 +217,8 @@ function Index({ tickets, sessions, addonsAll, fees, event_ticket_type }: any) {
             ),
         },
     ];
+          const { t } = useLaravelReactI18n();
+
     return (
         <React.Fragment>
             <Head title="Tickets" />
@@ -248,7 +251,7 @@ function Index({ tickets, sessions, addonsAll, fees, event_ticket_type }: any) {
                                                         }
                                                     >
                                                         <i className="ri-delete-bin-5-line"></i>{" "}
-                                                        Delete (
+                                                        {t("Delete")} (
                                                         {
                                                             dataTable.getSelectedRows()
                                                                 .length
@@ -271,7 +274,7 @@ function Index({ tickets, sessions, addonsAll, fees, event_ticket_type }: any) {
                                                         }
                                                     >
                                                         <i className="ri-add-fill"></i>{" "}
-                                                        Add New
+                                                        {t("Add New")}
                                                     </Button>
                                                 </HasPermission>
                                             ),

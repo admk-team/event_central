@@ -1,6 +1,7 @@
 import { Link, useForm } from '@inertiajs/react';
 import React, { useState } from 'react';
 import { Button, Form, ListGroup, ListGroupItem, Modal } from 'react-bootstrap';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 interface CreateModalProps {
     manageTypesModal: boolean;
@@ -49,7 +50,7 @@ function ManageTypes({ manageTypesModal, showModal, partnerCategories }: CreateM
         if (selectedCategory) {
             // Delete the category
             deleteForm.post(route('organizer.events.tickets-type.destroy', selectedCategory.id), {
-    
+
                 onSuccess: () => {
                     setIsEditing(false);
                     setSelectedCategory(null);
@@ -76,11 +77,12 @@ function ManageTypes({ manageTypesModal, showModal, partnerCategories }: CreateM
             _method: "POST", // Reset method to POST for create
         });
     };
+      const { t } = useLaravelReactI18n();
 
     return (
         <Modal className='modal-dialog-centered backdrop-modal' centered show={manageTypesModal} onHide={() => showModal()} backdrop={'static'}>
             <Modal.Header>
-                <h5 className="modal-title" id="staticBackdropLabel">Tickets Type</h5>
+                <h5 className="modal-title" id="staticBackdropLabel">{t("Tickets Type")}</h5>
                 <Button type="button" className="btn-close"
                     onClick={() => {
                         showModal();
@@ -102,7 +104,7 @@ function ManageTypes({ manageTypesModal, showModal, partnerCategories }: CreateM
                                             onChange={(e) => setData('name', e.target.value)}
                                         />
                                         <Button type="submit" className="btn btn-success ms-1" disabled={processing}>
-                                            Create
+                                            {t("Create")}
                                         </Button>
                                     </div>
                                     <Form.Control.Feedback type="invalid" className='d-block mt-0'> </Form.Control.Feedback>
@@ -111,7 +113,7 @@ function ManageTypes({ manageTypesModal, showModal, partnerCategories }: CreateM
 
                             {isEditing && selectedCategory && (
                                 <div className='my-4'>
-                                    <Form.Label htmlFor="name" className="form-label">Update</Form.Label>
+                                    <Form.Label htmlFor="name" className="form-label">{t("Update")}</Form.Label>
                                     <Form.Control
                                         type="text"
                                         className="form-control"
@@ -121,13 +123,13 @@ function ManageTypes({ manageTypesModal, showModal, partnerCategories }: CreateM
                                         onChange={(e) => setData('name', e.target.value)}
                                     />
                                     <Button type="button" className="btn btn-danger ms-1 mt-2" onClick={handleDelete} disabled={processing}>
-                                        Delete
+                                        {t("Delete")}
                                     </Button>
                                     <Button type="submit" className="btn btn-success ms-1 mt-2" disabled={processing}>
-                                        Update
+                                        {t("Update")}
                                     </Button>
                                     <Button type="button" className="btn btn-secondary ms-1 mt-2" onClick={handleCreateClick}>
-                                        Cancel
+                                        {t("Cancel")}
                                     </Button>
                                 </div>
                             )}

@@ -5,6 +5,7 @@ import Layout from "../../../../Layouts/Event";
 import moment from "moment";
 import DataTable, { ColumnDef } from '../../../../Components/DataTable';
 import DeleteModal from "../../../../Components/Common/DeleteModal";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 
 const EventAppTickets = ({ tickets }: any) => {
@@ -21,16 +22,17 @@ const EventAppTickets = ({ tickets }: any) => {
         setDeleteTicket(ticket);
         setShowDeleteConfirmation(true);
     };
+          const { t } = useLaravelReactI18n();
 
     const columns: ColumnDef<typeof tickets.data[0]> = [
             {
-                header: () => 'Attendee Name',
+                header: () => t('Attendee Name'),
                 cell: (ticket) => ticket.attendee_first_name +" "+ticket.attendee_last_name,
             },
             {
-                header: () => 'Attendee Email',
+                header: () => t('Attendee Email'),
                 headerStyle: { textWrap: 'wrap' },
-                cell: (ticket) => 
+                cell: (ticket) =>
                     <>
                         <Link href={route('organizer.events.attendee.info', ticket.attendee_id)}>
                             {ticket.attendee_email}
@@ -39,37 +41,37 @@ const EventAppTickets = ({ tickets }: any) => {
                 cellStyle: { textWrap: 'wrap' },
             },
             {
-                header: () => 'Ticket Name',
+                header: () => t('Ticket Name'),
                 headerStyle: { textWrap: 'wrap' },
                 cell: (ticket) => ticket.ticket_name,
                 cellStyle: { textWrap: 'wrap' },
             },
             {
-                header: () => 'Total',
+                header: () => t('Total'),
                 headerStyle: { textWrap: 'wrap' },
                 cell: (ticket) => ticket.total,
                 cellStyle: { textWrap: 'wrap' },
             },
             {
-                header: () => 'Paid',
+                header: () => t('Paid'),
                 headerStyle: { textWrap: 'wrap' },
                 cell: (ticket) => ticket.amount,
                 cellStyle: { textWrap: 'wrap' },
             },
             {
-                header: () => 'Discount Amount',
+                header: () => t('Discount Amount'),
                 headerStyle: { textWrap: 'wrap' },
                 cell: (ticket) => ticket.discount,
                 cellStyle: { textWrap: 'wrap' },
             },
             {
-                header: () => 'Promo Code',
+                header: () => t('Promo Code'),
                 headerStyle: { textWrap: 'wrap' },
-                cell: (ticket) => ticket.promo_code ?? 'N/A',
+                cell: (ticket) => ticket.promo_code ?? t('N/A'),
                 cellStyle: { textWrap: 'wrap' },
             },
             {
-                header: () => 'Discount Percentage',
+                header: () => t('Discount Percentage'),
                 headerStyle: { textWrap: 'wrap' },
                 cell: (ticket) => ticket.discount && ticket.total != '0.00'
                                 ? `${Math.round((ticket.discount / ticket.total) * 100).toFixed(2)}%`
@@ -77,31 +79,31 @@ const EventAppTickets = ({ tickets }: any) => {
                 cellStyle: { textWrap: 'wrap' },
             },
             {
-                header: () => 'Quantity',
+                header: () => t('Quantity'),
                 headerStyle: { textWrap: 'wrap' },
                 cell: (ticket) => ticket.qty,
                 cellStyle: { textWrap: 'wrap' },
             },
             {
-                header: () => 'Type',
+                header: () => t('Type'),
                 headerStyle: { textWrap: 'wrap' },
                 cell: (ticket) => ticket.type,
                 cellStyle: { textWrap: 'wrap' },
             },
             {
-                header: () => 'Create On',
+                header: () => t('Create On'),
                 headerStyle: { textWrap: 'wrap' },
                 cell: (ticket) => ticket.created_at ? moment(ticket.created_at).format('MMM DD, YYYY') : '',
                 cellStyle: { textWrap: 'wrap' },
             },
             {
-                header: () => 'Status',
+                header: () => t('Status'),
                 headerStyle: { textWrap: 'wrap' },
                 cell: (ticket) => <><i className="ri-checkbox-circle-line fs-17 align-middle"></i> Paid</>,
                 cellStyle: { textWrap: 'wrap', color: 'rgb(13, 110, 253)' },
             },
             {
-                header: () => "Actions",
+                header: () => t("Actions"),
                 cell: (ticket) => (
                     <div className="hstack gap-4 fs-15 text-center">
                         <i className="ri-delete-bin-5-line text-danger fs-17 align-middle" onClick={() => deleteAction(ticket)}></i>
@@ -109,7 +111,7 @@ const EventAppTickets = ({ tickets }: any) => {
                 ),
             },
         ];
-    
+
 
     const handleDelete = () => {
         console.log(deleteTicket.ticketId)
@@ -133,7 +135,7 @@ const EventAppTickets = ({ tickets }: any) => {
                                 <DataTable
                                     data={{ data: tickets, links: [] }}
                                     columns={columns}
-                                    title="Payments"
+                                    title={t("Payments")}
                                     tableLayoutFixed={false}
                                     disableRowSelection={true}
                                 />

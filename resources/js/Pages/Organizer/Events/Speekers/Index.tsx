@@ -8,6 +8,7 @@ import DeleteModal from '../../../../Components/Common/DeleteModal';
 import DataTable, { ColumnDef } from '../../../../Components/DataTable';
 import DeleteManyModal from '../../../../Components/Common/DeleteManyModal';
 import HasPermission from '../../../../Components/HasPermission';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 function Index({ speakers }: any) {
     const [deletespeaker, setDeleteSpeaker] = React.useState<any>(null);
@@ -45,25 +46,26 @@ function Index({ speakers }: any) {
         deleteManyForm.delete(route('organizer.events.speakers.destroy.many'));
         setShowDeleteManyConfirmation(false);
     }
+      const { t } = useLaravelReactI18n();
 
     const columns: ColumnDef<typeof speakers.data[0]> = [
         {
-            header: () => 'ID',
+            header: () => t('ID'),
             cell: (speaker) => speaker.id,
             cellClass: "fw-medium"
         },
         {
-            header: () => 'Avatar',
+            header: () => t('Avatar'),
             cell: (speaker) => (
                 <img src={speaker.avatar} alt={speaker.name} width="50" height="50" className="rounded-circle" />
             ),
         },
         {
-            header: () => 'Name',
+            header: () => t('Name'),
             cell: (speaker) => speaker.name,
         },
         {
-            header: () => 'Company',
+            header: () => t('Company'),
             cell: (speaker) => speaker.company,
         },
         {
@@ -71,7 +73,7 @@ function Index({ speakers }: any) {
             cell: (speaker) => speaker.position,
         },
         {
-            header: () => 'Action',
+            header: () => t('Action'),
             cell: (speaker) => (
                 <div className="hstack gap-3 fs-15">
                     <HasPermission permission="edit_speakers">
@@ -91,7 +93,7 @@ function Index({ speakers }: any) {
     return (
         <React.Fragment>
             <Head>
-                <title>Speakers Management | Organizer Dashboard</title>
+                <title>{t("Speakers Management | Organizer Dashboard")}</title>
                 <meta name="description" content="Manage event speakers, edit details, and delete records from the organizer's dashboard." />
                 <meta name="keywords" content="event speakers, speaker management, conference speakers, admin dashboard" />
                 <meta name="robots" content="index, follow" />
@@ -118,7 +120,7 @@ function Index({ speakers }: any) {
                                         {
                                             render: (dataTable) => (
                                                 <HasPermission permission="delete_speakers">
-                                                    <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>
+                                                    <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> {t("Delete")} ({dataTable.getSelectedRows().length})</Button>
                                                 </HasPermission>
                                             ),
                                             showOnRowSelection: true,
@@ -128,7 +130,7 @@ function Index({ speakers }: any) {
                                         {
                                             render: (
                                                 <HasPermission permission="create_speakers">
-                                                    <Link href={route('organizer.events.speaker.create')}><Button><i className="ri-add-fill"></i> Add New</Button></Link>
+                                                    <Link href={route('organizer.events.speaker.create')}><Button><i className="ri-add-fill"></i> {t("Add New")}</Button></Link>
                                                 </HasPermission>
                                             )
                                         },

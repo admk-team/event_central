@@ -15,6 +15,7 @@ import {
     Button,
 } from "react-bootstrap";
 import Select, { StylesConfig } from "react-select";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 export default function CreateEditModal({
     show,
@@ -239,13 +240,14 @@ export default function CreateEditModal({
             setData("bulk_purchase_status", false);
         }
     };
+          const { t } = useLaravelReactI18n();
 
     return (
         <>
             <Modal show={show} onHide={onHide} centered size="lg">
                 <Modal.Header className="bg-light p-3" closeButton>
                     <h5 className="modal-title">
-                        {isEdit ? "Edit Ticket" : "New Ticket"}
+                        {isEdit ? t("Edit Ticket") : t("New Ticket")}
                     </h5>
                 </Modal.Header>
 
@@ -254,7 +256,7 @@ export default function CreateEditModal({
                         <Row>
                             <Col md={6}>
                                 <FormGroup className="mb-3">
-                                    <Form.Label>Name</Form.Label>
+                                    <Form.Label>{t("Name")}</Form.Label>
                                     <Form.Control
                                         type="text"
                                         value={data.name}
@@ -270,7 +272,7 @@ export default function CreateEditModal({
                             </Col>
                             <Col md={6}>
                                 <FormGroup className="mb-3">
-                                    <Form.Label>Base Price</Form.Label>
+                                    <Form.Label>{t("Base Price")}</Form.Label>
                                     <Form.Control
                                         type="number"
                                         value={data.base_price}
@@ -289,7 +291,7 @@ export default function CreateEditModal({
                         <Row>
                             <Col md={12} lg={12}>
                                 <FormGroup className="mb-3">
-                                    <Form.Label>Description</Form.Label>
+                                    <Form.Label>{t("Description")}</Form.Label>
                                     <Form.Control
                                         as="textarea"
                                         rows={5}
@@ -309,13 +311,13 @@ export default function CreateEditModal({
                         <Row>
                             <Col md={8}>
                                 <FormGroup className="mb-3">
-                                    <Form.Label>Ticket Type</Form.Label>
+                                    <Form.Label>{t("Ticket Type")}</Form.Label>
                                     <Form.Select
                                         value={data.type}
                                         onChange={(e) => setData("type", e.target.value)}
                                         isInvalid={!!errors.type}
                                     >
-                                        <option value={"0"}>No Type</option>
+                                        <option value={"0"}>{t("No Type")}</option>
                                         {event_ticket_type &&
                                             event_ticket_type.map((type: any) => (
                                                 <option key={type.id || type} value={type.id || type}>
@@ -336,7 +338,7 @@ export default function CreateEditModal({
                                     className="mb-3"
                                     onClick={() => showModal()}
                                 >
-                                    Manage Type
+                                    {t("Manage Type")}
                                 </Button>
                             </Col>
                         </Row>
@@ -346,7 +348,7 @@ export default function CreateEditModal({
                                 <Row>
                                     <Col md={6}>
                                         <FormGroup className="mb-3">
-                                            <Form.Label>Increment Type</Form.Label>
+                                            <Form.Label>{t("Increment Type")}</Form.Label>
                                             <Form.Select
                                                 value={data.increment_type}
                                                 onChange={(e) =>
@@ -354,8 +356,8 @@ export default function CreateEditModal({
                                                 }
                                                 isInvalid={!!errors.increment_type}
                                             >
-                                                <option value="Fixed">Fixed</option>
-                                                <option value="Percentage">Percentage</option>
+                                                <option value="Fixed">{t("Fixed")}</option>
+                                                <option value="Percentage">{t("Percentage")}</option>
                                             </Form.Select>
                                             {errors.increment_type && (
                                                 <Form.Control.Feedback type="invalid">
@@ -366,7 +368,7 @@ export default function CreateEditModal({
                                     </Col>
                                     <Col md={6}>
                                         <FormGroup className="mb-3">
-                                            <Form.Label>Increment Rate</Form.Label>
+                                            <Form.Label>{t("Increment Rate")}</Form.Label>
                                             <Form.Control
                                                 id="increment_rate"
                                                 type="number"
@@ -390,7 +392,7 @@ export default function CreateEditModal({
                                 <Row>
                                     <Col md={6}>
                                         <FormGroup className="mb-3">
-                                            <Form.Label>Start Date</Form.Label>
+                                            <Form.Label>{t("Start Date")}</Form.Label>
                                             <Flatpickr
                                                 id="start_increment"
                                                 options={{
@@ -419,7 +421,7 @@ export default function CreateEditModal({
                                     </Col>
                                     <Col md={6}>
                                         <FormGroup className="mb-3">
-                                            <Form.Label>End Date</Form.Label>
+                                            <Form.Label>{t("End Date")}</Form.Label>
                                             <Flatpickr
                                                 id="end_increment"
                                                 options={{
@@ -455,7 +457,7 @@ export default function CreateEditModal({
                             <Col md={6}>
                                 <FormGroup className="mb-3">
                                     <Form.Label>
-                                        Total Quantity (leave empty for unlimited)
+                                        {t("Total Quantity (leave empty for unlimited)")}
                                     </Form.Label>
                                     <Form.Control
                                         type="number"
@@ -474,7 +476,7 @@ export default function CreateEditModal({
                             </Col>
                             <Col md={6}>
                                 <FormGroup className="mb-3">
-                                    <Form.Label>Sold Quantity</Form.Label>
+                                    <Form.Label>{t("Sold Quantity")}</Form.Label>
                                     <Form.Control
                                         type="number"
                                         step={1}
@@ -568,7 +570,7 @@ export default function CreateEditModal({
                         <Row className="mt-4">
                             <Col md={12}>
                                 <FormGroup className="mb-3">
-                                    <Form.Label>Extra Service Name</Form.Label>
+                                    <Form.Label>{t("Extra Service Name")}</Form.Label>
                                     <Form.Control
                                         type="text"
                                         value={data.extra_service_name}
@@ -591,15 +593,15 @@ export default function CreateEditModal({
                         <Row className="mt-2">
                             <Col md={12}>
                                 <FormGroup className="mb-2">
-                                    <Form.Label className="mb-2">Extra Services</Form.Label>
+                                    <Form.Label className="mb-2">{t("Extra Services")}</Form.Label>
 
                                     {/* Header (desktop only) */}
                                     <div className="d-none d-md-flex fw-semibold mb-2">
                                         <div className="me-2" style={{ width: "55%" }}>
-                                            Name
+                                            {t("Name")}
                                         </div>
                                         <div className="me-2" style={{ width: "25%" }}>
-                                            Quantity
+                                            {t("Quantity")}
                                         </div>
                                         <div style={{ width: "20%" }}>&nbsp;</div>
                                     </div>
@@ -651,14 +653,14 @@ export default function CreateEditModal({
                                                     onClick={() => removeExtraServiceRow(idx)}
                                                     disabled={extraServices.length === 1}
                                                 >
-                                                    Remove
+                                                    {t("Remove")}
                                                 </Button>
                                             </div>
                                         </div>
                                     ))}
 
                                     <Button variant="outline-primary" onClick={addExtraServiceRow}>
-                                        + Add more
+                                        + {t("Add more")}
                                     </Button>
 
                                     {errors.extra_services && (
@@ -685,10 +687,10 @@ export default function CreateEditModal({
                                 <table className="table table-sm table-bordered">
                                     <thead className="table-primary ">
                                         <tr>
-                                            <th className="d-flex justify-content-center">Select</th>
-                                            <th>Fee Name</th>
-                                            <th>Value</th>
-                                            <th>Type</th>
+                                            <th className="d-flex justify-content-center">{t("Select")}</th>
+                                            <th>{t("Fee Name")}</th>
+                                            <th>{t("Value")}</th>
+                                            <th>{t("Type")}</th>
                                         </tr>
                                     </thead>
                                     <tbody
@@ -756,7 +758,7 @@ export default function CreateEditModal({
                                             htmlFor="discount_type"
                                             className="form-label text-start w-100"
                                         >
-                                            Discount Type
+                                            {t("Discount Type")}
                                         </Form.Label>
                                         <Form.Select
                                             id="discount_type"
@@ -774,9 +776,9 @@ export default function CreateEditModal({
                                             }}
                                             isInvalid={!!errors.bulk_purchase_discount_type}
                                         >
-                                            <option value="">Select Discount Type</option>
-                                            <option value="fixed">Fixed</option>
-                                            <option value="percentage">Percentage</option>
+                                            <option value="">{t("Select Discount Type")}</option>
+                                            <option value="fixed">{t("Fixed")}</option>
+                                            <option value="percentage">{t("Percentage")}</option>
                                         </Form.Select>
                                         {errors.bulk_purchase_discount_type && (
                                             <Form.Control.Feedback type="invalid">
@@ -817,7 +819,7 @@ export default function CreateEditModal({
                                             htmlFor="bulk_qty"
                                             className="form-label text-start w-100"
                                         >
-                                            Quantity
+                                            {t("Quantity")}
                                         </Form.Label>
                                         <Form.Control
                                             id="bulk_qty"
@@ -843,7 +845,7 @@ export default function CreateEditModal({
 
                 <div className="modal-footer">
                     <button type="button" className="btn btn-light" onClick={hide}>
-                        Close
+                        {t("Close")}
                     </button>
                     <button
                         type="button"
@@ -860,10 +862,10 @@ export default function CreateEditModal({
                                     role="status"
                                     aria-hidden="true"
                                 />
-                                {isEdit ? "Updating" : "Creating"}
+                                {isEdit ? t("Updating") : t("Creating")}
                             </span>
                         ) : (
-                            <span>{isEdit ? "Update" : "Create"}</span>
+                            <span>{isEdit ? t("Update") : t("Create")}</span>
                         )}
                     </button>
                 </div>

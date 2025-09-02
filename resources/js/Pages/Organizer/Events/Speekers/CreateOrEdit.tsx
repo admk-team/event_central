@@ -7,6 +7,7 @@ import { Button, Col, Container, Row, Form, Card } from 'react-bootstrap';
 import languageData from "../../../../common/language-list.json";
 import countryData from "../../../../common/countries.json";
 import ImageCroper from "../../../../Components/ImageCroper/Index";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 function CreateOrEdit({ speaker, events }: any) {
     // Determine if the form is in edit mode
@@ -64,17 +65,18 @@ function CreateOrEdit({ speaker, events }: any) {
     const updateImagePreview = (file: any) => {
         setData('avatar', file);
     };
+      const { t } = useLaravelReactI18n();
 
     return (
         <React.Fragment>
-            <Head title={isEdit ? 'Edit Speaker' : 'Create Speaker'} />
+            <Head title={isEdit ? t('Edit Speaker') : t('Create Speaker')} />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title={isEdit ? 'Edit Speaker' : 'Create Speaker'} pageTitle="Dashboard" />
+                    <BreadCrumb title={isEdit ? t('Edit Speaker') : t('Create Speaker')} pageTitle="Dashboard" />
                     <Row>
                         <Card className="mt-4">
                             <div className="card-header d-flex justify-content-between align-items-center">
-                                <div className="card-title">{isEdit ? 'Edit Speaker' : 'Create Speaker'}</div>
+                                <div className="card-title">{isEdit ? t('Edit Speaker') : t('Create Speaker')}</div>
                             </div>
                             <Card.Body>
                                 <div className="card-body">
@@ -83,7 +85,7 @@ function CreateOrEdit({ speaker, events }: any) {
 
                                             <Col xxl={6} md={6}>
                                                 <div className="">
-                                                    <Form.Label htmlFor="name" className="form-label">Name</Form.Label>
+                                                    <Form.Label htmlFor="name" className="form-label">{t("Name")}</Form.Label>
                                                     <Form.Control
                                                         type="text"
                                                         className="form-control"
@@ -99,7 +101,7 @@ function CreateOrEdit({ speaker, events }: any) {
 
                                             <Col xxl={6} md={6}>
                                                 <div className="">
-                                                    <Form.Label htmlFor="avatar" className="form-label">Avatar </Form.Label>
+                                                    <Form.Label htmlFor="avatar" className="form-label">{t("Avatar")} </Form.Label>
                                                     <Form.Control
                                                         type="file"
                                                         className="form-control"
@@ -116,7 +118,7 @@ function CreateOrEdit({ speaker, events }: any) {
 
                                             <Col xxl={6} md={6}>
                                                 <div className="">
-                                                    <Form.Label htmlFor="company" className="form-label">Company</Form.Label>
+                                                    <Form.Label htmlFor="company" className="form-label">{t("Company")}</Form.Label>
                                                     <Form.Control
                                                         type="text"
                                                         className="form-control"
@@ -132,7 +134,7 @@ function CreateOrEdit({ speaker, events }: any) {
 
                                             <Col xxl={6} md={6}>
                                                 <div className="">
-                                                    <Form.Label htmlFor="position" className="form-label">Position</Form.Label>
+                                                    <Form.Label htmlFor="position" className="form-label">{t("Position")}</Form.Label>
                                                     <Form.Control
                                                         type="text"
                                                         className="form-control"
@@ -148,7 +150,7 @@ function CreateOrEdit({ speaker, events }: any) {
 
                                             <Col xxl={12} md={12}>
                                                 <div className="">
-                                                    <Form.Label htmlFor="bio" className="form-label">Bio</Form.Label>
+                                                    <Form.Label htmlFor="bio" className="form-label">{t("Bio")}</Form.Label>
                                                     <Form.Control
                                                         as="textarea"
                                                         className="form-control"
@@ -164,7 +166,7 @@ function CreateOrEdit({ speaker, events }: any) {
 
                                             <Col xxl={6} md={6}>
                                                 <div className="">
-                                                    <Form.Label htmlFor="email" className="form-label">Email</Form.Label>
+                                                    <Form.Label htmlFor="email" className="form-label">{t("Email")}</Form.Label>
                                                     <Form.Control
                                                         type="email"
                                                         className="form-control"
@@ -180,7 +182,7 @@ function CreateOrEdit({ speaker, events }: any) {
 
                                             <Col xxl={6} md={6}>
                                                 <div className="">
-                                                    <Form.Label htmlFor="phone" className="form-label">Phone</Form.Label>
+                                                    <Form.Label htmlFor="phone" className="form-label">{t("Phone")}</Form.Label>
                                                     <Form.Control
                                                         type="text"
                                                         className="form-control"
@@ -196,7 +198,7 @@ function CreateOrEdit({ speaker, events }: any) {
 
                                             <Col xxl={6} md={6}>
                                                 <div className="">
-                                                    <Form.Label htmlFor="web" className="form-label">Website</Form.Label>
+                                                    <Form.Label htmlFor="web" className="form-label">{t("Website")}</Form.Label>
                                                     <Form.Control
                                                         type="text"
                                                         className="form-control"
@@ -212,7 +214,7 @@ function CreateOrEdit({ speaker, events }: any) {
 
                                             <Col xxl={6} md={6}>
                                                 <div className="">
-                                                    <Form.Label htmlFor="linkedin" className="form-label">LinkedIn</Form.Label>
+                                                    <Form.Label htmlFor="linkedin" className="form-label">{t("LinkedIn")}</Form.Label>
                                                     <Form.Control
                                                         type="text"
                                                         className="form-control"
@@ -228,7 +230,7 @@ function CreateOrEdit({ speaker, events }: any) {
 
                                             <Col xxl={6} md={6}>
                                                 <div className="">
-                                                    <Form.Label htmlFor="facebook" className="form-label">Facebook</Form.Label>
+                                                    <Form.Label htmlFor="facebook" className="form-label">{t("Facebook")}</Form.Label>
                                                     <Form.Control
                                                         type="text"
                                                         className="form-control"
@@ -244,7 +246,7 @@ function CreateOrEdit({ speaker, events }: any) {
 
                                             <Col xxl={6} md={6}>
                                                 <div className="">
-                                                    <Form.Label htmlFor="twitter" className="form-label">X</Form.Label>
+                                                    <Form.Label htmlFor="twitter" className="form-label">{t("X")}</Form.Label>
                                                     <Form.Control
                                                         type="text"
                                                         className="form-control"
@@ -260,7 +262,7 @@ function CreateOrEdit({ speaker, events }: any) {
 
                                             <Col xxl={6} md={6}>
                                                 <div className="">
-                                                    <Form.Label htmlFor="instagram" className="form-label">Instagram</Form.Label>
+                                                    <Form.Label htmlFor="instagram" className="form-label">{t("Instagram")}</Form.Label>
                                                     <Form.Control
                                                         type="text"
                                                         className="form-control"
@@ -276,7 +278,7 @@ function CreateOrEdit({ speaker, events }: any) {
 
                                             <Col xxl={6} md={6}>
                                                 <div className="">
-                                                    <Form.Label htmlFor="country" className="form-label">Country</Form.Label>
+                                                    <Form.Label htmlFor="country" className="form-label">{t("Country")}</Form.Label>
                                                     <Select
                                                         id="country"
                                                         options={countryOptions}
@@ -292,7 +294,7 @@ function CreateOrEdit({ speaker, events }: any) {
 
                                             <Col xxl={6} md={6}>
                                                 <div className="">
-                                                    <Form.Label htmlFor="language" className="form-label">Language</Form.Label>
+                                                    <Form.Label htmlFor="language" className="form-label">{t("Language")}</Form.Label>
                                                     <Select
                                                         id="language"
                                                         options={languageOptions}
@@ -310,7 +312,7 @@ function CreateOrEdit({ speaker, events }: any) {
 
                                         <div className="mt-4 text-center ">
                                             <Button type="submit" className="btn btn-success px-3" disabled={processing}>
-                                                {isEdit ? 'Update' : 'Create'}
+                                                {isEdit ? t('Update') : t('Create')}
                                             </Button>
                                         </div>
 
