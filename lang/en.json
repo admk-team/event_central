@@ -1081,7 +1081,6 @@
     "Mobile": "Mobile",
     "Tablet": "Tablet",
     "k_users": "k Users",
-    "Toggle Columns":"Toggle Columns",
     "Stream Key": "Stream Key",
     "Stream URL": "Stream URL",
     "Playback URL": "Playback URL",
@@ -1094,11 +1093,16 @@
     "Process Free Upgrade": "Process Free Upgrade",
     "Edit Profile": "Edit Profile",
     "Welcome": "Welcome",
-    "Logout": "Logout",
     "Logo": "Logo",
     "Category": "Category",
     "R.Frequency": "R.Frequency",
     "Add New Event": "Add New Event",
     "Event Images": "Event Images",
-    "See all events": "See all events"
+    "See all events": "See all events",
+    "Toggle Columns": "Toggle Columns",
+    "Header Avatar": "Header Avatar",
+    "Attendee Options": "Attendee Options",
+    "Logout": "Logout",
+    "Search here...": "Search here...",
+    "Type your message...": "Type your message..."
 }
