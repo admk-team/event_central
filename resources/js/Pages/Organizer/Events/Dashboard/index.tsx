@@ -20,6 +20,7 @@ import { router } from "@inertiajs/react";
 import { useEchoPublic } from "@laravel/echo-react";
 import toast, { Toaster } from 'react-hot-toast';
 import { useLaravelReactI18n } from "laravel-react-i18n";
+import { t } from "i18next";
 const DashboardAnalytics = ({
     totalAttendee,
     totalSession,
@@ -57,7 +58,7 @@ const DashboardAnalytics = ({
             <Head title="Analytics " />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Analytics" pageTitle="Dashboards" />
+                    <BreadCrumb title={t("Analytics")} pageTitle={t("Dashboards")}/>
                     <Row>
                         <Col xxl={12}>
                             {/* <UpgradeAccountNotise /> */}
