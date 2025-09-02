@@ -1,8 +1,10 @@
 import { useForm, usePage } from '@inertiajs/react';
 import { Form, FormGroup, Modal, Spinner } from "react-bootstrap";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 export default function CreateEditModal({ show, hide, onHide, platform }: { show: boolean, hide: () => void, onHide: () => void, platform: any|null }) {
     const isEdit = platform != null ? true : false;
+         const { t } = useLaravelReactI18n();
 
 
     const { data, setData, post, put, processing, errors, reset } = useForm({
@@ -36,14 +38,14 @@ export default function CreateEditModal({ show, hide, onHide, platform }: { show
         <Modal show={show} onHide={onHide} centered>
             <Modal.Header className="bg-light p-3" closeButton>
                 <h5 className="modal-title">
-                    {isEdit ? 'Edit' : 'Add New'}
+                    {isEdit ? t('Edit') : t('Add New')}
                 </h5>
             </Modal.Header>
 
             <Form onSubmit={submit} className="tablelist-form">
                 <Modal.Body>
                     <FormGroup className="mb-3">
-                        <Form.Label className="form-label">Name</Form.Label>
+                        <Form.Label className="form-label">{t("Name")}</Form.Label>
                         <Form.Control
                             type="text"
                             className="form-control"
@@ -64,7 +66,7 @@ export default function CreateEditModal({ show, hide, onHide, platform }: { show
                             className="btn btn-light"
                             onClick={hide}
                         >
-                            Close
+                            {t("Close")}
                         </button>
 
                         <button type="submit" className="btn btn-success" disabled={processing}>
@@ -77,10 +79,10 @@ export default function CreateEditModal({ show, hide, onHide, platform }: { show
                                         role="status"
                                         aria-hidden="true"
                                     />
-                                    {isEdit ? 'Updating': 'Creating'}
+                                    {isEdit ? t('Updating'): t('Creating')}
                                 </span>
                             ) : (
-                                <span>{isEdit ? 'Update': 'Create'}</span>
+                                <span>{isEdit ? t('Update'): t('Create')}</span>
                             )}
                         </button>
                     </div>

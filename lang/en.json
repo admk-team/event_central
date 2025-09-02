@@ -974,5 +974,17 @@
     "Session Ratings": "Session Ratings",
     "Attendee Ratings": "Attendee Ratings",
     "No description provided": "No description provided",
-    "No ratings available for this session yet.": "No ratings available for this session yet."
+    "No ratings available for this session yet.": "No ratings available for this session yet.",
+    "Users - Admin": "Users - Admin",
+    "view_users": "View Users",
+    "edit_users": "Edit Users",
+    "delete_users": "Delete Users",
+    "create_users": "Create Users",
+    "Role": "Role",
+    "Permissions": "Permissions",
+    "Platforms - Admin": "Platforms - Admin",
+    "Add Organizer": "Add Organizer",
+    "Edit Organizer": "Edit Organizer",
+    "Edit Event Category": "Edit Event Category",
+    "Add Event Category": "Add Event Category"
 }
