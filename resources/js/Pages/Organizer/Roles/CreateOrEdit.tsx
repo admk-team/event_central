@@ -55,7 +55,7 @@ function CreateOrEdit({ role, allPermissions, roleSpecific }: { role: any | null
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb2
-                        title={isEdit ? 'Edit' : 'Create'}
+                        title={isEdit ? t('Edit') : t('Create')}
                         items={[
                             { title: t("Roles"), link: route('organizer.roles.index') }
                         ]}
@@ -94,7 +94,7 @@ function CreateOrEdit({ role, allPermissions, roleSpecific }: { role: any | null
                                             <strong>{t("Important Note")}:</strong>
                                             <ul style={{ paddingLeft: '1.2rem', marginTop: '0.5rem' }}>
                                                 <li>
-                                                    <span dangerouslySetInnerHTML={{ __html: t('Organizer') }} />
+                                                    <span dangerouslySetInnerHTML={{ __html: t('All roles under <strong>Organizer</strong> must have the <strong>View Event & View Event Dashboard</strong> permission.') }} />
 
                                                 </li>
                                                 <li>

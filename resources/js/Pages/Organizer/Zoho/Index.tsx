@@ -16,7 +16,7 @@ const ZohoSettings = ({ keys }: any) => {
                     <BreadCrumb2
                         title={t("Zoho CRM Settings")}
                         items={[
-                            { title: "Settings", link: route('organizer.zoho.index') }
+                            { title: t("Settings"), link: route('organizer.zoho.index') }
                         ]}
                     />
                     <Row className="justify-content-center">

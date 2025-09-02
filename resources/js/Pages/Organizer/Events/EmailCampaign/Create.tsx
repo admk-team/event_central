@@ -90,7 +90,7 @@ const Create = ({ baseTemplate, templateId }: { baseTemplate: any, templateId: a
 
                                 <div className="mt-4 text-center">
                                     <Button type="submit" variant="success" disabled={processing}>
-                                        {processing ? 'Sending...' : 'Send Message'}
+                                        {processing ? t('Sending...') : t('Send Message')}
                                     </Button>
                                 </div>
                             </Form>

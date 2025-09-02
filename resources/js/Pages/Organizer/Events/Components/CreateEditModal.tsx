@@ -100,7 +100,7 @@ function CreateEditModal({
         setEventImagePreviews(event?.images ?? []);
     }, [event]);
 
-    const btnTitle = event ? "UPDATE" : "CREATE";
+    const btnTitle = event ? t("update") : t("Create");
 
     const afterSumbitAction = {
         preserveScroll: true,

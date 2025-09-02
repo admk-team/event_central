@@ -2,6 +2,7 @@ import { useForm } from "@inertiajs/react";
 import { Form, FormGroup, Modal, Spinner } from "react-bootstrap";
 import Flatpickr from "react-flatpickr";
 import { DateTime } from "luxon";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 interface CreateEditModalProps {
     show: boolean;
@@ -65,12 +66,13 @@ export default function CreateEditModal({
                 zone: "America/New_York",
             }).toJSDate();
     };
+         const { t } = useLaravelReactI18n();
 
     return (
         <Modal show={show} onHide={onHide} centered>
             <Modal.Header className="bg-light p-3" closeButton>
                 <h5 className="modal-title">
-                    {isEdit ? "Edit Live Stream" : "Create Live Stream"}
+                    {isEdit ? t("Edit Live Stream") : t("Create Live Stream")}
                 </h5>
             </Modal.Header>
 
@@ -78,7 +80,7 @@ export default function CreateEditModal({
                 <Modal.Body>
                     {/* Title */}
                     <FormGroup className="mb-3">
-                        <Form.Label>Title</Form.Label>
+                        <Form.Label>{t("Title")}</Form.Label>
                         <Form.Control
                             type="text"
                             value={data.title}
@@ -95,7 +97,7 @@ export default function CreateEditModal({
                     {/* Resolution - Only on Create */}
                     {!isEdit && (
                         <FormGroup className="mb-3">
-                            <Form.Label>Resolution</Form.Label>
+                            <Form.Label>{t("Resolution")}</Form.Label>
                             <Form.Select
                                 value={data.resolution}
                                 onChange={(e) => setData("resolution", e.target.value)}
@@ -124,7 +126,7 @@ export default function CreateEditModal({
 
                     {/* Start Time */}
                     <FormGroup className="mb-3">
-                        <Form.Label>Start Time</Form.Label>
+                        <Form.Label>{t("Start Time")}</Form.Label>
                         <Flatpickr
                             options={{
                                 altInput: true,
@@ -144,7 +146,7 @@ export default function CreateEditModal({
                             value={data.eventTickets}
                             onChange={(e) => setData("eventTickets", e.target.value)}
                         >
-                            <option value="">-- Select Ticket --</option>
+                            <option value="">-- {t("Select Ticket")} --</option>
                             {eventTickets?.length ? (
                                 eventTickets.map((ticket) => (
                                     <option key={ticket.id} value={ticket.id}>
@@ -154,7 +156,7 @@ export default function CreateEditModal({
                                 ))
                             ) : (
                                 <option value="" disabled>
-                                    No tickets available
+                                    {t("No tickets available")}
                                 </option>
                             )}
                         </Form.Select>
@@ -169,7 +171,7 @@ export default function CreateEditModal({
                             className="btn btn-light"
                             onClick={onHide}
                         >
-                            Close
+                            {t("Close")}
                         </button>
 
                         <button
@@ -186,10 +188,10 @@ export default function CreateEditModal({
                                         role="status"
                                         aria-hidden="true"
                                     />
-                                    {isEdit ? "Updating" : "Creating"}
+                                    {isEdit ? t("Updating") : t("Creating")}
                                 </span>
                             ) : (
-                                <span>{isEdit ? "Update" : "Create"}</span>
+                                <span>{isEdit ? t("Update") : t("Create")}</span>
                             )}
                         </button>
                     </div>
