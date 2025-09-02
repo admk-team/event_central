@@ -71,10 +71,10 @@ const Create = () => {
 
     return (
         <>
-            <Head title="Create Email Template" />
+            <Head title={t("Create Email Template")} />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Create Email Template" pageTitle="Dashboard" />
+                    <BreadCrumb title={t("Create Email Template")} pageTitle={t("Dashboard")} />
                     <Row>
                         <Card className="mt-4">
                             <Card.Header className="d-flex justify-content-between align-items-center">
@@ -85,7 +85,7 @@ const Create = () => {
                                     onClick={handleSubmit}
                                     disabled={isSubmitting || processing}
                                 >
-                                    {isSubmitting ? 'Saving...' : 'Create'}
+                                    {isSubmitting ? t('Saving...') : t('Create')}
                                 </Button>
                             </Card.Header>
                             <Card.Body>

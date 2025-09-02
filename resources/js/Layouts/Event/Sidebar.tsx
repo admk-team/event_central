@@ -15,6 +15,7 @@ import TwoColumnLayout from "../Event/TwoColumnLayout";
 import { Label, MenuSeparator } from "@headlessui/react";
 import { current } from "@reduxjs/toolkit";
 import moment from "moment";
+import { useLaravelReactI18n } from 'laravel-react-i18n'
 
 const Sidebar = ({ layoutType }: any) => {
     useEffect(() => {
@@ -63,6 +64,7 @@ const Sidebar = ({ layoutType }: any) => {
     const truncateAppName = (name: any) => {
         return name.length > 15 ? name.substring(0, 15) + "..." : name;
     };
+   const { t } = useLaravelReactI18n()
     return (
         <React.Fragment>
             <div className="app-menu navbar-menu">
@@ -127,7 +129,7 @@ const Sidebar = ({ layoutType }: any) => {
                                 router.visit(route("organizer.events.index"))
                             }
                         >
-                            See all events
+                            {t("See all events")}
                         </Dropdown.Item>
                     </Dropdown.Menu>
                 </Dropdown>

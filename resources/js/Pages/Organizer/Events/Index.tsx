@@ -11,6 +11,7 @@ import HasPermission from "../../../Components/HasPermission";
 import moment from "moment";
 import ShareEventButton from "../../../Components/ShareEventButton";
 import { Share2 } from "lucide-react";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 function Index({ events, recurring_types, event_category_types }: any) {
     const [showCreateEditModal, setShowCreateEditModal] = React.useState(false);
@@ -20,6 +21,7 @@ function Index({ events, recurring_types, event_category_types }: any) {
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] =
         useState(false);
     const [imageHash, setImageHash] = useState(Date.now());
+    const { t } = useLaravelReactI18n();
 
     // console.log(events);
 
@@ -76,14 +78,14 @@ function Index({ events, recurring_types, event_category_types }: any) {
     const columns: ColumnDef<(typeof events.data)[0]> = [
         {
             accessorKey: "id",
-            header: () => "ID",
+            header: () => t("ID"),
             cell: (event) => event.id,
             cellClass: "fw-medium",
             enableSorting: false,
         },
         {
             accessorKey: "logo",
-            header: () => "Logo",
+            header: () => t("Logo"),
             cell: (event) => (
                 <img
                     className="img-fluid rounded-circle avatar-sm"
@@ -96,13 +98,13 @@ function Index({ events, recurring_types, event_category_types }: any) {
         },
         {
             accessorKey: "category",
-            header: () => "Category",
+            header: () => t("Category"),
             cell: (event) => event.category?.name ?? "",
             enableSorting: false,
         },
         {
             accessorKey: "name",
-            header: () => "Name",
+            header: () => t("Name"),
             cell: (event) => event.name,
             enableSorting: false,
         },
@@ -126,23 +128,23 @@ function Index({ events, recurring_types, event_category_types }: any) {
         // },
         {
             accessorKey: "start_date",
-            header: () => "Start Date",
+            header: () => t("Start Date"),
             cell: (event) => moment(event?.dates[0].date).format("MMM DD, YYYY"),
             enableSorting: false,
         },
         {
             accessorKey: "is_recurring",
-            header: () => "Recurring",
+            header: () => t("Recurring"),
             cell: (event) => (
                 <div className="d-flex justify-content-center w-50">
                     {event.is_recurring && (
                         <span className="badge bg-success-subtle text-success fs-6">
-                            Yes
+                            {t("Yes")}
                         </span>
                     )}
                     {!event.is_recurring && (
                         <span className="badge bg-secondary-subtle text-secondary fs-6">
-                            No
+                            {t("No")}
                         </span>
                     )}
                 </div>
@@ -151,13 +153,13 @@ function Index({ events, recurring_types, event_category_types }: any) {
         },
         {
             accessorKey: "recurring_frequency",
-            header: () => "R.Frequency",
+            header: () => t("R.Frequency"),
             cell: (event) =>
                 event.recurring_type ? event.recurring_type.name : "",
             enableSorting: false,
         },
         {
-            header: () => "Action",
+            header: () => t("Action"),
             cell: (event) => (
                 <div className="hstack gap-3 fs-15 ">
                     <ShareEventButton event={event} size="sm" variant="link" className="p-0">
@@ -204,17 +206,17 @@ function Index({ events, recurring_types, event_category_types }: any) {
 
     return (
         <React.Fragment>
-            <Head title="Events" />
+            <Head title={t("Events")} />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb2 title="Events" />
+                    <BreadCrumb2 title={t("Events")} />
                     <Row>
                         <Col xs={12} id="eventsTableWrapper">
                             <HasPermission permission="view_events">
                                 <DataTable
                                     data={events}
                                     columns={columns}
-                                    title="Events"
+                                    title={t("Events")}
                                     actions={[
                                         // Delete multiple
                                         {
@@ -255,7 +257,7 @@ function Index({ events, recurring_types, event_category_types }: any) {
                                                         }
                                                     >
                                                         <i className="ri-add-fill"></i>{" "}
-                                                        Add New Event
+                                                        {t("Add New Event")}
                                                     </Button>
                                                 </HasPermission>
                                             ),

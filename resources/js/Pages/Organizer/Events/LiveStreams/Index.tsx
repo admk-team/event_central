@@ -17,6 +17,7 @@ import HasPermission from "../../../../Components/HasPermission";
 import CreateEditModal from "./Components/CreateEditModal";
 import CopyTextBox from "../../../../Components/CopyTextBox";
 import moment from "moment";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 function Index({ liveStreams, eventTickets }: any) {
     const [showCreateEditModal, setShowCreateEditModal] = useState(false);
@@ -25,6 +26,7 @@ function Index({ liveStreams, eventTickets }: any) {
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] =
         useState(false);
+         const { t } = useLaravelReactI18n();
 
     const deleteForm = useForm({ _method: "DELETE" });
     const deleteManyForm = useForm<{ _method: string; ids: number[] }>({
@@ -56,46 +58,46 @@ function Index({ liveStreams, eventTickets }: any) {
     const columns: ColumnDef<typeof liveStreams.data[0]> = [
         {
             accessorKey: "id",
-            header: () => "ID",
+            header: () => t("ID"),
             cell: (row) => row.id,
             cellClass: "fw-medium",
             enableSorting: true,
         },
         {
             accessorKey: "ticket",
-            header: () => "Ticket",
+            header: () => t("Ticket"),
             cell: (row) => row?.event_tickets?.name ?? "—",
             enableSorting: true,
         },
         {
             accessorKey: "title",
-            header: () => "Title",
+            header: () => t("Title"),
             cell: (row) => row.title,
             enableSorting: true,
         },
         {
             accessorKey: "stream_key",
-            header: () => "Stream Key",
+            header: () => t("Stream Key"),
             cell: (row) => <CopyTextBox text={row.stream_key} />,
         },
         {
             accessorKey: "resolution",
-            header: () => "Resolution",
+            header: () => t("Resolution"),
             cell: (row) => row.resolution,
         },
         {
             accessorKey: "stream_url",
-            header: () => "Stream URL",
+            header: () => t("Stream URL"),
             cell: (row) => <CopyTextBox text={row.stream_url} />,
         },
         {
             accessorKey: "playback_url",
-            header: () => "Playback URL",
+            header: () => t("Playback URL"),
             cell: (row) => <CopyTextBox text={row.playback_url} />,
         },
         {
             accessorKey: "start_time",
-            header: () => "Start Time",
+            header: () => t("Start Time"),
             cell: (row) =>
                 row.start_time
                     ? moment(row.start_time).format("DD MMM YYYY, HH:mm")
@@ -103,7 +105,7 @@ function Index({ liveStreams, eventTickets }: any) {
         },
         {
             accessorKey: "status",
-            header: () => "Status",
+            header: () => t("Status"),
             cell: (row) => {
                 const statusColors: Record<string, string> = {
                     created: "secondary",
@@ -118,7 +120,7 @@ function Index({ liveStreams, eventTickets }: any) {
             },
         },
         {
-            header: () => "Action",
+            header: () => t("Action"),
             cell: (row) => (
                 <div className="hstack gap-3 fs-15">
                     {row.status === "created" && (
@@ -183,7 +185,7 @@ function Index({ liveStreams, eventTickets }: any) {
                                                         setShowDeleteManyConfirmation(true)
                                                     }
                                                 >
-                                                    <i className="ri-delete-bin-5-line"></i> Delete (
+                                                    <i className="ri-delete-bin-5-line"></i> {t("Delete")} (
                                                     {dataTable.getSelectedRows().length})
                                                 </Button>
                                             </HasPermission>
@@ -198,7 +200,7 @@ function Index({ liveStreams, eventTickets }: any) {
                                                         setShowCreateEditModal(true)
                                                     }
                                                 >
-                                                    <i className="ri-add-fill"></i> Add New
+                                                    <i className="ri-add-fill"></i> {t("Add New")}
                                                 </Button>
                                             </HasPermission>
                                         ),

@@ -19,13 +19,13 @@ const Create = () => {
     // --- Shortcodes (matched to Edit page) ---
     const [selectedShortcodes, setSelectedShortcodes] = useState<string[]>([]);
     const shortcodes = [
-        { name: 'Attendee Name', code: "{{ $attendeename }}" },
-        { name: 'Ticket Name', code: "{{ $ticketname }}" },
-        { name: 'Ticket Type', code: "{{ $tickettype }}" },
-        { name: 'Attendee Position', code: "{{ $attendeeposition }}" },
-        { name: 'Event Location', code: "{{ $eventlocation }}" },
-        { name: 'Event Logo', code: "{{ $eventlogo }}" },
-        { name: 'Ticket QR Code', code: "{{ $ticketqrcode }}" },
+        { name: t('Attendee Name'), code: "{{ $attendeename }}" },
+        { name: t('Ticket Name'), code: "{{ $ticketname }}" },
+        { name: t('Ticket Type'), code: "{{ $tickettype }}" },
+        { name: t('Attendee Position'), code: "{{ $attendeeposition }}" },
+        { name: t('Event Location'), code: "{{ $eventlocation }}" },
+        { name: t('Event Logo'), code: "{{ $eventlogo }}" },
+        { name: t('Ticket QR Code'), code: "{{ $ticketqrcode }}" },
     ];
 
     const toggleShortcode = async (code: string) => {

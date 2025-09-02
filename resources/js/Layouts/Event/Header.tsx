@@ -199,7 +199,7 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
                                                 )
                                             }
                                         >
-                                            See all events
+                                            {t("See all events")}
                                         </Dropdown.Item>
                                     </Dropdown.Menu>
                                 </Dropdown>

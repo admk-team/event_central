@@ -30,7 +30,7 @@ function Index({ attendees, eventApp, customBadgeDesign }: { attendees: any; eve
 
     return (
         <React.Fragment>
-            <Head title="Badge Printing" />
+            <Head title={t("Badge Printing")} />
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb title={t('Badge Printing')} pageTitle={t('Dashboard')} />
@@ -56,7 +56,7 @@ function Index({ attendees, eventApp, customBadgeDesign }: { attendees: any; eve
                                     className="btn btn-secondary w-100 w-md-auto"
                                     onClick={() => setShowLogo((prev) => !prev)}
                                 >
-                                    {showLogo ? t('🙈 Hide Logo') : ('👁️ Show Logo')}
+                                    {showLogo ? '🙈'+t('Hide Logo') : '👁️ '+('Show Logo')}
                                 </button>
 
                                 <button
@@ -64,7 +64,7 @@ function Index({ attendees, eventApp, customBadgeDesign }: { attendees: any; eve
                                     className="btn btn-secondary w-100 w-md-auto"
                                     onClick={() => setShowGradient((prev) => !prev)}
                                 >
-                                    {showGradient ? t('🧼 White Background') : t('🌈 Gradient Background')}
+                                    {showGradient ? '🧼'+t('White Background') : '🌈'+t('Gradient Background')}
                                 </button>
 
                                 <button
@@ -72,7 +72,7 @@ function Index({ attendees, eventApp, customBadgeDesign }: { attendees: any; eve
                                     className="btn btn-info w-100 w-md-auto"
                                     onClick={() => setIsFlipped((prev) => !prev)}
                                 >
-                                    {isFlipped ? t('↩️ Unflip') : t('🔄 Flip')}
+                                    {isFlipped ? '↩️'+t('Unflip') : '🔄'+t('Flip')}
                                 </button>
                             </div>
                         </Col>

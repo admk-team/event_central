@@ -104,18 +104,18 @@ function Index({ emailcampaign }: any) {
 
     return (
         <React.Fragment>
-            <Head title='Users' />
+            <Head title={t('Users')} />
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb2
-                        title="Users"
+                        title={t("Users")}
                     />
                     <Row>
                         <Col xs={12}>
                             <DataTable
                                 data={emailcampaign}
                                 columns={columns}
-                                title="Users"
+                                title={t("Users")}
                                 actions={[
                                     // Delete multiple
                                     {

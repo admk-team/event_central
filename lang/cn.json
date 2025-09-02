@@ -473,7 +473,7 @@
   "Edit Role": "编辑角色",
   "Important Note": "重要说明",
   "Important Note Details": "重要说明详情",
-  "Organizer": "在 <strong>主办方</strong> 下的所有角色必须拥有 <strong>查看活动 & 查看活动仪表盘</strong> 权限。",
+  "All roles under <strong>Organizer</strong> must have the <strong>View Event & View Event Dashboard</strong> permission.": "在 <strong>主办方</strong> 下的所有角色必须拥有 <strong>查看活动 & 查看活动仪表盘</strong> 权限。",
   "CreateView": "每个 <strong>创建</strong> 权限必须配套相应的 <strong>查看</strong> 权限，因为用户创建后需要可见性。",
   "Update Role": "更新角色",
   "Profile | Velzon - React Admin & Dashboard Template": "个人资料 | Velzon - React 管理与仪表盘模板",
