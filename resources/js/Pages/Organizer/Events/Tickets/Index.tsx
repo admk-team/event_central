@@ -224,14 +224,14 @@ function Index({ tickets, sessions, addonsAll, fees, event_ticket_type }: any) {
             <Head title="Tickets" />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Tickets" pageTitle="Dashboard" />
+                    <BreadCrumb title={t("Tickets")} pageTitle={t("Dashboard")}/>
                     <Row>
                         <Col xs={12}>
                             <HasPermission permission="view_tickets">
                                 <DataTable
                                     data={tickets}
                                     columns={columns}
-                                    title="Tickets"
+                                    title={t("Tickets")}
                                     actions={[
                                         // Delete multiple
                                         {

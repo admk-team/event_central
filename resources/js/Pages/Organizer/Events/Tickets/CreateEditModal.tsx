@@ -493,7 +493,7 @@ export default function CreateEditModal({
                                 <FormGroup className="mb-3">
                                     <Form.Check
                                         type="checkbox"
-                                        label="Select All Sessions"
+                                        label={t("Select All Sessions")}
                                         id="select-all-sessions"
                                         onChange={handleCheckChangeSession}
                                     />
@@ -502,7 +502,7 @@ export default function CreateEditModal({
                             <Col md={9} lg={9}>
                                 <FormGroup className="mb-3">
                                     <Select
-                                        placeholder="Select Event Sessions"
+                                        placeholder={t("Select Event Sessions")}
                                         className={errors.sessions && "is-invalid"}
                                         value={selectMulti}
                                         isMulti={true}
@@ -530,7 +530,7 @@ export default function CreateEditModal({
                                 <FormGroup className="mb-3">
                                     <Form.Check
                                         type="checkbox"
-                                        label="Select All Add-ons"
+                                        label={t("Select All Add-ons")}
                                         id="select-all-addons"
                                         onChange={handleCheckChangeAddon}
                                     />
@@ -539,7 +539,7 @@ export default function CreateEditModal({
                             <Col md={9} lg={9}>
                                 <FormGroup className="mb-3">
                                     <Select
-                                        placeholder="Select Add-ons"
+                                        placeholder={t("Select Add-ons")}
                                         className={errors.addons && "is-invalid"}
                                         value={addons.filter((item: any) =>
                                             data.addons.includes(item.value)
@@ -577,7 +577,7 @@ export default function CreateEditModal({
                                         onChange={(e) =>
                                             setData("extra_service_name", e.target.value)
                                         }
-                                        placeholder="e.g. Hospitality Package"
+                                        placeholder={t("e.g. Hospitality Package")}
                                         isInvalid={!!errors.extra_service_name}
                                     />
                                     {errors.extra_service_name && (
@@ -629,7 +629,7 @@ export default function CreateEditModal({
                                             <Form.Control
                                                 type="text"
                                                 inputMode="numeric"
-                                                placeholder="Quantity"
+                                                placeholder={t("Quantity")}
                                                 value={row.quantity}
                                                 onChange={(e) =>
                                                     updateExtraServiceField(
@@ -677,7 +677,7 @@ export default function CreateEditModal({
                                 <FormGroup className="mb-3">
                                     <Form.Check
                                         type="checkbox"
-                                        label="Select All Ticket Fee(s)"
+                                        label={t("Select All Ticket Fee(s)")}
                                         id="select-all-fee"
                                         onChange={handleSelectAllFeesChecked}
                                     />
@@ -729,7 +729,7 @@ export default function CreateEditModal({
                                 <FormGroup className="mb-3">
                                     <Form.Check
                                         checked={data.show_on_attendee_side}
-                                        label="Show to Attendees for Purchase"
+                                        label={t("Show to Attendees for Purchase")}
                                         id="check-show-to-attendee"
                                         onChange={handleShowToAttendeeSwitchChange}
                                     />
@@ -742,7 +742,7 @@ export default function CreateEditModal({
                                 <FormGroup className="mb-3">
                                     <Form.Check
                                         checked={data.bulk_purchase_status}
-                                        label="Bulk Purchase Discount"
+                                        label={t("Bulk Purchase Discount")}
                                         id="bulk-purchase-=discount"
                                         onChange={handleBluckPurchaseStatus}
                                     />
@@ -762,7 +762,7 @@ export default function CreateEditModal({
                                         </Form.Label>
                                         <Form.Select
                                             id="discount_type"
-                                            aria-label="Select Discount Type"
+                                            aria-label={t("Select Discount Type")}
                                             className="form-control"
                                             value={data.bulk_purchase_discount_type}
                                             onChange={(e) => {
@@ -828,7 +828,7 @@ export default function CreateEditModal({
                                             onChange={(e) =>
                                                 setData("bulk_purchase_qty", e.target.value)
                                             }
-                                            placeholder="e.g. 5"
+                                            placeholder={t("e.g. 5")}
                                             isInvalid={!!errors.bulk_purchase_qty}
                                         />
                                         {errors.bulk_purchase_qty && (

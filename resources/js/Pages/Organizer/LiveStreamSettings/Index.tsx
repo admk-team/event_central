@@ -20,18 +20,16 @@ import toast from "react-hot-toast";
 import gumletLogo from "../../../../images/gumlet-logo.svg";
 import { useLaravelReactI18n } from "laravel-react-i18n";
 
-
 const Index = ({ settings }: any) => {
     const { data, setData, post, processing, errors } = useForm({
         _method: "PUT",
         gumlet_api_key: settings?.gumlet_api_key ?? "",
         gumlet_live_source_id: settings?.gumlet_live_source_id ?? "",
     });
-       const { t } = useLaravelReactI18n();
+    const { t } = useLaravelReactI18n();
 
     const submit: React.FormEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
-
         post(route("organizer.settings.live-stream.update"));
     };
 
@@ -39,10 +37,10 @@ const Index = ({ settings }: any) => {
         navigator.clipboard
             .writeText(link)
             .then(() => {
-                toast.success("Key Copied!");
+                toast.success(t("Key Copied!"));
             })
             .catch(() => {
-                toast.error("Failed to copy key");
+                toast.error(t("Failed to copy key"));
             });
     };
 
@@ -73,7 +71,7 @@ const Index = ({ settings }: any) => {
                                                 )}
                                             </CardTitle>
                                             <CardText>
-                                               {t("Live Stream Info")}
+                                                {t("Live Stream Info")}
                                             </CardText>
                                         </div>
                                     </CardHeader>
@@ -81,7 +79,7 @@ const Index = ({ settings }: any) => {
                                         <InputGroup className="mb-3">
                                             <Form.Control
                                                 type="text"
-                                                placeholder="Enter Gumlet API Key"
+                                                placeholder={t("Enter Gumlet API Key")}
                                                 className="form-control"
                                                 value={data.gumlet_api_key}
                                                 onChange={(e) =>
@@ -111,7 +109,7 @@ const Index = ({ settings }: any) => {
                                         <InputGroup className="mb-3">
                                             <Form.Control
                                                 type="text"
-                                                placeholder="Enter Gumlet live video source/collection id"
+                                                placeholder={t("Enter Gumlet live video source/collection id")}
                                                 className="form-control"
                                                 value={data.gumlet_live_source_id}
                                                 onChange={(e) =>

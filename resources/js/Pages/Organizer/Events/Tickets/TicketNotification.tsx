@@ -13,7 +13,8 @@ const TicketNotification = ({ emailList }: any) => {
         e.preventDefault();
         post(route('organizer.events.ticket.notification.list')); // Replace with your actual route
     };
-      const { t } = useLaravelReactI18n();
+
+    const { t } = useLaravelReactI18n();
 
     return (
         <Container fluid style={{ marginTop: '80px' }} >
@@ -31,7 +32,7 @@ const TicketNotification = ({ emailList }: any) => {
                                         <Form.Control
                                             as="textarea"
                                             id="notificationlist"
-                                            placeholder="Enter name"
+                                            placeholder={t("Enter name")}
                                             value={data.notificationlist}
                                             onChange={(e) => setData('notificationlist', e.target.value)}
                                         />

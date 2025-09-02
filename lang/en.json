@@ -1081,6 +1081,16 @@
     "Mobile": "Mobile",
     "Tablet": "Tablet",
     "k_users": "k Users",
-    "Toggle Columns":"Toggle Columns"
+    "Toggle Columns":"Toggle Columns",
+    "attendees":"attendees",
+    "Attendees by Country":"Attendees by Country",
+    "event speakers, speaker management, conference speakers, admin dashboard": "event speakers, speaker management, conference speakers, admin dashboard",
+    "Submitting": "Submitting",
+    "more": "more",
+    "Event Tickets | Velzon - React Admin & Dashboard Template": "Event Tickets | Velzon - React Admin & Dashboard Template",
+    "Enter Gumlet API Key": "Enter Gumlet API Key",
+    "Enter Gumlet live video source/collection id": "Enter Gumlet live video source/collection id",
+    "Key Copied!": "Key Copied!",
+    "Failed to copy key": "Failed to copy key"
 }
 

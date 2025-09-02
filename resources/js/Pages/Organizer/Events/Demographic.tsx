@@ -164,7 +164,7 @@ import jsVectorMap from 'jsvectormap';
 import 'jsvectormap/dist/jsvectormap.min.css';
 import 'jsvectormap/dist/maps/world-merc.js';
 import Layout from "../../../Layouts/Event";
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 // Import ISO countries and coordinates
 import countries from "world-countries"; // has coordinates for all countries
 
@@ -189,6 +189,7 @@ interface Props {
 }
 
 export default function Demographic({ attendees }: Props) {
+    const { t } = useLaravelReactI18n();
     const mapRef = React.useRef<HTMLDivElement>(null);
     const mapInstance = React.useRef<any>(null);
 
@@ -297,7 +298,7 @@ export default function Demographic({ attendees }: Props) {
 
                     {/* Attendee List */}
                     <div style={{ maxHeight: 400, overflowY: 'auto', width: 300 }}>
-                        <h3>Attendees by Country</h3>
+                        <h3>{t("Attendees by Country")}</h3>
                         <ul>
                             {Object.values(
                                 attendees.reduce((acc, attendee) => {
@@ -319,7 +320,7 @@ export default function Demographic({ attendees }: Props) {
                                 }, {} as Record<string, { country: string; count: number }>))
                                 .map(({ country, count }) => (
                                     <li key={country}>
-                                        <strong>{country}</strong>: {count} attendees
+                                        <strong>{country}</strong>: {count} {t("attendees")}
                                     </li>
                                 ))}
                         </ul>

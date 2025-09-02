@@ -107,7 +107,7 @@ function Index({ fees, getCurrency }: any) {
             },
         },
         {
-            header: () => 'Action',
+            header: () => t('Action'),
             cell: (fee) => (
                 <div className="hstack gap-3 fs-15">
                     <HasPermission permission="edit_ticket_fee">
@@ -127,14 +127,14 @@ function Index({ fees, getCurrency }: any) {
             <Head title='Ticket Fees' />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Ticket Fees" pageTitle="Ticket Fees" />
+                    <BreadCrumb title={t("Ticket Fees")} pageTitle={t("Ticket Fees")} />
                     <Row>
                         <Col xs={12}>
                             <HasPermission permission="view_ticket_fee">
                                 <DataTable
                                     data={fees}
                                     columns={columns}
-                                    title="Fees"
+                                    title={t("Fees")}
                                     actions={[
                                         // Delete multiple
                                         {

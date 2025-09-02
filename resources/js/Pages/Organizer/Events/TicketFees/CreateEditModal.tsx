@@ -27,9 +27,9 @@ export default function CreateEditModal({ show, hide, onHide, fee }: { show: boo
 
     useEffect(() => {
         if (!fee || fee.fee_type === 'flat') {
-            setAmountLabel('Flat Value');
+            setAmountLabel(t("Flat Value"));
         } else {
-            setAmountLabel('Percentage Value');
+            setAmountLabel(t("Percentage Value"));
         }
     }, [fee]);
 
@@ -87,9 +87,9 @@ export default function CreateEditModal({ show, hide, onHide, fee }: { show: boo
 
                                         setData('fee_type', e.target.value);
                                         if (e.target.value === 'percentage') {
-                                            setAmountLabel('Percentage Value');
+                                            setAmountLabel(t("Percentage Value"));
                                         } else {
-                                            setAmountLabel('Flat Value');
+                                            setAmountLabel(t("Flat Value"));
                                         }
                                     }}
                                     isInvalid={!!errors.fee_type}>

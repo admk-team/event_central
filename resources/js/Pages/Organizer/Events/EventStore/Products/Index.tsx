@@ -7,6 +7,7 @@ import DataTable, { ColumnDef } from "../../../../../Components/DataTable";
 import CreateEditModal from "./Components/CreateEditModal";
 import DeleteModal from "../../../../../Components/Common/DeleteModal";
 import HasPermission from "../../../../../Components/HasPermission";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 interface Product {
     id: number;
@@ -28,6 +29,8 @@ interface Props {
 }
 
 const Index: React.FC<Props> = ({ products }) => {
+    const { t } = useLaravelReactI18n();
+
     const [showAddUpdateModal, setShowAddUpdateModal] = useState(false);
     const [product, setProduct] = useState<Product | null>(null);
     const [deleteProduct, setDeleteProduct] = useState<Product | null>(null);
@@ -54,7 +57,7 @@ const Index: React.FC<Props> = ({ products }) => {
 
     const columns: ColumnDef<Product> = [
         {
-            header: () => "Image",
+            header: () => t("Image"),
             headerStyle: { width: "90px" },
             cell: (product) => (
                 <img
@@ -67,32 +70,32 @@ const Index: React.FC<Props> = ({ products }) => {
             ),
         },
         {
-            header: () => "Name",
+            header: () => t("Name"),
             cell: (product) => product.name,
         },
         {
-            header: () => "Description",
+            header: () => t("Description"),
             cell: (product) => product.description,
             cellStyle: { width: "300px", textWrap: "wrap" },
         },
         {
-            header: () => "Price",
+            header: () => t("Price"),
             cell: (product) => `$${product.price}`,
         },
         {
-            header: () => "Old Price",
+            header: () => t("Old Price"),
             cell: (product) => `$${product.old_price}`,
         },
         {
-            header: () => "Stock",
+            header: () => t("Stock"),
             cell: (product) => product.stock,
         },
         {
-            header: () => "Sold",
+            header: () => t("Sold"),
             cell: (product) => product.sold_qty,
         },
         {
-            header: () => "Action",
+            header: () => t("Action"),
             cell: (product) => (
                 <div className="hstack gap-3 fs-15">
                     <HasPermission permission="edit_product">
@@ -100,7 +103,7 @@ const Index: React.FC<Props> = ({ products }) => {
                             className="link-primary cursor-pointer"
                             onClick={() => editAction(product)}
                         >
-                            <i className="ri-edit-fill"></i>
+                            <i className="ri-edit-fill"></i> {t("Edit")}
                         </span>
                     </HasPermission>
 
@@ -109,7 +112,7 @@ const Index: React.FC<Props> = ({ products }) => {
                             className="link-danger cursor-pointer"
                             onClick={() => deleteAction(product)}
                         >
-                            <i className="ri-delete-bin-5-line"></i>
+                            <i className="ri-delete-bin-5-line"></i> {t("Delete")}
                         </span>
                     </HasPermission>
                 </div>
@@ -119,17 +122,17 @@ const Index: React.FC<Props> = ({ products }) => {
 
     return (
         <React.Fragment>
-            <Head title="Products" />
+            <Head title={t("Products")} />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Event Products" pageTitle="Dashboard" />
+                    <BreadCrumb title={t("Event Products")} pageTitle={t("Dashboard")} />
                     <Row>
                         <Col xs={12}>
                             <HasPermission permission="view_product">
                                 <DataTable
                                     data={products}
                                     columns={columns}
-                                    title="Products"
+                                    title={t("Products")}
                                     actions={[
                                         {
                                             render: (dataTable) => (
@@ -139,7 +142,7 @@ const Index: React.FC<Props> = ({ products }) => {
                                                         disabled={dataTable.getSelectedRows().length === 0}
                                                     >
                                                         <i className="ri-delete-bin-5-line"></i>{" "}
-                                                        Delete ({dataTable.getSelectedRows().length})
+                                                        {t("Delete")} ({dataTable.getSelectedRows().length})
                                                     </Button>
                                                 </HasPermission>
                                             ),
@@ -149,7 +152,7 @@ const Index: React.FC<Props> = ({ products }) => {
                                             render: (
                                                 <HasPermission permission="create_product">
                                                     <Button onClick={() => editAction(null)}>
-                                                        <i className="ri-add-fill"></i> Add New
+                                                        <i className="ri-add-fill"></i> {t("Add New")}
                                                     </Button>
                                                 </HasPermission>
                                             ),
