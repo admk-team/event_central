@@ -151,7 +151,7 @@ export default function DataTable<T>({
 
                     <Dropdown>
                         <Dropdown.Toggle variant="success" id="dropdown-basic">
-                            Toggle Columns
+                            {t("Toggle Columns")}
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
                             {columns

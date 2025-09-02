@@ -1080,6 +1080,7 @@
     "Desktop": "Desktop",
     "Mobile": "Mobile",
     "Tablet": "Tablet",
-    "k_users": "k Users"
+    "k_users": "k Users",
+    "Toggle Columns":"Toggle Columns"
 }
 
