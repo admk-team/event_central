@@ -4,9 +4,11 @@ import { Head, useForm, Link } from '@inertiajs/react';
 import { Form, FormGroup, Modal, Spinner } from "react-bootstrap";
 import Layout from '../../../Layouts/Admin';
 import BreadCrumb2 from '../../../Components/Common/BreadCrumb2';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 function CreateOrEdit({ role, permissions, roleSpecific }: { role: any | null, permissions: any[], roleSpecific: any[] }) {
     const isEdit = role != null;
+      const { t } = useLaravelReactI18n();
 
     const { data, setData, post, processing, errors, reset } = useForm({
         _method: isEdit ? "PUT" : "POST",
@@ -46,16 +48,16 @@ function CreateOrEdit({ role, permissions, roleSpecific }: { role: any | null, p
             });
         }
     };
-    
+
     return (
         <React.Fragment>
-            <Head title={`${isEdit ? 'Edit Role' : 'Create Role'} - Admin`} />
+            <Head title={`${isEdit ? t('Edit Role') : t('Create Role')} - Admin`} />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb2 
-                        title={isEdit ? 'Edit' : 'Create'} 
+                    <BreadCrumb2
+                        title={isEdit ? t('Edit') : t('Create')}
                         items={[
-                            { title: "Roles", link: route('admin.roles.index') }
+                            { title: t("Roles"), link: route('admin.roles.index') }
                         ]}
                     />
                     <Row>
@@ -67,7 +69,7 @@ function CreateOrEdit({ role, permissions, roleSpecific }: { role: any | null, p
                                 <div className="card-body">
                                     <Form onSubmit={submit}>
                                         <FormGroup className="mb-3">
-                                            <Form.Label className="form-label">Name</Form.Label>
+                                            <Form.Label className="form-label">{t("Name")}</Form.Label>
                                             <Form.Control
                                                 type="text"
                                                 className="form-control"
@@ -108,7 +110,7 @@ function CreateOrEdit({ role, permissions, roleSpecific }: { role: any | null, p
                                         </Row>
 
                                         <Button type="submit" className="mt-3" disabled={processing}>
-                                            {isEdit ? "Update Role" : "Create Role"}
+                                            {isEdit ? t("Update Role") : t("Create Role")}
                                         </Button>
                                     </Form>
                                 </div>

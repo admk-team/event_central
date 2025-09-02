@@ -1041,6 +1041,18 @@
     "avg_visit_duration": "Avg. Visit Duration",
     "bounce_rate": "Bounce Rate",
     "min": "min",
-    "sec": "sec"
+    "sec": "sec",
+    "Users - Admin": "Users - Admin",
+    "view_users": "View Users",
+    "edit_users": "Edit Users",
+    "delete_users": "Delete Users",
+    "create_users": "Create Users",
+    "Role": "Role",
+    "Permissions": "Permissions",
+    "Platforms - Admin": "Platforms - Admin",
+    "Add Organizer": "Add Organizer",
+    "Edit Organizer": "Edit Organizer",
+    "Edit Event Category": "Edit Event Category",
+    "Add Event Category": "Add Event Category"
 }
 

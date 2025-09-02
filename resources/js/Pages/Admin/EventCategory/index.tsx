@@ -8,6 +8,7 @@ import DataTable, { ColumnDef } from '../../../Components/DataTable';
 import BreadCrumb2 from '../../../Components/Common/BreadCrumb2';
 import DeleteManyModal from '../../../Components/Common/DeleteManyModal';
 import HasPermission from '../../../Components/HasPermission';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 function Index({ eventcategory }: any) {
     const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
@@ -15,6 +16,7 @@ function Index({ eventcategory }: any) {
     const [deleteEventCategory, setDeleteEventCategory] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
+         const { t } = useLaravelReactI18n();
 
     const setShowCreateEditModal = (state: boolean) => {
         _setShowCreateEditModal(state);
@@ -60,21 +62,21 @@ function Index({ eventcategory }: any) {
     const columns: ColumnDef<typeof eventcategory.data[0]> = [
         {
             accessorKey: 'id',
-            header: () => 'ID',
+            header: () => t('ID'),
             cell: (eventcategory) => eventcategory.id,
             cellClass: "fw-medium",
             enableSorting: true,
         },
         {
             accessorKey: 'name',
-            header: () => 'Name',
+            header: () => t('Name'),
             cell: (eventcategory) => eventcategory.name,
             cellClass: "fw-medium",
             enableSorting: true,
         },
 
         {
-            header: () => 'Action',
+            header: () => t('Action'),
             cell: (eventcategory) => (
                 <div className="hstack gap-3 fs-15">
                     {/* <HasPermission permission="edit_locations"> */}
@@ -107,7 +109,7 @@ function Index({ eventcategory }: any) {
                                 actions={[
                                     // Delete multiple
                                     {
-                                        render: (dataTable) => <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>,
+                                        render: (dataTable) => <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> {t("Delete")} ({dataTable.getSelectedRows().length})</Button>,
                                         showOnRowSelection: true,
                                     },
 
@@ -115,7 +117,7 @@ function Index({ eventcategory }: any) {
                                     {
                                         render: (
                                             // <HasPermission permission="create_locations">
-                                                <Button onClick={() => setShowCreateEditModal(true)}><i className="ri-add-fill"></i> Add New</Button>
+                                                <Button onClick={() => setShowCreateEditModal(true)}><i className="ri-add-fill"></i> {t("Add New")}</Button>
                                             // </HasPermission>
                                         )
                                     },
