@@ -62,31 +62,31 @@ function Index({ users }: any) {
     const columns: ColumnDef<typeof users.data[0]> = [
         {
             accessorKey: 'id',
-            header: () => 'ID',
+            header: () => t('ID'),
             cell: (user) => user.id,
             cellClass: "fw-medium",
             enableSorting: true,
         },
         {
             accessorKey: 'name',
-            header: () => 'Name',
+            header: () => t('Name'),
             cell: (user) => user.name,
             enableSorting: true,
         },
         {
             accessorKey: 'email',
-            header: () => 'Email',
+            header: () => t('Email'),
             cell: (user) => user.email,
             enableSorting: true,
         },
         {
             accessorKey: 'role',
-            header: () => 'Role',
+            header: () => t('Role'),
             cell: (user) => <span className="badge bg-success-subtle text-success">{user.roles[0]?.name}</span>,
             enableSorting: true,
         },
         {
-            header: () => 'Action',
+            header: () => t('Action'),
             cell: (user) => (
                 <div className="hstack gap-3 fs-15">
                     <HasPermission permission="edit_users">
