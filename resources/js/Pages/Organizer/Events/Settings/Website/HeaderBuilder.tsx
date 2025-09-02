@@ -4,11 +4,13 @@ import "@measured/puck/puck.css";
 import { ArrowLeft, Save } from 'lucide-react';
 import { Link, router } from '@inertiajs/react';
 import useToastMessages from '../../../../../hooks/useToastMessages';
-import  { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 import { Spinner } from 'react-bootstrap';
 import { config } from '../../../../../PageBuilder/Config';
+import { useLaravelReactI18n } from 'laravel-react-i18n';
 
 export default function HeaderBuilder({ header }: any) {
+    const { t } = useLaravelReactI18n();
     const initialData = header.content ? JSON.parse(header.content) : {
         root: {
             props: {
@@ -23,8 +25,8 @@ export default function HeaderBuilder({ header }: any) {
         router.post(route('organizer.events.headers.builder.save', header.id), {
             header_title: headerData.root.props?.title,
             header_data: JSON.stringify(headerData),
-        }, { 
-            preserveScroll: true, 
+        }, {
+            preserveScroll: true,
             onBefore: () => setProcessing(true),
             onFinish: () => setProcessing(false),
         });
@@ -34,36 +36,38 @@ export default function HeaderBuilder({ header }: any) {
 
     return (
         <>
-            <Puck 
+            <Puck
                 config={config}
-                data={initialData} 
+                data={initialData}
                 onPublish={save}
                 overrides={{
-                    header: ({children}) => {
+                    header: ({ children }) => {
                         return (
-                            <div className="d-flex" style={{gridArea: 'header'}}>
-                                <div className="bg-white d-flex align-items-center gap-2 px-3" style={{borderBottom: '1px solid var(--puck-color-grey-09)'}}>
+                            <div className="d-flex" style={{ gridArea: 'header' }}>
+                                <div className="bg-white d-flex align-items-center gap-2 px-3" style={{ borderBottom: '1px solid var(--puck-color-grey-09)' }}>
                                     <Link href={route('organizer.events.settings.website.index')}>
-                                        <button className="_Button_10byl_1 _Button--primary_10byl_48 _Button--medium_10byl_29"><ArrowLeft size={18} /> Back</button>
+                                        <button className="_Button_10byl_1 _Button--primary_10byl_48 _Button--medium_10byl_29">
+                                            <ArrowLeft size={18} /> {t("Back")}
+                                        </button>
                                     </Link>
                                 </div>
-                                <div style={{flex: 1}}>
+                                <div style={{ flex: 1 }}>
                                     {children}
                                 </div>
                             </div>
                         );
                     },
-                    headerActions: ({children}) => {
+                    headerActions: ({ children }) => {
                         const { appState } = usePuck();
 
                         return (
                             <>
-                                <button 
+                                <button
                                     onClick={() => {
                                         save(appState.data);
                                     }}
                                     className="_Button_10byl_1 _Button--primary_10byl_48 _Button--medium_10byl_29 d-flex justify-content-center align-items-center"
-                                    style={{width: '100px'}}
+                                    style={{ width: '100px' }}
                                     disabled={processing}
                                 >
                                     {processing ? (
@@ -76,7 +80,7 @@ export default function HeaderBuilder({ header }: any) {
                                         />
                                     ) : (
                                         <span>
-                                            <Save size={18} /> Save
+                                            <Save size={18} /> {t("Save")}
                                         </span>
                                     )}
                                 </button>

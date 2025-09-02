@@ -6,9 +6,11 @@ import FieldTypesModal from './FieldTypesModal';
 import { FieldType, fieldTypes } from '../../../../../../common/data/formBuilderFieldTypes';
 import { usePage } from '@inertiajs/react';
 import FormField from './FormField';
+import { useTranslation } from 'react-i18next';
 
 export default function FormFields() {
     const form = usePage().props.form as any;
+    const { t } = useTranslation();
 
     const [showFieldsModal, setShowFieldsModal] = useState(false);
     const [selectedFieldType, setSelectedFieldType] = useState<FieldType | null>(null);
@@ -30,7 +32,7 @@ export default function FormFields() {
         <>
             <Card className="form-fields">
                 <CardHeader>
-                    <CardTitle className="mb-0">Fields</CardTitle>
+                    <CardTitle className="mb-0">{t('Fields')}</CardTitle>
                 </CardHeader>
                 <CardBody style={{ maxHeight: '400px', overflowY: 'auto' }}>
                     <ListGroup className="mb-1">
@@ -43,7 +45,7 @@ export default function FormFields() {
                         className="d-block w-100 d-flex align-items-center justify-content-center"
                         onClick={() => setShowFieldsModal(true)}
                     >
-                        <Plus size={18} />Add Field
+                        <Plus size={18} />{t('Add Field')}
                     </Button>
                 </CardFooter>
             </Card>
