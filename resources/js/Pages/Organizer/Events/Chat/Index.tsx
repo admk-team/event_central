@@ -309,7 +309,7 @@ const Chat = ({ member, event_data, loged_user }: any) => {
                                         id="search-user"
                                         type="text"
                                         className="form-control bg-light border-light"
-                                        placeholder="Search here..."
+                                        placeholder={t("Search here...")} 
                                     />
                                     <i className="ri-search-2-line search-icon"></i>
                                 </div>
@@ -585,7 +585,7 @@ const Chat = ({ member, event_data, loged_user }: any) => {
                                                             onChange={e => setcurMessage(e.target.value)}
                                                             className="form-control chat-input bg-light border-light"
                                                             id="chat-input"
-                                                            placeholder="Type your message..."
+                                                            placeholder={t("Type your message...")} 
                                                         />
                                                     </div>
                                                     <div className="col-auto">

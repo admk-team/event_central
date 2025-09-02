@@ -1081,6 +1081,10 @@
     "Mobile": "Mobile",
     "Tablet": "Tablet",
     "k_users": "k Users",
-    "Toggle Columns":"Toggle Columns"
+    "Toggle Columns": "Toggle Columns",
+    "Header Avatar": "Header Avatar",
+    "Attendee Options": "Attendee Options",
+    "Logout": "Logout",
+    "Search here...": "Search here...",
+    "Type your message...": "Type your message..."
 }
-

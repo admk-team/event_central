@@ -4,10 +4,13 @@ import { Link, usePage } from "@inertiajs/react";
 //import images
 import avatar1 from "../../../images/users/avatar-1.jpg";
 import UserProfileRightSidebar from "../../Pages/Attendee/Profile/RightSidebar";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 const AttendeeProfileDropdown = () => {
     const user: any = usePage().props.auth.user;
     const eventApp: any = usePage().props.eventApp;
+
+    const { t } = useLaravelReactI18n();
 
     const dropdownRef = useRef(null);
     //Dropdown Toggle
@@ -20,6 +23,7 @@ const AttendeeProfileDropdown = () => {
         const handleClickOutside = (event) => {
             if (
                 dropdownRef.current &&
+                // @ts-ignore
                 !dropdownRef.current.contains(event.target)
             ) {
                 setIsProfileDropdown(false);
@@ -29,7 +33,6 @@ const AttendeeProfileDropdown = () => {
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
-
 
     return (
         <React.Fragment>
@@ -51,7 +54,7 @@ const AttendeeProfileDropdown = () => {
                                 src={
                                     user.avatar_img ? user.avatar_img : avatar1
                                 }
-                                alt="Header Avatar"
+                                alt={t("Header Avatar")}
                             />
                             <span className="text-start ms-xl-2">
                                 <span
@@ -61,14 +64,14 @@ const AttendeeProfileDropdown = () => {
                                     {user?.first_name}
                                 </span>
                                 <span className="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text">
-                                    Attendee
+                                    {t("Attendee")}
                                 </span>
                             </span>
                         </span>
                     </Dropdown.Toggle>
                     <Dropdown.Menu className="dropdown-menu-end">
                         <h6 className="dropdown-header">
-                            Attendee Options {user?.name}!
+                            {t("Attendee Options")} {user?.name}!
                         </h6>
                         <UserProfileRightSidebar
                             dropdown={isProfileDropdown}
@@ -81,7 +84,7 @@ const AttendeeProfileDropdown = () => {
                         >
                             <i className="mdi mdi-logout text-muted fs-16 align-middle me-1"></i>{" "}
                             <span className="align-middle" data-key="t-logout">
-                                Logout
+                                {t("Logout")}
                             </span>
                         </Link>
                     </Dropdown.Menu>
