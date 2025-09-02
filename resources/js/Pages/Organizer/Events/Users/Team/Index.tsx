@@ -7,12 +7,12 @@ import Layout from '../../../../../Layouts/Event';
 import DeleteModal from '../../../../../Components/Common/DeleteModal';
 import DataTable, { ColumnDef } from '../../../../../Components/DataTable';
 import DeleteManyModal from '../../../../../Components/Common/DeleteManyModal';
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 function Index({ speakers }: any) {
     const [deletespeaker, setDeleteSpeaker] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
-
+    const { t } = useLaravelReactI18n();
     const { get } = useForm()
 
 
@@ -87,7 +87,7 @@ function Index({ speakers }: any) {
     return (
         <React.Fragment>
             <Head>
-                <title>Speakers Management | Organizer Dashboard</title>
+                <title>{t("Speakers Management | Organizer Dashboard")}</title>
                 <meta name="description" content="Manage event speakers, edit details, and delete records from the organizer's dashboard." />
                 <meta name="keywords" content="event speakers, speaker management, conference speakers, admin dashboard" />
                 <meta name="robots" content="index, follow" />
@@ -101,23 +101,23 @@ function Index({ speakers }: any) {
 
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Speakers" pageTitle="Dashboard" />
+                    <BreadCrumb title={t("Speakers")} pageTitle="Dashboard" />
                     <Row>
                         <Col xs={12}>
                             <DataTable
                                 data={speakers}
                                 columns={columns}
-                                title="Speakers"
+                                title={t("Speakers")}
                                 actions={[
                                     // Delete multiple
                                     {
-                                        render: (dataTable) => <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>,
+                                        render: (dataTable) => <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> {t("Delete")} ({dataTable.getSelectedRows().length})</Button>,
                                         showOnRowSelection: true,
                                     },
 
                                     // Add new
                                     {
-                                        render: <Link href={route('organizer.events.speaker.create')}><Button><i className="ri-add-fill"></i> Add New</Button></Link>
+                                        render: <Link href={route('organizer.events.speaker.create')}><Button><i className="ri-add-fill"></i> {t("Add New")}</Button></Link>
                                     },
 
                                 ]}

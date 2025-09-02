@@ -4,9 +4,11 @@ import { Head, useForm, Link } from '@inertiajs/react';
 import { Form, FormGroup, Modal, Spinner } from "react-bootstrap";
 import Layout from '../../../Layouts/Organizer';
 import BreadCrumb2 from '../../../Components/Common/BreadCrumb2';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 function CreateOrEdit({ role, allPermissions, roleSpecific }: { role: any | null, allPermissions: any[], roleSpecific: any[] }) {
     const isEdit = role != null;
+    const { t } = useLaravelReactI18n();
 
     const { data, setData, post, processing, errors, reset } = useForm({
         _method: isEdit ? "PUT" : "POST",
@@ -49,25 +51,25 @@ function CreateOrEdit({ role, allPermissions, roleSpecific }: { role: any | null
 
     return (
         <React.Fragment>
-            <Head title={`${isEdit ? 'Edit Role' : 'Create Role'}`} />
+            <Head title={`${isEdit ? t('Edit Role') : t('Create Role')}`} />
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb2
-                        title={isEdit ? 'Edit' : 'Create'}
+                        title={isEdit ? t('Edit') : t('Create')}
                         items={[
-                            { title: "Roles", link: route('organizer.roles.index') }
+                            { title: t("Roles"), link: route('organizer.roles.index') }
                         ]}
                     />
                     <Row>
                         <Col xs={12}>
                             <div className="card">
                                 <div className="card-header d-flex justify-content-between align-items-center">
-                                    <div className="card-title">{isEdit ? "Edit Role" : "Create Role"}</div>
+                                    <div className="card-title">{isEdit ? t("Edit Role") : t("Create Role")}</div>
                                 </div>
                                 <div className="card-body">
                                     <Form onSubmit={submit}>
                                         <FormGroup className="mb-3">
-                                            <Form.Label className="form-label">Name</Form.Label>
+                                            <Form.Label className="form-label">{t("Name")}</Form.Label>
                                             <Form.Control
                                                 type="text"
                                                 className="form-control"
@@ -89,14 +91,15 @@ function CreateOrEdit({ role, allPermissions, roleSpecific }: { role: any | null
                                             borderRadius: '8px',
                                             marginBottom: '1rem'
                                         }}>
-                                            <strong>Important Note:</strong>
+                                            <strong>{t("Important Note")}:</strong>
                                             <ul style={{ paddingLeft: '1.2rem', marginTop: '0.5rem' }}>
                                                 <li>
-                                                    All roles under <strong>Organizer</strong> must have the <strong>View Event & View Event Dashboard</strong> permission.
+                                                    <span dangerouslySetInnerHTML={{ __html: t('All roles under <strong>Organizer</strong> must have the <strong>View Event & View Event Dashboard</strong> permission.') }} />
+
                                                 </li>
                                                 <li>
-                                                    Every <strong>Create</strong> permission must be accompanied by the corresponding <strong>View</strong> permission,
-                                                    as users need visibility after creating items.
+                                                    <span dangerouslySetInnerHTML={{ __html: t('CreateView') }} />
+
                                                 </li>
                                             </ul>
                                         </div>
@@ -128,7 +131,7 @@ function CreateOrEdit({ role, allPermissions, roleSpecific }: { role: any | null
                                         </Row>
 
                                         <Button type="submit" className="mt-3" disabled={processing}>
-                                            {isEdit ? "Update Role" : "Create Role"}
+                                            {isEdit ? t("Update Role") : t("Create Role")}
                                         </Button>
                                     </Form>
                                 </div>

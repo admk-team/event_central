@@ -13,17 +13,20 @@ import AddtoGoogleCalendar from './Components/AddtoGoogleCalendar';
 import RegisterFeatures from './Components/RegisterFeatures';
 import ReminderDays from './Components/ReminderDays';
 import AfterEvent from './Components/AfterEvent';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 function Event() {
+    const { t } = useLaravelReactI18n();
+
     return (
         <React.Fragment>
-            <Head title='Event Settings' />
+            <Head title={t('Event Settings')} />
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb2
-                        title="Event"
+                        title={t("Event")}
                         items={[
-                            { title: "Settings", link: route('organizer.events.settings.event.index') }
+                            { title: t("Settings"), link: route('organizer.events.settings.event.index') }
                         ]}
                     />
                     <Row>

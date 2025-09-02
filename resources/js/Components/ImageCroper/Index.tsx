@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Cropper, { ReactCropperElement } from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import { Modal, Button, FormGroup, Form } from "react-bootstrap";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 type Props = {
     visible: boolean;
@@ -42,7 +43,7 @@ const Index: React.FC<Props> = ({ visible, imageSrc, onClose, onCrop }) => {
         }
     };
 
-    // convert base64 to file 
+    // convert base64 to file
     const dataURLtoFile = (dataUrl: string, filename: string): File => {
         const arr = dataUrl.split(",");
         const mimeMatch = arr[0].match(/:(.*?);/);
@@ -68,17 +69,18 @@ const Index: React.FC<Props> = ({ visible, imageSrc, onClose, onCrop }) => {
     };
 
     if (!visible) return null;
+      const { t } = useLaravelReactI18n();
 
     return (
         <Modal show={visible} onHide={onClose} size="lg" centered>
             <Modal.Header closeButton>
-                <Modal.Title>Crop Image</Modal.Title>
+                <Modal.Title>{t("Crop Image")}</Modal.Title>
             </Modal.Header>
 
             <Modal.Body>
                 <FormGroup className="mb-3">
                     <Form.Label htmlFor="aspectRatio" className="form-label text-start w-100">
-                        Aspect Ratio
+                        {t("Aspect Ratio")}
                     </Form.Label>
                     <Form.Select
                         id="aspectRatio"
@@ -92,7 +94,7 @@ const Index: React.FC<Props> = ({ visible, imageSrc, onClose, onCrop }) => {
                         <option value="free">Free</option>
                     </Form.Select>
                 </FormGroup>
-                
+
 
                 {imageUrl && (
                     <Cropper
@@ -114,10 +116,10 @@ const Index: React.FC<Props> = ({ visible, imageSrc, onClose, onCrop }) => {
 
             <Modal.Footer>
                 <Button variant="secondary" onClick={onClose}>
-                    Cancel
+                    {t("Cancel")}
                 </Button>
                 <Button variant="primary" onClick={handleCrop}>
-                    Crop & Save
+                    {t("Crop & Save")}
                 </Button>
             </Modal.Footer>
         </Modal>

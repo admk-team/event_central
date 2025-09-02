@@ -8,6 +8,7 @@ import DataTable, { ColumnDef } from '../../../Components/DataTable';
 import BreadCrumb2 from '../../../Components/Common/BreadCrumb2';
 import HasPermission from '../../../Components/HasPermission';
 import DeleteManyModal from '../../../Components/Common/DeleteManyModal';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 function Index({ organizers }: any) {
     const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
@@ -15,6 +16,7 @@ function Index({ organizers }: any) {
     const [deleteOrganizer, setDeleteOrganizer] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
+         const { t } = useLaravelReactI18n();
 
     const setShowCreateEditModal = (state: boolean) => {
         _setShowCreateEditModal(state);
@@ -60,25 +62,25 @@ function Index({ organizers }: any) {
     const columns: ColumnDef<typeof organizers.data[0]> = [
         {
             accessorKey: 'id',
-            header: () => 'ID',
+            header: () => t('ID'),
             cell: (organizer) => organizer.id,
             cellClass: "fw-medium",
             enableSorting: true,
         },
         {
             accessorKey: 'name',
-            header: () => 'Name',
+            header: () => t('Name'),
             cell: (organizer) => organizer.name,
             enableSorting: true,
         },
         {
             accessorKey: 'email',
-            header: () => 'Email',
+            header: () => t('Email'),
             cell: (organizer) => organizer.email,
             enableSorting: true,
         },
         {
-            header: () => 'Action',
+            header: () => t('Action'),
             cell: (organizer) => (
                 <div className="hstack gap-3 fs-15">
                     <HasPermission permission="edit_organizers">
@@ -100,20 +102,20 @@ function Index({ organizers }: any) {
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb2
-                        title="Organizers"
+                        title={t("Organizers")}
                     />
                     <Row>
                         <Col xs={12}>
                             <DataTable
                                 data={organizers}
                                 columns={columns}
-                                title="Organizers"
+                                title={t("Organizers")}
                                 actions={[
                                     // Delete multiple
                                     {
                                         render: (dataTable) => (
                                             <HasPermission permission="delete_organizers">
-                                                <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>
+                                                <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> {t("Delete")} ({dataTable.getSelectedRows().length})</Button>
                                             </HasPermission>
                                         ),
                                         showOnRowSelection: true,
@@ -123,7 +125,7 @@ function Index({ organizers }: any) {
                                     {
                                         render: (
                                             <HasPermission permission="create_organizers">
-                                                <Button onClick={() => setShowCreateEditModal(true)}>Add New</Button>
+                                                <Button onClick={() => setShowCreateEditModal(true)}>{t("Add New")}</Button>
                                             </HasPermission>
                                         )
                                     }

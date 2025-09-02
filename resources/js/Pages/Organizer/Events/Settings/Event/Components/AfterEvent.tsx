@@ -1,14 +1,16 @@
-import React from 'react'
-import { Card, ListGroup } from 'react-bootstrap'
-// import ChangeReminderDays from './Features/ChangeReminderDays'
-import ChangeAfterEvent from './Features/ChangeAfterEvent'
-import FollowUpToggle from './Features/FollowUpToggle'
+import React from 'react';
+import { Card, ListGroup } from 'react-bootstrap';
+import ChangeAfterEvent from './Features/ChangeAfterEvent';
+import FollowUpToggle from './Features/FollowUpToggle';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 export default function AfterEvent() {
+    const { t } = useLaravelReactI18n();
+
     return (
         <Card>
             <Card.Header>
-                <Card.Title className="mb-0">Follow Up</Card.Title>
+                <Card.Title className="mb-0">{t("Follow Up")}</Card.Title>
             </Card.Header>
             <Card.Body>
                 <ListGroup className="mb-1">
@@ -17,5 +19,5 @@ export default function AfterEvent() {
                 </ListGroup>
             </Card.Body>
         </Card>
-    )
+    );
 }

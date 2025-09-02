@@ -21,10 +21,10 @@ import defaultEventIcon from "../../../images/default-event-image.png";
 import defaultEventImage from "../../../images/defaultEventImage.png";
 
 import moment from "moment";
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 const AttendeeMore = ({ eventApp }: any) => {
     // console.log(eventApp);
-
+    const { t } = useLaravelReactI18n();
     const emailLink = useRef();
     const { data, setData, post, processing, errors, reset } = useForm({
         subject: "",
@@ -83,7 +83,7 @@ const AttendeeMore = ({ eventApp }: any) => {
                                         <CardHeader>
                                             <div className="d-flex justify-content-center align-items-center">
                                                 <span className="fs-3">
-                                                    Contact Organizer
+                                                    {t("Contact Organizer")}
                                                 </span>
                                             </div>
                                         </CardHeader>
@@ -112,7 +112,7 @@ const AttendeeMore = ({ eventApp }: any) => {
 
                                             <Row className="mt-4">
                                                 <Col md={4} lg={4}>
-                                                    <h5>Event Date</h5>
+                                                    <h5>{t("Event Date")}</h5>
                                                 </Col>
                                                 <Col md={8} lg={8}>
                                                     <h5>
@@ -149,7 +149,7 @@ const AttendeeMore = ({ eventApp }: any) => {
                                                 <Accordion defaultActiveKey="0">
                                                     <Accordion.Item eventKey="1">
                                                         <Accordion.Header>
-                                                            Contact Form
+                                                            {t("Contact Form")}
                                                         </Accordion.Header>
                                                         <Accordion.Body>
                                                             <Form
@@ -158,11 +158,13 @@ const AttendeeMore = ({ eventApp }: any) => {
                                                                 }
                                                             >
                                                                 <Form.Label htmlFor="inputPassword5">
-                                                                    Subject
+                                                                    {t("Subject")}
                                                                 </Form.Label>
                                                                 <Form.Control
                                                                     type="text"
-                                                                    value={data.subject}
+                                                                    value={
+                                                                        data.subject
+                                                                    }
                                                                     onChange={(
                                                                         e: any
                                                                     ) =>
@@ -185,11 +187,13 @@ const AttendeeMore = ({ eventApp }: any) => {
                                                                 </Form.Control.Feedback>
                                                                 <Form.Group className="mb-3">
                                                                     <Form.Label>
-                                                                        Content
+                                                                        {t("Content")}
                                                                     </Form.Label>
                                                                     <Form.Control
                                                                         as="textarea"
-                                                                        value={data.content} 
+                                                                        value={
+                                                                            data.content
+                                                                        }
                                                                         rows={3}
                                                                         onChange={(
                                                                             e: any
@@ -220,7 +224,7 @@ const AttendeeMore = ({ eventApp }: any) => {
                                                                             "var(--vz-success)",
                                                                     }}
                                                                 >
-                                                                    Submit
+                                                                    {t("Submit")}
                                                                 </Button>
                                                             </Form>
                                                         </Accordion.Body>

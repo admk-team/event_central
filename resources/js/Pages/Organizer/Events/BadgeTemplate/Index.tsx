@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { useForm, router } from '@inertiajs/react';
 import Layout from '../../../../Layouts/Event';
 import '../../../../css/emailtemplate.css';
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 const Index = ({ baseTemplate }: any) => {
     const { post, get } = useForm({});
     const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
-
+    const { t } = useLaravelReactI18n();
     const useTemplate = (id: number) => {
         post(route('organizer.events.use.badge.design', {
             baseTemplate: id
@@ -19,7 +19,7 @@ const Index = ({ baseTemplate }: any) => {
         if (win) {
             win.focus();
         } else {
-            alert('Popup blocked! Please allow popups for this site.');
+            alert(t('Popup blocked! Please allow popups for this site.'));
         }
     };
 
@@ -43,7 +43,7 @@ const Index = ({ baseTemplate }: any) => {
                         className="btn btn-primary mb-3"
                         onClick={() => router.visit(route('organizer.events.badge-template.create'))}
                     >
-                        Create New Template
+                        {t('Create New Template')}
                     </button>
                 </div>
             </div>
@@ -69,25 +69,25 @@ const Index = ({ baseTemplate }: any) => {
                                         className="btn btn-outline-light mb-2"
                                         onClick={() => useTemplate(template.id)}
                                     >
-                                        Use Template
+                                        {t('Use Template')}
                                     </button>
                                     <button
                                         className="btn btn-outline-light mb-2"
                                         onClick={() => previewTemplate(template.id)}
                                     >
-                                        Preview
+                                        {t('Preview')}
                                     </button>
                                     <button
                                         className="btn btn-outline-light mb-2"
                                         onClick={() => editTemplate(template.id)}
                                     >
-                                        Edit
+                                        {t('Edit')}
                                     </button>
                                     <button
                                         className="btn btn-danger"
                                         onClick={() => deleteTemplate(template.id)}
                                     >
-                                        Delete
+                                        {t('Delete')}
                                     </button>
                                 </div>
                             </div>

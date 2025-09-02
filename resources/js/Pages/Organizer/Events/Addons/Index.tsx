@@ -8,11 +8,11 @@ import DeleteModal from "../../../../Components/Common/DeleteModal";
 import DeleteManyModal from "../../../../Components/Common/DeleteManyModal";
 import HasPermission from "../../../../Components/HasPermission";
 import CreateEditModal from "./CreateEditModal";
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 function Index({ addons }: any) {
 
     // console.log('addons', addons);
-
+    const { t } = useLaravelReactI18n();
     const [showCreateEditModal, _setShowCreateEditModal] =
         React.useState(false);
     const [editAddon, setEditAddon] = React.useState<any>(null);
@@ -66,18 +66,18 @@ function Index({ addons }: any) {
     };
     const columns: ColumnDef<(typeof addons.data)[0]> = [
         {
-            header: () => "ID",
+            header: () => t('ID'),
             cell: (addon) => addon.id,
             cellClass: "fw-medium",
         },
         {
-            header: () => "Add-ons Name",
+            header: () => t('Add-ons Name'),
             cell: (addon) => (
                 <div style={{ minWidth: '200px' }} dangerouslySetInnerHTML={{ __html: addon.name }} />
             ),
         },
         {
-            header: () => "Price",
+            header: () => t('Price'),
             cell: (addon) => (
                 <span className="text-right d-block">
                     {addon.price > 0 ? addon.price : "Free"}
@@ -85,15 +85,15 @@ function Index({ addons }: any) {
             ),
         },
         {
-            header: () => "Total Qty",
+            header: () => t('Total Qty'),
             cell: (addon) => addon.qty_total,
         },
         {
-            header: () => "Total Sold",
+            header: () => t('Total Sold'),
             cell: (addon) => addon.qty_sold,
         },
         {
-            header: () => "Action",
+            header: () => t('Action'),
             cell: (addon) => (
                 <div className="hstack gap-3 fs-15">
                     <HasPermission permission="edit_add_on">
@@ -121,14 +121,14 @@ function Index({ addons }: any) {
             <Head title="Ticket Add-ons" />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Ticket Add-ons" pageTitle="Dashboard" />
+                    <BreadCrumb title={t('Ticket Add-ons')} pageTitle={t('Dashboard')} />
                     <Row>
                         <Col xs={12} id="TicketFeatureTable">
                             <HasPermission permission="view_add_on">
                                 <DataTable
                                     data={addons}
                                     columns={columns}
-                                    title="Add-ons"
+                                    title={t('Add-ons')}
                                     actions={[
                                         // Delete multiple
                                         {
@@ -147,7 +147,7 @@ function Index({ addons }: any) {
                                                         }
                                                     >
                                                         <i className="ri-delete-bin-5-line"></i>{" "}
-                                                        Delete (
+                                                        {t('Delete')} (
                                                         {
                                                             dataTable.getSelectedRows()
                                                                 .length
@@ -170,7 +170,7 @@ function Index({ addons }: any) {
                                                         }
                                                     >
                                                         <i className="ri-add-fill"></i>{" "}
-                                                        Add New
+                                                        {t('Add New')}
                                                     </Button>
                                                 </HasPermission>
                                             ),

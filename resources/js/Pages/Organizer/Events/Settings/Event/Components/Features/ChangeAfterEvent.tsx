@@ -1,8 +1,10 @@
 import { useForm, usePage } from "@inertiajs/react";
 import React from "react";
 import { ListGroupItem, Button, Form } from "react-bootstrap";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 export default function ChangeAfterEvent() {
+    const { t } = useLaravelReactI18n();
     const afterEventDays = usePage().props.after_days as number | null;
 
     const { data, setData, post, processing, errors } = useForm({
@@ -28,9 +30,9 @@ export default function ChangeAfterEvent() {
             <Form onSubmit={handleSubmit}>
                 <div className="d-flex justify-content-between align-items-center">
                     <div>
-                        <div>Send email  After event</div>
+                        <div>{t("Send email After event")}</div>
                         <small className="text-muted">
-                            Set Send Email after event finished.
+                            {t("Set Send Email after event finished.")}
                         </small>
                     </div>
 
@@ -38,7 +40,7 @@ export default function ChangeAfterEvent() {
                         <Form.Control
                             type="number"
                             min={1}
-                            placeholder="e.g. 3"
+                            placeholder={t("e.g. 3")}
                             value={data.days_after_event}
                             onChange={(e) => {
                                 const value = e.target.value;
@@ -50,7 +52,7 @@ export default function ChangeAfterEvent() {
                             isInvalid={!!errors.days_after_event}
                         />
                         <Button type="submit" disabled={processing}>
-                            Save
+                            {t("Save")}
                         </Button>
                     </div>
                 </div>

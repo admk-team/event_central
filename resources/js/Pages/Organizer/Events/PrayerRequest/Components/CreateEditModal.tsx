@@ -1,5 +1,6 @@
 import { useForm } from "@inertiajs/react";
 import { Form, FormGroup, Modal, Spinner } from "react-bootstrap";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 export default function CreateEditModal({
     show,
@@ -13,6 +14,7 @@ export default function CreateEditModal({
     prayer: any | null;
 }) {
     const isEdit = prayer != null;
+    const { t } = useLaravelReactI18n();
 
     const { data, setData, post, processing, errors } = useForm({
         _method: isEdit ? "PUT" : "POST",
@@ -31,13 +33,13 @@ export default function CreateEditModal({
     return (
         <Modal show={show} onHide={onHide} centered>
             <Modal.Header closeButton className="bg-light p-3">
-                <h5 className="modal-title">Edit Prayer Request</h5>
+                <h5 className="modal-title">{t("Edit Prayer Request")}</h5>
             </Modal.Header>
 
             <Form onSubmit={submit}>
                 <Modal.Body>
                     <FormGroup className="mb-3">
-                        <Form.Label>Request</Form.Label>
+                        <Form.Label>{t("Request")}</Form.Label>
                         <Form.Control
                             as="textarea"
                             rows={5}
@@ -52,15 +54,15 @@ export default function CreateEditModal({
                         )}
                     </FormGroup>
                     <FormGroup className="mt-3">
-                        <Form.Label>Status</Form.Label>
+                        <Form.Label>{t("Status")}</Form.Label>
                         <Form.Select
                             value={data.status}
                             onChange={(e) => setData("status", e.target.value)}
                             isInvalid={!!errors.status}
                         >
-                            <option value="pending">Pending</option>
-                            <option value="approved">Approved</option>
-                            <option value="rejected">Rejected</option>
+                            <option value="pending">{t("Pending")}</option>
+                            <option value="approved">{t("Approved")}</option>
+                            <option value="rejected">{t("Rejected")}</option>
                         </Form.Select>
                         {errors.status && (
                             <Form.Control.Feedback type="invalid">
@@ -76,7 +78,7 @@ export default function CreateEditModal({
                         className="btn btn-light"
                         onClick={hide}
                     >
-                        Cancel
+                        {t("Cancel")}
                     </button>
                     <button
                         type="submit"
@@ -86,7 +88,7 @@ export default function CreateEditModal({
                         {processing ? (
                             <Spinner animation="border" size="sm" />
                         ) : (
-                            "Update"
+                            t("Update")
                         )}
                     </button>
                 </div>

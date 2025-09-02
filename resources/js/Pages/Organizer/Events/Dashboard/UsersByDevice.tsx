@@ -9,9 +9,10 @@ import FeatherIcon from "feather-icons-react";
 import { UsersByDeviceCharts } from './DashboardAnalyticsCharts';
 import { createSelector } from 'reselect';
 import { ongetUserDeviceChartsData } from '../../../../slices/thunk';
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 const UsersByDevice = () => {
+    const { t } = useLaravelReactI18n();
     const [isUserDropdown, setUserDropdown] = useState<boolean>(false);
     const toggleDropdown = () => setUserDropdown(!isUserDropdown);
 
@@ -46,17 +47,18 @@ const UsersByDevice = () => {
             <Col xl={4}>
                 <Card className="card-height-100">
                     <Card.Header className="align-items-center d-flex">
-                        <h4 className="card-title mb-0 flex-grow-1">Attendees by Device</h4>
+                        <h4 className="card-title mb-0 flex-grow-1">{t("Attendees by Device")}</h4>
                         <div className="flex-shrink-0">
                         <Dropdown className="card-header-dropdown" show={isUserDropdown} onClick={toggleDropdown} dir="start">
                                 <Dropdown.Toggle as="a" className="text-reset dropdown-btn arrow-none" role="button">
                                     <span className="text-muted fs-16"><i className="mdi mdi-dots-vertical align-middle"></i></span>
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu className="dropdown-menu-end" >
-                                    <Dropdown.Item onClick={() => { onChangeChartPeriod("today"); }} className={seletedMonth === "today" ? "active" : ""}>Today</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => { onChangeChartPeriod("lastWeek"); }} className={seletedMonth === "lastWeek" ? "active" : ""}>Last Week</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => { onChangeChartPeriod("lastMonth"); }} className={seletedMonth === "lastMonth" ? "active" : ""}>Last Month</Dropdown.Item>
-                                    <Dropdown.Item onClick={() => { onChangeChartPeriod("currentYear"); }} className={seletedMonth === "currentYear" ? "active" : ""}>Current Year</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => { onChangeChartPeriod("today"); }} className={seletedMonth === "today" ? "active" : ""}>
+                                        {t("Today")}</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => { onChangeChartPeriod("lastWeek"); }} className={seletedMonth === "lastWeek" ? "active" : ""}>{t("Last Week{")}</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => { onChangeChartPeriod("lastMonth"); }} className={seletedMonth === "lastMonth" ? "active" : ""}>{t("Last Month")}</Dropdown.Item>
+                                    <Dropdown.Item onClick={() => { onChangeChartPeriod("currentYear"); }} className={seletedMonth === "currentYear" ? "active" : ""}>{t("Current Year")}</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
                         </div>
@@ -70,7 +72,7 @@ const UsersByDevice = () => {
                             <table className="table table-borderless table-sm table-centered align-middle table-nowrap mb-0">
                                 <tbody className="border-0">
                                     <tr>
-                                        <td><h4 className="text-truncate fs-14 fs-medium mb-0"><i className="ri-stop-fill align-middle fs-18 text-primary me-2"></i>Desktop Attendees</h4></td>
+                                        <td><h4 className="text-truncate fs-14 fs-medium mb-0"><i className="ri-stop-fill align-middle fs-18 text-primary me-2"></i>{t("Desktop Attendees")}</h4></td>
                                         <td><p className="text-muted mb-0">
                                             <FeatherIcon
                                                 icon="users"
@@ -80,7 +82,7 @@ const UsersByDevice = () => {
                                         <td className="text-end"><p className="text-success fw-medium fs-12 mb-0"><i className="ri-arrow-up-s-fill fs-5 align-middle"></i>2.08%</p></td>
                                     </tr>
                                     <tr>
-                                        <td><h4 className="text-truncate fs-14 fs-medium mb-0"><i className="ri-stop-fill align-middle fs-18 text-warning me-2"></i>Mobile Attendees</h4></td>
+                                        <td><h4 className="text-truncate fs-14 fs-medium mb-0"><i className="ri-stop-fill align-middle fs-18 text-warning me-2"></i>{t("Mobile Attendees")}</h4></td>
                                         <td><p className="text-muted mb-0">
                                             <FeatherIcon
                                                 icon="users"
@@ -90,7 +92,7 @@ const UsersByDevice = () => {
                                         <td className="text-end"><p className="text-danger fw-medium fs-12 mb-0"><i className="ri-arrow-down-s-fill fs-5 align-middle"></i>10.52%</p></td>
                                     </tr>
                                     <tr>
-                                        <td><h4 className="text-truncate fs-14 fs-medium mb-0"><i className="ri-stop-fill align-middle fs-18 text-info me-2"></i>Tablet Attendees</h4></td>
+                                        <td><h4 className="text-truncate fs-14 fs-medium mb-0"><i className="ri-stop-fill align-middle fs-18 text-info me-2"></i>{t("Tablet Attendees")}</h4></td>
                                         <td><p className="text-muted mb-0">
                                             <FeatherIcon
                                                 icon="users"

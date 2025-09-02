@@ -1,7 +1,9 @@
 import { router, useForm, usePage } from '@inertiajs/react';
-import React from 'react'
-import { Button, Card, Col, ListGroup, Row, Spinner } from 'react-bootstrap'
+import React from 'react';
+import { Button, Card, Col, Row, Spinner } from 'react-bootstrap';
 import ImageCroper from "../../../../../../Components/ImageCroper/Index";
+import { useLaravelReactI18n } from "laravel-react-i18n";
+
 type EventImage = {
     image_url: string | ArrayBuffer | null;
     id: string;
@@ -9,12 +11,11 @@ type EventImage = {
 };
 
 export default function Images() {
+    const { t } = useLaravelReactI18n();
     const event = usePage().props.event as any;
     const fileInput = React.useRef<HTMLInputElement>(null);
     const [eventImagePreviews, setEventImagePreviews] = React.useState<EventImage[]>([]);
 
-    console.log(eventImagePreviews);
-    //for image croper
     const [showCropper, setShowCropper] = React.useState(false);
     const [selectedImage, setSelectedImage] = React.useState<File | null>(null);
 
@@ -37,15 +38,14 @@ export default function Images() {
     const updatePreview = (file: any) => {
         setImageProcessing(true);
         router.post(
-            route('organizer.events.images.store', { event_app: event.id }), {
-            image_files: file,
-        },
+            route('organizer.events.images.store', { event_app: event.id }),
+            { image_files: file },
             {
                 preserveScroll: true,
                 onFinish: () => setImageProcessing(false),
             }
-        )
-    }
+        );
+    };
 
     const removeImageForm = useForm();
 
@@ -58,14 +58,14 @@ export default function Images() {
                 preserveScroll: true,
             });
         }
-    }
+    };
 
     const listImages = eventImagePreviews.map((image: EventImage) => (
         <div className="position-relative" key={image.id}>
             <img
                 className="rounded img-fluid m-0"
                 src={image.image_url}
-                alt="event image"
+                alt={t("Event image")}
                 style={{ width: "100%", marginTop: "15px" }}
             />
             <Button
@@ -75,7 +75,7 @@ export default function Images() {
                 className="position-absolute"
                 style={{ top: '0px', left: '0px' }}
                 disabled={removeImageForm.processing}>
-                Remove
+                {t("Remove")}
             </Button>
         </div>
     ));
@@ -86,7 +86,7 @@ export default function Images() {
                 <Card.Header className="d-flex justify-content-between align-items-center">
                     <div>
                         <Card.Title className="mb-0">
-                            Images{" "}
+                            {t("Images")}{" "}
                             {eventImagePreviews.length > 0
                                 ? `(${eventImagePreviews.length})`
                                 : ""}
@@ -142,5 +142,5 @@ export default function Images() {
                 onCrop={updatePreview}
             />
         </>
-    )
+    );
 }

@@ -7,10 +7,12 @@ import DeleteModal from '../../../Components/Common/DeleteModal';
 import DataTable, { ColumnDef } from '../../../Components/DataTable';
 import BreadCrumb2 from '../../../Components/Common/BreadCrumb2';
 import HasPermission from '../../../Components/HasPermission';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 function Index({ roles }: any) {
     const [deleteRole, setDeleteRole] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+      const { t } = useLaravelReactI18n();
 
     const deleteForm = useForm({
         _method: 'DELETE'
@@ -37,16 +39,16 @@ function Index({ roles }: any) {
 
     const columns: ColumnDef<typeof roles.data[0]> = [
         {
-            header: () => 'ID',
+            header: () => t('ID'),
             cell: (role) => role.id,
             cellClass: "fw-medium",
         },
         {
-            header: () => 'Name',
+            header: () => t('Name'),
             cell: (role) => role.name,
         },
         {
-            header: () => 'Action',
+            header: () => t('Action'),
             cell: (role) => (
                 <div className="hstack gap-3 fs-15">
                     <HasPermission permission="edit_roles">
@@ -67,8 +69,8 @@ function Index({ roles }: any) {
             <Head title='Roles - Admin' />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb2 
-                        title="Roles"
+                    <BreadCrumb2
+                        title={t("Roles")}
                     />
                     <Row>
                         <Col xs={12}>
@@ -80,9 +82,9 @@ function Index({ roles }: any) {
                                     {
                                         render: (
                                             <HasPermission permission="create_roles">
-                                                <Link href="/admin/roles/create"><Button>Add New</Button></Link>
+                                                <Link href="/admin/roles/create"><Button>{t("Add New")}</Button></Link>
                                             </HasPermission>
-                                        ) 
+                                        )
                                     }
                                 ]}
                             />

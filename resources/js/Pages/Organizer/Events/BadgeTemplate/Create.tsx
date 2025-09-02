@@ -4,10 +4,10 @@ import { Head, router, useForm } from '@inertiajs/react';
 import Layout from '../../../../Layouts/Event';
 import { Button, Col, Container, Row, Form, Card } from 'react-bootstrap';
 import BreadCrumb from '../../../../Components/Common/BreadCrumb';
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 const Create = () => {
     const emailEditorRef = useRef<EditorRef>(null);
-
+    const { t } = useLaravelReactI18n();
     const { data, setData, errors, processing, setError, reset } = useForm({
         name: '',
         role: 'user',
@@ -19,13 +19,13 @@ const Create = () => {
     // --- Shortcodes (matched to Edit page) ---
     const [selectedShortcodes, setSelectedShortcodes] = useState<string[]>([]);
     const shortcodes = [
-        { name: 'Attendee Name', code: "{{ $attendeename }}" },
-        { name: 'Ticket Name', code: "{{ $ticketname }}" },
-        { name: 'Ticket Type', code: "{{ $tickettype }}" },
-        { name: 'Attendee Position', code: "{{ $attendeeposition }}" },
-        { name: 'Event Location', code: "{{ $eventlocation }}" },
-        { name: 'Event Logo', code: "{{ $eventlogo }}" },
-        { name: 'Ticket QR Code', code: "{{ $ticketqrcode }}" },
+        { name: t('Attendee Name'), code: "{{ $attendeename }}" },
+        { name: t('Ticket Name'), code: "{{ $ticketname }}" },
+        { name: t('Ticket Type'), code: "{{ $tickettype }}" },
+        { name: t('Attendee Position'), code: "{{ $attendeeposition }}" },
+        { name: t('Event Location'), code: "{{ $eventlocation }}" },
+        { name: t('Event Logo'), code: "{{ $eventlogo }}" },
+        { name: t('Ticket QR Code'), code: "{{ $ticketqrcode }}" },
     ];
 
     const toggleShortcode = async (code: string) => {
@@ -99,18 +99,18 @@ const Create = () => {
             <Head title="Create Email Template" />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Create Email Template" pageTitle="Dashboard" />
+                    <BreadCrumb title={t('Create Email Template')} pageTitle={t('Dashboard')}/>
                     <Row>
                         <Card className="mt-4">
                             <Card.Header className="d-flex justify-content-between align-items-center">
-                                <div className="card-title">Create Badge Template</div>
+                                <div className="card-title">{t('Create Badge Template')}</div>
                                 <Button
                                     type="button"
                                     className="btn btn-success px-3"
                                     onClick={handleSubmit}
                                     disabled={isSubmitting || processing}
                                 >
-                                    {isSubmitting ? 'Saving...' : 'Create'}
+                                    {isSubmitting ? t('Saving...') : t('Create')}
                                 </Button>
                             </Card.Header>
 
@@ -118,7 +118,7 @@ const Create = () => {
                                 <Row className="mb-4">
                                     <Col xxl={6} md={6}>
                                         <Form.Group>
-                                            <Form.Label htmlFor="name">Template Name</Form.Label>
+                                            <Form.Label htmlFor="name">{t('Template Name')}</Form.Label>
                                             <Form.Control
                                                 type="text"
                                                 id="name"
@@ -135,7 +135,7 @@ const Create = () => {
                                     </Col>
                                     <Col xxl={6} md={6}>
                                         <Form.Group>
-                                            <Form.Label htmlFor="image">Preview Image</Form.Label>
+                                            <Form.Label htmlFor="image">{t('Preview Image')}</Form.Label>
                                             <Form.Control
                                                 type="file"
                                                 id="image"
@@ -153,7 +153,7 @@ const Create = () => {
 
                                 {/* Shortcode Selector (same UX as Edit) */}
                                 <Row className="mb-4 text-center">
-                                    <h4>Use below short codes to insert dynamic data in template</h4>
+                                    <h4>{t('Use below short codes to insert dynamic data in template')}</h4>
                                     <Row className="mt-3 w-100 m-0">
                                         {shortcodes.map((item, idx) => (
                                             <Col

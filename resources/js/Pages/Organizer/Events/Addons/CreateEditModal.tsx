@@ -19,7 +19,7 @@ import FormCheckInput from "react-bootstrap/esm/FormCheckInput";
 import Variants from "./Variants";
 import { Container, Plus, Trash } from 'lucide-react';
 import { boolean } from "yup";
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 export default function CreateEditModal({
     show,
     hide,
@@ -36,7 +36,7 @@ export default function CreateEditModal({
     const eventApp = usePage().props.currentEvent;
     const tickets = usePage().props.tickets as any[];
     const [displayNewField, setDisplayNewField] = useState(false);
-
+    const { t } = useLaravelReactI18n();
     // console.log(eventApp);
 
     const { data, setData, post, put, processing, errors, reset, transform } =
@@ -117,7 +117,7 @@ export default function CreateEditModal({
         <Modal show={show} onHide={onHide} centered size="lg">
             <Modal.Header className="bg-light p-3" closeButton>
                 <h5 className="modal-title">
-                    {isEdit ? "Edit Add-ons" : "Create Add-ons"}
+                    {isEdit ? t('Edit Add-ons') : t('Create Add-ons')}
                 </h5>
             </Modal.Header>
 
@@ -126,7 +126,7 @@ export default function CreateEditModal({
                     <Row>
                         <Col md={12}>
                             <FormGroup className="mb-3">
-                                <Form.Label>Name</Form.Label>
+                                <Form.Label>{t('Name')}</Form.Label>
                                 <Form.Control
                                     type="text"
                                     value={data.name}
@@ -176,7 +176,7 @@ export default function CreateEditModal({
                         <Col md={12}>
                             <FormGroup className="mb-3">
                                 <Form.Label className="m-0 d-flex justify-content-between align-items-center border p-3 cursor-pointer rounded" htmlFor="useTicketInventory">
-                                    <Form.Label className="m-0 cursor-pointer" htmlFor="useTicketInventory">Use ticket inventory</Form.Label>
+                                    <Form.Label className="m-0 cursor-pointer" htmlFor="useTicketInventory">{t('Use ticket inventory')}</Form.Label>
                                     <div className="form-check form-switch form-switch-lg" dir='ltr'>
                                         <FormCheckInput
                                             id="useTicketInventory"
@@ -198,12 +198,12 @@ export default function CreateEditModal({
                         {useTicketInventory && (
                             <Col md={12}>
                                 <FormGroup className="mb-3">
-                                    <Form.Label>Ticket</Form.Label>
+                                    <Form.Label>{t('Ticket')}</Form.Label>
                                     <Form.Select
                                         value={data.event_app_ticket_id}
                                         onChange={(e) => setData('event_app_ticket_id', e.target.value)}
                                     >
-                                        <option value="">Select</option>
+                                        <option value="">{t('Select')}</option>
                                         {tickets.map(ticket => (
                                             <option value={ticket.id} key={ticket.id}>{ticket.name}</option>
                                         ))}
@@ -213,7 +213,7 @@ export default function CreateEditModal({
                         )}
                         <Col md={4}>
                             <FormGroup className="mb-3">
-                                <Form.Label>Price</Form.Label>
+                                <Form.Label>{t('Price')}</Form.Label>
                                 <Form.Control
                                     type="number"
                                     value={data.price}
@@ -231,7 +231,7 @@ export default function CreateEditModal({
                         </Col>
                         <Col md={4}>
                             <FormGroup className="mb-3">
-                                <Form.Label>Total Qty</Form.Label>
+                                <Form.Label>{t('Total Qty')}</Form.Label>
                                 <Form.Control
                                     type="text"
                                     value={data.qty_total}
@@ -251,7 +251,7 @@ export default function CreateEditModal({
 
                         <Col md={4}>
                             <FormGroup className="mb-3">
-                                <Form.Label>Qty Sold</Form.Label>
+                                <Form.Label>{t('Qty Sold')}</Form.Label>
                                 <Form.Control
                                     title="Automatically calculated on Ticket Purchase Action"
                                     type="number"
@@ -271,11 +271,11 @@ export default function CreateEditModal({
                         </Col>
 
                         <Col md={12} className="mb-2">
-                            <Form.Label>Add Extra Fields</Form.Label>
+                            <Form.Label>{t('Add Extra Fields')}</Form.Label>
 
                             {data.newField.map((fieldValue, i) => (
                                 <div key={i}>
-                                    <Form.Label>Field Label</Form.Label>
+                                    <Form.Label>{t('Field Label')}</Form.Label>
                                     <FormGroup className="mb-3">
                                         <div className="input-group">
                                             <Form.Control
@@ -326,7 +326,7 @@ export default function CreateEditModal({
                         <Col md={12}>
                             <FormGroup className="mb-3">
                                 <Form.Label className="m-0 d-flex justify-content-between align-items-center border p-3 cursor-pointer rounded" htmlFor="enableDiscount">
-                                    <Form.Label className="m-0 cursor-pointer" htmlFor="enableDiscount">Enable Discount</Form.Label>
+                                    <Form.Label className="m-0 cursor-pointer" htmlFor="enableDiscount">{t('Enable Discount')}</Form.Label>
                                     <div className="form-check form-switch form-switch-lg" dir='ltr'>
                                         <FormCheckInput
                                             id="enableDiscount"
@@ -362,7 +362,7 @@ export default function CreateEditModal({
 
             <div className="modal-footer">
                 <button type="button" className="btn btn-light" onClick={hide}>
-                    Close
+                    {t('Close')}
                 </button>
                 <button
                     type="button"
@@ -379,10 +379,10 @@ export default function CreateEditModal({
                                 role="status"
                                 aria-hidden="true"
                             />
-                            {isEdit ? "Updating" : "Creating"}
+                            {isEdit ? t('Updating') : t('Creating')}
                         </span>
                     ) : (
-                        <span>{isEdit ? "Update" : "Create"}</span>
+                        <span>{isEdit ? t('Update') : t('Create')}</span>
                     )}
                 </button>
             </div>

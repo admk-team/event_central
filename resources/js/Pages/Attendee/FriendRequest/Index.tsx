@@ -5,8 +5,9 @@ import { Head, Link } from "@inertiajs/react";
 import FindFriends from "./Components/FindFriends";
 import Friends from "./Components/Friends";
 import IncomingRequest from "./Components/IncomingRequest";
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 const Index = () => {
+     const { t } = useLaravelReactI18n();
     return (
         <React.Fragment>
             <Head title="Firends System " />
@@ -15,7 +16,7 @@ const Index = () => {
                     <Col>
                         <Card>
                             <Card.Body>
-                                <h5 className="mb-4">Friends</h5>
+                                <h5 className="mb-4">{t("Friends")}</h5>
                                 <Row>
                                     <Tab.Container defaultActiveKey="1">
                                         <Col lg={2}>
@@ -23,19 +24,19 @@ const Index = () => {
                                                 <Nav.Item>
                                                     <Nav.Link eventKey="1">
                                                         <i className="ri-user-line d-block fs-20 mb-1"></i>
-                                                        My Friends
+                                                        {t("My Friends")}
                                                     </Nav.Link>
                                                 </Nav.Item>
                                                 <Nav.Item>
                                                     <Nav.Link eventKey="2">
                                                         <i className="ri-user-received-line d-block fs-20 mb-1"></i>
-                                                        Incoming Requests
+                                                        {t("Incoming Requests")}
                                                     </Nav.Link>
                                                 </Nav.Item>
                                                 <Nav.Item>
                                                     <Nav.Link eventKey="3">
                                                         <i className="ri-user-add-line d-block fs-20 mb-1"></i>
-                                                        Find Friends
+                                                        {t("Find Friends")}
                                                     </Nav.Link>
                                                 </Nav.Item>
                                             </Nav>

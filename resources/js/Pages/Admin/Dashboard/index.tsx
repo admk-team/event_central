@@ -13,16 +13,17 @@ import TopReferrals from './TopReferrals';
 import TopPages from './TopPages';
 import { Head } from '@inertiajs/react';
 import Layout from '../../../Layouts/Admin';
-
+import { useLaravelReactI18n } from 'laravel-react-i18n';
 
 const DashboardAnalytics = () => {
+    const { t } = useLaravelReactI18n();
 
     return (
         <React.Fragment>
-            <Head title="Dashboard - Admin"/>
+            <Head title={t("Dashboard - Admin")} />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Analytics" pageTitle="Dashboards" />
+                    <BreadCrumb title={t("Analytics")} pageTitle={t("Dashboards")} />
                     <Row>
                         <Col xxl={5}>
                             <UpgradeAccountNotise />
@@ -44,5 +45,6 @@ const DashboardAnalytics = () => {
         </React.Fragment>
     );
 };
-DashboardAnalytics.layout =(page:any) => <Layout children={page}/>
+
+DashboardAnalytics.layout = (page: any) => <Layout children={page} />;
 export default DashboardAnalytics;
