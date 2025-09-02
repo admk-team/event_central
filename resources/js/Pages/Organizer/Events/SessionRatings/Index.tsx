@@ -1,4 +1,3 @@
-
 import Layout from "../../../../Layouts/Event";
 import React, { useState } from "react";
 import { Head, Link, usePage, useForm } from "@inertiajs/react";
@@ -6,6 +5,7 @@ import { Container, Row, Col, Card, CardBody, Modal, Form, Button } from "react-
 import BreadCrumb from "../../../../Components/Common/BreadCrumb";
 import HasPermission from "../../../../Components/HasPermission";
 import DeleteModal from "../../../../Components/Common/DeleteModal";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 interface User {
     id?: number;
@@ -41,6 +41,7 @@ function EditRatingModal({
     attendee: any;
     eventSessionId: number;
 }) {
+    const { t } = useLaravelReactI18n();
     const { data, setData, put, errors } = useForm({
         rating: attendee?.pivot.rating || 0,
         rating_description: attendee?.pivot.rating_description || "",
@@ -56,12 +57,12 @@ function EditRatingModal({
     return (
         <Modal show={show} onHide={onHide}>
             <Modal.Header closeButton>
-                <Modal.Title>Edit Rating</Modal.Title>
+                <Modal.Title>{t("Edit Rating")}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form onSubmit={handleSubmit}>
                     <Form.Group className="mb-3">
-                        <Form.Label>Rating (1-5)</Form.Label>
+                        <Form.Label>{t("Rating (1-5)")}</Form.Label>
                         <Form.Control
                             type="number"
                             min={1}
@@ -73,7 +74,7 @@ function EditRatingModal({
                         <Form.Control.Feedback type="invalid">{errors.rating}</Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group className="mb-3">
-                        <Form.Label>Description</Form.Label>
+                        <Form.Label>{t("Description")}</Form.Label>
                         <Form.Control
                             as="textarea"
                             rows={3}
@@ -84,7 +85,7 @@ function EditRatingModal({
                         <Form.Control.Feedback type="invalid">{errors.rating_description}</Form.Control.Feedback>
                     </Form.Group>
                     <Button variant="primary" type="submit">
-                        Save Changes
+                        {t("Save Changes")}
                     </Button>
                 </Form>
             </Modal.Body>
@@ -94,6 +95,7 @@ function EditRatingModal({
 
 function Index({ eventSession }: Props) {
     const { auth } = usePage().props as { auth: { user: User } };
+    const { t } = useLaravelReactI18n();
     const [showEditRatingModal, setShowEditRatingModal] = useState(false);
     const [editAttendee, setEditAttendee] = useState<any>(null);
     const [showDeleteRatingModal, setShowDeleteRatingModal] = useState(false);
@@ -132,24 +134,24 @@ function Index({ eventSession }: Props) {
 
     return (
         <React.Fragment>
-            <Head title={`Ratings | ${eventSession?.name || "Event Central"}`} />
+            <Head title={`${t("Ratings")} | ${eventSession?.name || t("Event Central")}`} />
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb
-                        title={`Ratings for ${eventSession?.name || "Unnamed Session"}`}
-                        pageTitle="Events"
+                        title={`${t("Ratings for")} ${eventSession?.name || t("Unnamed Session")}`}
+                        pageTitle={t("Events")}
                     />
                     <Row className="justify-content-center">
                         <Col xs={12} md={8} lg={6}>
                             <div className="text-center">
-                                <h1>Session Ratings</h1>
+                                <h1>{t("Session Ratings")}</h1>
                             </div>
                             <Card className="mt-4">
                                 <CardBody>
                                     {/* Attendee Ratings with Average */}
                                     {ratedAttendees.length > 0 && (
                                         <div className="d-flex align-items-center mb-4">
-                                            <span className="fs-3 me-3 mb-0">Attendee Ratings</span>
+                                            <span className="fs-3 me-3 mb-0">{t("Attendee Ratings")}</span>
                                             {[...Array(5)].map((_, i) => (
                                                 <i
                                                     key={i}
@@ -186,7 +188,7 @@ function Index({ eventSession }: Props) {
                                                             ))}
                                                         </div>
                                                         <p className="mb-0 text-muted">
-                                                            {attendee.pivot.rating_description || 'No description provided'}
+                                                            {attendee.pivot.rating_description || t("No description provided")}
                                                         </p>
                                                     </div>
                                                     <div className="d-flex gap-2">
@@ -210,7 +212,7 @@ function Index({ eventSession }: Props) {
                                                 </div>
                                             ))
                                         ) : (
-                                            <p>No ratings available for this session yet.</p>
+                                            <p>{t("No ratings available for this session yet.")}</p>
                                         )}
                                     </div>
                                 </CardBody>
@@ -223,7 +225,7 @@ function Index({ eventSession }: Props) {
                                 href={route("organizer.events.schedule.index")}
                                 className="btn btn-outline-primary"
                             >
-                                <i className="ri-arrow-left-line"></i> Back to Schedule
+                                <i className="ri-arrow-left-line"></i> {t("Back to Schedule")}
                             </Link>
                         </Col>
                     </Row>
