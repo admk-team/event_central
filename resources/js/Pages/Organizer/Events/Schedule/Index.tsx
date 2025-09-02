@@ -1,133 +1,158 @@
-import { Head, useForm } from '@inertiajs/react';
-import React from 'react';
-import Layout from '../../../../Layouts/Event';
-import { Button, Card, CardBody, CardHeader, Container } from 'react-bootstrap';
-import BreadCrumb2 from '../../../../Components/Common/BreadCrumb2';
-import Platforms from './Components/Platforms';
-import CreateEditSessionModal from './Components/CreateEditSessionModal';
-import toast from 'react-hot-toast';
-import DatePickerModal from './Components/DatePickerModal';
-import moment from 'moment';
-import { ChevronDown, Menu, X } from 'lucide-react';
-import Sessions from './Components/Sessions';
-import DeleteModal from '../../../../Components/Common/DeleteModal';
-import HasPermission from '../../../../Components/HasPermission';
-
+import React, { useEffect, useState } from "react";
+import Layout from "../../../../Layouts/Event";
+import { Head, useForm } from "@inertiajs/react";
+import { Button, Col, Container, Card, CardBody, CardHeader } from "react-bootstrap";
+import BreadCrumb2 from "../../../../Components/Common/BreadCrumb2";
+import { ChevronDown, Menu, X } from "lucide-react";
+import Sessions from "./Components/Sessions";
+import DeleteModal from "../../../../Components/Common/DeleteModal";
+import HasPermission from "../../../../Components/HasPermission";
+import CreateEditSessionModal from "./Components/CreateEditSessionModal";
+import DatePickerModal from "./Components/DatePickerModal";
+import toast from "react-hot-toast";
+import moment from "moment";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 function Index() {
-    const [selectedDate, setSelectedDate] = React.useState<any>(null);
-    const [selectedPlatform, setSelectedPlatform] = React.useState<any>(null);
-    const [showSessionCreateEditModal, _setShowSessionCreateEditModal] = React.useState(false);
-    const [editSession, setEditSession] = React.useState<any>(null);
-    const [deleteSession, setDeleteSession] = React.useState<any>(null);
-    const [showDeleteSessionConfirmation, setShowDeleteSessionConfirmation] = React.useState(false);
-    const [showDatePickerModal, setShowDatePickerModal] = React.useState(false);
-    const [showPlatformsSidebar, setShowPlatformsSidebar] = React.useState(false);
+  const [selectedDate, setSelectedDate] = React.useState<any>(null);
+  const [selectedPlatform, setSelectedPlatform] = React.useState<any>(null);
+  const [showSessionCreateEditModal, _setShowSessionCreateEditModal] = React.useState(false);
+  const [editSession, setEditSession] = React.useState<any>(null);
+  const [deleteSession, setDeleteSession] = React.useState<any>(null);
+  const [showDeleteSessionConfirmation, setShowDeleteSessionConfirmation] = React.useState(false);
+  const [showDatePickerModal, setShowDatePickerModal] = React.useState(false);
+  const [showPlatformsSidebar, setShowPlatformsSidebar] = React.useState(false);
 
-    const deleteForm = useForm({
-        _method: 'DELETE'
-    });
+  const { t } = useLaravelReactI18n();
 
-    const setShowSessionCreateEditModal = (state: boolean) => {
-        if (selectedDate === null) {
-            toast.error("Please add date first");
-            return;
-        }
+  const deleteForm = useForm({
+    _method: "DELETE",
+  });
 
-        if (selectedPlatform === null) {
-            toast.error("Please create platform first");
-            return;
-        }
-
-        _setShowSessionCreateEditModal(state);
-        if (state === false) {
-            setEditSession(null);
-        }
+  const setShowSessionCreateEditModal = (state: boolean) => {
+    if (selectedDate === null) {
+      toast.error(t("Please add date first"));
+      return;
     }
 
-    const editSessionAction = (session: any) => {
-        setEditSession(session);
-        setShowSessionCreateEditModal(true);
+    if (selectedPlatform === null) {
+      toast.error(t("Please create platform first"));
+      return;
     }
 
-    const deleteSessionAction = (session: any) => {
-        setDeleteSession(session);
-        setShowDeleteSessionConfirmation(true);
+    _setShowSessionCreateEditModal(state);
+    if (state === false) {
+      setEditSession(null);
     }
+  };
 
-    const handleSessionDelete = () => {
-        deleteForm.delete(route('organizer.events.schedule.destroy', deleteSession.id));
-        setShowDeleteSessionConfirmation(false);
-    }
+  const editSessionAction = (session: any) => {
+    setEditSession(session);
+    setShowSessionCreateEditModal(true);
+  };
 
-    return (
-        <React.Fragment>
-            <Head title='Schedule' />
-            <div className="page-content">
-                <Container fluid>
-                    <BreadCrumb2
-                        title="Schedule"
-                    />
-                    <Card className="schedule">
-                        <CardHeader className="d-flex justify-content-between align-items-center">
-                            <Button variant="light" className="btn-icon d-sm-none" onClick={() => setShowPlatformsSidebar(!showPlatformsSidebar)}>
-                                {showPlatformsSidebar ? <X size={18} /> : <Menu size={18} />}
-                            </Button>
-                            <div className="">
-                                <Button variant="light" onClick={() => setShowDatePickerModal(true)} className="d-flex align-items-centers gap-2">
-                                    <span>
-                                        {selectedDate ? moment(selectedDate.date).format('MMMM D, YYYY') : moment(new Date()).format('MMMM D, YYYY')}
-                                    </span>
-                                    <ChevronDown size={18} />
-                                </Button>
-                                <DatePickerModal
-                                    show={showDatePickerModal}
-                                    onHide={() => setShowDatePickerModal(false)}
-                                    onDateSelect={(date) => setSelectedDate(date)}
-                                />
-                            </div>
-                            <HasPermission permission="create_event_sessions">
-                                <Button onClick={() => setShowSessionCreateEditModal(true)}><i className="ri-add-fill"></i> New Session</Button>
-                            </HasPermission>
-                        </CardHeader>
-                        <CardBody className={`p-0 d-flex ${showPlatformsSidebar ? 'show-platform-sidebar' : ''}`}>
-                            <div className="sidebar">
-                                <Platforms onPlatformChange={(platform: any) => {
-                                    setSelectedPlatform(platform);
-                                    setTimeout(() => setShowPlatformsSidebar(false), 300);
-                                }} />
-                            </div>
-                            <div className="sessions flex-grow-1 overflow-x-hidden overflow-y-auto">
-                                <Sessions
-                                    selectedDate={selectedDate}
-                                    selectedPlatform={selectedPlatform}
-                                    onEdit={editSessionAction}
-                                    onDelete={deleteSessionAction}
-                                />
-                            </div>
-                        </CardBody>
-                    </Card>
-                </Container>
-            </div>
-            
-            {showSessionCreateEditModal && (
-                <CreateEditSessionModal
-                    show={showSessionCreateEditModal}
-                    hide={() => setShowSessionCreateEditModal(false)}
-                    onHide={() => setShowSessionCreateEditModal(false)}
-                    eventSession={editSession}
-                    selectedDate={selectedDate}
-                    selectedPlatform={selectedPlatform}
+  const deleteSessionAction = (session: any) => {
+    setDeleteSession(session);
+    setShowDeleteSessionConfirmation(true);
+  };
+
+  const handleSessionDelete = () => {
+    deleteForm.delete(route("organizer.events.schedule.destroy", deleteSession.id));
+    setShowDeleteSessionConfirmation(false);
+  };
+
+  return (
+    <React.Fragment>
+      <Head title={t("Schedule")} />
+      <div className="page-content">
+        <Container fluid>
+          <BreadCrumb2 title={t("Schedule")} />
+
+          <Card className="schedule">
+            <CardHeader className="d-flex justify-content-between align-items-center">
+              <Button
+                variant="light"
+                className="btn-icon d-sm-none"
+                aria-label={t("Toggle platform sidebar")}
+                onClick={() => setShowPlatformsSidebar(!showPlatformsSidebar)}
+                title={t("Toggle platform sidebar")}
+              >
+                {showPlatformsSidebar ? <X size={18} /> : <Menu size={18} />}
+              </Button>
+
+              <div>
+                <Button
+                  variant="light"
+                  onClick={() => setShowDatePickerModal(true)}
+                  className="d-flex align-items-centers gap-2"
+                  aria-label={t("Pick date")}
+                  title={t("Pick date")}
+                >
+                  <span>
+                    {selectedDate
+                      ? moment(selectedDate.date).format("MMMM D, YYYY")
+                      : moment(new Date()).format("MMMM D, YYYY")}
+                  </span>
+                  <ChevronDown size={18} />
+                </Button>
+
+                <DatePickerModal
+                  show={showDatePickerModal}
+                  onHide={() => setShowDatePickerModal(false)}
+                  onDateSelect={(date) => setSelectedDate(date)}
                 />
-            )}
+              </div>
 
-            <DeleteModal
-                show={showDeleteSessionConfirmation}
-                onDeleteClick={handleSessionDelete}
-                onCloseClick={() => { setShowDeleteSessionConfirmation(false) }}
-            />
-        </React.Fragment>
-    )
+              <HasPermission permission="create_event_sessions">
+                <Button onClick={() => setShowSessionCreateEditModal(true)}>
+                  <i className="ri-add-fill"></i> {t("New Session")}
+                </Button>
+              </HasPermission>
+            </CardHeader>
+
+            <CardBody className={`p-0 d-flex ${showPlatformsSidebar ? "show-platform-sidebar" : ""}`}>
+              <div className="sidebar">
+                <Platforms
+                  onPlatformChange={(platform: any) => {
+                    setSelectedPlatform(platform);
+                    setTimeout(() => setShowPlatformsSidebar(false), 300);
+                  }}
+                />
+              </div>
+
+              <div className="sessions flex-grow-1 overflow-x-hidden overflow-y-auto">
+                <Sessions
+                  selectedDate={selectedDate}
+                  selectedPlatform={selectedPlatform}
+                  onEdit={editSessionAction}
+                  onDelete={deleteSessionAction}
+                />
+              </div>
+            </CardBody>
+          </Card>
+        </Container>
+      </div>
+
+      {showSessionCreateEditModal && (
+        <CreateEditSessionModal
+          show={showSessionCreateEditModal}
+          hide={() => setShowSessionCreateEditModal(false)}
+          onHide={() => setShowSessionCreateEditModal(false)}
+          eventSession={editSession}
+          selectedDate={selectedDate}
+          selectedPlatform={selectedPlatform}
+        />
+      )}
+
+      <DeleteModal
+        show={showDeleteSessionConfirmation}
+        onDeleteClick={handleSessionDelete}
+        onCloseClick={() => {
+          setShowDeleteSessionConfirmation(false);
+        }}
+      />
+    </React.Fragment>
+  );
 }
 
 Index.layout = (page: any) => <Layout children={page} />;
