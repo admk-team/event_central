@@ -1,8 +1,10 @@
 import { useForm, usePage } from "@inertiajs/react";
 import React from "react";
 import { ListGroupItem, Button, Form } from "react-bootstrap";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 export default function ChangeReminderDays() {
+    const { t } = useLaravelReactI18n();
     const reminderDays = usePage().props.reminderDays as number | null;
 
     const { data, setData, post, processing, errors } = useForm({
@@ -28,9 +30,9 @@ export default function ChangeReminderDays() {
             <Form onSubmit={handleSubmit}>
                 <div className="d-flex justify-content-between align-items-center">
                     <div>
-                        <div>Send email reminder before event</div>
+                        <div>{t("Send email reminder before event")}</div>
                         <small className="text-muted">
-                            Set how many days before the event start.
+                            {t("Set how many days before the event start.")}
                         </small>
                     </div>
 
@@ -38,7 +40,7 @@ export default function ChangeReminderDays() {
                         <Form.Control
                             type="number"
                             min={1}
-                            placeholder="e.g. 3"
+                            placeholder={t("e.g. 3")}
                             value={data.days_before_event}
                             onChange={(e) => {
                                 const value = e.target.value;
@@ -50,7 +52,7 @@ export default function ChangeReminderDays() {
                             isInvalid={!!errors.days_before_event}
                         />
                         <Button type="submit" disabled={processing}>
-                            Save
+                            {t("Save")}
                         </Button>
                     </div>
                 </div>

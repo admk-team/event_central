@@ -1,8 +1,10 @@
 import { useForm } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Form, Col, Row, Image } from "react-bootstrap";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 export default function CreateEditModal({ show, handleClose, product }: any) {
+    const { t } = useLaravelReactI18n();
     const [isPreview, setIsPreview] = useState<string | null>(null);
 
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -14,7 +16,6 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
         image: null,
     });
 
-    // Only run when modal is opened or product changes
     useEffect(() => {
         if (!show) return;
 
@@ -69,19 +70,19 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
         <Modal show={show} onHide={handleClose} centered>
             <Modal.Header closeButton>
                 <Modal.Title>
-                    {isEditMode ? "Edit Product" : "Add Product"}
+                    {isEditMode ? t("Edit Product") : t("Add Product")}
                 </Modal.Title>
             </Modal.Header>
             <form onSubmit={onSubmit}>
                 <Modal.Body>
                     <Form.Group className="mb-3">
-                        <Form.Label>Product Name</Form.Label>
+                        <Form.Label>{t("Product Name")}</Form.Label>
                         <Form.Control
                             type="text"
                             name="name"
                             value={data.name}
                             onChange={(event) => setData("name", event.target.value)}
-                            placeholder="Enter product name"
+                            placeholder={t("Enter product name")}
                         />
                         {errors.name && (
                             <Form.Control.Feedback type="invalid" className="d-block mt-2">
@@ -91,14 +92,14 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
                     </Form.Group>
 
                     <Form.Group className="mb-3">
-                        <Form.Label>Description</Form.Label>
+                        <Form.Label>{t("Description")}</Form.Label>
                         <Form.Control
                             as="textarea"
                             rows={3}
                             name="description"
                             value={data.description}
                             onChange={(event) => setData("description", event.target.value)}
-                            placeholder="Enter description"
+                            placeholder={t("Enter description")}
                         />
                         {errors.description && (
                             <Form.Control.Feedback type="invalid" className="d-block mt-2">
@@ -110,13 +111,13 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
                     <Row>
                         <Col md={6}>
                             <Form.Group className="mb-3">
-                                <Form.Label>Price</Form.Label>
+                                <Form.Label>{t("Price")}</Form.Label>
                                 <Form.Control
                                     type="number"
                                     name="price"
                                     value={data.price}
                                     onChange={(event) => setData("price", event.target.value)}
-                                    placeholder="Enter price"
+                                    placeholder={t("Enter price")}
                                 />
                                 {errors.price && (
                                     <Form.Control.Feedback type="invalid" className="d-block mt-2">
@@ -127,13 +128,13 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
                         </Col>
                         <Col md={6}>
                             <Form.Group className="mb-3">
-                                <Form.Label>Old Price</Form.Label>
+                                <Form.Label>{t("Old Price")}</Form.Label>
                                 <Form.Control
                                     type="number"
                                     name="old_price"
                                     value={data.old_price}
                                     onChange={(event) => setData("old_price", event.target.value)}
-                                    placeholder="Enter old price"
+                                    placeholder={t("Enter old price")}
                                 />
                                 {errors.old_price && (
                                     <Form.Control.Feedback type="invalid" className="d-block mt-2">
@@ -145,13 +146,13 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
                     </Row>
 
                     <Form.Group className="mb-3">
-                        <Form.Label>Stock</Form.Label>
+                        <Form.Label>{t("Stock")}</Form.Label>
                         <Form.Control
                             type="number"
                             name="stock"
                             value={data.stock}
                             onChange={(event) => setData("stock", event.target.value)}
-                            placeholder="Enter stock quantity"
+                            placeholder={t("Enter stock quantity")}
                         />
                         {errors.stock && (
                             <Form.Control.Feedback type="invalid" className="d-block mt-2">
@@ -161,7 +162,7 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
                     </Form.Group>
 
                     <Form.Group className="mb-3">
-                        <Form.Label>Image</Form.Label>
+                        <Form.Label>{t("Image")}</Form.Label>
                         <Form.Control type="file" name="image" onChange={handleChange} />
                         {errors.image && (
                             <Form.Control.Feedback type="invalid" className="d-block mt-2">
@@ -173,7 +174,7 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
                                 <Image
                                     src={isPreview}
                                     thumbnail
-                                    alt="Preview"
+                                    alt={t("Preview")}
                                     style={{
                                         maxHeight: "150px",
                                         objectFit: "contain",
@@ -185,10 +186,10 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleClose}>
-                        Cancel
+                        {t("Cancel")}
                     </Button>
                     <Button variant="primary" type="submit" disabled={processing}>
-                        {isEditMode ? "Update Product" : "Save Product"}
+                        {isEditMode ? t("Update Product") : t("Save Product")}
                     </Button>
                 </Modal.Footer>
             </form>

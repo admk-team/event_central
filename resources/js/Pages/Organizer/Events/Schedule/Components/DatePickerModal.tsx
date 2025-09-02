@@ -6,15 +6,16 @@ import { CalendarDay, DayPicker, Modifiers } from "react-day-picker";
 import "react-day-picker/style.css";
 import toast from 'react-hot-toast';
 import DeleteEventDateModal from '../../../../../Components/DeleteEventDateModal';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 const EventDates = React.createContext<any>({});
 const useEventDates = () => {
     return React.useContext(EventDates);
 }
 
-
 export default function DatePickerModal({ show, onHide, onDateSelect }: { show: boolean, onHide: () => void, onDateSelect: (date: any) => void }) {
     const eventDates = usePage().props.eventDates as any;
+    const { t } = useLaravelReactI18n();
 
     const [mode, setMode] = React.useState<"view" | "edit">("view");
     const [selectedDate, _setSelectedDate] = React.useState<any>(eventDates[0] ?? null);
@@ -51,9 +52,9 @@ export default function DatePickerModal({ show, onHide, onDateSelect }: { show: 
                 })
             }),
             {
-                loading: 'Adding...',
-                success: <b>Added!</b>,
-                error: <b>Could not add.</b>,
+                loading: t('Adding...'),
+                success: <b>{t('Added!')}</b>,
+                error: <b>{t('Could not add.')}</b>,
             }
         );
     }
@@ -77,9 +78,9 @@ export default function DatePickerModal({ show, onHide, onDateSelect }: { show: 
                 })
             }),
             {
-                loading: 'Deleting...',
-                success: <b>Deleted!</b>,
-                error: <b>Could not delete.</b>,
+                loading: t('Deleting...'),
+                success: <b>{t('Deleted!')}</b>,
+                error: <b>{t('Could not delete.')}</b>,
             }
         );
     }
@@ -90,7 +91,6 @@ export default function DatePickerModal({ show, onHide, onDateSelect }: { show: 
                 return item;
             }
         }
-
         return null;
     }
 
@@ -116,7 +116,7 @@ export default function DatePickerModal({ show, onHide, onDateSelect }: { show: 
         }}>
             <Modal show={show} onHide={_onHide} centered className="event-date-picker">
                 <Modal.Header className="bg-light p-3" closeButton>
-                    <h5 className="modal-title">Select Day</h5>
+                    <h5 className="modal-title">{t("Select Day")}</h5>
                 </Modal.Header>
                 <Modal.Body>
                     <DayPicker
@@ -135,7 +135,7 @@ export default function DatePickerModal({ show, onHide, onDateSelect }: { show: 
                             className={`btn btn-${mode === 'view' ? 'light' : 'success'}`}
                             onClick={() => setMode(mode === 'view' ? 'edit' : 'view')}
                         >
-                            Edit Days
+                            {t("Edit Days")}
                         </button>
                     </div>
                 </div>
@@ -151,7 +151,6 @@ export default function DatePickerModal({ show, onHide, onDateSelect }: { show: 
         </EventDates.Provider>
     )
 }
-
 
 function CustomDay(props: { day: CalendarDay; modifiers: Modifiers; } & HTMLAttributes<HTMLDivElement>) {
     const eventDates = useEventDates();

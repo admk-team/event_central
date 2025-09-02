@@ -6,6 +6,7 @@ import { useForm, usePage } from "@inertiajs/react";
 import DeleteModal from "../../../../../Components/Common/DeleteModal";
 import HasPermission from "../../../../../Components/HasPermission";
 import HasAnyPermission from "../../../../../Components/HasAnyPermission";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 export default function Platforms({ onPlatformChange }: { onPlatformChange: (platform: any) => void }) {
     const eventPlatforms = usePage().props.eventPlatforms as any;
@@ -16,6 +17,8 @@ export default function Platforms({ onPlatformChange }: { onPlatformChange: (pla
     const [deletePlatform, setDeletePlatform] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = React.useState(false);
     const [platformCreated, setPlatformCreated] = React.useState(false);
+
+    const { t } = useLaravelReactI18n();
 
     const setSelectedPlatform = (state: any) => {
         _setSelectedPlatform(state);
@@ -85,14 +88,14 @@ export default function Platforms({ onPlatformChange }: { onPlatformChange: (pla
                                     </Dropdown.Toggle>
                                     <Dropdown.Menu>
                                         <HasPermission permission="edit_locations">
-                                            <Dropdown.Item onClick={() => editAction(platform)}> Edit</Dropdown.Item>
+                                            <Dropdown.Item onClick={() => editAction(platform)}>{t("Edit")}</Dropdown.Item>
                                         </HasPermission>
                                         <HasPermission permission="delete_locations">
                                             <Dropdown.Item
                                                 className="text-danger fw-semibold"
                                                 onClick={() => deleteAction(platform)}
                                             >
-                                                Delete
+                                                {t("Delete")}
                                             </Dropdown.Item>
                                         </HasPermission>
                                     </Dropdown.Menu>
@@ -105,7 +108,7 @@ export default function Platforms({ onPlatformChange }: { onPlatformChange: (pla
                     <HasPermission permission="create_locations">
                         <Button onClick={() => setShowCreateEditPlatformModal(true)}>
                             <i className="ri-add-fill"></i>
-                            New Location
+                            {t("New Location")}
                         </Button>
                     </HasPermission>
                 </div>

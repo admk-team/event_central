@@ -2,8 +2,10 @@ import { useForm, usePage } from "@inertiajs/react";
 import React from "react";
 import { ListGroupItem } from "react-bootstrap";
 import FormCheckInput from "react-bootstrap/esm/FormCheckInput";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 export default function PrivateToggleRegister() {
+    const { t } = useLaravelReactI18n();
     const enablePrivateRegistraion = usePage().props
         .enablePrivateRegistraion as boolean;
 
@@ -26,11 +28,11 @@ export default function PrivateToggleRegister() {
     return (
         <ListGroupItem className="d-flex justify-content-between align-items-center">
             <div>
-                <div>Toggle Private Registration via Email</div>
+                <div>{t("Toggle Private Registration via Email")}</div>
                 <small className="text-muted">
                     {enablePrivateRegistraion
-                        ? "Private registration (share-link via email)."
-                        : "Public registration (anyone with the link can register)."}
+                        ? t("Private registration (share-link via email).")
+                        : t("Public registration (anyone with the link can register).")}
                 </small>
             </div>
 

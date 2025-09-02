@@ -4,8 +4,9 @@ import { router, usePage } from '@inertiajs/react';
 import Layout from '../../../../Layouts/Event';
 import { Button, Card, Col, Container, Form, Row, Spinner } from 'react-bootstrap';
 import axios from 'axios';
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 const Edit = ({ EmailTemplate, eventId }: any) => {
+    const { t } = useLaravelReactI18n();
     const emailEditorRef = useRef<EditorRef>(null);
     const page = usePage();
     const [name, setName] = useState(EmailTemplate?.name || '');
@@ -88,14 +89,14 @@ const Edit = ({ EmailTemplate, eventId }: any) => {
         <Container fluid style={{ marginTop: '100px' }}>
             <Card>
                 <Card.Header className="d-flex justify-content-between align-items-center">
-                    <h5>Update Email Template</h5>
+                    <h5>{t("Update Email Template")}</h5>
                     <Button onClick={handleSubmit} disabled={isSubmitting}>
                         {isSubmitting ? <Spinner size="sm" animation="border" /> : 'Update'}
                     </Button>
                 </Card.Header>
                 <Card.Body>
                     <Form.Group as={Col} md={6} className="mb-3">
-                        <Form.Label>Template Name</Form.Label>
+                        <Form.Label>{t("Template Name")}</Form.Label>
                         <Form.Control
                             type="text"
                             value={name}
@@ -105,7 +106,7 @@ const Edit = ({ EmailTemplate, eventId }: any) => {
                         <Form.Control.Feedback type="invalid">{errorMessage}</Form.Control.Feedback>
                     </Form.Group>
                     <Form.Group as={Col} md={6} className="mb-3">
-                        <Form.Label>Change Image</Form.Label>
+                        <Form.Label>{t("Change Image")}</Form.Label>
                         <Form.Control type="file" onChange={handleImageChange} />
                     </Form.Group>
                     <EmailEditor ref={emailEditorRef} minHeight="800px" />
