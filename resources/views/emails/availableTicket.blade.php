@@ -82,10 +82,15 @@
 
 <body>
     <div class="email-container">
+        <div class="header">
+            <img src="{{ asset($events->logo_img ?: 'images/logo.png') }}" alt="Logo">
+            <h1>Event Reminder</h1>
+        </div>
         <h2>Hi {{ $attendee->first_name }} {{ $attendee->last_name }}, Your Chance is Here!</h2>
 
-        <p>You were on the waiting list for this event — and now <strong>tickets are available again</strong>!  
-           As one of our priority waitlist members, you can secure your spot before tickets are released to the public.</p>
+        <p>You were on the waiting list for this event — and now <strong>tickets are available again</strong>!
+            As one of our priority waitlist members, you can secure your spot before tickets are released to the public.
+        </p>
 
         <div class="highlight">⚡ Hurry! This ticket may be claimed by other attendees if you delay.</div>
 
@@ -99,8 +104,14 @@
         <a href="{{ $purchaseUrl }}" class="btn">Claim Your Ticket Now</a>
 
         <div class="footer">
-            <p>This email was sent to you because you joined the waiting list for <strong>{{ config('app.name') }}</strong>.</p>
+            <p>This email was sent to you because you joined the waiting list for
+                <strong>{{ config('app.name') }}</strong>.
+            </p>
             <p>Please act fast – availability is not guaranteed.</p>
+        </div>
+        <div class="footer">
+            If you received this email by mistake, please ignore it.<br>
+            &copy; {{ date('Y') }} {{ $events->name ?? 'Event Central' }}
         </div>
     </div>
 </body>
