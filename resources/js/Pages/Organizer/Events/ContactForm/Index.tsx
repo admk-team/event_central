@@ -103,7 +103,7 @@ function Index({ contactForm }: any) {
 
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Contact Form" pageTitle={t("Dashboard")} />
+                    <BreadCrumb title={t("Contact Form")} pageTitle={t("Dashboard")} />
                     <Row>
                         <Col xs={12}>
                             <HasPermission permission="view_contact_form">

@@ -159,16 +159,16 @@ function Index({ liveStreams, eventTickets }: any) {
 
     return (
         <>
-            <Head title="Live Streams" />
+            <Head title={t("Live Streams")} />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb2 title="Live Streams" />
+                    <BreadCrumb2 title={t("Live Streams")} />
                     <Row>
                         <Col xs={12}>
                             <DataTable
                                 data={liveStreams}
                                 columns={columns}
-                                title="Live Streams"
+                                title={t("Live Streams")}
                                 actions={[
                                     {
                                         render: (dataTable) => (

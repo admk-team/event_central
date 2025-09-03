@@ -146,7 +146,7 @@ const EditAttendee = ({ show, handleClose, user, isEdit }: any) => {
                     <Row>
                         <Col md={6} lg={6}>
                             <Form.Group className="mb-3">
-                                <Form.Label>{t("{Company}")}</Form.Label>
+                                <Form.Label>{t("Company")}</Form.Label>
                                 <Form.Control
                                     type="text"
                                     name="company"
