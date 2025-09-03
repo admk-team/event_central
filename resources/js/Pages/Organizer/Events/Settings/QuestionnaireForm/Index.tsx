@@ -7,10 +7,9 @@ import FormStatus from "./Components/FormStatus";
 import FormFields from "./Components/FormFields";
 import RenderForm from "../../../../../Components/FormBuilder/RenderForm";
 import FormUrl from "./Components/FormUrl";
-import { useTranslation } from "react-i18next";
-
+import { useLaravelReactI18n } from 'laravel-react-i18n';
 function Index({ form }: any) {
-    const { t } = useTranslation();
+    const { t } = useLaravelReactI18n();
 
     return (
         <React.Fragment>

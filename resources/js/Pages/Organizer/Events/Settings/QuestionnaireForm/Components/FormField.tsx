@@ -5,8 +5,7 @@ import { useState } from "react";
 import DeleteModal from "../../../../../../Components/Common/DeleteModal";
 import { router } from "@inertiajs/react";
 import CreateEditFieldModal from "./CreateEditFieldModal";
-import { useLaravelReactI18n } from "laravel-react-i18n";
-
+import { useLaravelReactI18n } from 'laravel-react-i18n';
 export default function FormField({ field }: any) {
     const { t } = useLaravelReactI18n();
     const Icon = fieldTypes[field.type]?.icon;

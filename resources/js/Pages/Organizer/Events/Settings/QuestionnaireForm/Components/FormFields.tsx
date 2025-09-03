@@ -6,11 +6,10 @@ import FieldTypesModal from './FieldTypesModal';
 import { FieldType, fieldTypes } from '../../../../../../common/data/formBuilderFieldTypes';
 import { usePage } from '@inertiajs/react';
 import FormField from './FormField';
-import { useTranslation } from 'react-i18next';
-
+import { useLaravelReactI18n } from 'laravel-react-i18n';
 export default function FormFields() {
     const form = usePage().props.form as any;
-    const { t } = useTranslation();
+    const { t } = useLaravelReactI18n();
 
     const [showFieldsModal, setShowFieldsModal] = useState(false);
     const [selectedFieldType, setSelectedFieldType] = useState<FieldType | null>(null);
