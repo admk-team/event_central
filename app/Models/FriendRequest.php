@@ -10,6 +10,7 @@ class FriendRequest extends Model
     use HasFactory;
 
     protected $fillable = [
+        'event_app_id',
         'sender_id',
         'receiver_id',
         'status',
@@ -28,6 +29,10 @@ class FriendRequest extends Model
     public function receiver()
     {
         return $this->belongsTo(Attendee::class, 'receiver_id');
+    }
+    public function event()
+    {
+        return $this->belongsTo(EventApp::class, 'event_app_id');
     }
 
     public function scopePending($query)

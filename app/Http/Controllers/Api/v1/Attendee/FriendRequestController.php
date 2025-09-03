@@ -58,7 +58,12 @@ class FriendRequestController extends Controller
         ]);
 
         $sender = Auth::user();
-        $receiver = Attendee::findOrFail($request->receiver_id);
+        $receiver = Attendee::where('id', $request->receiver_id)->first();
+
+
+        if (!$receiver) {
+            return response()->json(['status' => 'error', 'message' => 'Reciver not Found'], 400);
+        }
 
         if ($sender->id === $receiver->id) {
             return response()->json(['status' => 'error', 'message' => 'You cannot send a request to yourself.'], 400);
@@ -77,18 +82,19 @@ class FriendRequestController extends Controller
         }
 
         FriendRequest::create([
+            'event_app_id' => $sender->event_app_id,
             'sender_id' => $sender->id,
             'receiver_id' => $receiver->id,
             'status' => 'pending',
         ]);
 
         // Push Notification
-        $this->sendWebPushNotification(
-            $receiver->id,
-            'Follow Request',
-            "{$sender->name} sent you a follow request",
-            route('friend.index')
-        );
+        // $this->sendWebPushNotification(
+        //     $receiver->id,
+        //     'Follow Request',
+        //     "{$sender->name} sent you a follow request",
+        //     route('friend.index')
+        // );
 
         return response()->json(['status' => 'success', 'message' => 'Friend request sent.']);
     }
@@ -106,12 +112,12 @@ class FriendRequestController extends Controller
         if ($user->acceptFriendRequest($sender)) {
             $this->chatInitiate($user, $sender);
 
-            $this->sendWebPushNotification(
-                $sender->id,
-                'Follow Request Accepted',
-                "{$user->name} accepted your follow request",
-                route('friend.index')
-            );
+            // $this->sendWebPushNotification(
+            //     $sender->id,
+            //     'Follow Request Accepted',
+            //     "{$user->name} accepted your follow request",
+            //     route('friend.index')
+            // );
 
             return response()->json(['status' => 'success', 'message' => 'Friend request accepted.']);
         }
@@ -130,12 +136,12 @@ class FriendRequestController extends Controller
         $friend = Attendee::findOrFail($request->friend_id);
 
         if ($user->removeFriend($friend)) {
-            $this->sendWebPushNotification(
-                $friend->id,
-                'Friend Removed',
-                "{$user->name} has removed you as a friend.",
-                route('friend.index')
-            );
+            // $this->sendWebPushNotification(
+            //     $friend->id,
+            //     'Friend Removed',
+            //     "{$user->name} has removed you as a friend.",
+            //     route('friend.index')
+            // );
 
             return response()->json(['status' => 'success', 'message' => 'Friend removed successfully.']);
         }

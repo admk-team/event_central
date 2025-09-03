@@ -13,6 +13,8 @@ use App\Http\Controllers\Api\v1\Attendee\ProfileController;
 use App\Http\Controllers\Api\v1\Attendee\RegisterController;
 use App\Http\Controllers\Api\v1\Organizer\EventSessionController;
 use App\Http\Controllers\Api\v1\Attendee\EventController as AttendeeEventController;
+use App\Http\Controllers\Api\v1\Attendee\EventShopController;
+use App\Http\Controllers\Api\v1\Attendee\EventStaffController;
 use App\Http\Controllers\Api\v1\Attendee\FriendRequestController;
 use App\Http\Controllers\Api\v1\Attendee\PrayerRequestController as AttendeePrayerRequestController;
 use App\Http\Controllers\Api\v1\Attendee\QuestionAttendeeController as AttendeeQuestionAttendeeController;
@@ -236,5 +238,14 @@ Route::prefix('attendee')->group(function () {
         Route::post('/friends/send', [FriendRequestController::class, 'store']);
         Route::post('/friends/accept', [FriendRequestController::class, 'accept']);
         Route::post('/friends/remove', [FriendRequestController::class, 'remove']);
+        // Event Staff
+        Route::get('staff', [EventStaffController::class, 'index']);
+        Route::post('initiate-chat', [EventStaffController::class, 'initiateChat']);
+        //Event Shop
+        Route::get('products', [EventShopController::class, 'index']);
+        Route::post('puchase/product', [EventShopController::class, 'checkout']);
+        Route::post('product/update/{paymentId}', [EventShopController::class, 'updateOrder']);
+        // Route::get('success/checkout', [EventShopController::class, 'paymentSuccess']);
+        // Route::get('cancel/checkout', [EventShopController::class, 'paymentCancel']);
     });
 });

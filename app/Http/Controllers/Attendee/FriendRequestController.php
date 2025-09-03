@@ -65,6 +65,7 @@ class FriendRequestController extends Controller
         }
 
         FriendRequest::create([
+            'event_app_id' => $sender->event_app_id,
             'sender_id' => $sender->id,
             'receiver_id' => $receiver->id,
             'status' => 'pending',
