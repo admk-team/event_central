@@ -31,6 +31,8 @@ use App\Http\Controllers\Api\v1\Organizer\PaymentController as OrganizerPaymentC
 use App\Http\Controllers\Api\v1\Organizer\PrayerRequestController;
 use App\Http\Controllers\Api\v1\Organizer\ProfileController as OrganizerProfileController;
 use App\Http\Controllers\Api\v1\Attendee\LiveStreamController;
+use App\Http\Controllers\Api\v1\Organizer\EventShop\OrdersController;
+use App\Http\Controllers\Api\v1\Organizer\EventShop\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -99,6 +101,7 @@ Route::prefix('user')->group(function () {
         Route::get('events/{event}/attendees/{attendee}', [AttendeeController::class, 'show']);
         Route::put('events/{event}/attendees/{attendee}', [AttendeeController::class, 'update']);
         Route::get('purchased-tickets/attendees/{attendee}', [AttendeeController::class, 'attendeeTickets']);
+        Route::post('attendee/chat-initiate/{attendee}', [AttendeeController::class, 'initiateChat']);
 
         // Event Tickets
         Route::get('events/{event}/tickets', [TicketController::class, 'index']);
@@ -138,6 +141,15 @@ Route::prefix('user')->group(function () {
         Route::get('/chat/one-to-one/{participant_id}/{event}', [OrganizerChatController::class, 'getOneToOneChat']);
         Route::post('/chat/send/{event}', [OrganizerChatController::class, 'store']);
         Route::post('/chat/mark-as-read/{chatWithUserId}/{event}', [OrganizerChatController::class, 'markAsRead']);
+
+        // Event Store
+        Route::get('/products/{event}', [ProductController::class, 'index']);
+        Route::post('/products/{event}', [ProductController::class, 'store']);
+        Route::post('/products/{product}/{event}', [ProductController::class, 'update']);
+        Route::delete('/products/{product}', [ProductController::class, 'destroy']);
+        // Event Product Orders
+        Route::get('/orders/{event}', [OrdersController::class, 'index']);
+        Route::delete('/orders/{order}', [OrdersController::class, 'destroy']);
     });
 });
 

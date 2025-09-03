@@ -17,7 +17,7 @@ class ChatController extends Controller
     {
         if (!$event) {
             return response()->json([
-                'success' => false,
+                'status' => false,
                 'message' => 'Event not fount'
             ], 404);
         }
@@ -63,7 +63,7 @@ class ChatController extends Controller
         }
 
         return response()->json([
-            'success' => true,
+            'status' => true,
             'members' => $members,
             'event_data' => $eventData,
             'logged_user' => $user->id
@@ -74,7 +74,7 @@ class ChatController extends Controller
     {
         if (!$event) {
             return response()->json([
-                'success' => false,
+                'status' => false,
                 'message' => 'Event not fount'
             ], 404);
         }
@@ -88,7 +88,7 @@ class ChatController extends Controller
             ->get();
 
         return response()->json([
-            'success' => true,
+            'status' => true,
             'messages' => $messages,
         ], 200);
     }
@@ -97,7 +97,7 @@ class ChatController extends Controller
     {
         if (!$event) {
             return response()->json([
-                'success' => false,
+                'status' => false,
                 'message' => 'Event not fount'
             ], 404);
         }
@@ -125,7 +125,7 @@ class ChatController extends Controller
             ->get();
 
         return response()->json([
-            'success' => true,
+            'status' => true,
             'messages' => $messages,
         ], 200);
     }
@@ -141,7 +141,7 @@ class ChatController extends Controller
 
         if (!$event) {
             return response()->json([
-                'success' => false,
+                'status' => false,
                 'message' => 'Event not fount'
             ], 404);
         }
@@ -216,14 +216,14 @@ class ChatController extends Controller
             broadcast(new AttendeeChatMessage($message))->toOthers();
         }
 
-        return response()->json(['success' => true, 'message' => $message], 200);
+        return response()->json(['status' => true, 'message' => $message], 200);
     }
 
     public function markAsRead($chatWithUserId, EventApp $event)
     {
         if (!$event) {
             return response()->json([
-                'success' => false,
+                'status' => false,
                 'message' => 'Event not fount'
             ], 404);
         }
@@ -236,7 +236,7 @@ class ChatController extends Controller
             ->where('user_id', $chatWithUserId)
             ->update(['unread_count' => 0]);
 
-        return response()->json(['success' => true], 200);
+        return response()->json(['status' => true], 200);
     }
 
     private function initiateChat($event, $userId, $userType, $participantId, $participantType)
