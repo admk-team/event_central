@@ -7,71 +7,90 @@ import Dropdown from "./Fields/Dropdown";
 import { useForm, usePage } from "@inertiajs/react";
 import { fieldTypes } from "../../common/data/formBuilderFieldTypes";
 import { FormBuilderContext } from "../../hooks/useFormBuilder";
+import { useLaravelReactI18n } from "laravel-react-i18n";
+export default function RenderQuestionnaireForm({
+    form,
+    preview = false,
+    submitRoute,
+}: any) {
+    const currentEvent = usePage().props.currentEvent as any;
+    const { t } = useLaravelReactI18n();
+    const { data, setData, post, processing, errors, reset } = useForm<
+        Record<string, any>
+    >(getDefaultFormData({}, form.fields));
 
-export default function RenderQuestionnaireForm({ form, preview = false, submitRoute }: any) {
-  const currentEvent = usePage().props.currentEvent as any;
+    useEffect(() => {
+        setData(getDefaultFormData({ ...data }, form.fields));
+    }, [form]);
 
-  const { data, setData, post, processing, errors, reset } = useForm<Record<string, any>>(getDefaultFormData({}, form.fields));
+    const submit = (e: any) => {
+        e.preventDefault();
 
-  useEffect(() => {
-    setData(getDefaultFormData({ ...data }, form.fields));
-  }, [form]);
+        post(
+            submitRoute ||
+                route("attendee.event-questionnaire-form", {
+                    id: currentEvent.id,
+                }),
+            {
+                preserveScroll: true,
+                onSuccess: () => reset(),
+            }
+        );
+    };
 
-  const submit = (e: any) => {
-    e.preventDefault();
-
-    post(submitRoute || route('attendee.event-questionnaire-form', {
-      id: currentEvent.id,
-    }), {
-      preserveScroll: true,
-      onSuccess: () => reset(),
-    })
-  }
-
-  return (
-    <FormBuilderContext.Provider value={{
-      data: getDefaultFormData({ ...data }, form.fields),
-      setData,
-      processing,
-      errors,
-    }}>
-      {form.fields.length > 0 && (
-        <Form onSubmit={submit}>
-          <div className="mb-4">
-            {form.fields.map((field: any) => {
-              const name = `field_${field.id}`;
-              const FieldComp = fieldTypes[field.type]?.render ?? null;
-              return FieldComp ? <FieldComp key={field.id} name={name} field={field} /> : null;
-            })}
-          </div>
-          <Button type="submit" disabled={processing}>
-            {processing ? (
-              <span className="d-flex gap-1 align-items-center">
-                <Spinner
-                  as="span"
-                  animation="border"
-                  size="sm"
-                  role="status"
-                  aria-hidden="true"
-                />
-                Submitting
-              </span>
-            ) : (
-              <span>Submit</span>
+    return (
+        <FormBuilderContext.Provider
+            value={{
+                data: getDefaultFormData({ ...data }, form.fields),
+                setData,
+                processing,
+                errors,
+            }}
+        >
+            {form.fields.length > 0 && (
+                <Form onSubmit={submit}>
+                    <div className="mb-4">
+                        {form.fields.map((field: any) => {
+                            const name = `field_${field.id}`;
+                            const FieldComp =
+                                fieldTypes[field.type]?.render ?? null;
+                            return FieldComp ? (
+                                <FieldComp
+                                    key={field.id}
+                                    name={name}
+                                    field={field}
+                                />
+                            ) : null;
+                        })}
+                    </div>
+                    <Button type="submit" disabled={processing}>
+                        {processing ? (
+                            <span className="d-flex gap-1 align-items-center">
+                                <Spinner
+                                    as="span"
+                                    animation="border"
+                                    size="sm"
+                                    role="status"
+                                    aria-hidden="true"
+                                />
+                                {t("Submitting")}
+                            </span>
+                        ) : (
+                            <span>{t("Submit")}</span>
+                        )}
+                    </Button>
+                </Form>
             )}
-          </Button>
-        </Form>
-      )}
-    </FormBuilderContext.Provider>
-  )
+        </FormBuilderContext.Provider>
+    );
 }
 
 function getDefaultFormData(data: Record<string, any>, fields: any) {
-  fields.map((field: any) => {
-    if (data[`field_${field.id}`] === undefined) {
-      data[`field_${field.id}`] = field.multi_selection ? [] : '';
-    }
-  });
+    fields.map((field: any) => {
+        if (data[`field_${field.id}`] === undefined) {
+            data[`field_${field.id}`] = field.multi_selection ? [] : "";
+        }
+    });
 
-  return data;
+    return data;
 }
