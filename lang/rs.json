@@ -302,8 +302,7 @@
 "Enter Zoho CRM Credentials": "Введите учётные данные Zoho CRM",
 "Enter Credentials Instruction": "Заполните Client ID, Client Secret и Redirect URI в точности как в консоли Zoho API. Нажмите «Save Keys».",
 "Redirect URI": "Redirect URI",
-"Redirect URI Instruction": "https://eventcentral.net/organizer/zoho/callback
- (Для этого нужно войти как Организатор)",
+"Redirect URI Instruction": "https://eventcentral.net/organizer/zoho/callback(Для этого нужно войти как Организатор)",
 "Connect to Zoho": "Подключиться к Zoho",
 "Connect to Zoho Instruction": "Нажмите кнопку <span class='badge bg-danger text-white'>Connect</span>. Войдите в Zoho и подтвердите доступ — после успешного подключения вы будете перенаправлены обратно.",
 "Sync Event Data": "Синхронизация данных события",
