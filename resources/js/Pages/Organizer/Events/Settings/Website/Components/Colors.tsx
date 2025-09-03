@@ -1,11 +1,11 @@
-import { useForm, usePage } from '@inertiajs/react'
-import { Key } from 'lucide-react';
-import React from 'react'
-import { Button, Card, CardBody, CardHeader, CardTitle, Col, Form, FormGroup, ListGroup, ListGroupItem, Row, Spinner } from 'react-bootstrap'
+import { useForm, usePage } from '@inertiajs/react';
+import React from 'react';
+import { Button, Card, CardBody, CardHeader, CardTitle, Col, Form, ListGroup, ListGroupItem, Row, Spinner } from 'react-bootstrap';
+import { useLaravelReactI18n } from 'laravel-react-i18n';
 
 export default function Colors() {
     const colors = usePage().props.colors as any;
-
+    const { t } = useLaravelReactI18n();
     const { data, setData, post, processing } = useForm({
         'colors': colors,
     });
@@ -16,21 +16,21 @@ export default function Colors() {
         post(route('organizer.events.settings.website.save-colors'), {
             preserveScroll: true,
         });
-    }
+    };
 
-    // 🔹 Mapping for friendly labels
+    // 🔹 Translatable color labels
     const colorLabels: Record<string, string> = {
-        primary: "Primary Theme Active",
-        primary_light: "Primary Text Color",
-        primary_dark: "Primary Background Color",
-        primary_foreground: "Primary Foreground Color"
+        primary: t("Primary Theme Active"),
+        primary_light: t("Primary Text Color"),
+        primary_dark: t("Primary Background Color"),
+        primary_foreground: t("Primary Foreground Color")
     };
 
     return (
         <Form onSubmit={submit}>
             <Card>
                 <CardHeader className="d-flex justify-content-between align-items-center gap-2">
-                    <CardTitle className="mb-0">Colors</CardTitle>
+                    <CardTitle className="mb-0">{t('Colors')}</CardTitle>
                     <div>
                         <Button type="submit" disabled={processing}>
                             {processing ? (
@@ -42,10 +42,10 @@ export default function Colors() {
                                         role="status"
                                         aria-hidden="true"
                                     />
-                                    Saving
+                                    {t('Saving')}
                                 </span>
                             ) : (
-                                <span>Save</span>
+                                <span>{t('Save')}</span>
                             )}
                         </Button>
                     </div>
@@ -59,7 +59,7 @@ export default function Colors() {
                                         <Col lg={3}>
                                             <div className="d-flex align-items-center h-100">
                                                 <Form.Label className="form-label mb-0">
-                                                    {colorLabels[name] ?? name.replaceAll('_', ' ')}
+                                                    {colorLabels[name] ?? t(name.replaceAll('_', ' '))}
                                                 </Form.Label>
                                             </div>
                                         </Col>
@@ -83,5 +83,5 @@ export default function Colors() {
                 </CardBody>
             </Card>
         </Form>
-    )
+    );
 }

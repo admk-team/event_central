@@ -10,11 +10,12 @@ import { createSelector } from "@reduxjs/toolkit";
 import { Dropdown, Form } from "react-bootstrap";
 import { changeSidebarVisibility } from "../../slices/thunk";
 // import SearchOption from "../../Components/Common/SearchOption";
-// import LanguageDropdown from "../../Components/Common/LanguageDropdown";
+import LanguageDropdown from "../../Components/Common/LanguageDropdown";
 // import WebAppsDropdown from "../../Components/Common/WebAppsDropdown";
 // import MyCartDropdown from "../../Components/Common/MyCartDropdown";
 // import FullScreenDropdown from "../../Components/Common/FullScreenDropdown";
 import AttendeeProfileDropdown from "../../Components/Common/AttendeeProfileDropdown";
+import LightDark from "../../Components/Common/LightDark";
 // import LightDark from "../../Components/Common/LightDark";
 // import NotificationDropdown from "../../Components/Common/NotificationDropdown";
 
@@ -123,6 +124,11 @@ const HeaderAttendee = ({ onChangeLayoutMode, layoutModeType, headerClass }: any
                                 </Dropdown.Menu>
                             </Dropdown> */}
                             {/* ProfileDropdown */}
+                             <LanguageDropdown />
+                              <LightDark
+                                layoutMode={layoutModeType}
+                                onChangeLayoutMode={onChangeLayoutMode}
+                            />
                             <AttendeeProfileDropdown />
                         </div>
                     </div>

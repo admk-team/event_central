@@ -10,10 +10,10 @@ import { createSelector } from 'reselect';
 import { ongetAllData } from '../../../../slices/thunk';
 import TopPages from './TopPages';
 import TopReferrals from './TopReferrals';
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 const LiveUsers  = ({sessionAttendance,top10Attendee, getCurrency}: any) => {
     const dispatch: any = useDispatch();
-
+    const { t } = useLaravelReactI18n();
     const [countryData, setcountryData] = useState<any>([]);
     const [periodType, setPeriodType] = useState<string>("halfyearly");
 
@@ -107,7 +107,7 @@ const LiveUsers  = ({sessionAttendance,top10Attendee, getCurrency}: any) => {
                         <Link title='View session report' href={route('organizer.events.report.session.index')} className="link-primary cursor-pointer">
                             <Card className="card-height-100">
                                 <div className="card-header align-items-center d-flex">
-                                    <h4 className="card-title mb-0 flex-grow-1">Sessions Attendance</h4>
+                                    <h4 className="card-title mb-0 flex-grow-1">{t("Sessions Attendance")}</h4>
                                     {/* <div className="d-flex gap-1">
                                         <button type="button" className={classNames({ active: periodType === "all" }, "btn btn-soft-secondary btn-sm")} onClick={() => { onChangeChartPeriod("all"); }}>
                                             ALL

@@ -2,12 +2,14 @@ import { useForm, usePage } from '@inertiajs/react';
 import { Form, FormGroup, Modal, Spinner } from "react-bootstrap";
 import Select from "react-select";
 import { customStyles } from '../../../../common/data/customSelectStyles';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 export default function CreateEditModal({ show, hide, onHide, user }: { show: boolean, hide: () => void, onHide: () => void, user: any | null }) {
     const isEdit = user != null ? true : false;
 
     const roles = (usePage().props.roles ?? []) as any[];
     const events = (usePage().props.events ?? []) as any[];
+    const { t } = useLaravelReactI18n();
 
     const { data, setData, post, processing, errors, reset } = useForm({
         _method: isEdit ? "PUT" : "POST",
@@ -63,14 +65,14 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
         <Modal show={show} onHide={onHide} centered>
             <Modal.Header className="bg-light p-3" closeButton>
                 <h5 className="modal-title">
-                    {isEdit ? 'Edit User' : 'Add User'}
+                    {isEdit ? t('Edit User') : t('Add User')}
                 </h5>
             </Modal.Header>
 
             <Form onSubmit={submit} className="tablelist-form">
                 <Modal.Body>
                     <FormGroup className="mb-3">
-                        <Form.Label className="form-label">Name</Form.Label>
+                        <Form.Label className="form-label">{t("Name")}</Form.Label>
                         <Form.Control
                             type="text"
                             className="form-control"
@@ -83,7 +85,7 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                         )}
                     </FormGroup>
                     <FormGroup className="mb-3">
-                        <Form.Label className="form-label">Email</Form.Label>
+                        <Form.Label className="form-label">{t("Email")}</Form.Label>
                         <Form.Control
                             type="email"
                             className="form-control"
@@ -96,7 +98,7 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                         )}
                     </FormGroup>
                     <FormGroup className="mb-3">
-                        <Form.Label className="form-label">Pasword</Form.Label>
+                        <Form.Label className="form-label">{t("Pasword")}</Form.Label>
                         <Form.Control
                             type="password"
                             className="form-control"
@@ -109,7 +111,7 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                         )}
                     </FormGroup>
                     <FormGroup className="mb-3">
-                        <Form.Label className="form-label">Role</Form.Label>
+                        <Form.Label className="form-label">{t("Role")}</Form.Label>
                         <Form.Select
                             className="form-control"
                             value={data.role_id}
@@ -129,7 +131,7 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                     {events.length > 0 && (
                         <FormGroup className="mb-3">
                             <Form.Label className="form-label d-flex justify-content-between align-items-center">
-                                <div>Events</div>
+                                <div>{t("Events")}</div>
                                 <div className="form-check form-switch mb-0">
                                     <Form.Check.Input
                                         className="form-check-input"
@@ -145,7 +147,7 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                                             }
                                         }}
                                     />
-                                    <Form.Check.Label className="form-check-label" htmlFor="selectAllEvents">Select all</Form.Check.Label>
+                                    <Form.Check.Label className="form-check-label" htmlFor="selectAllEvents">{t("Select all")}</Form.Check.Label>
                                 </div>
                             </Form.Label>
                             <Select
@@ -171,7 +173,7 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                     {eventSessions.length > 0 && (
                         <FormGroup className="mb-3">
                             <Form.Label className="form-label d-flex justify-content-between align-items-center">
-                                <div>Event Sessions</div>
+                                <div>{t("Event Sessions")}</div>
                                 <div className="form-check form-switch mb-0">
                                     <Form.Check.Input
                                         className="form-check-input"
@@ -187,7 +189,7 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                                             }
                                         }}
                                     />
-                                    <Form.Check.Label className="form-check-label" htmlFor="selectAllEventSessions">Select all</Form.Check.Label>
+                                    <Form.Check.Label className="form-check-label" htmlFor="selectAllEventSessions">{t("Select all")}</Form.Check.Label>
                                 </div>
                             </Form.Label>
                             <Select
@@ -216,7 +218,7 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                             className="btn btn-light"
                             onClick={hide}
                         >
-                            Close
+                            {t("Close")}
                         </button>
 
                         <button type="submit" className="btn btn-success" disabled={processing}>
@@ -229,10 +231,10 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                                         role="status"
                                         aria-hidden="true"
                                     />
-                                    {isEdit ? 'Updating' : 'Creating'}
+                                    {isEdit ? t('Updating') : t('Creating')}
                                 </span>
                             ) : (
-                                <span>{isEdit ? 'Update' : 'Create'}</span>
+                                <span>{isEdit ? t('Update') : t('Create')}</span>
                             )}
                         </button>
                     </div>

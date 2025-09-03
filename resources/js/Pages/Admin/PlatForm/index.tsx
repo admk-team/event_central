@@ -8,6 +8,7 @@ import DataTable, { ColumnDef } from '../../../Components/DataTable';
 import BreadCrumb2 from '../../../Components/Common/BreadCrumb2';
 import DeleteManyModal from '../../../Components/Common/DeleteManyModal';
 import HasPermission from '../../../Components/HasPermission';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 function Index({ platforms }: any) {
     const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
@@ -15,6 +16,7 @@ function Index({ platforms }: any) {
     const [deletePlatform, setDeletePlaform] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
+         const { t } = useLaravelReactI18n();
 
     const setShowCreateEditModal = (state: boolean) => {
         _setShowCreateEditModal(state);
@@ -60,14 +62,14 @@ function Index({ platforms }: any) {
     const columns: ColumnDef<typeof platforms.data[0]> = [
         {
             accessorKey: 'id',
-            header: () => 'ID',
+            header: () => t('ID'),
             cell: (platform) => platform.id,
             cellClass: "fw-medium",
             enableSorting: true,
         },
         {
             accessorKey: 'name',
-            header: () => 'Name',
+            header: () => t('Name'),
             cell: (platform) => platform.name,
             cellClass: "fw-medium",
             enableSorting: true,
@@ -96,18 +98,18 @@ function Index({ platforms }: any) {
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb2
-                        title="Spaces & Rooms"
+                        title={t("Spaces & Rooms")}
                     />
                     <Row>
                         <Col xs={12}>
                             <DataTable
                                 data={platforms}
                                 columns={columns}
-                                title="Spaces & Rooms"
+                                title={t("Spaces & Rooms")}
                                 actions={[
                                     // Delete multiple
                                     {
-                                        render: (dataTable) => <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>,
+                                        render: (dataTable) => <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> {t("Delete")} ({dataTable.getSelectedRows().length})</Button>,
                                         showOnRowSelection: true,
                                     },
 
@@ -115,7 +117,7 @@ function Index({ platforms }: any) {
                                     {
                                         render: (
                                             // <HasPermission permission="create_locations">
-                                                <Button onClick={() => setShowCreateEditModal(true)}><i className="ri-add-fill"></i> Add New</Button>
+                                                <Button onClick={() => setShowCreateEditModal(true)}><i className="ri-add-fill"></i> {t("Add New")}</Button>
                                             // </HasPermission>
                                         )
                                     },

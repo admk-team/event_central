@@ -30,7 +30,7 @@ class WaitingListController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        $waitList = WaitingList::where('attendee_id', $request->attendee_id)->where('event_app_ticket_id', $request->event_app_ticket_id);
+        $waitList = WaitingList::where('attendee_id', $request->attendee_id)->where('event_app_ticket_id', $request->event_app_ticket_id)->first();
         if ($waitList) {
             return back()->withError("Already in Waiting List");
         }

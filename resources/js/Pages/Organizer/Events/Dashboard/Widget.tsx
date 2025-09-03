@@ -4,7 +4,7 @@ import CountUp from "react-countup";
 import { Link } from '@inertiajs/react';
 //Import Icons
 import FeatherIcon from "feather-icons-react";
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 const Widget = ({
     totalSession,
     totalTickets,
@@ -15,6 +15,7 @@ const Widget = ({
     totalRevenue,
     getCurrency
 }: any) => {
+    const { t } = useLaravelReactI18n();
     return (
         <React.Fragment>
             <Row>
@@ -25,7 +26,7 @@ const Widget = ({
                                 <div className="d-flex justify-content-between">
                                     <div>
                                         <p className="fw-medium text-muted mb-0">
-                                            Total Revenue
+                                            {t("Total Revenue")}
                                         </p>
                                         <h2 className="fs-22 mt-4 ff-secondary fw-semibold">
                                             <span
@@ -80,7 +81,7 @@ const Widget = ({
                                 <div className="d-flex justify-content-between">
                                     <div>
                                         <p className="fw-medium text-muted mb-0">
-                                            Total Refunds
+                                            {t("Total Refunds")}
                                         </p>
                                         <h2 className="mt-4 ff-secondary fw-semibold">
                                             <span className="counter-value">
@@ -138,7 +139,7 @@ const Widget = ({
                                 <div className="d-flex justify-content-between">
                                     <div>
                                         <p className="fw-medium text-muted mb-0">
-                                            Partners
+                                            {t("Partners")}
                                         </p>
                                         <h2 className="mt-4 ff-secondary fw-semibold">
                                             <span className="counter-value">
@@ -192,7 +193,7 @@ const Widget = ({
                             <div className="d-flex justify-content-between">
                                 <div>
                                     <p className="fw-medium text-muted mb-0">
-                                        All Event Post
+                                        {t("All Event Post")}
                                     </p>
                                     <h2 className="fs-22 mt-4 ff-secondary fw-semibold">
                                         <span
@@ -249,7 +250,7 @@ const Widget = ({
                                 <div className="d-flex justify-content-between">
                                     <div>
                                         <p className="fw-medium text-muted mb-0">
-                                            Speakers
+                                            {t("Speakers")}
                                         </p>
                                         <h2 className="mt-4 ff-secondary fw-semibold">
                                             <span className="counter-value">
@@ -303,7 +304,7 @@ const Widget = ({
                                 <div className="d-flex justify-content-between">
                                     <div>
                                         <p className="fw-medium text-muted mb-0">
-                                            Attendees
+                                            {t("Attendees")}
                                         </p>
                                         <h2 className="mt-4 ff-secondary fw-semibold">
                                             <span className="counter-value">

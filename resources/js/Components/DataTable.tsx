@@ -4,7 +4,7 @@ import Pagination from './Common/Pagination'
 import { router } from '@inertiajs/react'
 import { ArrowDown, ArrowUp, ChevronDown, ChevronsUpDown, ChevronUp, Search, X } from 'lucide-react'
 import Dropdown from 'react-bootstrap/Dropdown';
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 type Column<T> = {
     accessorKey?: string;
     header: () => React.ReactNode;
@@ -53,6 +53,7 @@ export default function DataTable<T>({
     tableLayoutFixed,
     searchCombinations
 }: DataTableProps<T>) {
+    const { t } = useLaravelReactI18n();
     const rowSelector = useRowSelector(data.data);
     console.log('testing', columns.map((col, colIndex) => col.header.name));
     const [sort, setSort] = useSort();
@@ -150,7 +151,7 @@ export default function DataTable<T>({
 
                     <Dropdown>
                         <Dropdown.Toggle variant="success" id="dropdown-basic">
-                            Toggle Columns
+                            {t("Toggle Columns")}
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
                             {columns
@@ -250,7 +251,7 @@ export default function DataTable<T>({
                                         colSpan={filteredColumns.length + (!disableRowSelection ? 1 : 0)}
                                         className="text-center fw-semibold"
                                     >
-                                        No data found
+                                        {t("No data found")}
                                     </td>
                                 </tr>
                             )}

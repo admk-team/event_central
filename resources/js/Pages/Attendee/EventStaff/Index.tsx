@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import avatar1 from "../../../../images/users/user-dummy-img.jpg";
 import { Head, useForm } from "@inertiajs/react";
 import AttendeeLayout from "../../../Layouts/Attendee";
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 const Index = ({staff}:any) => {
-
+    const { t } = useLaravelReactI18n();
     const [search, setSearch] = useState("");
     // Filter users by search input
     const filteredUsers = staff.filter((user:any) =>
@@ -27,12 +27,12 @@ const Index = ({staff}:any) => {
 
     return (
         <React.Fragment>
-            <Head title="Event Staff " />
+            <Head title="Event Staff" />
             <div className="page-content">
                 <div className="container">
                     {/* Search Bar */}
                     <div className="search-box mb-5">
-                        <input type="text" className="form-control bg-light border-dark" autoComplete="off" placeholder="Search by name..." value={search}
+                        <input type="text" className="form-control bg-light border-dark" autoComplete="off" placeholder={t("Search by name...")} value={search}
                             onChange={(e) => setSearch(e.target.value)} />
                         <i className="ri-search-line search-icon"></i>
                     </div>
@@ -64,7 +64,7 @@ const Index = ({staff}:any) => {
                                                         onClick={() => setData('receiver_id',user.id)}
                                                     >
                                                         <i className="bx bx-message-rounded-dots me-1"></i>
-                                                        {user.is_chat ? "Chat Initiated" : "Start Chat"}
+                                                        {user.is_chat ? t("Chat Initiated") : t("Start Chat")}
                                                     </button>
                                                     {errors.receiver_id && <div className="text-danger">{errors.receiver_id}</div>}
                                                 </form>

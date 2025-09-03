@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { Modal, Button } from "react-bootstrap";
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 const ChatAttachments = ({ files }: { files: any[] }) => {
+   const { t } = useLaravelReactI18n();
   const [showAttachmentsModal, setShowAttachmentsModal] = useState(false);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [previewFile, setPreviewFile] = useState<any>(null);
@@ -111,7 +112,7 @@ const ChatAttachments = ({ files }: { files: any[] }) => {
         centered
       >
         <Modal.Header closeButton>
-          <Modal.Title>All Attachments</Modal.Title>
+          <Modal.Title>{t("All Attachments")}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="d-flex flex-wrap gap-3">
@@ -139,7 +140,7 @@ const ChatAttachments = ({ files }: { files: any[] }) => {
               className="ms-auto"
               onClick={() => downloadFile(previewFile)}
             >
-              ⬇ Download
+              {t("⬇ Download")}
             </Button>
           )}
         </Modal.Header>

@@ -3,9 +3,11 @@ import { Transition } from '@headlessui/react';
 import { Button, Card, Col, Form, Row } from 'react-bootstrap';
 import React from 'react';
 import InputError from '../../InputError';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 export default function UpdateProfileInformation({ mustVerifyEmail, status, className = '' }: any) {
     const user = usePage().props.auth.user;
+    const { t } = useLaravelReactI18n();
 
     const { data, setData, patch, errors, processing, recentlySuccessful } = useForm({
         name: user.name,
@@ -21,17 +23,17 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
     return (
         <React.Fragment>
             <Col>
-                <h2 >Profile Information</h2>
+                <h2 >{t("Profile Information")}</h2>
             <Card >
 
                 <p className="text-muted p-2">
-                    Update your account's profile information and email address.
+                    {t("Update Profile Info")}
                 </p>
                 <Card.Body>
                     <Form onSubmit={submit} className="mt-6 space-y-6">
                         <Row >
                             <Col lg={6}>
-                                <Form.Label htmlFor="name" value="Name">Name</Form.Label>
+                                <Form.Label htmlFor="name" value="Name">{t("Name")}</Form.Label>
 
                                 <Form.Control
                                     id="name"
@@ -47,7 +49,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                             </Col>
 
                             <Col lg={6}>
-                                <Form.Label htmlFor="email" value="Email" >Email </Form.Label>
+                                <Form.Label htmlFor="email" value="Email" >{t("Email")} </Form.Label>
 
                                 <Form.Control
                                     id="email"
@@ -66,20 +68,20 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                         {mustVerifyEmail && user.email_verified_at === null && (
                             <div>
                                 <p className="text-sm mt-2 text-gray-800 dark:text-gray-200">
-                                    Your email address is unverified.
+                                    {t("Email Unverified")}.
                                     <Link
                                         href={route('verification.send')}
                                         method="post"
                                         as="button"
                                         className="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
                                     >
-                                        Click here to re-send the verification email.
+                                        {t("Resend Verification")}.
                                     </Link>
                                 </p>
 
                                 {status === 'verification-link-sent' && (
                                     <div className="mt-2 font-medium text-sm text-green-600 dark:text-green-400">
-                                        A new verification link has been sent to your email address.
+                                        {t("Verification Link Sent")}.
                                     </div>
                                 )}
                             </div>
@@ -95,7 +97,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                                 leave="transition ease-in-out"
                                 leaveTo="opacity-0"
                             >
-                                <p className="text-sm text-gray-600 dark:text-gray-400">Saved.</p>
+                                <p className="text-sm text-gray-600 dark:text-gray-400">{t("Saved")}.</p>
                             </Transition>
                         </div>
                     </Form>

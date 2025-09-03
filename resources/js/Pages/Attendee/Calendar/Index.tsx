@@ -7,8 +7,11 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import rrulePlugin from "@fullcalendar/rrule";
+import { useLaravelReactI18n } from "laravel-react-i18n";
+
 const Index = ({ events }: any) => {
     const [zoomLevel, setZoomLevel] = useState(1); // 1 = default
+    const { t } = useLaravelReactI18n();
 
     const handleZoomIn = () => {
         setZoomLevel((prev) => Math.min(prev + 1, 3));
@@ -54,11 +57,11 @@ const Index = ({ events }: any) => {
 
     return (
         <>
-            <Head title="Event Calendar" />
+            <Head title={t("Event Calendar")} />
             <div className="page-content">
                 <Container fluid>
                     <h2 className="text-center mb-4 fw-bold">
-                        {events.name} – Schedule
+                        {events.name} – {t("Schedule")}
                     </h2>
 
                     {/* <Row className="mb-3 justify-content-center">
@@ -68,7 +71,7 @@ const Index = ({ events }: any) => {
                                 onClick={handleZoomOut}
                                 disabled={zoomLevel === 1}
                             >
-                                Zoom Out
+                                {t("Zoom Out")}
                             </Button>
                         </Col>
                         <Col xs="auto">
@@ -77,7 +80,7 @@ const Index = ({ events }: any) => {
                                 onClick={handleZoomIn}
                                 disabled={zoomLevel === 3}
                             >
-                                Zoom In
+                                {t("Zoom In")}
                             </Button>
                         </Col>
                     </Row> */}

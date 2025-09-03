@@ -1,6 +1,6 @@
 import { usePage } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 const Navdata = () => {
     const user: any = usePage().props.auth.user;
     const eventApp: any = usePage().props.eventApp;
@@ -20,7 +20,7 @@ const Navdata = () => {
     const [isFriend, setIsFriend] = useState<boolean>(false);
     const [isEventStaff, setIsEventStaff] = useState<boolean>(false);
     const [isEventShop, setIsEventShop] = useState<boolean>(false);
-
+    const { t } = useLaravelReactI18n();
     const [iscurrentState, setIscurrentState] = useState<any>("Dashboard");
     // const [IsQA, setIsQA] = useState<boolean>(false);
 
@@ -104,12 +104,12 @@ const Navdata = () => {
 
     const menuItems: any = [
         {
-            label: "Menu",
+            label: t('Menu'),
             isHeader: true,
         },
         {
             id: "dashboard",
-            label: "Dashboard",
+            label: t('Dashboard'),
             icon: "bx bxs-dashboard",
             link: route("attendee.event.detail.dashboard"),
             stateVariables: isDashboard,
@@ -122,7 +122,7 @@ const Navdata = () => {
         },
         {
             id: "eventShop",
-            label: "Event Shop",
+            label: t('Event Shop'),
             icon: "bx bx-store",
             link: route("attendee.event.products"),
             stateVariables: isDashboard,
@@ -135,7 +135,7 @@ const Navdata = () => {
         },
         {
             id: "program",
-            label: "Event Agenda",
+            label: t('Event Agenda'),
             icon: "bx bx-heart",
             link: route("attendee.event.detail.agenda"),
             stateVariables: isProgram,
@@ -148,7 +148,7 @@ const Navdata = () => {
         },
         {
             id: "speaker",
-            label: "Speakers",
+            label: t('Speakers'),
             icon: "bx bx-group",
             link: route("attendee.event.detail.speakers"),
             stateVariables: isSpeakers,
@@ -161,7 +161,7 @@ const Navdata = () => {
         },
         {
             id: "chat",
-            label: "Chat Room",
+            label: t('Chat Room'),
             icon: "bx bx-message-rounded-dots",
             link: route("attendee.event.chat"),
             stateVariables: isChat,
@@ -174,7 +174,7 @@ const Navdata = () => {
         },
         {
             id: "friend",
-            label: "Friend System",
+            label: t('Friend System'),
             icon: "las la-user-friends",
             link: route("friend.index"),
             stateVariables: isFriend,
@@ -187,7 +187,7 @@ const Navdata = () => {
         },
         {
             id: "more",
-            label: "Contact",
+            label: t('Contact'),
             icon: "bx bx-info-circle",
             link: route("attendee.event.detail.more"),
             stateVariables: isMore,
@@ -200,7 +200,7 @@ const Navdata = () => {
         },
         {
             id: "more",
-            label: "Favorites",
+            label: t('Favorites'),
             icon: "bx bxs-heart",
             link: route("all.fav.sessions"),
             stateVariables: isMore,
@@ -213,7 +213,7 @@ const Navdata = () => {
         },
         {
             id: "tickets",
-            label: "Tickets",
+            label: t('Tickets'),
             icon: "bx bx-qr",
             link: route("attendee.tickets.get"),
             stateVariables: isMore,
@@ -226,7 +226,7 @@ const Navdata = () => {
         },
         {
             id: "purchasedtickets",
-            label: "Purchased Tickets",
+            label: t('Purchased Tickets'),
             icon: "bx bx-qr",
             link: route("attendee.tickets.purchased"),
             stateVariables: isMore,
@@ -239,7 +239,7 @@ const Navdata = () => {
         },
         {
             id: "upgradeTicket",
-            label: "Upgrade Tickets",
+            label: t('Upgrade Tickets'),
             icon: "bx bxs-credit-card",
             link: route("attendee.tickets.upgrade"),
             stateVariables: isUpgradeTicket,
@@ -253,7 +253,7 @@ const Navdata = () => {
         },
         {
             id: "refundtickets",
-            label: "Refund Tickets",
+            label: t('Refund Tickets'),
             icon: "bx bx-qr",
             link: route("attendee.tickets.refund"),
             stateVariables: isMore,
@@ -266,7 +266,7 @@ const Navdata = () => {
         },
         {
             id: "tickets",
-            label: "Post Event Questionnaire",
+            label: t('Post Event Questionnaire'),
             icon: "bx bxs-notepad",
             link: route("attendee.event-questionnaire-form"),
             stateVariables: isMore,
@@ -279,7 +279,7 @@ const Navdata = () => {
         },
         {
             id: "achievement",
-            label: "Achievements",
+            label: t('Achievements'),
             icon: "bx bxs-medal",
             link: route("attendee.achievement"),
             stateVariables: isMore,
@@ -292,7 +292,7 @@ const Navdata = () => {
         },
         {
             id: "eventCalendar",
-            label: "Event Calendar",
+            label: t('Event Calendar'),
             icon: "bx bxs-calendar",
             link: route("event.calendar"),
             stateVariables: isMore,
@@ -305,7 +305,7 @@ const Navdata = () => {
         },
         {
             id: "eventStaff",
-            label: "Event Staff",
+            label: t('Event Staff'),
             icon: "bx bx-group",
             link: route("attendee.event.staff"),
             stateVariables: isMore,
@@ -316,10 +316,10 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
-        
+
         {
             id: "liveStream",
-            label: "Live Streams",
+            label: t('Live Streams'),
             icon: "bx bx-broadcast",
             link: route("stream.index"),
             stateVariables: isMore,
@@ -371,7 +371,7 @@ const Navdata = () => {
         //     },
         // },
     ];
-   
+
     return <React.Fragment>{menuItems}</React.Fragment>;
 };
 export default Navdata;

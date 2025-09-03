@@ -21,10 +21,10 @@ import OrganizerProfileDropdown from "../../Components/Common/OrganizerProfileDr
 import moment from "moment";
 import { Share2 } from "lucide-react";
 import ShareEventButton from "../../Components/ShareEventButton";
-
+import { useLaravelReactI18n } from 'laravel-react-i18n'
 const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
     const dispatch: any = useDispatch();
-
+ const { t } = useLaravelReactI18n()
     const selectDashboardData = createSelector(
         (state: any) => state.Layout,
         (sidebarVisibilitytype: any) =>
@@ -199,7 +199,7 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
                                                 )
                                             }
                                         >
-                                            See all events
+                                            {t("See all events")}
                                         </Dropdown.Item>
                                     </Dropdown.Menu>
                                 </Dropdown>
@@ -227,7 +227,7 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
                                     rel="noopener noreferrer"
                                     className="d-flex align-items-center gap-1"
                                 >
-                                    <span>Preview Website</span>
+                                    <span>{t('Preview Website')}</span>
                                 </a>
                             )}
                             {/* <SearchOption /> */}

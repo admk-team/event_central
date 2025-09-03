@@ -8,8 +8,10 @@ import DataTable, { ColumnDef } from "../../../../Components/DataTable";
 import DeleteModal from "../../../../Components/Common/DeleteModal";
 import CreateEditModal from "./Components/CreateEditModal";
 import DeleteManyModal from "../../../../Components/Common/DeleteManyModal";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 function Index({ data }: any) {
+    const { t } = useLaravelReactI18n();
     const [showCreateEditModal, setShowCreateEditModal] = useState(false);
     const [editItem, setEditItem] = useState<any>(null);
     const [deleteItem, setDeleteItem] = useState<any>(null);
@@ -50,19 +52,19 @@ function Index({ data }: any) {
     const columns: ColumnDef<(typeof data.data)[0]> = [
         {
             accessorKey: "id",
-            header: () => "ID",
+            header: () => t("ID"),
             cell: (row) => row.id,
             enableSorting: true,
         },
         {
             accessorKey: "name",
-            header: () => "Name",
+            header: () => t("Name"),
             cell: (row) => row.attendee.name,
             enableSorting: true,
         },
         {
             accessorKey: "request",
-            header: () => "Prayer Request",
+            header: () => t("Prayer Request"),
             cell: (row) => {
                 const message = row.message || "";
                 return message.length > 100
@@ -72,7 +74,7 @@ function Index({ data }: any) {
         },
         {
             accessorKey: "status",
-            header: () => "Status",
+            header: () => t("Status"),
             cell: (row) => {
                 const status = row.status;
                 let color = "#6c757d"; // default: gray
@@ -102,17 +104,17 @@ function Index({ data }: any) {
                             display: "inline-block",
                         }}
                     >
-                        {status}
+                        {t(status)}
                     </span>
                 );
             },
         },
         {
             accessorKey: "is_public",
-            header: () => "Visibility",
+            header: () => t("Visibility"),
             cell: (row) => {
                 const isPublic = row.request_type;
-                const visibilityText = isPublic ? "Public" : "Private";
+                const visibilityText = isPublic ? t("Public") : t("Private");
 
                 const style = {
                     backgroundColor: isPublic ? "#cfe2ff" : "#d3d3d4",
@@ -128,7 +130,7 @@ function Index({ data }: any) {
             },
         },
         {
-            header: () => "Actions",
+            header: () => t("Actions"),
             cell: (row) => (
                 <div className="hstack gap-3 fs-15">
                     <HasPermission permission="edit_prayer_request">
@@ -157,19 +159,19 @@ function Index({ data }: any) {
 
     return (
         <>
-            <Head title="Prayer Requests" />
+            <Head title={t("Prayer Requests")} />
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb
-                        title="Prayer Requests"
-                        pageTitle="Prayer Requests"
+                        title={t("Prayer Requests")}
+                        pageTitle={t("Prayer Requests")}
                     />
                     <Row>
                         <Col xs={12}>
                             <DataTable
                                 data={data}
                                 columns={columns}
-                                title="Prayer Requests"
+                                title={t("Prayer Requests")}
                                 actions={[
                                     // Delete multiple
                                     {
@@ -189,7 +191,7 @@ function Index({ data }: any) {
                                                     }
                                                 >
                                                     <i className="ri-delete-bin-5-line"></i>{" "}
-                                                    Delete (
+                                                    {t("Delete")} (
                                                     {
                                                         dataTable.getSelectedRows()
                                                             .length

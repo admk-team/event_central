@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
-import { Button, Col, Container, Row, Table } from 'react-bootstrap';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Button, Col, Container, Row } from 'react-bootstrap';
+import { Head, useForm } from '@inertiajs/react';
 import Layout from '../../../Layouts/Admin';
 import DeleteModal from '../../../Components/Common/DeleteModal';
+import DeleteManyModal from '../../../Components/Common/DeleteManyModal';
 import DataTable, { ColumnDef } from '../../../Components/DataTable';
 import BreadCrumb2 from '../../../Components/Common/BreadCrumb2';
-import DeleteManyModal from '../../../Components/Common/DeleteManyModal';
-import HasPermission from '../../../Components/HasPermission';
+import { useLaravelReactI18n } from 'laravel-react-i18n';
 
 function Index({ country }: any) {
-    const [deleteCountry, setDeleteCountry] = React.useState<any>(null);
+    const { t } = useLaravelReactI18n();
+
+    const [deleteCountry, setDeleteCountry] = useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
-
-  
 
     const deleteForm = useForm({
         _method: 'DELETE'
@@ -23,8 +23,6 @@ function Index({ country }: any) {
         _method: 'DELETE',
         ids: [],
     });
-
- 
 
     const deleteAction = (country: any) => {
         setDeleteCountry(country);
@@ -49,78 +47,66 @@ function Index({ country }: any) {
     const columns: ColumnDef<typeof country.data[0]> = [
         {
             accessorKey: 'id',
-            header: () => 'ID',
+            header: () => t('ID'),
             cell: (country) => country.id,
             cellClass: "fw-medium",
             enableSorting: true,
         },
         {
             accessorKey: 'code',
-            header: () => 'Code',
+            header: () => t('Code'),
             cell: (country) => country.code,
             cellClass: "fw-medium",
             enableSorting: true,
         },
         {
             accessorKey: 'title',
-            header: () => 'Name',
+            header: () => t('Name'),
             cell: (country) => country.title,
             cellClass: "fw-medium",
             enableSorting: true,
         },
-
-        // {
-        //     header: () => 'Action',
-        //     cell: (country) => (
-        //         <div className="hstack gap-3 fs-15">
-        //             {/* <HasPermission permission="delete_locations"> */}
-        //                 <span className="link-danger cursor-pointer" onClick={() => deleteAction(country)}>
-        //                     <i className="ri-delete-bin-5-line"></i>
-        //                 </span>
-        //             {/* </HasPermission> */}
-        //         </div>
-        //     ),
-        // },
     ];
 
     return (
         <React.Fragment>
-            <Head title='Starter | Velzon - React Admin & Dashboard Template' />
+            <Head title={t('Countries Management')} />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb2
-                        title="Countries"
-                    />
+                    <BreadCrumb2 title={t('Countries')} />
                     <Row>
                         <Col xs={12}>
                             <DataTable
                                 data={country}
                                 columns={columns}
-                                title="Countries"
+                                title={t('Countries')}
                                 actions={[
                                     // Delete multiple
                                     {
-                                        render: (dataTable) => <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>,
+                                        render: (dataTable) => (
+                                            <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}>
+                                                <i className="ri-delete-bin-5-line"></i> {t('Delete')} ({dataTable.getSelectedRows().length})
+                                            </Button>
+                                        ),
                                         showOnRowSelection: true,
                                     },
-
-                                   
                                 ]}
                             />
                         </Col>
                     </Row>
                 </Container>
             </div>
+
             <DeleteModal
                 show={showDeleteConfirmation}
                 onDeleteClick={handleDelete}
-                onCloseClick={() => { setShowDeleteConfirmation(false) }}
+                onCloseClick={() => setShowDeleteConfirmation(false)}
             />
 
             <DeleteManyModal
                 show={showDeleteManyConfirmation}
                 onDeleteClick={handleDeleteMany}
-                onCloseClick={() => { setShowDeleteManyConfirmation(false) }}
+                onCloseClick={() => setShowDeleteManyConfirmation(false)}
             />
         </React.Fragment>
     )

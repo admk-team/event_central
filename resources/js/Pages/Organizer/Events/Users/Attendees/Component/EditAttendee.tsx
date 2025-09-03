@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react";
 import { Modal, Button, Form, Alert, Row, Col, OverlayTrigger, Tooltip } from "react-bootstrap";
 import { useForm } from "@inertiajs/react";
 import { usePage } from "@inertiajs/react";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 const EditAttendee = ({ show, handleClose, user, isEdit }: any) => {
     const [preview, setPreview] = useState<any>(user?.avatar ?? null);
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [error, setError] = useState("");
+    const { t } = useLaravelReactI18n();
 
     const { data, setData, put, processing, errors, reset } = useForm({
         first_name: user?.first_name ?? "",
@@ -90,14 +92,14 @@ const EditAttendee = ({ show, handleClose, user, isEdit }: any) => {
     return (
         <Modal show={show} onHide={handleClose} centered>
             <Modal.Header closeButton>
-                <Modal.Title>Edit Attendee</Modal.Title>
+                <Modal.Title>{t("Edit Attendee")}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form onSubmit={handleSubmit}>
                     <Row>
                         <Col md={6} lg={6}>
                             <Form.Group className="mb-3">
-                                <Form.Label>First Name</Form.Label>
+                                <Form.Label>{t("First Name")}</Form.Label>
                                 <Form.Control
                                     type="text"
                                     name="first_name"
@@ -115,7 +117,7 @@ const EditAttendee = ({ show, handleClose, user, isEdit }: any) => {
                         </Col>
                         <Col md={6} lg={6}>
                             <Form.Group className="mb-3">
-                                <Form.Label>Last Name</Form.Label>
+                                <Form.Label>{t("Last Name")}</Form.Label>
                                 <Form.Control
                                     type="text"
                                     name="last_name"
@@ -133,7 +135,7 @@ const EditAttendee = ({ show, handleClose, user, isEdit }: any) => {
                         </Col>
                     </Row>
                     <Form.Group className="mb-3">
-                        <Form.Label>Email</Form.Label>
+                        <Form.Label>{t("Email")}</Form.Label>
                         <Form.Control
                             type="text"
                             name="email"
@@ -144,7 +146,7 @@ const EditAttendee = ({ show, handleClose, user, isEdit }: any) => {
                     <Row>
                         <Col md={6} lg={6}>
                             <Form.Group className="mb-3">
-                                <Form.Label>Company</Form.Label>
+                                <Form.Label>{t("Company")}</Form.Label>
                                 <Form.Control
                                     type="text"
                                     name="company"
@@ -155,7 +157,7 @@ const EditAttendee = ({ show, handleClose, user, isEdit }: any) => {
                         </Col>
                         <Col md={6} lg={6}>
                             <Form.Group className="mb-3">
-                                <Form.Label>Position</Form.Label>
+                                <Form.Label>{t("Position")}</Form.Label>
                                 <Form.Control
                                     type="text"
                                     name="position"
@@ -166,7 +168,7 @@ const EditAttendee = ({ show, handleClose, user, isEdit }: any) => {
                         </Col>
                     </Row>
                     <Form.Group className="mb-3">
-                        <Form.Label>Phone</Form.Label>
+                        <Form.Label>{t("Phone")}</Form.Label>
                         <Form.Control
                             type="text"
                             name="phone"
@@ -177,13 +179,14 @@ const EditAttendee = ({ show, handleClose, user, isEdit }: any) => {
                     <Row className="mt-1">
                         <Col md={12} lg={12}>
                             <Form.Label htmlFor="account_type" className="form-label">
-                                Account Type{' '}
+                                {t("Account Type")} {' '}
                                 <OverlayTrigger
                                     placement="right"
                                     overlay={
                                         <Tooltip id="account-type-tooltip">
-                                            If the account is <strong>Private</strong>, it will not appear in search results for other users.
-                                            If two users are friends with each other, a private chat will be initiated between them.
+                                            <span
+                                                dangerouslySetInnerHTML={{ __html: t("Account Type Tooltip") }}
+                                            />
                                         </Tooltip>
                                     }
                                 >
@@ -200,9 +203,9 @@ const EditAttendee = ({ show, handleClose, user, isEdit }: any) => {
                                 className={'mt-1 form-control' + (errors.is_public ? ' is-invalid' : '')}
                                 onChange={(e: any) => setData('is_public', e.target.value)}
                             >
-                                <option value="">Select Account Type</option>
-                                <option value="1">Public</option>
-                                <option value="0">Private</option>
+                                <option value="">{t("Select Account Type")}</option>
+                                <option value="1">{t("Public")}</option>
+                                <option value="0">{t("Private")}</option>
                             </Form.Select>
 
                             <Form.Control.Feedback type="invalid" className="mt-2 d-block">
@@ -210,18 +213,18 @@ const EditAttendee = ({ show, handleClose, user, isEdit }: any) => {
                             </Form.Control.Feedback>
                         </Col>
                     </Row>
-                    <Form.Group className="mb-1"> <Form.Label>Location</Form.Label> <Form.Control type="text" placeholder="Enter City, State/Province, Country"
+                    <Form.Group className="mb-1"> <Form.Label>{t("Location")}</Form.Label> <Form.Control type="text" placeholder="Enter City, State/Province, Country"
                         value={data.location || ""}
                         onChange={(e) => setData('location', e.target.value)} /> <Form.Control.Feedback type="invalid" className="d-block mt-2"> {" "} {errors.location}{" "} </Form.Control.Feedback> </Form.Group>
                     <Form.Group className="mb-3">
-                        <Form.Label>Country</Form.Label>
+                        <Form.Label>{t("Country")}</Form.Label>
                         <span className="text-danger ms-1">*</span>
                         <Form.Select
                             name="country"
                             value={data.country || ""}
                             onChange={handleChange}
                         >
-                            <option value="">Select a country</option>
+                            <option value="">{t("Select Country")}</option>
                             {usePage().props.countries.map((country) => (
                                 <option key={country.code} value={country.title}>
                                     {country.title}
@@ -230,7 +233,7 @@ const EditAttendee = ({ show, handleClose, user, isEdit }: any) => {
                         </Form.Select>
                     </Form.Group>
                     <Form.Group className="mb-3">
-                        <Form.Label>Bio</Form.Label>
+                        <Form.Label>{t("Bio")}</Form.Label>
                         <Form.Control
                             as="textarea"
                             rows={3}
@@ -242,7 +245,7 @@ const EditAttendee = ({ show, handleClose, user, isEdit }: any) => {
                     <Row>
                         <Col md={6} lg={6}>
                             <Form.Group className="mb-3">
-                                <Form.Label>Password</Form.Label>
+                                <Form.Label>{t("Password")}</Form.Label>
                                 <Form.Control
                                     type="password"
                                     value={password}
@@ -255,7 +258,7 @@ const EditAttendee = ({ show, handleClose, user, isEdit }: any) => {
                         </Col>
                         <Col md={6} lg={6}>
                             <Form.Group className="mb-3">
-                                <Form.Label>Confirm Password</Form.Label>
+                                <Form.Label>{t("Confirm Password")}</Form.Label>
                                 <Form.Control
                                     type="password"
                                     value={confirmPassword}
@@ -272,14 +275,14 @@ const EditAttendee = ({ show, handleClose, user, isEdit }: any) => {
 
                     <div className="hstack gap-2 justify-content-center mt-4">
                         <Button className="btn btn-light" onClick={handleClose}>
-                            Close
+                            {t("Close")}
                         </Button>
                         <Button
                             variant="primary"
                             type="submit"
                             disabled={processing}
                         >
-                            {processing ? "Updating..." : "Update"}
+                            {processing ? t("Updating...") : t("Update")}
                         </Button>
                     </div>
                 </Form>

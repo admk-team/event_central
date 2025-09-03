@@ -4,8 +4,9 @@ import { Head, router, useForm } from "@inertiajs/react";
 import { Col, Container, Form, Row } from "react-bootstrap";
 import BreadCrumb from "../../../../Components/Common/BreadCrumb";
 import "../../../../css/passes.css";
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 function Index({ attendees, eventApp, customBadgeDesign }: { attendees: any; eventApp: any; customBadgeDesign: any }) {
+    const { t } = useLaravelReactI18n();
     const [search, setSearch] = useState("");
     const [isFlipped, setIsFlipped] = useState(false);
 
@@ -29,14 +30,14 @@ function Index({ attendees, eventApp, customBadgeDesign }: { attendees: any; eve
 
     return (
         <React.Fragment>
-            <Head title="Badge Printing" />
+            <Head title={t("Badge Printing")} />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Badge Printing" pageTitle="Dashboard" />
+                    <BreadCrumb title={t('Badge Printing')} pageTitle={t('Dashboard')} />
 
                     <Row className="mb-4 justify-between">
                         <Col md={6}>
-                            <Form.Label className="text-black">Search Attendee</Form.Label>
+                            <Form.Label className="text-black">{t('Search Attendee')}</Form.Label>
                             <Form.Control
                                 type="text"
                                 placeholder="Search by name or position"
@@ -47,7 +48,7 @@ function Index({ attendees, eventApp, customBadgeDesign }: { attendees: any; eve
                         <Col md={6} className="mt-4">
                             <div className="d-flex flex-column flex-md-row justify-content-md-end align-items-stretch gap-2">
                                 <button type="button" className="btn btn-success w-100 w-md-auto" onClick={printBadge}>
-                                    🖨️ Print All Badges
+                                    🖨️ {t('Search Attendee')}
                                 </button>
 
                                 <button
@@ -55,7 +56,7 @@ function Index({ attendees, eventApp, customBadgeDesign }: { attendees: any; eve
                                     className="btn btn-secondary w-100 w-md-auto"
                                     onClick={() => setShowLogo((prev) => !prev)}
                                 >
-                                    {showLogo ? "🙈 Hide Logo" : "👁️ Show Logo"}
+                                    {showLogo ? '🙈'+t('Hide Logo') : '👁️ '+('Show Logo')}
                                 </button>
 
                                 <button
@@ -63,7 +64,7 @@ function Index({ attendees, eventApp, customBadgeDesign }: { attendees: any; eve
                                     className="btn btn-secondary w-100 w-md-auto"
                                     onClick={() => setShowGradient((prev) => !prev)}
                                 >
-                                    {showGradient ? "🧼 White Background" : "🌈 Gradient Background"}
+                                    {showGradient ? '🧼'+t('White Background') : '🌈'+t('Gradient Background')}
                                 </button>
 
                                 <button
@@ -71,7 +72,7 @@ function Index({ attendees, eventApp, customBadgeDesign }: { attendees: any; eve
                                     className="btn btn-info w-100 w-md-auto"
                                     onClick={() => setIsFlipped((prev) => !prev)}
                                 >
-                                    {isFlipped ? "↩️ Unflip" : "🔄 Flip"}
+                                    {isFlipped ? '↩️'+t('Unflip') : '🔄'+t('Flip')}
                                 </button>
                             </div>
                         </Col>
@@ -81,21 +82,21 @@ function Index({ attendees, eventApp, customBadgeDesign }: { attendees: any; eve
                     <Row>
                         <Col xs={12}>
                             <div className="border p-3 rounded bg-light">
-                                <h5 className="mb-3">Attendees & QR Codes</h5>
+                                <h5 className="mb-3">{t('Attendees & QR Codes')}</h5>
                                 {filteredAttendees.length === 0 ? (
-                                    <div>No results found.</div>
+                                    <div>{t('No results found.')}</div>
                                 ) : (
                                     filteredAttendees.map((attendee: any, index: number) => (
                                         <React.Fragment key={index}>
                                             <div key={index} className="mb-4 p-3 border rounded bg-transparent shadow-sm">
                                                 <Row>
                                                     <Col md={4}>
-                                                        <strong>Name:</strong> {attendee.name} <br />
-                                                        <strong>Position:</strong> {attendee.position} <br />
-                                                        <strong>Ticket Type:</strong> {attendee.qr_codes[0]?.ticket_type_name ?? "N/A"}
+                                                        <strong>{t('Name')}:</strong> {attendee.name} <br />
+                                                        <strong>{t('Position')}:</strong> {attendee.position} <br />
+                                                        <strong>{t('Ticket Type')}:</strong> {attendee.qr_codes[0]?.ticket_type_name ?? "N/A"}
                                                     </Col>
                                                     <Col md={8}>
-                                                        <strong>QR Codes:</strong>
+                                                        <strong>{t('QR Codes')}:</strong>
                                                         <div className="d-flex flex-wrap gap-2 mt-2">
                                                             {attendee.qr_codes.map((qr: string, idx: number) => (
                                                                 <img key={idx} src={qr.qr_code} alt="QR Code" width="100" height="100" />

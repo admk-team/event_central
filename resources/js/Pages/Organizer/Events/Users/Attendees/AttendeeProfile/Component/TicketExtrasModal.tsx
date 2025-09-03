@@ -1,11 +1,13 @@
 import React from "react";
 import { Modal, Button } from "react-bootstrap";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 const TicketExtrasModal = ({ show, onHide, extras }: any) => {
+      const { t } = useLaravelReactI18n();
     return (
         <Modal show={show} onHide={onHide} centered>
             <Modal.Header closeButton>
-                <Modal.Title>Purchased Extra Services</Modal.Title>
+                <Modal.Title>{t("Purchased Extra Services")}</Modal.Title>
             </Modal.Header>
             <hr className="mb-0" />
             <Modal.Body>
@@ -18,7 +20,7 @@ const TicketExtrasModal = ({ show, onHide, extras }: any) => {
                         </div>
                     ))
                 ) : (
-                    <p className="text-center">No Extra Services</p>
+                    <p className="text-center">{t("No Extra Services")}</p>
                 )}
             </Modal.Body>
         </Modal>

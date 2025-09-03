@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Modal, Button, Form, Alert, ModalBody, Row, Col } from "react-bootstrap";
 import { useForm } from "@inertiajs/react";
 import Select from "react-select";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 const ImportFromEvent = ({ show, handleClose, eventList }: any) => {
 
@@ -23,24 +24,25 @@ const ImportFromEvent = ({ show, handleClose, eventList }: any) => {
             }
         });
     };
+    const { t } = useLaravelReactI18n();
 
     return (
         <Modal show={show} onHide={handleClose} centered>
             <Modal.Header closeButton>
-                <Modal.Title>Import Attendees From Other Events</Modal.Title>
+                <Modal.Title>{t("Import Attendees From Other Events")}</Modal.Title>
             </Modal.Header>
             <Modal.Body>
                 <Form onSubmit={handleSubmit}>
                     <Row>
                         <Col md={12} lg={12}>
                             <Form.Group className="mb-3">
-                                <Form.Label>Select Event</Form.Label>
+                                <Form.Label>{t("Select Event")}</Form.Label>
                                 <Select
                                     id="event_id"
                                     options={eventOptions}
                                     onChange={(selected: any) => setData("event_id", selected?.value || "")}
                                     isSearchable={true}
-                                    placeholder="Select a Event..."
+                                    placeholder={t("Select a Event...")}
                                 />
                                 <Form.Control.Feedback type="invalid" className="d-block mt-2">
                                     {" "} {errors.event_id}{" "}
@@ -50,10 +52,10 @@ const ImportFromEvent = ({ show, handleClose, eventList }: any) => {
                     </Row>
                     <div className="hstack gap-2 justify-content-center mt-4">
                         <Button className="btn btn-light" onClick={handleClose}>
-                            Close
+                            {t("Close")}
                         </Button>
                         <Button variant="primary" type="submit" disabled={processing}>
-                            {processing ? "Saving..." : "Add Attendee"}
+                            {processing ? t("Saving...") : t("Add Attendee")}
                         </Button>
                     </div>
                 </Form>

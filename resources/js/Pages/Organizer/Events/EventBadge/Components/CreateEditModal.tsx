@@ -1,5 +1,6 @@
 import { useForm } from "@inertiajs/react";
 import { Form, FormGroup, Modal, Spinner } from "react-bootstrap";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 export default function CreateEditModal({
     show,
@@ -31,20 +32,20 @@ export default function CreateEditModal({
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
-    
+
         const formData = new FormData();
         formData.append("_method", data._method);
         formData.append("title", data.title);
-    
+
         if (data.icon) { // Only append if user selected a file
             formData.append("icon", data.icon);
         }
-    
+
         formData.append("type", data.type);
         formData.append("points", data.points.toString());
         formData.append("milestone", data.milestone.toString());
         formData.append("description", data.description);
-    
+
         if (isEdit) {
             post(route("organizer.events.badge.update", badge.id), {
                 data: formData,
@@ -64,19 +65,20 @@ export default function CreateEditModal({
             });
         }
     };
+    const { t } = useLaravelReactI18n();
 
     return (
         <Modal show={show} onHide={onHide} centered>
             <Modal.Header className="bg-light p-3" closeButton>
                 <h5 className="modal-title">
-                    {isEdit ? "Edit Badge" : "Add Badge"}
+                    {isEdit ? t("Edit Badge") : t("Add Badge")}
                 </h5>
             </Modal.Header>
 
             <Form onSubmit={submit} className="tablelist-form">
                 <Modal.Body>
                     <FormGroup className="mb-3">
-                        <Form.Label className="form-label">Title</Form.Label>
+                        <Form.Label className="form-label">{t("Title")}</Form.Label>
                         <Form.Control
                             type="text"
                             className="form-control"
@@ -92,7 +94,7 @@ export default function CreateEditModal({
                     </FormGroup>
 
                     <FormGroup className="mb-3">
-                        <Form.Label className="form-label">Icon</Form.Label>
+                        <Form.Label className="form-label">{t("Icon")}</Form.Label>
                         <Form.Control
                             type="file"
                             className="form-control"
@@ -107,7 +109,7 @@ export default function CreateEditModal({
                                     alt="Current Icon"
                                     style={{ width: "32px", height: "32px" }}
                                 />
-                                <span className="ms-2">Current Icon</span>
+                                <span className="ms-2">{t("Current Icon")}</span>
                             </div>
                         )}
                         {errors.icon && (
@@ -118,20 +120,20 @@ export default function CreateEditModal({
                     </FormGroup>
 
                     <FormGroup className="mb-3">
-                        <Form.Label className="form-label">Type</Form.Label>
+                        <Form.Label className="form-label">{t("Type")}</Form.Label>
                         <Form.Select
                             className="form-select"
                             value={data.type}
                             onChange={(e) => setData("type", e.target.value)}
                             isInvalid={!!errors.type}
                         >
-                            <option value="">Select Type</option>
-                            <option value="register"> Register Account</option>
-                            <option value="referral_link">Referral Link</option>
-                            <option value="session_rating">Session Rating</option>
-                            <option value="session_favorite">Session Favorite</option>
-                            <option value="purchase_ticket">Purchase Ticket</option>
-                            <option value="questionnaire">Questionnaire</option>
+                            <option value="">{t("Select Type")}</option>
+                            <option value="register"> {t("Register Account")}</option>
+                            <option value="referral_link">{t("Referral Link")}</option>
+                            <option value="session_rating">{t("Session Rating")}</option>
+                            <option value="session_favorite">{t("Session Favorite")}</option>
+                            <option value="purchase_ticket">{t("Purchase Ticket")}</option>
+                            <option value="questionnaire">{t("Questionnaire")}</option>
                         </Form.Select>
                         {errors.type && (
                             <Form.Control.Feedback type="invalid">
@@ -141,7 +143,7 @@ export default function CreateEditModal({
                     </FormGroup>
 
                     <FormGroup className="mb-3">
-                        <Form.Label className="form-label">Points</Form.Label>
+                        <Form.Label className="form-label">{t("Points")}</Form.Label>
                         <Form.Control
                             type="number"
                             className="form-control"
@@ -149,7 +151,7 @@ export default function CreateEditModal({
                             onChange={(e) =>
                                 setData("points", parseInt(e.target.value) || '')
                             }
-                           
+
                             isInvalid={!!errors.points}
                         />
                         {errors.points && (
@@ -161,7 +163,7 @@ export default function CreateEditModal({
 
                     <FormGroup className="mb-3">
                         <Form.Label className="form-label">
-                            Milestone
+                            {t("Milestone")}
                         </Form.Label>
                         <Form.Control
                             type="number"
@@ -211,7 +213,7 @@ export default function CreateEditModal({
                             className="btn btn-light"
                             onClick={hide}
                         >
-                            Close
+                            {t("Close")}
                         </button>
 
                         <button
@@ -228,10 +230,10 @@ export default function CreateEditModal({
                                         role="status"
                                         aria-hidden="true"
                                     />
-                                    {isEdit ? "Updating" : "Creating"}
+                                    {isEdit ? t("Updating") : t("Creating")}
                                 </span>
                             ) : (
-                                <span>{isEdit ? "Update" : "Create"}</span>
+                                <span>{isEdit ? t("Update") : t("Create")}</span>
                             )}
                         </button>
                     </div>
