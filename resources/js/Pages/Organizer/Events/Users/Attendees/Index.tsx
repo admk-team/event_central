@@ -212,14 +212,14 @@ function Index({ attendees, eventList }: any) {
 
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Attendees" pageTitle="Dashboard" />
+                    <BreadCrumb title={t("Attendees")} pageTitle={t("Dashboard")} />
                     <Row>
                         <Col xs={12}>
                             <HasPermission permission="view_attendees">
                                 <DataTable
                                     data={attendees}
                                     columns={columns}
-                                    title="Attendees"
+                                    title={t("Attendees")}
                                     tableLayoutFixed={true}
                                     searchCombinations={[['first_name', 'last_name']]}
                                     actions={[

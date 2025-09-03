@@ -82,9 +82,10 @@ const Index = ({ eventApp }: any) => {
                                                         display:
                                                             "-webkit - box",
                                                     }}
-                                                >
-                                                    {eventApp.description}
-                                                </div>
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: eventApp.description,
+                                                    }}
+                                                ></div>
                                             </div>
                                         </CardBody>
                                     </Card>
