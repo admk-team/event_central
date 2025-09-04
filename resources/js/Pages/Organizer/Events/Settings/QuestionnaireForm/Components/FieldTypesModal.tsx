@@ -1,7 +1,6 @@
 import { Button, Col, Form, Modal, Row } from "react-bootstrap";
 import { FieldType, fieldTypes } from "../../../../../../common/data/formBuilderFieldTypes";
-import { useLaravelReactI18n } from "laravel-react-i18n";
-
+import { useLaravelReactI18n } from 'laravel-react-i18n';
 export default function FieldTypesModal({
     show,
     onHide,
@@ -12,7 +11,6 @@ export default function FieldTypesModal({
     onSelect: (type: FieldType) => void;
 }) {
     const { t } = useLaravelReactI18n();
-
     const _onSelect = (fieldType: FieldType) => {
         onSelect(fieldType);
         onHide();

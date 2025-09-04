@@ -30,8 +30,6 @@ class SendEventReminderJob implements ShouldQueue
     {
         $attendees = Attendee::where('event_app_id', $this->eventApp->id)->get();
 
-        Log::info('Event reminder job started.');
-
         $startDateObj = optional($this->eventApp->dates()->orderBy('date', 'asc')->first())->date;
         $endDateObj   = optional($this->eventApp->dates()->orderBy('date', 'desc')->first())->date;
 
@@ -40,7 +38,6 @@ class SendEventReminderJob implements ShouldQueue
 
         foreach ($attendees as $attendee) {
             try {
-                Log::info("Sending reminder to attendee ID {$attendee->id}");
 
                 // Send Email
                 Mail::to($attendee->email)->queue(
@@ -54,10 +51,7 @@ class SendEventReminderJob implements ShouldQueue
                     "{$this->eventApp->name} will start at {$startDate}",
                     route('organizer.events.website', $this->eventApp->uuid)
                 );
-
-                Log::info("Reminder sent to attendee ID {$attendee->id}");
             } catch (\Exception $e) {
-                Log::error("Failed to send reminder to attendee ID {$attendee->id} ({$attendee->email}): " . $e->getMessage());
             }
         }
     }
