@@ -2,11 +2,21 @@ import { useForm } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
 import { Modal, Button, Form, Col, Row, Image } from "react-bootstrap";
 import { useLaravelReactI18n } from "laravel-react-i18n";
+import Select from "react-select";
+import { customStyles } from "../../../../../../common/data/customSelectStyles";
 
 export default function CreateEditModal({ show, handleClose, product }: any) {
     const { t } = useLaravelReactI18n();
     const [isPreview, setIsPreview] = useState<string | null>(null);
-
+    const sizes = [
+        { key: "XS", label: "Extra Small" },
+        { key: "S", label: "Small" },
+        { key: "M", label: "Medium" },
+        { key: "L", label: "Large" },
+        { key: "XL", label: "Extra Large" },
+        { key: "XXL", label: "Double Extra Large" },
+        { key: "XXXL", label: "Triple Extra Large" },
+    ];
     const { data, setData, post, processing, errors, reset } = useForm({
         name: "",
         description: "",
@@ -14,6 +24,7 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
         old_price: "",
         stock: "",
         image: null,
+        sizes: [],
     });
 
     useEffect(() => {
@@ -28,6 +39,7 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
                 old_price: product.old_price ?? "",
                 stock: product.stock ?? "",
                 image: null,
+                sizes: product.sizes ?? [],
             });
             setIsPreview(product.image_url ?? null);
         } else {
@@ -64,6 +76,15 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
         });
     };
 
+    const selectEventsOptions = [
+        {
+            options: sizes.map((size) => ({
+                label: size.label,
+                value: size.key,
+            })),
+        },
+    ];
+
     const isEditMode = Boolean(product?.id);
 
     return (
@@ -81,11 +102,16 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
                             type="text"
                             name="name"
                             value={data.name}
-                            onChange={(event) => setData("name", event.target.value)}
+                            onChange={(event) =>
+                                setData("name", event.target.value)
+                            }
                             placeholder={t("Enter product name")}
                         />
                         {errors.name && (
-                            <Form.Control.Feedback type="invalid" className="d-block mt-2">
+                            <Form.Control.Feedback
+                                type="invalid"
+                                className="d-block mt-2"
+                            >
                                 {errors.name}
                             </Form.Control.Feedback>
                         )}
@@ -98,14 +124,43 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
                             rows={3}
                             name="description"
                             value={data.description}
-                            onChange={(event) => setData("description", event.target.value)}
+                            onChange={(event) =>
+                                setData("description", event.target.value)
+                            }
                             placeholder={t("Enter description")}
                         />
                         {errors.description && (
-                            <Form.Control.Feedback type="invalid" className="d-block mt-2">
+                            <Form.Control.Feedback
+                                type="invalid"
+                                className="d-block mt-2"
+                            >
                                 {errors.description}
                             </Form.Control.Feedback>
                         )}
+                    </Form.Group>
+
+                    <Form.Group className="mb-3">
+                        <Form.Label>{t("Sizes")}</Form.Label>
+                        <Select
+                            value={sizes
+                                .filter((size) =>
+                                    data.sizes?.includes(size.key)
+                                )
+                                .map((size) => ({
+                                    label: size.label,
+                                    value: size.key,
+                                }))}
+                            isMulti={true}
+                            onChange={(value: any) => {
+                                setData(
+                                    "sizes",
+                                    value.map((option: any) => option.value)
+                                );
+                            }}
+                            options={selectEventsOptions}
+                            classNamePrefix="js-example-basic-multiple mb-0"
+                            styles={customStyles}
+                        />
                     </Form.Group>
 
                     <Row>
@@ -116,11 +171,16 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
                                     type="number"
                                     name="price"
                                     value={data.price}
-                                    onChange={(event) => setData("price", event.target.value)}
+                                    onChange={(event) =>
+                                        setData("price", event.target.value)
+                                    }
                                     placeholder={t("Enter price")}
                                 />
                                 {errors.price && (
-                                    <Form.Control.Feedback type="invalid" className="d-block mt-2">
+                                    <Form.Control.Feedback
+                                        type="invalid"
+                                        className="d-block mt-2"
+                                    >
                                         {errors.price}
                                     </Form.Control.Feedback>
                                 )}
@@ -133,11 +193,16 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
                                     type="number"
                                     name="old_price"
                                     value={data.old_price}
-                                    onChange={(event) => setData("old_price", event.target.value)}
+                                    onChange={(event) =>
+                                        setData("old_price", event.target.value)
+                                    }
                                     placeholder={t("Enter old price")}
                                 />
                                 {errors.old_price && (
-                                    <Form.Control.Feedback type="invalid" className="d-block mt-2">
+                                    <Form.Control.Feedback
+                                        type="invalid"
+                                        className="d-block mt-2"
+                                    >
                                         {errors.old_price}
                                     </Form.Control.Feedback>
                                 )}
@@ -151,11 +216,16 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
                             type="number"
                             name="stock"
                             value={data.stock}
-                            onChange={(event) => setData("stock", event.target.value)}
+                            onChange={(event) =>
+                                setData("stock", event.target.value)
+                            }
                             placeholder={t("Enter stock quantity")}
                         />
                         {errors.stock && (
-                            <Form.Control.Feedback type="invalid" className="d-block mt-2">
+                            <Form.Control.Feedback
+                                type="invalid"
+                                className="d-block mt-2"
+                            >
                                 {errors.stock}
                             </Form.Control.Feedback>
                         )}
@@ -163,9 +233,16 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
 
                     <Form.Group className="mb-3">
                         <Form.Label>{t("Image")}</Form.Label>
-                        <Form.Control type="file" name="image" onChange={handleChange} />
+                        <Form.Control
+                            type="file"
+                            name="image"
+                            onChange={handleChange}
+                        />
                         {errors.image && (
-                            <Form.Control.Feedback type="invalid" className="d-block mt-2">
+                            <Form.Control.Feedback
+                                type="invalid"
+                                className="d-block mt-2"
+                            >
                                 {errors.image}
                             </Form.Control.Feedback>
                         )}
@@ -188,7 +265,11 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
                     <Button variant="secondary" onClick={handleClose}>
                         {t("Cancel")}
                     </Button>
-                    <Button variant="primary" type="submit" disabled={processing}>
+                    <Button
+                        variant="primary"
+                        type="submit"
+                        disabled={processing}
+                    >
                         {isEditMode ? t("Update Product") : t("Save Product")}
                     </Button>
                 </Modal.Footer>

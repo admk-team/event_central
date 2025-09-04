@@ -5,6 +5,7 @@ import AttendeeLayout from "../../../Layouts/Attendee";
 import { Button } from "../../../Components/ui/button";
 import axios from "axios";
 import { useLaravelReactI18n } from "laravel-react-i18n";
+import { Form } from "react-bootstrap";
 const Index = ({ products, getCurrency }: any) => {
     const { t } = useLaravelReactI18n();
     const [search, setSearch] = useState("");
@@ -95,6 +96,19 @@ const Index = ({ products, getCurrency }: any) => {
                                                         </s>
                                                     </small>
                                                 )}
+                                            </div>
+                                            <div className="d-flex flex-wrap gap-2">
+                                                {product.sizes &&
+                                                    product.sizes.map((item: any, index: number) => (
+                                                    <React.Fragment key={index}>
+                                                        <Form.Check.Label
+                                                        htmlFor={`size-${product.id}-${item}`}
+                                                        className="btn btn-soft-primary avatar-xs rounded-circle p-0 d-flex justify-content-center align-items-center"
+                                                        >
+                                                        {item}
+                                                        </Form.Check.Label>
+                                                    </React.Fragment>
+                                                ))}
                                             </div>
                                             <Button
                                                 onClick={() =>

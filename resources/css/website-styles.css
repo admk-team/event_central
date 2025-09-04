@@ -1675,3 +1675,28 @@ section {
 .color_primary {
     color: var(--color-primary);
 }
+
+.sizes-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px; /* spacing between sizes */
+}
+
+.size-badge {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 35px;
+    height: 35px;
+    border-radius: 50%; /* makes it round */
+    background-color: var(--color-primary); /* Bootstrap primary */
+    color: var(--color-primary-foreground);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: default;
+    transition: background-color 0.2s ease;
+}
+
+.size-badge:hover {
+    background-color: var(--color-primary); /* darker on hover */
+}

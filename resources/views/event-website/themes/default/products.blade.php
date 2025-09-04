@@ -28,6 +28,17 @@
                                         <small class="text-muted"><s>${{ $item->old_price }}</s></small>
                                     @endif
                                 </div>
+                                <div class="mb-2">
+                                    @if ($item->sizes)
+                                        <div class="sizes-wrapper">
+                                            @foreach ($item->sizes as $size)
+                                                <label class="size-badge">
+                                                    {{ $size }}
+                                                </label>
+                                            @endforeach
+                                        </div>
+                                    @endif
+                                </div>
                                 <a href="{{ route('attendee.register', $event) }}"
                                     class="btn btn-primary btn-block mt-auto">Register Now</a>
                             </div>
