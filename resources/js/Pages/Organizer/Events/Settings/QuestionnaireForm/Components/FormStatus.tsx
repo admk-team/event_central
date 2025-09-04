@@ -2,11 +2,10 @@ import { useForm, usePage } from '@inertiajs/react';
 import { Eye, EyeOff } from 'lucide-react';
 import React from 'react';
 import { Button, Card, CardBody, CardHeader, CardTitle } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
-
+import { useLaravelReactI18n } from 'laravel-react-i18n';
 export default function FormStatus() {
     const form = usePage().props.form as any;
-    const { t } = useTranslation();
+    const { t } = useLaravelReactI18n();
     const { post, processing } = useForm();
 
     const toggleStatus = () => {

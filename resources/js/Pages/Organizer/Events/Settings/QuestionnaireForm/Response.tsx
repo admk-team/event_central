@@ -9,11 +9,9 @@ import DeleteModal from "../../../../../Components/Common/DeleteModal";
 import DeleteManyModal from "../../../../../Components/Common/DeleteManyModal";
 import RenderQuestionnaireResponse from "../../../../../Components/FormBuilder/RenderQuestionnaireResponse";
 import moment from "moment";
-import { useLaravelReactI18n } from "laravel-react-i18n";
-
+import { useLaravelReactI18n } from 'laravel-react-i18n';
 function Response({ form, submissions }: any) {
     const { t } = useLaravelReactI18n();
-
     const [deleteformSubmission, setDeleteformSubmission] = useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);

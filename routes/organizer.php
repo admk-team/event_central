@@ -261,6 +261,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                     Route::post('after-event', [EventSettingsController::class, 'changeAfterEvent'])->name('after-event');
                     Route::post('follow-up-event', [EventSettingsController::class, 'followUpToggle'])->name('follow-up-event');
                     Route::post('close-open-registration/{event}', [EventSettingsController::class, 'closeOpenRegistration'])->name('close.open.registration');
+                    Route::get('remove-reminder-closer', [EventSettingsController::class, 'removeReminderDays'])->name('remove-reminder-closer');
                 });
 
                 // Payment
