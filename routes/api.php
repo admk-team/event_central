@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Api\v1\Attendee\BadgeAchievementController;
+use App\Http\Controllers\Api\v1\Attendee\ChatController;
+use App\Http\Controllers\Api\v1\Organizer\ChatController as OrganizerChatController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\v1\AuthController;
@@ -11,6 +13,9 @@ use App\Http\Controllers\Api\v1\Attendee\ProfileController;
 use App\Http\Controllers\Api\v1\Attendee\RegisterController;
 use App\Http\Controllers\Api\v1\Organizer\EventSessionController;
 use App\Http\Controllers\Api\v1\Attendee\EventController as AttendeeEventController;
+use App\Http\Controllers\Api\v1\Attendee\EventShopController;
+use App\Http\Controllers\Api\v1\Attendee\EventStaffController;
+use App\Http\Controllers\Api\v1\Attendee\FriendRequestController;
 use App\Http\Controllers\Api\v1\Attendee\PrayerRequestController as AttendeePrayerRequestController;
 use App\Http\Controllers\Api\v1\Attendee\QuestionAttendeeController as AttendeeQuestionAttendeeController;
 use App\Http\Controllers\Api\v1\Organizer\AddonController;
@@ -26,6 +31,8 @@ use App\Http\Controllers\Api\v1\Organizer\PaymentController as OrganizerPaymentC
 use App\Http\Controllers\Api\v1\Organizer\PrayerRequestController;
 use App\Http\Controllers\Api\v1\Organizer\ProfileController as OrganizerProfileController;
 use App\Http\Controllers\Api\v1\Attendee\LiveStreamController;
+use App\Http\Controllers\Api\v1\Organizer\EventShop\OrdersController;
+use App\Http\Controllers\Api\v1\Organizer\EventShop\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -94,6 +101,7 @@ Route::prefix('user')->group(function () {
         Route::get('events/{event}/attendees/{attendee}', [AttendeeController::class, 'show']);
         Route::put('events/{event}/attendees/{attendee}', [AttendeeController::class, 'update']);
         Route::get('purchased-tickets/attendees/{attendee}', [AttendeeController::class, 'attendeeTickets']);
+        Route::post('attendee/chat-initiate/{attendee}', [AttendeeController::class, 'initiateChat']);
 
         // Event Tickets
         Route::get('events/{event}/tickets', [TicketController::class, 'index']);
@@ -126,6 +134,22 @@ Route::prefix('user')->group(function () {
         Route::get('events/organizer/prayer-requests/{event_id}', [PrayerRequestController::class, 'index']);
         Route::put('events/organizer/prayer-requests/update/{id}', [PrayerRequestController::class, 'update']);
         Route::delete('events/organizer/prayer-requests/delete/{id}', [PrayerRequestController::class, 'destroy']);
+
+        // chats (private + group)
+        Route::get('/chat/{event}', [OrganizerChatController::class, 'index']);
+        Route::get('/chat/messages/{event}', [OrganizerChatController::class, 'getMessages']);
+        Route::get('/chat/one-to-one/{participant_id}/{event}', [OrganizerChatController::class, 'getOneToOneChat']);
+        Route::post('/chat/send/{event}', [OrganizerChatController::class, 'store']);
+        Route::post('/chat/mark-as-read/{chatWithUserId}/{event}', [OrganizerChatController::class, 'markAsRead']);
+
+        // Event Store
+        Route::get('/products/{event}', [ProductController::class, 'index']);
+        Route::post('/products/{event}', [ProductController::class, 'store']);
+        Route::post('/products/{product}/{event}', [ProductController::class, 'update']);
+        Route::delete('/products/{product}', [ProductController::class, 'destroy']);
+        // Event Product Orders
+        Route::get('/orders/{event}', [OrdersController::class, 'index']);
+        Route::delete('/orders/{order}', [OrdersController::class, 'destroy']);
     });
 });
 
@@ -212,8 +236,28 @@ Route::prefix('attendee')->group(function () {
         Route::delete('/prayer-requests/{id}', [AttendeePrayerRequestController::class, 'destroy']);
         Route::post('/prayer-request/view/{id}', [AttendeePrayerRequestController::class, 'view']);
 
-        Route::get('/live/stream',[LiveStreamController::class,'index']);
+        Route::get('/live/stream', [LiveStreamController::class, 'index']);
         Route::get('/join/stream/{id}', [LiveStreamController::class, 'joinLiveStreams']);
 
+        // chats (private + group)
+        Route::get('/chat/{event}', [ChatController::class, 'index']);
+        Route::get('/chat/messages/{event}', [ChatController::class, 'getMessages']);
+        Route::get('/chat/one-to-one/{participant_id}/{event}', [ChatController::class, 'getOneToOneChat']);
+        Route::post('/chat/send/{event}', [ChatController::class, 'store']);
+        Route::post('/chat/mark-as-read/{chatWithUserId}/{event}', [ChatController::class, 'markAsRead']);
+        // Friend Request
+        Route::get('/friends', [FriendRequestController::class, 'index']);
+        Route::post('/friends/send', [FriendRequestController::class, 'store']);
+        Route::post('/friends/accept', [FriendRequestController::class, 'accept']);
+        Route::post('/friends/remove', [FriendRequestController::class, 'remove']);
+        // Event Staff
+        Route::get('staff', [EventStaffController::class, 'index']);
+        Route::post('initiate-chat', [EventStaffController::class, 'initiateChat']);
+        //Event Shop
+        Route::get('products', [EventShopController::class, 'index']);
+        Route::post('puchase/product', [EventShopController::class, 'checkout']);
+        Route::post('product/update/{paymentId}', [EventShopController::class, 'updateOrder']);
+        // Route::get('success/checkout', [EventShopController::class, 'paymentSuccess']);
+        // Route::get('cancel/checkout', [EventShopController::class, 'paymentCancel']);
     });
 });
