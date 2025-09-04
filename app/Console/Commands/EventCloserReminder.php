@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\EventAppTicket;
+use App\Models\ReminderEventEmail;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -27,23 +28,17 @@ class EventCloserReminder extends Command
      */
     public function handle()
     {
-        Log::info('Event Reminder Scheduler Started');
-
         $eventApps = \App\Models\EventApp::with('dates')->get();
-        Log::info('Fetched EventApps: ' . $eventApps->count());
 
         foreach ($eventApps as $eventApp) {
-            Log::info("Checking EventApp ID: {$eventApp->id}");
 
             $firstDate = optional($eventApp->dates()->orderBy('date', 'asc')->first())->date;
 
             if (!$firstDate) {
-                Log::warning("EventApp ID {$eventApp->id} has no start date.");
                 continue;
             }
 
-            $reminderDays = (int) eventSettings($eventApp->id)->getValue('reminder_days', 7);
-            Log::info("Reminder days for EventApp ID {$eventApp->id}: {$reminderDays}");
+            $reminderDays = ReminderEventEmail::where('event_app_id', $eventApp->id)->pluck('days');
 
             $eventStart = \Carbon\Carbon::parse($firstDate)->startOfDay();
             $now = \Carbon\Carbon::now()->startOfDay();
@@ -51,18 +46,12 @@ class EventCloserReminder extends Command
 
             $diffDays = $now->diffInDays($eventStart, false);
 
-            Log::info("Today: {$now->toDateString()}, Event Start: {$eventStart->toDateString()}, Diff: {$diffDays} days");
-
             if ($diffDays < 0) {
-                Log::info("EventApp ID {$eventApp->id} already passed. Skipping reminder...");
                 continue;
             }
-            if ($diffDays <= $reminderDays) {
-                Log::info("Event is {$diffDays} days away for EventApp ID {$eventApp->id}, sending reminder...");
+            if ($reminderDays->contains($diffDays)) {
                 \App\Jobs\SendEventReminderJob::dispatch($eventApp);
             }
         }
-
-        Log::info('Event Reminder Scheduler Completed');
     }
 }
