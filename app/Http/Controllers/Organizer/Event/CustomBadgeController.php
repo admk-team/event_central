@@ -32,7 +32,7 @@ class CustomBadgeController extends Controller
         $eventId = session('event_id');
 
         // Ensure the 3 default templates exist
-        $defaults = ['Default', 'Design1', 'Design2'];
+        $defaults = ['Default', 'Design1', 'Design2','Design3'];
 
         foreach ($defaults as $name) {
             CustomBadgeAttendee::firstOrCreate(

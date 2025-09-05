@@ -432,6 +432,86 @@ function Index({
                     )}
                 </div>
             )}
+            {customBadgeDesign == "Design3" && (
+                <div className="printable">
+                    {filteredAttendees.map((attendee: any, index: number) =>
+                        attendee.qr_codes.map((qr: string, idx: number) => (
+                            <div
+                                key={idx}
+                                className="passWrapper print-page-break"
+                                style={{
+                                    transform: isFlipped
+                                        ? "rotate(180deg)"
+                                        : "none",
+                                }}
+                            >
+                                <div className="passes-container">
+                                    <div
+                                        className={`pass ${showGradient
+                                            ? "div-gradient"
+                                            : "bg-transparent"
+                                            } mt-4 mb-4`}
+                                    >
+                                        <div className="qrWrapper">
+                                            <img
+                                                className="qr-code-img"
+                                                src={qr.qr_code}
+                                                alt={`QR code ${idx + 1}`}
+                                            />
+                                        </div>
+                                        <div className="heading-wraper">
+
+
+                                            <p className="attendee-name mt-2">
+                                                {/* {qr.ticket_type_name} */}
+                                                Purchased Ticket
+                                            </p>
+                                            <span className="attendee-name1">
+                                                {/* {eventApp?.location_base} */}
+                                                Event location
+                                            </span>
+                                            <span className="location">
+                                                {/* {eventApp?.location_base} */}
+                                                Event Start ➡️ Event End
+                                            </span>
+                                        </div>
+                                        {attendee?.avatar && (
+                                            <img
+                                                className="mt-2 mb-2" width={160} height={160} style={{borderRadius: "100%", marginLeft: "25%"}}
+                                                src={
+                                                    attendee?.avatar ||
+                                                    "/placeholder.svg?height=80&width=80"
+                                                }
+                                                alt="event logo"
+                                            />
+                                        )}
+                                        <div className="attendee-details">
+
+                                            <h6 className="attendee-name1">
+                                                {/* {attendee?.name} */}
+                                                Attendee Name
+                                            </h6>
+                                            <h6 className="attendee-name1">
+                                                {/* {attendee?.position} */}
+                                                Attendee Position
+                                            </h6>
+                                            <span className="location">
+                                                Attendee Hashtag / Social
+                                                Handles
+                                            </span>
+                                            <span className="attendee-name1">
+                                                {/* {attendee?.location} */}
+                                                Attendee location
+                                            </span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    )}
+                </div>
+            )}
         </React.Fragment>
     );
 }

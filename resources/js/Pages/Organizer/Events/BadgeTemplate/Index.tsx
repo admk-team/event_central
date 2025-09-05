@@ -31,7 +31,7 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
         );
     };
 
-    return ( 
+    return (
         <div className="container" style={{ marginTop: "100px" }}>
             <div className="row">
                 {baseTemplate.map((template) => {
@@ -309,7 +309,107 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                                         <span>🎟️</span>{" "}
                                                         {t("Attendee Ticket")}
                                                     </li>
-                                                   
+
+                                                    <li>
+                                                        <span>🙋</span>{" "}
+                                                        {t("Attendee Name")}
+                                                    </li>
+                                                    <li>
+                                                        <span>💼</span>{" "}
+                                                        {t("Attendee Position")}
+                                                    </li>
+                                                      <li>
+                                                        <span>🌍</span>{" "}
+                                                        {t("Attendee Location")}
+                                                    </li>
+                                                    <li>
+                                                        <span>🌍</span>{" "}
+                                                        {t("Attendee Hashtag / Social Handles")}
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <button
+                                                className="btn btn-outline-light mb-2"
+                                                onClick={() =>
+                                                    editTemplate(template.id)
+                                                }
+                                            >
+                                                {t("Edit")}
+                                            </button>
+                                            <button
+                                                className={`btn mt-3 ${
+                                                    isSelected
+                                                        ? "btn-success disabled"
+                                                        : "btn-outline-light"
+                                                }`}
+                                                onClick={() =>
+                                                    useTemplate(template.id)
+                                                }
+                                                disabled={isSelected}
+                                                title={
+                                                    isSelected
+                                                        ? "Already selected"
+                                                        : "Set as template"
+                                                }
+                                            >
+                                                {isSelected
+                                                    ? t("Selected")
+                                                    : t("Use Template")}
+                                            </button>
+                                        </div>
+                                    )}
+                                    {template.name == "Design3" && (
+                                        <div className="hoverInstructions d-flex flex-column justify-content-between">
+                                            <div>
+                                                <h6 className="fw-bold mb-3 text-uppercase">
+                                                    📝 Badge Instructions
+                                                </h6>
+                                                <ul className="instructionList">
+                                                     <li>
+                                                        <span>🎨</span>{" "}
+                                                        <strong>
+                                                            {t(
+                                                                "Event Branding & Logistics"
+                                                            )}
+                                                        </strong>
+                                                    </li>
+
+                                                    <li>
+                                                        <span>📅</span>{" "}
+                                                        {t("Event Logo")}
+                                                    </li>
+                                                    <li>
+                                                        <span>📍</span>{" "}
+                                                        {t("Location / Venue")}
+                                                    </li>
+                                                     <li>
+                                                        <span>📍</span>{" "}
+                                                        {t("Start and End Date")}
+                                                    </li>
+                                                      <li className="mt-3">
+                                                        <span>📱</span>{" "}
+                                                        <strong>
+                                                            {t(
+                                                                "Tech / Scanning"
+                                                            )}
+                                                        </strong>
+                                                    </li>
+                                                    <li>
+                                                        <span>🔳</span>{" "}
+                                                        {t("QR Code")}
+                                                    </li>
+
+                                                    <li className="mt-3">
+                                                        <span>✨</span>{" "}
+                                                        <strong>
+                                                            {t("Additional")}
+                                                        </strong>
+                                                    </li>
+                                                     <li>
+                                                        <span>🎟️</span>{" "}
+                                                        {t("Attendee Ticket")}
+                                                    </li>
+
                                                     <li>
                                                         <span>🙋</span>{" "}
                                                         {t("Attendee Name")}
