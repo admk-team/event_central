@@ -246,15 +246,16 @@ function Index({
                             >
                                 <div className="passes-container">
                                     <div
-                                        className={`${passSize} ${showGradient
+                                        className={`${passSize} ${
+                                            showGradient
                                                 ? "div-gradient"
                                                 : "bg-transparent"
-                                            } mt-4 mb-4`}
+                                        } mt-4 mb-4`}
                                     >
-                                        <div className="heading-wraper">
+                                        <div className="qrWrapper">
                                             {showLogo ? (
                                                 <img
-                                                    className="circle"
+                                                    className="qr-code-img"
                                                     src={
                                                         eventApp?.logo_img ||
                                                         "/placeholder.svg?height=80&width=80"
@@ -264,6 +265,8 @@ function Index({
                                             ) : (
                                                 <div className="eventlogodiv"></div>
                                             )}
+                                        </div>
+                                        <div className="heading-wraper">
                                             <p className="event-location">
                                                 {eventApp?.location_base}
                                             </p>
@@ -313,10 +316,11 @@ function Index({
                             >
                                 <div className="passes-container">
                                     <div
-                                        className={`${passSize} ${showGradient
+                                        className={`${passSize} ${
+                                            showGradient
                                                 ? "div-gradient"
                                                 : "bg-transparent"
-                                            } mt-4 mb-4`}
+                                        } mt-4 mb-4`}
                                     >
                                         <div className="attendee-details">
                                             {attendee?.avatar && (
@@ -324,8 +328,9 @@ function Index({
                                                     <img
                                                         className="avatar-img"
                                                         src={attendee?.avatar}
-                                                        alt={`Profile ${idx + 1
-                                                            }`}
+                                                        alt={`Profile ${
+                                                            idx + 1
+                                                        }`}
                                                     />
                                                 </div>
                                             )}
@@ -393,24 +398,27 @@ function Index({
                             >
                                 <div className="passes-container">
                                     <div
-                                        className={`${passSize} ${showGradient
+                                        className={`${passSize} ${
+                                            showGradient
                                                 ? "div-gradient"
                                                 : "bg-transparent"
-                                            } mt-4 mb-4`}
+                                        } mt-4 mb-4`}
                                     >
                                         <div className="heading-wraper">
-                                            {showLogo ? (
-                                                <img
-                                                    className="circle"
-                                                    src={
-                                                        eventApp?.logo_img ||
-                                                        "/placeholder.svg?height=80&width=80"
-                                                    }
-                                                    alt="event logo"
-                                                />
-                                            ) : (
-                                                <div className="eventlogodiv"></div>
-                                            )}
+                                            <div className="qrWrapper2">
+                                                {showLogo ? (
+                                                    <img
+                                                        className="logo-img"
+                                                        src={
+                                                            eventApp?.logo_img ||
+                                                            "/placeholder.svg?height=80&width=80"
+                                                        }
+                                                        alt="event logo"
+                                                    />
+                                                ) : (
+                                                    <div className="eventlogodiv"></div>
+                                                )}
+                                            </div>
 
                                             <span className="attendee-name1">
                                                 {eventApp?.location_base}
@@ -487,10 +495,11 @@ function Index({
                             >
                                 <div className="passes-container">
                                     <div
-                                        className={`${passSize} ${showGradient
+                                        className={`${passSize} ${
+                                            showGradient
                                                 ? "div-gradient"
                                                 : "bg-transparent"
-                                            } mt-4 mb-4`}
+                                        } mt-4 mb-4`}
                                     >
                                         <div className="qrWrapper3">
                                             <img
@@ -533,7 +542,6 @@ function Index({
                                             </h6>
                                             <h6 className="attendee-name1">
                                                 {attendee?.position}
-
                                             </h6>
                                             <div className="location">
                                                 {attendee?.facebook_link && (
@@ -583,10 +591,11 @@ function Index({
                             >
                                 <div className="passes-container">
                                     <div
-                                        className={`${passSize} ${showGradient
+                                        className={`${passSize} ${
+                                            showGradient
                                                 ? "div-gradient"
                                                 : "bg-transparent"
-                                            } mt-4 mb-4`}
+                                        } mt-4 mb-4`}
                                     >
                                         <div className="attendee-details">
                                             <p className="attendee-name">
@@ -633,23 +642,25 @@ function Index({
                                             />
                                         </div>
                                         <div className="heading-wraper">
-                                            {showLogo ? (
-                                                <img
-                                                    className="circle"
-                                                    src={
-                                                        eventApp?.logo_img ||
-                                                        "/placeholder.svg?height=80&width=80"
-                                                    }
-                                                    alt="event logo"
-                                                />
-                                            ) : (
-                                                <div className="eventlogodiv"></div>
-                                            )}
+                                            <div className="qrWrapper2">
+                                                {showLogo ? (
+                                                    <img
+                                                        className="logo-img"
+                                                        src={
+                                                            eventApp?.logo_img ||
+                                                            "/placeholder.svg?height=80&width=80"
+                                                        }
+                                                        alt="event logo"
+                                                    />
+                                                ) : (
+                                                    <div className="eventlogodiv"></div>
+                                                )}
+                                            </div>
                                             <span className="location">
                                                 {startDate}{" "}
                                                 {endDate && <>➡️ {endDate}</>}
                                             </span>
-                                            <span className="attendee-name1">
+                                            <span className="location1">
                                                 {eventApp?.location_base}
                                             </span>
                                         </div>
@@ -675,14 +686,15 @@ function Index({
                             >
                                 <div className="passes-container">
                                     <div
-                                        className={`${passSize} ${showGradient
-                                            ? "div-gradient"
-                                            : "bg-transparent"
-                                            } mt-4 mb-4`}
+                                        className={`${passSize} ${
+                                            showGradient
+                                                ? "div-gradient"
+                                                : "bg-transparent"
+                                        } mt-4 mb-4`}
                                     >
-                                        <div className="qrWrapper5">
+                                        <div className="qrWrapper">
                                             <img
-                                                className=""
+                                                className="qr-code-img"
                                                 src={qr.qr_code}
                                                 alt={`QR code ${idx + 1}`}
                                             />
@@ -696,7 +708,6 @@ function Index({
                                             </h6>
                                             <h6 className="attendee-position-5">
                                                 {attendee?.position}
-
                                             </h6>
 
                                             <div className="location">
@@ -726,7 +737,6 @@ function Index({
                                             </span>
                                         </div>
 
-
                                         <div className="heading-wraper">
                                             <span className="evnet-name-5">
                                                 {eventApp?.name}
@@ -734,16 +744,15 @@ function Index({
                                             <span className="attendee-name1">
                                                 {eventApp?.location_base}
                                             </span>
-                                           <span className="location">
+                                            <span className="location">
                                                 {startDate}{" "}
                                                 {endDate && <>➡️ {endDate}</>}
                                             </span>
-                                        </div>
 
-                                        <div className="heading-wraper">
+                                             <div className="qrWrapper2">
                                             {showLogo ? (
                                                 <img
-                                                    className="circle"
+                                                    className="logo-img"
                                                     src={
                                                         eventApp?.logo_img ||
                                                         "/placeholder.svg?height=80&width=80"
@@ -754,7 +763,9 @@ function Index({
                                                 <div className="eventlogodiv"></div>
                                             )}
                                         </div>
+                                        </div>
 
+                                       
                                     </div>
                                 </div>
                             </div>
