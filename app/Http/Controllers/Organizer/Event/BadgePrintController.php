@@ -7,6 +7,7 @@ use App\Models\Attendee;
 use App\Models\EventApp;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\CustomBadgeAttendee;
 use App\Models\EventBadgeDesign;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -21,7 +22,7 @@ class BadgePrintController extends Controller
         if (! Auth::user()->can('print_badges')) {
             abort(403);
         }
-
+        $eventId = session('event_id');
         $attendees = Attendee::currentEvent()
             ->with(['payments.purchased_tickets.ticket.ticketType'])
             ->get()
@@ -30,6 +31,12 @@ class BadgePrintController extends Controller
                     'name' => $attendee->first_name . ' ' . $attendee->last_name,
                     'position' => $attendee->position,
                     'location' => $attendee->location,
+                    'avatar' => $attendee->avatar,
+                    'other_link' => $attendee->other_link,
+                    'facebook_link' => $attendee->facebook_link,
+                    'linkedin_link' => $attendee->linkedin_link,
+                    'twitter_link' => $attendee->twitter_link,
+                    'phone' => $attendee->phone,
                     'qr_codes' => $attendee->payments
                         ->filter(fn($payment) => $payment->status === 'paid')
                         ->flatMap(function ($payment) {
@@ -80,16 +87,23 @@ class BadgePrintController extends Controller
             ->filter(fn($item) => $item['qr_codes']->isNotEmpty())
             ->values();
 
-        $eventApp = EventApp::find(session('event_id'));
+        $eventApp = EventApp::find($eventId);
         $customDesign = $eventApp->load(['badgeDesign.customBadgeAttendee']);
-        $customBadgeDesign = null;
+        $customBadgeDesign = 'Default';
         if ($customDesign->badgeDesign && $customDesign->badgeDesign->customBadgeAttendee) {
-            $customBadgeDesign = $customDesign->badgeDesign->customBadgeAttendee;
+            $customBadgeDesign = $customDesign->badgeDesign->customBadgeAttendee->name;
         }
+        $startDateObj = optional($eventApp->dates()->orderBy('date', 'asc')->first())->date;
+        $endDateObj   = optional($eventApp->dates()->orderBy('date', 'desc')->first())->date;
+
+        $startDate = $startDateObj ? \Carbon\Carbon::parse($startDateObj)->format('F j, Y') : null;
+        $endDate   = $endDateObj ? \Carbon\Carbon::parse($endDateObj)->format('F j, Y') : null;
         return Inertia::render('Organizer/Events/BadgePrint/Index', compact(
             'attendees',
             'eventApp',
-            'customBadgeDesign'
+            'customBadgeDesign',
+            'startDate',
+            'endDate',
         ));
     }
 

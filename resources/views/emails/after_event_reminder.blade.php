@@ -65,7 +65,7 @@
     <div class="container">
         <div class="content">
             <div class="header">
-                <img src="{{ asset($events->logo ? $events->logo : 'images/logo.png') }}" alt="Logo">
+                <img src="{{ asset($events->logo_img ?: 'images/logo.png') }}" alt="Logo">
                 <h1>Event Reminder</h1>
             </div>
             <p>Hello
