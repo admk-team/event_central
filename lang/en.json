@@ -1117,5 +1117,21 @@
     "Logout": "Logout",
     "Search here...": "Search here...",
     "Type your message...": "Type your message...",
-    "This form is currently empty. No questions have been added yet":"This form is currently empty. No questions have been added yet"
+    "This form is currently empty. No questions have been added yet": "This form is currently empty. No questions have been added yet",
+    "Badge Instructions": "Badge Instructions",
+    "Event Branding & Logistics": "Event Branding & Logistics",
+    "Event Name & Date": "Event Name & Date",
+    "Location / Venue": "Location / Venue",
+    "Additional": "Additional",
+    "Tech / Scanning": "Tech / Scanning",
+    "QR Code": "QR Code",
+    "Attendee Location": "Attendee Location",
+    "Attendee Ticket": "Attendee Ticket",
+    "Set as template":"Set as template",
+    "Attendee Profile":"Attendee Profile",
+    "Attendee Hashtag / Social Handles":"Attendee Hashtag / Social Handles",
+    "Attenddee Profile":"Attenddee Profile",
+    "Purchased Ticket":"Purchased Ticket",
+    "Event Start ➡️ Event End" : "Event Start ➡️ Event End",
+    "Start and End Date":"Start and End Date"
 }

@@ -1115,5 +1115,21 @@
   "Attendee Options": "خيارات المشارك",
   "Logout": "تسجيل الخروج",
   "Search here...": "ابحث هنا...",
-  "Type your message...": "اكتب رسالتك..."
+  "Type your message...": "اكتب رسالتك...",
+   "Badge Instructions": "تعليمات الشارة",
+  "Event Branding & Logistics": "علامة الحدث واللوجستيات",
+  "Event Name & Date": "اسم الحدث وتاريخه",
+  "Location / Venue": "الموقع / المكان",
+  "Additional": "إضافي",
+  "Tech / Scanning": "التقنية / المسح",
+  "QR Code": "رمز الاستجابة السريعة",
+  "Attendee Location": "موقع الحضور",
+  "Attendee Ticket": "تذكرة الحضور",
+  "Set as template": "تعيين كقالب",
+  "Attendee Profile": "ملف الحضور",
+  "Attendee Hashtag / Social Handles": "هاشتاج الحضور / حسابات التواصل الاجتماعي",
+  "Attenddee Profile": "ملف الحضور",
+  "Purchased Ticket": "التذكرة المشتراة",
+  "Event Start ➡️ Event End": "بداية الحدث ➡️ نهاية الحدث",
+  "Start and End Date": "تاريخ البدء والانتهاء"
 }
