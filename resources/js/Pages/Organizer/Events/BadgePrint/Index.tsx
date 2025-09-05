@@ -9,14 +9,19 @@ function Index({
     attendees,
     eventApp,
     customBadgeDesign,
+    startDate,
+    endDate,
 }: {
     attendees: any;
     eventApp: any;
     customBadgeDesign: any;
+    startDate: any;
+    endDate: any;
 }) {
     const { t } = useLaravelReactI18n();
     const [search, setSearch] = useState("");
     const [isFlipped, setIsFlipped] = useState(false);
+    const [passSize, setPassSize] = useState("pass"); // default size
 
     const filteredAttendees = attendees.filter((attendee: any) => {
         const ticketTypes = attendee.qr_codes
@@ -63,6 +68,34 @@ function Index({
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                             />
+                            <Form.Group
+                                controlId="passSizeSelect"
+                                className="mb-3 mt-2"
+                            >
+                                <Form.Label className="text-black">
+                                    {t("Select Pass Size")}
+                                </Form.Label>
+                                <Form.Select
+                                    value={passSize}
+                                    onChange={(e) =>
+                                        setPassSize(e.target.value)
+                                    }
+                                >
+                                    <option value="pass">Default</option>
+                                    <option value="pass-4x6">4 x 6</option>
+                                    <option value="pass-3_5x5_5">
+                                        3.5 x 5.5
+                                    </option>
+                                    <option value="pass-3x5">3 x 5</option>
+                                    <option value="pass-4x4">4 x 4</option>
+                                    <option value="pass-2_5x3_5">
+                                        2.5 x 3.5
+                                    </option>
+                                    <option value="pass-cr80">
+                                        CR80 (ID Card)
+                                    </option>
+                                </Form.Select>
+                            </Form.Group>
                         </Col>
                         <Col md={8} className="mt-4">
                             <div className="d-flex flex-column flex-md-row justify-content-md-end align-items-stretch gap-2">
@@ -73,7 +106,6 @@ function Index({
                                 >
                                     🖨️ {t("Search Attendee")}
                                 </button>
-
                                 <button
                                     type="button"
                                     className="btn btn-secondary w-100 w-md-auto"
@@ -83,7 +115,6 @@ function Index({
                                         ? "🙈" + t("Hide Logo")
                                         : "👁️ " + "Show Logo"}
                                 </button>
-
                                 <button
                                     type="button"
                                     className="btn btn-secondary w-100 w-md-auto"
@@ -95,7 +126,6 @@ function Index({
                                         ? "🧼" + t("White Background")
                                         : "🌈" + t("Gradient Background")}
                                 </button>
-
                                 <button
                                     type="button"
                                     className="btn btn-info w-100 w-md-auto"
@@ -107,6 +137,7 @@ function Index({
                                         ? "↩️" + t("Unflip")
                                         : "🔄" + t("Flip")}
                                 </button>
+
                                 <button
                                     className="btn btn-primary w-100 w-md-auto"
                                     onClick={() =>
@@ -215,7 +246,7 @@ function Index({
                             >
                                 <div className="passes-container">
                                     <div
-                                        className={`pass ${
+                                        className={`${passSize} ${
                                             showGradient
                                                 ? "div-gradient"
                                                 : "bg-transparent"
@@ -283,7 +314,7 @@ function Index({
                             >
                                 <div className="passes-container">
                                     <div
-                                        className={`pass ${
+                                        className={`${passSize} ${
                                             showGradient
                                                 ? "div-gradient"
                                                 : "bg-transparent"
@@ -365,7 +396,7 @@ function Index({
                             >
                                 <div className="passes-container">
                                     <div
-                                        className={`pass ${
+                                        className={`${passSize} ${
                                             showGradient
                                                 ? "div-gradient"
                                                 : "bg-transparent"
@@ -386,12 +417,11 @@ function Index({
                                             )}
 
                                             <span className="attendee-name1">
-                                                {/* {eventApp?.location_base} */}
-                                                Event location
+                                                {eventApp?.location_base}
                                             </span>
                                             <span className="location">
-                                                {/* {eventApp?.location_base} */}
-                                                Event Start ➡️ Event End
+                                                {startDate}{" "}
+                                                {endDate && <>➡️ {endDate}</>}
                                             </span>
                                         </div>
 
@@ -405,24 +435,38 @@ function Index({
 
                                         <div className="attendee-details">
                                             <p className="attendee-name">
-                                                {/* {qr.ticket_type_name} */}
-                                                Purchased Ticket
+                                                {qr.ticket_type_name}
                                             </p>
                                             <h6 className="attendee-name1">
-                                                {/* {attendee?.name} */}
-                                                Attendee Name
+                                                {attendee?.name}
                                             </h6>
                                             <h6 className="attendee-name1">
-                                                {/* {attendee?.position} */}
-                                                Attendee Position
+                                                {attendee?.position}
                                             </h6>
-                                            <span className="location">
-                                                Attendee Hashtag / Social
-                                                Handles
-                                            </span>
+                                            <div className="location">
+                                                {attendee?.facebook_link && (
+                                                    <div>
+                                                        {attendee.facebook_link}
+                                                    </div>
+                                                )}
+                                                {attendee?.linkedin_link && (
+                                                    <div>
+                                                        {attendee.linkedin_link}
+                                                    </div>
+                                                )}
+                                                {attendee?.twitter_link && (
+                                                    <div>
+                                                        {attendee.twitter_link}
+                                                    </div>
+                                                )}
+                                                {attendee?.other_link && (
+                                                    <div>
+                                                        {attendee.other_link}
+                                                    </div>
+                                                )}
+                                            </div>
                                             <span className="attendee-name1">
-                                                {/* {attendee?.location} */}
-                                                Attendee location
+                                                {attendee?.location}
                                             </span>
                                         </div>
                                     </div>
@@ -447,7 +491,7 @@ function Index({
                             >
                                 <div className="passes-container">
                                     <div
-                                        className={`pass ${
+                                        className={`${passSize} ${
                                             showGradient
                                                 ? "div-gradient"
                                                 : "bg-transparent"
@@ -462,16 +506,14 @@ function Index({
                                         </div>
                                         <div className="heading-wraper">
                                             <p className="attendee-name mt-2">
-                                                {/* {qr.ticket_type_name} */}
-                                                Purchased Ticket
+                                                {qr.ticket_type_name}
                                             </p>
                                             <span className="attendee-name1">
-                                                {/* {eventApp?.location_base} */}
-                                                Event location
+                                                {eventApp?.location_base}
                                             </span>
                                             <span className="location">
-                                                {/* {eventApp?.location_base} */}
-                                                Event Start ➡️ Event End
+                                                {startDate}{" "}
+                                                {endDate && <>➡️ {endDate}</>}
                                             </span>
                                         </div>
                                         {attendee?.avatar && (
@@ -492,20 +534,36 @@ function Index({
                                         )}
                                         <div className="attendee-details">
                                             <h6 className="attendee-name1">
-                                                {/* {attendee?.name} */}
-                                                Attendee Name
+                                                {attendee?.name}
                                             </h6>
                                             <h6 className="attendee-name1">
-                                                {/* {attendee?.position} */}
-                                                Attendee Position
+                                                {attendee?.position}
+                                                
                                             </h6>
-                                            <span className="location">
-                                                Attendee Hashtag / Social
-                                                Handles
-                                            </span>
+                                              <div className="location">
+                                                {attendee?.facebook_link && (
+                                                    <div>
+                                                        {attendee.facebook_link}
+                                                    </div>
+                                                )}
+                                                {attendee?.linkedin_link && (
+                                                    <div>
+                                                        {attendee.linkedin_link}
+                                                    </div>
+                                                )}
+                                                {attendee?.twitter_link && (
+                                                    <div>
+                                                        {attendee.twitter_link}
+                                                    </div>
+                                                )}
+                                                {attendee?.other_link && (
+                                                    <div>
+                                                        {attendee.other_link}
+                                                    </div>
+                                                )}
+                                            </div>
                                             <span className="attendee-name1">
-                                                {/* {attendee?.location} */}
-                                                Attendee location
+                                                {attendee?.location}
                                             </span>
                                         </div>
                                     </div>
@@ -530,7 +588,7 @@ function Index({
                             >
                                 <div className="passes-container">
                                     <div
-                                        className={`pass ${
+                                        className={`${passSize} ${
                                             showGradient
                                                 ? "div-gradient"
                                                 : "bg-transparent"
@@ -538,24 +596,38 @@ function Index({
                                     >
                                         <div className="attendee-details">
                                             <p className="attendee-name">
-                                                {/* {qr.ticket_type_name} */}
-                                                Purchased Ticket
+                                                {qr.ticket_type_name}
                                             </p>
                                             <h6 className="attendee-name1">
-                                                {/* {attendee?.name} */}
-                                                Attendee Name
+                                                {attendee?.name}
                                             </h6>
                                             <h6 className="attendee-name1">
-                                                {/* {attendee?.position} */}
-                                                Attendee Position
+                                                {attendee?.position}
                                             </h6>
-                                            <span className="location">
-                                                Attendee Hashtag / Social
-                                                Handles
-                                            </span>
+                                             <div className="location">
+                                                {attendee?.facebook_link && (
+                                                    <div>
+                                                        {attendee.facebook_link}
+                                                    </div>
+                                                )}
+                                                {attendee?.linkedin_link && (
+                                                    <div>
+                                                        {attendee.linkedin_link}
+                                                    </div>
+                                                )}
+                                                {attendee?.twitter_link && (
+                                                    <div>
+                                                        {attendee.twitter_link}
+                                                    </div>
+                                                )}
+                                                {attendee?.other_link && (
+                                                    <div>
+                                                        {attendee.other_link}
+                                                    </div>
+                                                )}
+                                            </div>
                                             <span className="attendee-name1">
-                                                {/* {attendee?.location} */}
-                                                Attendee location
+                                                {attendee?.location}
                                             </span>
                                         </div>
 
@@ -579,13 +651,12 @@ function Index({
                                             ) : (
                                                 <div className="eventlogodiv"></div>
                                             )}
-                                            <span className="location">
-                                                {/* {eventApp?.location_base} */}
-                                                Event Start ➡️ Event End
+                                          <span className="location">
+                                                {startDate}{" "}
+                                                {endDate && <>➡️ {endDate}</>}
                                             </span>
                                             <span className="attendee-name1">
-                                                {/* {eventApp?.location_base} */}
-                                                Event location
+                                                {eventApp?.location_base}
                                             </span>
                                         </div>
                                     </div>
