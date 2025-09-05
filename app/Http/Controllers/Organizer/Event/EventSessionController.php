@@ -48,6 +48,7 @@ class EventSessionController extends Controller
         $data = $request->validated();
         if ($data['type'] == "Break") {
             $data['qa_status'] = false;
+            $data['enable_certificate'] = false;
             $data['posts'] = false;
             $data['rating_status'] = false;
         }
@@ -71,7 +72,7 @@ class EventSessionController extends Controller
         }
 
         $session->tracks()->sync($tracksIds);
-        broadcast(new UpdateEventDashboard(session('event_id'),'New Session Created'))->toOthers();
+        broadcast(new UpdateEventDashboard(session('event_id'), 'New Session Created'))->toOthers();
         return back()->withSuccess("Session Created Successfully");
     }
 
@@ -85,6 +86,7 @@ class EventSessionController extends Controller
         if ($data['type'] == "Break") {
             $data['qa_status'] = false;
             $data['posts'] = false;
+            $data['enable_certificate'] = false;
             $data['rating_status'] = false;
         }
 
@@ -110,7 +112,7 @@ class EventSessionController extends Controller
         }
 
         $schedule->delete();
-        broadcast(new UpdateEventDashboard(session('event_id'),'Session Deleted'))->toOthers();
+        broadcast(new UpdateEventDashboard(session('event_id'), 'Session Deleted'))->toOthers();
         return back()->withSuccess("Session Deleted Successfully");
     }
 
@@ -129,6 +131,6 @@ class EventSessionController extends Controller
 
             $eventSession?->delete();
         }
-        broadcast(new UpdateEventDashboard(session('event_id'),'Session Deleted'))->toOthers();
+        broadcast(new UpdateEventDashboard(session('event_id'), 'Session Deleted'))->toOthers();
     }
 }

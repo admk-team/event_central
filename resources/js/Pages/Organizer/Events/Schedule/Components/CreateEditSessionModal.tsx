@@ -85,6 +85,7 @@ export default function CreateEditSessionModal({
     start_time: eventSession?.start_time ?? "00:00",
     end_time: eventSession?.end_time ?? "00:00",
     qa_status: eventSession?.qa_status ?? 0,
+    enable_certificate: eventSession?.enable_certificate ?? 0,
     price: eventSession?.price ?? "",
     posts: eventSession?.posts ?? false,
     rating_status: eventSession?.rating_status ?? 0,
@@ -182,7 +183,7 @@ export default function CreateEditSessionModal({
             {(data.type === "Session" || data.type === "Workshop") && (
               <>
                 <Row className="mt-3 mb-3">
-                  <Col md={4}>
+                  <Col md={6}>
                     <Form.Check
                       type="switch"
                       id="qa-status-switch"
@@ -192,7 +193,7 @@ export default function CreateEditSessionModal({
                     />
                     {errors.qa_status && <Form.Text className="text-danger">{errors.qa_status}</Form.Text>}
                   </Col>
-                  <Col md={4}>
+                  <Col md={6}>
                     <div className="form-check form-switch">
                       <Form.Check.Input
                         type="checkbox"
@@ -206,7 +207,7 @@ export default function CreateEditSessionModal({
                       </Form.Check.Label>
                     </div>
                   </Col>
-                  <Col md={4}>
+                  <Col md={6}>
                     <Form.Check
                       type="switch"
                       id="rating_status-switch"
@@ -216,6 +217,18 @@ export default function CreateEditSessionModal({
                     />
                     {errors.rating_status && (
                       <Form.Text className="text-danger">{errors.rating_status}</Form.Text>
+                    )}
+                  </Col>
+                  <Col md={6}>
+                    <Form.Check
+                      type="switch"
+                      id="enable_certificate-switch"
+                      label={t("Enable Certificate")}
+                      checked={!!data.enable_certificate}
+                      onChange={(e) => setData("enable_certificate", e.target.checked)}
+                    />
+                    {errors.enable_certificate && (
+                      <Form.Text className="text-danger">{errors.enable_certificate}</Form.Text>
                     )}
                   </Col>
                 </Row>

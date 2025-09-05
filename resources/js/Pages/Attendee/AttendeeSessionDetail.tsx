@@ -27,6 +27,7 @@ const AttendeeSessionDetail = ({
     next_session_id,
     checkin,
     attendeeRating,
+    download_certificate
 }: any) => {
     const { data, setData, post, processing, errors, reset } = useForm({
         _method: "POST",
@@ -124,6 +125,15 @@ const AttendeeSessionDetail = ({
                                         <div className="d-flex flex-row align-items-center">
                                                 <div className="d-flex align-items-center gap-2 me-3">
                                                     {" "}
+                                                    {/* Gap between Certificate and icons */}
+                                                   <a
+                                                        href={route("attendee.session.certificate",{eventSession: eventSession.id,})}
+                                                        className="d-flex align-items-center text-decoration-none"
+                                                        target="_blank" // optional: open in new tab
+                                                    >
+                                                        <i className="bx bx-certification fs-4 text-primary"></i>
+                                                        <span className="fw-bold text-primary ms-1">Certificate</span>
+                                                    </a>
                                                     {/* Gap between Q&A and icons */}
                                                     {eventSession.qa_status == true && (
                                                         <Link
