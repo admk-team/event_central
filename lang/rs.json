@@ -1117,5 +1117,21 @@
 "Logout": "Выйти",
 "Search here...": "Искать здесь...",
 "Type your message...": "Введите сообщение...",
-"This form is currently empty. No questions have been added yet": "Эта форма пока пуста. Вопросы ещё не добавлены"
+"This form is currently empty. No questions have been added yet": "Эта форма пока пуста. Вопросы ещё не добавлены",
+"Badge Instructions": "Инструкции по бейджу",
+  "Event Branding & Logistics": "Брендинг и логистика мероприятия",
+  "Event Name & Date": "Название и дата мероприятия",
+  "Location / Venue": "Место проведения",
+  "Additional": "Дополнительно",
+  "Tech / Scanning": "Технологии / Сканирование",
+  "QR Code": "QR-код",
+  "Attendee Location": "Местоположение участника",
+  "Attendee Ticket": "Билет участника",
+  "Set as template": "Установить как шаблон",
+  "Attendee Profile": "Профиль участника",
+  "Attendee Hashtag / Social Handles": "Хэштег / Соцсети участника",
+  "Attenddee Profile": "Профиль участника",
+  "Purchased Ticket": "Приобретённый билет",
+  "Event Start ➡️ Event End": "Начало мероприятия ➡️ Конец мероприятия",
+  "Start and End Date": "Дата начала и окончания"
 }

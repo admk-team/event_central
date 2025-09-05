@@ -1117,5 +1117,21 @@
   "Attendee Options": "Επιλογές συμμετέχοντα",
   "Logout": "Αποσύνδεση",
   "Search here...": "Αναζήτηση εδώ...",
-  "Type your message...": "Πληκτρολογήστε το μήνυμά σας..."
+  "Type your message...": "Πληκτρολογήστε το μήνυμά σας...",
+   "Badge Instructions": "Οδηγίες Σήματος",
+  "Event Branding & Logistics": "Branding & Λογιστική Εκδήλωσης",
+  "Event Name & Date": "Όνομα & Ημερομηνία Εκδήλωσης",
+  "Location / Venue": "Τοποθεσία / Χώρος",
+  "Additional": "Επιπλέον",
+  "Tech / Scanning": "Τεχνολογία / Σάρωση",
+  "QR Code": "Κωδικός QR",
+  "Attendee Location": "Τοποθεσία Συμμετέχοντα",
+  "Attendee Ticket": "Εισιτήριο Συμμετέχοντα",
+  "Set as template": "Ορισμός ως πρότυπο",
+  "Attendee Profile": "Προφίλ Συμμετέχοντα",
+  "Attendee Hashtag / Social Handles": "Hashtag / Social του Συμμετέχοντα",
+  "Attenddee Profile": "Προφίλ Συμμετέχοντα",
+  "Purchased Ticket": "Αγορασμένο Εισιτήριο",
+  "Event Start ➡️ Event End": "Έναρξη Εκδήλωσης ➡️ Λήξη Εκδήλωσης",
+  "Start and End Date": "Ημερομηνία Έναρξης και Λήξης"
 }

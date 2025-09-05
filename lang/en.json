@@ -1126,5 +1126,12 @@
     "Tech / Scanning": "Tech / Scanning",
     "QR Code": "QR Code",
     "Attendee Location": "Attendee Location",
-    "Attendee Ticket": "Attendee Ticket"
+    "Attendee Ticket": "Attendee Ticket",
+    "Set as template":"Set as template",
+    "Attendee Profile":"Attendee Profile",
+    "Attendee Hashtag / Social Handles":"Attendee Hashtag / Social Handles",
+    "Attenddee Profile":"Attenddee Profile",
+    "Purchased Ticket":"Purchased Ticket",
+    "Event Start ➡️ Event End" : "Event Start ➡️ Event End",
+    "Start and End Date":"Start and End Date"
 }

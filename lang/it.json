@@ -1117,5 +1117,21 @@
   "Attendee Options": "Opzioni Partecipante",
   "Logout": "Logout",
   "Search here...": "Cerca qui...",
-  "Type your message...": "Scrivi il tuo messaggio..."
+  "Type your message...": "Scrivi il tuo messaggio...",
+  "Badge Instructions": "Istruzioni per il badge",
+  "Event Branding & Logistics": "Branding e Logistica dell'evento",
+  "Event Name & Date": "Nome e data dell'evento",
+  "Location / Venue": "Luogo / Sede",
+  "Additional": "Aggiuntivo",
+  "Tech / Scanning": "Tecnologia / Scansione",
+  "QR Code": "Codice QR",
+  "Attendee Location": "Posizione del partecipante",
+  "Attendee Ticket": "Biglietto del partecipante",
+  "Set as template": "Imposta come modello",
+  "Attendee Profile": "Profilo del partecipante",
+  "Attendee Hashtag / Social Handles": "Hashtag / Social del partecipante",
+  "Attenddee Profile": "Profilo del partecipante",
+  "Purchased Ticket": "Biglietto acquistato",
+  "Event Start ➡️ Event End": "Inizio evento ➡️ Fine evento",
+  "Start and End Date": "Data di inizio e fine"
 }
