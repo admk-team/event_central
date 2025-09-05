@@ -256,6 +256,7 @@ export default function SettingForm({ keys }: any) {
                             value={data.currency} // now an object like { code: "ZWL", symbol: "Z$" }
                             onChange={(val) => setData({
                                 ...data,
+                                currency: val,
                                 currency_code: val.code,
                                 currency_symbol: val.symbol
                             })}

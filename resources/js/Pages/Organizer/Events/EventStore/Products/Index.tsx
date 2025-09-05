@@ -8,6 +8,7 @@ import CreateEditModal from "./Components/CreateEditModal";
 import DeleteModal from "../../../../../Components/Common/DeleteModal";
 import HasPermission from "../../../../../Components/HasPermission";
 import { useLaravelReactI18n } from "laravel-react-i18n";
+import { Badge } from "react-bootstrap";
 
 interface Product {
     id: number;
@@ -50,7 +51,9 @@ const Index: React.FC<Props> = ({ products }) => {
 
     const handleDelete = () => {
         if (deleteProduct) {
-            deleteForm.post(route("organizer.events.products.destroy", deleteProduct.id));
+            deleteForm.post(
+                route("organizer.events.products.destroy", deleteProduct.id)
+            );
             setShowDeleteConfirmation(false);
         }
     };
@@ -74,9 +77,21 @@ const Index: React.FC<Props> = ({ products }) => {
             cell: (product) => product.name,
         },
         {
+            header: () => t("Sizes"),
+            cell: (product) => (
+                <div className="d-flex flex-wrap gap-2">
+                    {product.sizes &&
+                        product.sizes.map((item: any, index: number) => (
+                            <Badge bg="primary" key={index} className="p-2">
+                                {item}
+                            </Badge>
+                        ))}
+                </div>
+            ),
+        },
+        {
             header: () => t("Description"),
             cell: (product) => product.description,
-            cellStyle: { width: "300px", textWrap: "wrap" },
         },
         {
             header: () => t("Price"),
@@ -112,7 +127,8 @@ const Index: React.FC<Props> = ({ products }) => {
                             className="link-danger cursor-pointer"
                             onClick={() => deleteAction(product)}
                         >
-                            <i className="ri-delete-bin-5-line"></i> {t("Delete")}
+                            <i className="ri-delete-bin-5-line"></i>{" "}
+                            {t("Delete")}
                         </span>
                     </HasPermission>
                 </div>
@@ -125,7 +141,10 @@ const Index: React.FC<Props> = ({ products }) => {
             <Head title={t("Products")} />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title={t("Event Products")} pageTitle={t("Dashboard")} />
+                    <BreadCrumb
+                        title={t("Event Products")}
+                        pageTitle={t("Dashboard")}
+                    />
                     <Row>
                         <Col xs={12}>
                             <HasPermission permission="view_product">
@@ -139,10 +158,18 @@ const Index: React.FC<Props> = ({ products }) => {
                                                 <HasPermission permission="delete_product">
                                                     <Button
                                                         className="btn-danger"
-                                                        disabled={dataTable.getSelectedRows().length === 0}
+                                                        disabled={
+                                                            dataTable.getSelectedRows()
+                                                                .length === 0
+                                                        }
                                                     >
                                                         <i className="ri-delete-bin-5-line"></i>{" "}
-                                                        {t("Delete")} ({dataTable.getSelectedRows().length})
+                                                        {t("Delete")} (
+                                                        {
+                                                            dataTable.getSelectedRows()
+                                                                .length
+                                                        }
+                                                        )
                                                     </Button>
                                                 </HasPermission>
                                             ),
@@ -151,8 +178,13 @@ const Index: React.FC<Props> = ({ products }) => {
                                         {
                                             render: (
                                                 <HasPermission permission="create_product">
-                                                    <Button onClick={() => editAction(null)}>
-                                                        <i className="ri-add-fill"></i> {t("Add New")}
+                                                    <Button
+                                                        onClick={() =>
+                                                            editAction(null)
+                                                        }
+                                                    >
+                                                        <i className="ri-add-fill"></i>{" "}
+                                                        {t("Add New")}
                                                     </Button>
                                                 </HasPermission>
                                             ),

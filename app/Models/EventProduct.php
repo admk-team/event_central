@@ -18,14 +18,19 @@ class EventProduct extends Model
         'old_price',
         'stock',
         'sold_qty',
+        'sizes',
         'image'
     ];
 
     protected $appends = ['image_url'];
 
+    protected $casts = [
+        'sizes' => 'array'
+    ];
+
     public function getImageUrlAttribute()
     {
-        return $this->image ? asset('storage/' . $this->image): 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s';
+        return $this->image ? asset('storage/' . $this->image) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s';
     }
 
     public function event()

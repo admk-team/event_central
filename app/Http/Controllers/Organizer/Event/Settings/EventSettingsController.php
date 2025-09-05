@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Organizer\Event\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Models\EventApp;
+use App\Models\ReminderEventEmail;
 use App\Models\Track;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -25,7 +26,7 @@ class EventSettingsController extends Controller
         $tracks = Track::where('event_app_id', session('event_id'))->latest()->get(); // For Track Manager
         $lasteventDate = $event->dates()->orderBy('date', 'desc')->get();
         $closeRegistration = eventSettings()->getValue('close_registration', false);
-        $reminderDays = eventSettings()->getValue('reminder_days', '7');
+        $reminderDays = ReminderEventEmail::where('event_app_id', $event->id)->get(['id', 'days']);
         $after_days = eventSettings()->getValue('after_days', '7');
         $follow_up_event = eventSettings()->getValue('follow_up_event', false);
         return Inertia::render("Organizer/Events/Settings/Event/Index", [
@@ -149,14 +150,34 @@ class EventSettingsController extends Controller
 
     public function changeReminderDays(Request $request)
     {
+        $validated = $request->validate([
+            'id' => 'nullable|integer',
+            'days_before_event' => 'required|integer',
+        ]);
+        $eventId = session('event_id');
+
+        ReminderEventEmail::updateOrCreate(
+            ['id' => $validated['id'] ?? null],
+            [
+                'event_app_id' => $eventId,
+                'days' => $validated['days_before_event'],
+            ]
+        );
+
+        return back()->withSuccess('Reminder day updated successfully.');
+    }
+
+    public function removeReminderDays(Request $request)
+    {
         $request->validate([
-            'days_before_event' => 'required|integer|min:1|max:365',
+            'id' => 'required|integer',
         ]);
 
-        eventSettings()->set('reminder_days', $request->days_before_event);
+        ReminderEventEmail::destroy($request->id);
 
-        return back()->withSuccess('Reminder days updated successfully.');
+       return back()->withSuccess('Reminder day removed successfully.');
     }
+
     public function changeAfterEvent(Request $request)
     {
         $request->validate([
