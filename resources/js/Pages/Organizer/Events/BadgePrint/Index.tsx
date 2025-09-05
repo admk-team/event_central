@@ -215,11 +215,10 @@ function Index({
                             >
                                 <div className="passes-container">
                                     <div
-                                        className={`pass ${
-                                            showGradient
-                                                ? "div-gradient"
-                                                : "bg-transparent"
-                                        } mt-4 mb-4`}
+                                        className={`pass ${showGradient
+                                            ? "div-gradient"
+                                            : "bg-transparent"
+                                            } mt-4 mb-4`}
                                     >
                                         <div className="heading-wraper">
                                             {showLogo ? (
@@ -283,11 +282,10 @@ function Index({
                             >
                                 <div className="passes-container">
                                     <div
-                                        className={`pass ${
-                                            showGradient
-                                                ? "div-gradient"
-                                                : "bg-transparent"
-                                        } mt-4 mb-4`}
+                                        className={`pass ${showGradient
+                                            ? "div-gradient"
+                                            : "bg-transparent"
+                                            } mt-4 mb-4`}
                                     >
                                         <div className="attendee-details">
                                             {attendee?.avatar && (
@@ -295,9 +293,8 @@ function Index({
                                                     <img
                                                         className="avatar-img"
                                                         src={attendee?.avatar}
-                                                        alt={`Profile ${
-                                                            idx + 1
-                                                        }`}
+                                                        alt={`Profile ${idx + 1
+                                                            }`}
                                                     />
                                                 </div>
                                             )}
@@ -365,11 +362,10 @@ function Index({
                             >
                                 <div className="passes-container">
                                     <div
-                                        className={`pass ${
-                                            showGradient
-                                                ? "div-gradient"
-                                                : "bg-transparent"
-                                        } mt-4 mb-4`}
+                                        className={`pass ${showGradient
+                                            ? "div-gradient"
+                                            : "bg-transparent"
+                                            } mt-4 mb-4`}
                                     >
                                         <div className="heading-wraper">
                                             {showLogo ? (
@@ -447,24 +443,27 @@ function Index({
                             >
                                 <div className="passes-container">
                                     <div
-                                        className={`pass ${
-                                            showGradient
-                                                ? "div-gradient"
-                                                : "bg-transparent"
-                                        } mt-4 mb-4`}
+                                        className={`pass ${showGradient
+                                            ? "div-gradient"
+                                            : "bg-transparent"
+                                            } mt-4 mb-4`}
                                     >
-                                        <div className="qrWrapper">
+                                        <div className="qrWrapper3">
                                             <img
-                                                className="qr-code-img"
+                                                className="qr-code-img-3"
                                                 src={qr.qr_code}
                                                 alt={`QR code ${idx + 1}`}
                                             />
                                         </div>
-                                        <div className="heading-wraper">
-                                            <p className="attendee-name mt-2">
+                                        <div className="heading-wraper-3">
+                                            <p className="attendee-name">
                                                 {/* {qr.ticket_type_name} */}
                                                 Purchased Ticket
                                             </p>
+                                            <span className="attendee-name3">
+                                                {/* {eventApp?.name} */}
+                                                Event Name
+                                            </span>
                                             <span className="attendee-name1">
                                                 {/* {eventApp?.location_base} */}
                                                 Event location
@@ -474,24 +473,20 @@ function Index({
                                                 Event Start ➡️ Event End
                                             </span>
                                         </div>
-                                        {attendee?.avatar && (
-                                            <img
-                                                className="mt-2 mb-2"
-                                                width={160}
-                                                height={160}
-                                                style={{
-                                                    borderRadius: "100%",
-                                                    marginLeft: "25%",
-                                                }}
-                                                src={
-                                                    attendee?.avatar ||
-                                                    "/placeholder.svg?height=80&width=80"
-                                                }
-                                                alt="event logo"
-                                            />
-                                        )}
-                                        <div className="attendee-details">
-                                            <h6 className="attendee-name1">
+                                            {attendee?.avatar && (
+                                                <div className="avatarWrapper">
+                                                    <img
+                                                        className="avatar-img"
+                                                        src={
+                                                            attendee?.avatar ||
+                                                            "/placeholder.svg?height=80&width=80"
+                                                        }
+                                                        alt="event logo"
+                                                    />
+                                                </div>
+                                            )}
+                                        <div className="attendee-details-3">
+                                            <h6 className="attendee-name1 fs-2">
                                                 {/* {attendee?.name} */}
                                                 Attendee Name
                                             </h6>
@@ -499,10 +494,6 @@ function Index({
                                                 {/* {attendee?.position} */}
                                                 Attendee Position
                                             </h6>
-                                            <span className="location">
-                                                Attendee Hashtag / Social
-                                                Handles
-                                            </span>
                                             <span className="attendee-name1">
                                                 {/* {attendee?.location} */}
                                                 Attendee location
@@ -530,11 +521,10 @@ function Index({
                             >
                                 <div className="passes-container">
                                     <div
-                                        className={`pass ${
-                                            showGradient
-                                                ? "div-gradient"
-                                                : "bg-transparent"
-                                        } mt-4 mb-4`}
+                                        className={`pass ${showGradient
+                                            ? "div-gradient"
+                                            : "bg-transparent"
+                                            } mt-4 mb-4`}
                                     >
                                         <div className="attendee-details">
                                             <p className="attendee-name">
@@ -588,6 +578,95 @@ function Index({
                                                 Event location
                                             </span>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    )}
+                </div>
+            )}
+            {customBadgeDesign == "Design5" && (
+                <div className="printable">
+                    {filteredAttendees.map((attendee: any, index: number) =>
+                        attendee.qr_codes.map((qr: string, idx: number) => (
+                            <div
+                                key={idx}
+                                className="passWrapper print-page-break"
+                                style={{
+                                    transform: isFlipped
+                                        ? "rotate(180deg)"
+                                        : "none",
+                                }}
+                            >
+                                <div className="passes-container">
+                                    <div
+                                        className={`pass ${showGradient
+                                            ? "div-gradient"
+                                            : "bg-transparent"
+                                            } mt-4 mb-4`}
+                                    >
+                                        <div className="qrWrapper5">
+                                            <img
+                                                className=""
+                                                src={qr.qr_code}
+                                                alt={`QR code ${idx + 1}`}
+                                            />
+                                        </div>
+                                        <div className="attendee-details">
+                                            <p className="purchased-ticket-5">
+                                                {/* {qr.ticket_type_name} */}
+                                                Purchased Ticket
+                                            </p>
+                                            <h6 className="attendee-name-5">
+                                                {/* {attendee?.name} */}
+                                                Attendee Name
+                                            </h6>
+                                            <h6 className="attendee-position-5">
+                                                {/* {attendee?.position} */}
+                                                Attendee Position
+                                            </h6>
+
+                                            <span className="location">
+                                                Attendee Hashtag / Social
+                                                Handles
+                                            </span>
+                                            <span className="attendee-name1">
+                                                {/* {attendee?.location} */}
+                                                Attendee location
+                                            </span>
+                                        </div>
+
+
+                                        <div className="heading-wraper">
+                                            <span className="evnet-name-5">
+                                                {/* {eventApp?.name} */}
+                                                Event Name
+                                            </span>
+                                            <span className="attendee-name1">
+                                                {/* {eventApp?.location_base} */}
+                                                Event location
+                                            </span>
+                                            <span className="location">
+                                                {/* {eventApp?.location_base} */}
+                                                Event Start ➡️ Event End
+                                            </span>
+                                        </div>
+
+                                        <div className="heading-wraper">
+                                            {showLogo ? (
+                                                <img
+                                                    className="circle"
+                                                    src={
+                                                        eventApp?.logo_img ||
+                                                        "/placeholder.svg?height=80&width=80"
+                                                    }
+                                                    alt="event logo"
+                                                />
+                                            ) : (
+                                                <div className="eventlogodiv"></div>
+                                            )}
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>

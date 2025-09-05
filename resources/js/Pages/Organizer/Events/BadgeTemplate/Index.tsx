@@ -43,9 +43,8 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                             key={template.id}
                         >
                             <div
-                                className={`templateCard card text-center shadow-sm ${
-                                    isSelected ? "selected" : ""
-                                }`}
+                                className={`templateCard card text-center shadow-sm ${isSelected ? "selected" : ""
+                                    }`}
                             >
                                 <div className="card-header bg-white fw-semibold text-muted d-flex justify-content-between align-items-center">
                                     <span>{template.name}</span>
@@ -61,7 +60,7 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                         src={
                                             template.thumbnail
                                                 ? "/storage/" +
-                                                  template.thumbnail
+                                                template.thumbnail
                                                 : "https://fullaccess.maildoll.com/not_found/no-preview.png"
                                         }
                                         alt="Template Thumbnail"
@@ -143,11 +142,10 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                                 {t("Edit")}
                                             </button>
                                             <button
-                                                className={`btn mt-3 ${
-                                                    isSelected
-                                                        ? "btn-success disabled"
-                                                        : "btn-outline-light"
-                                                }`}
+                                                className={`btn mt-3 ${isSelected
+                                                    ? "btn-success disabled"
+                                                    : "btn-outline-light"
+                                                    }`}
                                                 onClick={() =>
                                                     useTemplate(template.id)
                                                 }
@@ -237,11 +235,10 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                                 {t("Edit")}
                                             </button>
                                             <button
-                                                className={`btn mt-3 ${
-                                                    isSelected
-                                                        ? "btn-success disabled"
-                                                        : "btn-outline-light"
-                                                }`}
+                                                className={`btn mt-3 ${isSelected
+                                                    ? "btn-success disabled"
+                                                    : "btn-outline-light"
+                                                    }`}
                                                 onClick={() =>
                                                     useTemplate(template.id)
                                                 }
@@ -284,9 +281,7 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                                     </li>
                                                     <li>
                                                         <span>📍</span>{" "}
-                                                        {t(
-                                                            "Start and End Date"
-                                                        )}
+                                                        {t("Start and End Date")}
                                                     </li>
                                                     <li className="mt-3">
                                                         <span>📱</span>{" "}
@@ -326,9 +321,7 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                                     </li>
                                                     <li>
                                                         <span>🌍</span>{" "}
-                                                        {t(
-                                                            "Attendee Hashtag / Social Handles"
-                                                        )}
+                                                        {t("Attendee Hashtag / Social Handles")}
                                                     </li>
                                                 </ul>
                                             </div>
@@ -341,11 +334,10 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                                 {t("Edit")}
                                             </button>
                                             <button
-                                                className={`btn mt-3 ${
-                                                    isSelected
-                                                        ? "btn-success disabled"
-                                                        : "btn-outline-light"
-                                                }`}
+                                                className={`btn mt-3 ${isSelected
+                                                    ? "btn-success disabled"
+                                                    : "btn-outline-light"
+                                                    }`}
                                                 onClick={() =>
                                                     useTemplate(template.id)
                                                 }
@@ -365,10 +357,15 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                     {template.name == "Design3" && (
                                         <div className="hoverInstructions d-flex flex-column justify-content-between">
                                             <div>
+
                                                 <h6 className="fw-bold mb-3 text-uppercase">
                                                     📝 Badge Instructions
                                                 </h6>
                                                 <ul className="instructionList">
+                                                    <li>
+                                                        <span>🔳</span>{" "}
+                                                        {t("QR Code")}
+                                                    </li>
                                                     <li>
                                                         <span>🎨</span>{" "}
                                                         <strong>
@@ -379,42 +376,21 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                                     </li>
 
                                                     <li>
-                                                        <span>📅</span>{" "}
-                                                        {t("Event Logo")}
-                                                    </li>
-                                                    <li>
                                                         <span>📍</span>{" "}
                                                         {t("Location / Venue")}
                                                     </li>
+
                                                     <li>
                                                         <span>📍</span>{" "}
-                                                        {t(
-                                                            "Start and End Date"
-                                                        )}
+                                                        {t("Start and End Date")}
                                                     </li>
-                                                    <li className="mt-3">
-                                                        <span>📱</span>{" "}
-                                                        <strong>
-                                                            {t(
-                                                                "Tech / Scanning"
-                                                            )}
-                                                        </strong>
-                                                    </li>
-                                                    <li>
-                                                        <span>🔳</span>{" "}
-                                                        {t("QR Code")}
-                                                    </li>
-
                                                     <li className="mt-3">
                                                         <span>✨</span>{" "}
                                                         <strong>
-                                                            {t("Additional")}
+                                                            {t("Attenddee Profile")}
                                                         </strong>
                                                     </li>
-                                                    <li>
-                                                        <span>🎟️</span>{" "}
-                                                        {t("Attendee Ticket")}
-                                                    </li>
+
 
                                                     <li>
                                                         <span>🙋</span>{" "}
@@ -426,13 +402,11 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                                     </li>
                                                     <li>
                                                         <span>🌍</span>{" "}
-                                                        {t("Attendee Location")}
+                                                        {t("Attendee Hashtag / Social Handles")}
                                                     </li>
                                                     <li>
                                                         <span>🌍</span>{" "}
-                                                        {t(
-                                                            "Attendee Hashtag / Social Handles"
-                                                        )}
+                                                        {t("Attendee Location")}
                                                     </li>
                                                 </ul>
                                             </div>
@@ -445,11 +419,10 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                                 {t("Edit")}
                                             </button>
                                             <button
-                                                className={`btn mt-3 ${
-                                                    isSelected
-                                                        ? "btn-success disabled"
-                                                        : "btn-outline-light"
-                                                }`}
+                                                className={`btn mt-3 ${isSelected
+                                                    ? "btn-success disabled"
+                                                    : "btn-outline-light"
+                                                    }`}
                                                 onClick={() =>
                                                     useTemplate(template.id)
                                                 }
@@ -469,48 +442,11 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                     {template.name == "Design4" && (
                                         <div className="hoverInstructions d-flex flex-column justify-content-between">
                                             <div>
+
                                                 <h6 className="fw-bold mb-3 text-uppercase">
                                                     📝 Badge Instructions
                                                 </h6>
                                                 <ul className="instructionList">
-                                                    <li className="mt-3">
-                                                        <span>✨</span>{" "}
-                                                        <strong>
-                                                            {t("Additional")}
-                                                        </strong>
-                                                    </li>
-                                                    <li>
-                                                        <span>🎟️</span>{" "}
-                                                        {t("Attendee Ticket")}
-                                                    </li>
-
-                                                    <li>
-                                                        <span>🙋</span>{" "}
-                                                        {t("Attendee Name")}
-                                                    </li>
-                                                    <li>
-                                                        <span>💼</span>{" "}
-                                                        {t("Attendee Position")}
-                                                    </li>
-
-                                                    <li>
-                                                        <span>🌍</span>{" "}
-                                                        {t(
-                                                            "Attendee Hashtag / Social Handles"
-                                                        )}
-                                                    </li>
-                                                    <li>
-                                                        <span>🌍</span>{" "}
-                                                        {t("Attendee Location")}
-                                                    </li>
-                                                    <li className="mt-3">
-                                                        <span>📱</span>{" "}
-                                                        <strong>
-                                                            {t(
-                                                                "Tech / Scanning"
-                                                            )}
-                                                        </strong>
-                                                    </li>
                                                     <li>
                                                         <span>🔳</span>{" "}
                                                         {t("QR Code")}
@@ -525,19 +461,37 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                                     </li>
 
                                                     <li>
-                                                        <span>📅</span>{" "}
-                                                        {t("Event Logo")}
+                                                        <span>📍</span>{" "}
+                                                        {t("Location / Venue")}
                                                     </li>
 
                                                     <li>
                                                         <span>📍</span>{" "}
-                                                        {t(
-                                                            "Start and End Date"
-                                                        )}
+                                                        {t("Start and End Date")}
+                                                    </li>
+                                                    <li className="mt-3">
+                                                        <span>✨</span>{" "}
+                                                        <strong>
+                                                            {t("Attenddee Profile")}
+                                                        </strong>
+                                                    </li>
+
+
+                                                    <li>
+                                                        <span>🙋</span>{" "}
+                                                        {t("Attendee Name")}
                                                     </li>
                                                     <li>
-                                                        <span>📍</span>{" "}
-                                                        {t("Location / Venue")}
+                                                        <span>💼</span>{" "}
+                                                        {t("Attendee Position")}
+                                                    </li>
+                                                    <li>
+                                                        <span>🌍</span>{" "}
+                                                        {t("Attendee Hashtag / Social Handles")}
+                                                    </li>
+                                                    <li>
+                                                        <span>🌍</span>{" "}
+                                                        {t("Attendee Location")}
                                                     </li>
                                                 </ul>
                                             </div>
@@ -550,11 +504,96 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                                 {t("Edit")}
                                             </button>
                                             <button
-                                                className={`btn mt-3 ${
+                                                className={`btn mt-3 ${isSelected
+                                                    ? "btn-success disabled"
+                                                    : "btn-outline-light"
+                                                    }`}
+                                                onClick={() =>
+                                                    useTemplate(template.id)
+                                                }
+                                                disabled={isSelected}
+                                                title={
                                                     isSelected
-                                                        ? "btn-success disabled"
-                                                        : "btn-outline-light"
-                                                }`}
+                                                        ? "Already selected"
+                                                        : "Set as template"
+                                                }
+                                            >
+                                                {isSelected
+                                                    ? t("Selected")
+                                                    : t("Use Template")}
+                                            </button>
+                                        </div>
+                                    )}
+                                    {template.name == "Design5" && (
+                                        <div className="hoverInstructions d-flex flex-column justify-content-between">
+                                            <div>
+
+                                                <h6 className="fw-bold mb-3 text-uppercase">
+                                                    📝 Badge Instructions
+                                                </h6>
+                                                <ul className="instructionList">
+                                                    <li>
+                                                        <span>🔳</span>{" "}
+                                                        {t("QR Code")}
+                                                    </li>
+                                                    <li>
+                                                        <span>🎨</span>{" "}
+                                                        <strong>
+                                                            {t(
+                                                                "Event Branding & Logistics"
+                                                            )}
+                                                        </strong>
+                                                    </li>
+                                                    <li>
+                                                        <span>🙋</span>{" "}
+                                                        {t("Attendee Name")}
+                                                    </li>
+                                                    <li>
+                                                        <span>💼</span>{" "}
+                                                        {t("Attendee Position")}
+                                                    </li>
+                                                    <li>
+                                                        <span>#️⃣ / 🌐</span>{" "}
+                                                        {t("Attendee Hashtag / Social Handles")}
+                                                    </li>
+                                                    <li>
+                                                        <span>📍</span>{" "}
+                                                        {t("Attendee Location")}
+                                                    </li>
+                                                    <li>
+                                                        <span>🎉</span>{" "}
+                                                        {t("Event Name")}
+                                                    </li>
+                                                    <li>
+                                                        <span>🏟️</span>{" "}
+                                                        {t("Location / Venue")}
+                                                    </li>
+
+                                                    <li>
+                                                        <span>📅</span>{" "}
+                                                        {t("Start and End Date")}
+                                                    </li>
+                                                    <li className="mt-3">
+                                                        <span>✨</span>{" "}
+                                                        <strong>
+                                                            {t("Event Logo")}
+                                                        </strong>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                            <button
+                                                className="btn btn-outline-light mb-2"
+                                                onClick={() =>
+                                                    editTemplate(template.id)
+                                                }
+                                            >
+                                                {t("Edit")}
+                                            </button>
+                                            <button
+                                                className={`btn mt-3 ${isSelected
+                                                    ? "btn-success disabled"
+                                                    : "btn-outline-light"
+                                                    }`}
                                                 onClick={() =>
                                                     useTemplate(template.id)
                                                 }

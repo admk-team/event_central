@@ -41,7 +41,15 @@
     margin-right: 0;
     margin-bottom: 5px;
 }
-
+.heading-wraper-3 {
+    margin-top:-5%;
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 5px;
+}
+.attendee-details-3 {
+    margin-top: -5%;
+}
 .footer-wraper {
     margin-left: 0;
     margin-right: 0;
@@ -86,8 +94,27 @@
     margin-bottom: 5px;
     margin-top: 10px;
 }
+.qrWrapper3 {
+    padding-right: 20px;
+    padding-bottom: 5px;
+    padding-left: 20px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
 
+.qrWrapper5 {
+    margin-left: 25%;
+    margin-top: -5%
+}
 .qr-code-img {
+    width: 100%;
+    max-width: 200px;
+    height: auto;
+}
+.qr-code-img-3 {
+    margin-top: -15%;
     width: 100%;
     max-width: 200px;
     height: auto;
@@ -123,6 +150,13 @@
 }
 
 .attendee-name {
+    font-size: 25px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    color: black !important;
+}
+.purchased-ticket-5 {
+    margin-top: 10px;
     font-size: 25px;
     font-weight: 900;
     letter-spacing: 0.5px;
@@ -170,10 +204,25 @@
 .attendee-name1 {
     font-size: 19px;
     font-weight: 900;
-    letter-spacing: 0.5px;
     color: black !important;
 }
-
+.attendee-name3 {
+    margin-top: -5%;
+    font-size: 19px;
+    font-weight: 900;
+    color: black !important;
+}
+.attendee-name-5 {
+    margin-top: -3%;
+    font-size: 25px;
+    font-weight: 900;
+    color: black !important;
+}
+.attendee-position-5 {
+    font-size: 15px;
+    font-weight: 900;
+    color: black !important;
+}
 .event-location1 {
     margin-bottom: 1px;
     margin-right: auto;
@@ -182,7 +231,11 @@
     font-size: medium;
     font-weight: 800;
 }
-
+.evnet-name-5{
+      font-size: 30px;
+    font-weight: 900;
+    color: black !important;
+}
 @media (max-width: 420px) {
     .passWrapper {
         padding: 10px;
