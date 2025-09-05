@@ -19,6 +19,73 @@
 .pass {
     width: 100%;
     max-width: 400px;
+    max-height: 600px;
+    border-radius: 16px;
+    overflow: hidden;
+    padding: 30px 20px;
+    text-align: center;
+    box-sizing: border-box;
+}
+ 
+.pass-4x6 {
+    width: 100%;
+    max-width: 400px;
+    max-height: 600px;
+    border-radius: 16px;
+    overflow: hidden;
+    padding: 30px 20px;
+    text-align: center;
+    box-sizing: border-box;
+}
+ 
+.pass-3_5x5_5 {
+    width: 100%;
+    max-width: 350px;
+    max-height: 550px;
+    border-radius: 16px;
+    overflow: hidden;
+    padding: 30px 20px;
+    text-align: center;
+    box-sizing: border-box;
+}
+ 
+.pass-3x5 {
+    width: 100%;
+    max-width: 300px;
+    max-height: 500px;
+    border-radius: 16px;
+    overflow: hidden;
+    padding: 30px 20px;
+    text-align: center;
+    box-sizing: border-box;
+}
+ 
+.pass-4x4 {
+    width: 100%;
+    max-width: 400px;
+    max-height: 400px;
+    border-radius: 16px;
+    overflow: hidden;
+    padding: 30px 20px;
+    text-align: center;
+    box-sizing: border-box;
+}
+ 
+.pass-2_5x3_5 {
+    width: 100%;
+    max-width: 250px;
+    max-height: 350px;
+    border-radius: 16px;
+    overflow: hidden;
+    padding: 30px 20px;
+    text-align: center;
+    box-sizing: border-box;
+}
+ 
+.pass-cr80 {
+    width: 100%;
+    max-width: 337.5px;
+    max-height: 212.5px;
     border-radius: 16px;
     overflow: hidden;
     padding: 30px 20px;
