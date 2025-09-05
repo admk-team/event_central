@@ -31,7 +31,7 @@ class SendAfterEventEmail extends Mailable implements ShouldQueue
     {
         return new Envelope(
             from: new Address("info@mail.eventcentral.net", $this->eventApp->name ?? env('APP_NAME')),
-            subject: 'Event Reminder: ' . ($this->eventApp->name ?? 'Upcoming Event')
+            subject: 'Event Follow Up: ' . ($this->eventApp->name ?? 'Upcoming Event')
         );
     }
     public function content(): Content

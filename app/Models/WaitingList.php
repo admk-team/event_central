@@ -15,6 +15,6 @@ class WaitingList extends Model
 
     public function attendee()
     {
-        return $this->belongsTo(Attendee::class, 'id');
+        return $this->belongsTo(Attendee::class, 'attendee_id');
     }
 }

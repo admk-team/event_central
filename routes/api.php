@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\v1\Attendee\ChatController;
 use App\Http\Controllers\Api\v1\Organizer\ChatController as OrganizerChatController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Broadcast;
 use App\Http\Controllers\Api\v1\AuthController;
 use App\Http\Controllers\Api\v1\Attendee\EventPostController;
 use App\Http\Controllers\Api\v1\Organizer\EventController;
@@ -51,6 +52,9 @@ Route::prefix('user')->group(function () {
     Route::post('email-template-update/{EmailTemplate}', [EmailTemplateController::class, 'update'])->name('email.template.update');
     Route::post('badge-template-update/{EmailTemplate}', [CustomBadgeController::class, 'update'])->name('badge.template.update');
     Route::middleware(['auth:sanctum', 'ability:role:user'])->group(function () {
+        Route::post('/broadcasting/auth', function (Request $request) {
+            return Broadcast::auth($request);
+        });
         Route::delete('delete/{user}', [AuthController::class, 'delete'])->name('user.delete')->defaults('type', 'user');
         Route::get('/me', function (Request $request) {
             return $request->user();
@@ -172,6 +176,10 @@ Route::prefix('attendee')->group(function () {
 
 
     Route::middleware(['auth:sanctum', 'ability:role:attendee'])->group(function () {
+
+        Route::post('/broadcasting/auth', function (Request $request) {
+            return Broadcast::auth($request);
+        });
 
         Route::get('/me', function (Request $request) {
             return $request->user();

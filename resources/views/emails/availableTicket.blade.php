@@ -83,8 +83,8 @@
 <body>
     <div class="email-container">
         <div class="header">
-            <img src="{{ asset($events->logo_img ?: 'images/logo.png') }}" alt="Logo">
-            <h1>Event Reminder</h1>
+            <img src="{{ asset($events->logo ? $events->logo : 'images/logo.png') }}" alt="Logo">
+            {{-- <h1>Event Reminder</h1> --}}
         </div>
         <h2>Hi {{ $attendee->first_name }} {{ $attendee->last_name }}, Your Chance is Here!</h2>
 
