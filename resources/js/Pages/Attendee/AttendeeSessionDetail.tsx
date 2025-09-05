@@ -36,7 +36,7 @@ const AttendeeSessionDetail = ({
     });
 
 
-    console.log(data);
+    console.log(eventSession,download_certificate);
     const now = moment();
     const startTime = moment(eventSession.start_date_time);
     const endTime = moment(eventSession.end_date_time).add(15, "minutes");
@@ -126,14 +126,17 @@ const AttendeeSessionDetail = ({
                                                 <div className="d-flex align-items-center gap-2 me-3">
                                                     {" "}
                                                     {/* Gap between Certificate and icons */}
-                                                   <a
-                                                        href={route("attendee.session.certificate",{eventSession: eventSession.id,})}
-                                                        className="d-flex align-items-center text-decoration-none"
-                                                        target="_blank" // optional: open in new tab
-                                                    >
-                                                        <i className="bx bx-certification fs-4 text-primary"></i>
-                                                        <span className="fw-bold text-primary ms-1">Certificate</span>
-                                                    </a>
+                                                    {eventSession.enable_certificate == 1 && download_certificate == true && (
+                                                        <a
+                                                            href={route("attendee.session.certificate",{eventSession: eventSession.id,})}
+                                                            className="d-flex align-items-center text-decoration-none"
+                                                            target="_blank"
+                                                        >
+                                                            <i className="bx bx-certification fs-4 text-primary"></i>
+                                                            <span className="fw-bold text-primary ms-1">Certificate</span>
+                                                        </a>
+                                                    )}
+                                                   
                                                     {/* Gap between Q&A and icons */}
                                                     {eventSession.qa_status == true && (
                                                         <Link
