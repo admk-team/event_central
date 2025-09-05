@@ -1117,5 +1117,21 @@
   "Attendee Options": "Opciones del asistente",
   "Logout": "Cerrar sesión",
   "Search here...": "Busca aquí...",
-  "Type your message...": "Escribe tu mensaje..."
+  "Type your message...": "Escribe tu mensaje...",
+ "Badge Instructions": "Instrucciones de la credencial",
+  "Event Branding & Logistics": "Marca y logística del evento",
+  "Event Name & Date": "Nombre y fecha del evento",
+  "Location / Venue": "Ubicación / Lugar",
+  "Additional": "Adicional",
+  "Tech / Scanning": "Tecnología / Escaneo",
+  "QR Code": "Código QR",
+  "Attendee Location": "Ubicación del asistente",
+  "Attendee Ticket": "Entrada del asistente",
+  "Set as template": "Establecer como plantilla",
+  "Attendee Profile": "Perfil del asistente",
+  "Attendee Hashtag / Social Handles": "Hashtag / Redes sociales del asistente",
+  "Attenddee Profile": "Perfil del asistente",
+  "Purchased Ticket": "Entrada comprada",
+  "Event Start ➡️ Event End": "Inicio del evento ➡️ Fin del evento",
+  "Start and End Date": "Fecha de inicio y fin"
 }
