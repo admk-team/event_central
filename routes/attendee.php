@@ -78,12 +78,13 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::get('calendar/download/{eventApp}', [EventCalendarController::class, 'downloadIcs'])->name('calendar.download');
         Route::get('agenda', [EventController::class, 'getEventDetailAgenda'])->name('attendee.event.detail.agenda');
         Route::get('session/{eventSession}', [EventController::class, 'getEventSessionDetail'])->name('attendee.event.detail.session');
+        Route::get('download/{eventSession}', [EventController::class, 'downloadCertificate'])->name('attendee.session.certificate');
         Route::get('speakers/{eventSpeaker?}', [EventController::class, 'getEventSpeakerDetail'])->name('attendee.event.detail.speakers');
         Route::get('more', [EventController::class, 'getEventDetailMore'])->name('attendee.event.detail.more');
         Route::post('contact-form', [EventController::class, 'submitContectForm'])->name('attendee.event.detail.contact');
 
         //Event Shop
-        Route::get('products',[EventShopController::class,'index'])->name('attendee.event.products');
+        Route::get('products', [EventShopController::class, 'index'])->name('attendee.event.products');
         Route::post('puchase/product', [EventShopController::class, 'checkout'])->name('attendee.product.purchase');
         Route::post('product/update/{paymentId}', [EventShopController::class, 'updateOrder'])->name('attendee.product.update');
         Route::get('product/checkout/{data}', [EventShopController::class, 'checkoutPage'])->name('attendee.product.checkout');
@@ -156,8 +157,8 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::post('initiate-chat', [EventStaffController::class, 'initiateChat'])->name('attendee.event.chat-initate');
         // Friends system
         Route::resource('friend', FriendRequestController::class);
-        Route::post('accept', [FriendRequestController::class,'AcceptRequest'])->name('friend.accept');
-        Route::post('unfollow', [FriendRequestController::class,'remove'])->name('friend.unfollow');
+        Route::post('accept', [FriendRequestController::class, 'AcceptRequest'])->name('friend.accept');
+        Route::post('unfollow', [FriendRequestController::class, 'remove'])->name('friend.unfollow');
 
         //Prayer Request
         Route::get('/prayer-requests', [PrayerRequestController::class, 'index'])->name('attendee.prayer');
@@ -196,9 +197,8 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
     Route::get('/favsession/{sessionid}', [EventController::class, 'favsession'])->name('fav.sessions');
     Route::get('/allfav', [EventController::class, 'allfavouriteSession'])->name('all.fav.sessions');
 
-    Route::get('/streams/index',[LiveStreamController::class,'index'])->name('stream.index');
+    Route::get('/streams/index', [LiveStreamController::class, 'index'])->name('stream.index');
     Route::get('/join/stream/{id}', [LiveStreamController::class, 'joinLiveStreams'])->name('join.live.streams');
-
 });
 
 // Event questionnaire Form For Web

@@ -25,6 +25,7 @@ class EventSession extends Model
         'start_time',
         'end_time',
         'qa_status',
+        'enable_certificate',
         'event_app_id',
         'posts',
         'rating_status',
