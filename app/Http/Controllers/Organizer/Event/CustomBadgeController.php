@@ -48,9 +48,9 @@ class CustomBadgeController extends Controller
                     'thumbnail'      => "templates/{$name}.png",
                     'user_id'        => auth()->id(),
                     // If these are meant to be strings, set appropriate defaults instead of user id
-                    'custom_code'    => null,
-                    'editor_content' => null,
-                    'mail_content'   => null,
+                    'custom_code'    => 'default',
+                    'editor_content' => 'default',
+                    'mail_content'   => 'default',
                 ]
             );
         }
