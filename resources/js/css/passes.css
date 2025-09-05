@@ -41,6 +41,7 @@
     margin-right: 0;
     margin-bottom: 5px;
 }
+
 .footer-wraper {
     margin-left: 0;
     margin-right: 0;
@@ -76,6 +77,16 @@
     margin-bottom: 5px;
 }
 
+.qrWrapper4 {
+    padding-right: 20px;
+    padding-bottom: 5px;
+    padding-left: 20px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+
 .qr-code-img {
     width: 100%;
     max-width: 200px;
@@ -83,16 +94,17 @@
 }
 
 .avatarWrapper {
-    padding: 3px 10px;
+    padding: 10px 20px;
     border-radius: 12px;
     display: inline-block;
-    margin-bottom: 1px;
+    margin-bottom: 5px;
 }
 
 .avatar-img {
-    width: 100%;
-    max-width: 130px;
-    height: auto;
+    /* width: 100%; */
+    width: 130px;
+    height: 130px;
+    /* height: auto; */
     border-radius: 50%;
     /* makes it circular */
     object-fit: contain;
@@ -154,12 +166,14 @@
     letter-spacing: 0.5px;
     color: black !important;
 }
+
 .attendee-name1 {
     font-size: 19px;
     font-weight: 900;
     letter-spacing: 0.5px;
     color: black !important;
 }
+
 .event-location1 {
     margin-bottom: 1px;
     margin-right: auto;
