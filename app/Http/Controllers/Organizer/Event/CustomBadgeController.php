@@ -31,8 +31,12 @@ class CustomBadgeController extends Controller
 
         $eventId = session('event_id');
 
-        // Ensure the 3 default templates exist
-        $defaults = ['Default', 'Design1', 'Design2','Design3','Design4','Design5'];
+        if (! $eventId) {
+            abort(400, 'No event selected.');
+        }
+
+        // Ensure the default templates exist
+        $defaults = ['Default', 'Design1', 'Design2', 'Design3', 'Design4', 'Design5'];
 
         foreach ($defaults as $name) {
             CustomBadgeAttendee::firstOrCreate(
@@ -41,11 +45,12 @@ class CustomBadgeController extends Controller
                     'name'         => $name,
                 ],
                 [
-                    'thumbnail' => "templates/{$name}.png",
-                    'user_id' => auth()->id(),
-                    'custom_code' => auth()->id(),
-                    'editor_content' => auth()->id(),
-                    'mail_content' => auth()->id(),
+                    'thumbnail'      => "templates/{$name}.png",
+                    'user_id'        => auth()->id(),
+                    // If these are meant to be strings, set appropriate defaults instead of user id
+                    'custom_code'    => null,
+                    'editor_content' => null,
+                    'mail_content'   => null,
                 ]
             );
         }
@@ -64,8 +69,8 @@ class CustomBadgeController extends Controller
 
             if ($defaultTemplate) {
                 $current = EventBadgeDesign::create([
-                    'user_id'            => $eventId,
-                    'event_app_id'            => $eventId,
+                    'user_id'                  => auth()->id(),   // ← fixed
+                    'event_app_id'             => $eventId,
                     'custom_badge_attendee_id' => $defaultTemplate->id,
                 ]);
             }
@@ -76,6 +81,7 @@ class CustomBadgeController extends Controller
             'selectedTemplateId' => optional($current)->custom_badge_attendee_id,
         ]);
     }
+
 
 
 
