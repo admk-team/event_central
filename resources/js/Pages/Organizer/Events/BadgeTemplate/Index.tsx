@@ -69,14 +69,9 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
 
                                             <div className="card-body p-0 position-relative templateImageWrapper">
                                                 <img
-                                                    src={
-                                                        template.thumbnail
-                                                            ? "/storage/" +
-                                                              template.thumbnail
-                                                            : "https://fullaccess.maildoll.com/not_found/no-preview.png"
-                                                    }
-                                                    alt="Template Thumbnail"
-                                                    className="templateImage"
+                                                    src={`/storage/${template.thumbnail}`}
+                                                    alt={t("Badge")}
+                                                    className="badge-image"
                                                 />
 
                                                 {/* your attractive instruction overlay (kept as-is) */}
@@ -84,7 +79,10 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                                     <div className="hoverInstructions d-flex flex-column justify-content-between">
                                                         <div>
                                                             <h6 className="fw-bold mb-3 text-uppercase">
-                                                                📝  {t("Badge Instructions")}
+                                                                📝{" "}
+                                                                {t(
+                                                                    "Badge Instructions"
+                                                                )}
                                                             </h6>
                                                             <ul className="instructionList">
                                                                 <li>
@@ -227,7 +225,10 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                                     <div className="hoverInstructions d-flex flex-column justify-content-between">
                                                         <div>
                                                             <h6 className="fw-bold mb-3 text-uppercase">
-                                                                📝 {t("Badge Instructions")}
+                                                                📝{" "}
+                                                                {t(
+                                                                    "Badge Instructions"
+                                                                )}
                                                             </h6>
                                                             <ul className="instructionList">
                                                                 <li className="mt-3">
@@ -369,7 +370,10 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                                     <div className="hoverInstructions d-flex flex-column justify-content-between">
                                                         <div>
                                                             <h6 className="fw-bold mb-3 text-uppercase">
-                                                                📝 {t("Badge Instructions")}
+                                                                📝{" "}
+                                                                {t(
+                                                                    "Badge Instructions"
+                                                                )}
                                                             </h6>
                                                             <ul className="instructionList">
                                                                 <li>
@@ -521,7 +525,10 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                                     <div className="hoverInstructions d-flex flex-column justify-content-between">
                                                         <div>
                                                             <h6 className="fw-bold mb-3 text-uppercase">
-                                                                📝 {t("Badge Instructions")}
+                                                                📝{" "}
+                                                                {t(
+                                                                    "Badge Instructions"
+                                                                )}
                                                             </h6>
                                                             <ul className="instructionList">
                                                                 <li>
@@ -647,7 +654,10 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                                     <div className="hoverInstructions d-flex flex-column justify-content-between">
                                                         <div>
                                                             <h6 className="fw-bold mb-3 text-uppercase">
-                                                                📝 {t("Badge Instructions")}
+                                                                📝{" "}
+                                                                {t(
+                                                                    "Badge Instructions"
+                                                                )}
                                                             </h6>
                                                             <ul className="instructionList">
                                                                 <li>
@@ -773,7 +783,10 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                                     <div className="hoverInstructions d-flex flex-column justify-content-between">
                                                         <div>
                                                             <h6 className="fw-bold mb-3 text-uppercase">
-                                                                📝 {t("Badge Instructions")}
+                                                                📝{" "}
+                                                                {t(
+                                                                    "Badge Instructions"
+                                                                )}
                                                             </h6>
                                                             <ul className="instructionList">
                                                                 <li>
