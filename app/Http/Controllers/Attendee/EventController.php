@@ -99,7 +99,6 @@ class EventController extends Controller
                 $next_session_id = $index < (count($sessions) - 1) ? $sessions[$index + 1] : null;
             }
         }
-
         // Note: After upgrading to Laravel 11, the above code can be replaced with:
         // $next_session_id = $sessions->after($eventSession->id);
         // $prev_session_id = $sessions->before($eventSession->id);
