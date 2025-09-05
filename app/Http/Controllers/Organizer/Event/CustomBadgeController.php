@@ -49,8 +49,8 @@ class CustomBadgeController extends Controller
                     'user_id'        => auth()->id(),
                     // If these are meant to be strings, set appropriate defaults instead of user id
                     'custom_code'    => 'default',
-                    'editor_content' => 'default',
-                    'mail_content'   => 'default',
+                    'editor_content' => '{}', // ✅ valid JSON
+                    'mail_content'   => '{}', // ✅ valid JSON
                 ]
             );
         }
