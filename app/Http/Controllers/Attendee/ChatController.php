@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Attendee;
 use App\Events\AttendeeChatMessage;
 use App\Events\EventGroupChat;
 use App\Http\Controllers\Controller;
+use App\Models\ChatGroup;
 use App\Models\ChatMember;
 use App\Models\ChatMessage;
 use App\Models\EventApp;
@@ -17,7 +18,7 @@ class ChatController extends Controller
     public function index()
     {
         // Private chats
-        $member = ChatMember::where('event_id', Auth::user()->event_app_id)
+        $member = ChatMember::where('event_id', Auth::user()->event_app_id)->whereNull('group_id')
             ->where('user_id', Auth::user()->id)
             ->with(['participant'])->get()
             ->map(function ($member) {
@@ -52,9 +53,26 @@ class ChatController extends Controller
             $event_data->last_message = $lastMessage?->message ?? null;
             $event_data->last_message_created_at = $lastMessage?->created_at;
         }
+        // Group chat
+        $rooms = ChatGroup::where('event_id', Auth::user()->event_app_id)
+            ->whereHas('members', function ($q) {
+                $q->where('user_id', Auth::id());
+            })
+            ->get()
+            ->map(function ($room) {
+                $lastMessage = ChatMessage::where('event_id', $room->event_id)
+                    ->where('receiver_id', $room->id)
+                    ->orderByDesc('created_at')
+                    ->first();
+
+                $room->last_message = $lastMessage?->message ?? null;
+                $room->last_message_created_at = $lastMessage?->created_at ?? null;
+
+                return $room;
+            });
 
         $loged_user = Auth::user()->id;
-        return Inertia::render('Attendee/Chat/Index', compact('member', 'event_data', 'loged_user'));
+        return Inertia::render('Attendee/Chat/Index', compact('member', 'event_data', 'loged_user', 'rooms'));
     }
 
     public function getMessages($id)

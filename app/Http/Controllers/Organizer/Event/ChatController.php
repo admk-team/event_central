@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Organizer\Event;
 use App\Events\AttendeeChatMessage;
 use App\Events\EventGroupChat;
 use App\Http\Controllers\Controller;
+use App\Models\Attendee;
+use App\Models\ChatGroup;
 use App\Models\ChatMember;
 use App\Models\ChatMessage;
 use App\Models\EventApp;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -16,7 +19,8 @@ class ChatController extends Controller
 {
     public function index()
     {
-        $member = ChatMember::currentEvent()->where('user_id', Auth::user()->id)
+        $eventId = session('event_id');
+        $member = ChatMember::currentEvent()->where('user_id', Auth::user()->id)->whereNull('group_id')
             ->with(['participant'])->get()
             ->map(function ($member) {
                 $lastMessage = ChatMessage::where('event_id', $member->event_id)
@@ -33,12 +37,29 @@ class ChatController extends Controller
                     ->orderByDesc('created_at')
                     ->first();
 
-                $member->last_message = $lastMessage->message ?? null;
+                $member->last_message = $lastMessage?->message ?? null;
                 $member->last_message_created_at = $lastMessage?->created_at ?? null;
                 return $member;
             });
 
         $event_data = EventApp::where('id', session('event_id'))->first();
+        $rooms = ChatGroup::where('event_id', session('event_id'))
+            ->whereHas('members', function ($q) {
+                $q->where('user_id', Auth::id());
+            })
+            ->get()
+            ->map(function ($room) {
+                $lastMessage = ChatMessage::where('event_id', $room->event_id)
+                    ->where('receiver_id', $room->id)
+                    ->orderByDesc('created_at')
+                    ->first();
+
+                $room->last_message = $lastMessage?->message ?? null;
+                $room->last_message_created_at = $lastMessage?->created_at ?? null;
+
+                return $room;
+            });
+
         if ($event_data) {
             $lastMessage = ChatMessage::where('event_id', $event_data->id)
                 ->where('receiver_id', $event_data->id)
@@ -50,7 +71,18 @@ class ChatController extends Controller
             $event_data->last_message_created_at = $lastMessage?->created_at;
         }
         $loged_user = Auth::user()->id;
-        return Inertia::render('Organizer/Events/Chat/Index', compact('member', 'event_data', 'loged_user'));
+        $staff = null;
+        if (Auth::user()->parent_id) {
+            $all_user = User::where('parent_id', Auth::user()->parent_id)->get()->toArray();
+            $admin = User::where('id', Auth::user()->parent_id)->get()->toArray();
+            $staff = array_merge($all_user, $admin);
+        } else {
+            $all_user = User::where('parent_id', $loged_user)->get()->toArray();
+            $admin = User::where('id', $loged_user)->get()->toArray();
+            $staff = array_merge($all_user, $admin);
+        }
+        $attendees = Attendee::where('event_app_id', $eventId)->get();
+        return Inertia::render('Organizer/Events/Chat/Index', compact('member', 'event_data', 'loged_user', 'staff', 'attendees', 'rooms'));
     }
 
     public function getMessages($id)
@@ -169,7 +201,7 @@ class ChatController extends Controller
                 ->where('user_id', $receiver_id)
                 ->where('participant_id', $senderId)
                 ->increment('unread_count');
-                
+
             broadcast(new AttendeeChatMessage($message))->toOthers();
         }
 
@@ -190,14 +222,48 @@ class ChatController extends Controller
     }
 
     // uses for chat initiate
-    public function initiateChat($event, $user_id, $user_type, $participant_id, $participant_type)
+    public function initiateChat($event, $user_id, $user_type, $participant_id, $participant_type, $group_id = null)
     {
         ChatMember::create([
             'event_id' => $event,
+            'group_id' => $group_id,
             'user_id' => $user_id,
             'user_type' => $user_type,
             'participant_id' => $participant_id,
             'participant_type' => $participant_type,
         ]);
+    }
+
+    public function createRoom(Request $request)
+    {
+        $eventId = session('event_id');
+        $userId = Auth::user()->id;
+
+        $request->validate([
+            "type" => "required",
+            "name" => "required",
+            "members" => "required|array|min:1",
+            "image"   => "nullable|image|mimes:jpg,jpeg,png,gif|max:2048",
+        ]);
+
+        if ($request->members && count($request->members) > 0) {
+            $path = null;
+
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                $path = $file->store('chat_groups', 'public');
+            }
+            $group = ChatGroup::create([
+                'event_id' => $eventId,
+                'name' => $request->name,
+                'image' =>  $path,
+                'type' => $request->type,
+                'created_by' => $userId
+            ]);
+            foreach ($request->members as $member) {
+                $this->initiateChat($eventId,  $member, \App\Models\User::class, $userId, \App\Models\User::class, $group->id);
+            }
+        }
+        return back()->withSuccess('Room Created Successfully');
     }
 }

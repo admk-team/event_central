@@ -209,6 +209,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::get('private-chat/{id}', [ChatController::class, 'getOneToOneChat']);
             Route::post('chat/mark-as-read/{id}', [ChatController::class, 'markAsRead']);
             Route::post('send-message', [ChatController::class, 'store']);
+            Route::post('chat-room', [ChatController::class, 'createRoom'])->name('chat.room');
 
             // Ticket Fees
             Route::resource('ticket-fees', EventAppFeeController::class)->only(['index', 'store', 'update', 'destroy']);

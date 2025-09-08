@@ -18,7 +18,7 @@ import { useEcho, useEchoPublic } from "@laravel/echo-react";
 import ChatAttachments from "./Components/ChatAttachments";
 import Attachments from "./Components/Attachments";
 import { useLaravelReactI18n } from "laravel-react-i18n";
-const Chat = ({ member, event_data, loged_user, lastMessage }: any) => {
+const Chat = ({ member, event_data, loged_user, rooms }: any) => {
     const { t } = useLaravelReactI18n();
     const userChatShow: any = useRef();
     const [publicChatMessages, setPublicChatMessages] = useState<any[]>([]);
@@ -446,6 +446,57 @@ const Chat = ({ member, event_data, loged_user, lastMessage }: any) => {
                                                 </div>
                                             </Link>
                                         </li>
+                                    </ul>
+                                </div>
+                                {/* Groups SECTION */}
+                                <div className="chat-message-list">
+                                    <ul className="list-unstyled chat-list chat-user-list users-list" id="userList">
+                                        {(rooms || []).map((chat: any) => (
+                                            <li key={"group-" + chat.id} className={Chat_Box_Username === chat.name ? "active" : ""}>
+                                                <Link href="#!" onClick={(event) => { event.preventDefault(); userChatOpen(chat, chat.id); }} className="unread-msg-user border-bottom" id={"msgUser" + chat.id}>
+                                                    <div className="d-flex align-items-center">
+                                                        <div className={`flex-shrink-0 chat-user-img align-self-center me-2 ms-0`}>
+                                                            <div className="avatar-xxs">
+                                                                {chat.image ? (
+                                                                    <img src={chat.image} className="rounded-circle img-fluid userprofile" alt="" />
+                                                                ) : (
+                                                                    <div className={"avatar-title rounded-circle bg-dark userprofile"}>
+                                                                        {chat.participant.name?.charAt(0)}
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex-grow-1 overflow-hidden">
+                                                            <p className="text-truncate mb-0">{chat.name}</p>
+                                                            <small className="text-truncate mb-0" id={"last-msg-group" + chat.id}>{chat.last_message == null ? '' : chat.last_message == 'media' ? 'Media' : chat.last_message}</small>
+                                                        </div>
+                                                        <div className="flex-shrink-0" id={"unread-msg-group" + chat.id}>
+                                                            <div>
+                                                                <span className="badge bg-dark-subtle text-body rounded p-1">
+                                                                    {(() => {
+                                                                        if (!chat?.last_message_created_at) return null;
+                                                                        const messageDate = new Date(chat.last_message_created_at);
+                                                                        const now = new Date();
+
+                                                                        const isToday =
+                                                                            messageDate.getDate() === now.getDate() &&
+                                                                            messageDate.getMonth() === now.getMonth() &&
+                                                                            messageDate.getFullYear() === now.getFullYear();
+
+                                                                        return isToday
+                                                                            ? messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) // e.g., 10:15 AM
+                                                                            : messageDate.toLocaleDateString(); // e.g., 7/25/2025
+                                                                    })()}
+                                                                </span>
+                                                            </div>
+                                                            {/* <div className="text-end">
+                                                                {chat.unread_count != 0 ? (<span className="badge bg-dark-subtle text-body rounded p-1">{chat.unread_count}</span>) : ("")}
+                                                            </div> */}
+                                                        </div>
+                                                    </div>
+                                                </Link>
+                                            </li>
+                                        ))}
                                     </ul>
                                 </div>
                                 {/* user SECTION */}

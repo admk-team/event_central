@@ -31,14 +31,16 @@ import axios from 'axios';
 import { useEchoPublic } from '@laravel/echo-react';
 import Attachments from "./Components/Attachments";
 import ChatAttachments from "./Components/ChatAttachments";
+import ChatRoomModal from "./Components/ChatRoomModal";
 import { useLaravelReactI18n } from "laravel-react-i18n";
-const Chat = ({ member, event_data, loged_user }: any) => {
+const Chat = ({ member, event_data, loged_user ,staff,attendees,rooms}: any) => {
     const { t } = useLaravelReactI18n();
     const userChatShow: any = useRef();
     const [publicChatMessages, setPublicChatMessages] = useState<any[]>([]);
     const [privateChatMessages, setPrivateChatMessages] = useState<any[]>([]);
     const [customActiveTab, setcustomActiveTab] = useState<any>("1");
     const [membersList, setMembersList] = useState(member || []);
+    const [showCreateRoomModal, setShowCreateRoomModal] = useState(false);
     const toggleCustom = (tab: any) => {
         if (customActiveTab !== tab) {
             setcustomActiveTab(tab);
@@ -52,6 +54,7 @@ const Chat = ({ member, event_data, loged_user }: any) => {
     const [curMessage, setcurMessage] = useState<string>("");
     const [reply, setReply] = useState<any>(null);
     const [emojiPicker, setemojiPicker] = useState<boolean>(false);
+
     // hide the chat open section on reload or open
     useEffect(() => {
         if (userChatShow.current) {
@@ -126,7 +129,7 @@ const Chat = ({ member, event_data, loged_user }: any) => {
     const [isLoading, setLoading] = useState<any>(loading);
 
     //Use For Chat Box
-    const userChatOpen = async (chats: any, reciever_id: any) => {
+    const userChatOpen = async (chats: any, reciever_id: any, spaceType:string) => {
         try {
             let response: any;
             if (reciever_id == null) {
@@ -300,9 +303,24 @@ const Chat = ({ member, event_data, loged_user }: any) => {
                             <div className="px-4 pt-4 mb-3">
                                 <div className="d-flex align-items-start">
                                     <div className="flex-grow-1">
-                                        <h5 className="mb-4">{t("Chats")}</h5>
+                                        <div className="d-flex align-items-center justify-content-between mb-4">
+                                            <h5 className="">{t("Chats")}</h5>
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowCreateRoomModal(true)}
+                                                className="btn btn-success "
+                                            >
+                                                Create Room
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
+                                <ChatRoomModal
+                                    showModal={showCreateRoomModal}
+                                    hideModal={setShowCreateRoomModal}
+                                    staff={staff}
+                                    attendees={attendees}
+                                />
                                 <div className="search-box">
                                     <input
                                         onKeyUp={searchUsers}
@@ -321,7 +339,7 @@ const Chat = ({ member, event_data, loged_user }: any) => {
                                 <div className="chat-message-list">
                                     <ul className="list-unstyled chat-list chat-user-list users-list" id="eventList">
                                         <li key={"event-" + event_data.id} className={Chat_Box_Username === event_data.name ? "active" : ""}>
-                                            <Link href="#!" onClick={(event) => { event.preventDefault(); userChatOpen(event_data, null) }} className={"unread-msg-user border-bottom"} id={"msgUser" + event_data.id}>
+                                            <Link href="#!" onClick={(event) => { event.preventDefault();userChatOpen(event_data, null,'Event_chat') }} className={"unread-msg-user border-bottom"} id={"msgUser" + event_data.id}>
                                                 <div className="d-flex align-items-center">
                                                     <div className={'flex-shrink-0 chat-user-img align-self-center me-2 ms-0'}>
                                                         <div className="avatar-xxs">
@@ -361,12 +379,63 @@ const Chat = ({ member, event_data, loged_user }: any) => {
                                         </li>
                                     </ul>
                                 </div>
+                                {/* Groups SECTION */}
+                                <div className="chat-message-list">
+                                    <ul className="list-unstyled chat-list chat-user-list users-list" id="groupList">
+                                        {(rooms || []).map((chat: any) => (
+                                            <li key={"group-" + chat.id} className={Chat_Box_Username === chat.name ? "active" : ""}>
+                                                <Link href="#!" onClick={(event) => { event.preventDefault(); userChatOpen(chat, chat.id,'Group_chat'); }} className="unread-msg-user border-bottom" id={"msgUser" + chat.id}>
+                                                    <div className="d-flex align-items-center">
+                                                        <div className={`flex-shrink-0 chat-user-img align-self-center me-2 ms-0`}>
+                                                            <div className="avatar-xxs">
+                                                                {chat.image ? (
+                                                                    <img src={chat.image} className="rounded-circle img-fluid userprofile" alt="" />
+                                                                ) : (
+                                                                    <div className={"avatar-title rounded-circle bg-dark userprofile"}>
+                                                                        {chat.participant.name?.charAt(0)}
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex-grow-1 overflow-hidden">
+                                                            <p className="text-truncate mb-0">{chat.name}</p>
+                                                            <small className="text-truncate mb-0" id={"last-msg-group" + chat.id}>{chat.last_message == null ? '' : chat.last_message == 'media' ? 'Media' : chat.last_message}</small>
+                                                        </div>
+                                                        <div className="flex-shrink-0" id={"unread-msg-group" + chat.id}>
+                                                            <div>
+                                                                <span className="badge bg-dark-subtle text-body rounded p-1">
+                                                                    {(() => {
+                                                                        if (!chat?.last_message_created_at) return null;
+                                                                        const messageDate = new Date(chat.last_message_created_at);
+                                                                        const now = new Date();
+
+                                                                        const isToday =
+                                                                            messageDate.getDate() === now.getDate() &&
+                                                                            messageDate.getMonth() === now.getMonth() &&
+                                                                            messageDate.getFullYear() === now.getFullYear();
+
+                                                                        return isToday
+                                                                            ? messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) // e.g., 10:15 AM
+                                                                            : messageDate.toLocaleDateString(); // e.g., 7/25/2025
+                                                                    })()}
+                                                                </span>
+                                                            </div>
+                                                            {/* <div className="text-end">
+                                                                {chat.unread_count != 0 ? (<span className="badge bg-dark-subtle text-body rounded p-1">{chat.unread_count}</span>) : ("")}
+                                                            </div> */}
+                                                        </div>
+                                                    </div>
+                                                </Link>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
                                 {/* user SECTION */}
                                 <div className="chat-message-list">
                                     <ul className="list-unstyled chat-list chat-user-list users-list" id="userList">
                                         {(membersList || []).map((chat: any) => (
                                             <li key={"user-" + chat.id} className={Chat_Box_Username === chat.participant.name ? "active" : ""}>
-                                                <Link href="#!" onClick={(event) => { event.preventDefault(); userChatOpen(chat, chat.participant.id); }} className="unread-msg-user border-bottom" id={"msgUser" + chat.participant.id}>
+                                                <Link href="#!" onClick={(event) => { event.preventDefault(); userChatOpen(chat, chat.participant.id,'Private_chat'); }} className="unread-msg-user border-bottom" id={"msgUser" + chat.participant.id}>
                                                     <div className="d-flex align-items-center">
                                                         <div className={`flex-shrink-0 chat-user-img align-self-center me-2 ms-0`}>
                                                             <div className="avatar-xxs">
