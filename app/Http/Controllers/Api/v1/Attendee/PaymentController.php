@@ -117,7 +117,7 @@ class PaymentController extends Controller
         $user = auth()->user();
         $attendee = $organizerView ? $attendee : auth()->user();
         $amount = $data['totalAmount'];
-        $stripe_response = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount);
+        $stripe_response = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount ,$request->input('currency') ?? 'USD');
         $client_secret = $stripe_response['client_secret'];
         $payment_id = $stripe_response['payment_id'];
 

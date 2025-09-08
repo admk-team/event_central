@@ -4,6 +4,7 @@ namespace App\Http\Resources\Api;
 
 use App\Http\Resources\UserResource;
 use App\Models\EventSession;
+use App\Models\OrganizerPaymentKeys;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -18,6 +19,9 @@ class EventResource extends JsonResource
     {
         $privateRegister = eventSettings($this->id)->getValue('private_register', false);
         $closeOpenRegistration = eventSettings($this->id)->getValue('close_registration', false);
+        $paymentDetail = OrganizerPaymentKeys::where('user_id',$this->organizer_id)->first();
+        $cuurency_code =  $paymentDetail->currency ?? 'USD';
+        $currency_symbol =  $paymentDetail->currency_symbol ?? '$';
         return [
             'id' => $this->id,
             'organizer_id' => $this->organizer_id,
@@ -30,7 +34,6 @@ class EventResource extends JsonResource
             'type' => $this->type,
             'schedual_type' => $this->schedual_type,
             'event_sessions' => EventSessionResource::collection($this->whenLoaded('event_sessions')),
-            'event_tickets' => EventTicketResource::collection($this->whenLoaded('tickets')),
             'event_organizer' => new UserResource($this->whenLoaded('organiser')),
             'public_tickets' => PublicTicketResource::collection($this->whenLoaded('public_tickets')),
             'images' => EventImageResource::collection($this->whenLoaded('images')),
@@ -39,6 +42,8 @@ class EventResource extends JsonResource
             'logo_img' => $this->logo_img,
             'private_register' => $privateRegister ?? false,
             'close_open_registration' => $closeOpenRegistration ?? false,
+            'curency_code' => $cuurency_code,
+            'currency_symbol' => $currency_symbol
             // 'applicant_answer' => AnswerResource::collection($this->whenLoaded('applicantAnswer')),
         ];
     }
