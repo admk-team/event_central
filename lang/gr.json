@@ -1133,5 +1133,12 @@
   "Attenddee Profile": "Προφίλ Συμμετέχοντα",
   "Purchased Ticket": "Αγορασμένο Εισιτήριο",
   "Event Start ➡️ Event End": "Έναρξη Εκδήλωσης ➡️ Λήξη Εκδήλωσης",
-  "Start and End Date": "Ημερομηνία Έναρξης και Λήξης"
+  "Start and End Date": "Ημερομηνία Έναρξης και Λήξης",
+  "Staff Room": "Personalraum",
+  "Attendee Room": "Teilnehmerraum",
+  "Room Image": "Raumbild",
+  "Select Attendees": "Teilnehmer auswählen",
+  "Select Staff": "Mitarbeiter auswählen",
+  "Room Name": "Raumname",
+  "Create Room": "Raum erstellen"
 }

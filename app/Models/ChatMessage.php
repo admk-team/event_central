@@ -12,6 +12,7 @@ class ChatMessage extends Model
 
     protected $fillable = [
         'event_id',
+        'group_id',
         'sender_id',
         'sender_type',
         'receiver_id',
@@ -33,6 +34,11 @@ class ChatMessage extends Model
     public function reciever(): MorphTo
     {
         return $this->morphTo(); // can be User or Attendee
+    }
+
+    public function group()
+    {
+        return $this->belongsTo(ChatGroup::class, 'group_id');
     }
 
     public function reply()

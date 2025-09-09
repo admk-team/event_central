@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Attendee;
 
 use App\Events\AttendeeChatMessage;
 use App\Events\EventGroupChat;
+use App\Events\GroupChat;
 use App\Http\Controllers\Controller;
+use App\Models\ChatGroup;
 use App\Models\ChatMember;
 use App\Models\ChatMessage;
 use App\Models\EventApp;
@@ -17,7 +19,7 @@ class ChatController extends Controller
     public function index()
     {
         // Private chats
-        $member = ChatMember::where('event_id', Auth::user()->event_app_id)
+        $member = ChatMember::where('event_id', Auth::user()->event_app_id)->whereNull('group_id')
             ->where('user_id', Auth::user()->id)
             ->with(['participant'])->get()
             ->map(function ($member) {
@@ -52,9 +54,27 @@ class ChatController extends Controller
             $event_data->last_message = $lastMessage?->message ?? null;
             $event_data->last_message_created_at = $lastMessage?->created_at;
         }
+        // Group chat
+        $rooms = ChatGroup::where('event_id', Auth::user()->event_app_id)
+            ->where('type', 'attendee')
+            ->whereHas('members', function ($q) {
+                $q->where('user_id', Auth::id());
+            })
+            ->get()
+            ->map(function ($room) {
+                $lastMessage = ChatMessage::where('event_id', $room->event_id)
+                    ->where('receiver_id', $room->id)
+                    ->orderByDesc('created_at')
+                    ->first();
+
+                $room->last_message = $lastMessage?->message ?? null;
+                $room->last_message_created_at = $lastMessage?->created_at ?? null;
+
+                return $room;
+            });
 
         $loged_user = Auth::user()->id;
-        return Inertia::render('Attendee/Chat/Index', compact('member', 'event_data', 'loged_user'));
+        return Inertia::render('Attendee/Chat/Index', compact('member', 'event_data', 'loged_user', 'rooms'));
     }
 
     public function getMessages($id)
@@ -77,9 +97,9 @@ class ChatController extends Controller
         $eventId = Auth::user()->event_app_id;
 
         // Reset unread count for this conversation
-        ChatMember::where('event_id', $eventId)->where('user_id', $userId)
-            ->where('participant_id', $id)
-            ->update(['unread_count' => 0]);
+        // ChatMember::where('event_id', $eventId)->where('user_id', $userId)
+        //     ->where('participant_id', $id)
+        //     ->update(['unread_count' => 0]);
 
         // Fetch messages
         $messages = ChatMessage::where('event_id', $eventId)
@@ -103,6 +123,32 @@ class ChatController extends Controller
         ]);
     }
 
+    // for fetching group chat
+    public function getGroupChat($id)
+    {
+        $userId = Auth::user()->id;
+        $eventId = Auth::user()->event_app_id;
+
+        // Reset unread count for this conversation
+        // ChatMember::where('event_id', $eventId)->where('user_id', $userId)
+        //     ->where('group_id', $id)
+        //     ->update(['unread_count' => 0]);
+
+        // Fetch messages
+        $messages = ChatMessage::where('event_id', $eventId)
+            ->where('group_id', $id)
+            ->Where('receiver_id', $id)
+            ->with(['sender', 'reply', 'files'])
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'messages' => $messages,
+        ]);
+    }
+
+
     public function store(Request $request)
     {
 
@@ -112,6 +158,7 @@ class ChatController extends Controller
             'receiver_id' => 'required',
             'reply_to' => 'nullable|exists:chat_messages,id',
             'files' => 'nullable|array',
+            'room_type' => 'required',
         ]);
 
         $eventId = Auth::user()->event_app_id;
@@ -119,9 +166,16 @@ class ChatController extends Controller
 
         // Determine receiver type
         $receiver_id = $request->receiver_id;
-        $receiver_type = ($receiver_id == $eventId) ? \App\Models\EventApp::class : \App\Models\Attendee::class;
+        $receiver_type = null;
+        if ($request->room_type == 'Event_chat') {
+            $receiver_type = \App\Models\EventApp::class;
+        } elseif ($request->room_type == 'Group_chat') {
+            $receiver_type = \App\Models\Attendee::class;
+        } elseif ($request->room_type == 'Private_chat') {
+            $receiver_type = \App\Models\Attendee::class;
+        }
         // check that both user initiate the chat
-        if ($receiver_type != \App\Models\EventApp::class) {
+        if ($request->room_type == 'Private_chat') {
             $auth_user = ChatMember::where('event_id', $eventId)->where('user_id', $senderId)->where('participant_id', $receiver_id)->first();
             $participant_user = ChatMember::where('event_id', $eventId)->where('user_id', $receiver_id)->where('participant_id', $senderId)->first();
             if (!$auth_user) {
@@ -134,6 +188,7 @@ class ChatController extends Controller
 
         $message = ChatMessage::create([
             'event_id' => $eventId,
+            'group_id' => $request->room_type == 'Group_chat' ? $receiver_id : null,
             'sender_id' => $senderId,
             'sender_type' => \App\Models\Attendee::class,
             'receiver_id' => $receiver_id,
@@ -159,22 +214,29 @@ class ChatController extends Controller
         $message->load(['sender', 'reply', 'files']);
 
         // Handle group or private chat
-        if ($receiver_type === \App\Models\EventApp::class) {
+        if ($request->room_type == 'Event_chat') {
             // Group chat: increment unread for all other members in the event
-            ChatMember::where('event_id', $eventId)
-                ->where('user_id', '!=', $senderId)
-                ->where('participant_type', \App\Models\EventApp::class)
-                ->increment('unread_count');
+            // ChatMember::where('event_id', $eventId)
+            //     ->where('user_id', '!=', $senderId)
+            //     ->where('participant_type', \App\Models\EventApp::class)
+            //     ->increment('unread_count');
 
             broadcast(new EventGroupChat($message))->toOthers();
-        } else {
+        } elseif ($request->room_type == 'Private_chat') {
             // Private chat: increment unread only for the receiver
-            ChatMember::where('event_id', $eventId)
-                ->where('user_id', $receiver_id)
-                ->where('participant_id', $senderId)
-                ->increment('unread_count');
+            // ChatMember::where('event_id', $eventId)
+            //     ->where('user_id', $receiver_id)
+            //     ->where('participant_id', $senderId)
+            //     ->increment('unread_count');
 
             broadcast(new AttendeeChatMessage($message))->toOthers();
+        } elseif ($request->room_type == 'Group_chat') {
+            // Group chat: increment unread only for the receiver
+            // ChatMember::where('event_id', $eventId)
+            //     ->where('user_id', '!=', $senderId)
+            //     ->where('group_id', $message->group_id)
+            //     ->increment('unread_count');
+            broadcast(new GroupChat($message))->toOthers();
         }
 
         return response()->json(['success' => true, 'message' => $message]);

@@ -18,13 +18,19 @@ import { useEcho, useEchoPublic } from "@laravel/echo-react";
 import ChatAttachments from "./Components/ChatAttachments";
 import Attachments from "./Components/Attachments";
 import { useLaravelReactI18n } from "laravel-react-i18n";
-const Chat = ({ member, event_data, loged_user, lastMessage }: any) => {
+const Chat = ({ member, event_data, loged_user, rooms }: any) => {
     const { t } = useLaravelReactI18n();
     const userChatShow: any = useRef();
     const [publicChatMessages, setPublicChatMessages] = useState<any[]>([]);
     const [privateChatMessages, setPrivateChatMessages] = useState<any[]>([]);
+    const [groupChatMessages, setGroupChatMessages] = useState<any[]>([]);
     const [customActiveTab, setcustomActiveTab] = useState<any>("1");
     const [membersList, setMembersList] = useState(member || []);
+    const [eventPreview, setEventPreview] = useState(event_data || {});
+    const [groupsList, setGroupsList] = useState(rooms || []);
+    const [roomGroupId,setRoomGroupId] = useState(0);
+    const [roomOpenType,setRoomOpenType] = useState('');
+
     const toggleCustom = (tab: any) => {
         if (customActiveTab !== tab) {
             setcustomActiveTab(tab);
@@ -48,6 +54,12 @@ const Chat = ({ member, event_data, loged_user, lastMessage }: any) => {
         }
     }, []);
 
+    useEffect(() => {
+        setEventPreview(event_data || {});
+        setGroupsList(rooms || []);
+        setMembersList(member || []);
+    }, [event_data, rooms, member]);
+
     // file attachments in chat
     const [showFileModal, setShowFileModal] = useState(false);
     const sendFiles = (files: File[]) => {
@@ -59,6 +71,12 @@ const Chat = ({ member, event_data, loged_user, lastMessage }: any) => {
     useEchoPublic(eventChannelName, "EventGroupChat", (e: any) => {
         const newMessage = e.message;
         setPublicChatMessages((prev) => [...prev, newMessage]);
+        setEventPreview((prev:any) => ({...prev,
+            last_message: newMessage.message == null ? '' : newMessage.message === 'media' ? 'Media' : newMessage.message,
+            last_message_created_at: newMessage.created_at,
+            // Increment unread if not current chat
+            // unread_count: roomOpenType === 'Event_chat' ? (prev.unread_count || 0) : (prev.unread_count || 0) + 1
+        }));
     });
 
     // for private chat
@@ -77,14 +95,8 @@ const Chat = ({ member, event_data, loged_user, lastMessage }: any) => {
                                 return {
                                     ...user,
                                     unread_count: (user.unread_count || 0) + 1,
-                                    last_message:
-                                        e.message.message == null
-                                            ? ""
-                                            : e.message.message == "media"
-                                            ? "Media"
-                                            : e.message.message,
-                                    last_message_created_at:
-                                        e.message.created_at,
+                                    last_message: e.message.message == null ? '' : e.message.message == 'media' ? 'Media' : e.message.message,
+                                    last_message_created_at: e.message.created_at,
                                 };
                             }
                             return user;
@@ -108,24 +120,65 @@ const Chat = ({ member, event_data, loged_user, lastMessage }: any) => {
         messages: state.messages,
         loading: state.loading,
     }));
+
+    // for group chat 
+    useEffect(() => {
+        const subscriptions:any = [];
+        groupsList.forEach((group:any) => {
+            const channelName = `group-chat-${group.id}`;
+            const channel = window.Echo.private(channelName)
+                .listen('GroupChat', (e: any) => {
+                    const newMessage = e.message;
+                    // Assume newMessage has group_id or receiver_id to confirm (if not, infer from channel)
+                    const targetGroupId = newMessage.receiver_id || newMessage.group_id || group.id;
+                    if (targetGroupId === roomGroupId && roomOpenType === 'Group_chat') {
+                        // Current open group: Add to messages (with duplicate check)
+                        setGroupChatMessages((prev) => {
+                            const exists = prev.some((msg) => msg.id === newMessage.id);
+                            return exists ? prev : [...prev, newMessage];
+                        });
+                    } else {
+                        // Other group: Update preview in list
+                        setGroupsList((prev:any) =>
+                            prev.map((g:any) => g.id === targetGroupId ? { ...g,
+                                        last_message: newMessage.message == null ? '' : newMessage.message === 'media' ? 'Media' : newMessage.message,
+                                        last_message_created_at: newMessage.created_at,
+                                        // Optional: Increment unread
+                                        // unread_count: (g.unread_count || 0) + 1
+                                    }
+                                    : g
+                            )
+                        );
+                    }
+                })
+                .error((error: any) => {
+                    console.error('CHANNEL ERROR:', error);
+                });
+
+            subscriptions.push(channelName);
+        });
+
+        return () => {
+            // Cleanup: Leave all group channels
+            subscriptions.forEach((name:any) => window.Echo.leave(`private-${name}`));
+        };
+    }, [groupsList, roomGroupId, roomOpenType]);
+
     // Inside your component
     const { chats, messages, loading }: any = useSelector(chatProperties);
 
     const [isLoading, setLoading] = useState<any>(loading);
 
     //Use For Chat Box
-    const userChatOpen = async (chats: any, reciever_id: any) => {
+    const userChatOpen = async (chats: any, reciever_id: any,spaceType:string) => {
+        setRoomOpenType(spaceType);
         try {
             let response: any;
-            if (reciever_id == null) {
-                response = await axios.get(
-                    `/attendee/get-chat/${event_data.id}`
-                );
+            if(spaceType == 'Event_chat'){
+                response = await axios.get(`/attendee/get-chat/${event_data.id}`);
                 setPublicChatMessages(response.data.messages);
-            } else {
-                response = await axios.get(
-                    `/attendee/private-chat/${reciever_id}`
-                );
+            } else if(spaceType == 'Private_chat') {
+                response = await axios.get(`/attendee/private-chat/${reciever_id}`);
                 setPrivateChatMessages(response.data.messages);
                 // Reset unread count for the opened private chat
                 setMembersList((prevMembers: any) =>
@@ -136,6 +189,10 @@ const Chat = ({ member, event_data, loged_user, lastMessage }: any) => {
                         return user;
                     })
                 );
+            } else if(spaceType == 'Group_chat'){
+                setRoomGroupId(chats.id);
+                response = await axios.get(`/attendee/group-chat/${chats.id}`);
+                setGroupChatMessages(response.data.messages);
             }
             userChatShow.current.classList.remove("d-none");
             setChat_Box_Username(chats.name ?? chats.participant.name);
@@ -149,15 +206,9 @@ const Chat = ({ member, event_data, loged_user, lastMessage }: any) => {
             Array.from(userLists).forEach((userList: any) => {
                 const listItems = userList.getElementsByTagName("li");
                 Array.from(listItems).forEach((li: any) => {
-                    const id = li
-                        .querySelector("a")
-                        ?.id?.replace("msgUser", "");
-                    const unreadMessage = document.getElementById(
-                        "unread-msg-user" + id
-                    );
-                    const lastMessage = document.getElementById(
-                        "last-msg-user" + id
-                    );
+                    const id = li.querySelector("a") ?.id?.replace("msgUser", "");
+                    const unreadMessage = document.getElementById("unread-msg-user" + id);
+                    const lastMessage = document.getElementById("last-msg-user" + id);
                     const msgUser = document.getElementById("msgUser" + id);
                     if (unreadMessage && lastMessage && msgUser) {
                         // Show last message and unread count for all chats
@@ -175,15 +226,11 @@ const Chat = ({ member, event_data, loged_user, lastMessage }: any) => {
         }
         let idSuffix = reciever_id ?? chats.id;
         if (reciever_id) {
-            idSuffix = chats.participant.id;
+            idSuffix = chats.participant.id ?? chats.id;
         }
         // remove unread msg on read in chat
-        var unreadMessage: any = document.getElementById(
-            "unread-msg-user" + idSuffix
-        );
-        var lastMessage: any = document.getElementById(
-            "last-msg-user" + idSuffix
-        );
+        var unreadMessage: any = document.getElementById("unread-msg-user" + idSuffix);
+        var lastMessage: any = document.getElementById("last-msg-user" + idSuffix);
         var msgUser: any = document.getElementById("msgUser" + idSuffix);
         if (unreadMessage) {
             unreadMessage.style.display = "none";
@@ -203,12 +250,19 @@ const Chat = ({ member, event_data, loged_user, lastMessage }: any) => {
     const addMessage = async (files?: File[]) => {
         try {
             const selectedFilesData = files ?? [];
+            const receiver_id = roomOpenType === "Event_chat" ? event_data.id : roomOpenType === "Group_chat" ? roomGroupId : currentRoomId;
             // Check if both message and files are empty
+           if (!receiver_id) {
+                console.warn("No receiver_id found for", roomOpenType);
+                return;
+            }
             if (!curMessage.trim() && selectedFilesData.length === 0) {
                 return;
             }
+
             const formData = new FormData();
-            formData.append("receiver_id", currentRoomId ?? event_data.id);
+            formData.append("room_type", roomOpenType);
+            formData.append("receiver_id", receiver_id);
             if (reply?.msg_id) {
                 formData.append("reply_to", reply.msg_id);
             }
@@ -222,9 +276,7 @@ const Chat = ({ member, event_data, loged_user, lastMessage }: any) => {
             } else {
                 formData.append("message", "media");
             }
-            const response = await axios.post(
-                "/attendee/send-message",
-                formData,
+            const response = await axios.post("/attendee/send-message",formData,
                 {
                     headers: {
                         "Content-Type": "multipart/form-data",
@@ -233,8 +285,11 @@ const Chat = ({ member, event_data, loged_user, lastMessage }: any) => {
             );
             // Append to appropriate message state
             const newMessage = response.data.message;
-            if (currentRoomId != null) {
+            if (roomOpenType == 'Private_chat') {
                 setPrivateChatMessages((prev: any) => [...prev, newMessage]);
+            }
+            else if(roomOpenType == 'Group_chat'){
+                setGroupChatMessages((prev: any) => [...prev, newMessage]);
             }
             setcurMessage("");
             setReply(null);
@@ -249,10 +304,9 @@ const Chat = ({ member, event_data, loged_user, lastMessage }: any) => {
     const chatRef = useRef<any>(null);
     useEffect(() => {
         if (chatRef.current?.el) {
-            chatRef.current.getScrollElement().scrollTop =
-                chatRef.current.getScrollElement().scrollHeight;
+            chatRef.current.getScrollElement().scrollTop = chatRef.current.getScrollElement().scrollHeight;
         }
-    }, [publicChatMessages, privateChatMessages]);
+    }, [publicChatMessages, privateChatMessages,groupChatMessages])
 
     const onKeyPress = (e: any) => {
         const { key, value } = e;
@@ -294,8 +348,7 @@ const Chat = ({ member, event_data, loged_user, lastMessage }: any) => {
         setcurMessage(curMessage + event.emoji);
     };
     // Determine which messages to display based on currentRoomId
-    const currentMessages =
-        currentRoomId == null ? publicChatMessages : privateChatMessages;
+    const currentMessages = roomOpenType === "Event_chat" ? publicChatMessages : roomOpenType === "Group_chat" ? groupChatMessages : privateChatMessages;
     return (
         <React.Fragment>
             <Head title="Chat " />
@@ -327,118 +380,39 @@ const Chat = ({ member, event_data, loged_user, lastMessage }: any) => {
                             >
                                 {/* EVENT SECTION */}
                                 <div className="chat-message-list">
-                                    <ul
-                                        className="list-unstyled chat-list chat-user-list users-list"
-                                        id="eventList"
-                                    >
-                                        <li
-                                            key={"event-" + event_data.id}
-                                            className={
-                                                Chat_Box_Username ===
-                                                event_data.name
-                                                    ? "active"
-                                                    : ""
-                                            }
-                                        >
-                                            <Link
-                                                href="#!"
-                                                onClick={(event) => {
-                                                    event.preventDefault();
-                                                    userChatOpen(
-                                                        event_data,
-                                                        null
-                                                    );
-                                                }}
-                                                className={
-                                                    "unread-msg-user border-bottom"
-                                                }
-                                                id={"msgUser" + event_data.id}
-                                            >
+                                    <ul className="list-unstyled chat-list chat-user-list users-list" id="eventList">
+                                        <li key={"event-" + eventPreview.id} className={Chat_Box_Username === eventPreview.name ? "active" : ""}>
+                                            <Link href="#!" onClick={(event) => { event.preventDefault();userChatOpen(eventPreview, null,'Event_chat') }} className={"unread-msg-user border-bottom"} id={"msgUser" + eventPreview.id}>
                                                 <div className="d-flex align-items-center">
-                                                    <div
-                                                        className={
-                                                            "flex-shrink-0 chat-user-img align-self-center me-2 ms-0"
-                                                        }
-                                                    >
+                                                    <div className={'flex-shrink-0 chat-user-img align-self-center me-2 ms-0'}>
                                                         <div className="avatar-xxs">
-                                                            {event_data.logo_img ? (
-                                                                <img
-                                                                    src={
-                                                                        event_data.logo_img
-                                                                    }
-                                                                    className="rounded-circle img-fluid userprofile"
-                                                                    alt=""
-                                                                    style={{
-                                                                        width: "100%",
-                                                                        height: "100%",
-                                                                        objectFit:
-                                                                            "cover",
-                                                                    }}
-                                                                />
+                                                            {eventPreview.logo_img ? (
+                                                                <img src={eventPreview.logo_img} className="rounded-circle img-fluid userprofile" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                                             ) : (
-                                                                <div
-                                                                    className={
-                                                                        "avatar-title rounded-circle bg-dark userprofile"
-                                                                    }
-                                                                >
-                                                                    {event_data.name.charAt(
-                                                                        0
-                                                                    )}
+                                                                <div className={"avatar-title rounded-circle bg-dark userprofile"}>
+                                                                    {eventPreview.name.charAt(0)}
                                                                 </div>
                                                             )}
                                                         </div>
                                                     </div>
                                                     <div className="flex-grow-1 overflow-hidden">
-                                                        <p className="text-truncate mb-0">
-                                                            {event_data.name}
-                                                        </p>
-                                                        <small
-                                                            className="text-truncate mb-0"
-                                                            id={
-                                                                "last-msg-user" +
-                                                                event_data.id
-                                                            }
-                                                        >
-                                                            {event_data.last_message ??
-                                                                ""}
-                                                        </small>
+                                                        <p className="text-truncate mb-0">{eventPreview.name}</p>
+                                                        <small className="text-truncate mb-0" id={"last-msg-user" + eventPreview.id}>{eventPreview?.last_message ?? ''}</small>
                                                     </div>
-                                                    <div
-                                                        className="flex-shrink-0"
-                                                        id={
-                                                            "unread-msg-user" +
-                                                            event_data.id
-                                                        }
-                                                    >
+                                                    <div className="flex-shrink-0" id={"unread-msg-user" + eventPreview.id}>
                                                         <span className="badge bg-dark-subtle text-body rounded p-1">
                                                             {(() => {
-                                                                if (
-                                                                    !event_data?.last_message_created_at
-                                                                )
-                                                                    return null;
-                                                                const messageDate =
-                                                                    new Date(
-                                                                        event_data.last_message_created_at
-                                                                    );
-                                                                const now =
-                                                                    new Date();
+                                                                if (!eventPreview?.last_message_created_at) return null;
+                                                                const messageDate = new Date(eventPreview.last_message_created_at);
+                                                                const now = new Date();
 
                                                                 const isToday =
-                                                                    messageDate.getDate() ===
-                                                                        now.getDate() &&
-                                                                    messageDate.getMonth() ===
-                                                                        now.getMonth() &&
-                                                                    messageDate.getFullYear() ===
-                                                                        now.getFullYear();
+                                                                    messageDate.getDate() === now.getDate() &&
+                                                                    messageDate.getMonth() === now.getMonth() &&
+                                                                    messageDate.getFullYear() === now.getFullYear();
 
                                                                 return isToday
-                                                                    ? messageDate.toLocaleTimeString(
-                                                                          [],
-                                                                          {
-                                                                              hour: "2-digit",
-                                                                              minute: "2-digit",
-                                                                          }
-                                                                      ) // e.g., 10:15 AM
+                                                                    ? messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) // e.g., 10:15 AM
                                                                     : messageDate.toLocaleDateString(); // e.g., 7/25/2025
                                                             })()}
                                                         </span>
@@ -448,156 +422,106 @@ const Chat = ({ member, event_data, loged_user, lastMessage }: any) => {
                                         </li>
                                     </ul>
                                 </div>
-                                {/* user SECTION */}
+                                {/* Groups SECTION */}
                                 <div className="chat-message-list">
-                                    <ul
-                                        className="list-unstyled chat-list chat-user-list users-list"
-                                        id="userList"
-                                    >
-                                        {(membersList || []).map(
-                                            (chat: any) => (
-                                                <li
-                                                    key={"user-" + chat.id}
-                                                    className={
-                                                        Chat_Box_Username ===
-                                                        chat.participant.name
-                                                            ? "active"
-                                                            : ""
-                                                    }
-                                                >
-                                                    <Link
-                                                        href="#!"
-                                                        onClick={(event) => {
-                                                            event.preventDefault();
-                                                            userChatOpen(
-                                                                chat,
-                                                                chat.participant
-                                                                    .id
-                                                            );
-                                                        }}
-                                                        className="unread-msg-user border-bottom"
-                                                        id={
-                                                            "msgUser" +
-                                                            chat.participant.id
-                                                        }
-                                                    >
-                                                        <div className="d-flex align-items-center">
-                                                            <div
-                                                                className={`flex-shrink-0 chat-user-img align-self-center me-2 ms-0`}
-                                                            >
-                                                                <div className="avatar-xxs">
-                                                                    {chat
-                                                                        .participant
-                                                                        .avatar_img ? (
-                                                                        <img
-                                                                            src={
-                                                                                chat
-                                                                                    .participant
-                                                                                    .avatar_img
-                                                                            }
-                                                                            className="rounded-circle img-fluid userprofile"
-                                                                            alt=""
-                                                                        />
-                                                                    ) : (
-                                                                        <div
-                                                                            className={
-                                                                                "avatar-title rounded-circle bg-dark userprofile"
-                                                                            }
-                                                                        >
-                                                                            {chat.participant.name?.charAt(
-                                                                                0
-                                                                            )}
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                            </div>
-                                                            <div className="flex-grow-1 overflow-hidden">
-                                                                <p className="text-truncate mb-0">
-                                                                    {
-                                                                        chat
-                                                                            .participant
-                                                                            .name
-                                                                    }
-                                                                </p>
-                                                                <small
-                                                                    className="text-truncate mb-0"
-                                                                    id={
-                                                                        "last-msg-user" +
-                                                                        chat
-                                                                            .participant
-                                                                            .id
-                                                                    }
-                                                                >
-                                                                    {chat.last_message ==
-                                                                    null
-                                                                        ? ""
-                                                                        : chat.last_message ==
-                                                                          "media"
-                                                                        ? "Media"
-                                                                        : chat.last_message}
-                                                                </small>
-                                                            </div>
-                                                            <div
-                                                                className="flex-shrink-0"
-                                                                id={
-                                                                    "unread-msg-user" +
-                                                                    chat
-                                                                        .participant
-                                                                        .id
-                                                                }
-                                                            >
-                                                                <div>
-                                                                    <span className="badge bg-dark-subtle text-body rounded p-1">
-                                                                        {(() => {
-                                                                            if (
-                                                                                !chat?.last_message_created_at
-                                                                            )
-                                                                                return null;
-                                                                            const messageDate =
-                                                                                new Date(
-                                                                                    chat.last_message_created_at
-                                                                                );
-                                                                            const now =
-                                                                                new Date();
-
-                                                                            const isToday =
-                                                                                messageDate.getDate() ===
-                                                                                    now.getDate() &&
-                                                                                messageDate.getMonth() ===
-                                                                                    now.getMonth() &&
-                                                                                messageDate.getFullYear() ===
-                                                                                    now.getFullYear();
-
-                                                                            return isToday
-                                                                                ? messageDate.toLocaleTimeString(
-                                                                                      [],
-                                                                                      {
-                                                                                          hour: "2-digit",
-                                                                                          minute: "2-digit",
-                                                                                      }
-                                                                                  ) // e.g., 10:15 AM
-                                                                                : messageDate.toLocaleDateString(); // e.g., 7/25/2025
-                                                                        })()}
-                                                                    </span>
-                                                                </div>
-                                                                <div className="text-end">
-                                                                    {chat.unread_count !=
-                                                                    0 ? (
-                                                                        <span className="badge bg-dark-subtle text-body rounded p-1">
-                                                                            {
-                                                                                chat.unread_count
-                                                                            }
-                                                                        </span>
-                                                                    ) : (
-                                                                        ""
-                                                                    )}
-                                                                </div>
+                                    <ul className="list-unstyled chat-list chat-user-list users-list" id="groupList">
+                                        {(groupsList || []).map((chat: any) => (
+                                            <li key={"group-" + chat.id} className={Chat_Box_Username === chat.name ? "active" : ""}>
+                                                <Link href="#!" onClick={(event) => { event.preventDefault(); userChatOpen(chat, chat.id,'Group_chat'); }} className="unread-msg-user border-bottom" id={"msgUser" + chat.id}>
+                                                    <div className="d-flex align-items-center">
+                                                        <div className={`flex-shrink-0 chat-user-img align-self-center me-2 ms-0`}>
+                                                            <div className="avatar-xxs">
+                                                                {chat.image ? (
+                                                                    <img src={chat.image} className="rounded-circle img-fluid userprofile" alt="" />
+                                                                ) : (
+                                                                    <div className={"avatar-title rounded-circle bg-dark userprofile"}>
+                                                                        {chat.participant.name?.charAt(0)}
+                                                                    </div>
+                                                                )}
                                                             </div>
                                                         </div>
-                                                    </Link>
-                                                </li>
-                                            )
-                                        )}
+                                                        <div className="flex-grow-1 overflow-hidden">
+                                                            <p className="text-truncate mb-0">{chat.name}</p>
+                                                            <small className="text-truncate mb-0" id={"last-msg-group" + chat.id}>{chat.last_message == null ? '' : chat.last_message == 'media' ? 'Media' : chat.last_message}</small>
+                                                        </div>
+                                                        <div className="flex-shrink-0" id={"unread-msg-group" + chat.id}>
+                                                            <div>
+                                                                <span className="badge bg-dark-subtle text-body rounded p-1">
+                                                                    {(() => {
+                                                                        if (!chat?.last_message_created_at) return null;
+                                                                        const messageDate = new Date(chat.last_message_created_at);
+                                                                        const now = new Date();
+
+                                                                        const isToday =
+                                                                            messageDate.getDate() === now.getDate() &&
+                                                                            messageDate.getMonth() === now.getMonth() &&
+                                                                            messageDate.getFullYear() === now.getFullYear();
+
+                                                                        return isToday
+                                                                            ? messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) // e.g., 10:15 AM
+                                                                            : messageDate.toLocaleDateString(); // e.g., 7/25/2025
+                                                                    })()}
+                                                                </span>
+                                                            </div>
+                                                            {/* <div className="text-end">
+                                                                {chat.unread_count != 0 ? (<span className="badge bg-dark-subtle text-body rounded p-1">{chat.unread_count}</span>) : ("")}
+                                                            </div> */}
+                                                        </div>
+                                                    </div>
+                                                </Link>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                                {/* user SECTION */}
+                                <div className="chat-message-list">
+                                    <ul className="list-unstyled chat-list chat-user-list users-list" id="userList">
+                                        {(membersList || []).map((chat: any) => (
+                                            <li key={"user-" + chat.id} className={Chat_Box_Username === chat.participant.name ? "active" : ""}>
+                                                <Link href="#!" onClick={(event) => { event.preventDefault(); userChatOpen(chat, chat.participant.id,'Private_chat'); }} className="unread-msg-user border-bottom" id={"msgUser" + chat.participant.id}>
+                                                    <div className="d-flex align-items-center">
+                                                        <div className={`flex-shrink-0 chat-user-img align-self-center me-2 ms-0`}>
+                                                            <div className="avatar-xxs">
+                                                                {chat.participant.avatar_img ? (
+                                                                    <img src={chat.participant.avatar_img} className="rounded-circle img-fluid userprofile" alt="" />
+                                                                ) : (
+                                                                    <div className={"avatar-title rounded-circle bg-dark userprofile"}>
+                                                                        {chat.participant.name?.charAt(0)}
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                        <div className="flex-grow-1 overflow-hidden">
+                                                            <p className="text-truncate mb-0">{chat.participant.name}</p>
+                                                            <small className="text-truncate mb-0" id={"last-msg-user" + chat.participant.id}>{chat.last_message == null ? '' : chat.last_message == 'media' ? 'Media' : chat.last_message}</small>
+                                                        </div>
+                                                        <div className="flex-shrink-0" id={"unread-msg-user" + chat.participant.id}>
+                                                            <div>
+                                                                <span className="badge bg-dark-subtle text-body rounded p-1">
+                                                                    {(() => {
+                                                                        if (!chat?.last_message_created_at) return null;
+                                                                        const messageDate = new Date(chat.last_message_created_at);
+                                                                        const now = new Date();
+
+                                                                        const isToday =
+                                                                            messageDate.getDate() === now.getDate() &&
+                                                                            messageDate.getMonth() === now.getMonth() &&
+                                                                            messageDate.getFullYear() === now.getFullYear();
+
+                                                                        return isToday
+                                                                            ? messageDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) // e.g., 10:15 AM
+                                                                            : messageDate.toLocaleDateString(); // e.g., 7/25/2025
+                                                                    })()}
+                                                                </span>
+                                                            </div>
+                                                            {/* <div className="text-end">
+                                                                {chat.unread_count != 0 ? (<span className="badge bg-dark-subtle text-body rounded p-1">{chat.unread_count}</span>) : ("")}
+                                                            </div> */}
+                                                        </div>
+                                                    </div>
+                                                </Link>
+                                            </li>
+                                        ))}
                                     </ul>
                                 </div>
                             </SimpleBar>
