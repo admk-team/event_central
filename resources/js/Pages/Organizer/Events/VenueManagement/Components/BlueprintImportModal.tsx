@@ -11,7 +11,7 @@ type Props = {
 export default function BlueprintImportModal({ show, onHide }: Props) {
     const { t } = useLaravelReactI18n();
 
-    const { data, setData, post, processing, errors } = useForm<{ blueprint: File | null }>({
+    const { setData, post, processing, errors } = useForm<{ blueprint: File | null }>({
         blueprint: null,
     });
 
@@ -20,6 +20,7 @@ export default function BlueprintImportModal({ show, onHide }: Props) {
 
         post(route('organizer.events.event-platforms.blueprint-import'), {
             preserveScroll: true,
+            onSuccess: () => onHide(),
         });
     }
 

@@ -7,9 +7,11 @@ use App\Http\Requests\Organizer\Event\EventPlatformRequest;
 use App\Models\EventPartner;
 use App\Models\EventPlatform;
 use App\Models\PlatForm;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
@@ -93,30 +95,65 @@ class EventPlatformController extends Controller
 
         $dataUri = 'data:' . $mime . ';base64,' . $base64Image;
         $prompt = file_get_contents(resource_path('data/venue_blueprint_prompt.txt'));
-
-
-        $response = Http::withHeaders([
-            'Authorization' => 'Bearer ' . env('OPENAI_API_KEY'),
-            'Content-Type'  => 'application/json',
-        ])->post('https://api.openai.com/v1/responses', [
-            'model' => 'gpt-4.1',
-            'input' => [
-                [
-                    'role' => 'user',
-                    'content' => [
-                        [
-                            'type' => 'input_text',
-                            'text' => $prompt,
-                        ],
-                        [
-                            'type' => 'input_image',
-                            'image_url' => $dataUri,
+        
+        
+        try {
+            $response = Http::withHeaders([
+                'Authorization' => 'Bearer ' . env('OPENAI_API_KEY'),
+                'Content-Type'  => 'application/json',
+            ])->post('https://api.openai.com/v1/responses', [
+                'model' => 'gpt-4.1',
+                'input' => [
+                    [
+                        'role' => 'user',
+                        'content' => [
+                            [
+                                'type' => 'input_text',
+                                'text' => $prompt,
+                            ],
+                            [
+                                'type' => 'input_image',
+                                'image_url' => $dataUri,
+                            ],
                         ],
                     ],
                 ],
-            ],
-        ]);
+            ]);
+    
+            if (! $response->successful()) {
+                throw new Exception('Failed');
+            }
+    
+            $output = $response->json()['output'][0]['content'][0]['text'] ?? null;
+            if (! $output) {
+                throw new Exception('Failed');
+            }
 
-        dd($response->json());
+            $outputArray = json_decode($output, true);
+
+            foreach ($outputArray as $item) {
+                $eventPlatform = EventPlatform::where('name', $item['name'])->where('event_app_id', session('event_id'))->first();
+                if ($eventPlatform) {
+                    $eventPlatform->update([
+                        'type' => ucwords($item['type']),
+                        'seats' => $item['seats'],
+                    ]);
+                } else {
+                    EventPlatform::create([
+                        'event_app_id' => session('event_id'),
+                        'type' => ucwords($item['type']),
+                        'name' => $item['name'],
+                        'seats' => $item['seats'],
+                    ]);
+                }
+            }
+
+            return back()->withSuccess("successfully Imported");
+        } catch (\Exception $e) {
+            Log::error("error", [
+                $e->getMessage(),
+            ]);
+            return back()->withError("Failed to import from blueprint");
+        }
     }
 }
