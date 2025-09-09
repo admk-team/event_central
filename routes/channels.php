@@ -24,3 +24,7 @@ Broadcast::channel('event-app-{eventId}', function ($user, $eventId) {
 Broadcast::channel('attendee-chat-{receiverId}', function ($user, $receiverId) {
     return true;
 });
+
+Broadcast::channel('group-chat-{group_id}', function ($user, $receiverId) {
+    return true;
+});

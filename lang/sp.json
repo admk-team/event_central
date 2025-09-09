@@ -1133,5 +1133,12 @@
   "Attenddee Profile": "Perfil del asistente",
   "Purchased Ticket": "Entrada comprada",
   "Event Start ➡️ Event End": "Inicio del evento ➡️ Fin del evento",
-  "Start and End Date": "Fecha de inicio y fin"
+  "Start and End Date": "Fecha de inicio y fin",
+  "Staff Room": "Sala de Personal",
+  "Attendee Room": "Sala de Asistentes",
+  "Room Image": "Imagen de la Sala",
+  "Select Attendees": "Seleccionar Asistentes",
+  "Select Staff": "Seleccionar Personal",
+  "Room Name": "Nombre de la Sala",
+  "Create Room": "Crear Sala"
 }

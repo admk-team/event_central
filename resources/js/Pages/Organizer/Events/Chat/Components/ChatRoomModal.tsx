@@ -47,7 +47,6 @@ const ChatRoomModal = ({ showModal, hideModal, staff, attendees }: any) => {
 
     const submit = (e: any) => {
         e.preventDefault();
-        console.log(data);
         post(route("organizer.events.chat.room"), {
             preserveScroll: true,
             onSuccess: () => {
@@ -89,8 +88,7 @@ const ChatRoomModal = ({ showModal, hideModal, staff, attendees }: any) => {
                                         <div className="d-flex justify-content-between align-items-center">
                                             <div>
                                                 <h3 className="fw-medium text-muted mb-0">
-                                                    {/* {t("Sessions")} */}
-                                                    Staff Room
+                                                    {t("Staff Room")}
                                                 </h3>
                                             </div>
                                             <div>
@@ -122,7 +120,7 @@ const ChatRoomModal = ({ showModal, hideModal, staff, attendees }: any) => {
                                         <div className="d-flex justify-content-between align-items-center">
                                             <div>
                                                 <h3 className="fw-medium text-muted mb-0">
-                                                    Attendee Room
+                                                    {t("Attendee Room")}
                                                 </h3>
                                             </div>
                                             <div>

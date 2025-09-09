@@ -470,7 +470,7 @@
   "Add User": "إضافة مستخدم",
   "Edit User": "تعديل المستخدم",
   "Select All": "تحديد الكل",
- "Select all": "تحديد الكل",
+  "Select all": "تحديد الكل",
   "Create Role": "إنشاء دور",
   "Edit Role": "تعديل الدور",
   "Important Note": "ملاحظة مهمة",
@@ -1116,7 +1116,7 @@
   "Logout": "تسجيل الخروج",
   "Search here...": "ابحث هنا...",
   "Type your message...": "اكتب رسالتك...",
-   "Badge Instructions": "تعليمات الشارة",
+  "Badge Instructions": "تعليمات الشارة",
   "Event Branding & Logistics": "علامة الحدث واللوجستيات",
   "Event Name & Date": "اسم الحدث وتاريخه",
   "Location / Venue": "الموقع / المكان",
@@ -1131,5 +1131,12 @@
   "Attenddee Profile": "ملف الحضور",
   "Purchased Ticket": "التذكرة المشتراة",
   "Event Start ➡️ Event End": "بداية الحدث ➡️ نهاية الحدث",
-  "Start and End Date": "تاريخ البدء والانتهاء"
+  "Start and End Date": "تاريخ البدء والانتهاء",
+  "Staff Room": "غرفة الموظفين",
+  "Attendee Room": "غرفة الحضور",
+  "Room Image": "صورة الغرفة",
+  "Select Attendees": "اختر الحضور",
+  "Select Staff": "اختر الموظفين",
+  "Room Name": "اسم الغرفة",
+  "Create Room": "إنشاء غرفة"
 }

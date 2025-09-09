@@ -207,6 +207,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::resource('chat', ChatController::class);
             Route::get('get-chat/{id}', [ChatController::class, 'getMessages'])->name('get-messages');
             Route::get('private-chat/{id}', [ChatController::class, 'getOneToOneChat']);
+            Route::get('group-chat/{id}', [ChatController::class, 'getGroupChat']);
             Route::post('chat/mark-as-read/{id}', [ChatController::class, 'markAsRead']);
             Route::post('send-message', [ChatController::class, 'store']);
             Route::post('chat-room', [ChatController::class, 'createRoom'])->name('chat.room');

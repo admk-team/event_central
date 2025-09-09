@@ -1133,5 +1133,12 @@
   "Attenddee Profile": "Профиль участника",
   "Purchased Ticket": "Приобретённый билет",
   "Event Start ➡️ Event End": "Начало мероприятия ➡️ Конец мероприятия",
-  "Start and End Date": "Дата начала и окончания"
+  "Start and End Date": "Дата начала и окончания",
+  "Staff Room": "Комната персонала",
+  "Attendee Room": "Комната участников",
+  "Room Image": "Изображение комнаты",
+  "Select Attendees": "Выбрать участников",
+  "Select Staff": "Выбрать персонал",
+  "Room Name": "Название комнаты",
+  "Create Room": "Создать комнату"
 }
