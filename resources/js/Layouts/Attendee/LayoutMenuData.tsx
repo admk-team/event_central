@@ -6,6 +6,7 @@ const Navdata = () => {
     const eventApp: any = usePage().props.eventApp;
     //state data
     const [isDashboard, setIsDashboard] = useState<boolean>(false);
+    const [isBannerAd, setIsBannerAd] = useState<boolean>(false);
     const [isProgram, setIsProgram] = useState<boolean>(false);
     const [isSpeakers, setIsSpeakers] = useState<boolean>(false);
     const [isPost, setIsPost] = useState<boolean>(false);
@@ -42,6 +43,9 @@ const Navdata = () => {
         document.body.classList.remove("twocolumn-panel");
         if (iscurrentState !== "Dashboard") {
             setIsDashboard(false);
+        }
+        if (iscurrentState !== "bannerad") {
+            setIsBannerAd(false);
         }
         if (iscurrentState !== "Program") {
             setIsProgram(false);
@@ -100,6 +104,7 @@ const Navdata = () => {
         IsPrayerRequest,
         isEventStaff,
         isEventShop,
+        isBannerAd,
     ]);
 
     const menuItems: any = [
@@ -117,6 +122,19 @@ const Navdata = () => {
                 e.preventDefault();
                 setIsDashboard(!isDashboard);
                 setIscurrentState("Dashboard");
+                updateIconSidebar(e);
+            },
+        },
+        {
+            id: "bannerad",
+            label: t('BannerAd'),
+            icon: "bx bx-store",
+            link: route("attendee.event.products"),
+            stateVariables: isDashboard,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsBannerAd(!isBannerAd);
+                setIscurrentState("bannerad");
                 updateIconSidebar(e);
             },
         },

@@ -27,7 +27,9 @@ use App\Http\Controllers\Attendee\ProfileController;
 use App\Http\Controllers\Attendee\QrCodeController;
 use App\Http\Controllers\Attendee\QuestionAttendeeController as AttendeeQuestionAttendeeController;
 use App\Http\Controllers\Attendee\WaitingListController;
+use App\Http\Controllers\Attendee\BannerAdController;
 use App\Http\Controllers\QuestionAttendeeController;
+
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->prefix('attendee')->group(function () {
@@ -82,7 +84,8 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::get('speakers/{eventSpeaker?}', [EventController::class, 'getEventSpeakerDetail'])->name('attendee.event.detail.speakers');
         Route::get('more', [EventController::class, 'getEventDetailMore'])->name('attendee.event.detail.more');
         Route::post('contact-form', [EventController::class, 'submitContectForm'])->name('attendee.event.detail.contact');
-
+        //Bnner Ads
+        Route::resource('banner-ads', BannerAdController::class);
         //Event Shop
         Route::get('products', [EventShopController::class, 'index'])->name('attendee.event.products');
         Route::post('puchase/product', [EventShopController::class, 'checkout'])->name('attendee.product.purchase');
