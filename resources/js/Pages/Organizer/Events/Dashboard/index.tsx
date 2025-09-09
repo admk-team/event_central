@@ -19,6 +19,7 @@ import HasPermission from "../../../../Components/HasPermission";
 import { router } from "@inertiajs/react";
 import { useEchoPublic } from "@laravel/echo-react";
 import toast, { Toaster } from 'react-hot-toast';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 const DashboardAnalytics = ({
     totalAttendee,
@@ -52,12 +53,13 @@ const DashboardAnalytics = ({
             );
         }
     });
+     const { t } = useLaravelReactI18n();
     return (
         <React.Fragment>
-            <Head title="Analytics " />
+            <Head title={t("analytics")} />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Analytics" pageTitle="Dashboards" />
+                    <BreadCrumb title={t("analytics")} pageTitle={t("dashboards")} />
                     <Row>
                         <Col xxl={12}>
                             {/* <UpgradeAccountNotise /> */}

@@ -3,12 +3,14 @@ import Layout from '../../../Layouts/Organizer';
 import { Head, router } from '@inertiajs/react';
 import { Col, Container, Row, Form, Button, Alert, Spinner } from 'react-bootstrap';
 import BreadCrumb2 from '../../../Components/Common/BreadCrumb2';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 const ZohoSyncPage = ({ events }: any) => {
     const [selectedEvent, setSelectedEvent] = useState('');
     const [module, setModule] = useState('Leads');
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState<any>(null);
+    const { t } = useLaravelReactI18n();
 
     const handleSync = () => {
         if (!selectedEvent) {
@@ -37,13 +39,13 @@ const ZohoSyncPage = ({ events }: any) => {
 
     return (
         <React.Fragment>
-            <Head title="Zoho CRM Sync" />
+            <Head title={t("Zoho CRM Sync")} />
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb2
-                        title="Zoho CRM Sync"
+                        title={t("Zoho CRM Sync")}
                         items={[
-                            { title: 'Settings', link: route('organizer.zoho.index') },
+                            { title: t("Settings"), link: route('organizer.zoho.index') },
 
                         ]}
                     />
@@ -51,12 +53,12 @@ const ZohoSyncPage = ({ events }: any) => {
                         <Col md={8}>
                             <div className="bg-white p-4 rounded shadow-sm">
                                 <Form.Group className="mb-3">
-                                    <Form.Label>Select Event</Form.Label>
+                                    <Form.Label>{t("Select Event")}</Form.Label>
                                     <Form.Select
                                         value={selectedEvent}
                                         onChange={(e) => setSelectedEvent(e.target.value)}
                                     >
-                                        <option value="">-- Select Event --</option>
+                                        <option value="">-- {t("Select Event")} --</option>
                                         {events.map((event: any) => (
                                             <option key={event.id} value={event.id}>
                                                 {event.name}
@@ -66,13 +68,13 @@ const ZohoSyncPage = ({ events }: any) => {
                                 </Form.Group>
 
                                 <Form.Group className="mb-3">
-                                    <Form.Label>Sync as</Form.Label>
+                                    <Form.Label>{t("Sync as")}</Form.Label>
                                     <Form.Select
                                         value={module}
                                         onChange={(e) => setModule(e.target.value)}
                                     >
-                                        <option value="Leads">Leads</option>
-                                        <option value="Contacts">Contacts</option>
+                                        <option value="Leads">{t('Leads')}</option>
+                                        <option value="Contacts">{t('Contacts')}</option>
                                     </Form.Select>
                                 </Form.Group>
 
@@ -84,7 +86,7 @@ const ZohoSyncPage = ({ events }: any) => {
                                     {loading ? (
                                         <Spinner animation="border" size="sm" />
                                     ) : (
-                                        'Sync Now'
+                                        t('Sync Now')
                                     )}
                                 </Button>
 

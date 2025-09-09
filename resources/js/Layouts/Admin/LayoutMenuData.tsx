@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import HasPermission from "../../Components/HasPermission";
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 const Navdata = () => {
     //state data
     const [isDashboard, setIsDashboard] = useState<boolean>(false);
@@ -9,19 +9,19 @@ const Navdata = () => {
     const [isPlatforms, setIsPlatforms] = useState<boolean>(false);
     const [isEventCategory, setIsEventCategory] = useState<boolean>(false);
     const [IsCountry, setIsCountry] = useState<boolean>(false);
-
+    const { t } = useLaravelReactI18n();
 
     const [iscurrentState, setIscurrentState] = useState<any>('Dashboard');
 
     function updateIconSidebar(e: any) {
         if (e && e.target && e.target.getAttribute("sub-items")) {
-            const ul : any = document.getElementById("two-column-menu");
-            const iconItems : any = ul.querySelectorAll(".nav-icon.active");
+            const ul: any = document.getElementById("two-column-menu");
+            const iconItems: any = ul.querySelectorAll(".nav-icon.active");
             let activeIconItems = [...iconItems];
             activeIconItems.forEach((item) => {
                 item.classList.remove("active");
                 var id = item.getAttribute("sub-items");
-                const getID : any = document.getElementById(id) as HTMLElement;
+                const getID: any = document.getElementById(id) as HTMLElement;
                 if (getID)
                     getID?.parentElement.classList.remove("show");
             });
@@ -60,12 +60,12 @@ const Navdata = () => {
 
     const menuItems: any = [
         {
-            label: "Menu",
+            label: t('Menu'),
             isHeader: true,
         },
         {
             id: "dashboard",
-            label: "Dashboards",
+            label: t('Dashboards'),
             icon: "bx bxs-dashboard",
             link: route('admin.dashboard'),
             stateVariables: isDashboard,
@@ -78,7 +78,7 @@ const Navdata = () => {
         },
         {
             id: "UserManagement",
-            label: "User Management",
+            label: t('User Management'),
             icon: "bx bxs-user",
             link: "/#",
             stateVariables: isUserManagement,
@@ -91,7 +91,7 @@ const Navdata = () => {
             subItems: [
                 {
                     id: "Users",
-                    label: "Users",
+                    label: t('Users'),
                     link: route('admin.users.index'),
                     parentId: "dashboard",
                     hasAnyPermission: [
@@ -103,7 +103,7 @@ const Navdata = () => {
                 },
                 {
                     id: "roles",
-                    label: "Roles",
+                    label: t('Roles'),
                     link: route('admin.roles.index'),
                     parentId: "dashboard",
                     hasAnyPermission: [
@@ -117,7 +117,7 @@ const Navdata = () => {
         },
         {
             id: "organizers",
-            label: "Organizers",
+            label: t('Organizers'),
             icon: "ri-group-fill",
             link: route('admin.organizers.index'),
             stateVariables: isOrganizers,
@@ -130,7 +130,7 @@ const Navdata = () => {
         },
         {
             id: "plateforms",
-            label: "Spaces & Rooms",
+            label: t('Spaces & Rooms'),
             icon: "bx bx-devices",
             link: route('admin.platforms.index'),
             stateVariables: isOrganizers,
@@ -143,7 +143,7 @@ const Navdata = () => {
         },
         {
             id: "eventcategory",
-            label: "Event Categories",
+            label: t('Event Categories'),
             icon: "bx bx-category-alt",
             link: route('admin.event-category.index'),
             stateVariables: isOrganizers,
@@ -156,7 +156,7 @@ const Navdata = () => {
         },
         {
             id: "countries",
-            label: "Countries",
+            label: t('Countries'),
             icon: "bx bx-globe",
             link: route('admin.countries'),
             stateVariables: isOrganizers,

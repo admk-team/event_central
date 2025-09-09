@@ -6,10 +6,10 @@ import { Head, Link } from '@inertiajs/react';
 import Layout from '../../Layouts/Attendee';
 import moment from 'moment';
 import EventSessionsTimeLine from './common/EventSessionsTimeLine';
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 const AttendeeAgenda = ({ eventApp, enableTracks, tracks, eventPlatforms }: any) => {
-
+  const { t } = useLaravelReactI18n();
     return (
         <React.Fragment>
             <Head title="Event Program" />
@@ -17,7 +17,7 @@ const AttendeeAgenda = ({ eventApp, enableTracks, tracks, eventPlatforms }: any)
                 <Container fluid>
                     <div className="d-flex justify-content-between align-items-center">
                         <div>
-                            <h5>Event Agenda</h5>
+                            <h5>{t("Event Agenda")}</h5>
                         </div>
                     </div>
 

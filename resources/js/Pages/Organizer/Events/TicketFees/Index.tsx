@@ -9,6 +9,7 @@ import DeleteModal from '../../../../Components/Common/DeleteModal';
 import DeleteManyModal from '../../../../Components/Common/DeleteManyModal';
 import HasPermission from '../../../../Components/HasPermission';
 import CreateEditModal from './CreateEditModal';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 
 function Index({ fees, getCurrency }: any) {
@@ -64,37 +65,38 @@ function Index({ fees, getCurrency }: any) {
         deleteManyForm.delete(route('organizer.events.ticket-fees.destroy.many'));
         setShowDeleteManyConfirmation(false);
     }
+      const { t } = useLaravelReactI18n();
 
 
     const columns: ColumnDef<typeof fees.data[0]> = [
         {
-            header: () => 'ID',
+            header: () => t('ID'),
             cell: (fee) => fee.id,
             cellClass: "fw-medium"
         },
         {
-            header: () => 'Name',
+            header: () => t('Name'),
             cell: (fee) => fee.name,
         },
         {
-            header: () => 'Description',
+            header: () => t('Description'),
             cell: (fee) => fee.description,
         },
         {
-            header: () => 'Fee Type',
+            header: () => t('Fee Type'),
             cell: (fee: any) => {
                 switch (fee.fee_type) {
                     case "flat":
-                        return (<span className="badge rounded-pill border border-success text-success text-uppercase"> Flat</span>);
+                        return (<span className="badge rounded-pill border border-success text-success text-uppercase"> {t("Flat")}</span>);
                     case "percentage":
-                        return (<span className="badge rounded-pill border border-info text-info text-uppercase"> Percentage</span>);
+                        return (<span className="badge rounded-pill border border-info text-info text-uppercase"> {t("Percentage")}</span>);
                     default:
-                        return (<span className="badge bg-danger-subtle  text-danger text-uppercase"> na</span>);
+                        return (<span className="badge bg-danger-subtle  text-danger text-uppercase"> {t("N/A")}</span>);
                 }
             },
         },
         {
-            header: () => <span className='d-block text-start' style={{ width: '50px' }}>Fee Value</span>,
+            header: () => <span className='d-block text-start' style={{ width: '50px' }}>{t("Fee Value")}</span>,
             cell: (fee) => {
                 switch (fee.fee_type) {
                     case "flat":
@@ -105,7 +107,7 @@ function Index({ fees, getCurrency }: any) {
             },
         },
         {
-            header: () => 'Action',
+            header: () => t('Action'),
             cell: (fee) => (
                 <div className="hstack gap-3 fs-15">
                     <HasPermission permission="edit_ticket_fee">
@@ -125,20 +127,20 @@ function Index({ fees, getCurrency }: any) {
             <Head title='Ticket Fees' />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Ticket Fees" pageTitle="Ticket Fees" />
+                    <BreadCrumb title={t("Ticket Fees")} pageTitle={t("Ticket Fees")} />
                     <Row>
                         <Col xs={12}>
                             <HasPermission permission="view_ticket_fee">
                                 <DataTable
                                     data={fees}
                                     columns={columns}
-                                    title="Fees"
+                                    title={t("Fees")}
                                     actions={[
                                         // Delete multiple
                                         {
                                             render: (dataTable) => (
                                                 <HasPermission permission="delete_ticket_fee">
-                                                    <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>
+                                                    <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> {t("Delete")} ({dataTable.getSelectedRows().length})</Button>
                                                 </HasPermission>
                                             ),
                                             showOnRowSelection: true,
@@ -148,7 +150,7 @@ function Index({ fees, getCurrency }: any) {
                                         {
                                             render: (
                                                 <HasPermission permission="create_ticket_fee">
-                                                    <Button onClick={() => setShowCreateEditModal(true)}><i className="ri-add-fill"></i> Add New</Button>
+                                                    <Button onClick={() => setShowCreateEditModal(true)}><i className="ri-add-fill"></i> {t("Add New")}</Button>
                                                 </HasPermission>
                                             )
                                         },

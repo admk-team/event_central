@@ -64,6 +64,10 @@
 <body>
     <div class="container">
         <div class="content">
+            <div class="header">
+                <img src="{{ asset($events->logo_img ?: 'images/logo.png') }}" alt="Logo">
+                <h1>Event Reminder</h1>
+            </div>
             <p>Hello
                 {{ $attendee->first_name ? $attendee->first_name : 'Guest' }},
             </p>
@@ -95,6 +99,10 @@
                 {{ $events->name }} Team
             </p>
 
+            <div class="footer">
+                If you received this email by mistake, please ignore it.<br>
+                &copy; {{ date('Y') }} {{ $events->name ?? 'Event Central' }}
+            </div>
         </div>
 </body>
 

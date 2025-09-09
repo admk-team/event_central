@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -84,16 +85,9 @@ Route::middleware('auth:attendee')->group(function () {
 });
 
 Route::get('test', function () {
-    $payment = AttendeePayment::find(213);
-    $payment->load('purchased_tickets.ticket.sessions');
-    $sessions = $payment->purchased_tickets->flatMap(function ($item) {
-        return $item->ticket->sessions;
-    });
-
-    // return $payment;
-    return $sessions->pluck('id');
-    //dd($payment);
-    // return Inertia::render('Test');
+    $pdf = Pdf::loadView('certificate.event-certificate')->setPaper('a4', 'landscape');;
+    return $pdf->download('certificate.pdf');
+    return view('certificate.event-certificate');
 });
 
 

@@ -128,6 +128,7 @@ class OrganizerPermissionsSeeder extends Seeder
 
         // Chat
         'view_chat',
+        'create_chat_room',
 
         // Referral links
         'view_referral_link',

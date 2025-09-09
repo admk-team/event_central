@@ -25,10 +25,11 @@ class EventSessionRequest extends FormRequest
             'start_time' => 'required',
             'end_time' => 'required',
             'qa_status' => 'boolean',
+            'enable_certificate' => 'boolean',
             'posts' => 'required',
             'tracks' => 'array',
             'rating_status' => 'boolean',
-            'price'=> 'nullable|numeric|min:0',
+            'price' => 'nullable|numeric|min:0',
         ];
     }
 }

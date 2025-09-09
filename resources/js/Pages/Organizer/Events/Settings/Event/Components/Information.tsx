@@ -1,15 +1,16 @@
 import { useForm, usePage } from '@inertiajs/react';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Card, CardBody, CardHeader, CardText, CardTitle, Form, FormGroup, Spinner, Row, Col, InputGroup } from 'react-bootstrap';
 import toast from 'react-hot-toast';
 import ImageCroper from "../../../../../../Components/ImageCroper/Index";
 import QuillEditor from '../../../../../../Components/Quill/QuillEditor';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 export default function Information() {
+    const { t } = useLaravelReactI18n();
     const event = usePage().props.event as Record<string, string>;
-    // console.log(event);
-    //for image croper
+
     const [showCropper, setShowCropper] = useState(false);
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
@@ -28,12 +29,11 @@ export default function Information() {
     const submit: React.FormEventHandler<HTMLFormElement> = (e) => {
         e.preventDefault();
         post(route('organizer.events.settings.event.info'));
-    }
+    };
 
-    const [preview, setPreview] = useState<any>(event.logo_img); // State to store the preview image URL
-    const [registrationPrivate, setRegistrationPrivate] = useState<any>(event.registration_private === 1); // State to store the preview image URL
+    const [preview, setPreview] = useState<any>(event.logo_img);
+    const [registrationPrivate, setRegistrationPrivate] = useState<any>(event.registration_private === 1);
 
-    // Handle file upload
     const handleImageChange = (e: any) => {
         const file = e.target.files[0];
         setSelectedImage(file);
@@ -57,26 +57,23 @@ export default function Information() {
             setData('registration_private', 0);
             setRegistrationPrivate(false);
         }
-    }
+    };
 
     const generateLink = () => {
         axios.get(route('organizer.events.settings.event.link')).then((response) => {
-            console.log(response);
             setData('registration_link', response.data.link);
-        }).finally(() => {
-
         });
-    }
+    };
 
     const CopyLink = (link: string) => {
         navigator.clipboard.writeText(link)
             .then(() => {
-                toast.success("Link Copied!");
+                toast.success(t("Link Copied!"));
             })
             .catch(() => {
-                toast.error("Failed to copy link");
+                toast.error(t("Failed to copy link"));
             });
-    }
+    };
 
     return (
         <>
@@ -84,8 +81,8 @@ export default function Information() {
                 <Card>
                     <CardHeader className="d-flex justify-content-between align-items-center gap-2">
                         <div>
-                            <CardTitle>Event information</CardTitle>
-                            <CardText>Edit the general information about your event.</CardText>
+                            <CardTitle>{t("Event information")}</CardTitle>
+                            <CardText>{t("Edit the general information about your event.")}</CardText>
                         </div>
                         <div>
                             <Button type="submit" disabled={processing}>
@@ -98,10 +95,10 @@ export default function Information() {
                                             role="status"
                                             aria-hidden="true"
                                         />
-                                        Saving
+                                        {t("Saving")}
                                     </span>
                                 ) : (
-                                    <span>Save</span>
+                                    <span>{t("Save")}</span>
                                 )}
                             </Button>
                         </div>
@@ -119,22 +116,22 @@ export default function Information() {
                                         width: '150px',
                                         height: '150px',
                                         background: preview ? `url(${preview}) no-repeat center center / cover` : '#ccc',
-                                        border: '2px dashed #dee2e6' // Optional: Dashed border for better UX
+                                        border: '2px dashed #dee2e6'
                                     }}
                                 >
                                     {!preview && (
                                         <span className="text-muted d-flex justify-content-center align-items-center h-100">
-                                            Click to Upload Logo
+                                            {t("Click to Upload Logo")}
                                         </span>
                                     )}
                                 </div>
                                 <Form.Control
                                     type="file"
                                     id="logo-upload"
-                                    className="d-none" // Hide the input but keep it functional
+                                    className="d-none"
                                     onChange={handleImageChange}
                                     isInvalid={!!errors.name}
-                                    accept="image/*" // Only accept image files
+                                    accept="image/*"
                                 />
                             </label>
                             {errors.name && (
@@ -142,7 +139,7 @@ export default function Information() {
                             )}
                         </FormGroup>
                         <FormGroup className="mb-3">
-                            <Form.Label className="form-label">Event Name</Form.Label>
+                            <Form.Label className="form-label">{t("Event Name")}</Form.Label>
                             <Form.Control
                                 type="text"
                                 className="form-control"
@@ -155,7 +152,7 @@ export default function Information() {
                             )}
                         </FormGroup>
                         <FormGroup className="mb-3">
-                            <Form.Label className="form-label">Event Tagline</Form.Label>
+                            <Form.Label className="form-label">{t("Event Tagline")}</Form.Label>
                             <Form.Control
                                 type="text"
                                 className="form-control"
@@ -168,33 +165,32 @@ export default function Information() {
                             )}
                         </FormGroup>
                         <FormGroup className="mb-3">
-                            <Form.Label className="form-label">Event Website Theme</Form.Label>
+                            <Form.Label className="form-label">{t("Event Website Theme")}</Form.Label>
                             <Form.Select
-                            className="form-control"
-                            value={data.custom_theme}
-                            onChange={(e) => setData({ ...data, custom_theme: e.target.value })}
-                            isInvalid={!!errors.custom_theme}
-                        >
-                            <option value="default">Default</option>
-                            <option value="design1">Design 1</option>
-                            <option value="design2">Design 2</option>
-                            <option value="design3">Design 3</option>
-                            <option value="design3">Design 4</option>
+                                className="form-control"
+                                value={data.custom_theme}
+                                onChange={(e) => setData({ ...data, custom_theme: e.target.value })}
+                                isInvalid={!!errors.custom_theme}
+                            >
+                                <option value="default">{t("Default")}</option>
+                                <option value="design1">{t("Design 1")}</option>
+                                <option value="design2">{t("Design 2")}</option>
+                                <option value="design3">{t("Design 3")}</option>
                             </Form.Select>
                             {errors.custom_theme && (
                                 <Form.Control.Feedback type="invalid">
                                     {errors.custom_theme}
                                 </Form.Control.Feedback>
                             )}
-                         </FormGroup>
+                        </FormGroup>
                         <FormGroup className="mb-3">
-                            <Form.Label className="form-label">Event Description</Form.Label>
+                            <Form.Label className="form-label">{t("Event Description")}</Form.Label>
                             <div className={!!errors.description ? "is-invalid" : ""}>
                                 <QuillEditor
-                                value={data.description}
-                                onChange={(val) => setData({ ...data, description: val })}
-                                placeholder="Enter description"
-                                className="form-control"
+                                    value={data.description}
+                                    onChange={(val) => setData({ ...data, description: val })}
+                                    placeholder={t("Enter description")}
+                                    className="form-control"
                                 />
                             </div>
                             {errors.description && (
@@ -202,7 +198,7 @@ export default function Information() {
                             )}
                         </FormGroup>
                         <FormGroup className="mb-3">
-                            <Form.Label className="form-label">Location</Form.Label>
+                            <Form.Label className="form-label">{t("Location")}</Form.Label>
                             <Form.Control
                                 type="text"
                                 className="form-control"
@@ -214,14 +210,13 @@ export default function Information() {
                                 <Form.Control.Feedback type="invalid">{errors.location_base}</Form.Control.Feedback>
                             )}
                         </FormGroup>
-                        <Row >
+                        <Row>
                             <Col md={3} lg={3} className='d-flex align-items-center'>
                                 <FormGroup>
-                                    {/* <Form.Label className="form-label">Registration Private</Form.Label> */}
                                     <Form.Check
                                         type='checkbox'
                                         checked={data.registration_private == 1}
-                                        label="Attendee will Register privately"
+                                        label={t("Attendee will Register privately")}
                                         id="select-all-features"
                                         onChange={handleCheckChangeRegistration}
                                     />
@@ -238,7 +233,12 @@ export default function Information() {
                                             onChange={(e) => setData('registration_link', e.target.value)}
                                             isInvalid={!!errors.registration_link}
                                         />
-                                        <Button variant="outline-secondary" id="button-copyLink" disabled={data.registration_link.length === 0} onClick={() => CopyLink(data.registration_link)}>
+                                        <Button
+                                            variant="outline-secondary"
+                                            id="button-copyLink"
+                                            disabled={data.registration_link.length === 0}
+                                            onClick={() => CopyLink(data.registration_link)}
+                                        >
                                             <i className='bx bx-copy'></i>
                                         </Button>
                                         <Form.Control.Feedback type="invalid">{errors.registration_link}</Form.Control.Feedback>
@@ -246,7 +246,7 @@ export default function Information() {
                                 </Col>
                                 <Col md={2} lg={2}>
                                     <Button type="button" onClick={generateLink}>
-                                        Generate Link
+                                        {t("Generate Link")}
                                     </Button>
                                 </Col>
                             </>}
@@ -262,5 +262,5 @@ export default function Information() {
                 onCrop={updateImagePreview}
             />
         </>
-    )
+    );
 }

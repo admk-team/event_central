@@ -4,7 +4,7 @@ import { router, usePage } from '@inertiajs/react';
 import Layout from '../../../../Layouts/Event';
 import { Button, Card, Col, Container, Form, Row, Spinner } from 'react-bootstrap';
 import axios from 'axios';
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 const Edit = ({ EmailTemplate, eventId }: any) => {
     const emailEditorRef = useRef<EditorRef>(null);
     const page = usePage();
@@ -13,7 +13,7 @@ const Edit = ({ EmailTemplate, eventId }: any) => {
     const [thumbnailUrl, setThumbnailUrl] = useState(EmailTemplate?.thumbnail || '');
     const [errorMessage, setErrorMessage] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
-
+    const { t } = useLaravelReactI18n();
     const [selectedShortcodes, setSelectedShortcodes] = useState<string[]>([]);
 
     const shortcodes = [
@@ -56,7 +56,7 @@ const Edit = ({ EmailTemplate, eventId }: any) => {
 
     const handleSubmit = async () => {
         if (!name) {
-            setErrorMessage('Name is required');
+            setErrorMessage(t('Name is required'));
             return;
         }
 
@@ -98,9 +98,9 @@ const Edit = ({ EmailTemplate, eventId }: any) => {
             router.visit(route('organizer.events.badge-template.index'));
         } catch (error: any) {
             if (error.response?.data?.errors) {
-                setErrorMessage(error.response.data.errors.name || 'Something went wrong');
+                setErrorMessage(error.response.data.errors.name || t('Something went wrong'));
             } else {
-                setErrorMessage('Failed to submit form.');
+                setErrorMessage(t('Failed to submit form.'));
             }
         } finally {
             setIsSubmitting(false);
@@ -111,15 +111,15 @@ const Edit = ({ EmailTemplate, eventId }: any) => {
         <Container fluid style={{ marginTop: '100px' }}>
             <Card>
                 <Card.Header className="d-flex justify-content-between align-items-center">
-                    <h5>Update Email Template</h5>
+                    <h5>{t('Update Email Template')}</h5>
                     <Button onClick={handleSubmit} disabled={isSubmitting}>
-                        {isSubmitting ? <Spinner size="sm" animation="border" /> : 'Update'}
+                        {isSubmitting ? <Spinner size="sm" animation="border" /> : t('Update')}
                     </Button>
                 </Card.Header>
                 <Card.Body>
                     <Row className="mb-4">
                         <Form.Group as={Col} md={6} className="mb-3">
-                            <Form.Label>Template Name</Form.Label>
+                            <Form.Label>{t('Template Name')}</Form.Label>
                             <Form.Control
                                 type="text"
                                 value={name}
@@ -129,14 +129,14 @@ const Edit = ({ EmailTemplate, eventId }: any) => {
                             <Form.Control.Feedback type="invalid">{errorMessage}</Form.Control.Feedback>
                         </Form.Group>
                         <Form.Group as={Col} md={6} className="mb-3">
-                            <Form.Label>Change Image</Form.Label>
+                            <Form.Label>{t('Change Image')}</Form.Label>
                             <Form.Control type="file" onChange={handleImageChange} />
                         </Form.Group>
                     </Row>
 
                     {/* Shortcode Selector */}
                     <Row className='mb-4 text-center'>
-                        <h4>Use below short codes to insert dynamic data in template</h4>
+                        <h4>{t('Use below short codes to insert dynamic data in template')}</h4>
                         <Row className="mt-3 w-100 m-0">
                             {shortcodes.map((item, idx) => (
                                 <Col

@@ -207,8 +207,10 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::resource('chat', ChatController::class);
             Route::get('get-chat/{id}', [ChatController::class, 'getMessages'])->name('get-messages');
             Route::get('private-chat/{id}', [ChatController::class, 'getOneToOneChat']);
+            Route::get('group-chat/{id}', [ChatController::class, 'getGroupChat']);
             Route::post('chat/mark-as-read/{id}', [ChatController::class, 'markAsRead']);
             Route::post('send-message', [ChatController::class, 'store']);
+            Route::post('chat-room', [ChatController::class, 'createRoom'])->name('chat.room');
 
             // Ticket Fees
             Route::resource('ticket-fees', EventAppFeeController::class)->only(['index', 'store', 'update', 'destroy']);
@@ -261,6 +263,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                     Route::post('after-event', [EventSettingsController::class, 'changeAfterEvent'])->name('after-event');
                     Route::post('follow-up-event', [EventSettingsController::class, 'followUpToggle'])->name('follow-up-event');
                     Route::post('close-open-registration/{event}', [EventSettingsController::class, 'closeOpenRegistration'])->name('close.open.registration');
+                    Route::get('remove-reminder-closer', [EventSettingsController::class, 'removeReminderDays'])->name('remove-reminder-closer');
                 });
 
                 // Payment

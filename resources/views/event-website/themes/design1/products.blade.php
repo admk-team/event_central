@@ -50,6 +50,17 @@
 
 
                                 </div>
+                                <div class="mb-2">
+                                    @if ($item->sizes)
+                                        <div class="sizes-wrapper">
+                                            @foreach ($item->sizes as $size)
+                                                <label class="size-badge">
+                                                    {{ $size }}
+                                                </label>
+                                            @endforeach
+                                        </div>
+                                    @endif
+                                </div>
                                 <a href="{{ route('attendee.register', $event) }}" class="btn btn-primary btn-buy">
                                     Register Now
                                 </a>

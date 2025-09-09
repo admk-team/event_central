@@ -7,70 +7,110 @@ import DataTable, { ColumnDef } from "../../../../../Components/DataTable";
 import CreateEditModal from "./Components/CreateEditModal";
 import DeleteModal from "../../../../../Components/Common/DeleteModal";
 import HasPermission from "../../../../../Components/HasPermission";
-const Index = ({ products }: any) => {
+import { useLaravelReactI18n } from "laravel-react-i18n";
+import { Badge } from "react-bootstrap";
 
+interface Product {
+    id: number;
+    name: string;
+    description: string;
+    price: number;
+    old_price: number;
+    stock: number;
+    sold_qty: number;
+    image_url: string;
+}
 
-    console.log(products);
+interface ProductsData {
+    data: Product[];
+}
+
+interface Props {
+    products: ProductsData;
+}
+
+const Index: React.FC<Props> = ({ products }) => {
+    const { t } = useLaravelReactI18n();
+
     const [showAddUpdateModal, setShowAddUpdateModal] = useState(false);
-    const [deleteProduct, setDeleteProduct] = React.useState<any>(null);
+    const [product, setProduct] = useState<Product | null>(null);
+    const [deleteProduct, setDeleteProduct] = useState<Product | null>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
-    const [product, setProduct] = useState(null);
 
-    const deleteForm = useForm({
-        _method: 'DELETE'
-    });
+    const deleteForm = useForm({ _method: "DELETE" });
 
-    const editAction = (product: any) => {
-        setProduct(product || null);
+    const editAction = (product: Product | null) => {
+        setProduct(product);
         setShowAddUpdateModal(true);
-    }
-    const deleteAction = (product: any) => {
+    };
+
+    const deleteAction = (product: Product) => {
         setDeleteProduct(product);
         setShowDeleteConfirmation(true);
-    }
+    };
+
     const handleDelete = () => {
+        if (deleteProduct) {
+            deleteForm.post(
+                route("organizer.events.products.destroy", deleteProduct.id)
+            );
+            setShowDeleteConfirmation(false);
+        }
+    };
 
-        deleteForm.post(route('organizer.events.products.destroy', deleteProduct.id));
-        setShowDeleteConfirmation(false);
-    }
-
-
-    const columns: ColumnDef<(typeof products.data)[0]> = [
+    const columns: ColumnDef<Product> = [
         {
-            header: () => 'Image',
-            headerStyle: { width: '90px' },
+            header: () => t("Image"),
+            headerStyle: { width: "90px" },
             cell: (product) => (
-                <img src={product.image_url} alt={product.name} width="50" height="50" className="rounded-circle" />
+                <img
+                    src={product.image_url}
+                    alt={product.name}
+                    width="50"
+                    height="50"
+                    className="rounded-circle"
+                />
             ),
         },
         {
-            header: () => "Name",
+            header: () => t("Name"),
             cell: (product) => product.name,
         },
         {
-            header: () => "Descrption",
+            header: () => t("Sizes"),
+            cell: (product) => (
+                <div className="d-flex flex-wrap gap-2">
+                    {product.sizes &&
+                        product.sizes.map((item: any, index: number) => (
+                            <Badge bg="primary" key={index} className="p-2">
+                                {item}
+                            </Badge>
+                        ))}
+                </div>
+            ),
+        },
+        {
+            header: () => t("Description"),
             cell: (product) => product.description,
-            cellStyle: { width: '300px', textWrap: 'wrap'},
         },
         {
-            header: () => "Price",
-            cell: (product) => product.price,
+            header: () => t("Price"),
+            cell: (product) => `$${product.price}`,
         },
         {
-            header: () => "Old Price",
-            cell: (product) => product.old_price,
+            header: () => t("Old Price"),
+            cell: (product) => `$${product.old_price}`,
         },
         {
-            header: () => "Stock",
+            header: () => t("Stock"),
             cell: (product) => product.stock,
         },
         {
-            header: () => "Sold",
+            header: () => t("Sold"),
             cell: (product) => product.sold_qty,
         },
-
         {
-            header: () => "Action",
+            header: () => t("Action"),
             cell: (product) => (
                 <div className="hstack gap-3 fs-15">
                     <HasPermission permission="edit_product">
@@ -78,7 +118,7 @@ const Index = ({ products }: any) => {
                             className="link-primary cursor-pointer"
                             onClick={() => editAction(product)}
                         >
-                            <i className="ri-edit-fill"></i>
+                            <i className="ri-edit-fill"></i> {t("Edit")}
                         </span>
                     </HasPermission>
 
@@ -87,7 +127,8 @@ const Index = ({ products }: any) => {
                             className="link-danger cursor-pointer"
                             onClick={() => deleteAction(product)}
                         >
-                            <i className="ri-delete-bin-5-line"></i>
+                            <i className="ri-delete-bin-5-line"></i>{" "}
+                            {t("Delete")}
                         </span>
                     </HasPermission>
                 </div>
@@ -97,40 +138,57 @@ const Index = ({ products }: any) => {
 
     return (
         <React.Fragment>
-            <Head title="Products" />
+            <Head title={t("Products")} />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Event Products" pageTitle="Dashboard" />
+                    <BreadCrumb
+                        title={t("Event Products")}
+                        pageTitle={t("Dashboard")}
+                    />
                     <Row>
                         <Col xs={12}>
                             <HasPermission permission="view_product">
                                 <DataTable
                                     data={products}
                                     columns={columns}
-                                    title="Products"
+                                    title={t("Products")}
                                     actions={[
-                                        // Delete multiple
                                         {
                                             render: (dataTable) => (
                                                 <HasPermission permission="delete_product">
-                                                    <Button className="btn-danger"
-                                                    // onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}
-                                                    ><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>
+                                                    <Button
+                                                        className="btn-danger"
+                                                        disabled={
+                                                            dataTable.getSelectedRows()
+                                                                .length === 0
+                                                        }
+                                                    >
+                                                        <i className="ri-delete-bin-5-line"></i>{" "}
+                                                        {t("Delete")} (
+                                                        {
+                                                            dataTable.getSelectedRows()
+                                                                .length
+                                                        }
+                                                        )
+                                                    </Button>
                                                 </HasPermission>
                                             ),
                                             showOnRowSelection: true,
                                         },
-
-                                        // Add new
                                         {
                                             render: (
                                                 <HasPermission permission="create_product">
-                                                    <Button onClick={() => editAction(null)} ><i className="ri-add-fill"></i> Add New</Button>
+                                                    <Button
+                                                        onClick={() =>
+                                                            editAction(null)
+                                                        }
+                                                    >
+                                                        <i className="ri-add-fill"></i>{" "}
+                                                        {t("Add New")}
+                                                    </Button>
                                                 </HasPermission>
-                                            )
-
+                                            ),
                                         },
-
                                     ]}
                                 />
                             </HasPermission>
@@ -144,10 +202,11 @@ const Index = ({ products }: any) => {
                 handleClose={() => setShowAddUpdateModal(false)}
                 product={product}
             />
+
             <DeleteModal
                 show={showDeleteConfirmation}
                 onDeleteClick={handleDelete}
-                onCloseClick={() => { setShowDeleteConfirmation(false) }}
+                onCloseClick={() => setShowDeleteConfirmation(false)}
             />
         </React.Fragment>
     );

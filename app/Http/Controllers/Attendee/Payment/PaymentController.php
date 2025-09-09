@@ -431,7 +431,7 @@ class PaymentController extends Controller
     {
         try {
             $attendee = auth()->user();
-            $attendee->load('payments.purchased_tickets');
+            $attendee->load(['payments.purchased_tickets.purchased_addons']);
             $attendee_purchased_tickets = [];
             foreach ($attendee->payments as $payment) {
                 foreach ($payment->purchased_tickets as $ticket)
@@ -607,6 +607,7 @@ class PaymentController extends Controller
         DB::beginTransaction();
         try {
             $attendee = Auth::user();
+            $eventApp = EventApp::find($attendee->event_app_id);
             $AttendeeTicket = AttendeePurchasedTickets::where('attendee_id', $attendee->id)
                 ->where('id', $id)
                 ->where('event_app_id', $attendee->event_app_id)
@@ -624,10 +625,12 @@ class PaymentController extends Controller
 
             foreach ($waiting_attendees as $waiting) {
                 $ticketUrl = url('/') . '/attendee' . '/' . $eventTicket->event_app_id . '/login';
-                if ($waiting->attendee?->email) {
+                if (!empty($waiting->attendee?->email)) {
                     Mail::to($waiting->attendee->email)->queue(
-                        new AvailableTicketMail($waiting->attendee, $eventTicket, $ticketUrl)
+                        new AvailableTicketMail($waiting->attendee, $eventTicket, $ticketUrl, $eventApp)
                     );
+                } else {
+                    Log::error("Attendee email missing for waiting ID: {$waiting->id}");
                 }
             }
 

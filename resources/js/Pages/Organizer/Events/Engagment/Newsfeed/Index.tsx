@@ -18,12 +18,14 @@ import { usePage } from "@inertiajs/react";
 import DeleteModal from "../../../../../Components/Common/DeleteModal";
 import EditModal from "./Component/EditModal";
 import HasPermission from "../../../../../Components/HasPermission";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 function Index({ newsfeeds, events, session_id }: any) {
     const [deletePost, setDeletePost] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showEditPost, setshowEditPost] = React.useState<any>(null);
     const [showEditModal, setshowEditModal] = React.useState<any>(false);
+    const { t } = useLaravelReactI18n();
 
     const deleteForm = useForm({
         _method: "DELETE",
@@ -49,7 +51,7 @@ function Index({ newsfeeds, events, session_id }: any) {
     return (
         <React.Fragment>
             <Head>
-                <title>Newsfeed | Organizer Dashboard</title>
+                <title>{t("Newsfeed | Organizer Dashboard")}</title>
                 <meta
                     name="description"
                     content="Manage event Newsfeeds, edit details, and delete records from the organizer's dashboard."
@@ -98,8 +100,7 @@ function Index({ newsfeeds, events, session_id }: any) {
                                 href={route("organizer.events.schedule.index")}
                                 className="btn btn-outline-primary"
                             >
-                                <i className="ri-arrow-left-line"></i> Back to
-                                Schedule
+                                <i className="ri-arrow-left-line"></i> {t("Back to Schedule")}
                             </Link>
                         </Col>
                     </Row>
@@ -133,7 +134,7 @@ function Index({ newsfeeds, events, session_id }: any) {
                                                             editPost={showEditPost}
                                                         />
                                                     </HasPermission>
-                                                    
+
                                                     <HasPermission permission="delete_posts">
                                                         <span
                                                             className="link-danger cursor-pointer"
@@ -265,9 +266,9 @@ function Index({ newsfeeds, events, session_id }: any) {
                                                                 );
                                                                 return (
                                                                     <p>
-                                                                        Error
-                                                                        loading poll
-                                                                        data
+                                                                        {t("Error")}
+                                                                        {t("loading poll")}
+                                                                        {t("data")}
                                                                     </p>
                                                                 );
                                                             }

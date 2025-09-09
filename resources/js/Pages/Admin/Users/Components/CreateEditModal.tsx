@@ -1,8 +1,10 @@
 import { useForm, usePage } from '@inertiajs/react';
 import { Form, FormGroup, Modal, Spinner } from "react-bootstrap";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 export default function CreateEditModal({ show, hide, onHide, user }: { show: boolean, hide: () => void, onHide: () => void, user: any|null }) {
     const isEdit = user != null ? true : false;
+      const { t } = useLaravelReactI18n();
 
     const roles = (usePage().props.roles ?? []) as any[];
 
@@ -39,17 +41,17 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
         <Modal show={show} onHide={onHide} centered>
             <Modal.Header className="bg-light p-3" closeButton>
                 <h5 className="modal-title">
-                    {isEdit ? 'Edit User' : 'Add User'}
+                    {isEdit ? t('Edit User') : t('Add User')}
                 </h5>
             </Modal.Header>
 
             <Form onSubmit={submit} className="tablelist-form">
                 <Modal.Body>
                     <FormGroup className="mb-3">
-                        <Form.Label className="form-label">Name</Form.Label>
-                        <Form.Control 
-                            type="text" 
-                            className="form-control" 
+                        <Form.Label className="form-label">{t("Name")}</Form.Label>
+                        <Form.Control
+                            type="text"
+                            className="form-control"
                             value={data.name}
                             onChange={(e) => setData({...data, name: e.target.value})}
                             isInvalid={!!errors.name}
@@ -59,9 +61,9 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                         )}
                     </FormGroup>
                     <FormGroup className="mb-3">
-                        <Form.Label className="form-label">Email</Form.Label>
-                        <Form.Control 
-                            type="email" 
+                        <Form.Label className="form-label">{t("Email")}</Form.Label>
+                        <Form.Control
+                            type="email"
                             className="form-control"
                             value={data.email}
                             onChange={(e) => setData({...data, email: e.target.value})}
@@ -72,9 +74,9 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                         )}
                     </FormGroup>
                     <FormGroup className="mb-3">
-                        <Form.Label className="form-label">Pasword</Form.Label>
-                        <Form.Control 
-                            type="password" 
+                        <Form.Label className="form-label">{t("Pasword")}</Form.Label>
+                        <Form.Control
+                            type="password"
                             className="form-control"
                             value={data.password}
                             onChange={(e) => setData({...data, password: e.target.value})}
@@ -85,14 +87,14 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                         )}
                     </FormGroup>
                     <FormGroup className="mb-3">
-                        <Form.Label className="form-label">Role</Form.Label>
-                        <Form.Select 
-                            className="form-control" 
+                        <Form.Label className="form-label">{t("Role")}</Form.Label>
+                        <Form.Select
+                            className="form-control"
                             value={data.role_id}
                             onChange={(e) => setData({...data, role_id: e.target.value})}
                             isInvalid={!!errors.role_id}
                         >
-                            <option>Select</option>
+                            <option>{t("Select")}</option>
                             {roles.map((role) => (
                                 <option value={role.id} key={role.id}>{role.name}</option>
                             ))}
@@ -109,7 +111,7 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                             className="btn btn-light"
                             onClick={hide}
                         >
-                            Close
+                            {t("Close")}
                         </button>
 
                         <button type="submit" className="btn btn-success" disabled={processing}>
@@ -122,10 +124,10 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                                         role="status"
                                         aria-hidden="true"
                                     />
-                                    {isEdit ? 'Updating': 'Creating'}
+                                    {isEdit ? t('Updating'): t('Creating')}
                                 </span>
                             ) : (
-                                <span>{isEdit ? 'Update': 'Create'}</span>
+                                <span>{isEdit ? t('Update'): t('Create')}</span>
                             )}
                         </button>
                     </div>

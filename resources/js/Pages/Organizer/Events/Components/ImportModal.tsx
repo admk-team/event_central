@@ -5,6 +5,7 @@ import readXlsxFile from 'read-excel-file'
 import Papa from 'papaparse';
 import Select from 'react-select';
 import { Button, Col, Form, FormGroup, Modal, Nav, Row, Spinner, Tab } from 'react-bootstrap';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 interface ImportModalProps {
     importAttendeesModal: boolean;
@@ -33,7 +34,7 @@ function ImportModal({
     const [attributeMapping, setAttributeMapping] = useState<Record<string, string>>({});
     const [hoveredCard, setHoveredCard] = useState<string | null>(null);
     const [processing, setProcessing] = useState<boolean | undefined>(false);
-
+    const { t } = useLaravelReactI18n();
 
     // styles for the import method cards
     const cardStyle = (isHovered: any) => ({
@@ -185,7 +186,7 @@ function ImportModal({
     return (
         <Modal className='modal-dialog-centered' size='lg' centered show={importAttendeesModal} onHide={() => showModal()} backdrop={'static'}>
             <Modal.Header>
-                <h5 className="modal-title text-capitalize" id="staticBackdropLabel">Import {importType}</h5>
+                <h5 className="modal-title text-capitalize" id="staticBackdropLabel">{t("Import")} {importType}</h5>
                 <Button type="button" className="btn-close"
                     onClick={() => {
                         showModal();
@@ -199,25 +200,25 @@ function ImportModal({
                                 <Nav.Item>
                                     <Nav.Link eventKey="1">
                                         <span className="border rounded-circle avatar-xs d-block mx-auto fs-5 mb-1 p-1">1</span>
-                                        Import Method
+                                        {t("Import Method")}
                                     </Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item>
                                     <Nav.Link eventKey="2" disabled={!method}>
                                         <span className="border rounded-circle avatar-xs d-block mx-auto fs-5 mb-1 p-1">2</span>
-                                        Upload Data
+                                       {t("Upload Data")}
                                     </Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item>
                                     <Nav.Link eventKey="3" disabled={!headers.length || !parsedData.length}>
                                         <span className="border rounded-circle avatar-xs d-block mx-auto fs-5 mb-1 p-1">3</span>
-                                        Map Attributes
+                                        {t("Map Attributes")}
                                     </Nav.Link>
                                 </Nav.Item>
                                 <Nav.Item>
                                     <Nav.Link eventKey="4" disabled={Object.keys(attributeMapping).length === 0}>
                                         <span className="border rounded-circle avatar-xs d-block mx-auto fs-5 mb-1 p-1">4</span>
-                                        Import Progress
+                                        {t("Import Progress")}
                                     </Nav.Link>
                                 </Nav.Item>
                             </Nav>
@@ -238,7 +239,7 @@ function ImportModal({
                                             <i className="ri-download-cloud-2-line d-block fs-20 mb-1"
                                                 style={contentStyle(hoveredCard === 'file')}>
                                             </i>
-                                            <span style={contentStyle(hoveredCard === 'file')}>Import from file</span>
+                                            <span style={contentStyle(hoveredCard === 'file')}>{t("Import from file")}</span>
                                         </div>
                                         <div
                                             className="card border px-2 py-4 p-md-5 rounded-4 w-50"
@@ -250,7 +251,7 @@ function ImportModal({
                                         >
                                             <i className="ri-file-edit-line d-block fs-20 mb-1" style={contentStyle(hoveredCard === 'manual')}>
                                             </i>
-                                            <span style={contentStyle(hoveredCard === 'manual')}>Import Manually</span>
+                                            <span style={contentStyle(hoveredCard === 'manual')}>{t("Import Manually")}</span>
                                         </div>
                                     </div>
                                 </Tab.Pane>
@@ -267,44 +268,44 @@ function ImportModal({
                                                 <i className="ri-download-cloud-2-line d-block fs-20 mb-1"
                                                     style={contentStyle(hoveredCard === 'file')}>
                                                 </i>
-                                                <span style={contentStyle(hoveredCard === 'file')}>Choose .csv, .xls, .xlsx file</span>
+                                                <span style={contentStyle(hoveredCard === 'file')}>{t("Choose .csv, .xls, .xlsx file")}</span>
                                                 <input type="file" name="importFile" id="importFile" style={{ display: 'none' }}
                                                     onChange={handleFileChange} accept=".csv,.xls,.xlsx" />
                                             </div>
                                             {invalidFileType && <Form.Control.Feedback type="invalid" className='d-block'>
-                                                Invalid File Type Selected, only *.csv, *.xls, *.xlsx files are allowed
+                                                {t("Invalid File Type Selected, only *.csv, *.xls, *.xlsx files are allowed")}
                                             </Form.Control.Feedback>}
                                             {chooseFile &&
                                                 <Row className='w-100 mb-3 mt-2'>
-                                                    <Col className='d-flex justify-content-start' md={3} lg={3}>Selected File : </Col>
+                                                    <Col className='d-flex justify-content-start' md={3} lg={3}>{t("Selected File:")}</Col>
                                                     <Col className='d-flex justify-content-start' md={9} lg={9}>{fileName}</Col>
                                                 </Row>
                                             }
                                             {enableHeaderCheckBox && <Row className='d-flex justify-content-start w-100 mb-3'>
                                                 <Col>
                                                     <Form.Check type="checkbox" id="first-row-contains-header" onChange={handleFirstRowContainsHeaderCheckBox}
-                                                        checked={firstRowHeader} label="First Row Contains Header" disabled={!enableHeaderCheckBox} />
+                                                        checked={firstRowHeader} label={t("First Row Contains Header")}disabled={!enableHeaderCheckBox} />
                                                 </Col>
                                             </Row>}
                                         </div>
                                     ) : (
                                         <>
                                             <div className="h6 text-start mb-0">
-                                                Enter {importType} information below the given attributes respectively, separated by commas.
+                                                {t("Enter")} {importType} {t("information below the given attributes respectively, separated by commas.")}
                                             </div>
-                                            <span className="text-muted fw-normal text-start">Please don't change the given attributes</span>
+                                            <span className="text-muted fw-normal text-start">{t("Please don't change the given attributes")}</span>
                                             <textarea className="border p-3 rounded-3 w-100 mt-3" cols={30} rows={8}
-                                                placeholder='e.g. name, email, phone number, position, location etc.'
+                                                placeholder={t('e.g. name, email, phone number, position, location etc.')}
                                                 onChange={(e) => setImportText(e.target.value)}
                                                 value={importText || ""}
                                             >
                                             </textarea>
                                         </>
                                     )}
-                                    <Button className="btn btn-success text-end" disabled={(!chooseFile && !importText) || invalidFileType} onClick={handleContinue}>Continue</Button>
+                                    <Button className="btn btn-success text-end" disabled={(!chooseFile && !importText) || invalidFileType} onClick={handleContinue}>{t("Continue")}</Button>
                                 </Tab.Pane>
                                 <Tab.Pane eventKey="3" id="custom-v-pills-messages">
-                                    <h6>Map Attributes</h6>
+                                    <h6>{t("Map Attributes")}</h6>
                                     <div className="card p-4">
                                         {headers?.map((header) => {
                                             // Get used attributes (excluding current header)
@@ -337,12 +338,12 @@ function ImportModal({
                                         onClick={() => setDefaultActiveKey("4")}
                                         disabled={Object.keys(attributeMapping).length === 0}
                                     >
-                                        Continue
+                                        {t("Continue")}
                                     </Button>
                                 </Tab.Pane>
                                 <Tab.Pane eventKey="4" id="custom-v-pills-messages">
-                                    <h6>Import Progress</h6>
-                                    <p className='my-5 py-5 fs-2'>Ready to import <span className="">{parsedData.length}</span> records.</p>
+                                    <h6>{t("Import Progress")}</h6>
+                                    <p className='my-5 py-5 fs-2'>{t("Ready to import ")}<span className="">{parsedData.length}</span> {t("records.")}</p>
 
                                     {/* <Button className="btn btn-success"  disabled={parsedData.length === 0}>
                                     </Button> */}
@@ -350,10 +351,10 @@ function ImportModal({
                                         {processing ? (
                                             <span className="d-flex gap-1 align-items-center">
                                                 <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
-                                                Start Import
+                                                {t("Start Import")}
                                             </span>
                                         ) : (
-                                            <span>Start Import</span>
+                                            <span>{t("Start Import")}</span>
                                         )}
                                     </button>
                                 </Tab.Pane>

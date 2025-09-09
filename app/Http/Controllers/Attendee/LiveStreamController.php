@@ -33,7 +33,9 @@ class LiveStreamController extends Controller
 
     public function joinLiveStreams($id)
     {
-        $join_live_stream = LiveStream::findOrFail($id);
+        $eventAppId = Auth::user()->event_app_id;
+
+        $join_live_stream = LiveStream::where('event_app_id',$eventAppId)->findOrFail($id);
 
         $playbackUrlParts = explode('/', $join_live_stream->playback_url);
         $playbackKey = $playbackUrlParts[count($playbackUrlParts) - 2];

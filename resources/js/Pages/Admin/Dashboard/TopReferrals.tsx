@@ -1,20 +1,22 @@
 import React from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 //import Images
 import illustrator from "../../../../images/illustrator-1.png";
-import { Link } from '@inertiajs/react';
 
 const TopReferrals = () => {
+    const { t } = useLaravelReactI18n();
+
     return (
         <React.Fragment>
             <Col xl={4} md={6}>
                 <Card className="card-height-100">
                     <Card.Header className="align-items-center d-flex">
-                        <h4 className="card-title mb-0 flex-grow-1">Top Referrals Pages</h4>
+                        <h4 className="card-title mb-0 flex-grow-1">{t("top_referrals_pages")}</h4>
                         <div className="flex-shrink-0">
                             <button type="button" className="btn btn-soft-primary btn-sm">
-                                Export Report
+                                {t("export_report")}
                             </button>
                         </div>
                     </Card.Header>
@@ -23,11 +25,13 @@ const TopReferrals = () => {
 
                         <Row className="align-items-center">
                             <Col xs={6}>
-                                <h6 className="text-muted text-uppercase fw-semibold text-truncate fs-12 mb-3">Total Referrals Page</h6>
+                                <h6 className="text-muted text-uppercase fw-semibold text-truncate fs-12 mb-3">{t("total_referrals_page")}</h6>
                                 <h4 className="fs- mb-0">725,800</h4>
-                                <p className="mb-0 mt-2 text-muted"><span className="badge bg-success-subtle text-success mb-0">
-                                    <i className="ri-arrow-up-line align-middle"></i> 15.72 %
-                                </span> vs. previous month</p>
+                                <p className="mb-0 mt-2 text-muted">
+                                    <span className="badge bg-success-subtle text-success mb-0">
+                                        <i className="ri-arrow-up-line align-middle"></i> 15.72 %
+                                    </span> {t("vs_previous_month")}
+                                </p>
                             </Col>
                             <Col xs={6}>
                                 <div className="text-center">
@@ -35,6 +39,7 @@ const TopReferrals = () => {
                                 </div>
                             </Col>
                         </Row>
+
                         <div className="mt-3 pt-2">
                             <div className="progress progress-lg rounded-pill">
                                 <div className="progress-bar bg-primary" role="progressbar" style={{ width: "25%" }} ></div>
@@ -80,7 +85,7 @@ const TopReferrals = () => {
                             </div>
                             <div className="d-flex">
                                 <div className="flex-grow-1">
-                                    <p className="text-truncate text-muted fs-14 mb-0"><i className="mdi mdi-circle align-middle text-danger me-2"></i>Other</p>
+                                    <p className="text-truncate text-muted fs-14 mb-0"><i className="mdi mdi-circle align-middle text-danger me-2"></i>{t("other")}</p>
                                 </div>
                                 <div className="flex-shrink-0">
                                     <p className="mb-0">17.58%</p>
@@ -89,7 +94,7 @@ const TopReferrals = () => {
                         </div>
 
                         <div className="mt-2 text-center">
-                            <Button variant='link' className="text-muted text-decoration-underline">Show All</Button>
+                            <Button variant='link' className="text-muted text-decoration-underline">{t("show_all")}</Button>
                         </div>
 
                     </Card.Body>

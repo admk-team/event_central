@@ -24,6 +24,7 @@ class EventProductRequest extends FormRequest
         return [
             'name'         => ['required', 'string', 'max:255'],
             'description'  => ['required', 'string'],
+            'sizes'  => ['required'],
             'price'        => ['required', 'numeric', 'min:0'],
             'old_price'    => ['nullable', 'numeric', 'min:0'],
             'stock'        => ['required', 'integer', 'min:0'],

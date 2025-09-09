@@ -5,6 +5,7 @@ import Layout from "../../../../../../Layouts/Event";
 import CheckInModal from "./Component/CheckInModal";
 import TicketAddonsModal from "./Component/TicketAddonsModal";
 import TicketExtrasModal from "./Component/TicketExtrasModal";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 const Profile = ({ attendee, user, sessions, tickets, sessionsPurchased }: any) => {
     console.log(tickets);
@@ -18,6 +19,7 @@ const Profile = ({ attendee, user, sessions, tickets, sessionsPurchased }: any) 
         setCurrentTicketId(ticketId);
         setShowAddonsModal(true);
     }
+    const { t } = useLaravelReactI18n();
 
 
     const handleShowExtraModal = (extras: any[]) => {
@@ -65,7 +67,7 @@ const Profile = ({ attendee, user, sessions, tickets, sessionsPurchased }: any) 
                                 <Row className="text text-white-50 text-center">
                                     <Col lg={12} xs={12}>
                                         <Button className="p-2 fw-bold" onClick={() => setShowModal(true)}>
-                                            Check In
+                                            {t("Check In")}
                                         </Button>
                                     </Col>
                                 </Row>
@@ -80,7 +82,7 @@ const Profile = ({ attendee, user, sessions, tickets, sessionsPurchased }: any) 
                                     <Card>
                                         <Card.Body>
                                             <h5 className="card-title mb-3">
-                                                Info
+                                                {t("Info")}
                                             </h5>
                                             <div className="table-responsive">
                                                 <Table className="table-borderless mb-0">
@@ -90,7 +92,7 @@ const Profile = ({ attendee, user, sessions, tickets, sessionsPurchased }: any) 
                                                                 className="ps-0"
                                                                 scope="row"
                                                             >
-                                                                Full Name :
+                                                                {t("Full Name")} :
                                                             </th>
                                                             <td className="text-muted">
                                                                 {
@@ -106,7 +108,7 @@ const Profile = ({ attendee, user, sessions, tickets, sessionsPurchased }: any) 
                                                                 className="ps-0"
                                                                 scope="row"
                                                             >
-                                                                Mobile :
+                                                                {t("Mobile")} :
                                                             </th>
                                                             <td className="text-muted">
                                                                 {user.phone ??
@@ -118,7 +120,7 @@ const Profile = ({ attendee, user, sessions, tickets, sessionsPurchased }: any) 
                                                                 className="ps-0"
                                                                 scope="row"
                                                             >
-                                                                E-mail :
+                                                                {t("E-mail")} :
                                                             </th>
                                                             <td className="text-muted">
                                                                 {user.email}
@@ -129,10 +131,10 @@ const Profile = ({ attendee, user, sessions, tickets, sessionsPurchased }: any) 
                                                                 className="ps-0"
                                                                 scope="row"
                                                             >
-                                                                Location :
+                                                                {t("Location")} :
                                                             </th>
                                                             <td className="text-muted">
-                                                                {user.location ?? 'N/A'}
+                                                                {user.location ?? t('N/A')}
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -140,10 +142,10 @@ const Profile = ({ attendee, user, sessions, tickets, sessionsPurchased }: any) 
                                                                 className="ps-0"
                                                                 scope="row"
                                                             >
-                                                                Joining Date
+                                                                {t("Joining Date")}
                                                             </th>
                                                             <td className="text-muted">
-                                                                {new Date(user.created_at).toLocaleString() ?? 'N/A'}
+                                                                {new Date(user.created_at).toLocaleString() ?? t('N/A')}
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -155,7 +157,7 @@ const Profile = ({ attendee, user, sessions, tickets, sessionsPurchased }: any) 
                                     <Card>
                                         <Card.Body>
                                             <h5 className="card-title mb-4">
-                                                Portfolio
+                                                {t("Portfolio")}
                                             </h5>
                                             <div className="d-flex flex-wrap gap-2">
                                                 <div>
@@ -176,7 +178,7 @@ const Profile = ({ attendee, user, sessions, tickets, sessionsPurchased }: any) 
                                                         target="_blank"
                                                     >
                                                         <span className="avatar-title rounded-circle fs-16 text-light" style={{ background: 'DodgerBlue' }}>
-                                                            <i className="ri-linkdin-fill fw-bold cursor-pointer">In</i>
+                                                            <i className="ri-linkdin-fill fw-bold cursor-pointer">{t("In")}</i>
                                                         </span>
                                                     </a>
                                                 </div>
@@ -210,7 +212,7 @@ const Profile = ({ attendee, user, sessions, tickets, sessionsPurchased }: any) 
                                 <Col xxl={9}>
                                     <Card>
                                         <Card.Body>
-                                            <h5 className="card-title mb-3">Other Information</h5>
+                                            <h5 className="card-title mb-3">{t("Other Information")}</h5>
                                             {attendee[0]?.field_values.length > 0 && attendee[0]?.form_fields.length > 0 ? (
                                                 attendee[0]?.form_fields.map((field: any, index: any) => {
                                                     let rawValue = attendee[0]?.field_values[index].value;
@@ -243,26 +245,26 @@ const Profile = ({ attendee, user, sessions, tickets, sessionsPurchased }: any) 
                                                     );
                                                 })
                                             ) : (
-                                                <p className="text-center">No Info available</p>
+                                                <p className="text-center">{t("No Info available")}</p>
                                             )}
 
                                         </Card.Body>
                                     </Card>
                                     <Card>
                                         <Card.Body>
-                                            <h5 className="card-title mb-3">Tickets</h5>
+                                            <h5 className="card-title mb-3">{t("Tickets")}</h5>
                                             <div className="table-responsive">
                                                 <Table className="table-striped table-nowrap align-middle mb-0">
                                                     <thead>
                                                         <tr>
-                                                            <th scope="col">Name</th>
-                                                            <th scope="col">Unit Price</th>
-                                                            <th scope="col">Total Price</th>
-                                                            <th scope="col">Quantity</th>
-                                                            <th scope="col">Type</th>
-                                                            <th scope="col">Status</th>
-                                                            <th scope="col">Addons</th>
-                                                            <th scope="col">Extra Services</th>
+                                                            <th scope="col">{t("Name")}</th>
+                                                            <th scope="col">{t("Unit Price")}</th>
+                                                            <th scope="col">{t("Total Price")}</th>
+                                                            <th scope="col">{t("Quantity")}</th>
+                                                            <th scope="col">{t("Type")}</th>
+                                                            <th scope="col">{t("Status")}</th>
+                                                            <th scope="col">{("Addons")}</th>
+                                                            <th scope="col">{t("Extra Services")}</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -277,7 +279,7 @@ const Profile = ({ attendee, user, sessions, tickets, sessionsPurchased }: any) 
                                                                     <td style={{ color: "#0d6efd" }}><i className="ri-checkbox-circle-line fs-17 align-middle"></i> Paid</td>
                                                                     <td>
                                                                         <Button variant="primary" onClick={(e) => handleShowAddonsModal(ticket.attendee_purchased_ticket_id)} size="sm" disabled={ticket.addons_count === 0}>
-                                                                            Addons ({ticket.addons_count})
+                                                                            {t("Addons")} ({ticket.addons_count})
                                                                         </Button>
 
                                                                     </td>
@@ -296,7 +298,7 @@ const Profile = ({ attendee, user, sessions, tickets, sessionsPurchased }: any) 
                                                                                     onClick={() => handleShowExtraModal(extraServices)}
                                                                                     disabled={extraServices.length === 0}
                                                                                 >
-                                                                                    {ticket.ticket_extra_service_name ?? "Extra Services"} ({extraServices.length})
+                                                                                    {ticket.ticket_extra_service_name ?? t("Extra Services")} ({extraServices.length})
                                                                                 </Button>
                                                                             );
                                                                         })()}
@@ -305,7 +307,7 @@ const Profile = ({ attendee, user, sessions, tickets, sessionsPurchased }: any) 
                                                             ))
                                                         ) : (
                                                             <tr>
-                                                                <td colSpan={5} className="text-center">No record found !!</td>
+                                                                <td colSpan={5} className="text-center">{t("No record found")}</td>
                                                             </tr>
                                                         )}
                                                     </tbody>
@@ -315,16 +317,16 @@ const Profile = ({ attendee, user, sessions, tickets, sessionsPurchased }: any) 
                                     </Card>
                                     <Card>
                                         <Card.Body>
-                                            <h5 className="card-title mb-3">Sessions</h5>
+                                            <h5 className="card-title mb-3">{t("Sessions")}</h5>
                                             <div className="table-responsive">
                                                 <Table className="table-striped table-nowrap align-middle mb-0">
                                                     <thead>
                                                         <tr>
-                                                            <th scope="col">Name</th>
-                                                            <th scope="col">Start Time</th>
-                                                            <th scope="col">End Time</th>
-                                                            <th scope="col">Check In</th>
-                                                            <th scope="col">Status</th>
+                                                            <th scope="col">{t("Name")}</th>
+                                                            <th scope="col">{t("Start Time")}</th>
+                                                            <th scope="col">{t("End Time")}</th>
+                                                            <th scope="col">{t("Check In")}</th>
+                                                            <th scope="col">{t("Status")}</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -344,7 +346,7 @@ const Profile = ({ attendee, user, sessions, tickets, sessionsPurchased }: any) 
                                                             ))
                                                         ) : (
                                                             <tr>
-                                                                <td colSpan={5} className="text-center">No record found !!</td>
+                                                                <td colSpan={5} className="text-center">{t("No record found")}</td>
                                                             </tr>
                                                         )}
                                                     </tbody>
