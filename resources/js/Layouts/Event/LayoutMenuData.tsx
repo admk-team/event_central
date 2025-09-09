@@ -8,6 +8,7 @@ const Navdata = () => {
 
     // State data
     const [isDashboard, setIsDashboard] = useState<boolean>(false);
+    const [isVenueManagement, setIsVenueManagement] = useState<boolean>(false);
     const [isContent, setIsContent] = useState<boolean>(false);
     const [isEventStore, setIsEventStore] = useState<boolean>(false);
     const [isEngagement, setIsEngagement] = useState<boolean>(false);
@@ -59,6 +60,7 @@ const Navdata = () => {
         document.body.classList.remove("twocolumn-panel");
         if (iscurrentState !== "Dashboard") setIsDashboard(false);
         if (iscurrentState !== "Event") setIsEvent(false);
+        if (iscurrentState !== "venueManagement") setIsVenueManagement(false);
         if (iscurrentState !== "Content") setIsContent(false);
         if (iscurrentState !== "EventShop") setIsEventStore(false);
         if (iscurrentState !== "Report") setIsContent(false);
@@ -91,6 +93,7 @@ const Navdata = () => {
         iscurrentState,
         isDashboard,
         isEvent,
+        isVenueManagement,
         isAttendees,
         isSettingsMenu,
         isForm,
@@ -161,6 +164,20 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
             hasPermissions: ["edit_events"],
+        },
+        {
+            id: "venueManagement",
+            label: t('Venue Management'),
+            icon: "bx bxs-calendar-event",
+            link: route("organizer.events.event-platforms.index"),
+            stateVariables: isVenueManagement,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsVenueManagement(!isVenueManagement);
+                setIscurrentState("venueManagement");
+                updateIconSidebar(e);
+            },
+            hasPermissions: ["view_locations"],
         },
         {
             id: "Content",
