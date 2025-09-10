@@ -121,7 +121,7 @@ class EventPlatformController extends Controller
             ]);
     
             if (! $response->successful()) {
-                throw new Exception('Failed');
+                throw new Exception($response->body());
             }
     
             $output = $response->json()['output'][0]['content'][0]['text'] ?? null;

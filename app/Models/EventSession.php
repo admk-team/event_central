@@ -22,6 +22,7 @@ class EventSession extends Model
         'description',
         'capacity',
         'current_capacity',
+        'sync_with_tickets',
         'start_time',
         'end_time',
         'qa_status',
@@ -30,6 +31,10 @@ class EventSession extends Model
         'posts',
         'rating_status',
         'price',
+    ];
+
+    protected $casts = [
+        'sync_with_tickets' => 'boolean',
     ];
 
     // Removed event_speaker_id from fillable since we're using a pivot table

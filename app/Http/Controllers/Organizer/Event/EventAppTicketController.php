@@ -37,6 +37,8 @@ class EventAppTicketController extends Controller
             return [
                 'value' => $session->id,
                 'label' => $session->name . ($session->tracks->count() > 0 ? " | {$session->tracks[0]->name}" : ''),
+                'capacity' => $session->capacity,
+                'sync_with_tickets' => $session->sync_with_tickets,
             ];
         });
         $event_ticket_type = EventTicketType::where('event_app_id', session('event_id'))->latest()->get();

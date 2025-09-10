@@ -66,7 +66,6 @@ export default function CreateEditModal({
             // expects array of { name, quantity }
             extra_services: ticket?.extra_services ?? [],
         });
-    console.log('error',errors)
 
     const [selectMulti, setselectMulti] = useState<any>(
         ticket?.selected_sessions ?? null
@@ -242,6 +241,11 @@ export default function CreateEditModal({
     };
           const { t } = useLaravelReactI18n();
 
+    // Determine if any selected session has sync_with_tickets true
+    const ticketShouldBeSynced = data.sessions.some((session: any) => session.sync_with_tickets);
+    // If ticket should be synced, ensure all sessions have same capacity, otherwise tickets cannot be synced
+    const ticketCannotBeSynced = data.sessions.some((session: any) => session.capacity !== data.sessions[0].capacity);
+    
     return (
         <>
             <Modal show={show} onHide={onHide} centered size="lg">
@@ -519,6 +523,11 @@ export default function CreateEditModal({
                                     {errors.sessions && (
                                         <Form.Control.Feedback type="invalid">
                                             {errors.sessions}
+                                        </Form.Control.Feedback>
+                                    )}
+                                    {ticketShouldBeSynced && ticketCannotBeSynced && (
+                                        <Form.Control.Feedback type="invalid" className="d-block">
+                                            {t("Selected sessions have different capacities. Ticket cannot be synced.")}
                                         </Form.Control.Feedback>
                                     )}
                                 </FormGroup>
