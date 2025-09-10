@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Attendee;
 
 use App\Http\Controllers\Controller;
+use App\Models\BannerAd;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class BannerAdController extends Controller
 {
@@ -12,7 +15,11 @@ class BannerAdController extends Controller
      */
     public function index()
     {
-        //
+        $user = Auth::user();
+        $eventAppId = $user->event_app_id;
+        $attendeeId = $user->id;
+        $bannerad=BannerAd::where('event_app_id', $eventAppId)->where('attendee_id', $attendeeId);
+
     }
 
     /**

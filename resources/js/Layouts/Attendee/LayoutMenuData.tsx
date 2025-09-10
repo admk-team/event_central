@@ -127,9 +127,9 @@ const Navdata = () => {
         },
         {
             id: "bannerad",
-            label: t('BannerAd'),
+            label: t('Banner Ad'),
             icon: "bx bx-store",
-            link: route("attendee.event.products"),
+            link: route("banner-ads.index"),
             stateVariables: isDashboard,
             click: function (e: any) {
                 e.preventDefault();
