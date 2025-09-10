@@ -9,6 +9,7 @@ use App\Http\Controllers\Attendee\Auth\PasswordController;
 use App\Http\Controllers\Attendee\Auth\RegisteredUserController;
 use App\Http\Controllers\Attendee\BadgeAchievementController;
 use App\Http\Controllers\Attendee\ChatController;
+use App\Http\Controllers\Attendee\EventBoothController;
 use App\Http\Controllers\Attendee\EventCalendarController;
 use App\Http\Controllers\Attendee\EventController;
 use App\Http\Controllers\Attendee\EventSessionController;
@@ -200,6 +201,15 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
 
     Route::get('/streams/index', [LiveStreamController::class, 'index'])->name('stream.index');
     Route::get('/join/stream/{id}', [LiveStreamController::class, 'joinLiveStreams'])->name('join.live.streams');
+
+    // List booths
+    Route::get('booths', [EventBoothController::class, 'index'])->name('attendee.event.booths');
+    Route::get('booths/checkout/{booth}', [EventBoothController::class, 'checkoutPage'])->name('attendee.booth.checkout');
+    // Frontend posts here after Stripe confirms payment (like product.update)
+
+    Route::post('booths/update/{booth}', [EventBoothController::class, 'updateBooth'])->name('attendee.booth.update');
+    Route::get('/boothss/checkouts/success', [EventBoothController::class, 'successView'])->name('attendee.booth.checkout.success');
+    Route::get('boothss/checkouts/cancel',  [EventBoothController::class, 'paymentCancel'])->name('attendee.booth.checkout.cancel');
 });
 
 // Event questionnaire Form For Web
