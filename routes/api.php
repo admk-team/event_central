@@ -143,9 +143,10 @@ Route::prefix('user')->group(function () {
         Route::get('/chat/{event}', [OrganizerChatController::class, 'index']);
         Route::get('/chat/messages/{event}', [OrganizerChatController::class, 'getMessages']);
         Route::get('/chat/one-to-one/{participant_id}/{event}', [OrganizerChatController::class, 'getOneToOneChat']);
+        Route::get('/group-chat/{id}/{event}', [OrganizerChatController::class, 'getGroupChat']);
         Route::post('/chat/send/{event}', [OrganizerChatController::class, 'store']);
         Route::post('/chat/mark-as-read/{chatWithUserId}/{event}', [OrganizerChatController::class, 'markAsRead']);
-
+        Route::post('/create/chat-room/{event}', [OrganizerChatController::class, 'createRoom']);
         // Event Store
         Route::get('/products/{event}', [ProductController::class, 'index']);
         Route::post('/products/{event}', [ProductController::class, 'store']);
@@ -251,6 +252,7 @@ Route::prefix('attendee')->group(function () {
         Route::get('/chat/{event}', [ChatController::class, 'index']);
         Route::get('/chat/messages/{event}', [ChatController::class, 'getMessages']);
         Route::get('/chat/one-to-one/{participant_id}/{event}', [ChatController::class, 'getOneToOneChat']);
+        Route::get('/group-chat/{id}/{event}', [ChatController::class, 'getGroupChat']);
         Route::post('/chat/send/{event}', [ChatController::class, 'store']);
         Route::post('/chat/mark-as-read/{chatWithUserId}/{event}', [ChatController::class, 'markAsRead']);
         // Friend Request
