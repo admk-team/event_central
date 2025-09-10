@@ -187,7 +187,7 @@
 
             <div class="description">
                 Awarded to acknowledge your participation in "{{ $event_name }}" and its session "{{ $session_name }}"
-                held on {{ $start_date }}, appreciating your commitment to growth, learning, and contribution
+                held on {{  \Carbon\Carbon::parse($start_date)->format('F d, Y') }}, appreciating your commitment to growth, learning, and contribution
                 toward excellence in the field of digital marketing.
             </div>
 
