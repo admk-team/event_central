@@ -3,11 +3,14 @@ import { Head } from "@inertiajs/react";
 import React from "react";
 import Layout from "../../../../Layouts/Attendee";
 import { Card, CardBody, Col, Container, Row } from "react-bootstrap";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 const PaymentCancel = () => {
+  const { t } = useLaravelReactI18n();
+
   return (
     <>
-      <Head title="Payment Canceled" />
+      <Head title={t("Payment Canceled")} />
       <section className="section bg-light mt-4" id="success">
         <div className="bg-overlay bg-overlay-pattern"></div>
         <Container>
@@ -18,7 +21,7 @@ const PaymentCancel = () => {
                   <div className="d-flex justify-content-center align-items-center" style={{ height: "300px" }}>
                     <div>
                       <span className="fs-2">
-                        Payment was cancelled. <i className="bx bx-smile text-primary"></i>
+                        {t("Payment was cancelled.")} <i className="bx bx-smile text-primary"></i>
                       </span>
                     </div>
                   </div>

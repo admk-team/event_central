@@ -4,10 +4,12 @@ import { Head, Link, router } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
 import Layout from "../../../../Layouts/Attendee";
 import { Card, CardBody, Col, Container, Row } from "react-bootstrap";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 const PaymentSuccess = () => {
   const [secondsLeft, setSecondsLeft] = useState(5);
   const redirectRoute = route("attendee.event.booths");
+  const { t } = useLaravelReactI18n();
 
   useEffect(() => {
     const countdown = setInterval(() => {
@@ -25,7 +27,7 @@ const PaymentSuccess = () => {
 
   return (
     <>
-      <Head title="Booth Checkout" />
+      <Head title={t("Booth Checkout")} />
       <section className="section bg-light mt-4" id="success">
         <div className="bg-overlay bg-overlay-pattern"></div>
         <Container>
@@ -36,15 +38,21 @@ const PaymentSuccess = () => {
                   <div className="d-flex justify-content-center align-items-center" style={{ height: "300px" }}>
                     <div className="d-flex justify-content-center align-items-center flex-column">
                       <i className="bx bxs-check-circle" style={{ fontSize: "50px", color: "green" }}></i>
-                      <span className="fs-3 text-green p-4 text-center">Checkout was processed successfully</span>
+                      <span className="fs-3 text-green p-4 text-center">
+                        {t("Checkout was processed successfully")}
+                      </span>
                       {secondsLeft > 0 ? (
                         <p className="text-muted text-center">
-                          Redirecting in <strong>{secondsLeft}</strong> second{secondsLeft !== 1 && "s"}...
+                          {t("Redirecting in")} <strong>{secondsLeft}</strong>{" "}
+                          {secondsLeft === 1 ? t("second") : t("seconds")}...
                         </p>
                       ) : (
                         <p className="text-muted text-center">
-                          Redirecting now... If you are not redirected,{" "}
-                          <Link href={redirectRoute} className="text-primary">click here</Link>.
+                          {t("Redirecting now... If you are not redirected, ")}
+                          <Link href={redirectRoute} className="text-primary">
+                            {t("click here")}
+                          </Link>
+                          .
                         </p>
                       )}
                     </div>

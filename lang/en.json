@@ -1160,5 +1160,20 @@
     "Booth": "Booth",
     "Sponsor Ad": "Sponsor Ad",
     "Banner": "Banner",
-    "Buy Now": "Buy Now"
+    "Buy Now": "Buy Now",
+    "Edit Booth / Sponsor Ad / Banner": "Edit Booth / Sponsor Ad / Banner",
+    "Add Booth / Sponsor Ad/ Banner": "Add Booth / Sponsor Ad/ Banner",
+    "Sponsorship": "Sponsorship",
+    "Processing...": "Processing...",
+    "Unable to finalize booth assignment.": "Unable to finalize booth assignment.",
+    "An unexpected error occurred.": "An unexpected error occurred.",
+    "Booth Checkout": "Booth Checkout",
+    "Checkout was processed successfully": "Checkout was processed successfully",
+    "Redirecting in": "Redirecting in",
+    "second": "second",
+    "seconds": "seconds",
+    "Redirecting now... If you are not redirected, ": "Redirecting now... If you are not redirected, ",
+    "click here": "click here",
+    "Payment Canceled": "Payment Canceled",
+    "Payment was cancelled.": "Payment was cancelled."
 }

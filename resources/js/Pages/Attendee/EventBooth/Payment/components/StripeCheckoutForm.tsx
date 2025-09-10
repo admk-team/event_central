@@ -5,10 +5,12 @@ import { useStripe, useElements } from "@stripe/react-stripe-js";
 import { Button, Spinner } from "react-bootstrap";
 import axios from "axios";
 import { router } from "@inertiajs/react";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 export default function CheckoutForm({ payment, currency, getCurrency }: any) {
   const stripe = useStripe();
   const elements = useElements();
+  const { t } = useLaravelReactI18n();
 
   const [message, setMessage] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
@@ -23,14 +25,12 @@ export default function CheckoutForm({ payment, currency, getCurrency }: any) {
       .confirmPayment({
         elements,
         confirmParams: {
-          // booth success page
           return_url: route("attendee.booth.checkout.success"),
         },
         redirect: "if_required",
       })
       .then((result) => {
         if (!result.error) {
-          // same pattern as product: call update endpoint and then go to success page
           const payment_update_url = route("attendee.booth.update", payment.id);
           const payment_success_url = route("attendee.booth.checkout.success");
 
@@ -41,14 +41,14 @@ export default function CheckoutForm({ payment, currency, getCurrency }: any) {
             })
             .catch((errorPost) => {
               console.error(errorPost);
-              setMessage("Unable to finalize booth assignment.");
+              setMessage(t("Unable to finalize booth assignment."));
             })
             .finally(() => setIsProcessing(false));
         } else {
           if (result.error.type === "card_error" || result.error.type === "validation_error") {
             setMessage(result.error.message as string);
           } else {
-            setMessage("An unexpected error occured.");
+            setMessage(t("An unexpected error occurred."));
           }
           setIsProcessing(false);
         }
@@ -62,7 +62,7 @@ export default function CheckoutForm({ payment, currency, getCurrency }: any) {
       {!(stripe && elements) && (
         <div className="d-flex justify-content-center mt-3">
           <Spinner animation="border" role="status">
-            <span className="visually-hidden">Loading...</span>
+            <span className="visually-hidden">{t("Loading...")}</span>
           </Spinner>
         </div>
       )}
@@ -71,7 +71,7 @@ export default function CheckoutForm({ payment, currency, getCurrency }: any) {
         {stripe && elements && (
           <Button className="mt-3 btn btn-success mt-2 w-75 rounded-pill" disabled={isProcessing} type="submit">
             <span id="button-text">
-              {isProcessing ? "Processing ... " : getCurrency + " " + payment.total_amount}
+              {isProcessing ? t("Processing...") : `${getCurrency} ${payment.total_amount}`}
             </span>
           </Button>
         )}
