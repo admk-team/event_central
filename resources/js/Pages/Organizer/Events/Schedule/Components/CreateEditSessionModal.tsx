@@ -81,7 +81,8 @@ export default function CreateEditSessionModal({
     event_date_id: selectedDate?.id,
     type: eventSession?.type ?? "Session",
     description: eventSession?.description ?? "",
-    capacity: eventSession?.capacity ?? "",
+    capacity: eventSession?.capacity ?? (selectedPlatform?.seats && selectedPlatform.seats > 0 ? selectedPlatform.seats : ""),
+    sync_with_tickets: eventSession?.sync_with_tickets ?? false,
     start_time: eventSession?.start_time ?? "00:00",
     end_time: eventSession?.end_time ?? "00:00",
     qa_status: eventSession?.qa_status ?? 0,
@@ -327,7 +328,20 @@ export default function CreateEditSessionModal({
 
           {(data.type === "Session" || data.type === "Workshop") && (
             <FormGroup className="mb-3">
-              <Form.Label>{t("Capacity")}</Form.Label>
+              <Form.Label className="form-label d-flex justify-content-between align-items-center">
+                <div>{t("Capacity")}</div>
+                <div className="form-check form-switch mb-0">
+                  <Form.Check.Input
+                      className="form-check-input"
+                      type="checkbox"
+                      role="switch"
+                      id="selectAllEvents"
+                      checked={data.sync_with_tickets}
+                      onChange={(e) => setData("sync_with_tickets", e.target.checked)}
+                  />
+                  <Form.Check.Label className="form-check-label" htmlFor="selectAllEvents">{t("Sync With Tickets")}</Form.Check.Label>
+                </div>
+              </Form.Label>
               <Form.Control
                 type="number"
                 value={data.capacity}

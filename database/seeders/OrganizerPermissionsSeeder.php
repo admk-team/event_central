@@ -197,6 +197,12 @@ class OrganizerPermissionsSeeder extends Seeder
 
         //demo graphic detail
         'view_demographic_detail',
+
+        //Event booth
+        'view_event_booth',
+        'create_event_booth',
+        'edit_event_booth',
+        'delete_event_booth',
     ];
 
     public function run(): void
