@@ -35,7 +35,7 @@ class EventAppTicket extends Model
 
     protected $casts = [
         'show_on_attendee_side' => 'boolean',
-        'extra_services' => 'json'
+        'extra_services' => 'json',
     ];
 
     //Being used by Select2 in Ticket Create/Edit Model
@@ -77,7 +77,7 @@ class EventAppTicket extends Model
 
     public function getSelectedSessionsAttribute()
     {
-        return $this->sessions()->select(['id as value', 'name as label'])->get();
+        return $this->sessions()->select(['id as value', 'name as label', 'capacity', 'sync_with_tickets'])->get();
     }
 
     public function getTotalRevenueAttribute()

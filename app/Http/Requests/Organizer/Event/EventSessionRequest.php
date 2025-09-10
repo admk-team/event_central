@@ -22,6 +22,7 @@ class EventSessionRequest extends FormRequest
             'type' => 'required|in:Session,Workshop,Break',
             'description' => 'nullable|string',
             'capacity' => 'nullable|integer|min:1',
+            'sync_with_tickets' => 'boolean',
             'start_time' => 'required',
             'end_time' => 'required',
             'qa_status' => 'boolean',
