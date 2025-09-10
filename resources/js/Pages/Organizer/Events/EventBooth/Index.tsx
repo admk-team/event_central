@@ -65,7 +65,7 @@ function Index({ data, attendees }: { data: any; attendees: Attendee[] }) {
       header: () => t("Logo"),
       cell: (r) =>
         r.logo ? (
-          <img src={`/storage/${r.logo}`} alt={r.name} style={{ width: 32, height: 32 }} />
+          <img src={`/storage/${r.logo}`} alt={r.name} style={{ height: 32 }} />
         ) : (
           t("No Logo")
         ),
