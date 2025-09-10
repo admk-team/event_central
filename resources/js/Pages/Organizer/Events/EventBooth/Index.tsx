@@ -62,7 +62,7 @@ function Index({ data, attendees }: { data: any; attendees: Attendee[] }) {
     { accessorKey: "name", header: () => t("Name"), cell: (r) => r.name, enableSorting: true },
     {
       accessorKey: "logo",
-      header: () => t("Logo"),
+      header: () => t("Poster"),
       cell: (r) =>
         r.logo ? (
           <img src={`/storage/${r.logo}`} alt={r.name} style={{ height: 32 }} />
