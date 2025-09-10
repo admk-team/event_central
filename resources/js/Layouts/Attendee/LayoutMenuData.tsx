@@ -20,6 +20,7 @@ const Navdata = () => {
     const [isFriend, setIsFriend] = useState<boolean>(false);
     const [isEventStaff, setIsEventStaff] = useState<boolean>(false);
     const [isEventShop, setIsEventShop] = useState<boolean>(false);
+    const [isEventBooth, setIsEventBooth] = useState<boolean>(false);
     const { t } = useLaravelReactI18n();
     const [iscurrentState, setIscurrentState] = useState<any>("Dashboard");
     // const [IsQA, setIsQA] = useState<boolean>(false);
@@ -79,6 +80,9 @@ const Navdata = () => {
         if (iscurrentState !== "eventShop") {
             setIsEventShop(false);
         }
+         if (iscurrentState !== "eventBooth") {
+            setIsEventBooth(false);
+        }
         // if (iscurrentState !== "Q&A") {
         //     setIsQA(false);
         // }
@@ -100,6 +104,7 @@ const Navdata = () => {
         IsPrayerRequest,
         isEventStaff,
         isEventShop,
+        isEventBooth
     ]);
 
     const menuItems: any = [
@@ -130,6 +135,19 @@ const Navdata = () => {
                 e.preventDefault();
                 setIsEventShop(!isEventShop);
                 setIscurrentState("eventShop");
+                updateIconSidebar(e);
+            },
+        },
+          {
+            id: "eventBooth",
+            label: t('Sponsorship'),
+            icon: "bx bx-gift",
+            link: route("attendee.event.booths"),
+            stateVariables: isDashboard,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsEventBooth(!isEventBooth);
+                setIscurrentState("eventBooth");
                 updateIconSidebar(e);
             },
         },

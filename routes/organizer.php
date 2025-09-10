@@ -47,6 +47,7 @@ use App\Http\Controllers\Organizer\Event\EventTicketTypeController;
 use App\Http\Controllers\Organizer\Event\SessionAttendanceController;
 use App\Http\Controllers\Organizer\Event\EventStore\ProductController;
 use App\Http\Controllers\Organizer\Event\Engagement\NewsfeedController;
+use App\Http\Controllers\Organizer\Event\EventBoothController;
 use App\Http\Controllers\Organizer\Event\EventPartnerCategoryController;
 use App\Http\Controllers\Organizer\Settings\LiveStreamSettingController;
 use App\Http\Controllers\Organizer\Event\EventStore\EventOrderController;
@@ -421,4 +422,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
     Route::post('/private-registration/send', [PrivateRegistrationViaEmailController::class, 'send'])->name('private-registration.send');
     Route::delete('prayer-requests/{id}', [PrivateRegistrationViaEmailController::class, 'destroy'])->name('private-registration.destroy');
     Route::delete('prayer-requests/delete/many', [PrivateRegistrationViaEmailController::class, 'destroyMany'])->name('private-registration.destroy.many');
+    // event booths
+    Route::resource('booths', EventBoothController::class);
+    Route::delete('booths/delete/many', [EventBoothController::class, 'destroyMany'])->name('booths.destroy.many');
 });

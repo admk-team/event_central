@@ -202,6 +202,7 @@ const Navdata = () => {
                     parentId: "Content",
                     hasPermissions: ["view_partner"],
                 },
+                
             ],
         },
         {
@@ -232,6 +233,14 @@ const Navdata = () => {
                     parentId: "EventShop",
                     hasPermissions: ["view_orders"],
                 },
+                 {
+                    id: "booth",
+                    label: t('Sponsorship'),
+                    link: route("organizer.booths.index"), // pass eventApp UUID or ID here
+                    parentId: "Content",
+                    hasPermissions: ["view_event_booth"],
+                },
+                
             ],
         },
         {
