@@ -12,6 +12,7 @@ export default function CreateEditEventPlatformModal({ show, hide, onHide, event
         _method: isEdit ? "PUT" : "POST",
         name: eventPlatform?.name ?? '',
         type: eventPlatform?.type ?? '',
+        seats: eventPlatform?.seats ?? '',
     });
 
     const submit = (e: any) => {
@@ -80,7 +81,21 @@ export default function CreateEditEventPlatformModal({ show, hide, onHide, event
                             <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
                         )}
                     </FormGroup>
-
+                    <FormGroup className="mb-3">
+                        <Form.Label className="form-label">{data.type} {t("Seats")}</Form.Label>
+                        <Form.Control
+                            type="number"
+                            min={0}
+                            step={1}
+                            className="form-control"
+                            value={data.seats}
+                            onChange={(e) => setData({ ...data, seats: e.target.value })}
+                            isInvalid={!!errors.seats}
+                        />
+                        {errors.seats && (
+                            <Form.Control.Feedback type="invalid">{errors.seats}</Form.Control.Feedback>
+                        )}
+                    </FormGroup>
                 </Modal.Body>
                 <div className="modal-footer">
                     <div className="hstack gap-2 justify-content-end">

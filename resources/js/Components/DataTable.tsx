@@ -55,7 +55,6 @@ export default function DataTable<T>({
 }: DataTableProps<T>) {
     const { t } = useLaravelReactI18n();
     const rowSelector = useRowSelector(data.data);
-    console.log('testing', columns.map((col, colIndex) => col.header.name));
     const [sort, setSort] = useSort();
 
     const { hasSearch, searchQuery, setSearchQuery, search, searchProcessing } = useSearch(columns, searchCombinations);
@@ -92,7 +91,6 @@ export default function DataTable<T>({
     };
 
     const filteredColumns = columns.filter((_, index) => visibleColumnsIndexes.includes(index));
-    console.log(`filterColumns of ${title}`, filteredColumns);
 
     return (
         <div className="card">

@@ -131,6 +131,11 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
         Route::middleware('event_is_selected')->group(function () {
             Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+            // Venue Management
+            Route::resource('event-platforms', EventPlatformController::class);
+            Route::delete('event-platforms/delete/many', [EventPlatformController::class, 'destroyMany'])->name('event-platforms.destroy.many');
+            Route::post('event-platforms/blueprint-import', [EventPlatformController::class, 'blueprintImport'])->name('event-platforms.blueprint-import');
+
             // Schedule (Event Sessions)
             Route::resource('schedule', EventSessionController::class);
             Route::delete('schedule/delete/many', [EventSessionController::class, 'destroyMany'])->name('schedule.destroy.many');
