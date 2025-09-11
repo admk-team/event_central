@@ -331,9 +331,22 @@ const TicketCard = ({
         post(route("attendee.waitlist.post"), { onSuccess: () => setIsWaitList(true) });
     };
 
-    const availableQty =
-        ticket.qty_total === null ? Infinity : Math.max(0, ticket.qty_total - ticket.qty_sold);
-    const unlimitedQty = ticket.qty_total === null;
+    // const availableQty =
+    //     ticket.qty_total === null ? Infinity : Math.max(0, ticket.qty_total - ticket.qty_sold);
+
+    // Determine if any selected session has sync_with_tickets true
+    const ticketShouldBeSynced = ticket.selected_sessions.some((session: any) => session.sync_with_tickets);
+    // If ticket should be synced, ensure all sessions have same capacity, otherwise tickets cannot be synced
+    const ticketCanBeSynced = ticket.selected_sessions.every((session: any) => session.capacity === ticket.selected_sessions[0].capacity);
+    const availableQty = (() => {
+        if (ticketShouldBeSynced && ticketCanBeSynced) {
+            return Math.max(0, ticket.selected_sessions[0].capacity - ticket.qty_sold);
+        }
+
+        return ticket.qty_total === null ? Infinity : Math.max(0, ticket.qty_total - ticket.qty_sold);
+    })();
+    
+    const unlimitedQty = ticket.qty_total === null && !(ticketShouldBeSynced && ticketCanBeSynced);
 
     return (
         <Col lg={12}>
