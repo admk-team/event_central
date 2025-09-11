@@ -265,6 +265,11 @@ export default function CreateEditModal({
     };
           const { t } = useLaravelReactI18n();
 
+          // Determine if any selected session has sync_with_tickets true
+    const ticketShouldBeSynced = data.sessions.some((session: any) => session.sync_with_tickets);
+    // If ticket should be synced, ensure all sessions have same capacity, otherwise tickets cannot be synced
+    const ticketCannotBeSynced = data.sessions.some((session: any) => session.capacity !== data.sessions[0].capacity);
+
     type BulkDiscount = {
         type: string;
         value: string | number;
