@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::table('event_app_tickets', function (Blueprint $table) {
             $table->boolean('bulk_purchase_status')->default(false);
-            $table->enum('bulk_purchase_discount_type', ['fixed', 'percentage'])->default('fixed');
-            $table->unsignedDecimal('bulk_purchase_discount_value')->nullable();
-            $table->integer('bulk_purchase_qty')->nullable();
+            $table->json('bulk_purchase_discount_type')->nullable()->after('bulk_purchase_status');
+            $table->json('bulk_purchase_discount_value')->nullable()->after('bulk_purchase_discount_type');
+            $table->json('bulk_purchase_qty')->nullable()->after('bulk_purchase_discount_value');
         });
     }
 
