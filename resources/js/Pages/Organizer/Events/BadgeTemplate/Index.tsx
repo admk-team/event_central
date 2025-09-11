@@ -223,16 +223,6 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                                                 )}
                                                             </h6>
                                                             <ul className="instructionList">
-                                                                <li className="mt-3">
-                                                                    <span>
-                                                                        ✨
-                                                                    </span>{" "}
-                                                                    <strong>
-                                                                        {t(
-                                                                            "Additional"
-                                                                        )}
-                                                                    </strong>
-                                                                </li>
                                                                 <li>
                                                                     <span>
                                                                         🧑
@@ -255,14 +245,6 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                                                     </span>{" "}
                                                                     {t(
                                                                         "Attendee Position"
-                                                                    )}
-                                                                </li>
-                                                                <li>
-                                                                    <span>
-                                                                        🌍
-                                                                    </span>{" "}
-                                                                    {t(
-                                                                        "Attendee Location"
                                                                     )}
                                                                 </li>
                                                                 <li>
@@ -368,16 +350,6 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                                                 )}
                                                             </h6>
                                                             <ul className="instructionList">
-                                                                <li>
-                                                                    <span>
-                                                                        🎨
-                                                                    </span>{" "}
-                                                                    <strong>
-                                                                        {t(
-                                                                            "Event Branding & Logistics"
-                                                                        )}
-                                                                    </strong>
-                                                                </li>
 
                                                                 <li>
                                                                     <span>
@@ -400,7 +372,7 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                                                         📅
                                                                     </span>{" "}
                                                                     {t(
-                                                                        "Start and End Date"
+                                                                        "Start and End Date/Time"
                                                                     )}
                                                                 </li>
                                                                 <li className="mt-3">
@@ -422,16 +394,6 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                                                     )}
                                                                 </li>
 
-                                                                <li className="mt-3">
-                                                                    <span>
-                                                                        ✨
-                                                                    </span>{" "}
-                                                                    <strong>
-                                                                        {t(
-                                                                            "Additional"
-                                                                        )}
-                                                                    </strong>
-                                                                </li>
                                                                 <li>
                                                                     <span>
                                                                         🎟️
@@ -455,22 +417,6 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                                                     </span>{" "}
                                                                     {t(
                                                                         "Attendee Position"
-                                                                    )}
-                                                                </li>
-                                                                <li>
-                                                                    <span>
-                                                                        🌍
-                                                                    </span>{" "}
-                                                                    {t(
-                                                                        "Attendee Location"
-                                                                    )}
-                                                                </li>
-                                                                <li>
-                                                                    <span>
-                                                                        🌍
-                                                                    </span>{" "}
-                                                                    {t(
-                                                                        "Attendee Hashtag / Social Handles"
                                                                     )}
                                                                 </li>
                                                             </ul>
@@ -570,7 +516,7 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                                                         📅
                                                                     </span>{" "}
                                                                     {t(
-                                                                        "Start and End Date"
+                                                                        "Start and End Date/Time"
                                                                     )}
                                                                 </li>
                                                                 <li className="mt-3">
@@ -597,14 +543,6 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                                                     </span>{" "}
                                                                     {t(
                                                                         "Attendee Position"
-                                                                    )}
-                                                                </li>
-                                                                <li>
-                                                                    <span>
-                                                                        🌍
-                                                                    </span>{" "}
-                                                                    {t(
-                                                                        "Attendee Location"
                                                                     )}
                                                                 </li>
                                                             </ul>
@@ -684,22 +622,6 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                                                 </li>
                                                                 <li>
                                                                     <span>
-                                                                        🌍
-                                                                    </span>{" "}
-                                                                    {t(
-                                                                        "Attendee Hashtag / Social Handles"
-                                                                    )}
-                                                                </li>
-                                                                <li>
-                                                                    <span>
-                                                                        🌍
-                                                                    </span>{" "}
-                                                                    {t(
-                                                                        "Attendee Location"
-                                                                    )}
-                                                                </li>
-                                                                <li>
-                                                                    <span>
                                                                         🔳
                                                                     </span>{" "}
                                                                     {t(
@@ -722,7 +644,7 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                                                         📅
                                                                     </span>{" "}
                                                                     {t(
-                                                                        "Start and End Date"
+                                                                        "Start and End Date/Time"
                                                                     )}
                                                                 </li>
                                                                 <li>
@@ -817,22 +739,6 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                                                 </li>
                                                                 <li>
                                                                     <span>
-                                                                        🌐
-                                                                    </span>{" "}
-                                                                    {t(
-                                                                        "Attendee Hashtag / Social Handles"
-                                                                    )}
-                                                                </li>
-                                                                <li>
-                                                                    <span>
-                                                                        📍
-                                                                    </span>{" "}
-                                                                    {t(
-                                                                        "Attendee Location"
-                                                                    )}
-                                                                </li>
-                                                                <li>
-                                                                    <span>
                                                                         🎉
                                                                     </span>{" "}
                                                                     {t(
@@ -862,7 +768,7 @@ const Index = ({ baseTemplate, selectedTemplateId }: Props) => {
                                                                     </span>{" "}
                                                                     <strong>
                                                                         {t(
-                                                                            "Event Logo"
+                                                                            "Attendee Avatar"
                                                                         )}
                                                                     </strong>
                                                                 </li>
