@@ -35,7 +35,10 @@ class EventAppTicket extends Model
 
     protected $casts = [
         'show_on_attendee_side' => 'boolean',
-        'extra_services' => 'json'
+        'extra_services' => 'json',
+         'bulk_purchase_discount_type' => 'array',
+        'bulk_purchase_discount_value' => 'array',
+        'bulk_purchase_qty' => 'array',
     ];
 
     //Being used by Select2 in Ticket Create/Edit Model

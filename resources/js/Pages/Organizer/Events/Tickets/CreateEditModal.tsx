@@ -56,10 +56,10 @@ export default function CreateEditModal({
             show_on_attendee_side: ticket?.show_on_attendee_side ?? true,
             qty_total: ticket?.qty_total ?? null,
 
-            bulk_purchase_status: ticket?.bulk_purchase_status ?? "",
-            bulk_purchase_discount_type: ticket?.bulk_purchase_discount_type ?? "",
-            bulk_purchase_discount_value: ticket?.bulk_purchase_discount_value ?? "",
-            bulk_purchase_qty: ticket?.bulk_purchase_qty ?? "",
+            bulk_purchase_status: ticket?.bulk_purchase_status ?? false,
+            bulk_purchase_discount_type: ticket?.bulk_purchase_discount_type ?? [],
+            bulk_purchase_discount_value: ticket?.bulk_purchase_discount_value ?? [],
+            bulk_purchase_qty: ticket?.bulk_purchase_qty ?? [],
 
             // NEW FIELDS
             extra_service_name: ticket?.extra_service_name ?? "",
@@ -84,12 +84,25 @@ export default function CreateEditModal({
             ? ticket.extra_services
             : [{ name: "", quantity: "" }]
     );
-
+    const [bulkDiscounts, setBulkDiscounts] = useState<BulkDiscount[]>(
+        Array.isArray(ticket?.bulk_purchase_discount_type) &&
+            Array.isArray(ticket?.bulk_purchase_discount_value) &&
+            Array.isArray(ticket?.bulk_purchase_qty) &&
+            ticket.bulk_purchase_discount_type.length > 0
+            ? ticket.bulk_purchase_discount_type.map((t: string, i: number) => ({
+                type: t,
+                value: ticket.bulk_purchase_discount_value[i] ?? "",
+                qty: ticket.bulk_purchase_qty[i] ?? "",
+            }))
+            : [{ type: "", value: "", qty: "" }]
+    );
     // keep useForm's data in sync with local rows
     useEffect(() => {
         setData("extra_services", extraServices);
-    }, [extraServices]);
-
+        setData("bulk_purchase_discount_type", bulkDiscounts.map((r) => r.type));
+        setData("bulk_purchase_discount_value", bulkDiscounts.map((r) => r.value));
+        setData("bulk_purchase_qty", bulkDiscounts.map((r) => r.qty));
+    }, [extraServices, bulkDiscounts]);
     const addExtraServiceRow = () => {
         setExtraServices((prev) => [...prev, { name: "", quantity: "" }]);
     };
@@ -119,12 +132,21 @@ export default function CreateEditModal({
                     quantity: (r.quantity ?? "").toString().trim(),
                 }))
                 .filter((r) => r.name !== "" || r.quantity !== "");
-
+            const cleanedBulkDiscounts = (bulkDiscounts || [])
+                .map((r) => ({
+                    type: (r.type ?? "").trim(),
+                    value: (r.value ?? "").toString().trim(),
+                    qty: (r.qty ?? "").toString().trim(),
+                }))
+                .filter((r) => r.type !== "" && r.value !== "" && r.qty !== "");
             return {
                 ...formData,
                 fees: [...selectedFees],
                 extra_service_name: formData.extra_service_name ?? "",
                 extra_services: cleanedServices,
+                bulk_purchase_discount_type: cleanedBulkDiscounts.map((r) => r.type),
+                bulk_purchase_discount_value: cleanedBulkDiscounts.map((r) => r.value),
+                bulk_purchase_qty: cleanedBulkDiscounts.map((r) => r.qty),
             };
         });
 
@@ -236,12 +258,38 @@ export default function CreateEditModal({
     const handleBluckPurchaseStatus = (event: any) => {
         if (event.target.checked) {
             setData("bulk_purchase_status", true);
+            console.log(data.bulk_purchase_status)
         } else {
             setData("bulk_purchase_status", false);
+            console.log(data.bulk_purchase_status)
         }
     };
           const { t } = useLaravelReactI18n();
 
+    type BulkDiscount = {
+        type: string;
+        value: string | number;
+        qty: string | number;
+    };
+
+
+    const addBulkDiscountRow = () => {
+        setBulkDiscounts((prev) => [...prev, { type: "", value: "", qty: "" }]);
+    };
+
+    const removeBulkDiscountRow = (idx: number) => {
+        setBulkDiscounts((prev) => prev.filter((_, i) => i !== idx));
+    };
+
+    const updateBulkDiscountField = (
+        idx: number,
+        field: keyof BulkDiscount,
+        value: string | number
+    ) => {
+        setBulkDiscounts((prev) =>
+            prev.map((row, i) => (i === idx ? { ...row, [field]: value } : row))
+        );
+    };
     return (
         <>
             <Modal show={show} onHide={onHide} centered size="lg">
@@ -750,95 +798,75 @@ export default function CreateEditModal({
                             </Col>
                         </Row>
 
-                        {data.bulk_purchase_status != 0 && (
-                            <Row>
-                                <Col md={4}>
-                                    <FormGroup className="mb-3">
-                                        <Form.Label
-                                            htmlFor="discount_type"
-                                            className="form-label text-start w-100"
-                                        >
-                                            {t("Discount Type")}
-                                        </Form.Label>
-                                        <Form.Select
-                                            id="discount_type"
-                                            aria-label={t("Select Discount Type")}
-                                            className="form-control"
-                                            value={data.bulk_purchase_discount_type}
-                                            onChange={(e) => {
-                                                const value = e.target.value;
-                                                setData("bulk_purchase_discount_type", value);
-                                                if (value === "percentage") {
-                                                    setDiscountLabel("Discount Percentage");
-                                                } else {
-                                                    setDiscountLabel("Discount Value");
-                                                }
-                                            }}
-                                            isInvalid={!!errors.bulk_purchase_discount_type}
-                                        >
-                                            <option value="">{t("Select Discount Type")}</option>
-                                            <option value="fixed">{t("Fixed")}</option>
-                                            <option value="percentage">{t("Percentage")}</option>
-                                        </Form.Select>
-                                        {errors.bulk_purchase_discount_type && (
-                                            <Form.Control.Feedback type="invalid">
-                                                {errors.bulk_purchase_discount_type}
-                                            </Form.Control.Feedback>
-                                        )}
-                                    </FormGroup>
-                                </Col>
+                        {data.bulk_purchase_status == true && (
+                            <>
+                                {bulkDiscounts.map((row, index) => (
+                                    <Row key={index}>
+                                        <Col md={3}>
+                                            <FormGroup className="mb-3">
+                                                <Form.Label>{t("Discount Type")}</Form.Label>
+                                                <Form.Select
+                                                    value={row.type}
+                                                    onChange={(e) =>
+                                                        updateBulkDiscountField(index, "type", e.target.value)
+                                                    }
+                                                    isInvalid={!!errors.bulk_purchase_discount_type}
+                                                >
+                                                    <option value="">{t("Select Discount Type")}</option>
+                                                    <option value="fixed">{t("Fixed")}</option>
+                                                    <option value="percentage">{t("Percentage")}</option>
+                                                </Form.Select>
+                                            </FormGroup>
+                                        </Col>
 
-                                <Col md={4}>
-                                    <FormGroup className="mb-3">
-                                        <Form.Label
-                                            htmlFor="discount_value"
-                                            className="form-label text-start w-100"
-                                        >
-                                            {discountLabel || "Discount Value"}
-                                        </Form.Label>
-                                        <Form.Control
-                                            id="discount_value"
-                                            type="number"
-                                            value={data.bulk_purchase_discount_value}
-                                            onChange={(e) =>
-                                                setData("bulk_purchase_discount_value", e.target.value)
-                                            }
-                                            placeholder="e.g. 10"
-                                            isInvalid={!!errors.bulk_purchase_discount_value}
-                                        />
-                                        {errors.bulk_purchase_discount_value && (
-                                            <Form.Control.Feedback type="invalid">
-                                                {errors.bulk_purchase_discount_value}
-                                            </Form.Control.Feedback>
-                                        )}
-                                    </FormGroup>
-                                </Col>
-                                <Col md={4}>
-                                    <FormGroup className="mb-3">
-                                        <Form.Label
-                                            htmlFor="bulk_qty"
-                                            className="form-label text-start w-100"
-                                        >
-                                            {t("Quantity")}
-                                        </Form.Label>
-                                        <Form.Control
-                                            id="bulk_qty"
-                                            type="number"
-                                            value={data.bulk_purchase_qty}
-                                            onChange={(e) =>
-                                                setData("bulk_purchase_qty", e.target.value)
-                                            }
-                                            placeholder={t("e.g. 5")}
-                                            isInvalid={!!errors.bulk_purchase_qty}
-                                        />
-                                        {errors.bulk_purchase_qty && (
-                                            <Form.Control.Feedback type="invalid">
-                                                {errors.bulk_purchase_qty}
-                                            </Form.Control.Feedback>
-                                        )}
-                                    </FormGroup>
-                                </Col>
-                            </Row>
+                                        <Col md={3}>
+                                            <FormGroup className="mb-3">
+                                                <Form.Label>
+                                                    {row.type === "fixed"
+                                                        ? t("Discount Value (Fixed)")
+                                                        : row.type === "percentage"
+                                                            ? t("Discount Value (%)")
+                                                            : t("Discount Value")}
+                                                </Form.Label>
+                                                <Form.Control
+                                                    type="number"
+                                                    value={row.value}
+                                                    onChange={(e) =>
+                                                        updateBulkDiscountField(index, "value", e.target.value)
+                                                    }
+                                                    placeholder="e.g. 10"
+                                                    isInvalid={!!errors.bulk_purchase_discount_value}
+                                                />
+                                            </FormGroup>
+                                        </Col>
+
+                                        <Col md={3}>
+                                            <FormGroup className="mb-3">
+                                                <Form.Label>{t("Quantity")}</Form.Label>
+                                                <Form.Control
+                                                    type="number"
+                                                    value={row.qty}
+                                                    onChange={(e) =>
+                                                        updateBulkDiscountField(index, "qty", e.target.value)
+                                                    }
+                                                    placeholder={t("e.g. 5")}
+                                                    isInvalid={!!errors.bulk_purchase_qty}
+                                                />
+                                            </FormGroup>
+                                        </Col>
+
+                                        <Col md={3}>
+                                            <FormGroup className="mt-4">
+                                                {index === 0 ? (
+                                                    <Button variant="success" onClick={addBulkDiscountRow}>+</Button>
+                                                ) : (
+                                                    <Button variant="danger" onClick={() => removeBulkDiscountRow(index)}>-</Button>
+                                                )}
+                                            </FormGroup>
+                                        </Col>
+                                    </Row>
+                                ))}
+                            </>
                         )}
                     </Form>
                 </Modal.Body>
