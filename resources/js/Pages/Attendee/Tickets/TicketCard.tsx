@@ -209,19 +209,29 @@ const TicketCard = ({
     useEffect(() => {
         setTicketDetails((prevDetails: any[]) => {
             const basePrice = Number(ticket.base_price) || 0;
-            const discountValue = Number(ticket.bulk_purchase_discount_value || 0);
-            const discountQty = Number(ticket.bulk_purchase_qty || 0);
-            const discountType = ticket.bulk_purchase_discount_type;
+            // Parse bulk purchase arrays (ensure numbers)
+            const discountQtyArr: number[] = (ticket.bulk_purchase_qty || []).map(Number);
+            const discountValueArr: number[] = (ticket.bulk_purchase_discount_value || []).map(Number);
+            const discountTypeArr: string[] = ticket.bulk_purchase_discount_type || [];
             const totalBaseAmount = basePrice * ticketQty;
 
-            const shouldApplyDiscount = discountQty > 0 && discountValue > 0 && ticketQty >= discountQty;
+            // Determine applicable discount based on current ticketQty
+            let applicableDiscountValue = 0;
+            let applicableDiscountType: string | null = null;
+
+            for (let i = 0; i < discountQtyArr.length; i++) {
+                if (ticketQty >= discountQtyArr[i]) {
+                    applicableDiscountValue = discountValueArr[i];
+                    applicableDiscountType = discountTypeArr[i];
+                }
+            }
 
             let finalPerTicketPrice = basePrice;
-            if (shouldApplyDiscount && ticketQty > 0) {
+            if (applicableDiscountType && applicableDiscountValue > 0 && ticketQty > 0) {
                 const totalDiscountedAmount =
-                    discountType === "fixed"
-                        ? Math.max(0, totalBaseAmount - discountValue)
-                        : totalBaseAmount - totalBaseAmount * (discountValue / 100);
+                    applicableDiscountType === "fixed"
+                        ? Math.max(0, totalBaseAmount - applicableDiscountValue)
+                        : totalBaseAmount - totalBaseAmount * (applicableDiscountValue / 100);
                 finalPerTicketPrice = Number((totalDiscountedAmount / ticketQty).toFixed(2));
             }
 
@@ -233,19 +243,17 @@ const TicketCard = ({
                 const id = Number(`${ticket.id}${i}`);
                 newIds.push(id);
 
-                const adjustedBasePrice = shouldApplyDiscount ? finalPerTicketPrice : basePrice;
-
                 const newTicketData = {
                     ...ticket,
-                    base_price: adjustedBasePrice,
-                    bulk_purchase_discount_type: discountType,
-                    bulk_purchase_discount_value: discountValue,
-                    bulk_purchase_qty: discountQty,
+                    base_price: finalPerTicketPrice,
+                    bulk_purchase_discount_type: applicableDiscountType,
+                    bulk_purchase_discount_value: applicableDiscountValue,
+                    bulk_purchase_qty: ticketQty,
                 };
 
                 const fees_sub_total = calculateFeesSubTotal({
                     ...ticket,
-                    base_price: adjustedBasePrice,
+                    base_price: finalPerTicketPrice,
                 });
 
                 const existing = byId.get(id);
@@ -366,17 +374,26 @@ const TicketCard = ({
                     <Accordion.Body>
                         <Row className="d-flex justify-content-centel align-items-center">
                             <Col md={5} lg={5}>
-                                <span className="mb-5">{ticket.description}</span>
-                                <br />
-                                {ticket.bulk_purchase_status !== 0 && (
-                                    <span className="mt-5 ff-secondary fw-bold text-warning">
-                                        {t("Limited Offer:")} {ticket.bulk_purchase_qty}+ {t("tickets and Save")}{" "}
-                                        {ticket.bulk_purchase_discount_type === "fixed"
-                                            ? `${currency_symbol} ${parseInt(ticket.bulk_purchase_discount_value)}`
-                                            : `${parseInt(ticket.bulk_purchase_discount_value)}%`}{" "}
-                                        {t("instantly!")}
-                                    </span>
-                                )}
+                                <span className="mb-3">{ticket.description}</span>
+                                {ticket.bulk_purchase_status !== 0 &&
+                                    ticket.bulk_purchase_qty?.length > 0 &&
+                                    ticket.bulk_purchase_discount_value?.length > 0 &&
+                                    ticket.bulk_purchase_discount_type?.length > 0 && (
+                                        <div className="mt-3 ff-secondary fw-bold text-warning">
+                                            <span>{t("Limited Offers:")}</span>
+                                            <ul className="ps-3 mb-0">
+                                                {ticket.bulk_purchase_qty.map((qty: any, index: number) => (
+                                                    <li key={index}>
+                                                        {qty} {t("tickets and Save")}{" "}
+                                                        {ticket.bulk_purchase_discount_type[index] === "fixed"
+                                                            ? `${currency_symbol}${ticket.bulk_purchase_discount_value[index]}`
+                                                            : `${ticket.bulk_purchase_discount_value[index]}%`}{" "}
+                                                        {t("instantly!")}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    )}
                             </Col>
 
                             <Col md={2} lg={2}>
