@@ -22,27 +22,32 @@ const typeMeta = (type?: string) => {
   switch ((type || "booth").toLowerCase()) {
     case "sponsor":
     case "sponsor ad":
-      return { label: "Sponsor Ad", bg: "#F97316", color: "#111827" }; // orange
+      return { label: "Sponsor Ad", bg: "#F97316", color: "#111827" };
     case "banner":
-      return { label: "Banner", bg: "#3B82F6", color: "#ffffff" }; // blue
+      return { label: "Banner", bg: "#3B82F6", color: "#ffffff" };
     default:
-      return { label: "Booth", bg: "#111827", color: "#ffffff" }; // dark
+      return { label: "Booth", bg: "#111827", color: "#ffffff" };
   }
 };
 
 type BoothCardProps = {
-  booth: any;
+  booth: any;                 // expects: id, name, description, number, status, logo, price, type, total_qty, sold_qty
   currencySymbol: string;
-  owned?: boolean; // “My Booths” section
-  onBuy?: (id: number) => void; // marketplace
+  owned?: boolean;            // shows “Owned” and disables button
+  onBuy?: (id: number) => void;
   t: (k: string) => string;
 };
 
 /* ---------------- card ---------------- */
 const BoothCard: React.FC<BoothCardProps> = ({ booth, currencySymbol, owned, onBuy, t }) => {
-  const canBuy = !owned && booth.status === "available";
   const initials = getInitials(booth.name);
   const tm = typeMeta(booth.type);
+
+  const total = Number(booth.total_qty ?? 0);
+  const sold  = Number(booth.sold_qty ?? 0);
+  const remaining = Math.max(0, total - sold);
+
+  const canBuy = !owned && booth.status === "available" && remaining > 0;
 
   return (
     <div className="card h-100 border-0 shadow-sm rounded-4 overflow-visible">
@@ -132,21 +137,33 @@ const BoothCard: React.FC<BoothCardProps> = ({ booth, currencySymbol, owned, onB
           </p>
         )}
 
+        {/* Quantities row */}
+        <div className="d-flex justify-content-between align-items-center small text-muted mb-2">
+          <span>{t("Total")}: <strong>{total}</strong></span>
+          <span>{t("Remaining")}: <strong>{remaining}</strong></span>
+        </div>
+
+        {/* Price + availability */}
         <div className="d-flex justify-content-between align-items-center mb-3">
           <span className="fw-semibold">
             {currencySymbol} {booth.price ?? 0}
           </span>
-          <span className={`badge ${booth.status === "available" ? "bg-success" : "bg-secondary"}`}>
-            {booth.status === "available" ? t("Available") : t("Soldout")}
+          <span className={`badge ${canBuy ? "bg-success" : "bg-secondary"}`}>
+           {canBuy ? t("Available") : (owned ? t("Purchased") : t("Soldout"))}
           </span>
         </div>
 
+        {/* CTA / Owned */}
         {owned ? (
           <button className="btn btn-success mt-auto w-100" disabled>
             {t("Owned")}
           </button>
         ) : (
-          <button className="btn btn-primary mt-auto w-100" disabled={!canBuy} onClick={() => onBuy && onBuy(booth.id)}>
+          <button
+            className="btn btn-primary mt-auto w-100"
+            disabled={!canBuy}
+            onClick={() => onBuy && onBuy(booth.id)}
+          >
             {canBuy ? t("Buy Now") : t("Sold Out")}
           </button>
         )}
@@ -160,24 +177,27 @@ const Index = ({ booths, myBooths = [], getCurrency }: any) => {
   const { t } = useLaravelReactI18n();
   const [search, setSearch] = useState("");
 
-  const myIds = useMemo(() => new Set((myBooths || []).map((b: any) => b.id)), [myBooths]);
+  // IDs the user already owns (from purchases)
+  const myIds = useMemo(
+    () => new Set((myBooths || []).map((b: any) => b.id)),
+    [myBooths]
+  );
 
-  // text filter
+  // Text filter across all booths
   const filteredAll = useMemo(() => {
     const q = search.toLowerCase();
-    return (booths || [])
-      .filter((b: any) =>
-        [b.name, b.description, b.number?.toString()].some((v) => (v || "").toLowerCase().includes(q))
-      );
+    return (booths || []).filter((b: any) =>
+      [b.name, b.description, b.number?.toString()].some((v) => (v || "").toLowerCase().includes(q))
+    );
   }, [booths, search]);
 
-  // exclude user's items from marketplace
+  // Exclude user's purchased items from marketplace
   const filteredMarket = useMemo(
     () => filteredAll.filter((b: any) => !myIds.has(b.id)),
     [filteredAll, myIds]
   );
 
-  // split by type
+  // Split by type for marketplace sections
   const boothsOnly   = filteredMarket.filter((b: any) => (b.type || "booth").toLowerCase() === "booth");
   const sponsorsOnly = filteredMarket.filter((b: any) => (b.type || "").toLowerCase().startsWith("sponsor"));
   const bannersOnly  = filteredMarket.filter((b: any) => (b.type || "").toLowerCase() === "banner");
@@ -209,7 +229,12 @@ const Index = ({ booths, myBooths = [], getCurrency }: any) => {
               <Row className="mb-4">
                 {myBooths.map((booth: any) => (
                   <Col lg={3} md={6} sm={12} className="mb-3" key={booth.id}>
-                    <BoothCard booth={booth} currencySymbol={getCurrency?.currency_symbol} owned t={t} />
+                    <BoothCard
+                      booth={booth}
+                      currencySymbol={getCurrency?.currency_symbol}
+                      owned
+                      t={t}
+                    />
                   </Col>
                 ))}
               </Row>
@@ -228,7 +253,7 @@ const Index = ({ booths, myBooths = [], getCurrency }: any) => {
                   </Col>
                 ))}
               </Row>
-                <hr className="mb-4" />
+              <hr className="mb-4" />
             </>
           )}
 

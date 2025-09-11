@@ -11,23 +11,25 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('event_booths', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('event_app_id')->nullable();
-            $table->unsignedBigInteger('attendee_id')->nullable();
-            $table->foreign('attendee_id')->references('id')->on('attendees')->onDelete('cascade');
-            $table->foreign('event_app_id')->references('id')->on('event_apps')->onDelete('cascade');
-            $table->string('name')->nullable();
-            $table->text('description')->nullable();
-            $table->unsignedBigInteger('number')->nullable();
-            // New columns
-            $table->string('status')->default('available'); // default: available
-            $table->string('logo')->nullable();      
-            $table->string('type', 20)->default('booth'); // booth | sponsor | banner       // store path or filename
-            $table->unsignedInteger('price')->nullable();   // store price in points
+       Schema::create('event_booths', function (Blueprint $table) {
+    $table->id();
+    $table->unsignedBigInteger('event_app_id')->nullable();
+    $table->foreign('event_app_id')->references('id')->on('event_apps')->onDelete('cascade');
+    $table->string('name')->nullable();
+    $table->text('description')->nullable();
+    $table->unsignedBigInteger('number')->nullable();
 
-            $table->timestamps();
-        });
+    $table->string('status')->default('available');
+    $table->string('logo')->nullable();
+    $table->string('type', 20)->default('booth');   // booth | sponsor | banner
+    $table->unsignedInteger('price')->nullable();   // points
+
+    // NEW stock fields
+    $table->unsignedInteger('total_qty')->default(1);
+    $table->unsignedInteger('sold_qty')->default(0);
+
+    $table->timestamps();
+});
     }
 
     /**

@@ -19,8 +19,9 @@ class EventBooth extends Model
         'status',
         'logo',
         'price',     // points
-        'attendee_id',
         'type',
+        'total_qty',
+        'sold_qty'
     ];
 
     protected $casts = [
@@ -33,9 +34,19 @@ class EventBooth extends Model
     {
         return $query->where('event_app_id', session('event_id'));
     }
-    public function attendee()
+    public function purchases()
     {
-        // Update the class & table if yours is different
-        return $this->belongsTo(Attendee::class, 'attendee_id');
+        return $this->hasMany(EventBoothPurchase::class, 'event_booth_id');
+    }
+
+    // Many attendees through purchases
+    public function attendees()
+    {
+        return $this->belongsToMany(Attendee::class, 'event_booth_purchases', 'event_booth_id', 'attendee_id');
+    }
+
+    public function getRemainingAttribute(): int
+    {
+        return max(0, (int)$this->total_qty - (int)$this->sold_qty);
     }
 }

@@ -7,10 +7,12 @@ use App\Mail\EventSponsorshipAwardedMail;
 use App\Models\Attendee;
 use App\Models\EventApp;
 use App\Models\EventBooth;
+use App\Models\EventBoothPurchase;
 use App\Models\OrganizerPaymentKeys;
 use App\Services\StripeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
@@ -23,21 +25,55 @@ class EventBoothController extends Controller
         $this->stripe_service = $stripeService;
     }
 
+    // app/Http/Controllers/Attendee/EventBoothController.php
+
     public function index()
     {
-        $attendee  = Auth::user();
-        $eventApp  = EventApp::findOrFail($attendee->event_app_id);
+        $attendee = Auth::user();
+        $eventApp = EventApp::findOrFail($attendee->event_app_id);
 
-        // All booths in this event (for the marketplace grid)
+        // Marketplace: all listings for this event (pull the fields the UI needs)
         $booths = EventBooth::where('event_app_id', $attendee->event_app_id)
             ->orderBy('number')
+            ->get([
+                'id',
+                'name',
+                'description',
+                'number',
+                'status',
+                'logo',
+                'price',
+                'type',
+                'total_qty',
+                'sold_qty'
+            ]);
+
+        // My purchases (grouped by booth), include booth fields + my_qty
+        $purchases = EventBoothPurchase::with([
+            'booth:id,name,description,number,status,logo,price,type,total_qty,sold_qty'
+        ])
+            ->where('event_app_id', $attendee->event_app_id)
+            ->where('attendee_id', $attendee->id)
             ->get();
 
-        // ✅ All booths owned by this attendee
-        $myBooths = EventBooth::where('event_app_id', $attendee->event_app_id)
-            ->where('attendee_id', $attendee->id)
-            ->orderBy('number')
-            ->get();
+        $myBooths = $purchases->groupBy('event_booth_id')->map(function ($rows) {
+            $qty   = (int) $rows->sum('quantity');    // make sure your purchase model has 'quantity' (default 1)
+            $booth = $rows->first()->booth;
+
+            return [
+                'id'          => $booth->id,
+                'name'        => $booth->name,
+                'description' => $booth->description,
+                'number'      => $booth->number,
+                'status'      => $booth->status,
+                'logo'        => $booth->logo,
+                'price'       => $booth->price,
+                'type'        => $booth->type,
+                'total_qty'   => $booth->total_qty,
+                'sold_qty'    => $booth->sold_qty,
+                'my_qty'      => $qty,                 // <-- user-owned quantity for this listing
+            ];
+        })->values();
 
         $getCurrency = OrganizerPaymentKeys::getCurrencyForUser($eventApp->organizer_id);
 
@@ -47,14 +83,17 @@ class EventBoothController extends Controller
             'getCurrency' => $getCurrency,
         ]);
     }
-
-
     public function checkoutPage(EventBooth $booth)
     {
         $attendee = Auth::user();
-        if ($booth->event_app_id !== $attendee->event_app_id) abort(404);
-        if ($booth->status !== 'available') {
-            return redirect()->route('attendee.event.booths')->withError('This booth is not available.');
+        if ($booth->event_app_id !== $attendee->event_app_id) {
+            abort(404);
+        }
+
+        // If completely sold out, bounce back to list
+        if ($booth->sold_qty >= $booth->total_qty) {
+            return redirect()->route('attendee.event.booths')
+                ->withError('This booth is not available.');
         }
 
         $eventApp    = EventApp::findOrFail($attendee->event_app_id);
@@ -62,52 +101,93 @@ class EventBoothController extends Controller
         $currency    = $getCurrency['currency'];
 
         // Stripe keys (publishable, etc.)
-        $stripeKeys  = $this->stripe_service->StripKeys($booth->event_app_id);
+        $stripeKeys = $this->stripe_service->StripKeys($booth->event_app_id);
 
-        // Create PaymentIntent (amount in major units; if your service expects minor units, convert inside it)
+        // Create a fresh PaymentIntent for this attempt
         $pi = $this->stripe_service->createPaymentIntent(
             $booth->event_app_id,
-            (float)($booth->price ?? 0),
+            (float) ($booth->price ?? 0),
             $currency
         );
 
-        // IMPORTANT: "payment" must match your product shape (has stripe_intent + total_amount)
+        // Keep the shape your Payment page expects
         $payment = [
-            'id'            => $booth->id,               // we reuse "id" as the resource id
-            'total_amount'  => $booth->price,            // for button text
-            'stripe_intent' => $pi['client_secret'],     // client secret for PaymentElement
+            'id'            => $booth->id,
+            'total_amount'  => $booth->price,
+            'stripe_intent' => $pi['client_secret'], // PaymentElement client_secret
         ];
 
-        $stripe_pub_key    = $stripeKeys->stripe_publishable_key;
-        $paypal_client_id  = null; // set if you add PayPal
+        // Create/update a PENDING purchase record for this user & booth
+        EventBoothPurchase::updateOrCreate(
+            [
+                'event_booth_id' => $booth->id,
+                'attendee_id'    => $attendee->id,
+                // keep the same row for retries until it is paid
+                'status'         => 'pending',
+            ],
+            [
+                'event_app_id'       => $booth->event_app_id,
+                'amount'             => (int) $booth->price,
+                'currency'           => $currency ?? 'USD',
+                'payment_intent_id'  => $pi['payment_id'] ?? null, // <- store PI id, not the secret
+            ]
+        );
 
-        return Inertia::render('Attendee/EventBooth/Payment/Index', compact(
-            'payment',
-            'stripe_pub_key',
-            'paypal_client_id',
-            'currency',
-            'getCurrency'
-        ));
+        return Inertia::render('Attendee/EventBooth/Payment/Index', [
+            'payment'         => $payment,
+            'stripe_pub_key'  => $stripeKeys->stripe_publishable_key,
+            'paypal_client_id' => null,
+            'currency'        => $currency,
+            'getCurrency'     => $getCurrency,
+        ]);
     }
-
-    // Mirrors your product "update" endpoint: mark as sold after Stripe success
     public function updateBooth(EventBooth $booth)
     {
         $attendee = Auth::user();
-        if ($booth->event_app_id !== $attendee->event_app_id) abort(404);
-
-        // Only allow if still available
-        if ($booth->status !== 'available') {
-            return response()->json(['status' => false, 'message' => 'This booth is no longer available.'], 409);
+        if ($booth->event_app_id !== $attendee->event_app_id) {
+            abort(404);
         }
+        return DB::transaction(function () use ($booth, $attendee) {
+            $locked = EventBooth::whereKey($booth->id)->lockForUpdate()->firstOrFail();
 
-        // Assign booth and mark soldout
-        $booth->attendee_id = $attendee->id;
-        $booth->status      = 'soldout';
-        $booth->save();
-        $this->sendEmail($booth);
+            if ($locked->sold_qty >= $locked->total_qty) {
+                return response()->json([
+                    'status'  => false,
+                    'message' => 'This item is sold out.',
+                ], 409);
+            }
 
-        return response()->json(['status' => true, 'message' => 'Booth purchased successfully.']);
+            // Find the attendee's latest purchase for this booth
+            $purchase = EventBoothPurchase::where('event_booth_id', $locked->id)
+                ->where('attendee_id', $attendee->id)
+                ->orderByDesc('id')
+                ->lockForUpdate()
+                ->first();
+
+            // If already paid, return idempotent success
+            if ($purchase && $purchase->status === 'paid') {
+                return response()->json([
+                    'status'  => true,
+                    'message' => 'Already purchased.',
+                ]);
+            }
+            // Mark purchase as PAID
+            $purchase->status = 'paid';
+            $purchase->save();
+
+            // Increment stock counters and update availability
+            $locked->sold_qty = $locked->sold_qty + 1;
+            $locked->status   = ($locked->sold_qty >= $locked->total_qty) ? 'soldout' : 'available';
+            $locked->save();
+
+            // Email the attendee
+            $this->sendEmail($locked, $attendee);
+
+            return response()->json([
+                'status'  => true,
+                'message' => 'Booth purchased successfully.',
+            ]);
+        });
     }
 
     public function successView()
@@ -120,18 +200,14 @@ class EventBoothController extends Controller
     {
         return Inertia::render('Attendee/EventBooth/Payment/PaymentCancel');
     }
-    private function sendEmail(EventBooth $booth): void
+    private function sendEmail(EventBooth $booth, Attendee $attendee): void
     {
-        if ($booth->attendee_id) {
-            $attendee = Attendee::where('id', $booth->attendee_id)->first();
-            $eventapp = EventApp::where('id', $booth->event_app_id)->first();
+        $eventapp = EventApp::find($booth->event_app_id);
 
-            if ($attendee && $attendee->email && $eventapp) {
-                // mirrors your style: Mail::to(...)->send(new ...)
-                Mail::to($attendee->email)->send(
-                    new EventSponsorshipAwardedMail($eventapp, $booth, $attendee)
-                );
-            }
+        if ($eventapp && $attendee && $attendee->email) {
+            Mail::to($attendee->email)->send(
+                new EventSponsorshipAwardedMail($eventapp, $booth, $attendee)
+            );
         }
     }
 }
