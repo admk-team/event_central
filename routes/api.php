@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\v1\Attendee\BadgeAchievementController;
 use App\Http\Controllers\Api\v1\Attendee\ChatController;
+use App\Http\Controllers\Api\v1\Attendee\EventBoothController;
 use App\Http\Controllers\Api\v1\Organizer\ChatController as OrganizerChatController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -269,5 +270,9 @@ Route::prefix('attendee')->group(function () {
         Route::post('product/update/{paymentId}', [EventShopController::class, 'updateOrder']);
         // Route::get('success/checkout', [EventShopController::class, 'paymentSuccess']);
         // Route::get('cancel/checkout', [EventShopController::class, 'paymentCancel']);
+        //Event booth Functionality
+        Route::get('booths', [EventBoothController::class, 'index']);
+        Route::get('booths/checkout/{booth}', [EventBoothController::class, 'checkoutPage']);
+        Route::post('booths/update/{booth}', [EventBoothController::class, 'updateBooth']);
     });
 });
