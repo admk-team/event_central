@@ -1184,5 +1184,9 @@
   "Payment Canceled": "Plaćanje otkazano",
   "Payment was cancelled.": "Plaćanje je otkazano.",
   "Poster": "Plakat",
-  "Newly selected attendees will be assigned, emailed, and counted toward sold quantity.": "Novo odabrani učesnici biće dodeljeni, obavešteni e-poštom i uračunati u prođatu količinu."
+  "Newly selected attendees will be assigned, emailed, and counted toward sold quantity.": "Novo odabrani učesnici biće dodeljeni, obavešteni e-poštom i uračunati u prođatu količinu.",
+  "Locations": "Lokacije",
+  "Venue Management": "Upravljanje lokacijom",
+  "Import from Blueprint": "Uvoz iz Blueprint-a",
+  "Seats": "Sedišta"
 }

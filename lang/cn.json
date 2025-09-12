@@ -1183,5 +1183,9 @@
     "Payment Canceled": "付款已取消",
     "Payment was cancelled.": "付款已被取消。",
     "Poster": "海报",
-    "Newly selected attendees will be assigned, emailed, and counted toward sold quantity.": "新选择的参会者将被分配、发送邮件通知，并计入已售数量。"
+    "Newly selected attendees will be assigned, emailed, and counted toward sold quantity.": "新选择的参会者将被分配、发送邮件通知，并计入已售数量。",
+    "Locations": "位置",
+    "Venue Management": "场地管理",
+    "Import from Blueprint": "从蓝图导入",
+    "Seats": "座位"
 }

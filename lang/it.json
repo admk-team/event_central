@@ -1183,5 +1183,9 @@
   "Payment Canceled": "Pagamento annullato",
   "Payment was cancelled.": "Il pagamento è stato annullato.",
   "Poster": "Poster",
-  "Newly selected attendees will be assigned, emailed, and counted toward sold quantity.": "I partecipanti appena selezionati verranno assegnati, avvisati via email e conteggiati nella quantità venduta."
+  "Newly selected attendees will be assigned, emailed, and counted toward sold quantity.": "I partecipanti appena selezionati verranno assegnati, avvisati via email e conteggiati nella quantità venduta.",
+  "Locations": "Sedi",
+  "Venue Management": "Gestione sedi",
+  "Import from Blueprint": "Importa da Blueprint",
+  "Seats": "Posti"
 }

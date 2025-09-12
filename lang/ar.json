@@ -1182,5 +1182,9 @@
   "Payment Canceled": "تم إلغاء الدفع",
   "Payment was cancelled.": "تم إلغاء عملية الدفع.",
   "Poster": "ملصق",
-  "Newly selected attendees will be assigned, emailed, and counted toward sold quantity.": "سيتم تعيين الحاضرين الذين تم اختيارهم حديثًا، وإرسال بريد إلكتروني إليهم، واحتسابهم ضمن الكمية المباعة."
+  "Newly selected attendees will be assigned, emailed, and counted toward sold quantity.": "سيتم تعيين الحاضرين الذين تم اختيارهم حديثًا، وإرسال بريد إلكتروني إليهم، واحتسابهم ضمن الكمية المباعة.",
+  "Locations": "المواقع",
+  "Venue Management": "إدارة المكان",
+  "Import from Blueprint": "الاستيراد من المخطط",
+  "Seats": "المقاعد"
 }

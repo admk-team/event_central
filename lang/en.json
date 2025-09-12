@@ -1184,5 +1184,9 @@
     "Payment Canceled": "Payment Canceled",
     "Payment was cancelled.": "Payment was cancelled.",
     "Poster": "Poster",
-    "Newly selected attendees will be assigned, emailed, and counted toward sold quantity.": "Newly selected attendees will be assigned, emailed, and counted toward sold quantity."
+    "Newly selected attendees will be assigned, emailed, and counted toward sold quantity.": "Newly selected attendees will be assigned, emailed, and counted toward sold quantity.",
+    "Locations": "Locations",
+    "Venue Management": "Venue Management",
+    "Import from Blueprint": "Import from Blueprint",
+    "Seats": "Seats"
 }
