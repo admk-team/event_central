@@ -1166,7 +1166,7 @@
   "Sponsor Ad": "إعلان راعٍ",
   "Banner": "لافتة",
   "Buy Now": "اشتري الآن",
-   "Edit Booth / Sponsor Ad / Banner": "تعديل الجناح / إعلان الراعي / لافتة",
+  "Edit Booth / Sponsor Ad / Banner": "تعديل الجناح / إعلان الراعي / لافتة",
   "Add Booth / Sponsor Ad/ Banner": "إضافة جناح / إعلان الراعي / لافتة",
   "Sponsorship": "الرعاية",
   "Processing...": "جارٍ المعالجة...",
@@ -1181,5 +1181,10 @@
   "click here": "اضغط هنا",
   "Payment Canceled": "تم إلغاء الدفع",
   "Payment was cancelled.": "تم إلغاء عملية الدفع.",
-  "Poster": "ملصق"
+  "Poster": "ملصق",
+  "Newly selected attendees will be assigned, emailed, and counted toward sold quantity.": "سيتم تعيين الحاضرين الذين تم اختيارهم حديثًا، وإرسال بريد إلكتروني إليهم، واحتسابهم ضمن الكمية المباعة.",
+  "Locations": "المواقع",
+  "Venue Management": "إدارة المكان",
+  "Import from Blueprint": "الاستيراد من المخطط",
+  "Seats": "المقاعد"
 }
