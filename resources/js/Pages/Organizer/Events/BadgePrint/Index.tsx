@@ -40,13 +40,56 @@ function Index({
     const [showLogo, setShowLogo] = useState(true);
     const [showGradient, setShowGradient] = useState(true);
 
-    const printBadge = () => {
-        // if (customBadgeDesign && customBadgeDesign.mail_content) {
-        //     const url = route('organizer.events.print.badge.design', { search });
-        //     window.open(url, '_blank');
-        // } else {
+    // 1) Put this helper near the top of your component file (outside the component or inside, either is fine)
+    const preloadImage = (src: string) =>
+        new Promise<void>((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => resolve();
+            img.onerror = () => resolve(); // don't block printing if a single asset fails
+            img.src = src;
+        });
+
+    // 2) Collect all <img> sources + any inline CSS background-image URLs currently in the DOM
+    const waitForAllImages = async () => {
+        const urls = new Set<string>();
+
+        // <img> tags
+        document.querySelectorAll<HTMLImageElement>("img").forEach((img) => {
+            if (img.src) urls.add(img.src);
+        });
+
+        // Inline style background-image: url("…")
+        document
+            .querySelectorAll<HTMLElement>("[style*='background']")
+            .forEach((el) => {
+                const bg = el.style.backgroundImage || el.style.background;
+                const match = bg?.match(/url\((['"]?)(.*?)\1\)/);
+                if (match?.[2]) urls.add(match[2]);
+            });
+
+        // If you know your background paths, add them defensively (covers class-based backgrounds too)
+        const BG_BY_DESIGN: Record<string, string> = {
+            Design1: "/storage/BadgesBackground/design_1.png",
+            Design2: "/storage/BadgesBackground/design_2.png",
+            Design3: "/storage/BadgesBackground/design_3.png",
+            Design4: "/storage/BadgesBackground/design_4.png",
+            Design5: "/storage/BadgesBackground/design_5.png",
+            Default: "", // none
+        };
+        // If your container uses classes instead of inline styles, uncomment this line:
+        // if (BG_BY_DESIGN[customBadgeDesign]) urls.add(BG_BY_DESIGN[customBadgeDesign]);
+
+        await Promise.all([...urls].map(preloadImage));
+    };
+
+    // 3) Use the loader inside your print function
+    const printBadge = async () => {
+        await waitForAllImages();
+
+        // Give layout a tick to paint the newly-cached backgrounds before printing
+        await new Promise((r) => setTimeout(r, 50));
+
         window.print();
-        // }
     };
 
     return (
@@ -311,33 +354,72 @@ function Index({
                 <div className="printable">
                     {filteredAttendees.map((attendee: any, index: number) =>
                         attendee.qr_codes.map((qr: any, idx: number) => (
-                            <div key={idx} className="passWrapper print-page-break" style={{transform: isFlipped ? "rotate(180deg)" : "none"}}>
-                                <div className="badge-5-badge-container" style={{  background:  "url('/storage/BadgesBackground/design_5.png')",backgroundSize: "100% 100%" }}>
+                            <div
+                                key={idx}
+                                className="passWrapper print-page-break"
+                                style={{
+                                    transform: isFlipped
+                                        ? "rotate(180deg)"
+                                        : "none",
+                                }}
+                            >
+                                <div
+                                    className="badge-5-badge-container"
+                                    style={{
+                                        background:
+                                            "url('/storage/BadgesBackground/design_5.png')",
+                                        backgroundSize: "100% 100%",
+                                    }}
+                                >
                                     <div className="badge-5-badge-header">
-                                        <h1 style={{ color: "white" }}>{eventApp?.name}</h1>
+                                        <h1 style={{ color: "white" }}>
+                                            {eventApp?.name}
+                                        </h1>
                                     </div>
 
                                     <div className="badge-1-badge-body">
                                         <div className="badge-1-profile-image">
-                                        <img className="avatar-img" src={attendee?.avatar ?? UserDummay} alt={`Profile ${idx + 1}`}/>
+                                            <img
+                                                className="avatar-img"
+                                                src={
+                                                    attendee?.avatar ??
+                                                    UserDummay
+                                                }
+                                                alt={`Profile ${idx + 1}`}
+                                            />
                                         </div>
-                                        <h2 className="badge-1-name">{attendee?.name}</h2>
+                                        <h2 className="badge-1-name">
+                                            {attendee?.name}
+                                        </h2>
                                         <div className="badge-1-title">
-                                        <p style={{ color: "white" }}>{attendee?.position}</p>
+                                            <p style={{ color: "white" }}>
+                                                {attendee?.position}
+                                            </p>
                                         </div>
                                     </div>
 
                                     <div className="badge-5-badge-footer">
-                                        <div className="badge-1-company">{eventApp?.location_base}</div>
-                                        <p className="badge-1-event" style={{ color: "white" }}>{startDate}{" "}{endDate && <>➡️ {endDate}</>}</p>
+                                        <div className="badge-1-company">
+                                            {eventApp?.location_base}
+                                        </div>
+                                        <p
+                                            className="badge-1-event"
+                                            style={{ color: "white" }}
+                                        >
+                                            {startDate}{" "}
+                                            {endDate && <>➡️ {endDate}</>}
+                                        </p>
 
                                         <div className="barcode">
-                                        <img className="qr-code-img" src={qr?.qr_code} alt={`QR code ${idx + 1}`} />
+                                            <img
+                                                className="qr-code-img"
+                                                src={qr?.qr_code}
+                                                alt={`QR code ${idx + 1}`}
+                                            />
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            
                         ))
                     )}
                 </div>
@@ -346,12 +428,37 @@ function Index({
                 <div className="printable">
                     {filteredAttendees.map((attendee: any, index: number) =>
                         attendee.qr_codes.map((qr: any, idx: number) => (
-                            <div key={idx} className="passWrapper print-page-break" style={{ transform: isFlipped ? "rotate(180deg)" : "none",}}>
-                                <div className="badge-4-badge-container"  style={{  background:  "url('/storage/BadgesBackground/design_4.png')",backgroundSize: "100% 100%" }}>
+                            <div
+                                key={idx}
+                                className="passWrapper print-page-break"
+                                style={{
+                                    transform: isFlipped
+                                        ? "rotate(180deg)"
+                                        : "none",
+                                }}
+                            >
+                                <div
+                                    className="badge-4-badge-container"
+                                    style={{
+                                        background:
+                                            "url('/storage/BadgesBackground/design_4.png')",
+                                        backgroundSize: "100% 100%",
+                                    }}
+                                >
                                     <div className="badge-4-badge-header">
                                         {showLogo && (
                                             <div className="badge-4-event-image">
-                                                {showLogo ? (<img src={eventApp?.logo_img || "/placeholder.svg?height=80&width=80" }alt="event logo"/>) : (<div className="eventlogodiv"></div>)}
+                                                {showLogo ? (
+                                                    <img
+                                                        src={
+                                                            eventApp?.logo_img ||
+                                                            "/placeholder.svg?height=80&width=80"
+                                                        }
+                                                        alt="event logo"
+                                                    />
+                                                ) : (
+                                                    <div className="eventlogodiv"></div>
+                                                )}
                                             </div>
                                         )}
                                         <h3>{eventApp?.name}</h3>
@@ -359,17 +466,35 @@ function Index({
 
                                     <div className="badge-3-badge-body">
                                         <div className="badge-4-profile-image">
-                                        <img className="avatar-img" src={attendee?.avatar ?? UserDummay} alt={`Profile ${idx + 1}`}/>
+                                            <img
+                                                className="avatar-img"
+                                                src={
+                                                    attendee?.avatar ??
+                                                    UserDummay
+                                                }
+                                                alt={`Profile ${idx + 1}`}
+                                            />
                                         </div>
-                                        <h2 className="badge-4-name">{attendee?.name}</h2>
-                                        <p className="badge-4-title">{attendee?.position}</p>
+                                        <h2 className="badge-4-name">
+                                            {attendee?.name}
+                                        </h2>
+                                        <p className="badge-4-title">
+                                            {attendee?.position}
+                                        </p>
                                     </div>
                                     <div className="badge-4-footer-outer">
                                         <h4>{eventApp?.location_base}</h4>
-                                        <h4>{startDate}{" "}{endDate && <>➡️ {endDate}</>}</h4>
+                                        <h4>
+                                            {startDate}{" "}
+                                            {endDate && <>➡️ {endDate}</>}
+                                        </h4>
                                         <div className="badge-2-badge-footer">
                                             <div className="barcode">
-                                                <img className="qr-code-img" src={qr?.qr_code} alt={`QR code ${idx + 1}`} />
+                                                <img
+                                                    className="qr-code-img"
+                                                    src={qr?.qr_code}
+                                                    alt={`QR code ${idx + 1}`}
+                                                />
                                             </div>
                                         </div>
                                     </div>
@@ -383,40 +508,85 @@ function Index({
                 <div className="printable">
                     {filteredAttendees.map((attendee: any, index: number) =>
                         attendee.qr_codes.map((qr: any, idx: number) => (
-                            <div key={idx} className="passWrapper print-page-break" style={{ transform: isFlipped ? "rotate(180deg)" : "none",}}>
-                                    <div className="badge-3-badge-container" style={{  background:  "url('/storage/BadgesBackground/design_3.png')",backgroundSize: "100% 100%" }}>
-                                        <div className="badge-3-badge-header">
-                                            {showLogo && (
-                                                <div className="badge-3-event-image">
-                                                    {showLogo ? (<img src={eventApp?.logo_img || "/placeholder.svg?height=80&width=80" }alt="event logo"/>) : (<div className="eventlogodiv"></div>)}
-                                                </div>
-                                            )}
-                                            <h3>{eventApp?.name}</h3>
-                                        </div>
+                            <div
+                                key={idx}
+                                className="passWrapper print-page-break"
+                                style={{
+                                    transform: isFlipped
+                                        ? "rotate(180deg)"
+                                        : "none",
+                                }}
+                            >
+                                <div
+                                    className="badge-3-badge-container"
+                                    style={{
+                                        background:
+                                            "url('/storage/BadgesBackground/design_3.png')",
+                                        backgroundSize: "100% 100%",
+                                    }}
+                                >
+                                    <div className="badge-3-badge-header">
+                                        {showLogo && (
+                                            <div className="badge-3-event-image">
+                                                {showLogo ? (
+                                                    <img
+                                                        src={
+                                                            eventApp?.logo_img ||
+                                                            "/placeholder.svg?height=80&width=80"
+                                                        }
+                                                        alt="event logo"
+                                                    />
+                                                ) : (
+                                                    <div className="eventlogodiv"></div>
+                                                )}
+                                            </div>
+                                        )}
+                                        <h3>{eventApp?.name}</h3>
+                                    </div>
 
-                                        <div className="badge-3-badge-body">
-                                            <div className="badge-3-profile-image">
-                                                <img className="avatar-img" src={attendee?.avatar ?? UserDummay} alt={`Profile ${idx + 1}`}/>
-                                            </div>
-                                            <h2 className="badge-3-name">{attendee?.name}</h2>
-                                            <p className="badge-3-title">{attendee?.position}</p>
+                                    <div className="badge-3-badge-body">
+                                        <div className="badge-3-profile-image">
+                                            <img
+                                                className="avatar-img"
+                                                src={
+                                                    attendee?.avatar ??
+                                                    UserDummay
+                                                }
+                                                alt={`Profile ${idx + 1}`}
+                                            />
                                         </div>
-                                        <div className="badge-3-footer-outer">
-                                            <div className="badge-2-event-detail">
-                                                <div className="badge-2-event-detail-content">
-                                                    <p>{eventApp?.location_base}</p>
-                                                </div>
-                                                <div className="badge-2-event-detail-content">
-                                                    <p style={{color:"black"}}>{startDate}{" "}{endDate && <>➡️ {endDate}</>}</p>
-                                                </div>
+                                        <h2 className="badge-3-name">
+                                            {attendee?.name}
+                                        </h2>
+                                        <p className="badge-3-title">
+                                            {attendee?.position}
+                                        </p>
+                                    </div>
+                                    <div className="badge-3-footer-outer">
+                                        <div className="badge-2-event-detail">
+                                            <div className="badge-2-event-detail-content">
+                                                <p>{eventApp?.location_base}</p>
                                             </div>
-                                            <div className="badge-2-badge-footer">
-                                                <div className="barcode">
-                                                    <img className="qr-code-img" src={qr?.qr_code} alt={`QR code ${idx + 1}`} />
-                                                </div>
+                                            <div className="badge-2-event-detail-content">
+                                                <p style={{ color: "black" }}>
+                                                    {startDate}{" "}
+                                                    {endDate && (
+                                                        <>➡️ {endDate}</>
+                                                    )}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="badge-2-badge-footer">
+                                            <div className="barcode">
+                                                <img
+                                                    className="qr-code-img"
+                                                    src={qr?.qr_code}
+                                                    alt={`QR code ${idx + 1}`}
+                                                />
                                             </div>
                                         </div>
                                     </div>
+                                </div>
                             </div>
                         ))
                     )}
@@ -426,12 +596,37 @@ function Index({
                 <div className="printable">
                     {filteredAttendees.map((attendee: any, index: number) =>
                         attendee.qr_codes.map((qr: any, idx: number) => (
-                            <div key={idx} className="passWrapper print-page-break" style={{ transform: isFlipped ? "rotate(180deg)": "none"}}>
-                                <div className="badge-2-badge-container" style={{  background: "url('/storage/BadgesBackground/design_2.png')", backgroundSize: "100% 100%" }}>
+                            <div
+                                key={idx}
+                                className="passWrapper print-page-break"
+                                style={{
+                                    transform: isFlipped
+                                        ? "rotate(180deg)"
+                                        : "none",
+                                }}
+                            >
+                                <div
+                                    className="badge-2-badge-container"
+                                    style={{
+                                        background:
+                                            "url('/storage/BadgesBackground/design_2.png')",
+                                        backgroundSize: "100% 100%",
+                                    }}
+                                >
                                     <div className="badge-2-badge-header">
                                         {showLogo && (
                                             <div className="badge-2-event-image">
-                                                {showLogo ? (<img src={eventApp?.logo_img || "/placeholder.svg?height=80&width=80" }alt="event logo"/>) : (<div className="eventlogodiv"></div>)}
+                                                {showLogo ? (
+                                                    <img
+                                                        src={
+                                                            eventApp?.logo_img ||
+                                                            "/placeholder.svg?height=80&width=80"
+                                                        }
+                                                        alt="event logo"
+                                                    />
+                                                ) : (
+                                                    <div className="eventlogodiv"></div>
+                                                )}
                                             </div>
                                         )}
                                         <h1>{eventApp?.name}</h1>
@@ -439,22 +634,39 @@ function Index({
 
                                     <div className="badge-2-badge-body">
                                         <div className="badge-2-profile-image">
-                                            <img  src={attendee?.avatar ?? UserDummay} alt={`Profile ${idx + 1}`}/>
+                                            <img
+                                                src={
+                                                    attendee?.avatar ??
+                                                    UserDummay
+                                                }
+                                                alt={`Profile ${idx + 1}`}
+                                            />
                                         </div>
-                                        <h2 className="badge-2-name">{attendee?.name}</h2>
-                                        <p className="badge-2-title">{attendee?.position}</p>
+                                        <h2 className="badge-2-name">
+                                            {attendee?.name}
+                                        </h2>
+                                        <p className="badge-2-title">
+                                            {attendee?.position}
+                                        </p>
                                     </div>
                                     <div className="badge-2-event-detail">
                                         <div className="badge-2-event-detail-content">
                                             <p>{eventApp?.location_base}</p>
                                         </div>
                                         <div className="badge-2-event-detail-content">
-                                            <p style={{color:"black"}}>{startDate}{" "}{endDate && <>➡️ {endDate}</>}</p>
+                                            <p style={{ color: "black" }}>
+                                                {startDate}{" "}
+                                                {endDate && <>➡️ {endDate}</>}
+                                            </p>
                                         </div>
                                     </div>
                                     <div className="badge-2-badge-footer">
                                         <div className="barcode">
-                                            <img className="qr-code-img" src={qr?.qr_code} alt={`QR code ${idx + 1}`} />
+                                            <img
+                                                className="qr-code-img"
+                                                src={qr?.qr_code}
+                                                alt={`QR code ${idx + 1}`}
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -467,28 +679,67 @@ function Index({
                 <div className="printable">
                     {filteredAttendees.map((attendee: any, index: number) =>
                         attendee.qr_codes.map((qr: any, idx: number) => (
-                            <div key={idx} className="passWrapper print-page-break" style={{transform: isFlipped? "rotate(180deg)": "none",}}>
-                                <div className="badge-1-badge-container" style={{  background: "url('/storage/BadgesBackground/design_1.png')", backgroundSize: "100% 100%" }}>
+                            <div
+                                key={idx}
+                                className="passWrapper print-page-break"
+                                style={{
+                                    transform: isFlipped
+                                        ? "rotate(180deg)"
+                                        : "none",
+                                }}
+                            >
+                                <div
+                                    className="badge-1-badge-container"
+                                    style={{
+                                        background:
+                                            "url('/storage/BadgesBackground/design_1.png')",
+                                        backgroundSize: "100% 100%",
+                                    }}
+                                >
                                     <div className="badge-1-badge-header">
-                                        <h1 style={{color:"#5d9edf"}}>{eventApp?.name}</h1>
+                                        <h1 style={{ color: "#5d9edf" }}>
+                                            {eventApp?.name}
+                                        </h1>
                                     </div>
 
                                     <div className="badge-1-badge-body">
                                         <div className="badge-1-profile-image">
-                                            <img  src={attendee?.avatar ?? UserDummay} alt={`Profile ${idx + 1}`}/>
+                                            <img
+                                                src={
+                                                    attendee?.avatar ??
+                                                    UserDummay
+                                                }
+                                                alt={`Profile ${idx + 1}`}
+                                            />
                                         </div>
-                                        <h2 className="badge-1-name">{attendee?.name}</h2>
+                                        <h2 className="badge-1-name">
+                                            {attendee?.name}
+                                        </h2>
                                         <div className="badge-1-title">
-                                            <p style={{color:"white"}}>{attendee?.position}</p>
+                                            <p style={{ color: "white" }}>
+                                                {attendee?.position}
+                                            </p>
                                         </div>
                                     </div>
 
                                     <div className="badge-1-badge-footer">
-                                        <div className="badge-1-company" >{eventApp?.location_base}</div>
-                                        <p className="badge-1-event" style={{color:"white"}}>{startDate}{" "}{endDate && <>➡️ {endDate}</>}</p>
+                                        <div className="badge-1-company">
+                                            {eventApp?.location_base}
+                                        </div>
+                                        <p
+                                            className="badge-1-event"
+                                            style={{ color: "white" }}
+                                        >
+                                            {startDate}{" "}
+                                            {endDate && <>➡️ {endDate}</>}
+                                        </p>
 
                                         <div className="barcode">
-                                            <img className="qr-code-img" src={qr?.qr_code} alt={`QR code ${idx + 1}`} />
+                                            <img
+                                                className="qr-code-img"
+                                                src={qr?.qr_code}
+                                                alt={`QR code ${idx + 1}`}
+                                            />
                                         </div>
                                     </div>
                                 </div>
