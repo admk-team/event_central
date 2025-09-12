@@ -4,12 +4,8 @@ import { Head, router, useForm } from "@inertiajs/react";
 import { Col, Container, Form, Row } from "react-bootstrap";
 import BreadCrumb from "../../../../Components/Common/BreadCrumb";
 import "../../../../css/passes.css";
-import "./Component/Css/badges.css";
-import design5 from "./Component/Images/design_5.png";
-import design4 from "./Component/Images/design_4.png";
-import design3 from "./Component/Images/design_3.png";
-import design2 from "./Component/Images/design_2.png";
-import design1 from "./Component/Images/design_1.png";
+import "../../../../css/badges.css";
+import UserDummay from "../../../../../images/users/user-dummy-img.jpg";
 import { useLaravelReactI18n } from "laravel-react-i18n";
 function Index({
     attendees,
@@ -316,14 +312,14 @@ function Index({
                     {filteredAttendees.map((attendee: any, index: number) =>
                         attendee.qr_codes.map((qr: any, idx: number) => (
                             <div key={idx} className="passWrapper print-page-break" style={{transform: isFlipped ? "rotate(180deg)" : "none"}}>
-                                <div className="badge-5-badge-container" style={{  background:  `url(${design5})` }}>
+                                <div className="badge-5-badge-container" style={{  background:  "url('/storage/BadgesBackground/design_5.png')",backgroundSize: "100% 100%" }}>
                                     <div className="badge-5-badge-header">
                                         <h1 style={{ color: "white" }}>{eventApp?.name}</h1>
                                     </div>
 
                                     <div className="badge-1-badge-body">
                                         <div className="badge-1-profile-image">
-                                        <img className="avatar-img" src={attendee?.avatar} alt={`Profile ${idx + 1}`}/>
+                                        <img className="avatar-img" src={attendee?.avatar ?? UserDummay} alt={`Profile ${idx + 1}`}/>
                                         </div>
                                         <h2 className="badge-1-name">{attendee?.name}</h2>
                                         <div className="badge-1-title">
@@ -351,7 +347,7 @@ function Index({
                     {filteredAttendees.map((attendee: any, index: number) =>
                         attendee.qr_codes.map((qr: any, idx: number) => (
                             <div key={idx} className="passWrapper print-page-break" style={{ transform: isFlipped ? "rotate(180deg)" : "none",}}>
-                                <div className="badge-4-badge-container"  style={{  background:  `url(${design4})`,backgroundSize: "100% 100%" }}>
+                                <div className="badge-4-badge-container"  style={{  background:  "url('/storage/BadgesBackground/design_4.png')",backgroundSize: "100% 100%" }}>
                                     <div className="badge-4-badge-header">
                                         {showLogo && (
                                             <div className="badge-4-event-image">
@@ -363,7 +359,7 @@ function Index({
 
                                     <div className="badge-3-badge-body">
                                         <div className="badge-4-profile-image">
-                                        <img className="avatar-img" src={attendee?.avatar} alt={`Profile ${idx + 1}`}/>
+                                        <img className="avatar-img" src={attendee?.avatar ?? UserDummay} alt={`Profile ${idx + 1}`}/>
                                         </div>
                                         <h2 className="badge-4-name">{attendee?.name}</h2>
                                         <p className="badge-4-title">{attendee?.position}</p>
@@ -388,7 +384,7 @@ function Index({
                     {filteredAttendees.map((attendee: any, index: number) =>
                         attendee.qr_codes.map((qr: any, idx: number) => (
                             <div key={idx} className="passWrapper print-page-break" style={{ transform: isFlipped ? "rotate(180deg)" : "none",}}>
-                                    <div className="badge-3-badge-container" style={{  background:  `url(${design3})`,backgroundSize: "100% 100%" }}>
+                                    <div className="badge-3-badge-container" style={{  background:  "url('/storage/BadgesBackground/design_3.png')",backgroundSize: "100% 100%" }}>
                                         <div className="badge-3-badge-header">
                                             {showLogo && (
                                                 <div className="badge-3-event-image">
@@ -400,7 +396,7 @@ function Index({
 
                                         <div className="badge-3-badge-body">
                                             <div className="badge-3-profile-image">
-                                                <img className="avatar-img" src={attendee?.avatar} alt={`Profile ${idx + 1}`}/>
+                                                <img className="avatar-img" src={attendee?.avatar ?? UserDummay} alt={`Profile ${idx + 1}`}/>
                                             </div>
                                             <h2 className="badge-3-name">{attendee?.name}</h2>
                                             <p className="badge-3-title">{attendee?.position}</p>
@@ -431,7 +427,7 @@ function Index({
                     {filteredAttendees.map((attendee: any, index: number) =>
                         attendee.qr_codes.map((qr: any, idx: number) => (
                             <div key={idx} className="passWrapper print-page-break" style={{ transform: isFlipped ? "rotate(180deg)": "none"}}>
-                                <div className="badge-2-badge-container" style={{  background:  `url(${design2})`, backgroundSize: "100% 100%" }}>
+                                <div className="badge-2-badge-container" style={{  background: "url('/storage/BadgesBackground/design_2.png')", backgroundSize: "100% 100%" }}>
                                     <div className="badge-2-badge-header">
                                         {showLogo && (
                                             <div className="badge-2-event-image">
@@ -443,7 +439,7 @@ function Index({
 
                                     <div className="badge-2-badge-body">
                                         <div className="badge-2-profile-image">
-                                            <img  src={attendee?.avatar} alt={`Profile ${idx + 1}`}/>
+                                            <img  src={attendee?.avatar ?? UserDummay} alt={`Profile ${idx + 1}`}/>
                                         </div>
                                         <h2 className="badge-2-name">{attendee?.name}</h2>
                                         <p className="badge-2-title">{attendee?.position}</p>
@@ -472,14 +468,14 @@ function Index({
                     {filteredAttendees.map((attendee: any, index: number) =>
                         attendee.qr_codes.map((qr: any, idx: number) => (
                             <div key={idx} className="passWrapper print-page-break" style={{transform: isFlipped? "rotate(180deg)": "none",}}>
-                                <div className="badge-1-badge-container" style={{  background:  `url(${design1})`, backgroundSize: "100% 100%" }}>
+                                <div className="badge-1-badge-container" style={{  background: "url('/storage/BadgesBackground/design_1.png')", backgroundSize: "100% 100%" }}>
                                     <div className="badge-1-badge-header">
                                         <h1 style={{color:"#5d9edf"}}>{eventApp?.name}</h1>
                                     </div>
 
                                     <div className="badge-1-badge-body">
                                         <div className="badge-1-profile-image">
-                                            <img  src={attendee?.avatar} alt={`Profile ${idx + 1}`}/>
+                                            <img  src={attendee?.avatar ?? UserDummay} alt={`Profile ${idx + 1}`}/>
                                         </div>
                                         <h2 className="badge-1-name">{attendee?.name}</h2>
                                         <div className="badge-1-title">

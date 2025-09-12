@@ -143,7 +143,6 @@
     border-radius: 50%;
     margin: 0 auto 20px;
     overflow: hidden;
-    background: #3498db;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -226,7 +225,6 @@
     border-radius: 50%;
     border: 2px solid #ecf0f1;
     overflow: hidden;
-    background: #3498db;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -306,9 +304,7 @@
     width: 70px;
     height: 70px;
     border-radius: 50%;
-    border: 2px solid #ecf0f1;
     overflow: hidden;
-    background: #3498db;
     display: flex;
     align-items: center;
     justify-content: center;
