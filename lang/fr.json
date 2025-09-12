@@ -1167,7 +1167,7 @@
   "Sponsor Ad": "Publicité sponsor",
   "Banner": "Bannière",
   "Buy Now": "Acheter maintenant",
-   "Edit Booth / Sponsor Ad / Banner": "Modifier stand / Annonce sponsor / Bannière",
+  "Edit Booth / Sponsor Ad / Banner": "Modifier stand / Annonce sponsor / Bannière",
   "Add Booth / Sponsor Ad/ Banner": "Ajouter stand / Annonce sponsor / Bannière",
   "Sponsorship": "Parrainage",
   "Processing...": "Traitement en cours...",
@@ -1182,5 +1182,6 @@
   "click here": "cliquez ici",
   "Payment Canceled": "Paiement annulé",
   "Payment was cancelled.": "Le paiement a été annulé.",
-  "Poster": "Affiche"
+  "Poster": "Affiche",
+  "Newly selected attendees will be assigned, emailed, and counted toward sold quantity.": "Les nouveaux participants sélectionnés seront attribués, informés par e-mail et comptabilisés dans la quantité vendue."
 }

@@ -1182,5 +1182,6 @@
   "click here": "clicca qui",
   "Payment Canceled": "Pagamento annullato",
   "Payment was cancelled.": "Il pagamento è stato annullato.",
-  "Poster": "Poster"
+  "Poster": "Poster",
+  "Newly selected attendees will be assigned, emailed, and counted toward sold quantity.": "I partecipanti appena selezionati verranno assegnati, avvisati via email e conteggiati nella quantità venduta."
 }
