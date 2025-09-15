@@ -101,7 +101,7 @@ export default function WebsiteUrl() {
                             className="d-flex align-items-center gap-1"
                             onClick={() => setShowModal(true)}
                         >
-                            <span>{t("Custome Website")}</span>
+                            <span>{t("Custome Domain")}</span>
                         </Button>
                     </div>
                 </CardFooter>
