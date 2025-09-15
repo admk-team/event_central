@@ -1182,5 +1182,10 @@
   "click here": "haz clic aquí",
   "Payment Canceled": "Pago cancelado",
   "Payment was cancelled.": "El pago fue cancelado.",
-   "Poster": "Póster"
+  "Poster": "Póster",
+  "Newly selected attendees will be assigned, emailed, and counted toward sold quantity.": "Los asistentes seleccionados recientemente serán asignados, notificados por correo electrónico y contabilizados en la cantidad vendida.",
+  "Locations": "Ubicaciones",
+  "Venue Management": "Gestión del recinto",
+  "Import from Blueprint": "Importar desde Blueprint",
+  "Seats": "Asientos"
 }

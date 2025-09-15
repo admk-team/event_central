@@ -1,4 +1,3 @@
-// resources/js/Pages/Organizer/Events/EventBooth/Index.tsx
 import Layout from "../../../../Layouts/Event";
 import React, { useMemo, useState } from "react";
 import { Head, useForm } from "@inertiajs/react";
@@ -11,7 +10,7 @@ import DeleteManyModal from "../../../../Components/Common/DeleteManyModal";
 import CreateEditModal from "./Components/CreateEditModal";
 import { useLaravelReactI18n } from "laravel-react-i18n";
 
-type Attendee = { id: number; name: string; email:string};
+type Attendee = { id: number; name: string; email: string };
 
 function Index({ data, attendees }: { data: any; attendees: Attendee[] }) {
   const [showCreateEditModal, setShowCreateEditModal] = useState(false);
@@ -24,16 +23,10 @@ function Index({ data, attendees }: { data: any; attendees: Attendee[] }) {
   const deleteForm = useForm({ _method: "DELETE" });
   const deleteManyForm = useForm<{ _method: string; ids: number[] }>({ _method: "DELETE", ids: [] });
 
-  const attendeeMap = useMemo(() => {
-    const map: Record<number, string> = {};
-    (attendees || []).forEach((a) => {
-      map[a.id] = a.name || `#${a.id}`;
-    });
-    return map;
-  }, [attendees]);
-
   const editAction = (booth: any) => {
-    setEditBooth(booth);
+    // Preselect attendee IDs from badges
+    const selectedIds = (booth.attendees_badges || []).map((a: any) => a.id);
+    setEditBooth({ ...booth, selected_attendee_ids: selectedIds });
     setShowCreateEditModal(true);
   };
 
@@ -64,20 +57,30 @@ function Index({ data, attendees }: { data: any; attendees: Attendee[] }) {
       accessorKey: "logo",
       header: () => t("Poster"),
       cell: (r) =>
-        r.logo ? (
-          <img src={`/storage/${r.logo}`} alt={r.name} style={{ height: 32 }} />
-        ) : (
-          t("No Logo")
-        ),
+        r.logo ? <img src={`/storage/${r.logo}`} alt={r.name} style={{ height: 32 }} /> : <span>—</span>,
       enableSorting: false,
     },
     { accessorKey: "number", header: () => t("Number"), cell: (r) => r.number ?? "—", enableSorting: true },
     { accessorKey: "type", header: () => t("Type"), cell: (r) => r.type, enableSorting: true },
+    { accessorKey: "sold_qty", header: () => t("Sold"), cell: (r) => r.sold_qty, enableSorting: true },
+    { accessorKey: "total_qty", header: () => t("Total"), cell: (r) => r.total_qty, enableSorting: true },
     {
-      accessorKey: "attendee_id",
-      header: () => t("Attendee"),
-      cell: (r) => (r.attendee_id ? attendeeMap[r.attendee_id] ?? `#${r.attendee_id}` : "—"),
-      enableSorting: true,
+      accessorKey: "attendees_badges",
+      header: () => t("Attendees"),
+      cell: (row: any) => {
+        const list = (row.attendees_badges || []) as { id: number; name: string; email: string }[];
+        if (!list.length) return "—";
+        return (
+          <div className="d-flex flex-wrap gap-1">
+            {list.map((a) => (
+              <span key={a.id} className="badge bg-light text-dark border">
+                {a.name} <span className="text-muted">({a.email})</span>
+              </span>
+            ))}
+          </div>
+        );
+      },
+      enableSorting: false,
     },
     { accessorKey: "status", header: () => t("Status"), cell: (r) => r.status, enableSorting: true },
     { accessorKey: "price", header: () => t("Price"), cell: (r) => r.price ?? 0, enableSorting: true },
@@ -113,6 +116,7 @@ function Index({ data, attendees }: { data: any; attendees: Attendee[] }) {
                 columns={columns}
                 title={t("Sponsorship Opportunities")}
                 actions={[
+                  // Delete multiple
                   {
                     render: (dt) => (
                       <HasPermission permission="delete_event_booth">
@@ -126,6 +130,7 @@ function Index({ data, attendees }: { data: any; attendees: Attendee[] }) {
                     ),
                     showOnRowSelection: true,
                   },
+                  // Add new
                   {
                     render: (
                       <HasPermission permission="create_event_booth">
@@ -154,7 +159,7 @@ function Index({ data, attendees }: { data: any; attendees: Attendee[] }) {
             setEditBooth(null);
           }}
           booth={editBooth}
-          attendees={attendees} // <-- pass down
+          attendees={attendees}
         />
       )}
 
@@ -174,5 +179,4 @@ function Index({ data, attendees }: { data: any; attendees: Attendee[] }) {
 }
 
 Index.layout = (page: any) => <Layout children={page} />;
-
 export default Index;

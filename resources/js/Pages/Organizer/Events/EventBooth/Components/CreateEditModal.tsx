@@ -1,4 +1,3 @@
-// resources/js/Pages/Organizer/Events/EventBooth/Components/CreateEditModal.tsx
 import React, { useEffect, useMemo, useState } from "react";
 import { useForm } from "@inertiajs/react";
 import { Form, FormGroup, Modal, Spinner } from "react-bootstrap";
@@ -6,13 +5,7 @@ import { useLaravelReactI18n } from "laravel-react-i18n";
 import Select from "react-select";
 
 type Attendee = { id: number; name: string; email: string };
-
-type Option = {
-  value: number;
-  label: string;
-  name: string;
-  email: string;
-};
+type Option = { value: number; label: string };
 
 export default function CreateEditModal({
   show,
@@ -30,33 +23,38 @@ export default function CreateEditModal({
   const isEdit = booth != null;
   const { t } = useLaravelReactI18n();
 
+  // Preselect attendee IDs for edit
+  const preselectedIds: number[] =
+    (booth?.selected_attendee_ids as number[] | undefined) ??
+    (Array.isArray(booth?.attendees_badges) ? booth.attendees_badges.map((a: any) => a.id) : []) ??
+    [];
+
   const { data, setData, post, processing, errors, reset } = useForm({
     _method: isEdit ? "PUT" : "POST",
     name: booth?.name ?? "",
     type: booth?.type ?? "booth",
     description: booth?.description ?? "",
     number: booth?.number ?? "",
+    total_qty: booth?.total_qty ?? "",
     price: booth?.price ?? "",
-    attendee_id: booth?.attendee_id ?? "",
+    attendee_ids: preselectedIds, // multi-assign
     logo: null as File | null,
   });
 
-  // === visibility flags
+  // Conditional visibility
   const isBooth = (data.type || "").toLowerCase() === "booth";
-  const showLogoField = !isBooth;   // hide logo for booth
-  const showNumberField = isBooth;  // hide number for non-booth
+  const showLogoField = !isBooth;   // Poster shown for sponsor/banner
+  const showNumberField = isBooth;  // Number shown only for booth
 
-  // Reset hidden field values to avoid stale submits
-  const [logoKey, setLogoKey] = useState(0); // to clear file input
+  // Clear hidden fields so we don't submit stale values
+  const [logoKey, setLogoKey] = useState(0);
   useEffect(() => {
     if (isBooth) {
-      // hide logo, clear it
       if (data.logo) {
         setData("logo", null);
         setLogoKey((k) => k + 1);
       }
     } else {
-      // hide number, clear it
       if (data.number !== "") {
         setData("number", "");
       }
@@ -64,24 +62,16 @@ export default function CreateEditModal({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isBooth]);
 
-  // Build react-select options once
+  // Options for react-select
   const attendeeOptions = useMemo<Option[]>(
-    () =>
-      (attendees || []).map((a) => ({
-        value: a.id,
-        label: `${a.name} — ${a.email}`,
-        name: (a.name || "").toLowerCase(),
-        email: (a.email || "").toLowerCase(),
-      })),
+    () => (attendees || []).map((a) => ({ value: a.id, label: `${a.name} — ${a.email}` })),
     [attendees]
   );
 
-  const selectedOption = useMemo<Option | null>(() => {
-    if (data.attendee_id === "" || data.attendee_id == null) return null;
-    const id = Number(data.attendee_id);
-    if (Number.isNaN(id)) return null;
-    return attendeeOptions.find((o) => o.value === id) ?? null;
-  }, [data.attendee_id, attendeeOptions]);
+  const selectedOptions = useMemo<Option[]>(
+    () => attendeeOptions.filter((o) => (data.attendee_ids || []).includes(o.value)),
+    [attendeeOptions, data.attendee_ids]
+  );
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
@@ -96,10 +86,19 @@ export default function CreateEditModal({
     formData.append("name", data.name);
     formData.append("type", data.type);
     formData.append("description", data.description ?? "");
-    formData.append("number", showNumberField ? data.number?.toString() ?? "" : ""); // send only if visible
     formData.append("price", data.price?.toString() ?? "");
-    formData.append("attendee_id", data.attendee_id === "" ? "" : String(data.attendee_id));
-    if (showLogoField && data.logo) formData.append("logo", data.logo);
+    formData.append("total_qty", data.total_qty?.toString() ?? "");
+    // Only send number if visible for booth
+    formData.append("number", showNumberField ? data.number?.toString() ?? "" : "");
+
+    // Multi-assign attendees
+    (data.attendee_ids || []).forEach((id: number) => {
+      formData.append("attendee_ids[]", String(id));
+    });
+
+    if (showLogoField && data.logo) {
+      formData.append("logo", data.logo);
+    }
 
     if (isEdit) {
       post(route("organizer.booths.update", booth.id), {
@@ -155,7 +154,7 @@ export default function CreateEditModal({
             {errors.name && <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>}
           </FormGroup>
 
-          {/* Logo (hidden for booth) */}
+          {/* Poster (logo) — only for sponsor/banner */}
           {showLogoField && (
             <FormGroup className="mb-3">
               <Form.Label className="form-label">{t("Poster")}</Form.Label>
@@ -169,7 +168,7 @@ export default function CreateEditModal({
               />
               {isEdit && booth?.logo && !data.logo && (
                 <div className="mt-2">
-                  <img src={`/storage/${booth.logo}`} alt="Current Logo" style={{ width: 32, height: 32 }} />
+                  <img src={`/storage/${booth.logo}`} alt="Current Logo" style={{ height: 40 }} />
                   <span className="ms-2">{t("Current Logo")}</span>
                 </div>
               )}
@@ -177,7 +176,7 @@ export default function CreateEditModal({
             </FormGroup>
           )}
 
-          {/* Number (hidden for non-booth) */}
+          {/* Number — only for booth */}
           {showNumberField && (
             <FormGroup className="mb-3">
               <Form.Label className="form-label">{t("Number")}</Form.Label>
@@ -192,22 +191,37 @@ export default function CreateEditModal({
             </FormGroup>
           )}
 
-          {/* Attendee */}
           <FormGroup className="mb-3">
-            <Form.Label className="form-label">{t("Assign to Attendee")}</Form.Label>
+            <Form.Label className="form-label">{t("Total quantity")}</Form.Label>
+            <Form.Control
+              type="number"
+              className="form-control"
+              value={data.total_qty}
+              onChange={(e) => setData("total_qty", parseInt(e.target.value) || "")}
+              isInvalid={!!errors.total_qty}
+            />
+            {errors.total_qty && <Form.Control.Feedback type="invalid">{errors.total_qty}</Form.Control.Feedback>}
+          </FormGroup>
+
+          {/* Multi-select attendees */}
+          <FormGroup className="mb-3">
+            <Form.Label className="form-label">{t("Assign to Attendees")}</Form.Label>
             <Select
               className="react-select-container"
               classNamePrefix="react-select"
               options={attendeeOptions}
-              value={selectedOption}
-              onChange={(opt) => setData("attendee_id", opt ? (opt as Option).value : "")}
+              value={selectedOptions}
+              onChange={(opts) => setData("attendee_ids", (opts || []).map((o: any) => o.value))}
               isClearable
               isSearchable
+              isMulti
               placeholder={t("Search by name or email...")}
             />
-            {errors.attendee_id && <div className="invalid-feedback d-block">{errors.attendee_id}</div>}
+            {errors.attendee_ids && (
+              <div className="invalid-feedback d-block">{(errors as any).attendee_ids}</div>
+            )}
             <div className="form-text">
-              {t("If you select an attendee, the booth will be marked Soldout automatically.")}
+              {t("Newly selected attendees will be assigned, emailed, and counted toward sold quantity.")}
             </div>
           </FormGroup>
 

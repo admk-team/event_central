@@ -4,6 +4,8 @@ import { Head, router, useForm } from "@inertiajs/react";
 import { Col, Container, Form, Row } from "react-bootstrap";
 import BreadCrumb from "../../../../Components/Common/BreadCrumb";
 import "../../../../css/passes.css";
+import "../../../../css/badges.css";
+import UserDummay from "../../../../../images/users/user-dummy-img.jpg";
 import { useLaravelReactI18n } from "laravel-react-i18n";
 function Index({
     attendees,
@@ -38,13 +40,56 @@ function Index({
     const [showLogo, setShowLogo] = useState(true);
     const [showGradient, setShowGradient] = useState(true);
 
-    const printBadge = () => {
-        // if (customBadgeDesign && customBadgeDesign.mail_content) {
-        //     const url = route('organizer.events.print.badge.design', { search });
-        //     window.open(url, '_blank');
-        // } else {
+    // 1) Put this helper near the top of your component file (outside the component or inside, either is fine)
+    const preloadImage = (src: string) =>
+        new Promise<void>((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => resolve();
+            img.onerror = () => resolve(); // don't block printing if a single asset fails
+            img.src = src;
+        });
+
+    // 2) Collect all <img> sources + any inline CSS background-image URLs currently in the DOM
+    const waitForAllImages = async () => {
+        const urls = new Set<string>();
+
+        // <img> tags
+        document.querySelectorAll<HTMLImageElement>("img").forEach((img) => {
+            if (img.src) urls.add(img.src);
+        });
+
+        // Inline style background-image: url("…")
+        document
+            .querySelectorAll<HTMLElement>("[style*='background']")
+            .forEach((el) => {
+                const bg = el.style.backgroundImage || el.style.background;
+                const match = bg?.match(/url\((['"]?)(.*?)\1\)/);
+                if (match?.[2]) urls.add(match[2]);
+            });
+
+        // If you know your background paths, add them defensively (covers class-based backgrounds too)
+        const BG_BY_DESIGN: Record<string, string> = {
+            Design1: "/storage/BadgesBackground/design_1.png",
+            Design2: "/storage/BadgesBackground/design_2.png",
+            Design3: "/storage/BadgesBackground/design_3.png",
+            Design4: "/storage/BadgesBackground/design_4.png",
+            Design5: "/storage/BadgesBackground/design_5.png",
+            Default: "", // none
+        };
+        // If your container uses classes instead of inline styles, uncomment this line:
+        // if (BG_BY_DESIGN[customBadgeDesign]) urls.add(BG_BY_DESIGN[customBadgeDesign]);
+
+        await Promise.all([...urls].map(preloadImage));
+    };
+
+    // 3) Use the loader inside your print function
+    const printBadge = async () => {
+        await waitForAllImages();
+
+        // Give layout a tick to paint the newly-cached backgrounds before printing
+        await new Promise((r) => setTimeout(r, 50));
+
         window.print();
-        // }
     };
 
     return (
@@ -68,34 +113,36 @@ function Index({
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
                             />
-                            <Form.Group
-                                controlId="passSizeSelect"
-                                className="mb-3 mt-2"
-                            >
-                                <Form.Label className="text-black">
-                                    {t("Select Pass Size")}
-                                </Form.Label>
-                                <Form.Select
-                                    value={passSize}
-                                    onChange={(e) =>
-                                        setPassSize(e.target.value)
-                                    }
+                            {customBadgeDesign == "Default" && (
+                                <Form.Group
+                                    controlId="passSizeSelect"
+                                    className="mb-3 mt-2"
                                 >
-                                    <option value="pass">Default</option>
-                                    <option value="pass-4x6">4 x 6</option>
-                                    <option value="pass-3_5x5_5">
-                                        3.5 x 5.5
-                                    </option>
-                                    <option value="pass-3x5">3 x 5</option>
-                                    <option value="pass-4x4">4 x 4</option>
-                                    <option value="pass-2_5x3_5">
-                                        2.5 x 3.5
-                                    </option>
-                                    <option value="pass-cr80">
-                                        CR80 (ID Card)
-                                    </option>
-                                </Form.Select>
-                            </Form.Group>
+                                    <Form.Label className="text-black">
+                                        {t("Select Pass Size")}
+                                    </Form.Label>
+                                    <Form.Select
+                                        value={passSize}
+                                        onChange={(e) =>
+                                            setPassSize(e.target.value)
+                                        }
+                                    >
+                                        <option value="pass">Default</option>
+                                        <option value="pass-4x6">4 x 6</option>
+                                        <option value="pass-3_5x5_5">
+                                            3.5 x 5.5
+                                        </option>
+                                        <option value="pass-3x5">3 x 5</option>
+                                        <option value="pass-4x4">4 x 4</option>
+                                        <option value="pass-2_5x3_5">
+                                            2.5 x 3.5
+                                        </option>
+                                        <option value="pass-cr80">
+                                            CR80 (ID Card)
+                                        </option>
+                                    </Form.Select>
+                                </Form.Group>
+                            )}
                         </Col>
                         <Col md={8} className="mt-4">
                             <div className="d-flex flex-column flex-md-row justify-content-md-end align-items-stretch gap-2">
@@ -115,17 +162,19 @@ function Index({
                                         ? "🙈" + t("Hide Logo")
                                         : "👁️ " + "Show Logo"}
                                 </button>
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary w-100 w-md-auto"
-                                    onClick={() =>
-                                        setShowGradient((prev) => !prev)
-                                    }
-                                >
-                                    {showGradient
-                                        ? "🧼" + t("White Background")
-                                        : "🌈" + t("Gradient Background")}
-                                </button>
+                                {customBadgeDesign == "Default" && (
+                                    <button
+                                        type="button"
+                                        className="btn btn-secondary w-100 w-md-auto"
+                                        onClick={() =>
+                                            setShowGradient((prev) => !prev)
+                                        }
+                                    >
+                                        {showGradient
+                                            ? "🧼" + t("White Background")
+                                            : "🌈" + t("Gradient Background")}
+                                    </button>
+                                )}
                                 <button
                                     type="button"
                                     className="btn btn-info w-100 w-md-auto"
@@ -304,7 +353,7 @@ function Index({
             {customBadgeDesign == "Design1" && (
                 <div className="printable">
                     {filteredAttendees.map((attendee: any, index: number) =>
-                        attendee.qr_codes.map((qr: string, idx: number) => (
+                        attendee.qr_codes.map((qr: any, idx: number) => (
                             <div
                                 key={idx}
                                 className="passWrapper print-page-break"
@@ -314,67 +363,59 @@ function Index({
                                         : "none",
                                 }}
                             >
-                                <div className="passes-container">
-                                    <div
-                                        className={`${passSize} ${
-                                            showGradient
-                                                ? "div-gradient"
-                                                : "bg-transparent"
-                                        } mt-4 mb-4`}
-                                    >
-                                        <div className="attendee-details">
-                                            {attendee?.avatar && (
-                                                <div className="avatarWrapper">
-                                                    <img
-                                                        className="avatar-img"
-                                                        src={attendee?.avatar}
-                                                        alt={`Profile ${
-                                                            idx + 1
-                                                        }`}
-                                                    />
-                                                </div>
-                                            )}
-                                            <h6 className="attendee-name1">
-                                                {attendee?.name}
-                                            </h6>
-                                            <h6 className="attendee-name1">
-                                                {attendee?.position}
-                                            </h6>
+                                <div
+                                    className="badge-5-badge-container"
+                                    style={{
+                                        background:
+                                            "url('/storage/BadgesBackground/design_5.png')",
+                                        backgroundSize: "100% 100%",
+                                    }}
+                                >
+                                    <div className="badge-5-badge-header">
+                                        <h1 style={{ color: "white" }}>
+                                            {eventApp?.name}
+                                        </h1>
+                                    </div>
 
-                                            <span className="location1">
-                                                {attendee?.location}
-                                            </span>
-                                            <p className="attendee-name1">
-                                                {qr.ticket_type_name}
-                                            </p>
-                                        </div>
-
-                                        <div className="qrWrapper">
+                                    <div className="badge-1-badge-body">
+                                        <div className="badge-1-profile-image">
                                             <img
-                                                className="qr-code-img"
-                                                src={qr.qr_code}
-                                                alt={`QR code ${idx + 1}`}
+                                                className="avatar-img"
+                                                src={
+                                                    attendee?.avatar ??
+                                                    UserDummay
+                                                }
+                                                alt={`Profile ${idx + 1}`}
                                             />
                                         </div>
-                                        <div className="footer-wraper">
-                                            {/* {showLogo ? (
-                                                <img
-                                                    className="circle"
-                                                    src={
-                                                        eventApp?.logo_img ||
-                                                        "/placeholder.svg?height=80&width=80"
-                                                    }
-                                                    alt="event logo"
-                                                />
-                                            ) : (
-                                                <div className="eventlogodiv"></div>
-                                            )} */}
-                                            <h1 className="attendee-name1">
-                                                {eventApp?.name}
-                                            </h1>
-                                            <span className="location1">
-                                                {eventApp?.location_base}
-                                            </span>
+                                        <h2 className="badge-1-name">
+                                            {attendee?.name}
+                                        </h2>
+                                        <div className="badge-1-title">
+                                            <p style={{ color: "white" }}>
+                                                {attendee?.position}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="badge-5-badge-footer">
+                                        <div className="badge-1-company">
+                                            {eventApp?.location_base}
+                                        </div>
+                                        <p
+                                            className="badge-1-event"
+                                            style={{ color: "white" }}
+                                        >
+                                            {startDate}{" "}
+                                            {endDate && <>➡️ {endDate}</>}
+                                        </p>
+
+                                        <div className="barcode">
+                                            <img
+                                                className="qr-code-img"
+                                                src={qr?.qr_code}
+                                                alt={`QR code ${idx + 1}`}
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -386,7 +427,7 @@ function Index({
             {customBadgeDesign == "Design2" && (
                 <div className="printable">
                     {filteredAttendees.map((attendee: any, index: number) =>
-                        attendee.qr_codes.map((qr: string, idx: number) => (
+                        attendee.qr_codes.map((qr: any, idx: number) => (
                             <div
                                 key={idx}
                                 className="passWrapper print-page-break"
@@ -396,19 +437,19 @@ function Index({
                                         : "none",
                                 }}
                             >
-                                <div className="passes-container">
-                                    <div
-                                        className={`${passSize} ${
-                                            showGradient
-                                                ? "div-gradient"
-                                                : "bg-transparent"
-                                        } mt-4 mb-4`}
-                                    >
-                                        <div className="heading-wraper">
-                                            <div className="qrWrapper2">
+                                <div
+                                    className="badge-4-badge-container"
+                                    style={{
+                                        background:
+                                            "url('/storage/BadgesBackground/design_4.png')",
+                                        backgroundSize: "100% 100%",
+                                    }}
+                                >
+                                    <div className="badge-4-badge-header">
+                                        {showLogo && (
+                                            <div className="badge-4-event-image">
                                                 {showLogo ? (
                                                     <img
-                                                        className="logo-img"
                                                         src={
                                                             eventApp?.logo_img ||
                                                             "/placeholder.svg?height=80&width=80"
@@ -419,59 +460,42 @@ function Index({
                                                     <div className="eventlogodiv"></div>
                                                 )}
                                             </div>
+                                        )}
+                                        <h3>{eventApp?.name}</h3>
+                                    </div>
 
-                                            <span className="attendee-name1">
-                                                {eventApp?.location_base}
-                                            </span>
-                                            <span className="location">
-                                                {startDate}{" "}
-                                                {endDate && <>➡️ {endDate}</>}
-                                            </span>
-                                        </div>
-
-                                        <div className="qrWrapper">
+                                    <div className="badge-3-badge-body">
+                                        <div className="badge-4-profile-image">
                                             <img
-                                                className="qr-code-img"
-                                                src={qr.qr_code}
-                                                alt={`QR code ${idx + 1}`}
+                                                className="avatar-img"
+                                                src={
+                                                    attendee?.avatar ??
+                                                    UserDummay
+                                                }
+                                                alt={`Profile ${idx + 1}`}
                                             />
                                         </div>
-
-                                        <div className="attendee-details">
-                                            <p className="attendee-name">
-                                                {qr.ticket_type_name}
-                                            </p>
-                                            <h6 className="attendee-name1">
-                                                {attendee?.name}
-                                            </h6>
-                                            <h6 className="attendee-name1">
-                                                {attendee?.position}
-                                            </h6>
-                                            <div className="location">
-                                                {attendee?.facebook_link && (
-                                                    <div>
-                                                        {attendee.facebook_link}
-                                                    </div>
-                                                )}
-                                                {attendee?.linkedin_link && (
-                                                    <div>
-                                                        {attendee.linkedin_link}
-                                                    </div>
-                                                )}
-                                                {attendee?.twitter_link && (
-                                                    <div>
-                                                        {attendee.twitter_link}
-                                                    </div>
-                                                )}
-                                                {attendee?.other_link && (
-                                                    <div>
-                                                        {attendee.other_link}
-                                                    </div>
-                                                )}
+                                        <h2 className="badge-4-name">
+                                            {attendee?.name}
+                                        </h2>
+                                        <p className="badge-4-title">
+                                            {attendee?.position}
+                                        </p>
+                                    </div>
+                                    <div className="badge-4-footer-outer">
+                                        <h4>{eventApp?.location_base}</h4>
+                                        <h4>
+                                            {startDate}{" "}
+                                            {endDate && <>➡️ {endDate}</>}
+                                        </h4>
+                                        <div className="badge-2-badge-footer">
+                                            <div className="barcode">
+                                                <img
+                                                    className="qr-code-img"
+                                                    src={qr?.qr_code}
+                                                    alt={`QR code ${idx + 1}`}
+                                                />
                                             </div>
-                                            <span className="attendee-name1">
-                                                {attendee?.location}
-                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -483,7 +507,7 @@ function Index({
             {customBadgeDesign == "Design3" && (
                 <div className="printable">
                     {filteredAttendees.map((attendee: any, index: number) =>
-                        attendee.qr_codes.map((qr: string, idx: number) => (
+                        attendee.qr_codes.map((qr: any, idx: number) => (
                             <div
                                 key={idx}
                                 className="passWrapper print-page-break"
@@ -493,81 +517,73 @@ function Index({
                                         : "none",
                                 }}
                             >
-                                <div className="passes-container">
-                                    <div
-                                        className={`${passSize} ${
-                                            showGradient
-                                                ? "div-gradient"
-                                                : "bg-transparent"
-                                        } mt-4 mb-4`}
-                                    >
-                                        <div className="qrWrapper3">
-                                            <img
-                                                className="qr-code-img-3"
-                                                src={qr.qr_code}
-                                                alt={`QR code ${idx + 1}`}
-                                            />
-                                        </div>
-                                        <div className="heading-wraper">
-                                            <p className="attendee-name mt-2">
-                                                {qr.ticket_type_name}
-                                            </p>
-                                            <span className="attendee-name3">
-                                                {/* {eventApp?.name} */}
-                                                Event Name
-                                            </span>
-                                            <span className="attendee-name1">
-                                                {eventApp?.location_base}
-                                            </span>
-                                            <span className="location">
-                                                {startDate}{" "}
-                                                {endDate && <>➡️ {endDate}</>}
-                                            </span>
-                                        </div>
-                                        {attendee?.avatar && (
-                                            <div className="avatarWrapper">
-                                                <img
-                                                    className="avatar-img"
-                                                    src={
-                                                        attendee?.avatar ||
-                                                        "/placeholder.svg?height=80&width=80"
-                                                    }
-                                                    alt="event logo"
-                                                />
+                                <div
+                                    className="badge-3-badge-container"
+                                    style={{
+                                        background:
+                                            "url('/storage/BadgesBackground/design_3.png')",
+                                        backgroundSize: "100% 100%",
+                                    }}
+                                >
+                                    <div className="badge-3-badge-header">
+                                        {showLogo && (
+                                            <div className="badge-3-event-image">
+                                                {showLogo ? (
+                                                    <img
+                                                        src={
+                                                            eventApp?.logo_img ||
+                                                            "/placeholder.svg?height=80&width=80"
+                                                        }
+                                                        alt="event logo"
+                                                    />
+                                                ) : (
+                                                    <div className="eventlogodiv"></div>
+                                                )}
                                             </div>
                                         )}
-                                        <div className="attendee-details-3">
-                                            <h6 className="attendee-name1 fs-2">
-                                                {attendee?.name}
-                                            </h6>
-                                            <h6 className="attendee-name1">
-                                                {attendee?.position}
-                                            </h6>
-                                            <div className="location">
-                                                {attendee?.facebook_link && (
-                                                    <div>
-                                                        {attendee.facebook_link}
-                                                    </div>
-                                                )}
-                                                {attendee?.linkedin_link && (
-                                                    <div>
-                                                        {attendee.linkedin_link}
-                                                    </div>
-                                                )}
-                                                {attendee?.twitter_link && (
-                                                    <div>
-                                                        {attendee.twitter_link}
-                                                    </div>
-                                                )}
-                                                {attendee?.other_link && (
-                                                    <div>
-                                                        {attendee.other_link}
-                                                    </div>
-                                                )}
+                                        <h3>{eventApp?.name}</h3>
+                                    </div>
+
+                                    <div className="badge-3-badge-body">
+                                        <div className="badge-3-profile-image">
+                                            <img
+                                                className="avatar-img"
+                                                src={
+                                                    attendee?.avatar ??
+                                                    UserDummay
+                                                }
+                                                alt={`Profile ${idx + 1}`}
+                                            />
+                                        </div>
+                                        <h2 className="badge-3-name">
+                                            {attendee?.name}
+                                        </h2>
+                                        <p className="badge-3-title">
+                                            {attendee?.position}
+                                        </p>
+                                    </div>
+                                    <div className="badge-3-footer-outer">
+                                        <div className="badge-2-event-detail">
+                                            <div className="badge-2-event-detail-content">
+                                                <p>{eventApp?.location_base}</p>
                                             </div>
-                                            <span className="attendee-name1">
-                                                {attendee?.location}
-                                            </span>
+                                            <div className="badge-2-event-detail-content">
+                                                <p style={{ color: "black" }}>
+                                                    {startDate}{" "}
+                                                    {endDate && (
+                                                        <>➡️ {endDate}</>
+                                                    )}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="badge-2-badge-footer">
+                                            <div className="barcode">
+                                                <img
+                                                    className="qr-code-img"
+                                                    src={qr?.qr_code}
+                                                    alt={`QR code ${idx + 1}`}
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -579,7 +595,7 @@ function Index({
             {customBadgeDesign == "Design4" && (
                 <div className="printable">
                     {filteredAttendees.map((attendee: any, index: number) =>
-                        attendee.qr_codes.map((qr: string, idx: number) => (
+                        attendee.qr_codes.map((qr: any, idx: number) => (
                             <div
                                 key={idx}
                                 className="passWrapper print-page-break"
@@ -589,63 +605,19 @@ function Index({
                                         : "none",
                                 }}
                             >
-                                <div className="passes-container">
-                                    <div
-                                        className={`${passSize} ${
-                                            showGradient
-                                                ? "div-gradient"
-                                                : "bg-transparent"
-                                        } mt-4 mb-4`}
-                                    >
-                                        <div className="attendee-details">
-                                            <p className="attendee-name">
-                                                {qr.ticket_type_name}
-                                            </p>
-                                            <h6 className="attendee-name1">
-                                                {attendee?.name}
-                                            </h6>
-                                            <h6 className="attendee-name1">
-                                                {attendee?.position}
-                                            </h6>
-                                            <div className="location">
-                                                {attendee?.facebook_link && (
-                                                    <div>
-                                                        {attendee.facebook_link}
-                                                    </div>
-                                                )}
-                                                {attendee?.linkedin_link && (
-                                                    <div>
-                                                        {attendee.linkedin_link}
-                                                    </div>
-                                                )}
-                                                {attendee?.twitter_link && (
-                                                    <div>
-                                                        {attendee.twitter_link}
-                                                    </div>
-                                                )}
-                                                {attendee?.other_link && (
-                                                    <div>
-                                                        {attendee.other_link}
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <span className="attendee-name1">
-                                                {attendee?.location}
-                                            </span>
-                                        </div>
-
-                                        <div className="qrWrapper4">
-                                            <img
-                                                className="qr-code-img"
-                                                src={qr.qr_code}
-                                                alt={`QR code ${idx + 1}`}
-                                            />
-                                        </div>
-                                        <div className="heading-wraper">
-                                            <div className="qrWrapper2">
+                                <div
+                                    className="badge-2-badge-container"
+                                    style={{
+                                        background:
+                                            "url('/storage/BadgesBackground/design_2.png')",
+                                        backgroundSize: "100% 100%",
+                                    }}
+                                >
+                                    <div className="badge-2-badge-header">
+                                        {showLogo && (
+                                            <div className="badge-2-event-image">
                                                 {showLogo ? (
                                                     <img
-                                                        className="logo-img"
                                                         src={
                                                             eventApp?.logo_img ||
                                                             "/placeholder.svg?height=80&width=80"
@@ -656,13 +628,45 @@ function Index({
                                                     <div className="eventlogodiv"></div>
                                                 )}
                                             </div>
-                                            <span className="location">
+                                        )}
+                                        <h1>{eventApp?.name}</h1>
+                                    </div>
+
+                                    <div className="badge-2-badge-body">
+                                        <div className="badge-2-profile-image">
+                                            <img
+                                                src={
+                                                    attendee?.avatar ??
+                                                    UserDummay
+                                                }
+                                                alt={`Profile ${idx + 1}`}
+                                            />
+                                        </div>
+                                        <h2 className="badge-2-name">
+                                            {attendee?.name}
+                                        </h2>
+                                        <p className="badge-2-title">
+                                            {attendee?.position}
+                                        </p>
+                                    </div>
+                                    <div className="badge-2-event-detail">
+                                        <div className="badge-2-event-detail-content">
+                                            <p>{eventApp?.location_base}</p>
+                                        </div>
+                                        <div className="badge-2-event-detail-content">
+                                            <p style={{ color: "black" }}>
                                                 {startDate}{" "}
                                                 {endDate && <>➡️ {endDate}</>}
-                                            </span>
-                                            <span className="location1">
-                                                {eventApp?.location_base}
-                                            </span>
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="badge-2-badge-footer">
+                                        <div className="barcode">
+                                            <img
+                                                className="qr-code-img"
+                                                src={qr?.qr_code}
+                                                alt={`QR code ${idx + 1}`}
+                                            />
                                         </div>
                                     </div>
                                 </div>
@@ -674,7 +678,7 @@ function Index({
             {customBadgeDesign == "Design5" && (
                 <div className="printable">
                     {filteredAttendees.map((attendee: any, index: number) =>
-                        attendee.qr_codes.map((qr: string, idx: number) => (
+                        attendee.qr_codes.map((qr: any, idx: number) => (
                             <div
                                 key={idx}
                                 className="passWrapper print-page-break"
@@ -684,88 +688,59 @@ function Index({
                                         : "none",
                                 }}
                             >
-                                <div className="passes-container">
-                                    <div
-                                        className={`${passSize} ${
-                                            showGradient
-                                                ? "div-gradient"
-                                                : "bg-transparent"
-                                        } mt-4 mb-4`}
-                                    >
-                                        <div className="qrWrapper">
+                                <div
+                                    className="badge-1-badge-container"
+                                    style={{
+                                        background:
+                                            "url('/storage/BadgesBackground/design_1.png')",
+                                        backgroundSize: "100% 100%",
+                                    }}
+                                >
+                                    <div className="badge-1-badge-header">
+                                        <h1 style={{ color: "#5d9edf" }}>
+                                            {eventApp?.name}
+                                        </h1>
+                                    </div>
+
+                                    <div className="badge-1-badge-body">
+                                        <div className="badge-1-profile-image">
+                                            <img
+                                                src={
+                                                    attendee?.avatar ??
+                                                    UserDummay
+                                                }
+                                                alt={`Profile ${idx + 1}`}
+                                            />
+                                        </div>
+                                        <h2 className="badge-1-name">
+                                            {attendee?.name}
+                                        </h2>
+                                        <div className="badge-1-title">
+                                            <p style={{ color: "white" }}>
+                                                {attendee?.position}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="badge-1-badge-footer">
+                                        <div className="badge-1-company">
+                                            {eventApp?.location_base}
+                                        </div>
+                                        <p
+                                            className="badge-1-event"
+                                            style={{ color: "white" }}
+                                        >
+                                            {startDate}{" "}
+                                            {endDate && <>➡️ {endDate}</>}
+                                        </p>
+
+                                        <div className="barcode">
                                             <img
                                                 className="qr-code-img"
-                                                src={qr.qr_code}
+                                                src={qr?.qr_code}
                                                 alt={`QR code ${idx + 1}`}
                                             />
                                         </div>
-                                        <div className="attendee-details">
-                                            <p className="purchased-ticket-5">
-                                                {qr.ticket_type_name}
-                                            </p>
-                                            <h6 className="attendee-name-5">
-                                                {attendee?.name}
-                                            </h6>
-                                            <h6 className="attendee-position-5">
-                                                {attendee?.position}
-                                            </h6>
-
-                                            <div className="location">
-                                                {attendee?.facebook_link && (
-                                                    <div>
-                                                        {attendee.facebook_link}
-                                                    </div>
-                                                )}
-                                                {attendee?.linkedin_link && (
-                                                    <div>
-                                                        {attendee.linkedin_link}
-                                                    </div>
-                                                )}
-                                                {attendee?.twitter_link && (
-                                                    <div>
-                                                        {attendee.twitter_link}
-                                                    </div>
-                                                )}
-                                                {attendee?.other_link && (
-                                                    <div>
-                                                        {attendee.other_link}
-                                                    </div>
-                                                )}
-                                            </div>
-                                            <span className="attendee-name1">
-                                                {attendee?.location}
-                                            </span>
-                                        </div>
-
-                                        <div className="heading-wraper">
-                                            <span className="evnet-name-5">
-                                                {eventApp?.name}
-                                            </span>
-                                            <span className="attendee-name1">
-                                                {eventApp?.location_base}
-                                            </span>
-                                            <span className="location">
-                                                {startDate}{" "}
-                                                {endDate && <>➡️ {endDate}</>}
-                                            </span>
-
-                                             <div className="qrWrapper2">
-                                            {showLogo ? (
-                                                <img
-                                                    className="logo-img"
-                                                    src={
-                                                        eventApp?.logo_img ||
-                                                        "/placeholder.svg?height=80&width=80"
-                                                    }
-                                                    alt="event logo"
-                                                />
-                                            ) : (
-                                                <div className="eventlogodiv"></div>
-                                            )}
-                                        </div>
-                                        </div>
-
-                                       
                                     </div>
                                 </div>
                             </div>

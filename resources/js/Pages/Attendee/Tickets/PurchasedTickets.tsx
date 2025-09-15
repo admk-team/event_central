@@ -53,7 +53,7 @@ const PaymentSuccess = ({ eventApp, attendee, image = [], hasTickets }) => {
                             {images.map((img, index) => (
                                 <div key={index} className="pass div-gradient mt-4 mb-4">
                                     <div className="heading-wraper">
-                                        <img
+                                        <img style={{ height: "160px", width: "160px", objectFit: "cover", margin: "0 auto" }}
                                             className="circle"
                                             src={eventApp?.logo_img || "/placeholder.svg?height=80&width=80"}
                                             alt={t("event logo")}
