@@ -123,4 +123,29 @@ class WebsiteSettingsController extends Controller
         //dd($isPreviewMode);
         return view('event-website.index', compact('event', 'colors', 'partnerCategories', 'exhibitors','isPreviewMode'));
     }
+
+    public function customizeWebsiteDomain() {
+       return Inertia::render("Organizer/Events/Settings/Website/CustomeWebsite");
+    }
+
+    public function storeCustomizeWebsiteDomain(Request $request) {
+        $request->validate([
+            'custome_domain' => 'required|string|max:512',
+        ], [
+            'custome_domain.required' => 'The domain field cannot be empty',
+        ]);
+        $currentEvent = EventApp::find(session('event_id'));
+        if (!$currentEvent) {
+            return response()->json([
+                'message' => 'Event not found'
+            ], 404);
+        }
+        $currentEvent->update([
+            'custome_domain' => $request->custome_domain
+        ]);
+        return response()->json([
+            'message' => 'Custom Domain Request Successfully sent'
+        ]);
+    }
+
 }
