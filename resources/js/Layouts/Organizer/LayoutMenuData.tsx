@@ -8,6 +8,7 @@ const Navdata = () => {
     const [isStaff, setIsStaff] = useState<boolean>(false);
     const [isPaymentSettings, setIsPaymentSettings] = useState<boolean>(false);
     const [isZohoSetting, setIsZohoSetting] = useState<boolean>(false);
+    const [isMailChimpSetting, setIsMailChimpSetting] = useState<boolean>(false);
     const [isLiveStreamSettings, setIsLiveStreamSettings] =
         useState<boolean>(false);
     const { t } = useLaravelReactI18n();
@@ -48,6 +49,9 @@ const Navdata = () => {
         if (iscurrentState !== "LiveStreamSettings") {
             setIsLiveStreamSettings(false);
         }
+        if (iscurrentState !== "MailChimpSettings") {
+            setIsMailChimpSetting(false);
+        }
     }, [
         history,
         iscurrentState,
@@ -57,6 +61,7 @@ const Navdata = () => {
         isPaymentSettings,
         isZohoSetting,
         isLiveStreamSettings,
+        isMailChimpSetting
     ]);
 
     const menuItems: any = [
@@ -155,6 +160,33 @@ const Navdata = () => {
                     label: t('Zoho Sync Data'),
                     link: route("organizer.zoho.sync.page"),
                     parentId: "zoho_settings",
+                },
+            ],
+        },
+        {
+            id: "mailchimp_settings",
+            label: t('MailChimp Settings'),
+            icon: "bx bxs-cog",
+            link: "/#",
+            stateVariables: isMailChimpSetting,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsMailChimpSetting(!isMailChimpSetting);
+                setIscurrentState("MailChimpSettings");
+                updateIconSidebar(e);
+            },
+            subItems: [
+                {
+                    id: "keys_connect_mailchimp",
+                    label: t('MailChimp Keys'),
+                    link: route("organizer.mailchimp.index"),
+                    parentId: "mailchimp_settings",
+                },
+                {
+                    id: "sync_data_mailchimp",
+                    label: t('mailChimp Sync Data'),
+                    link: route("organizer.zoho.sync.page"),
+                    parentId: "mailchimp_settings",
                 },
             ],
         },

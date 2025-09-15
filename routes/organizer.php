@@ -106,6 +106,9 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
     Route::get('/zoho/sync', [ZohoController::class, 'showSyncPage'])->name('zoho.sync.page');
     Route::post('/zoho/sync/{event}', [ZohoController::class, 'sync'])->name('zoho.sync');
 
+    // MailChimp 
+    Route::get('/mailchimp/settings', [ZohoController::class, 'index'])->name('mailchimp.index');
+
     // Live Stream Settings
     Route::prefix('settings')->name('settings.')->group(function () {
         Route::prefix('live-stream')->name('live-stream.')->group(function () {
