@@ -32,6 +32,7 @@ class EventApp extends Model
         'is_recurring',
         'recurring_type_id',
         'custom_theme',
+        'custome_domain',
     ];
 
     protected $appends = [
