@@ -185,9 +185,30 @@ const ChatRoomModal = ({ showModal, hideModal, staff, attendees }: any) => {
 
                                 {hideAttendeeSection && (
                                     <FormGroup className="mb-3">
-                                        <Form.Label className="form-label">
-                                            {t("Select Attendees")}
-                                        </Form.Label>
+                                        <div className="d-flex justify-content-between align-items-center">
+                                            <Form.Label className="form-label">
+                                                {t("Select Attendees")}
+                                            </Form.Label>
+                                            
+                                            <Form.Check
+                                                type="switch"
+                                                id="select-all-staff"
+                                                label={t("Select All")}
+                                                checked={
+                                                    data.members?.length === attendees.length && attendees.length > 0
+                                                }
+                                                onChange={(e) => {
+                                                    if (e.target.checked) {
+                                                        // Select all staff
+                                                        const allIds = attendees.map((s: any) => s.id);
+                                                        setData("members", allIds);
+                                                    } else {
+                                                        // Clear selection
+                                                        setData("members", []);
+                                                    }
+                                                }}
+                                            />
+                                        </div>
                                         <Select
                                             value={attendees
                                                 .filter((item: any) =>
@@ -216,9 +237,30 @@ const ChatRoomModal = ({ showModal, hideModal, staff, attendees }: any) => {
 
                                 {hideStaffSection && (
                                     <FormGroup className="mb-3">
-                                        <Form.Label className="form-label">
-                                            {t("Select Staff")}
-                                        </Form.Label>
+                                        <div className="d-flex justify-content-between align-items-center">
+                                            <Form.Label className="form-label mb-0">
+                                                {t("Select Staff")}
+                                            </Form.Label>
+
+                                            <Form.Check
+                                                type="switch"
+                                                id="select-all-staff"
+                                                label={t("Select All")}
+                                                checked={
+                                                    data.members?.length === staff.length && staff.length > 0
+                                                }
+                                                onChange={(e) => {
+                                                    if (e.target.checked) {
+                                                        // Select all staff
+                                                        const allIds = staff.map((s: any) => s.id);
+                                                        setData("members", allIds);
+                                                    } else {
+                                                        // Clear selection
+                                                        setData("members", []);
+                                                    }
+                                                }}
+                                            />
+                                        </div>
                                         <Select
                                             value={staff
                                                 .filter((item: any) =>
@@ -259,7 +301,7 @@ const ChatRoomModal = ({ showModal, hideModal, staff, attendees }: any) => {
                     </Button>
                     <Button
                         variant="primary"
-                        disabled={!hideBothSection}
+                        disabled={!hideBothSection || processing}
                         onClick={submit}
                     >
                         {t("Create")}
