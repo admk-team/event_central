@@ -22,18 +22,22 @@ const ChatRoomModal = ({ showModal, hideModal, staff, attendees }: any) => {
 
     const selectStaffOptions = [
         {
-            options: staff.map((event: any) => ({
-                label: event.name,
-                value: event.id,
-            })),
+            options: (staff || [])
+                .filter((s: any) => s)
+                .map((event: any) => ({
+                    label: event?.name ?? "",
+                    value: event?.id ?? "",
+                })),
         },
     ];
     const selectAttendeeOptions = [
         {
-            options: attendees.map((attendee: any) => ({
-                label: attendee.name,
-                value: attendee.id,
-            })),
+            options: (attendees || [])
+                .filter((a: any) => a && a.id && a.name)
+                .map((attendee: any) => ({
+                    label: attendee.name,
+                    value: attendee.id,
+                })),
         },
     ];
 
@@ -189,19 +193,27 @@ const ChatRoomModal = ({ showModal, hideModal, staff, attendees }: any) => {
                                             <Form.Label className="form-label">
                                                 {t("Select Attendees")}
                                             </Form.Label>
-                                            
+
                                             <Form.Check
                                                 type="switch"
-                                                id="select-all-staff"
+                                                id="select-all-attendees"
                                                 label={t("Select All")}
                                                 checked={
-                                                    data.members?.length === attendees.length && attendees.length > 0
+                                                    data.members?.length ===
+                                                        attendees.length &&
+                                                    attendees.length > 0
                                                 }
                                                 onChange={(e) => {
                                                     if (e.target.checked) {
                                                         // Select all staff
-                                                        const allIds = attendees.map((s: any) => s.id);
-                                                        setData("members", allIds);
+                                                        const allIds =
+                                                            attendees.map(
+                                                                (s: any) => s.id
+                                                            );
+                                                        setData(
+                                                            "members",
+                                                            allIds
+                                                        );
                                                     } else {
                                                         // Clear selection
                                                         setData("members", []);
@@ -247,13 +259,21 @@ const ChatRoomModal = ({ showModal, hideModal, staff, attendees }: any) => {
                                                 id="select-all-staff"
                                                 label={t("Select All")}
                                                 checked={
-                                                    data.members?.length === staff.length && staff.length > 0
+                                                    data.members?.length ===
+                                                        staff.length &&
+                                                    staff.length > 0
                                                 }
                                                 onChange={(e) => {
                                                     if (e.target.checked) {
                                                         // Select all staff
-                                                        const allIds = staff.map((s: any) => s.id);
-                                                        setData("members", allIds);
+                                                        const allIds =
+                                                            staff.map(
+                                                                (s: any) => s.id
+                                                            );
+                                                        setData(
+                                                            "members",
+                                                            allIds
+                                                        );
                                                     } else {
                                                         // Clear selection
                                                         setData("members", []);
@@ -294,11 +314,16 @@ const ChatRoomModal = ({ showModal, hideModal, staff, attendees }: any) => {
                     <Button
                         variant="secondary"
                         onClick={() => {
+                            reset();
+                            setHideBothSection(false);
+                            setHideAttendeeSection(false);
+                            setHideStaffSection(false);
                             hideModal(false);
                         }}
                     >
                         {t("Cancel")}
                     </Button>
+
                     <Button
                         variant="primary"
                         disabled={!hideBothSection || processing}
