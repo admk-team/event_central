@@ -23,7 +23,7 @@ const ChatRoomModal = ({ showModal, hideModal, staff, attendees }: any) => {
     const selectStaffOptions = [
         {
             options: (staff || [])
-                .filter((s: any) => s)
+                .filter((s: any) => s && s.id && s.name)
                 .map((event: any) => ({
                     label: event?.name ?? "",
                     value: event?.id ?? "",
@@ -35,8 +35,8 @@ const ChatRoomModal = ({ showModal, hideModal, staff, attendees }: any) => {
             options: (attendees || [])
                 .filter((a: any) => a && a.id && a.name)
                 .map((attendee: any) => ({
-                    label: attendee.name,
-                    value: attendee.id,
+                    label: attendee.name ?? "",
+                    value: attendee.id ?? "",
                 })),
         },
     ];
