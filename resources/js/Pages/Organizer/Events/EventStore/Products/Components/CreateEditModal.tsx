@@ -4,7 +4,7 @@ import { Modal, Button, Form, Col, Row, Image } from "react-bootstrap";
 import { useLaravelReactI18n } from "laravel-react-i18n";
 import Select from "react-select";
 import { customStyles } from "../../../../../../common/data/customSelectStyles";
-import ImageCroper from "../../../../../../Components/ImageCroper/Index";
+import ProductImageCroper from "../../../../../../Components/ProductImageCroper/Index";
 
 export default function CreateEditModal({ show, handleClose, product }: any) {
     const { t } = useLaravelReactI18n();
@@ -301,7 +301,7 @@ export default function CreateEditModal({ show, handleClose, product }: any) {
                     </Modal.Footer>
                 </form>
             </Modal>
-            <ImageCroper
+            <ProductImageCroper
                 visible={showCropper}
                 imageSrc={selectedImage}
                 onClose={() => setShowCropper(false)}
