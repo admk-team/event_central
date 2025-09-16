@@ -112,6 +112,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
     Route::post('/mailchimp/store', [MailChimpController::class, 'store'])->name('mailchimp.store');
     Route::get('/mailchimp/sync', [MailChimpController::class, 'showSyncPage'])->name('mailchimp.sync.page');
     Route::post('/mailchimp/sync/{event}', [MailChimpController::class, 'sync'])->name('mailchimp.sync');
+    Route::post('/mailchimp/compaign/{campaignId}', [MailChimpController::class, 'sendCampaign'])->name('mailchimp.send.compaign');
 
     // Live Stream Settings
     Route::prefix('settings')->name('settings.')->group(function () {

@@ -51,9 +51,24 @@ class MailChimpController extends Controller
         $events = EventApp::where('organizer_id', auth()->id())
             ->select('id', 'name')
             ->get();
+        // Get Mailchimp credentials
+        $integration = MailchimpSetting::firstWhere('organizer_id', auth()->id());
+        $campaigns = [];
+        if ($integration) {
+            $apiKey = $integration->api_key;
+            $server = $integration->server_prefix;
+            // Fetch campaigns from Mailchimp
+            $response = Http::withBasicAuth('anystring', $apiKey)
+                ->get("https://{$server}.api.mailchimp.com/3.0/campaigns");
+
+            if ($response->ok()) {
+                $campaigns = $response->json('campaigns'); // just the campaigns array
+            }
+        }
 
         return Inertia::render('Organizer/MailChimp/SyncForm', [
-            'events' => $events
+            'events' => $events,
+            'campaigns' => $campaigns
         ]);
     }
 
@@ -127,6 +142,37 @@ class MailChimpController extends Controller
             'message' => "Sync completed",
             // 'synced' => $synced,
             'errors' => $errors,
+        ]);
+    }
+
+    // send Campaign
+    public function sendCampaign($campaignId)
+    {
+        $integration = MailchimpSetting::firstWhere('organizer_id', auth()->id());
+        if (!$integration) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Mailchimp not connected',
+            ], 404);
+        }
+
+        $apiKey = $integration->api_key;
+        $server = $integration->server_prefix;
+
+        $response = Http::withBasicAuth('anystring', $apiKey)
+            ->post("https://{$server}.api.mailchimp.com/3.0/campaigns/{$campaignId}/actions/send");
+
+        if ($response->failed()) {
+            return response()->json([
+                'success' => false,
+                'message' => $response->json()['detail'] ?? 'Failed to send campaign',
+                'errors' => $response->json(),
+            ], 400);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Campaign sent successfully!',
         ]);
     }
 }

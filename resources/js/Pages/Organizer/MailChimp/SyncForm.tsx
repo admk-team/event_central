@@ -13,8 +13,9 @@ import {
 import BreadCrumb2 from "../../../Components/Common/BreadCrumb2";
 import { useLaravelReactI18n } from "laravel-react-i18n";
 import axios from "axios";
+import MailchimpCompains from "./Components/MailchimpCompains";
 
-const MailChimpSyncPage = ({ events }: any) => {
+const MailChimpSyncPage = ({ events , campaigns }: any) => {
     const [selectedEvent, setSelectedEvent] = useState("");
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState<any>(null);
@@ -119,6 +120,9 @@ const MailChimpSyncPage = ({ events }: any) => {
                                     </Alert>
                                 )}
                             </div>
+                        </Col>
+                        <Col md={4}>
+                            <MailchimpCompains campaigns={campaigns}/>
                         </Col>
                     </Row>
                 </Container>
