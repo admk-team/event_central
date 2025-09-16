@@ -524,8 +524,8 @@ const Chat = ({ member, event_data, loged_user ,staff,attendees,rooms}: any) => 
                                                     <div className="d-flex align-items-center">
                                                         <div className={`flex-shrink-0 chat-user-img align-self-center me-2 ms-0`}>
                                                             <div className="avatar-xxs">
-                                                                {chat.participant.avatar_img ? (
-                                                                    <img src={chat.participant.avatar_img} className="rounded-circle img-fluid userprofile" alt="" />
+                                                                {chat.participant?.avatar_img ? (
+                                                                    <img src={chat.participant?.avatar_img} className="rounded-circle img-fluid userprofile" alt="" />
                                                                 ) : (
                                                                     <div className={"avatar-title rounded-circle bg-dark userprofile"}>
                                                                         {chat.participant?.name?.charAt(0)}
