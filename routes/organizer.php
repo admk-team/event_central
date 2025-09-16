@@ -63,6 +63,7 @@ use App\Http\Controllers\Organizer\Settings\OrganizerPaymentSettingController;
 use App\Http\Controllers\Organizer\Event\PrivateRegistrationViaEmailController;
 use App\Http\Controllers\Organizer\Event\Settings\RegistrationFormSettingsController;
 use App\Http\Controllers\Organizer\Event\Settings\QuestionnaireFormSettingsController;
+use App\Http\Controllers\Organizer\MailChimpController;
 
 // Event Website
 Route::prefix('e/{uuid}')->name('organizer.events.website')->group(function () {
@@ -107,7 +108,10 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
     Route::post('/zoho/sync/{event}', [ZohoController::class, 'sync'])->name('zoho.sync');
 
     // MailChimp 
-    Route::get('/mailchimp/settings', [ZohoController::class, 'index'])->name('mailchimp.index');
+    Route::get('/mailchimp/settings', [MailChimpController::class, 'index'])->name('mailchimp.index');
+    Route::post('/mailchimp/store', [MailChimpController::class, 'store'])->name('mailchimp.store');
+    Route::get('/mailchimp/sync', [MailChimpController::class, 'showSyncPage'])->name('mailchimp.sync.page');
+    Route::post('/mailchimp/sync/{event}', [MailChimpController::class, 'sync'])->name('mailchimp.sync');
 
     // Live Stream Settings
     Route::prefix('settings')->name('settings.')->group(function () {

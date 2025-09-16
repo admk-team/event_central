@@ -185,7 +185,7 @@ const Navdata = () => {
                 {
                     id: "sync_data_mailchimp",
                     label: t('mailChimp Sync Data'),
-                    link: route("organizer.zoho.sync.page"),
+                    link: route("organizer.mailchimp.sync.page"),
                     parentId: "mailchimp_settings",
                 },
             ],
