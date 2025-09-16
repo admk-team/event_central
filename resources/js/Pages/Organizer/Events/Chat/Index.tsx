@@ -108,7 +108,7 @@ const Chat = ({ member, event_data, loged_user ,staff,attendees,rooms}: any) => 
                     // Message from another chat → increment unread count
                     setMembersList((prevMembers: any) =>
                         prevMembers.map((user: any) => {
-                            if (user.participant.id === e.message.sender_id) {
+                            if (user.participant?.id === e.message.sender_id) {
                                 return {
                                     ...user,
                                     unread_count: (user.unread_count || 0) + 1,
@@ -468,8 +468,8 @@ const Chat = ({ member, event_data, loged_user ,staff,attendees,rooms}: any) => 
                                 <div className="chat-message-list">
                                     <ul className="list-unstyled chat-list chat-user-list users-list" id="groupList">
                                         {(groupsList || []).map((chat: any) => (
-                                            <li key={"group-" + chat.id} className={Chat_Box_Username === chat?.name ? "active" : ""}>
-                                                <Link href="#!" onClick={(event) => { event.preventDefault(); userChatOpen(chat, chat.id,'Group_chat'); }} className="unread-msg-user border-bottom" id={"msgUser" + chat.id}>
+                                            <li key={"group-" + chat?.id} className={Chat_Box_Username === chat?.name ? "active" : ""}>
+                                                <Link href="#!" onClick={(event) => { event.preventDefault(); userChatOpen(chat, chat.id,'Group_chat'); }} className="unread-msg-user border-bottom" id={"msgUser" + chat?.id}>
                                                     <div className="d-flex align-items-center">
                                                         <div className={`flex-shrink-0 chat-user-img align-self-center me-2 ms-0`}>
                                                             <div className="avatar-xxs">
@@ -484,9 +484,9 @@ const Chat = ({ member, event_data, loged_user ,staff,attendees,rooms}: any) => 
                                                         </div>
                                                         <div className="flex-grow-1 overflow-hidden">
                                                             <p className="text-truncate mb-0">{chat?.name}</p>
-                                                            <small className="text-truncate mb-0" id={"last-msg-group" + chat.id}>{chat.last_message == null ? '' : chat.last_message == 'media' ? 'Media' : chat.last_message}</small>
+                                                            <small className="text-truncate mb-0" id={"last-msg-group" + chat?.id}>{chat.last_message == null ? '' : chat.last_message == 'media' ? 'Media' : chat.last_message}</small>
                                                         </div>
-                                                        <div className="flex-shrink-0" id={"unread-msg-group" + chat.id}>
+                                                        <div className="flex-shrink-0" id={"unread-msg-group" + chat?.id}>
                                                             <div>
                                                                 <span className="badge bg-dark-subtle text-body rounded p-1">
                                                                     {(() => {
@@ -519,8 +519,8 @@ const Chat = ({ member, event_data, loged_user ,staff,attendees,rooms}: any) => 
                                 <div className="chat-message-list">
                                     <ul className="list-unstyled chat-list chat-user-list users-list" id="userList">
                                         {(membersList || []).map((chat: any) => (
-                                            <li key={"user-" + chat.id} className={Chat_Box_Username === chat.participant?.name ? "active" : ""}>
-                                                <Link href="#!" onClick={(event) => { event.preventDefault(); userChatOpen(chat, chat.participant.id,'Private_chat'); }} className="unread-msg-user border-bottom" id={"msgUser" + chat.participant.id}>
+                                            <li key={"user-" + chat?.id} className={Chat_Box_Username === chat.participant?.name ? "active" : ""}>
+                                                <Link href="#!" onClick={(event) => { event.preventDefault(); userChatOpen(chat, chat.participant?.id,'Private_chat'); }} className="unread-msg-user border-bottom" id={"msgUser" + chat.participant?.id}>
                                                     <div className="d-flex align-items-center">
                                                         <div className={`flex-shrink-0 chat-user-img align-self-center me-2 ms-0`}>
                                                             <div className="avatar-xxs">
@@ -535,9 +535,9 @@ const Chat = ({ member, event_data, loged_user ,staff,attendees,rooms}: any) => 
                                                         </div>
                                                         <div className="flex-grow-1 overflow-hidden">
                                                             <p className="text-truncate mb-0">{chat.participant?.name}</p>
-                                                            <small className="text-truncate mb-0" id={"last-msg-user" + chat.participant.id}>{chat.last_message == null ? '' : chat.last_message == 'media' ? 'Media' : chat.last_message}</small>
+                                                            <small className="text-truncate mb-0" id={"last-msg-user" + chat.participant?.id}>{chat.last_message == null ? '' : chat.last_message == 'media' ? 'Media' : chat.last_message}</small>
                                                         </div>
-                                                        <div className="flex-shrink-0" id={"unread-msg-user" + chat.participant.id}>
+                                                        <div className="flex-shrink-0" id={"unread-msg-user" + chat.participant?.id}>
                                                             <div>
                                                                 <span className="badge bg-dark-subtle text-body rounded p-1">
                                                                     {(() => {
