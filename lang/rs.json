@@ -1208,5 +1208,7 @@
   "Quick Steps: Generate API key → Copy Audience ID → Add Server Prefix → Save & Connect → Sync Attendees": "Быстрые шаги: Создать API ключ → Скопировать ID аудитории → Добавить префикс сервера → Сохранить и подключиться → Синхронизировать участников",
   "MailChimp Sync": "Синхронизация Mailchimp",
   "MailChimp Keys": "Ключи Mailchimp",
-  "mailChimp Sync Data": "Данные синхронизации Mailchimp"
+  "mailChimp Sync Data": "Данные синхронизации Mailchimp",
+  "Hide Quantity": "Sakrij količinu"
+
 }

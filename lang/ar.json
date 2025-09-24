@@ -1206,5 +1206,6 @@
   "Quick Steps: Generate API key → Copy Audience ID → Add Server Prefix → Save & Connect → Sync Attendees": "خطوات سريعة: أنشئ مفتاح API → انسخ معرف الجمهور → أضف بادئة الخادم → احفظ واتصل → قم بمزامنة الحضور",
   "MailChimp Sync": "مزامنة Mailchimp",
   "MailChimp Keys": "مفاتيح Mailchimp",
-  "mailChimp Sync Data": "بيانات مزامنة Mailchimp"
+  "mailChimp Sync Data": "بيانات مزامنة Mailchimp",
+  "Hide Quantity": "إخفاء الكمية"
 }

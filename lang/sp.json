@@ -1207,5 +1207,7 @@
   "Quick Steps: Generate API key → Copy Audience ID → Add Server Prefix → Save & Connect → Sync Attendees": "Pasos Rápidos: Generar Clave API → Copiar ID de Audiencia → Agregar Prefijo del Servidor → Guardar y Conectar → Sincronizar Asistentes",
   "MailChimp Sync": "Sincronización con Mailchimp",
   "MailChimp Keys": "Claves de Mailchimp",
-  "mailChimp Sync Data": "Datos de Sincronización de Mailchimp"
+  "mailChimp Sync Data": "Datos de Sincronización de Mailchimp",
+  "Hide Quantity": "Ocultar cantidad"
+
 }

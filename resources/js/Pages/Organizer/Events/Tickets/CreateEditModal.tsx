@@ -65,6 +65,7 @@ export default function CreateEditModal({
             extra_service_name: ticket?.extra_service_name ?? "",
             // expects array of { name, quantity }
             extra_services: ticket?.extra_services ?? [],
+            hide_quantity: ticket?.hide_quantity ?? 0,
         });
 
     const [selectMulti, setselectMulti] = useState<any>(
@@ -506,7 +507,7 @@ export default function CreateEditModal({
                         </Row>
 
                         <Row className="mt-4">
-                            <Col md={6}>
+                            <Col md={5}>
                                 <FormGroup className="mb-3">
                                     <Form.Label>
                                         {t("Total Quantity (leave empty for unlimited)")}
@@ -526,7 +527,7 @@ export default function CreateEditModal({
                                     )}
                                 </FormGroup>
                             </Col>
-                            <Col md={6}>
+                            <Col md={4}>
                                 <FormGroup className="mb-3">
                                     <Form.Label>{t("Sold Quantity")}</Form.Label>
                                     <Form.Control
@@ -538,6 +539,16 @@ export default function CreateEditModal({
                                     />
                                 </FormGroup>
                             </Col>
+                          <Col md={3}>
+                                <Form.Check className="mt-4"
+                                type="switch"
+                                id="hide_quantity-switch"
+                                label={t("Hide Quantity")}
+                                checked={!!data.hide_quantity}
+                                onChange={(e) => setData("hide_quantity", e.target.checked)}
+                                />
+                                {errors.hide_quantity && <Form.Text className="text-danger">{errors.hide_quantity}</Form.Text>}
+                         </Col>
                         </Row>
 
                         <Row className="mt-4">

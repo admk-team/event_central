@@ -1207,5 +1207,6 @@
     "Quick Steps: Generate API key → Copy Audience ID → Add Server Prefix → Save & Connect → Sync Attendees": "快速步骤：生成 API 密钥 → 复制受众 ID → 添加服务器前缀 → 保存并连接 → 同步与会者",
     "MailChimp Sync": "Mailchimp 同步",
     "MailChimp Keys": "Mailchimp 密钥",
-    "mailChimp Sync Data": "Mailchimp 同步数据"
+    "mailChimp Sync Data": "Mailchimp 同步数据",
+    "Hide Quantity": "隐藏数量"
 }

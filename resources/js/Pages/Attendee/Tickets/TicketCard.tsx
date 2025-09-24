@@ -400,14 +400,16 @@ const TicketCard = ({
                                 <sup><small>{currency_symbol}</small></sup>
                                 <span className="ff-secondary fw-bold fs-3">{ticket.base_price}</span>
                             </Col>
-
-                            <Col md={3} lg={3}>
+                           <Col md={3} lg={3}>
+                            {ticket.hide_quantity === 0 ? (
                                 <span className="ff-secondary fw-bold">
-                                    <span className="fs-5">{t("Available Quantity")}</span>:{" "}
-                                    <span className="fs-5">{unlimitedQty ? t("Unlimited") : availableQty}</span>
+                                <span className="fs-5">{t("Available Quantity")}</span>:{" "}
+                                <span className="fs-5">{unlimitedQty ? t("Unlimited") : availableQty}</span>
                                 </span>
+                            ) : (
+                                <span style={{ visibility: "hidden" }}>placeholder</span>
+                            )}
                             </Col>
-
                             {!unlimitedQty && availableQty <= 0 ? (
                                 <Col md={2} lg={2}>
                                     <span className="ff-secondary fw-bold d-flex justify-content-lg-end">

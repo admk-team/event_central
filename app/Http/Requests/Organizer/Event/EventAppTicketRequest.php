@@ -47,6 +47,7 @@ class EventAppTicketRequest extends FormRequest
             'bulk_purchase_qty' => 'nullable',
             'extra_service_name' => 'nullable|string|max:255',
             'extra_services' => 'nullable',
+            'hide_quantity' => 'boolean',
         ];
     }
 

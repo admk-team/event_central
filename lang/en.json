@@ -1208,5 +1208,6 @@
     "Quick Steps: Generate API key → Copy Audience ID → Add Server Prefix → Save & Connect → Sync Attendees": "Quick Steps: Generate API key → Copy Audience ID → Add Server Prefix → Save & Connect → Sync Attendees",
     "MailChimp Sync": "MailChimp Sync",
     "MailChimp Keys": "MailChimp Keys",
-    "mailChimp Sync Data": "mailChimp Sync Data"
+    "mailChimp Sync Data": "mailChimp Sync Data",
+    "Hide Quantity": "Hide Quantity"
 }

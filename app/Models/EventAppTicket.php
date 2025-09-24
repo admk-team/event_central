@@ -31,12 +31,13 @@ class EventAppTicket extends Model
         'bulk_purchase_qty',
         'extra_service_name',
         'extra_services',
+        'hide_quantity',
     ];
 
     protected $casts = [
         'show_on_attendee_side' => 'boolean',
         'extra_services' => 'json',
-         'bulk_purchase_discount_type' => 'array',
+        'bulk_purchase_discount_type' => 'array',
         'bulk_purchase_discount_value' => 'array',
         'bulk_purchase_qty' => 'array',
     ];
