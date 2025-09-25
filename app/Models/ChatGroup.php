@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 class ChatGroup extends Model
 {
     use HasFactory;
-    protected $fillable = ['event_id', 'image', 'name', 'type', 'created_by'];
+    protected $fillable = ['event_id', 'image', 'name', 'type','visibility', 'created_by'];
 
     public function members()
     {
