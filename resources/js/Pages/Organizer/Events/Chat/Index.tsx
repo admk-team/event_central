@@ -11,7 +11,8 @@ import {
     Alert,
     OverlayTrigger,
     Tab,
-    Form
+    Form,
+    Modal
 } from "react-bootstrap";
 import SimpleBar from "simplebar-react";
 import EmojiPicker from 'emoji-picker-react';
@@ -24,7 +25,7 @@ import userDummayImage from "../../../../../images/users/user-dummy-img.jpg";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { createSelector } from "reselect";
 import Spinners from "../../../../Components/Common/Spinner";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, useForm } from "@inertiajs/react";
 import Layout from "../../../../Layouts/Event";
 import { onGetMessages } from "../../../../slices/thunk";
 import axios from 'axios';
@@ -35,9 +36,10 @@ import ChatRoomModal from "./Components/ChatRoomModal";
 import { useLaravelReactI18n } from "laravel-react-i18n";
 import HasPermission from "../../../../Components/HasPermission";
 
-const Chat = ({ member, event_data, loged_user ,staff,attendees,rooms}: any) => {
+const Chat = ({ member, event_data, loged_user ,staff,attendees,rooms,openrooms}: any) => {
     const { t } = useLaravelReactI18n();
     const userChatShow: any = useRef();
+    const { post, processing } = useForm({});
     const [publicChatMessages, setPublicChatMessages] = useState<any[]>([]);
     const [privateChatMessages, setPrivateChatMessages] = useState<any[]>([]);
     const [groupChatMessages, setGroupChatMessages] = useState<any[]>([]);
@@ -45,9 +47,35 @@ const Chat = ({ member, event_data, loged_user ,staff,attendees,rooms}: any) => 
     const [membersList, setMembersList] = useState(member || []);
     const [eventPreview, setEventPreview] = useState(event_data || {});
     const [groupsList, setGroupsList] = useState(rooms || []);
+    const [openRooms, setOpenRooms] = useState(openrooms || []);
     const [showCreateRoomModal, setShowCreateRoomModal] = useState(false);
     const [roomGroupId,setRoomGroupId] = useState(0);
     const [roomOpenType,setRoomOpenType] = useState('');
+
+
+    const [showJoinModal, setShowJoinModal] = useState(false);
+    const [selectedOpenRoom, setSelectedOpenRoom] = useState<any>(null);
+    
+    const handleJoinClick = (room: any) => {
+        setSelectedOpenRoom(room);
+        setShowJoinModal(true);
+    };
+
+    const confirmJoinRoom = () => {
+        if (!selectedOpenRoom) return;
+        post(route('organizer.events.join.group',selectedOpenRoom.id), {
+            preserveScroll: true,
+            onSuccess: () => {
+                // Close modal after successful join
+                setOpenRooms((prev: any) => prev.filter((g: any) => g.id !== selectedOpenRoom.id) );
+                setShowJoinModal(false);
+                setSelectedOpenRoom(null);
+            },
+            onError: (errors) => {
+                console.error("Join group failed:", errors);
+            },
+        });
+    };
 
     const toggleCustom = (tab: any) => {
         if (customActiveTab !== tab) {
@@ -566,6 +594,61 @@ const Chat = ({ member, event_data, loged_user ,staff,attendees,rooms}: any) => 
                                         ))}
                                     </ul>
                                 </div>
+
+                                {/* Open Groups SECTION */}
+                                {openRooms && openRooms.length > 0 && (
+                                    <div className="chat-message-list">
+                                        <h6 className="px-3 text-muted">
+                                            Open Groups
+                                        </h6>
+                                        <ul
+                                            className="list-unstyled chat-list chat-user-list users-list"
+                                            id="openGroupList"
+                                        >
+                                            {(openRooms || []).map((chat: any) => (
+                                                <li key={"open-group-" + chat.id}>
+                                                    <Link
+                                                        href="#!"
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            handleJoinClick(chat);
+                                                        }}
+                                                    >
+                                                        <div className="d-flex align-items-center">
+                                                            <div className="flex-shrink-0 chat-user-img me-2">
+                                                                <div className="avatar-xxs">
+                                                                    {chat.image ? (
+                                                                        <img
+                                                                            src={
+                                                                                chat.image
+                                                                            }
+                                                                            className="rounded-circle img-fluid userprofile"
+                                                                            alt=""
+                                                                        />
+                                                                    ) : (
+                                                                        <div className="avatar-title rounded-circle bg-dark userprofile">
+                                                                            {chat.name?.charAt(
+                                                                                0
+                                                                            )}
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                            <div className="flex-grow-1 overflow-hidden">
+                                                                <p className="text-truncate mb-0">
+                                                                    {chat.name}
+                                                                </p>
+                                                                <small className="text-muted">
+                                                                    Click to join
+                                                                </small>
+                                                            </div>
+                                                        </div>
+                                                    </Link>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
                             </SimpleBar>
                         </div>
 
@@ -786,6 +869,30 @@ const Chat = ({ member, event_data, loged_user ,staff,attendees,rooms}: any) => 
                             </div>
                         </div>
                     </div>
+                    {/* Join Group Modal */}
+                    <Modal
+                        show={showJoinModal}
+                        onHide={() => setShowJoinModal(false)}
+                    >
+                        <Modal.Header closeButton>
+                            <Modal.Title>Join Group</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>
+                            Are you sure you want to join{" "}
+                            <strong>{selectedOpenRoom?.name}</strong>?
+                        </Modal.Body>
+                        <Modal.Footer>
+                            <Button
+                                variant="secondary"
+                                onClick={() => setShowJoinModal(false)}
+                            >
+                                Cancel
+                            </Button>
+                            <Button variant="primary" onClick={confirmJoinRoom}>
+                                Join
+                            </Button>
+                        </Modal.Footer>
+                    </Modal>
                 </Container>
             </div >
         </React.Fragment >

@@ -225,7 +225,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::post('chat/mark-as-read/{id}', [ChatController::class, 'markAsRead']);
             Route::post('send-message', [ChatController::class, 'store']);
             Route::post('chat-room', [ChatController::class, 'createRoom'])->name('chat.room');
-
+            Route::post('group-join/{id}', [ChatController::class, 'join'])->name('join.group');
             // Ticket Fees
             Route::resource('ticket-fees', EventAppFeeController::class)->only(['index', 'store', 'update', 'destroy']);
             Route::delete('ticket-fees/delete/many', [EventAppFeeController::class, 'destroyMany'])->name('ticket-fees.destroy.many');

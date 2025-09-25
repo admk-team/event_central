@@ -16,7 +16,7 @@ import userDummayImage from "../../../../images/users/user-dummy-img.jpg";
 import "react-perfect-scrollbar/dist/css/styles.css";
 import { createSelector } from "reselect";
 import Spinners from "../../../Components/Common/Spinner";
-import { Head, Link } from "@inertiajs/react";
+import { Head, Link, useForm } from "@inertiajs/react";
 import AttendeeLayout from "../../../Layouts/Attendee";
 import { onGetMessages } from "../../../slices/thunk";
 import axios from "axios";
@@ -28,7 +28,7 @@ import { useLaravelReactI18n } from "laravel-react-i18n";
 const Chat = ({ member, event_data, loged_user, rooms, openrooms }: any) => {
     const { t } = useLaravelReactI18n();
     const userChatShow: any = useRef();
-
+    const { post, processing } = useForm({});
     const [publicChatMessages, setPublicChatMessages] = useState<any[]>([]);
     const [privateChatMessages, setPrivateChatMessages] = useState<any[]>([]);
     const [groupChatMessages, setGroupChatMessages] = useState<any[]>([]);
@@ -48,26 +48,20 @@ const Chat = ({ member, event_data, loged_user, rooms, openrooms }: any) => {
         setShowJoinModal(true);
     };
 
-    const confirmJoinRoom = async () => {
+    const confirmJoinRoom = () => {
         if (!selectedOpenRoom) return;
-
-        try {
-            const response = await axios.post(
-                `/attendee/group-join/${selectedOpenRoom.id}`
-            );
-            const joinedGroup = response.data.group;
-
-            // Remove from openrooms and add to groupsList
-            setGroupsList((prev: any) => [...prev, joinedGroup]);
-            setOpenRooms((prev: any) =>
-                prev.filter((g: any) => g.id !== selectedOpenRoom.id)
-            );
-
-            setShowJoinModal(false);
-            setSelectedOpenRoom(null);
-        } catch (error) {
-            console.error("Failed to join group:", error);
-        }
+        post(route('attendee.join.group',selectedOpenRoom.id), {
+            preserveScroll: true,
+            onSuccess: () => {
+                // Close modal after successful join
+                setOpenRooms((prev: any) => prev.filter((g: any) => g.id !== selectedOpenRoom.id) );
+                setShowJoinModal(false);
+                setSelectedOpenRoom(null);
+            },
+            onError: (errors) => {
+                console.error("Join group failed:", errors);
+            },
+        });
     };
 
     const toggleCustom = (tab: any) => {
@@ -605,9 +599,6 @@ const Chat = ({ member, event_data, loged_user, rooms, openrooms }: any) => {
                                 </div>
                                 {/* Groups SECTION */}
                                 <div className="chat-message-list">
-                                    <h6 className="px-3 text-muted">
-                                        My Groups
-                                    </h6>
                                     <ul
                                         className="list-unstyled chat-list chat-user-list users-list"
                                         id="groupList"
@@ -616,9 +607,7 @@ const Chat = ({ member, event_data, loged_user, rooms, openrooms }: any) => {
                                             <li key={"group-" + chat.id}>
                                                 <Link
                                                     href="#!"
-                                                    onClick={(e) => {
-                                                        e.preventDefault(); /* open chat */
-                                                    }}
+                                                    onClick={(event) => { event.preventDefault(); userChatOpen(chat, chat.id,'Group_chat'); }} className="unread-msg-user border-bottom" id={"msgUser" + chat?.id}
                                                 >
                                                     <div className="d-flex align-items-center">
                                                         <div className="flex-shrink-0 chat-user-img me-2">
@@ -651,59 +640,7 @@ const Chat = ({ member, event_data, loged_user, rooms, openrooms }: any) => {
                                         ))}
                                     </ul>
                                 </div>
-
-                                {/* Open Groups SECTION */}
-                                <div className="chat-message-list">
-                                    <h6 className="px-3 text-muted">
-                                        Open Groups
-                                    </h6>
-                                    <ul
-                                        className="list-unstyled chat-list chat-user-list users-list"
-                                        id="openGroupList"
-                                    >
-                                        {(openRooms || []).map((chat: any) => (
-                                            <li key={"open-group-" + chat.id}>
-                                                <Link
-                                                    href="#!"
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        handleJoinClick(chat);
-                                                    }}
-                                                >
-                                                    <div className="d-flex align-items-center">
-                                                        <div className="flex-shrink-0 chat-user-img me-2">
-                                                            <div className="avatar-xxs">
-                                                                {chat.image ? (
-                                                                    <img
-                                                                        src={
-                                                                            chat.image
-                                                                        }
-                                                                        className="rounded-circle img-fluid userprofile"
-                                                                        alt=""
-                                                                    />
-                                                                ) : (
-                                                                    <div className="avatar-title rounded-circle bg-dark userprofile">
-                                                                        {chat.name?.charAt(
-                                                                            0
-                                                                        )}
-                                                                    </div>
-                                                                )}
-                                                            </div>
-                                                        </div>
-                                                        <div className="flex-grow-1 overflow-hidden">
-                                                            <p className="text-truncate mb-0">
-                                                                {chat.name}
-                                                            </p>
-                                                            <small className="text-muted">
-                                                                Click to join
-                                                            </small>
-                                                        </div>
-                                                    </div>
-                                                </Link>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
+                                
                                 {/* user SECTION */}
                                 <div className="chat-message-list">
                                     <ul
@@ -848,6 +785,61 @@ const Chat = ({ member, event_data, loged_user, rooms, openrooms }: any) => {
                                         )}
                                     </ul>
                                 </div>
+
+                                {/* Open Groups SECTION */}
+                                {openRooms && openRooms.length > 0 && (
+                                    <div className="chat-message-list">
+                                        <h6 className="px-3 text-muted">
+                                            Open Groups
+                                        </h6>
+                                        <ul
+                                            className="list-unstyled chat-list chat-user-list users-list"
+                                            id="openGroupList"
+                                        >
+                                            {(openRooms || []).map((chat: any) => (
+                                                <li key={"open-group-" + chat.id}>
+                                                    <Link
+                                                        href="#!"
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            handleJoinClick(chat);
+                                                        }}
+                                                    >
+                                                        <div className="d-flex align-items-center">
+                                                            <div className="flex-shrink-0 chat-user-img me-2">
+                                                                <div className="avatar-xxs">
+                                                                    {chat.image ? (
+                                                                        <img
+                                                                            src={
+                                                                                chat.image
+                                                                            }
+                                                                            className="rounded-circle img-fluid userprofile"
+                                                                            alt=""
+                                                                        />
+                                                                    ) : (
+                                                                        <div className="avatar-title rounded-circle bg-dark userprofile">
+                                                                            {chat.name?.charAt(
+                                                                                0
+                                                                            )}
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                            <div className="flex-grow-1 overflow-hidden">
+                                                                <p className="text-truncate mb-0">
+                                                                    {chat.name}
+                                                                </p>
+                                                                <small className="text-muted">
+                                                                    Click to join
+                                                                </small>
+                                                            </div>
+                                                        </div>
+                                                    </Link>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
                             </SimpleBar>
                         </div>
 

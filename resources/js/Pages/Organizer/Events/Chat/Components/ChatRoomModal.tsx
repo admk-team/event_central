@@ -47,6 +47,7 @@ const ChatRoomModal = ({ showModal, hideModal, staff, attendees }: any) => {
         name: "",
         members: [],
         image: null,
+        visibility: "public",
     });
 
     const submit = (e: any) => {
@@ -141,11 +142,6 @@ const ChatRoomModal = ({ showModal, hideModal, staff, attendees }: any) => {
                         </Row>
                     </div>
                     <div>
-                        {errors.members && (
-                            <Form.Control.Feedback type="invalid">
-                                {errors.members}
-                            </Form.Control.Feedback>
-                        )}
                         {hideBothSection && (
                             <>
                                 <FormGroup className="mb-3">
@@ -164,6 +160,11 @@ const ChatRoomModal = ({ showModal, hideModal, staff, attendees }: any) => {
                                     {errors.name && (
                                         <Form.Control.Feedback type="invalid">
                                             {errors.name}
+                                        </Form.Control.Feedback>
+                                    )}
+                                    {errors.members && (
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.members}
                                         </Form.Control.Feedback>
                                     )}
                                 </FormGroup>
@@ -187,13 +188,32 @@ const ChatRoomModal = ({ showModal, hideModal, staff, attendees }: any) => {
                                     )}
                                 </FormGroup>
 
-                                {hideAttendeeSection && (
+                                <FormGroup className="mb-3">
+                                    <Form.Label className="form-label">
+                                        {t("Visibility")}
+                                    </Form.Label>
+                                    <Form.Select
+                                        value={data.visibility || "public"}
+                                        onChange={(e) => setData("visibility", e.target.value)}
+                                        isInvalid={!!errors.visibility}
+                                    >
+                                        <option value="public">{t("Public")}</option>
+                                        <option value="private">{t("Private")}</option>
+                                    </Form.Select>
+                                    {errors.visibility && (
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.visibility}
+                                        </Form.Control.Feedback>
+                                    )}
+                                </FormGroup>
+
+                                {hideAttendeeSection && data.visibility == 'private' && (
                                     <FormGroup className="mb-3">
                                         <div className="d-flex justify-content-between align-items-center">
                                             <Form.Label className="form-label">
                                                 {t("Select Attendees")}
                                             </Form.Label>
-
+                                            
                                             <Form.Check
                                                 type="switch"
                                                 id="select-all-attendees"
@@ -247,7 +267,7 @@ const ChatRoomModal = ({ showModal, hideModal, staff, attendees }: any) => {
                                     </FormGroup>
                                 )}
 
-                                {hideStaffSection && (
+                                {hideStaffSection && data.visibility == 'private' &&(
                                     <FormGroup className="mb-3">
                                         <div className="d-flex justify-content-between align-items-center">
                                             <Form.Label className="form-label mb-0">
