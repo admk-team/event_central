@@ -1193,5 +1193,8 @@
   "MailChimp Sync": "Mailchimp-Synchronisierung",
   "MailChimp Keys": "Mailchimp-Schlüssel",
   "mailChimp Sync Data": "Mailchimp-Synchronisierungsdaten",
-  "Hide Quantity": "Απόκρυψη ποσότητας"
+  "Hide Quantity": "Απόκρυψη ποσότητας",
+  "Sponsorship Purchases": "Αγορές χορηγιών",
+  "assigned": "ανατεθειμένο",
+  "Purchased Sponsorships": "Αγορασμένες χορηγίες"
 }

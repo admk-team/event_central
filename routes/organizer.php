@@ -48,6 +48,7 @@ use App\Http\Controllers\Organizer\Event\SessionAttendanceController;
 use App\Http\Controllers\Organizer\Event\EventStore\ProductController;
 use App\Http\Controllers\Organizer\Event\Engagement\NewsfeedController;
 use App\Http\Controllers\Organizer\Event\EventBoothController;
+use App\Http\Controllers\Organizer\Event\EventBoothPurchaseController;
 use App\Http\Controllers\Organizer\Event\EventPartnerCategoryController;
 use App\Http\Controllers\Organizer\Settings\LiveStreamSettingController;
 use App\Http\Controllers\Organizer\Event\EventStore\EventOrderController;
@@ -442,4 +443,10 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
     // event booths
     Route::resource('booths', EventBoothController::class);
     Route::delete('booths/delete/many', [EventBoothController::class, 'destroyMany'])->name('booths.destroy.many');
+    Route::prefix('/booth-purchases')->name('booth-purchases.')->group(function () {
+        Route::get('/', [EventBoothPurchaseController::class, 'index'])->name('index');
+        Route::get('/booth/{booth}', [EventBoothPurchaseController::class, 'index'])->name('booth'); // purchases by booth
+        Route::delete('{id}', [EventBoothPurchaseController::class, 'destroy'])->name('destroy');
+    });
+    Route::delete('/destroy-many', [EventBoothPurchaseController::class, 'destroyMany'])->name('booth-purchases.destroy.many');
 });

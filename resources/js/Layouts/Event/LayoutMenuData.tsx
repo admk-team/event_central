@@ -257,6 +257,13 @@ const Navdata = () => {
                     parentId: "Content",
                     hasPermissions: ["view_event_booth"],
                 },
+                 {
+                    id: "booth-purchased",
+                    label: t('Purchased Sponsorships'),
+                    link: route("organizer.booth-purchases.index"), // pass eventApp UUID or ID here
+                    parentId: "Content",
+                    hasPermissions: ["view_event_booth"],
+                },
                 
             ],
         },

@@ -1208,6 +1208,8 @@
   "MailChimp Sync": "Sincronización con Mailchimp",
   "MailChimp Keys": "Claves de Mailchimp",
   "mailChimp Sync Data": "Datos de Sincronización de Mailchimp",
-  "Hide Quantity": "Ocultar cantidad"
-
+  "Hide Quantity": "Ocultar cantidad",
+  "Sponsorship Purchases": "Compras de patrocinio",
+  "assigned": "asignado",
+  "Purchased Sponsorships": "Patrocinios comprados"
 }

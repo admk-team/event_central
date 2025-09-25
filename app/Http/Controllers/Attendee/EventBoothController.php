@@ -58,13 +58,14 @@ class EventBoothController extends Controller
 
         $myBooths = $purchases->groupBy('event_booth_id')->map(function ($rows) {
             $qty   = (int) $rows->sum('quantity');    // make sure your purchase model has 'quantity' (default 1)
-            $booth = $rows->first()->booth;
+            $purchase = $rows->first();                 // get one purchase row for booth-specific data
+            $booth    = $purchase->booth;               // related booth
 
             return [
                 'id'          => $booth->id,
                 'name'        => $booth->name,
                 'description' => $booth->description,
-                'number'      => $booth->number,
+                'number'      => $purchase->number ?? $booth->number, // ✅ safe fallback to booth->number
                 'status'      => $booth->status,
                 'logo'        => $booth->logo,
                 'price'       => $booth->price,
@@ -128,6 +129,7 @@ class EventBoothController extends Controller
             [
                 'event_app_id'       => $booth->event_app_id,
                 'amount'             => (int) $booth->price,
+                'number'             => (int) $booth->number,
                 'currency'           => $currency ?? 'USD',
                 'payment_intent_id'  => $pi['payment_id'] ?? null, // <- store PI id, not the secret
             ]
@@ -177,6 +179,7 @@ class EventBoothController extends Controller
 
             // Increment stock counters and update availability
             $locked->sold_qty = $locked->sold_qty + 1;
+            $locked->increment('number');
             $locked->status   = ($locked->sold_qty >= $locked->total_qty) ? 'soldout' : 'available';
             $locked->save();
 

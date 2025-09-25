@@ -14,6 +14,7 @@ class EventBoothPurchase extends Model
         'currency',
         'status',
         'payment_intent_id',
+        'number',
     ];
 
     /**
@@ -22,6 +23,10 @@ class EventBoothPurchase extends Model
     public function eventBooth()
     {
         return $this->belongsTo(EventBooth::class, 'event_booth_id');
+    }
+      public function scopeCurrentEvent($query)
+    {
+        return $query->where('event_app_id', session('event_id'));
     }
 
     /**

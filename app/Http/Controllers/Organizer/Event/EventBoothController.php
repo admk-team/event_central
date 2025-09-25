@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class EventBoothController extends Controller
@@ -207,6 +208,7 @@ class EventBoothController extends Controller
                 [
                     'event_app_id'  => $booth->event_app_id,
                     'price'         => (int) $booth->price,
+                    'number'         => (int) $booth->number,
                     'currency'      => 'USD',
                     'status'        => 'paid',
                     'payment_intent_id' => Auth::user()->id ??  null,
@@ -215,6 +217,7 @@ class EventBoothController extends Controller
 
             if ($purchase->wasRecentlyCreated) {
                 $booth->increment('sold_qty');
+                $booth->increment('number');
                 $createdIds[] = (int) $attendeeId;
             }
         }
@@ -240,6 +243,8 @@ class EventBoothController extends Controller
             $p->delete();
             if ($booth->sold_qty > 0) {
                 $booth->decrement('sold_qty');
+                $booth->status = ($booth->sold_qty >= $booth->total_qty) ? 'soldout' : 'available';
+                $booth->save();
             }
         }
     }
@@ -286,5 +291,46 @@ class EventBoothController extends Controller
             $booth->logo = 'events/booths/' . $imageFileName;
             $booth->save();
         }
+    }
+
+    public function destroy(EventBooth $booth)
+    {
+        if (! Auth::user()->can('delete_event_booth')) {
+            abort(403);
+        }
+        if ($booth) {
+            $booth->purchases()->delete();
+            if ($booth->logo) {
+                Storage::disk('public')->delete($booth->logo);
+            }
+            $booth->delete();
+        }
+
+        return back()->withSuccess('Deleted');
+    }
+
+    public function destroyMany(Request $request)
+    {
+        if (! Auth::user()->can('delete_event_booth')) {
+            abort(403);
+        }
+
+        $request->validate([
+            'ids' => 'required|array'
+        ]);
+
+        foreach ($request->ids as $id) {
+            $booth = EventBooth::find($id);
+
+            if ($booth) {
+                $booth->purchases()->delete();
+                if ($booth->logo) {
+                    Storage::disk('public')->delete($booth->logo);
+                }
+                $booth->delete();
+            }
+        }
+
+        return back()->withSuccess('Deleted');
     }
 }

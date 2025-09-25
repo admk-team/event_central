@@ -1207,5 +1207,8 @@
   "MailChimp Sync": "مزامنة Mailchimp",
   "MailChimp Keys": "مفاتيح Mailchimp",
   "mailChimp Sync Data": "بيانات مزامنة Mailchimp",
-  "Hide Quantity": "إخفاء الكمية"
+  "Hide Quantity": "إخفاء الكمية",
+  "Sponsorship Purchases": "مشتريات الرعاية",
+  "assigned": "مخصص",
+  "Purchased Sponsorships": "الرعايات المشتراة"
 }
