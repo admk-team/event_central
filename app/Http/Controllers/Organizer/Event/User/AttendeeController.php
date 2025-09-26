@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Organizer\Event\User;
 
+use App\Events\UpdateEventDashboard;
 use Carbon\Carbon;
 use Inertia\Inertia;
 use App\Models\Attendee;

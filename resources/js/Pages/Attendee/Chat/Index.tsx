@@ -25,7 +25,7 @@ import ChatAttachments from "./Components/ChatAttachments";
 import Attachments from "./Components/Attachments";
 import { useLaravelReactI18n } from "laravel-react-i18n";
 
-const Chat = ({ member, event_data, loged_user, rooms, openrooms }: any) => {
+const Chat = ({ member, event_data, loged_user, rooms, openrooms,purchasedTicket }: any) => {
     const { t } = useLaravelReactI18n();
     const userChatShow: any = useRef();
     const { post, processing } = useForm({});
@@ -787,7 +787,7 @@ const Chat = ({ member, event_data, loged_user, rooms, openrooms }: any) => {
                                 </div>
 
                                 {/* Open Groups SECTION */}
-                                {openRooms && openRooms.length > 0 && (
+                                {purchasedTicket && openRooms && openRooms.length > 0 && (
                                     <div className="chat-message-list">
                                         <h6 className="px-3 text-muted">
                                             Open Groups

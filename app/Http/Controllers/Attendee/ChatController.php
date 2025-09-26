@@ -6,6 +6,7 @@ use App\Events\AttendeeChatMessage;
 use App\Events\EventGroupChat;
 use App\Events\GroupChat;
 use App\Http\Controllers\Controller;
+use App\Models\AttendeePurchasedTickets;
 use App\Models\ChatGroup;
 use App\Models\ChatMember;
 use App\Models\ChatMessage;
@@ -82,7 +83,8 @@ class ChatController extends Controller
             ->get();
 
         $loged_user = Auth::user()->id;
-        return Inertia::render('Attendee/Chat/Index', compact('member', 'event_data', 'loged_user', 'rooms', 'openrooms'));
+        $purchasedTicket = AttendeePurchasedTickets::where('attendee_id', $loged_user)->exists();
+        return Inertia::render('Attendee/Chat/Index', compact('member', 'event_data', 'loged_user', 'rooms', 'openrooms','purchasedTicket'));
     }
 
     public function getMessages($id)
