@@ -256,6 +256,7 @@ Route::prefix('attendee')->group(function () {
         Route::get('/group-chat/{id}/{event}', [ChatController::class, 'getGroupChat']);
         Route::post('/chat/send/{event}', [ChatController::class, 'store']);
         Route::post('/chat/mark-as-read/{chatWithUserId}/{event}', [ChatController::class, 'markAsRead']);
+        Route::post('/chat/group-join/{id}', [ChatController::class, 'join'])->name('attendee.join.group');
         // Friend Request
         Route::get('/friends', [FriendRequestController::class, 'index']);
         Route::post('/friends/send', [FriendRequestController::class, 'store']);

@@ -9,6 +9,7 @@ use App\Models\EventApp;
 use App\Events\EventGroupChat;
 use App\Events\AttendeeChatMessage;
 use App\Events\GroupChat;
+use App\Models\AttendeePurchasedTickets;
 use App\Models\ChatGroup;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -81,12 +82,22 @@ class ChatController extends Controller
                 return $room;
             });
 
+        $openrooms = ChatGroup::where('event_id', Auth::user()->event_app_id)
+            ->where('type', 'attendee')
+            ->where('visibility', 'public') // only public rooms
+            ->whereDoesntHave('members', function ($q) {
+                $q->where('user_id', Auth::id()); // exclude if user is already a member
+            })
+            ->get();
+        $purchasedTicket = AttendeePurchasedTickets::where('attendee_id', $user->id)->exists();
         return response()->json([
             'status' => true,
             'members' => $members,
             'event_data' => $eventData,
             'logged_user' => $user->id,
-            'rooms' => $rooms
+            'rooms' => $rooms,
+            'openrooms' => $openrooms,
+            'purchasedTicket' => $purchasedTicket,
         ], 200);
     }
 
@@ -297,6 +308,40 @@ class ChatController extends Controller
             'user_type' => $userType,
             'participant_id' => $participantId,
             'participant_type' => $participantType,
+        ]);
+    }
+
+    public function join($id)
+    {
+        $group = ChatGroup::findOrFail($id);
+        $userId = Auth::id();
+        $eventId = Auth::user()->event_app_id;
+
+        // Prevent duplicate join
+        $alreadyMember = ChatMember::where('event_id', $eventId)
+            ->where('group_id', $group->id)
+            ->where('user_id', $userId)
+            ->exists();
+
+        if ($alreadyMember) {
+            return response()->json([
+                'status'  => true,
+                'message' => 'Already a member of this group.',
+            ]);
+        }
+
+        $member = ChatMember::create([
+            'event_id'        => $eventId,
+            'group_id'        => $group->id,
+            'user_id'         => $userId,
+            'user_type'       => \App\Models\Attendee::class,
+            'participant_id'  => $group->created_by,
+            'participant_type' => \App\Models\User::class,
+        ]);
+
+        return response()->json([
+            'status'  => true,
+            'message' => 'Joined group successfully.',
         ]);
     }
 }
