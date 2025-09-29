@@ -790,7 +790,7 @@ const Chat = ({ member, event_data, loged_user, rooms, openrooms,purchasedTicket
                                 {purchasedTicket && openRooms && openRooms.length > 0 && (
                                     <div className="chat-message-list">
                                         <h6 className="px-3 text-muted">
-                                            Open Groups
+                                          {t("Open Groups")}  
                                         </h6>
                                         <ul
                                             className="list-unstyled chat-list chat-user-list users-list"
@@ -830,7 +830,7 @@ const Chat = ({ member, event_data, loged_user, rooms, openrooms,purchasedTicket
                                                                     {chat.name}
                                                                 </p>
                                                                 <small className="text-muted">
-                                                                    Click to join
+                                                                   {t("Click to join")}
                                                                 </small>
                                                             </div>
                                                         </div>

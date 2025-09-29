@@ -420,7 +420,7 @@ const Chat = ({ member, event_data, loged_user ,staff,attendees,rooms,openrooms}
                                                     onClick={() => setShowCreateRoomModal(true)}
                                                     className="btn btn-success "
                                                 >
-                                                    Create Room
+                                                    {t("Create Room")}
                                                 </button>
                                             </HasPermission>
                                         </div>
@@ -599,7 +599,7 @@ const Chat = ({ member, event_data, loged_user ,staff,attendees,rooms,openrooms}
                                 {openRooms && openRooms.length > 0 && (
                                     <div className="chat-message-list">
                                         <h6 className="px-3 text-muted">
-                                            Open Groups
+                                           {t("Open Groups")} 
                                         </h6>
                                         <ul
                                             className="list-unstyled chat-list chat-user-list users-list"
@@ -639,7 +639,7 @@ const Chat = ({ member, event_data, loged_user ,staff,attendees,rooms,openrooms}
                                                                     {chat.name}
                                                                 </p>
                                                                 <small className="text-muted">
-                                                                    Click to join
+                                                                   {t("Click to join")}
                                                                 </small>
                                                             </div>
                                                         </div>
