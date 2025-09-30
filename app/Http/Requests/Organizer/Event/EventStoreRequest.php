@@ -35,7 +35,7 @@ class EventStoreRequest extends FormRequest
             'recurring_type_id' => 'required_if_accepted:is_recurring',
             'is_recurring' => ['boolean'],
             'logo_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp'],
-            'image_files' => ['required', 'array', 'min:1'],
+            'image_files' => ['nullable', 'array'],
         ];
     }
 

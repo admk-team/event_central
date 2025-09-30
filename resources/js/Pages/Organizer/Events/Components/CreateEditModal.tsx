@@ -96,6 +96,8 @@ function CreateEditModal({
             image_files: [],
         });
 
+        console.log("form data", data);
+
     useEffect(() => {
         setEventImagePreviews(event?.images ?? []);
     }, [event]);
@@ -450,7 +452,11 @@ function CreateEditModal({
                                     <div className={!!errors.description ? "is-invalid" : ""}>
                                         <QuillEditor
                                         value={data.description}
-                                        onChange={(val) => setData("description", val)}
+                                        onChange={(val) => setData((state) => {
+                                            const newState = {...state};
+                                            newState.description = val;
+                                            return newState;
+                                        })}
                                         placeholder="Enter description"
                                         className="form-control"
                                         />
