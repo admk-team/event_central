@@ -45,7 +45,6 @@ class ChatController extends Controller
 
         $event_data = EventApp::where('id', session('event_id'))->first();
         $rooms = ChatGroup::where('event_id', session('event_id'))
-            ->where('type', 'staff')
             ->whereHas('members', function ($q) {
                 $q->where('user_id', Auth::id());
             })
@@ -75,13 +74,9 @@ class ChatController extends Controller
         $loged_user = Auth::user()->id;
         $staff = null;
         if (Auth::user()->parent_id) {
-            $all_user = User::where('parent_id', Auth::user()->parent_id)->get()->toArray();
-            $admin = User::where('id', Auth::user()->parent_id)->get()->toArray();
-            $staff = array_merge($all_user, $admin);
+            $staff = User::where('parent_id', Auth::user()->parent_id)->get()->toArray();
         } else {
-            $all_user = User::where('parent_id', $loged_user)->get()->toArray();
-            $admin = User::where('id', $loged_user)->get()->toArray();
-            $staff = array_merge($all_user, $admin);
+            $staff = User::where('parent_id', $loged_user)->get()->toArray();
         }
         $attendees = Attendee::where('event_app_id', $eventId)->get();
 
@@ -326,7 +321,7 @@ class ChatController extends Controller
             'created_by' => $userId,
             'visibility' => $request->visibility,
         ]);
-
+        $this->initiateChat($eventId,  $userId, \App\Models\User::class, $userId, \App\Models\User::class, $group->id);
         if (is_array($request->members) && count($request->members) > 0 && $request->visibility == "private") {
             $member_type = $request->type == 'Staff' ? \App\Models\User::class : \App\Models\Attendee::class;
             foreach ($request->members as $member) {
