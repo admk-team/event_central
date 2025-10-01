@@ -1215,10 +1215,16 @@
   "Purchased Sponsorships": "Kupljena sponzorstva",
   "Open Groups": "Otvorene grupe",
   "Click to join": "Klikni da se pridružiš",
-    "🎛 Dashboard & Analytics": "🎛 Kontrolna tabla i analitika",
+  "🎛 Dashboard & Analytics": "🎛 Kontrolna tabla i analitika",
   "📅 Events & Venue": "📅 Događaji i mesto",
   "🎟 Tickets & Registration": "🎟 Karte i registracija",
   "🛍 Event Shop": "🛍 Prodavnica događaja",
   "🪪 Badges & Communication": "🪪 Bedževi i komunikacija",
-  "🔗 Engagement & Extras": "🔗 Učešće i dodaci"
+  "🔗 Engagement & Extras": "🔗 Učešće i dodaci",
+  "🎛 Dashboard": "🎛 Kontrolna tabla",
+  "🛍 Event Shop & Sponsorships": "🛍 Prodavnica događaja i sponzorstva",
+  "📅 Event Info & Participation": "📅 Informacije o događaju i učešće",
+  "💬 Interaction & Networking": "💬 Interakcija i umrežavanje",
+  "🎟 Tickets & Access": "🎟 Karte i pristup",
+  "🏆 Engagement & Extras": "🏆 Učešće i dodatno"
 }
