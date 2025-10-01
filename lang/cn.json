@@ -6,7 +6,7 @@
     "Staff": "工作人员",
     "Colors": "颜色",
     "Dashboard": "仪表盘",
-    "Demo Graphic Detail": "演示图形详情",
+    "Demographic Details": "演示图形详情",
     "Content": "内容",
     "Schedule": "日程",
     "Speakers": "讲者",
@@ -1213,5 +1213,11 @@
     "assigned": "已分配",
     "Purchased Sponsorships": "已购买的赞助",
     "Open Groups": "开放的群组",
-    "Click to join": "点击加入"
+    "Click to join": "点击加入",
+    "🎛 Dashboard & Analytics": "🎛 控制台与分析",
+    "📅 Events & Venue": "📅 活动与场地",
+    "🎟 Tickets & Registration": "🎟 门票与注册",
+    "🛍 Event Shop": "🛍 活动商店",
+    "🪪 Badges & Communication": "🪪 徽章与沟通",
+    "🔗 Engagement & Extras": "🔗 互动与附加功能"
 }

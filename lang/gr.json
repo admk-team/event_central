@@ -6,7 +6,7 @@
   "Staff": "Προσωπικό",
   "Colors": "Χρώματα",
   "Dashboard": "Πίνακας ελέγχου",
-  "Demo Graphic Detail": "Λεπτομέρεια γραφικού επίδειξης",
+  "Demographic Details": "Λεπτομέρεια γραφικού επίδειξης",
   "Content": "Περιεχόμενο",
   "Schedule": "Πρόγραμμα",
   "Speakers": "Ομιλητές",
@@ -1198,5 +1198,11 @@
   "assigned": "ανατεθειμένο",
   "Purchased Sponsorships": "Αγορασμένες χορηγίες",
   "Open Groups": "Ανοιχτές Ομάδες",
-  "Click to join": "Κάντε κλικ για να συμμετάσχετε"
+  "Click to join": "Κάντε κλικ για να συμμετάσχετε",
+  "🎛 Dashboard & Analytics": "🎛 Πίνακας Ελέγχου & Αναλύσεις",
+  "📅 Events & Venue": "📅 Εκδηλώσεις & Χώρος",
+  "🎟 Tickets & Registration": "🎟 Εισιτήρια & Εγγραφή",
+  "🛍 Event Shop": "🛍 Κατάστημα Εκδήλωσης",
+  "🪪 Badges & Communication": "🪪 Κονκάρδες & Επικοινωνία",
+  "🔗 Engagement & Extras": "🔗 Συμμετοχή & Πρόσθετα"
 }
