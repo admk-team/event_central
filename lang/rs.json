@@ -6,7 +6,7 @@
   "Staff": "Персонал",
   "Colors": "Цвета",
   "Dashboard": "Панель управления",
-  "Demo Graphic Detail": "Демонстрационная графика — детали",
+  "Demographic Details": "Демонстрационная графика — детали",
   "Content": "Контент",
   "Schedule": "Расписание",
   "Speakers": "Спикеры",
@@ -1214,5 +1214,17 @@
   "assigned": "dodeljeno",
   "Purchased Sponsorships": "Kupljena sponzorstva",
   "Open Groups": "Otvorene grupe",
-  "Click to join": "Klikni da se pridružiš"
+  "Click to join": "Klikni da se pridružiš",
+  "🎛 Dashboard & Analytics": "🎛 Kontrolna tabla i analitika",
+  "📅 Events & Venue": "📅 Događaji i mesto",
+  "🎟 Tickets & Registration": "🎟 Karte i registracija",
+  "🛍 Event Shop": "🛍 Prodavnica događaja",
+  "🪪 Badges & Communication": "🪪 Bedževi i komunikacija",
+  "🔗 Engagement & Extras": "🔗 Učešće i dodaci",
+  "🎛 Dashboard": "🎛 Kontrolna tabla",
+  "🛍 Event Shop & Sponsorships": "🛍 Prodavnica događaja i sponzorstva",
+  "📅 Event Info & Participation": "📅 Informacije o događaju i učešće",
+  "💬 Interaction & Networking": "💬 Interakcija i umrežavanje",
+  "🎟 Tickets & Access": "🎟 Karte i pristup",
+  "🏆 Engagement & Extras": "🏆 Učešće i dodatno"
 }

@@ -122,9 +122,15 @@ const Navdata = () => {
     const isEventStarted = eventStartDate && currentDate >= eventStartDate;
 
     const menuItems: any = [
+        // 🎛 Dashboard & Analytics
+        {
+            id: "header-dashboard",
+            label: t("🎛 Dashboard & Analytics"),
+            isHeader: true,
+        },
         {
             id: "dashboard",
-            label: t('Dashboard'),
+            label: t("Dashboard"),
             icon: "bx bxs-dashboard",
             link: route("organizer.events.dashboard"),
             stateVariables: isDashboard,
@@ -137,8 +143,57 @@ const Navdata = () => {
             hasPermissions: ["view_event_dashboard"],
         },
         {
+            id: "Report",
+            label: t("Reports"),
+            icon: "bx bxs-report",
+            link: "/#",
+            stateVariables: isReport,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsReport(!isReport);
+                setIscurrentState("Report");
+                updateIconSidebar(e);
+            },
+            hasAnyPermission: [
+                "view_attendee_report",
+                "view_ticket_report",
+                "view_session_report",
+                "view_refund_ticket_report",
+            ],
+            subItems: [
+                {
+                    id: "attendeeReport",
+                    label: t("Attendee Reports"),
+                    link: route("organizer.events.report.attendee.index"),
+                    parentId: "Report",
+                    hasPermissions: ["view_attendee_report"],
+                },
+                {
+                    id: "sessionReport",
+                    label: t("Session Reports"),
+                    link: route("organizer.events.report.session.index"),
+                    parentId: "Report",
+                    hasPermissions: ["view_session_report"],
+                },
+                {
+                    id: "ticketReport",
+                    label: t("Ticket Reports"),
+                    link: route("organizer.events.report.ticket.index"),
+                    parentId: "Report",
+                    hasPermissions: ["view_ticket_report"],
+                },
+                {
+                    id: "refundTicketReport",
+                    label: t("Refund Reports"),
+                    link: route("organizer.events.report.refund-ticket.index"),
+                    parentId: "Report",
+                    hasPermissions: ["view_refund_ticket_report"],
+                },
+            ],
+        },
+        {
             id: "demographic_detail",
-            label: t('Demo Graphic Detail'),
+            label: t("Demographic Details"),
             icon: "bx bxs-calendar-event",
             link: route("organizer.events.demographic", {
                 eventUuid: currentEvent.uuid,
@@ -149,11 +204,18 @@ const Navdata = () => {
                 setIscurrentState("Demographic");
                 updateIconSidebar(e);
             },
-            hasPermissions: ["view_demographic_detail"], // uncomment if using permissions
+            hasPermissions: ["view_demographic_detail"],
+        },
+
+        // 📅 Events & Venue
+        {
+            id: "header-events",
+            label: t("📅 Events & Venue"),
+            isHeader: true,
         },
         {
             id: "attendees",
-            label: t('Event'),
+            label: t("Events"),
             icon: "bx bxs-calendar-event",
             link: route("organizer.events.settings.event.index"),
             stateVariables: isEvent,
@@ -167,7 +229,7 @@ const Navdata = () => {
         },
         {
             id: "venueManagement",
-            label: t('Venue Management'),
+            label: t("Venue Management"),
             icon: "bx bxs-calendar-event",
             link: route("organizer.events.event-platforms.index"),
             stateVariables: isVenueManagement,
@@ -181,7 +243,7 @@ const Navdata = () => {
         },
         {
             id: "Content",
-            label: t('Content'),
+            label: t("Content"),
             icon: "bx bx-book-content",
             link: "/#",
             stateVariables: isContent,
@@ -200,137 +262,44 @@ const Navdata = () => {
             subItems: [
                 {
                     id: "schedule",
-                    label: t('Schedule'),
+                    label: t("Schedule"),
                     link: route("organizer.events.schedule.index"),
                     parentId: "Content",
                     hasPermissions: ["view_event_sessions"],
                 },
                 {
                     id: "speakers",
-                    label: t('Speakers'),
+                    label: t("Speakers"),
                     link: route("organizer.events.speaker.index"),
                     parentId: "Content",
                     hasPermissions: ["view_speakers"],
                 },
                 {
                     id: "partners",
-                    label: t('Partners'),
+                    label: t("Partners"),
                     link: route("organizer.events.partner.index"),
                     parentId: "Content",
                     hasPermissions: ["view_partner"],
                 },
-                
             ],
         },
         {
-            id: "EventShop",
-            label: t('Event Shop'),
-            icon: "bx bx-store",
-            link: "/#",
-            stateVariables: isEventStore,
+            id: "liveStreams",
+            label: t("Live Streams"),
+            icon: "bx bx-broadcast",
+            link: route("organizer.events.live-streams.index"),
+            stateVariables: isLiveStreams,
             click: function (e: any) {
                 e.preventDefault();
-                setIsEventStore(!isEventStore);
-                setIscurrentState("EventShop");
+                setIsLiveStreams(!isLiveStreams);
+                setIscurrentState("LiveStreams");
                 updateIconSidebar(e);
             },
-            hasAnyPermission: ["view_product", "view_order"],
-            subItems: [
-                {
-                    id: "products",
-                    label: t('Products'),
-                    link: route("organizer.events.products.index"),
-                    parentId: "EventShop",
-                    hasPermissions: ["view_product"],
-                },
-                {
-                    id: "orders",
-                    label: t('Orders'),
-                    link: route("organizer.events.orders.index"), // pass eventApp UUID or ID here
-                    parentId: "EventShop",
-                    hasPermissions: ["view_orders"],
-                },
-                 {
-                    id: "booth",
-                    label: t('Sponsorship'),
-                    link: route("organizer.booths.index"), // pass eventApp UUID or ID here
-                    parentId: "Content",
-                    hasPermissions: ["view_event_booth"],
-                },
-                 {
-                    id: "booth-purchased",
-                    label: t('Purchased Sponsorships'),
-                    link: route("organizer.booth-purchases.index"), // pass eventApp UUID or ID here
-                    parentId: "Content",
-                    hasPermissions: ["view_event_booth"],
-                },
-                
-            ],
+            hasPermissions: ["view_live_streams"],
         },
-        {
-            id: "attendees",
-            label: t('Attendees'),
-            icon: "bx bxs-user-account",
-            link: route("organizer.events.attendees.index"),
-            stateVariables: isAttendees,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsAttendees(!isAttendees);
-                setIscurrentState("users");
-                updateIconSidebar(e);
-            },
-            hasPermissions: ["view_attendees"],
-        },
-        {
-            id: "payments",
-            label: t('Payments'),
-            icon: "bx bxs-credit-card",
-            link: route("organizer.events.payments"),
-            stateVariables: isAttendees,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsTickets(!isTickets);
-                setIscurrentState("payments");
-                updateIconSidebar(e);
-            },
-            hasPermissions: ["view_payments"],
-        },
-
-        {
-            id: "registrationForm",
-            label: t('Registration Form'),
-            icon: "bx bxs-user-plus",
-            link: route("organizer.events.settings.registration-form.index"),
-            stateVariables: isForm,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsForm(!isForm);
-                setIscurrentState("registrationForm");
-                updateIconSidebar(e);
-            },
-            hasPermissions: ["edit_registration_form"],
-        },
-        ...(isEventStarted
-            ? [
-                  {
-                      id: "sessionAttendance",
-                      label: t('Sessions Attendance'),
-                      icon: "bx bx-calendar-check",
-                      link: route("organizer.events.attendance.index"),
-                      stateVariables: IsSessionAttendance,
-                      click: function (e: any) {
-                          e.preventDefault();
-                          setIsSessionAttendance(!IsSessionAttendance);
-                          setIscurrentState("sessionAttendance");
-                          updateIconSidebar(e);
-                      },
-                      hasPermissions: ["view_session_attendence"],
-                  },
-              ]
-            : []),
         {
             id: "website",
-            label: t('Website'),
+            label: t("Website"),
             icon: "bx bx-globe",
             link: route("organizer.events.settings.website.index"),
             stateVariables: IsWebsite,
@@ -342,25 +311,16 @@ const Navdata = () => {
             },
             hasPermissions: ["view_website"],
         },
-        // {
-        //     id: "payemntSettings",
-        //     label: "Payment Settings",
-        //     icon: "bx bx-cog",
-        //     link: route('organizer.events.settings.payment.index'),
-        //     stateVariables: IspayemntSettings,
-        //     click: function (e: any) {
-        //         e.preventDefault();
-        //         setIspayemntSettings(!IspayemntSettings);
-        //         setIscurrentState('payemntSettings');
-        //         updateIconSidebar(e);
-        //     },
-        //     hasPermissions: [
-        //         'edit_payment_settings'
-        //     ],
-        // },
+
+        // 🎟 Tickets & Registration
+        {
+            id: "header-tickets",
+            label: t("🎟 Tickets & Registration"),
+            isHeader: true,
+        },
         {
             id: "tickets",
-            label: t('Tickets'),
+            label: t("Tickets"),
             icon: "bx bxs-server",
             link: "/#",
             stateVariables: isTickets,
@@ -372,46 +332,41 @@ const Navdata = () => {
             },
             hasAnyPermission: [
                 "view_tickets",
-                "view_tickets",
                 "view_add_on",
                 "view_ticket_fee",
             ],
             subItems: [
                 {
                     id: "tickets",
-                    label: t('Tickets'),
+                    label: t("Manage Tickets"),
                     link: route("organizer.events.tickets.index"),
-                    parentId: "Content",
+                    parentId: "tickets",
                     hasPermissions: ["view_tickets"],
                 },
                 {
                     id: "ticket-fees",
-                    label: t('Ticket Fees'),
+                    label: t("Ticket Fees"),
                     link: route("organizer.events.ticket-fees.index"),
-                    parentId: "Content",
-                    hasPermissions: [
-                        "view_ticket_fee", //To be changed after permission added
-                    ],
+                    parentId: "tickets",
+                    hasPermissions: ["view_ticket_fee"],
                 },
                 {
                     id: "ticket-addons",
-                    label: t('Ticket Add-ons'),
+                    label: t("Ticket Add-ons"),
                     link: route("organizer.events.addon.index"),
-                    parentId: "Content",
-                    hasPermissions: [
-                        "view_add_on", //To be changed after permission added
-                    ],
+                    parentId: "tickets",
+                    hasPermissions: ["view_add_on"],
                 },
                 {
                     id: "promo-codes",
-                    label: t('Promo Codes'),
+                    label: t("Promo Codes"),
                     link: route("organizer.events.promo-codes.index"),
-                    parentId: "Content",
+                    parentId: "tickets",
                     hasPermissions: ["view_promo_code"],
                 },
                 {
                     id: "assignTickets",
-                    label: t('Assign Tickets'),
+                    label: t("Assign Tickets"),
                     link: route(
                         "organizer.events.attendee.tickets.assign",
                         null
@@ -421,21 +376,21 @@ const Navdata = () => {
                 },
                 {
                     id: "upgradeTicket",
-                    label: t('Upgrade Tickets'),
+                    label: t("Upgrade Tickets"),
                     link: route("organizer.events.tickets.upgrade"),
                     parentId: "tickets",
                     hasPermissions: ["refund_ticket"],
                 },
                 {
                     id: "refundTicket",
-                    label: t('Refund Tickets'),
+                    label: t("Refund Tickets"),
                     link: route("organizer.events.refund.tickets"),
                     parentId: "tickets",
                     hasPermissions: ["refund_ticket"],
                 },
                 {
                     id: "purchasedNotification",
-                    label: t('Purchased Notification'),
+                    label: t("Purchased Notifications"),
                     link: route(
                         "organizer.events.purchased-ticket.notification"
                     ),
@@ -455,9 +410,7 @@ const Navdata = () => {
         //         setIscurrentState('assignTickets');
         //         updateIconSidebar(e);
         //     },
-        //     hasPermissions: [
-        //         'assign_tickets',
-        //     ],
+        //     hasPermissions: ['assign_tickets'],
         // },
         // {
         //     id: "refundTicket",
@@ -471,9 +424,7 @@ const Navdata = () => {
         //         setIscurrentState('refundTicket');
         //         updateIconSidebar(e);
         //     },
-        //     hasPermissions: [
-        //         'refund_ticket'
-        //     ],
+        //     hasPermissions: ['refund_ticket']
         // },
         // {
         //     id: "upgradeTicket",
@@ -487,13 +438,129 @@ const Navdata = () => {
         //         setIscurrentState('upgradeTicket');
         //         updateIconSidebar(e);
         //     },
-        //     hasPermissions: [
-        //         'refund_ticket'
-        //     ],
+        //     hasPermissions: ['refund_ticket']
         // },
         {
+            id: "registrationForm",
+            label: t("Registration Form"),
+            icon: "bx bxs-user-plus",
+            link: route("organizer.events.settings.registration-form.index"),
+            stateVariables: isForm,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsForm(!isForm);
+                setIscurrentState("registrationForm");
+                updateIconSidebar(e);
+            },
+            hasPermissions: ["edit_registration_form"],
+        },
+        {
+            id: "attendees",
+            label: t("Attendees"),
+            icon: "bx bxs-user-account",
+            link: route("organizer.events.attendees.index"),
+            stateVariables: isAttendees,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsAttendees(!isAttendees);
+                setIscurrentState("users");
+                updateIconSidebar(e);
+            },
+            hasPermissions: ["view_attendees"],
+        },
+        {
+            id: "payments",
+            label: t("Payments"),
+            icon: "bx bxs-credit-card",
+            link: route("organizer.events.payments"),
+            stateVariables: isAttendees,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsTickets(!isTickets);
+                setIscurrentState("payments");
+                updateIconSidebar(e);
+            },
+            hasPermissions: ["view_payments"],
+        },
+        ...(isEventStarted
+            ? [
+                  {
+                      id: "sessionAttendance",
+                      label: t("Sessions Attendance"),
+                      icon: "bx bx-calendar-check",
+                      link: route("organizer.events.attendance.index"),
+                      stateVariables: IsSessionAttendance,
+                      click: function (e: any) {
+                          e.preventDefault();
+                          setIsSessionAttendance(!IsSessionAttendance);
+                          setIscurrentState("sessionAttendance");
+                          updateIconSidebar(e);
+                      },
+                      hasPermissions: ["view_session_attendence"],
+                  },
+              ]
+            : []),
+
+        // 🛍 Event Shop
+        {
+            id: "header-shop",
+            label: t("🛍 Event Shop"),
+            isHeader: true,
+        },
+        {
+            id: "EventShop",
+            label: t("Event Shop"),
+            icon: "bx bx-store",
+            link: "/#",
+            stateVariables: isEventStore,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsEventStore(!isEventStore);
+                setIscurrentState("EventShop");
+                updateIconSidebar(e);
+            },
+            hasAnyPermission: ["view_product", "view_order"],
+            subItems: [
+                {
+                    id: "products",
+                    label: t("Products"),
+                    link: route("organizer.events.products.index"),
+                    parentId: "EventShop",
+                    hasPermissions: ["view_product"],
+                },
+                {
+                    id: "orders",
+                    label: t("Orders"),
+                    link: route("organizer.events.orders.index"),
+                    parentId: "EventShop",
+                    hasPermissions: ["view_orders"],
+                },
+                {
+                    id: "booth",
+                    label: t("Sponsorships"),
+                    link: route("organizer.booths.index"),
+                    parentId: "EventShop",
+                    hasPermissions: ["view_event_booth"],
+                },
+                {
+                    id: "booth-purchased",
+                    label: t("Purchased Sponsorships"),
+                    link: route("organizer.booth-purchases.index"),
+                    parentId: "EventShop",
+                    hasPermissions: ["view_event_booth"],
+                },
+            ],
+        },
+
+        // 🪪 Badges & Communication
+        {
+            id: "header-badges",
+            label: t("🪪 Badges & Communication"),
+            isHeader: true,
+        },
+        {
             id: "badgePrinting",
-            label: t('Badge Printing'),
+            label: t("Badge Printing"),
             icon: "bx bxs-printer",
             link: route("organizer.events.badge.print"),
             click: function (e: any) {
@@ -502,11 +569,35 @@ const Navdata = () => {
             },
             hasPermissions: ["print_badges"],
         },
-        // ...(isEventStarted ? [{
-
+        {
+            id: "event_badge",
+            label: t("Event Badges"),
+            icon: "bx bx-badge",
+            link: route("organizer.events.badge.index"),
+            stateVariables: isEventBadge,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsRefferalLink(!isEventBadge);
+                setIscurrentState("event_badge");
+                updateIconSidebar(e);
+            },
+            hasPermissions: ["view_event_badge"],
+        },
+        {
+            id: "BadgeTemplate",
+            label: t("Badge Template"),
+            icon: "bx bxs-envelope",
+            link: route("organizer.events.badge-template.index"),
+            click: function (e: any) {
+                e.preventDefault();
+                setIscurrentState("BadgeTemplate");
+                updateIconSidebar(e);
+            },
+            hasPermissions: ["view_email_template"],
+        },
         {
             id: "chat",
-            label: t('Chat Room'),
+            label: t("Chat Room"),
             icon: "bx bx-message-rounded-dots",
             link: route("organizer.events.chat.index"),
             stateVariables: isForm,
@@ -519,8 +610,44 @@ const Navdata = () => {
             hasPermissions: ["view_chat"],
         },
         {
+            id: "EmailCampaign",
+            label: t("Email Campaign"),
+            icon: "bx bxs-envelope",
+            link: route("organizer.events.email-campaign.index"),
+            click: function (e: any) {
+                e.preventDefault();
+                setIscurrentState("EmailCampaign");
+                updateIconSidebar(e);
+            },
+            hasPermissions: ["view_email_campaign"],
+        },
+        {
+            id: "BaseTemplate",
+            label: t("Default Email Template"),
+            icon: "bx bxs-envelope",
+            link: route("organizer.events.base.template"),
+            click: function (e: any) {
+                e.preventDefault();
+                setIscurrentState("BaseTemplate");
+                updateIconSidebar(e);
+            },
+            hasPermissions: ["view_default_email_template"],
+        },
+        {
+            id: "EmailTemplate",
+            label: t("Email Template"),
+            icon: "bx bxs-envelope",
+            link: route("organizer.events.email-template.index"),
+            click: function (e: any) {
+                e.preventDefault();
+                setIscurrentState("EmailTemplate");
+                updateIconSidebar(e);
+            },
+            hasPermissions: ["view_email_template"],
+        },
+        {
             id: "Questionnaire",
-            label: t('Questionnaire Form'),
+            label: t("Questionnaire Form"),
             icon: "bx bxs-notepad",
             link: route("organizer.events.settings.questionnaire-form.index"),
             stateVariables: isForm,
@@ -534,7 +661,7 @@ const Navdata = () => {
         },
         {
             id: "Questionnaire_response",
-            label: t('Questionnaire Response'),
+            label: t("Questionnaire Response"),
             icon: "bx bxs-notepad",
             link: route(
                 "organizer.events.settings.questionnaire-form.response"
@@ -549,57 +676,9 @@ const Navdata = () => {
             hasPermissions: ["questionnaire_response"],
         },
         {
-            id: "EmailCampaign",
-            label: t('Email Campaign'),
-            icon: "bx bxs-envelope",
-            link: route("organizer.events.email-campaign.index"),
-            click: function (e: any) {
-                e.preventDefault();
-                setIscurrentState("EmailCampaign");
-                updateIconSidebar(e);
-            },
-            hasPermissions: ["view_email_campaign"],
-        },
-        {
-            id: "BaseTemplate",
-            label: t('Default Email Template'),
-            icon: "bx bxs-envelope",
-            link: route("organizer.events.base.template"),
-            click: function (e: any) {
-                e.preventDefault();
-                setIscurrentState("BaseTemplate");
-                updateIconSidebar(e);
-            },
-            hasPermissions: ["view_default_email_template"],
-        },
-        {
-            id: "BadgeTemplate",
-            label: t('Badge Template'),
-            icon: "bx bxs-envelope",
-            link: route("organizer.events.badge-template.index"),
-            click: function (e: any) {
-                e.preventDefault();
-                setIscurrentState("BadgeTemplate");
-                updateIconSidebar(e);
-            },
-            hasPermissions: ["view_email_template"],
-        },
-        {
-            id: "EmailTemplate",
-            label: t('Email Template'),
-            icon: "bx bxs-envelope",
-            link: route("organizer.events.email-template.index"),
-            click: function (e: any) {
-                e.preventDefault();
-                setIscurrentState("EmailTemplate");
-                updateIconSidebar(e);
-            },
-            hasPermissions: ["view_email_template"],
-        },
-        {
             id: "ContactForm",
-            label: t('Contact Form'),
-            icon: "bx  bxs-contact",
+            label: t("Contact Form"),
+            icon: "bx bxs-contact",
             link: route("organizer.events.contact-forms.index"),
             click: function (e: any) {
                 e.preventDefault();
@@ -608,9 +687,16 @@ const Navdata = () => {
             },
             hasPermissions: ["view_contact_form"],
         },
+
+        // 🔗 Engagement & Extras
+        {
+            id: "header-extras",
+            label: t("🔗 Engagement & Extras"),
+            isHeader: true,
+        },
         {
             id: "refferal_link",
-            label: t("Referral Link"),
+            label: t("Referral Links"),
             icon: "bx bx-share-alt",
             link: route("organizer.events.refferal-link.index"),
             stateVariables: isRefferalLink,
@@ -623,68 +709,33 @@ const Navdata = () => {
             hasPermissions: ["view_referral_link"],
         },
         {
-            id: "event_badge",
-            label: t('Event Badges'),
-            icon: "bx bx-badge",
-            link: route("organizer.events.badge.index"),
-            stateVariables: isEventBadge,
+            id: "private_registration",
+            label: t("Private Registration"),
+            icon: "bx bxs-notepad",
+            link: route("organizer.private-registration.index"),
+            stateVariables: isPrivateRegister,
             click: function (e: any) {
                 e.preventDefault();
-                setIsRefferalLink(!isEventBadge);
-                setIscurrentState("event_badge");
+                setIsPrivateRegister(!isPrivateRegister);
+                setIscurrentState("private_registration");
                 updateIconSidebar(e);
             },
-            hasPermissions: ["view_event_badge"],
+            hasPermissions: ["view_private_registration"],
         },
-        {
-            id: "Report",
-            label: t('Reports'),
-            icon: "bx bxs-report",
-            link: "/#",
-            stateVariables: isReport,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsReport(!isReport);
-                setIscurrentState("Report");
-                updateIconSidebar(e);
-            },
-            hasAnyPermission: [
-                "view_attendee_report",
-                "view_ticket_report",
-                "view_session_report",
-                "view_refund_ticket_report",
-            ],
-            subItems: [
-                {
-                    id: "attendeeReport",
-                    label: t('Attendee'),
-                    link: route("organizer.events.report.attendee.index"),
-                    parentId: "Report",
-                    hasPermissions: ["view_attendee_report"],
-                },
-                {
-                    id: "sessionReport",
-                    label: t('Session'),
-                    link: route("organizer.events.report.session.index"),
-                    parentId: "Report",
-                    hasPermissions: ["view_session_report"],
-                },
-                {
-                    id: "ticketReport",
-                    label: t('Ticket'),
-                    link: route("organizer.events.report.ticket.index"),
-                    parentId: "Report",
-                    hasPermissions: ["view_ticket_report"],
-                },
-                {
-                    id: "refundTicketReport",
-                    label: t('Refund Ticket'),
-                    link: route("organizer.events.report.refund-ticket.index"),
-                    parentId: "Report",
-                    hasPermissions: ["view_refund_ticket_report"],
-                },
-            ],
-        },
+        // {
+        //     id: "payemntSettings",
+        //     label: "Payment Settings",
+        //     icon: "bx bx-cog",
+        //     link: route('organizer.events.settings.payment.index'),
+        //     stateVariables: IspayemntSettings,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setIspayemntSettings(!IspayemntSettings);
+        //         setIscurrentState('payemntSettings');
+        //         updateIconSidebar(e);
+        //     },
+        //     hasPermissions: ['edit_payment_settings'],
+        // },
         // {
         //     id: "prayer_request",
         //     label: "Prayer Request Report",
@@ -697,41 +748,8 @@ const Navdata = () => {
         //         setIscurrentState('prayer_request');
         //         updateIconSidebar(e);
         //     },
-        //     hasPermissions: [
-        //         'view_prayer_request'
-        //     ],
+        //     hasPermissions: ['view_prayer_request'],
         // },
-
-        {
-            id: "private_registration",
-            label: t('Private Registration'),
-            icon: "bx bxs-notepad",
-            link: route("organizer.private-registration.index"),
-            stateVariables: isPrivateRegister,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsPrivateRegister(!isPrivateRegister);
-                setIscurrentState("private_registration");
-                updateIconSidebar(e);
-            },
-            hasPermissions: ["view_private_registration"],
-        },
-        {
-            id: "liveStreams",
-            label: t('Live Streams'),
-            icon: "bx bx-broadcast",
-            link: route("organizer.events.live-streams.index"),
-            stateVariables: isLiveStreams,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsLiveStreams(!isLiveStreams);
-                setIscurrentState("LiveStreams");
-                updateIconSidebar(e);
-            },
-            hasPermissions: ["view_live_streams"],
-        },
-
-        // }] : []),
     ];
 
     return <React.Fragment>{menuItems}</React.Fragment>;

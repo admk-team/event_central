@@ -27,7 +27,7 @@ class EventStoreRequest extends FormRequest
             'tagline'       => ['nullable', 'string'],
             'description'   => ['required', 'string'],
             'start_date'    => ['required', 'date', 'after_or_equal:today'],
-            'location_type' => ['required', 'string', 'max:255'],
+            'location_type' => ['nullable', 'string', 'max:255'],
             'location_base' => ['nullable', 'string', 'max:255'],
             'type'          => ['required', 'string', 'max:255'],
             'schedual_type' => ['required', 'in:singleday,multiday'],

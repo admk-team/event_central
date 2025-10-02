@@ -6,7 +6,7 @@
   "Staff": "Staff",
   "Colors": "Colori",
   "Dashboard": "Dashboard",
-  "Demo Graphic Detail": "Dettaglio Grafico Demo",
+  "Demographic Details": "Dettaglio Grafico Demo",
   "Content": "Contenuto",
   "Schedule": "Programma",
   "Speakers": "Relatori",
@@ -1213,5 +1213,17 @@
   "assigned": "assegnato",
   "Purchased Sponsorships": "Sponsorizzazioni acquistate",
   "Open Groups": "Gruppi aperti",
-  "Click to join": "Clicca per unirti"
+  "Click to join": "Clicca per unirti",
+  "🎛 Dashboard & Analytics": "🎛 Dashboard e analisi",
+  "📅 Events & Venue": "📅 Eventi e sede",
+  "🎟 Tickets & Registration": "🎟 Biglietti e registrazione",
+  "🛍 Event Shop": "🛍 Negozio dell’evento",
+  "🪪 Badges & Communication": "🪪 Badge e comunicazione",
+  "🔗 Engagement & Extras": "🔗 Coinvolgimento e extra",
+  "🎛 Dashboard": "🎛 Pannello di controllo",
+  "🛍 Event Shop & Sponsorships": "🛍 Negozio evento & Sponsorizzazioni",
+  "📅 Event Info & Participation": "📅 Informazioni evento & Partecipazione",
+  "💬 Interaction & Networking": "💬 Interazione & Networking",
+  "🎟 Tickets & Access": "🎟 Biglietti & Accesso",
+  "🏆 Engagement & Extras": "🏆 Coinvolgimento & Extra"
 }
