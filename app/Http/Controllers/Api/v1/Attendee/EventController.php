@@ -21,6 +21,8 @@ use App\Models\EventPartnerCategory;
 use App\Models\SessionCheckIn;
 use App\Models\SessionRating;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 
 class EventController extends Controller
 {
@@ -68,7 +70,7 @@ class EventController extends Controller
     public function ticket(EventApp $eventApp)
     {
 
-        $eventApp->load(['tickets','public_tickets.sessions', 'public_tickets.addons', 'public_tickets.fees']);
+        $eventApp->load(['tickets', 'public_tickets.sessions', 'public_tickets.addons', 'public_tickets.fees']);
         return $this->successResponse(new EventResource($eventApp));
     }
 
@@ -302,6 +304,29 @@ class EventController extends Controller
 
         return response()->json([
             'data' => EventSpeakerResource::collection($speakers),
+        ]);
+    }
+
+    public function downloadCertificate(EventSession $eventSession)
+    {
+        $eventSession->load(['eventApp']);
+        $attendee = auth()->user();
+
+        // Generate PDF
+        $pdf = Pdf::loadView('certificate.event-certificate', [
+            'session_name' => $eventSession->name,
+            'attendee'     => $attendee->name,
+            'event_name'   => $eventSession->eventApp->name,
+            'start_date'   => $eventSession->start_date_time,
+        ])->setPaper('a4', 'landscape');
+
+        // Store the PDF file
+        $filename = 'Session_certificate.pdf';
+        Storage::disk('public')->put($filename, $pdf->output());
+
+        // Return the public URL
+        return response()->json([
+            'certificate_url' => Storage::url($filename),
         ]);
     }
 }
