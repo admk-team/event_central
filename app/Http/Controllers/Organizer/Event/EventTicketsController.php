@@ -35,22 +35,38 @@ class EventTicketsController extends Controller
             ->select(
                 'attendee_payments.id as ticketId',
                 'event_app_tickets.name as ticket_name',
-                'attendee_purchased_tickets.total as total',
+                DB::raw('SUM(attendee_purchased_tickets.total) as total'),
                 'attendee_payments.amount_paid as amount',
                 'attendee_payments.organizer_payment_note as payment_note',
                 'attendee_payments.created_at',
                 'attendee_payments.payment_method as type',
-                'attendee_purchased_tickets.fees_sub_total as fees_sub_total',
-                'attendee_purchased_tickets.addons_sub_total as addons_sub_total',
-                'attendee_purchased_tickets.qty as qty',
+                DB::raw('SUM(attendee_purchased_tickets.fees_sub_total) as fees_sub_total'),
+                DB::raw('SUM(attendee_purchased_tickets.addons_sub_total) as addons_sub_total'),
+                DB::raw('SUM(attendee_purchased_tickets.qty) as qty'),
                 'attendees.id as attendee_id',
                 'attendees.first_name as attendee_first_name',
                 'attendees.last_name as attendee_last_name',
                 'attendees.email as attendee_email',
                 'attendee_payments.discount as discount',
-                'attendee_payments.discount_code as promo_code',
+                'attendee_payments.discount_code as promo_code'
             )
-            ->latest()->get();
+            ->groupBy(
+                'attendee_payments.id',
+                'event_app_tickets.id',
+                'event_app_tickets.name',
+                'attendee_payments.amount_paid',
+                'attendee_payments.organizer_payment_note',
+                'attendee_payments.created_at',
+                'attendee_payments.payment_method',
+                'attendees.id',
+                'attendees.first_name',
+                'attendees.last_name',
+                'attendees.email',
+                'attendee_payments.discount',
+                'attendee_payments.discount_code'
+            )
+            ->latest()
+            ->get();
         return Inertia::render('Organizer/Events/Tickets/EventAppTickets', compact(['tickets']));
     }
 
