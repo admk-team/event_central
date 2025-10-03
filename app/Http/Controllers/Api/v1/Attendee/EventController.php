@@ -321,12 +321,13 @@ class EventController extends Controller
         ])->setPaper('a4', 'landscape');
 
         // Store the PDF file
-        $filename = 'Session_certificate.pdf';
+        $filename = 'Session_certificate_' . now()->format('Y-m-d') . '.pdf';
+
         Storage::disk('public')->put($filename, $pdf->output());
 
         // Return the public URL
         return response()->json([
-            'certificate_url' => Storage::url($filename),
+            'certificate_url' => asset(Storage::url($filename)),
         ]);
     }
 }
