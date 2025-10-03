@@ -14,6 +14,11 @@ class EventSessionResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $checkin = \App\Models\SessionCheckIn::where('attendee_id', auth()->user()->id)->where('session_id', $this->id)->exists();
+        $download_certificate = false;
+        if (!now()->lt(\Carbon\Carbon::parse($this->end_date_time)) && $checkin) {
+            $download_certificate = true;
+        }
         return [
             'id' => $this->id,
             'event_app_id' => $this->event_app_id,
@@ -26,6 +31,8 @@ class EventSessionResource extends JsonResource
             'type' => $this->type,
             'posts' => $this->posts,
             'qa_status' => $this->qa_status,
+            'enable_certificate' => $this->enable_certificate,
+            'download_certificate' => $download_certificate,
             'description' => $this->description,
             'capacity' => $this->capacity,
             'start_time' => $this->start_time,
