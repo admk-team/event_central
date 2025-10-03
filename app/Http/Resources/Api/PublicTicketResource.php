@@ -37,7 +37,8 @@ class PublicTicketResource extends JsonResource
             'bulk_purchase_status' => $this->bulk_purchase_status,
             'bulk_purchase_discount_type' => $this->bulk_purchase_discount_type,
             'bulk_purchase_discount_value' => $this->bulk_purchase_discount_value,
-            'bulk_purchase_qty' => $this->bulk_purchase_qty
+            'bulk_purchase_qty' => $this->bulk_purchase_qty,
+            'hide_quantity' => $this->hide_quantity
         ];
     }
 }
