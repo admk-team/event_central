@@ -168,17 +168,17 @@ Route::prefix('attendee')->group(function () {
 
     Route::get('event/{eventApp}', [AttendeeEventController::class, 'getEventDetailDashboard']);
     Route::get('event/{eventApp}/session', [AttendeeEventController::class, 'getEventDetailAgenda']);
-    Route::get('event/{eventApp}/session/{eventSession}', [AttendeeEventController::class, 'eventsessions']);
     Route::get('event/ticket/{eventApp}', [AttendeeEventController::class, 'ticket']);
     Route::get('event/speaker/{eventApp}', [AttendeeEventController::class, 'speaker']);
     Route::get('event/contact/{eventApp}', [AttendeeEventController::class, 'contact']);
     //search
     Route::get('event/{eventApp}/session-search', [AttendeeEventController::class, 'searchSessions']);
     Route::get('event/{eventApp}/speaker-search', [AttendeeEventController::class, 'searchSpeakers']);
-
-
+    
+    
     Route::middleware(['auth:sanctum', 'ability:role:attendee'])->group(function () {
-
+        Route::get('event/{eventApp}/session/{eventSession}', [AttendeeEventController::class, 'eventsessions']);
+        
         Route::post('/broadcasting/auth', function (Request $request) {
             return Broadcast::auth($request);
         });

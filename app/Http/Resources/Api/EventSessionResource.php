@@ -2,8 +2,10 @@
 
 namespace App\Http\Resources\Api;
 
+use App\Models\SessionCheckIn;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class EventSessionResource extends JsonResource
 {
@@ -14,7 +16,15 @@ class EventSessionResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $checkin = \App\Models\SessionCheckIn::where('attendee_id', auth()->user()->id)->where('session_id', $this->id)->exists();
+        $user = Auth::user();
+        $checkin = false;
+
+        if ($user) {
+            $checkin = SessionCheckIn::where('attendee_id', $user->id)
+                ->where('session_id', $this->id)
+                ->exists();
+        }
+
         $download_certificate = false;
         if (!now()->lt(\Carbon\Carbon::parse($this->end_date_time)) && $checkin) {
             $download_certificate = true;
