@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Models\EventAppTicket;
 use App\Models\ReminderEventEmail;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 
 class EventCloserReminder extends Command
 {
