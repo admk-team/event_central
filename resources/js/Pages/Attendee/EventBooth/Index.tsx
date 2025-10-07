@@ -88,44 +88,46 @@ const BoothCard: React.FC<BoothCardProps> = ({ booth, currencySymbol, owned, onB
         )}
 
         {/* Square media box */}
-        <div
-          style={{
-            position: "relative",
-            width: "100%",
-            aspectRatio: "1 / 1",
-            borderRadius: 16,
-            overflow: "hidden",
-            background: "linear-gradient(180deg,#F6F8FC 0%, #EDF2FB 100%)",
-            border: "1px solid rgba(17,24,39,.06)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          {booth.logo ? (
-            <img
-              src={`/storage/${booth.logo}`}
-              alt={booth.name || t("Booth")}
-              style={{ display: "block", objectFit: "contain", width: "86%", height: "86%" }}
-            />
-          ) : (
-            <div
-              style={{
-                width: "78%",
-                height: "78%",
-                borderRadius: 14,
-                background: softBg(booth.id),
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <span style={{ fontWeight: 800, fontSize: 40, lineHeight: 1, color: "#6f42c1", letterSpacing: 0.5 }}>
-                {initials}
-              </span>
-            </div>
-          )}
-        </div>
+        {booth.logo && (
+          <div
+            style={{
+              position: "relative",
+              width: "100%",
+              aspectRatio: "1 / 1",
+              borderRadius: 16,
+              overflow: "hidden",
+              background: "linear-gradient(180deg,#F6F8FC 0%, #EDF2FB 100%)",
+              border: "1px solid rgba(17,24,39,.06)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {booth.logo ? (
+              <img
+                src={`/storage/${booth.logo}`}
+                alt={booth.name || t("Booth")}
+                style={{ display: "block", objectFit: "contain", width: "86%", height: "86%" }}
+              />
+            ) : (
+              <div
+                style={{
+                  width: "78%",
+                  height: "78%",
+                  borderRadius: 14,
+                  background: softBg(booth.id),
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <span style={{ fontWeight: 800, fontSize: 40, lineHeight: 1, color: "#6f42c1", letterSpacing: 0.5 }}>
+                  {initials}
+                </span>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* CONTENT */}
