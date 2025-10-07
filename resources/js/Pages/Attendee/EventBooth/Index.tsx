@@ -26,7 +26,7 @@ const typeMeta = (type?: string) => {
     case "banner":
       return { label: "Banner", bg: "#3B82F6", color: "#ffffff" };
     default:
-      return { label: "Booth", bg: "#111827", color: "#ffffff" };
+      return { label: capitalizeWords(type), bg: "#111827", color: "#ffffff" };
   }
 };
 
@@ -204,6 +204,12 @@ const Index = ({ booths, myBooths = [], getCurrency }: any) => {
   const sponsorsOnly = filteredMarket.filter((b: any) => (b.type || "").toLowerCase().startsWith("sponsor"));
   const bannersOnly  = filteredMarket.filter((b: any) => (b.type || "").toLowerCase() === "banner");
 
+  const digitalOnly  = filteredMarket.filter((b: any) => (b.type || "").toLowerCase() === "digital");
+  const programBookOnly  = filteredMarket.filter((b: any) => (b.type || "").toLowerCase() === "program book");
+  const kioskOnly  = filteredMarket.filter((b: any) => (b.type || "").toLowerCase() === "kiosk");
+  const emailOnly  = filteredMarket.filter((b: any) => (b.type || "").toLowerCase() === "email");
+  const otherOnly  = filteredMarket.filter((b: any) => (b.type || "").toLowerCase() === "other");
+
   const goCheckout = (id: number) => router.visit(route("attendee.booth.checkout", id));
 
   return (
@@ -288,8 +294,78 @@ const Index = ({ booths, myBooths = [], getCurrency }: any) => {
             </>
           )}
 
+          {/* Digital */}
+          {digitalOnly.length > 0 && (
+            <>
+              <h5 className="mb-3">{t("Event Digitals")}</h5>
+              <Row className="mb-4">
+                {digitalOnly.map((booth: any) => (
+                  <Col lg={3} md={6} sm={12} className="mb-4" key={booth.id}>
+                    <BoothCard booth={booth} currencySymbol={getCurrency?.currency_symbol} onBuy={goCheckout} t={t} />
+                  </Col>
+                ))}
+              </Row>
+            </>
+          )}
+
+          {/* Program Book */}
+          {programBookOnly.length > 0 && (
+            <>
+              <h5 className="mb-3">{t("Event Program Books")}</h5>
+              <Row className="mb-4">
+                {programBookOnly.map((booth: any) => (
+                  <Col lg={3} md={6} sm={12} className="mb-4" key={booth.id}>
+                    <BoothCard booth={booth} currencySymbol={getCurrency?.currency_symbol} onBuy={goCheckout} t={t} />
+                  </Col>
+                ))}
+              </Row>
+            </>
+          )}
+
+          {/* Program Book */}
+          {kioskOnly.length > 0 && (
+            <>
+              <h5 className="mb-3">{t("Event Kiosks")}</h5>
+              <Row className="mb-4">
+                {kioskOnly.map((booth: any) => (
+                  <Col lg={3} md={6} sm={12} className="mb-4" key={booth.id}>
+                    <BoothCard booth={booth} currencySymbol={getCurrency?.currency_symbol} onBuy={goCheckout} t={t} />
+                  </Col>
+                ))}
+              </Row>
+            </>
+          )}
+
+          {/* Program Book */}
+          {emailOnly.length > 0 && (
+            <>
+              <h5 className="mb-3">{t("Event Emails")}</h5>
+              <Row className="mb-4">
+                {emailOnly.map((booth: any) => (
+                  <Col lg={3} md={6} sm={12} className="mb-4" key={booth.id}>
+                    <BoothCard booth={booth} currencySymbol={getCurrency?.currency_symbol} onBuy={goCheckout} t={t} />
+                  </Col>
+                ))}
+              </Row>
+            </>
+          )}
+
+          {/* Others */}
+          {otherOnly.length > 0 && (
+            <>
+              <h5 className="mb-3">{t("Others")}</h5>
+              <Row className="mb-4">
+                {otherOnly.map((booth: any) => (
+                  <Col lg={3} md={6} sm={12} className="mb-4" key={booth.id}>
+                    <BoothCard booth={booth} currencySymbol={getCurrency?.currency_symbol} onBuy={goCheckout} t={t} />
+                  </Col>
+                ))}
+              </Row>
+            </>
+          )}
+
           {/* If nothing after filtering */}
-          {boothsOnly.length === 0 && sponsorsOnly.length === 0 && bannersOnly.length === 0 && (
+          {boothsOnly.length === 0 && sponsorsOnly.length === 0 && bannersOnly.length === 0 && digitalOnly.length === 0 && programBookOnly.length === 0 && kioskOnly.length === 0 && emailOnly.length === 0 && otherOnly.length === 0 && (
             <div className="text-center text-muted">{t("No booths found.")}</div>
           )}
         </Container>
@@ -300,3 +376,10 @@ const Index = ({ booths, myBooths = [], getCurrency }: any) => {
 
 Index.layout = (page: any) => <Layout children={page} />;
 export default Index;
+
+function capitalizeWords(str) {
+  return str
+    .split(" ")
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+}
