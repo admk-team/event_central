@@ -6,6 +6,7 @@ use App\Events\AttendeeChatMessage;
 use App\Events\EventGroupChat;
 use App\Events\GroupChat;
 use App\Http\Controllers\Controller;
+use App\Models\AttendeePurchasedTickets;
 use App\Models\ChatGroup;
 use App\Models\ChatMember;
 use App\Models\ChatMessage;
@@ -73,8 +74,17 @@ class ChatController extends Controller
                 return $room;
             });
 
+        $openrooms = ChatGroup::where('event_id', Auth::user()->event_app_id)
+            ->where('type', 'attendee')
+            ->where('visibility', 'public') // only public rooms
+            ->whereDoesntHave('members', function ($q) {
+                $q->where('user_id', Auth::id()); // exclude if user is already a member
+            })
+            ->get();
+
         $loged_user = Auth::user()->id;
-        return Inertia::render('Attendee/Chat/Index', compact('member', 'event_data', 'loged_user', 'rooms'));
+        $purchasedTicket = AttendeePurchasedTickets::where('attendee_id', $loged_user)->exists();
+        return Inertia::render('Attendee/Chat/Index', compact('member', 'event_data', 'loged_user', 'rooms', 'openrooms','purchasedTicket'));
     }
 
     public function getMessages($id)
@@ -264,5 +274,28 @@ class ChatController extends Controller
             'participant_id' => $participant_id,
             'participant_type' => $participant_type,
         ]);
+    }
+
+    public function join($id)
+    {
+        $group = ChatGroup::findOrFail($id);
+        $userId = Auth::id();
+        $eventId = Auth::user()->event_app_id;
+
+        // Prevent duplicate join
+        $alreadyMember = ChatMember::where('event_id', $eventId)->where('group_id', $group->id)->where('user_id', $userId)->exists();
+        if ($alreadyMember) {
+            return back()->withSuccess('Added successfully.');
+        }
+        ChatMember::create([
+            'event_id' => $eventId,
+            'group_id' => $group->id,
+            'user_id' => $userId,
+            'user_type' => \App\Models\Attendee::class,
+            'participant_id' => $group->created_by,
+            'participant_type' => \App\Models\User::class,
+        ]);
+        // Return updated group with members
+        return redirect()->route('attendee.event.chat')->withSuccess('Added successfully.');
     }
 }

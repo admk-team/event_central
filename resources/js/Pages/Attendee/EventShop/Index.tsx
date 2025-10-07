@@ -66,7 +66,7 @@ const Index = ({ products, getCurrency }: any) => {
                                             className="card-img-top"
                                             alt={product.name}
                                             style={{
-                                                height: "200px",
+                                                height: "250px",
                                                 width: "100%",
                                                 objectFit: "cover",
                                             }}

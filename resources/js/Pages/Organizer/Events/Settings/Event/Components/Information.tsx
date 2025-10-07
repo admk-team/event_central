@@ -188,7 +188,11 @@ export default function Information() {
                             <div className={!!errors.description ? "is-invalid" : ""}>
                                 <QuillEditor
                                     value={data.description}
-                                    onChange={(val) => setData({ ...data, description: val })}
+                                    onChange={(val) => setData((state) => {
+                                        const newState = {...state};
+                                        newState.description = val;
+                                        return newState;
+                                    })}
                                     placeholder={t("Enter description")}
                                     className="form-control"
                                 />

@@ -80,7 +80,7 @@ const Navdata = () => {
         if (iscurrentState !== "eventShop") {
             setIsEventShop(false);
         }
-         if (iscurrentState !== "eventBooth") {
+        if (iscurrentState !== "eventBooth") {
             setIsEventBooth(false);
         }
         // if (iscurrentState !== "Q&A") {
@@ -104,17 +104,17 @@ const Navdata = () => {
         IsPrayerRequest,
         isEventStaff,
         isEventShop,
-        isEventBooth
+        isEventBooth,
     ]);
 
     const menuItems: any = [
         {
-            label: t('Menu'),
+            label: t("🎛 Dashboard"),
             isHeader: true,
         },
         {
             id: "dashboard",
-            label: t('Dashboard'),
+            label: t("Dashboard"),
             icon: "bx bxs-dashboard",
             link: route("attendee.event.detail.dashboard"),
             stateVariables: isDashboard,
@@ -125,9 +125,14 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
+
+        {
+            label: t("🛍 Event Shop & Sponsorships"),
+            isHeader: true,
+        },
         {
             id: "eventShop",
-            label: t('Event Shop'),
+            label: t("Event Shop"),
             icon: "bx bx-store",
             link: route("attendee.event.products"),
             stateVariables: isDashboard,
@@ -138,9 +143,9 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
-          {
+        {
             id: "eventBooth",
-            label: t('Sponsorship'),
+            label: t("Sponsorship"),
             icon: "bx bx-gift",
             link: route("attendee.event.booths"),
             stateVariables: isDashboard,
@@ -151,9 +156,14 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
+
+        {
+            label: t("📅 Event Info & Participation"),
+            isHeader: true,
+        },
         {
             id: "program",
-            label: t('Event Agenda'),
+            label: t("Event Agenda"),
             icon: "bx bx-heart",
             link: route("attendee.event.detail.agenda"),
             stateVariables: isProgram,
@@ -166,7 +176,7 @@ const Navdata = () => {
         },
         {
             id: "speaker",
-            label: t('Speakers'),
+            label: t("Speakers"),
             icon: "bx bx-group",
             link: route("attendee.event.detail.speakers"),
             stateVariables: isSpeakers,
@@ -178,8 +188,52 @@ const Navdata = () => {
             },
         },
         {
+            id: "eventStaff",
+            label: t("Event Staff"),
+            icon: "bx bx-group",
+            link: route("attendee.event.staff"),
+            stateVariables: isMore,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsMore(!isMore);
+                setIscurrentState("More");
+                updateIconSidebar(e);
+            },
+        },
+        {
+            id: "eventCalendar",
+            label: t("Event Calendar"),
+            icon: "bx bxs-calendar",
+            link: route("event.calendar"),
+            stateVariables: isMore,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsMore(!isMore);
+                setIscurrentState("More");
+                updateIconSidebar(e);
+            },
+        },
+        {
+            id: "liveStream",
+            label: t("Live Streams"),
+            icon: "bx bx-broadcast",
+            link: route("stream.index"),
+            stateVariables: isMore,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsMore(!isMore);
+                setIscurrentState("More");
+                updateIconSidebar(e);
+            },
+        },
+
+        {
+            label: t("💬 Interaction & Networking"),
+            isHeader: true,
+        },
+        {
             id: "chat",
-            label: t('Chat Room'),
+            label: t("Chat Room"),
             icon: "bx bx-message-rounded-dots",
             link: route("attendee.event.chat"),
             stateVariables: isChat,
@@ -192,7 +246,7 @@ const Navdata = () => {
         },
         {
             id: "friend",
-            label: t('Friend System'),
+            label: t("Friend System"),
             icon: "las la-user-friends",
             link: route("friend.index"),
             stateVariables: isFriend,
@@ -205,7 +259,7 @@ const Navdata = () => {
         },
         {
             id: "more",
-            label: t('Contact'),
+            label: t("Contact"),
             icon: "bx bx-info-circle",
             link: route("attendee.event.detail.more"),
             stateVariables: isMore,
@@ -216,22 +270,14 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
+
         {
-            id: "more",
-            label: t('Favorites'),
-            icon: "bx bxs-heart",
-            link: route("all.fav.sessions"),
-            stateVariables: isMore,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsMore(!isMore);
-                setIscurrentState("More");
-                updateIconSidebar(e);
-            },
+            label: t("🎟 Tickets & Access"),
+            isHeader: true,
         },
         {
             id: "tickets",
-            label: t('Tickets'),
+            label: t("Tickets"),
             icon: "bx bx-qr",
             link: route("attendee.tickets.get"),
             stateVariables: isMore,
@@ -244,7 +290,7 @@ const Navdata = () => {
         },
         {
             id: "purchasedtickets",
-            label: t('Purchased Tickets'),
+            label: t("Purchased Tickets"),
             icon: "bx bx-qr",
             link: route("attendee.tickets.purchased"),
             stateVariables: isMore,
@@ -257,7 +303,7 @@ const Navdata = () => {
         },
         {
             id: "upgradeTicket",
-            label: t('Upgrade Tickets'),
+            label: t("Upgrade Tickets"),
             icon: "bx bxs-credit-card",
             link: route("attendee.tickets.upgrade"),
             stateVariables: isUpgradeTicket,
@@ -271,7 +317,7 @@ const Navdata = () => {
         },
         {
             id: "refundtickets",
-            label: t('Refund Tickets'),
+            label: t("Refund Tickets"),
             icon: "bx bx-qr",
             link: route("attendee.tickets.refund"),
             stateVariables: isMore,
@@ -284,7 +330,7 @@ const Navdata = () => {
         },
         {
             id: "tickets",
-            label: t('Post Event Questionnaire'),
+            label: t("Post Event Questionnaire"),
             icon: "bx bxs-notepad",
             link: route("attendee.event-questionnaire-form"),
             stateVariables: isMore,
@@ -295,9 +341,27 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
+
+        {
+            label: t("🏆 Engagement & Extras"),
+            isHeader: true,
+        },
+        {
+            id: "more",
+            label: t("Favorites"),
+            icon: "bx bxs-heart",
+            link: route("all.fav.sessions"),
+            stateVariables: isMore,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsMore(!isMore);
+                setIscurrentState("More");
+                updateIconSidebar(e);
+            },
+        },
         {
             id: "achievement",
-            label: t('Achievements'),
+            label: t("Achievements"),
             icon: "bx bxs-medal",
             link: route("attendee.achievement"),
             stateVariables: isMore,
@@ -308,47 +372,9 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
-        {
-            id: "eventCalendar",
-            label: t('Event Calendar'),
-            icon: "bx bxs-calendar",
-            link: route("event.calendar"),
-            stateVariables: isMore,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsMore(!isMore);
-                setIscurrentState("More");
-                updateIconSidebar(e);
-            },
-        },
-        {
-            id: "eventStaff",
-            label: t('Event Staff'),
-            icon: "bx bx-group",
-            link: route("attendee.event.staff"),
-            stateVariables: isMore,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsMore(!isMore);
-                setIscurrentState("More");
-                updateIconSidebar(e);
-            },
-        },
 
-        {
-            id: "liveStream",
-            label: t('Live Streams'),
-            icon: "bx bx-broadcast",
-            link: route("stream.index"),
-            stateVariables: isMore,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsMore(!isMore);
-                setIscurrentState("More");
-                updateIconSidebar(e);
-            },
-        },
-        //   {
+        // commented code preserved
+        // {
         //     id: "PrayerRequest",
         //     label: "Prayer Request",
         //     icon: "bx bx-donate-heart",
@@ -361,7 +387,6 @@ const Navdata = () => {
         //         updateIconSidebar(e);
         //     },
         // },
-
         // {
         //     id: "attendee-pass",
         //     label: "Attendee Pass",

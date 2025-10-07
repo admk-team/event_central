@@ -6,7 +6,7 @@
   "Staff": "الطاقم",
   "Colors": "الألوان",
   "Dashboard": "لوحة التحكم",
-  "Demo Graphic Detail": "تفاصيل الرسم التجريبي",
+  "Demographic Details": "تفاصيل الرسم التجريبي",
   "Content": "المحتوى",
   "Schedule": "الجدول",
   "Speakers": "المتحدثون",
@@ -1186,5 +1186,43 @@
   "Locations": "المواقع",
   "Venue Management": "إدارة المكان",
   "Import from Blueprint": "الاستيراد من المخطط",
-  "Seats": "المقاعد"
+  "Seats": "المقاعد",
+  "Mailchimp Credentials": "بيانات اعتماد Mailchimp",
+  "API Key": "مفتاح API",
+  "Server Prefix": "بادئة الخادم",
+  "Audience ID": "معرّف الجمهور",
+  "Sync Data": "مزامنة البيانات",
+  "MailChimp Settings": "إعدادات Mailchimp",
+  "How to Connect and Sync with Mailchimp": "كيفية الاتصال والمزامنة مع Mailchimp",
+  "Enter Mailchimp API Key": "أدخل مفتاح Mailchimp API",
+  "Go to your Mailchimp account → Profile → Extras → API keys, and generate a new key. Copy the key and paste it into our system settings.": "اذهب إلى حساب Mailchimp الخاص بك → الملف الشخصي → إضافات → مفاتيح API، وأنشئ مفتاحًا جديدًا. انسخ المفتاح والصقه في إعدادات نظامنا.",
+  "Find Your Audience (List) ID": "اعثر على معرف الجمهور (القائمة)",
+  "In Mailchimp, go to Audience → Manage Audience → Settings → Audience name and defaults. Copy the Audience ID and paste it into our system settings.": "في Mailchimp، انتقل إلى الجمهور → إدارة الجمهور → الإعدادات → اسم الجمهور والإعدادات الافتراضية. انسخ معرف الجمهور والصقه في إعدادات نظامنا.",
+  "Enter Mailchimp Server Prefix": "أدخل بادئة خادم Mailchimp",
+  "Your API key ends with a dash and region code (e.g., -us3, -us19). Enter this as the Server Prefix in our system.": "ينتهي مفتاح API بشرطة ورمز منطقة (مثل -us3، -us19). أدخل هذا كبادئة الخادم في نظامنا.",
+  "Connect to Mailchimp": "الاتصال بـ Mailchimp",
+  "Save your Mailchimp credentials in the settings and test the connection. If successful, your EventCentral system will be linked to Mailchimp.": "احفظ بيانات اعتماد Mailchimp في الإعدادات واختبر الاتصال. إذا نجح، سيتم ربط نظام EventCentral الخاص بك بـ Mailchimp.",
+  "Note: Mailchimp requires at least one Audience. Make sure you have created an Audience in Mailchimp before connecting.": "ملاحظة: يتطلب Mailchimp جمهورًا واحدًا على الأقل. تأكد من أنك أنشأت جمهورًا في Mailchimp قبل الاتصال.",
+  "Quick Steps: Generate API key → Copy Audience ID → Add Server Prefix → Save & Connect → Sync Attendees": "خطوات سريعة: أنشئ مفتاح API → انسخ معرف الجمهور → أضف بادئة الخادم → احفظ واتصل → قم بمزامنة الحضور",
+  "MailChimp Sync": "مزامنة Mailchimp",
+  "MailChimp Keys": "مفاتيح Mailchimp",
+  "mailChimp Sync Data": "بيانات مزامنة Mailchimp",
+  "Hide Quantity": "إخفاء الكمية",
+  "Sponsorship Purchases": "مشتريات الرعاية",
+  "assigned": "مخصص",
+  "Purchased Sponsorships": "الرعايات المشتراة",
+  "Open Groups": "المجموعات المفتوحة",
+  "Click to join": "انقر للانضمام",
+  "🎛 Dashboard & Analytics": "🎛 لوحة التحكم والتحليلات",
+  "📅 Events & Venue": "📅 الفعاليات والمكان",
+  "🎟 Tickets & Registration": "🎟 التذاكر والتسجيل",
+  "🛍 Event Shop": "🛍 متجر الفعالية",
+  "🪪 Badges & Communication": "🪪 الشارات والتواصل",
+  "🔗 Engagement & Extras": "🔗 التفاعل والإضافات",
+  "🎛 Dashboard": "🎛 لوحة التحكم",
+  "🛍 Event Shop & Sponsorships": "🛍 متجر الحدث والرعايات",
+  "📅 Event Info & Participation": "📅 معلومات ومشاركة الحدث",
+  "💬 Interaction & Networking": "💬 التفاعل والتواصل",
+  "🎟 Tickets & Access": "🎟 التذاكر والوصول",
+  "🏆 Engagement & Extras": "🏆 المشاركة والإضافات"
 }

@@ -168,17 +168,17 @@ Route::prefix('attendee')->group(function () {
 
     Route::get('event/{eventApp}', [AttendeeEventController::class, 'getEventDetailDashboard']);
     Route::get('event/{eventApp}/session', [AttendeeEventController::class, 'getEventDetailAgenda']);
-    Route::get('event/{eventApp}/session/{eventSession}', [AttendeeEventController::class, 'eventsessions']);
     Route::get('event/ticket/{eventApp}', [AttendeeEventController::class, 'ticket']);
     Route::get('event/speaker/{eventApp}', [AttendeeEventController::class, 'speaker']);
     Route::get('event/contact/{eventApp}', [AttendeeEventController::class, 'contact']);
     //search
     Route::get('event/{eventApp}/session-search', [AttendeeEventController::class, 'searchSessions']);
     Route::get('event/{eventApp}/speaker-search', [AttendeeEventController::class, 'searchSpeakers']);
-
-
+    
+    
     Route::middleware(['auth:sanctum', 'ability:role:attendee'])->group(function () {
-
+        Route::get('event/{eventApp}/session/{eventSession}', [AttendeeEventController::class, 'eventsessions']);
+        
         Route::post('/broadcasting/auth', function (Request $request) {
             return Broadcast::auth($request);
         });
@@ -233,6 +233,7 @@ Route::prefix('attendee')->group(function () {
         Route::get('/session/{eventSession}/ratings', [AttendeeEventController::class, 'getSessionRatings'])
             ->name('attendee.session.ratings');
         Route::post('/attendee-save-rating/{eventSession}', [AttendeeEventController::class, 'saveRating'])->name('attendee.save.rating');
+        Route::get('download/{eventSession}', [AttendeeEventController::class, 'downloadCertificate']);
 
         //fav session
         Route::get('/favsession/{sessionid}', [AttendeeEventController::class, 'favsession']);
@@ -256,6 +257,7 @@ Route::prefix('attendee')->group(function () {
         Route::get('/group-chat/{id}/{event}', [ChatController::class, 'getGroupChat']);
         Route::post('/chat/send/{event}', [ChatController::class, 'store']);
         Route::post('/chat/mark-as-read/{chatWithUserId}/{event}', [ChatController::class, 'markAsRead']);
+        Route::post('/chat/group-join/{id}', [ChatController::class, 'join'])->name('attendee.join.group');
         // Friend Request
         Route::get('/friends', [FriendRequestController::class, 'index']);
         Route::post('/friends/send', [FriendRequestController::class, 'store']);

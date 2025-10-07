@@ -7,7 +7,6 @@ use App\Models\EventAppDate;
 use App\Models\EventAppTicket;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 
 class EventCloseRegistration extends Command
 {
@@ -44,17 +43,9 @@ class EventCloseRegistration extends Command
             });
 
             if ($latestEventDate && Carbon::parse($latestEventDate->date)->lessThan(Carbon::today())) {
-
-                $closeRegistration = eventSettings($eventAppId)->getValue('close_registration', false);
-                eventSettings($eventAppId)->set('close_registration', !$closeRegistration);
-
-                Log::info("Event ID {$eventAppId} has passed its last date: {$latestEventDate->date}");
-            } else if ($allTicketsFull) {
-
-                $closeRegistration = eventSettings($eventAppId)->getValue('close_registration', false);
-                eventSettings($eventAppId)->set('close_registration', !$closeRegistration);
-
-                Log::info("All tickets for Event ID {$eventAppId} are sold out.");
+                $closeRegistration = eventSettings($eventAppId)->set('close_registration', true);
+            } elseif ($allTicketsFull) {
+                $closeRegistration = eventSettings($eventAppId)->set('close_registration', true);
             }
         }
     }

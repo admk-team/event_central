@@ -32,7 +32,16 @@ class EventBoothController extends Controller
         $booths = EventBooth::where('event_app_id', $attendee->event_app_id)
             ->orderBy('number')
             ->get([
-                'id','name','description','number','status','logo','price','type','total_qty','sold_qty'
+                'id',
+                'name',
+                'description',
+                'number',
+                'status',
+                'logo',
+                'price',
+                'type',
+                'total_qty',
+                'sold_qty'
             ]);
 
         $purchases = EventBoothPurchase::with([
@@ -44,13 +53,14 @@ class EventBoothController extends Controller
 
         $myBooths = $purchases->groupBy('event_booth_id')->map(function ($rows) {
             $qty   = (int) $rows->sum('quantity');
-            $booth = $rows->first()->booth;
+            $purchase = $rows->first();                 // get one purchase row for booth-specific data
+            $booth    = $purchase->booth;               // related booth
 
             return [
                 'id'          => $booth->id,
                 'name'        => $booth->name,
                 'description' => $booth->description,
-                'number'      => $booth->number,
+                'number'      => $purchase->number ?? $booth->number, // ✅ safe fallback to booth->number
                 'status'      => $booth->status,
                 'logo'        => $booth->logo,
                 'price'       => $booth->price,
@@ -103,6 +113,7 @@ class EventBoothController extends Controller
             [
                 'event_app_id'       => $booth->event_app_id,
                 'amount'             => (int) $booth->price,
+                'number'             => (int) $booth->number,
                 'currency'           => $currency ?? 'USD',
                 'payment_intent_id'  => $pi['payment_id'] ?? null,
             ]
@@ -149,6 +160,7 @@ class EventBoothController extends Controller
             $purchase->save();
 
             $locked->sold_qty += 1;
+            $locked->increment('number');
             $locked->status   = ($locked->sold_qty >= $locked->total_qty) ? 'soldout' : 'available';
             $locked->save();
 
@@ -158,7 +170,7 @@ class EventBoothController extends Controller
         });
     }
 
- 
+
 
     private function sendEmail(EventBooth $booth, Attendee $attendee): void
     {

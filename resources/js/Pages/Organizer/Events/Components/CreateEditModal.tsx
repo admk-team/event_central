@@ -87,14 +87,16 @@ function CreateEditModal({
             tagline: event?.tagline ?? "",
             start_date: event?.dates[0].date ?? "",
             description: event?.description ?? "",
-            location_type: event?.location_type ?? "test",
-            location_base: event?.location_base ?? "test",
+            location_type: event?.location_type ?? "",
+            location_base: event?.location_base ?? "",
             type: "in-person",
             is_recurring: event?.is_recurring ?? false,
             schedual_type: event?.schedual_type ?? "singleday",
             logo_file: null, //To be used for new file
             image_files: [],
         });
+
+        console.log("form data", data);
 
     useEffect(() => {
         setEventImagePreviews(event?.images ?? []);
@@ -450,7 +452,11 @@ function CreateEditModal({
                                     <div className={!!errors.description ? "is-invalid" : ""}>
                                         <QuillEditor
                                         value={data.description}
-                                        onChange={(val) => setData("description", val)}
+                                        onChange={(val) => setData((state) => {
+                                            const newState = {...state};
+                                            newState.description = val;
+                                            return newState;
+                                        })}
                                         placeholder="Enter description"
                                         className="form-control"
                                         />

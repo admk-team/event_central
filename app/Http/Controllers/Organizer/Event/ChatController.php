@@ -45,7 +45,6 @@ class ChatController extends Controller
 
         $event_data = EventApp::where('id', session('event_id'))->first();
         $rooms = ChatGroup::where('event_id', session('event_id'))
-            ->where('type', 'staff')
             ->whereHas('members', function ($q) {
                 $q->where('user_id', Auth::id());
             })
@@ -75,16 +74,21 @@ class ChatController extends Controller
         $loged_user = Auth::user()->id;
         $staff = null;
         if (Auth::user()->parent_id) {
-            $all_user = User::where('parent_id', Auth::user()->parent_id)->get()->toArray();
-            $admin = User::where('id', Auth::user()->parent_id)->get()->toArray();
-            $staff = array_merge($all_user, $admin);
+            $staff = User::where('parent_id', Auth::user()->parent_id)->get()->toArray();
         } else {
-            $all_user = User::where('parent_id', $loged_user)->get()->toArray();
-            $admin = User::where('id', $loged_user)->get()->toArray();
-            $staff = array_merge($all_user, $admin);
+            $staff = User::where('parent_id', $loged_user)->get()->toArray();
         }
         $attendees = Attendee::where('event_app_id', $eventId)->get();
-        return Inertia::render('Organizer/Events/Chat/Index', compact('member', 'event_data', 'loged_user', 'staff', 'attendees', 'rooms'));
+
+        $openrooms = ChatGroup::where('event_id', $eventId)
+            ->where('type', 'staff')
+            ->where('visibility', 'public') // only public rooms
+            ->whereDoesntHave('members', function ($q) {
+                $q->where('user_id', Auth::id()); // exclude if user is already a member
+            })
+            ->get();
+
+        return Inertia::render('Organizer/Events/Chat/Index', compact('member', 'event_data', 'loged_user', 'staff', 'attendees', 'rooms', 'openrooms'));
     }
 
     public function getMessages($id)
@@ -283,32 +287,72 @@ class ChatController extends Controller
         $eventId = session('event_id');
         $userId = Auth::user()->id;
 
-        $request->validate([
+        $rules = [
             "type" => "required",
             "name" => "required",
-            "members" => "required|array|min:1",
-            "image"   => "nullable|image|mimes:jpg,jpeg,png,gif|max:2048",
+            "image" => "nullable|image|mimes:jpg,jpeg,png,gif|max:2048",
+            "visibility" => "required|in:public,private",
+        ];
+
+        // If private → require members
+        if ($request->visibility == "private") {
+            $rules["members"] = "required|array|min:1";
+        }
+
+        $messages = [
+            "members.required" => "Please select at least one member.",
+            "members.array"    => "Invalid members format.",
+            "members.min"      => "Please select at least one member.",
+        ];
+
+        $request->validate($rules, $messages);
+        $path = null;
+
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $path = $file->store('chat_groups', 'public');
+        }
+
+        $group = ChatGroup::create([
+            'event_id' => $eventId,
+            'name' => $request->name,
+            'image' =>  $path,
+            'type' => strtolower($request->type),
+            'created_by' => $userId,
+            'visibility' => $request->visibility,
         ]);
-
-        if ($request->members && count($request->members) > 0) {
-            $path = null;
-
-            if ($request->hasFile('image')) {
-                $file = $request->file('image');
-                $path = $file->store('chat_groups', 'public');
-            }
-            $group = ChatGroup::create([
-                'event_id' => $eventId,
-                'name' => $request->name,
-                'image' =>  $path,
-                'type' => $request->type,
-                'created_by' => $userId
-            ]);
+        $this->initiateChat($eventId,  $userId, \App\Models\User::class, $userId, \App\Models\User::class, $group->id);
+        if (is_array($request->members) && count($request->members) > 0 && $request->visibility == "private") {
             $member_type = $request->type == 'Staff' ? \App\Models\User::class : \App\Models\Attendee::class;
             foreach ($request->members as $member) {
                 $this->initiateChat($eventId,  $member, $member_type, $userId, \App\Models\User::class, $group->id);
             }
         }
         return back()->withSuccess('Room Created Successfully');
+    }
+
+    // join public groups 
+
+    public function join($id)
+    {
+        $group = ChatGroup::findOrFail($id);
+        $eventId = session('event_id');
+        $userId = Auth::user()->id;
+
+        // Prevent duplicate join
+        $alreadyMember = ChatMember::where('event_id', $eventId)->where('group_id', $group->id)->where('user_id', $userId)->exists();
+        if ($alreadyMember) {
+            return back()->withSuccess('Added successfully.');
+        }
+        ChatMember::create([
+            'event_id' => $eventId,
+            'group_id' => $group->id,
+            'user_id' => $userId,
+            'user_type' => \App\Models\User::class,
+            'participant_id' => $group->created_by,
+            'participant_type' => \App\Models\User::class,
+        ]);
+        // Return updated group with members
+        return redirect()->route('organizer.events.chat.index')->withSuccess('Added successfully.');
     }
 }

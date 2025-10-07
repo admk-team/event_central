@@ -25,6 +25,7 @@ return new class extends Migration
             // Payment details
             $table->string('status', 20)->default('pending');
             $table->string('payment_intent_id')->nullable();
+            $table->unsignedBigInteger('number')->nullable();
 
             $table->timestamps();
         });

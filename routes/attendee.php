@@ -154,6 +154,7 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::get('group-chat/{id}', [ChatController::class, 'getGroupChat']);
         Route::post('chat/mark-as-read/{id}', [ChatController::class, 'markAsRead']);
         Route::post('send-message', [ChatController::class, 'store']);
+        Route::post('group-join/{id}', [ChatController::class, 'join'])->name('attendee.join.group');
         // Event Staff
         Route::get('staff', [EventStaffController::class, 'index'])->name('attendee.event.staff');
         Route::post('initiate-chat', [EventStaffController::class, 'initiateChat'])->name('attendee.event.chat-initate');

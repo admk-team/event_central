@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Models\EventAppTicket;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 
 class IncreaseTicketPrices extends Command
 {
@@ -28,7 +27,6 @@ class IncreaseTicketPrices extends Command
      */
     public function handle()
     {
-        Log::info("Running ticket increment task");
         $tickets = EventAppTicket::whereColumn('qty_total', '>', 'qty_sold')
             ->whereNotNull('increment_rate')
             ->whereDate('start_increment', '<=', Carbon::now())
@@ -42,19 +40,15 @@ class IncreaseTicketPrices extends Command
                 });
             })
             ->get();
-        Log::info(" second phase of Running ticket increment percentage task: {$tickets}");
 
         foreach ($tickets as $ticket) {
-            Log::info("Running ticket increment task for ticket ID: {$ticket->id}");
             if (! $ticket->increment_rate) continue;
 
             $incrementAmount = 0;
             if ($ticket->increment_type === 'Percentage') {
                 $incrementAmount = ($ticket->increment_rate / 100) * $ticket->original_price;
-                Log::info("Running ticket increment percentage task");
             } else {
                 $incrementAmount = $ticket->increment_rate;
-                Log::info("Running ticket increment fixed task");
             }
 
             $ticket->base_price += $incrementAmount;

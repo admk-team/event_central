@@ -18,7 +18,7 @@
                     <div class="col-lg-3 col-md-6 col-sm-12">
                         <div class="card h-100">
                             <img src="{{ $item->image_url }}" class="card-img-top" alt="Wireless Headphones"
-                                style="height: 200px; width: 100%; object-fit: cover;">
+                                style="height: 250px; width: 100%; object-fit: cover;">
                             <div class="card-body">
                                 <h5 class="card-title">{{ $item->name }}</h5>
                                 <p class="card-text">{{ $item->description }}</p>

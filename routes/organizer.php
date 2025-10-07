@@ -48,6 +48,7 @@ use App\Http\Controllers\Organizer\Event\SessionAttendanceController;
 use App\Http\Controllers\Organizer\Event\EventStore\ProductController;
 use App\Http\Controllers\Organizer\Event\Engagement\NewsfeedController;
 use App\Http\Controllers\Organizer\Event\EventBoothController;
+use App\Http\Controllers\Organizer\Event\EventBoothPurchaseController;
 use App\Http\Controllers\Organizer\Event\EventPartnerCategoryController;
 use App\Http\Controllers\Organizer\Settings\LiveStreamSettingController;
 use App\Http\Controllers\Organizer\Event\EventStore\EventOrderController;
@@ -63,6 +64,7 @@ use App\Http\Controllers\Organizer\Settings\OrganizerPaymentSettingController;
 use App\Http\Controllers\Organizer\Event\PrivateRegistrationViaEmailController;
 use App\Http\Controllers\Organizer\Event\Settings\RegistrationFormSettingsController;
 use App\Http\Controllers\Organizer\Event\Settings\QuestionnaireFormSettingsController;
+use App\Http\Controllers\Organizer\MailChimpController;
 
 // Event Website
 Route::prefix('e/{uuid}')->name('organizer.events.website')->group(function () {
@@ -105,6 +107,13 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
     Route::get('/zoho/callback', [ZohoController::class, 'callback'])->name('zoho.callback');
     Route::get('/zoho/sync', [ZohoController::class, 'showSyncPage'])->name('zoho.sync.page');
     Route::post('/zoho/sync/{event}', [ZohoController::class, 'sync'])->name('zoho.sync');
+
+    // MailChimp 
+    Route::get('/mailchimp/settings', [MailChimpController::class, 'index'])->name('mailchimp.index');
+    Route::post('/mailchimp/store', [MailChimpController::class, 'store'])->name('mailchimp.store');
+    Route::get('/mailchimp/sync', [MailChimpController::class, 'showSyncPage'])->name('mailchimp.sync.page');
+    Route::post('/mailchimp/sync/{event}', [MailChimpController::class, 'sync'])->name('mailchimp.sync');
+    Route::post('/mailchimp/compaign/{campaignId}', [MailChimpController::class, 'sendCampaign'])->name('mailchimp.send.compaign');
 
     // Live Stream Settings
     Route::prefix('settings')->name('settings.')->group(function () {
@@ -217,7 +226,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::post('chat/mark-as-read/{id}', [ChatController::class, 'markAsRead']);
             Route::post('send-message', [ChatController::class, 'store']);
             Route::post('chat-room', [ChatController::class, 'createRoom'])->name('chat.room');
-
+            Route::post('group-join/{id}', [ChatController::class, 'join'])->name('join.group');
             // Ticket Fees
             Route::resource('ticket-fees', EventAppFeeController::class)->only(['index', 'store', 'update', 'destroy']);
             Route::delete('ticket-fees/delete/many', [EventAppFeeController::class, 'destroyMany'])->name('ticket-fees.destroy.many');
@@ -434,4 +443,10 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
     // event booths
     Route::resource('booths', EventBoothController::class);
     Route::delete('booths/delete/many', [EventBoothController::class, 'destroyMany'])->name('booths.destroy.many');
+    Route::prefix('/booth-purchases')->name('booth-purchases.')->group(function () {
+        Route::get('/', [EventBoothPurchaseController::class, 'index'])->name('index');
+        Route::get('/booth/{booth}', [EventBoothPurchaseController::class, 'index'])->name('booth'); // purchases by booth
+        Route::delete('{id}', [EventBoothPurchaseController::class, 'destroy'])->name('destroy');
+    });
+    Route::delete('/destroy-many', [EventBoothPurchaseController::class, 'destroyMany'])->name('booth-purchases.destroy.many');
 });
