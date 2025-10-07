@@ -138,6 +138,11 @@ export default function CreateEditModal({
               <option value="booth">{t("Booth")}</option>
               <option value="sponsor ad">{t("Sponsor Ad")}</option>
               <option value="banner">{t("Banner")}</option>
+              <option value="digital">{t("Digital")}</option>
+              <option value="program book">{t("Program Book")}</option>
+              <option value="kiosk">{t("Kiosk")}</option>
+              <option value="email">{t("Email")}</option>
+              <option value="other">{t("Other")}</option>
             </Form.Select>
             {errors.type && <Form.Control.Feedback type="invalid">{errors.type}</Form.Control.Feedback>}
           </FormGroup>

@@ -17,7 +17,7 @@ class EventBoothRequest extends FormRequest
     {
         return [
             'name'        => 'required|string|max:255',
-            'type'        => 'required|string|in:booth,sponsor ad,banner',
+            'type'        => 'required|string|in:booth,sponsor ad,banner,digital,program book,kiosk,email,other',
             'description' => 'nullable|string',
             'number'      => 'nullable|integer|min:0',
             'price'       => 'required|integer|min:0',
