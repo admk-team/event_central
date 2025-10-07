@@ -73,8 +73,10 @@ const Index: React.FC<Props> = ({ products }) => {
             ),
         },
         {
+            accessorKey: 'name',
             header: () => t("Name"),
             cell: (product) => product.name,
+            searchable: true,
         },
         {
             header: () => t("Sizes"),
@@ -90,8 +92,10 @@ const Index: React.FC<Props> = ({ products }) => {
             ),
         },
         {
+            accessorKey: 'description',
             header: () => t("Description"),
             cell: (product) => product.description,
+            searchable: true,
         },
         {
             header: () => t("Price"),

@@ -72,12 +72,14 @@ function Index({ users }: any) {
             header: () => t('Name'),
             cell: (user) => user.name,
             enableSorting: true,
+            searchable: true,
         },
         {
             accessorKey: 'email',
             header: () => t('Email'),
             cell: (user) => user.email,
             enableSorting: true,
+            searchable: true,
         },
         {
             accessorKey: 'role',

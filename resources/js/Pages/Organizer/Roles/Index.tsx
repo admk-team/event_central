@@ -50,6 +50,7 @@ function Index({ roles }: any) {
             header: () => t('Name'),
             cell: (role) => role.name,
             enableSorting: true,
+            searchable: true,
         },
         {
             header: () => t('Action'),

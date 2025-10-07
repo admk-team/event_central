@@ -88,8 +88,10 @@ function Index({ tickets, sessions, addonsAll, fees, event_ticket_type }: any) {
         //     ),
         // },
         {
+            accessorKey: 'name',
             header: () => t("Name"),
             cell: (ticket) => ticket.name,
+            searchable: true,
         },
         // {
         //     header: () => "Description",

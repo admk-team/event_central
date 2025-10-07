@@ -74,6 +74,7 @@ function Index({ liveStreams, eventTickets }: any) {
             header: () => t("Title"),
             cell: (row) => row.title,
             enableSorting: true,
+            searchable: true,
         },
         {
             accessorKey: "stream_key",

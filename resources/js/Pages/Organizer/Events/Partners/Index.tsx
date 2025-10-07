@@ -55,8 +55,10 @@ function Index({ partners }: any) {
             cellClass: "fw-medium"
         },
         {
+            accessorKey: 'company_name',
             header: () => t("Company Name"),
             cell: (partner) => partner.company_name,
+            searchable: true,
         },
         {
             header: () => t("Type"),

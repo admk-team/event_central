@@ -21,7 +21,7 @@ class EventSpeakerController extends Controller
             abort(403);
         }
 
-        $speakers = EventSpeaker::currentEvent()->latest()->paginate($request->per_page ?? 10);
+        $speakers = $this->datatable(EventSpeaker::currentEvent());
         return Inertia::render('Organizer/Events/Speekers/Index', compact('speakers'));
     }
 

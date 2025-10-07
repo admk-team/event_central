@@ -107,6 +107,7 @@ function Index({ events, recurring_types, event_category_types }: any) {
             header: () => t("Name"),
             cell: (event) => event.name,
             enableSorting: false,
+            searchable: true,
         },
         // {
         //     accessorKey: "description",
