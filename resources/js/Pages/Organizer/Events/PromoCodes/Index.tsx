@@ -76,14 +76,18 @@ function Index({ promoCodes, tickets }: any) {
         //     cell: (promoCode) => (<span key={promoCode.event?.id ?? ''} className="badge bg-secondary-subtle text-secondary fs-6" style={{ marginRight: '3px' }}>{promoCode.event?.name ?? ''}</span>),
         // },
         {
+            accessorKey: 'code',
             header: () => t('Code'),
             cell: (promoCode) => {
                 return (<span className="text-uppercase"> {promoCode.code}</span>)
             },
+            searchable: true,
         },
         {
+            accessorKey: 'description',
             header: () => t('Description'),
             cell: (promoCode) => promoCode.description,
+            searchable: true,
         },
         {
             header: () => t('Discount Type'),

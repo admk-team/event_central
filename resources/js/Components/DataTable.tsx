@@ -105,15 +105,21 @@ export default function DataTable<T>({
                 {hasSearch && (
                     <form onSubmit={(e) => {
                         e.preventDefault();
-                        search();
+                        // search();
                     }}>
                         <div className="input-group w-auto position-relative">
+                            <Search 
+                                size={16} 
+                                className="position-absolute" 
+                                style={{ top: '10px', left: '6px', zIndex: '6' }}
+                            />
                             <Form.Control
                                 type="text"
                                 placeholder="Search"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 style={{
+                                    paddingLeft: '28px',
                                     paddingRight: '25px',
                                 }}
                             />
@@ -121,13 +127,14 @@ export default function DataTable<T>({
                                 <X
                                     className="position-absolute cursor-pointer"
                                     size={20}
-                                    style={{ top: '8px', right: '38px' }}
+                                    style={{ top: '9px', right: '4px', zIndex: '6' }}
                                     onClick={() => {
                                         search('');
                                     }}
                                 />
                             )}
-                            <Button type="submit" size="sm">
+                            
+                            {/* <Button type="submit" size="sm">
                                 {searchProcessing ? (
                                     <Spinner
                                         as="span"
@@ -139,7 +146,7 @@ export default function DataTable<T>({
                                 ) : (
                                     <Search size={16} />
                                 )}
-                            </Button>
+                            </Button> */}
                         </div>
                     </form>
                 )}
@@ -386,9 +393,25 @@ function useSearch<T>(columns: ColumnDef<T>, combinations: DataTableProps<T>['se
         setSearchProcessing(true);
 
         router.visit(url.toString(), {
+            preserveState: true,
             onFinish: () => setSearchProcessing(false),
         });
     }
+
+    const debounceTimeout = React.useRef<null | ReturnType<typeof setTimeout>>(null);
+
+    React.useEffect(() => {
+        if (searchQuery && searchQuery !== (search?.query ?? '')) {
+            debounceTimeout.current && clearTimeout(debounceTimeout.current);
+            debounceTimeout.current = setTimeout(() => {
+                doSearch();
+            }, 700);
+        }
+        
+        return () => {
+            debounceTimeout.current && clearTimeout(debounceTimeout.current);
+        }
+    }, [searchQuery]);
 
     return {
         hasSearch: searchableColumns.length > 0,

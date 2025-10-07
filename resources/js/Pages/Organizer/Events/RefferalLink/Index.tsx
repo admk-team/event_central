@@ -79,6 +79,7 @@ function Index({ data }: any) {
       header: () => t("Name"),
       cell: (referralLink) => referralLink.name,
       enableSorting: true,
+      searchable: true,
     },
     {
       accessorKey: "url",

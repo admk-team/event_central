@@ -79,12 +79,14 @@ function Index({ eventPlatforms }: Props) {
             header: () => t('Name'),
             cell: (platform) => platform.name,
             enableSorting: true,
+            searchable: true,
         },
         {
             accessorKey: 'type',
             header: () => t('Type'),
             cell: (platform) => platform.type,
             enableSorting: true,
+            searchable: true,
         },
         {
             accessorKey: 'seats',

@@ -20,7 +20,7 @@ class EventPartnerController extends Controller
             abort(403);
         }
 
-        $partners = EventPartner::currentEvent()->latest()->paginate($request->per_page ?? 10);
+        $partners = $this->datatable(EventPartner::currentEvent());
         return Inertia::render('Organizer/Events/Partners/Index', compact('partners'));
     }
 

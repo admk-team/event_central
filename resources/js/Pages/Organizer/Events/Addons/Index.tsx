@@ -71,10 +71,12 @@ function Index({ addons }: any) {
             cellClass: "fw-medium",
         },
         {
+            accessorKey: 'name',
             header: () => t('Add-ons Name'),
             cell: (addon) => (
                 <div style={{ minWidth: '200px' }} dangerouslySetInnerHTML={{ __html: addon.name }} />
             ),
+            searchable: true,
         },
         {
             header: () => t('Price'),

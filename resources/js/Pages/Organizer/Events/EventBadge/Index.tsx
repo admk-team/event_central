@@ -66,6 +66,7 @@ function Index({ data }: any) {
             header: () => t('Title'),
             cell: (badge) => badge.title,
             enableSorting: true,
+            searchable: true,
         },
         // {
         //     accessorKey: 'description',

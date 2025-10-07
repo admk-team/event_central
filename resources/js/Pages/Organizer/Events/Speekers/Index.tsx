@@ -57,8 +57,10 @@ function Index({ speakers }: any) {
             ),
         },
         {
+            accessorKey: 'name',
             header: () => t('Name'),
             cell: (speaker) => speaker.name,
+            searchable: true,
         },
         {
             header: () => t('Company'),
