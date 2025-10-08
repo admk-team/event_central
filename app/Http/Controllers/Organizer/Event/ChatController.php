@@ -357,7 +357,7 @@ class ChatController extends Controller
     }
     public function deleteGroup($id)
     {
-        $group = ChatGroup::findOrFail($id);
+        $group = ChatGroup::find($id);
 
         // Check that the current user is creator or admin
         if ($group->created_by !== Auth::id()) {
@@ -372,6 +372,6 @@ class ChatController extends Controller
         $group->delete();
 
         // Return plain text (no JSON)
-        return redirect()->route('organizer.events.chat.index')->withSuccess('Chat Delete successfully.');
+        return back()->withSuccess('Chat Delete successfully.');
     }
 }
