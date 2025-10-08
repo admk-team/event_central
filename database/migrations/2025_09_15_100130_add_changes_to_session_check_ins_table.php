@@ -1,4 +1,4 @@
-<?php
++<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -30,7 +30,7 @@ return new class extends Migration
     {
         Schema::table('session_check_ins', function (Blueprint $table) {
             // Revert to non-cascading FK (original behavior)
-            $table->dropForeign('session_check_ins_session_id_foreign');
+            $table->dropForeign(['session_check_ins_session_id_foreign']);
 
             $table->foreign('session_id')
                   ->references('id')->on('event_sessions');

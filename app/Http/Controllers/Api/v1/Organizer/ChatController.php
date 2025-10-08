@@ -64,7 +64,7 @@ class ChatController extends Controller
             $eventData->last_message_created_at = $lastMessage?->created_at;
         }
 
-        // for rooms private 
+        // for rooms private
         $rooms = ChatGroup::where('event_id', $eventId)
             ->where('type', 'staff')
             ->whereHas('members', function ($q) {
@@ -410,6 +410,30 @@ class ChatController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Added successfully.'
+        ], 200);
+    }
+    public function destroy($id, EventApp $event)
+    {
+        $group = ChatGroup::findOrFail($id);
+        $userId = Auth::user()->id;
+
+        if ($group->created_by != $userId) {
+            return response()->json([
+                'status' => false,
+                'message' => 'You are not authorized to delete this group.'
+            ], 403);
+        }
+
+        // Delete associated chat members and messages
+        ChatMember::where('event_id', $event->id)->where('group_id', $group->id)->delete();
+        ChatMessage::where('event_id', $event->id)->where('group_id', $group->id)->delete();
+
+        // Delete the group
+        $group->delete();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Group deleted successfully.'
         ], 200);
     }
 }

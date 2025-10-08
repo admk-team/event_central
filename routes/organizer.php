@@ -108,7 +108,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
     Route::get('/zoho/sync', [ZohoController::class, 'showSyncPage'])->name('zoho.sync.page');
     Route::post('/zoho/sync/{event}', [ZohoController::class, 'sync'])->name('zoho.sync');
 
-    // MailChimp 
+    // MailChimp
     Route::get('/mailchimp/settings', [MailChimpController::class, 'index'])->name('mailchimp.index');
     Route::post('/mailchimp/store', [MailChimpController::class, 'store'])->name('mailchimp.store');
     Route::get('/mailchimp/sync', [MailChimpController::class, 'showSyncPage'])->name('mailchimp.sync.page');
@@ -140,8 +140,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
 
         Route::middleware('event_is_selected')->group(function () {
             Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
-            // Venue Management
+              // Venue Management
             Route::resource('event-platforms', EventPlatformController::class);
             Route::delete('event-platforms/delete/many', [EventPlatformController::class, 'destroyMany'])->name('event-platforms.destroy.many');
             Route::post('event-platforms/blueprint-import', [EventPlatformController::class, 'blueprintImport'])->name('event-platforms.blueprint-import');
@@ -169,12 +168,8 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::post('/attendee/checkin', [AttendeeController::class, 'chechIn'])->name('attendee.checkin');
             Route::get('get-attendee-puchased-addons/{attendeePurchasedTicket}', [AttendeeController::class, 'getPurchasedTicketAddons'])->name('attendee.puchased-ticket.adddons');
             Route::post('attendee/import/event', [AttendeeController::class, 'importFromEvent'])->name('attendee.importevent');
-
             Route::post('attendee/return/ticket/{id}', [AttendeeController::class, 'returnTicket'])->name('attendee.return.ticket');
             Route::post('attendee/chat-initiate/{id}', [AttendeeController::class, 'initiateChat'])->name('attendee.chat.initiate');
-
-
-
             // Wordshop
             Route::resource('workshop', WorkshopController::class);
             Route::resource('custom-menu', CustomMenuController::class);
@@ -220,6 +215,8 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
 
             // Chat
             Route::resource('chat', ChatController::class);
+            // organizer chat delete
+            Route::delete('/attendee/chat/group/{id}', [ChatController::class, 'deleteGroup'])->name('attendee.chat.group.delete');
             Route::get('get-chat/{id}', [ChatController::class, 'getMessages'])->name('get-messages');
             Route::get('private-chat/{id}', [ChatController::class, 'getOneToOneChat']);
             Route::get('group-chat/{id}', [ChatController::class, 'getGroupChat']);

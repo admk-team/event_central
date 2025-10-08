@@ -149,6 +149,7 @@ Route::prefix('user')->group(function () {
         Route::post('/chat/mark-as-read/{chatWithUserId}/{event}', [OrganizerChatController::class, 'markAsRead']);
         Route::post('/create/chat-room/{event}', [OrganizerChatController::class, 'createRoom']);
         Route::get('/group-join/{id}/{event}', [OrganizerChatController::class, 'join']);
+        Route::delete('/group-delete/{id}/{event}', [OrganizerChatController::class, 'destroy']);
         // Event Store
         Route::get('/products/{event}', [ProductController::class, 'index']);
         Route::post('/products/{event}', [ProductController::class, 'store']);
