@@ -345,12 +345,22 @@ class ChatController extends Controller
         $eventId = $event->id;
         $userId = Auth::user()->id;
 
-        $request->validate([
+        $rules = [
             "type" => "required",
             "name" => "required",
-            "members" => "required|array|min:1",
-            "image"   => "nullable|image|mimes:jpg,jpeg,png,gif|max:2048",
-        ]);
+            "image" => "nullable|image|mimes:jpg,jpeg,png,gif|max:2048",
+            "visibility" => "required|in:public,private",
+        ];
+
+        if ($request->visibility == "private") {
+            $rules["members"] = "required|array|min:1";
+        }
+        $messages = [
+            "members.required" => "Please select at least one member.",
+            "members.array"    => "Invalid members format.",
+            "members.min"      => "Please select at least one member.",
+        ];
+        $request->validate($rules, $messages);
 
         if ($request->members && count($request->members) > 0) {
             $path = null;
@@ -374,6 +384,32 @@ class ChatController extends Controller
         return response()->json([
             'status' => true,
             'message' => 'Room Created Successfully'
+        ], 200);
+    }
+
+    public function join($id, EventApp $event)
+    {
+        $group = ChatGroup::findOrFail($id);
+        $userId = Auth::user()->id;
+
+        // Prevent duplicate join
+        $alreadyMember = ChatMember::where('event_id', $event->id)->where('group_id', $group->id)->where('user_id', $userId)->exists();
+        if ($alreadyMember) {
+            return back()->withSuccess('Added successfully.');
+        }
+
+        ChatMember::create([
+            'event_id' => $event->id,
+            'group_id' => $group->id,
+            'user_id' => $userId,
+            'user_type' => \App\Models\User::class,
+            'participant_id' => $group->created_by,
+            'participant_type' => \App\Models\User::class,
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Added successfully.'
         ], 200);
     }
 }

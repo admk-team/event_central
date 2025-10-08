@@ -148,6 +148,7 @@ Route::prefix('user')->group(function () {
         Route::post('/chat/send/{event}', [OrganizerChatController::class, 'store']);
         Route::post('/chat/mark-as-read/{chatWithUserId}/{event}', [OrganizerChatController::class, 'markAsRead']);
         Route::post('/create/chat-room/{event}', [OrganizerChatController::class, 'createRoom']);
+        Route::get('/group-join/{id}/{event}', [OrganizerChatController::class, 'join']);
         // Event Store
         Route::get('/products/{event}', [ProductController::class, 'index']);
         Route::post('/products/{event}', [ProductController::class, 'store']);
@@ -174,11 +175,11 @@ Route::prefix('attendee')->group(function () {
     //search
     Route::get('event/{eventApp}/session-search', [AttendeeEventController::class, 'searchSessions']);
     Route::get('event/{eventApp}/speaker-search', [AttendeeEventController::class, 'searchSpeakers']);
-    
-    
+
+
     Route::middleware(['auth:sanctum', 'ability:role:attendee'])->group(function () {
         Route::get('event/{eventApp}/session/{eventSession}', [AttendeeEventController::class, 'eventsessions']);
-        
+
         Route::post('/broadcasting/auth', function (Request $request) {
             return Broadcast::auth($request);
         });
