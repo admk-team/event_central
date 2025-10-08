@@ -414,7 +414,7 @@ class ChatController extends Controller
     }
     public function destroy($id, EventApp $event)
     {
-        $group = ChatGroup::findOrFail($id);
+        $group = ChatGroup::find($id);
         $userId = Auth::user()->id;
 
         if ($group->created_by != $userId) {
@@ -424,9 +424,9 @@ class ChatController extends Controller
             ], 403);
         }
 
-        // Delete associated chat members and messages
-        ChatMember::where('event_id', $event->id)->where('group_id', $group->id)->delete();
-        ChatMessage::where('event_id', $event->id)->where('group_id', $group->id)->delete();
+        // // Delete associated chat members and messages
+        // ChatMember::where('event_id', $event->id)->where('group_id', $group->id)->delete();
+        // ChatMessage::where('event_id', $event->id)->where('group_id', $group->id)->delete();
 
         // Delete the group
         $group->delete();
