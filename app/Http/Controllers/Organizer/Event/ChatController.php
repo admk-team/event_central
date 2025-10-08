@@ -14,7 +14,6 @@ use App\Models\EventApp;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class ChatController extends Controller
@@ -360,23 +359,19 @@ class ChatController extends Controller
     {
         $group = ChatGroup::find($id);
 
-        if (!$group) {
-            return back()->withErrors('Group not found.');
-        }
-
+        // Check that the current user is creator or admin
         if ($group->created_by !== Auth::id()) {
             abort(403, 'Unauthorized');
         }
 
-        try {
-            ChatMessage::where('group_id', $id)->delete();
-            ChatMember::where('group_id', $id)->delete();
-            $group->delete();
+        // Delete all related messages and members
+        // ChatMessage::where('group_id', $id)->delete();
+        // ChatMember::where('group_id', $id)->delete();
 
-            return back()->withSuccess('Chat deleted successfully.');
-        } catch (\Exception $e) {
-            Log::error('Error deleting group: ' . $e->getMessage());
-            return back()->withErrors('Error deleting chat group.');
-        }
+        // Delete the group
+        $group->delete();
+
+        // Return plain text (no JSON)
+        return back()->withSuccess('Chat Delete successfully.');
     }
 }
