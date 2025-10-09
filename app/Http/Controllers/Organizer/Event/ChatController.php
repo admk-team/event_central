@@ -331,7 +331,7 @@ class ChatController extends Controller
         return back()->withSuccess('Room Created Successfully');
     }
 
-    // join public groups 
+    // join public groups
 
     public function join($id)
     {
@@ -354,5 +354,24 @@ class ChatController extends Controller
         ]);
         // Return updated group with members
         return redirect()->route('organizer.events.chat.index')->withSuccess('Added successfully.');
+    }
+    public function deleteGroup($id)
+    {
+        $group = ChatGroup::find($id);
+
+        // Check that the current user is creator or admin
+        if ($group->created_by !== Auth::id()) {
+            abort(403, 'Unauthorized');
+        }
+
+        // Delete all related messages and members
+        // ChatMessage::where('group_id', $id)->delete();
+        // ChatMember::where('group_id', $id)->delete();
+
+        // Delete the group
+        $group->delete();
+
+        // Return plain text (no JSON)
+        return back()->withSuccess('Chat Delete successfully.');
     }
 }
