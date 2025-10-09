@@ -108,6 +108,17 @@ const UpgradeTicketToTicket = ({ attendees, tickets, currency }) => {
 
         setProcessing(true);
 
+        // Get the new ticket price for refund case
+        const newTicketObj = tickets.find((t) => t.id === parseInt(newTicket));
+        const newTicketPrice = newTicketObj
+            ? parseFloat(newTicketObj.base_price)
+            : 0;
+
+        // Determine amount:
+        // If cheaper → use new ticket price (refund case)
+        // If more expensive → use price difference
+        const amountToSave = priceDiff < 0 ? newTicketPrice : priceDiff;
+
         axios
             .post(
                 route(
@@ -117,12 +128,12 @@ const UpgradeTicketToTicket = ({ attendees, tickets, currency }) => {
                 {
                     old_ticket_id: oldTicket,
                     new_ticket_id: newTicket,
-                    amount: Math.abs(priceDiff), // use absolute value for record
+                    amount: amountToSave,
                     payment_method: paymentMethod,
                     note: note,
                     stripe_payment_id: stripeId,
                     stripe_payment_intent: stripeIntent,
-                    refund_required: priceDiff < 0, // mark refunds for backend record
+                    refund_required: priceDiff < 0, // mark refund flag for backend
                 }
             )
             .then((res) => {
@@ -241,9 +252,7 @@ const UpgradeTicketToTicket = ({ attendees, tickets, currency }) => {
                                     <option value="">
                                         {attendeeTickets.length
                                             ? t("Select Old Ticket")
-                                            : t(
-                                                  "Select"
-                                              )}
+                                            : t("Select")}
                                     </option>
 
                                     {attendeeTickets.length > 0 &&
