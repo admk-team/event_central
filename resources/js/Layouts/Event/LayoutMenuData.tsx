@@ -367,19 +367,23 @@ const Navdata = () => {
                 {
                     id: "assignTickets",
                     label: t("Assign Tickets"),
-                    link: route(
-                        "organizer.events.attendee.tickets.assign",
-                        null
-                    ),
+                    link: route("organizer.events.attendee.tickets.assign",null),
                     parentId: "tickets",
                     hasPermissions: ["assign_tickets"],
                 },
                 {
                     id: "upgradeTicket",
                     label: t("Upgrade Tickets"),
-                    link: route("organizer.events.tickets.upgrade"),
+                    link: route("organizer.events.tickets.toticket.index"),
                     parentId: "tickets",
-                    hasPermissions: ["refund_ticket"],
+                    hasPermissions: ["upgrade_ticket_to_ticket"],
+                },
+                {
+                    id: "upgradeTicketsession",
+                    label: t("Upgrade Ticket Sessions"),
+                    link: route("organizer.events.tickets.sessions.upgrade"),
+                    parentId: "tickets",
+                    hasPermissions: ["upgrade_ticket_sessions"],
                 },
                 {
                     id: "refundTicket",

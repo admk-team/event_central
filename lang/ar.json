@@ -1224,5 +1224,25 @@
   "📅 Event Info & Participation": "📅 معلومات ومشاركة الحدث",
   "💬 Interaction & Networking": "💬 التفاعل والتواصل",
   "🎟 Tickets & Access": "🎟 التذاكر والوصول",
-  "🏆 Engagement & Extras": "🏆 المشاركة والإضافات"
+  "🏆 Engagement & Extras": "🏆 المشاركة والإضافات",
+    "Upgrade Ticket to Another Ticket": "ترقية التذكرة إلى تذكرة أخرى",
+    "Upgrade Attendee Ticket to Another Ticket": "ترقية تذكرة المشارك إلى تذكرة أخرى",
+    "Select Attendee": "اختر المشارك",
+    "Choose Attendee": "اختر المشارك",
+    "Old Ticket (Purchased)": "التذكرة القديمة (المشتراة)",
+    "Select Old Ticket": "اختر التذكرة القديمة",
+    "No Purchased Tickets Available": "لا توجد تذاكر مشتراة متاحة",
+    "This attendee has not purchased any tickets yet.": "هذا المشارك لم يشتر أي تذاكر بعد.",
+    "New Ticket (Upgrade To)": "التذكرة الجديدة (للترقية إليها)",
+    "Select New Ticket": "اختر التذكرة الجديدة",
+    "Enter note about this upgrade": "أدخل ملاحظة حول هذه الترقية",
+    "Price Difference": "فرق السعر",
+    "Proceed to Checkout": "المتابعة إلى الدفع",
+    "Please select attendee and tickets": "يرجى اختيار المشارك والتذاكر",
+    "Please enter a note for organizer": "يرجى إدخال ملاحظة للمنظم",
+    "Unable to initiate checkout.": "تعذر بدء عملية الدفع.",
+    "Ticket upgraded successfully": "تمت ترقية التذكرة بنجاح",
+    "Upgrade failed. Please try again.": "فشلت الترقية. يرجى المحاولة مرة أخرى.",
+    "The new ticket is cheaper. Please refund the difference manually. This will be processed as a free checkout.": "التذكرة الجديدة أرخص. يرجى إعادة الفرق يدويًا. ستُعتبر هذه العملية كترقية مجانية.",
+    "Upgrade Ticket Sessions": "ترقية جلسات التذاكر"
 }

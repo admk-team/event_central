@@ -303,7 +303,7 @@ const Navdata = () => {
         },
         {
             id: "upgradeTicket",
-            label: t("Upgrade Tickets"),
+            label: t("Upgrade Tickets Sessions"),
             icon: "bx bxs-credit-card",
             link: route("attendee.tickets.upgrade"),
             stateVariables: isUpgradeTicket,

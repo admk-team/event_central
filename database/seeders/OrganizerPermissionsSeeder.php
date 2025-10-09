@@ -203,6 +203,11 @@ class OrganizerPermissionsSeeder extends Seeder
         'create_event_booth',
         'edit_event_booth',
         'delete_event_booth',
+
+        //Event upgrade_ticket to ticket
+        'upgrade_ticket_to_ticket',
+        'upgrade_ticket_sessions',
+
     ];
 
     public function run(): void

@@ -64,6 +64,7 @@ use App\Http\Controllers\Organizer\Settings\OrganizerPaymentSettingController;
 use App\Http\Controllers\Organizer\Event\PrivateRegistrationViaEmailController;
 use App\Http\Controllers\Organizer\Event\Settings\RegistrationFormSettingsController;
 use App\Http\Controllers\Organizer\Event\Settings\QuestionnaireFormSettingsController;
+use App\Http\Controllers\Organizer\Event\UpgradeTicketToTicketController;
 use App\Http\Controllers\Organizer\MailChimpController;
 
 // Event Website
@@ -140,7 +141,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
 
         Route::middleware('event_is_selected')->group(function () {
             Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-              // Venue Management
+            // Venue Management
             Route::resource('event-platforms', EventPlatformController::class);
             Route::delete('event-platforms/delete/many', [EventPlatformController::class, 'destroyMany'])->name('event-platforms.destroy.many');
             Route::post('event-platforms/blueprint-import', [EventPlatformController::class, 'blueprintImport'])->name('event-platforms.blueprint-import');
@@ -202,12 +203,21 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::post('attendee/refundticket', [RefundPaymentController::class, 'attendeeRefund'])->name('attendee.refund');
 
             //Upgrade payments
-            Route::get('upgrade/tickets', [UpgradeTicketController::class, 'upgradeTickets'])->name('tickets.upgrade');
+            Route::get('upgrade/tickets/sessions', [UpgradeTicketController::class, 'upgradeTickets'])->name('tickets.sessions.upgrade');
             Route::post('upgrade/tickets', [UpgradeTicketController::class, 'saveTicketUpgrade'])->name('save.ticket.upgrade');
             Route::post('save/upgraded-sessions/{attendee}', [UpgradeTicketController::class, 'saveUpgradedSessions'])->name('save.upgraded.sessions');
             Route::post('save/free-upgraded-sessions/{attendee}', [UpgradeTicketController::class, 'saveUpgradedSessionsFree'])->name('save.upgraded.sessions.free');
             Route::post('proceed-for-checkout/{attendee}', [UpgradeTicketController::class, 'getStripPaymentIntent'])->name('upgrade.ticket.proceed.checkout');
             Route::get('upgrade-payment-success/{paymentUuid}', [UpgradeTicketController::class, 'showTicketUpgradeSuccess'])->name('upgrade.payment.success');
+
+            //upgrade purchased ticket to ticket
+            Route::prefix('upgrade/ticket-to-ticket')->group(function () {
+                Route::get('/', [UpgradeTicketToTicketController::class, 'index'])->name('tickets.toticket.index');
+                Route::get('/attendee-tickets/{attendee}', [UpgradeTicketToTicketController::class, 'getAttendeeTickets'])->name('tickets.toticket.attendee.tickets');
+                Route::post('/save/{attendee}', [UpgradeTicketToTicketController::class, 'saveUpgrade'])->name('tickets.toticket.save');
+                Route::post('/proceed-checkout/{attendee}', [UpgradeTicketToTicketController::class, 'proceedCheckout'])->name('tickets.toticket.checkout');
+                Route::get('/success/{uuid}', [UpgradeTicketToTicketController::class, 'success'])->name('tickets.toticket.success');
+            });
 
             // Promo Codes
             Route::resource('promo-codes', EventPromoCodeController::class)->only(['index', 'store', 'update', 'destroy']);
