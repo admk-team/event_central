@@ -94,10 +94,10 @@ class EventAppTicket extends Model
         // Ordering and selecting appended property of model
         // and being used as preselected Select2 Options
 
-        $addons_collection = $this->addons()->orderBy('name')->get();
+        $addons_collection = $this->addons()->with('variants')->orderBy('name')->get();
 
         return $addons_collection->map(function ($addon) {
-            return ['value' => $addon->id, 'label' => $addon->full_name];
+            return ['value' => $addon->id, 'label' => $addon->full_name, 'variants' => $addon->variants];
         });
     }
 

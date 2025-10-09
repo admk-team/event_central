@@ -127,6 +127,9 @@ const TicketDetail: React.FC<Props> = ({
                     (attr.options || []).some((o: any) => o.id === option.id && o.isSelected)
             )
         );
+    const getSelectedVariantPrice = (addon: any) => {
+        return selectedAddons.find((a: any) => a.id === addon.id)?.selectedVariant?.price;
+    }
 
     const handleCheckChanged = (_e: any, addon: any) => {
         if (addon.variants?.length) {
@@ -205,7 +208,7 @@ const TicketDetail: React.FC<Props> = ({
         return (ticket.addons ?? []).map((addon: any) => {
             const id = `${ticket.id}-${ticket_no}-addon-${addon.id}`;
             const priceLabel =
-                addon.selectedVariant?.price ?? addon.variants?.[0]?.price ?? addon.price ?? 0;
+                getSelectedVariantPrice(addon) ?? addon.variants?.[0]?.price ?? addon.price ?? 0;
 
             return (
                 <div key={id}>
