@@ -299,7 +299,7 @@ function Index({ tickets, sessions, addonsAll, fees, event_ticket_type }: any) {
                     addons={
                         addonsAll
                             .filter((addon: any) => addon.event_app_ticket_id === null || addon.event_app_ticket_id === editTicket?.id)
-                            .map((addon: any) => ({ value: addon.value, label: addon.label }))
+                            .map((addon: any) => ({ value: addon.value, label: addon.label, variants: addon.variants }))
                     }
                     fees={fees}
                     event_ticket_type={event_ticket_type}

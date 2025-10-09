@@ -82,7 +82,7 @@ function Index({ addons }: any) {
             header: () => t('Price'),
             cell: (addon) => (
                 <span className="text-right d-block">
-                    {addon.price > 0 ? addon.price : "Free"}
+                    {(addon.variants[0]?.price ?? addon.price) > 0 ? (addon.variants[0]?.price ?? addon.price) : "Free"}
                 </span>
             ),
         },

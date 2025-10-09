@@ -42,9 +42,9 @@ class EventAppTicketController extends Controller
             ];
         });
         $event_ticket_type = EventTicketType::where('event_app_id', session('event_id'))->latest()->get();
-        $addons_collection = Addon::currentEvent()->orderBy('name')->get();
+        $addons_collection = Addon::currentEvent()->with('variants')->orderBy('name')->get();
         $addonsAll = $addons_collection->map(function ($addon) {
-            return ['value' => $addon->id, 'label' => $addon->full_name, 'event_app_ticket_id' => $addon->event_app_ticket_id];
+            return ['value' => $addon->id, 'label' => $addon->full_name, 'event_app_ticket_id' => $addon->event_app_ticket_id, 'variants' => $addon->variants];
         });
 
         $fees = EventAppFee::where('status', 'active')->currentEvent()->orderBy('name')->get();
