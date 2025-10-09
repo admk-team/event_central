@@ -99,7 +99,9 @@ export default function CreateEditModal({
     };
 
     useEffect(() => {
-        setData('qty_total', data.variants.reduce((total, variant) => total = total + variant.qty, 0));
+        if (data.variants.length > 0) {
+            setData('qty_total', data.variants.reduce((total, variant) => total = total + variant.qty, 0));
+        }
     }, data.variants);
 
     function showNewField() {
