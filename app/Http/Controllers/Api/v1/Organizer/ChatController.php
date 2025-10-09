@@ -66,7 +66,6 @@ class ChatController extends Controller
 
         // for rooms private
         $rooms = ChatGroup::where('event_id', $eventId)
-            ->where('type', 'staff')
             ->whereHas('members', function ($q) {
                 $q->where('user_id', Auth::id());
             })
@@ -86,15 +85,19 @@ class ChatController extends Controller
         // staff and attendees for creating rooms
         $staff = null;
         if (Auth::user()->parent_id) {
-            $all_user = User::where('parent_id', Auth::user()->parent_id)->get()->toArray();
-            $admin = User::where('id', Auth::user()->parent_id)->get()->toArray();
-            $staff = array_merge($all_user, $admin);
+            $staff = User::where('parent_id', Auth::user()->parent_id)->get()->toArray();
         } else {
-            $all_user = User::where('parent_id', $user->id)->get()->toArray();
-            $admin = User::where('id', $user->id)->get()->toArray();
-            $staff = array_merge($all_user, $admin);
+            $staff = User::where('parent_id', $user->id)->get()->toArray();
         }
         $attendees = Attendee::where('event_app_id', $eventId)->get();
+
+        $openrooms = ChatGroup::where('event_id', $eventId)
+            ->where('type', 'staff')
+            ->where('visibility', 'public')
+            ->whereDoesntHave('members', function ($q) {
+                $q->where('user_id', Auth::id());
+            })
+            ->get();
 
         return response()->json([
             'status' => true,
@@ -104,6 +107,7 @@ class ChatController extends Controller
             'staff' => $staff,
             'attendees' => $attendees,
             'rooms' => $rooms,
+            'openrooms' => $openrooms,
         ], 200);
     }
 
