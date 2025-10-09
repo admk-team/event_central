@@ -249,7 +249,7 @@ const UpgradeTicketToTicket = ({ attendees, tickets, currency }) => {
                                         setOldTicket(parseInt(e.target.value))
                                     }
                                 >
-                                    <option value="">
+                                    <option disabled value="">
                                         {attendeeTickets.length
                                             ? t("Select Old Ticket")
                                             : t("Select")}
@@ -292,7 +292,7 @@ const UpgradeTicketToTicket = ({ attendees, tickets, currency }) => {
                                         setNewTicket(parseInt(e.target.value))
                                     }
                                 >
-                                    <option value="">
+                                    <option  disabled value="">
                                         {t("Select New Ticket")}
                                     </option>
                                     {tickets.map((t) => (
