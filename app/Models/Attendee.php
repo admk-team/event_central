@@ -36,7 +36,8 @@ class Attendee extends Authenticatable
         'personal_url',
         'referral_link',
         'google_id',
-        'is_public'
+        'is_public',
+        'fcm_token',
     ];
 
     protected $appends = [

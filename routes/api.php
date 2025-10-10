@@ -33,6 +33,7 @@ use App\Http\Controllers\Api\v1\Organizer\PaymentController as OrganizerPaymentC
 use App\Http\Controllers\Api\v1\Organizer\PrayerRequestController;
 use App\Http\Controllers\Api\v1\Organizer\ProfileController as OrganizerProfileController;
 use App\Http\Controllers\Api\v1\Attendee\LiveStreamController;
+use App\Http\Controllers\Api\v1\Attendee\NotificationController;
 use App\Http\Controllers\Api\v1\Organizer\EventShop\OrdersController;
 use App\Http\Controllers\Api\v1\Organizer\EventShop\ProductController;
 
@@ -278,5 +279,8 @@ Route::prefix('attendee')->group(function () {
         Route::get('booths', [EventBoothController::class, 'index']);
         Route::get('booths/checkout/{booth}', [EventBoothController::class, 'checkoutPage']);
         Route::post('booths/update/{booth}', [EventBoothController::class, 'updateBooth']);
+
+        //save fcm_token for notification
+        Route::post('/save-fcm-token', [NotificationController::class, 'saveFcmToken']);
     });
 });
