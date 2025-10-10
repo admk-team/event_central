@@ -35,6 +35,9 @@ return [
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect' => env('GOOGLE_REDIRECT_URL'),
     ],
+    'fcm' => [
+        'project_id' => env('FIREBASE_PROJECT_ID'),
+    ],
     'pusher_beams' => [
         'instance_id' => env('PUSHER_BEAMS_INSTANCE_ID'),
         'secret_key' => env('PUSHER_BEAMS_SECRET_KEY'),
