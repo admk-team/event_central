@@ -48,7 +48,13 @@ class EventTicketsController extends Controller
                 'attendees.last_name as attendee_last_name',
                 'attendees.email as attendee_email',
                 'attendee_payments.discount as discount',
-                'attendee_payments.discount_code as promo_code'
+                'attendee_payments.discount_code as promo_code',
+
+                // 👇 Added upgrade-related columns
+                DB::raw('MAX(attendee_purchased_tickets.original_ticket_price) as original_price'),
+                DB::raw('MAX(attendee_purchased_tickets.upgrade_amount) as upgrade_amount'),
+                DB::raw('MAX(attendee_purchased_tickets.is_upgrade) as is_upgrade'),
+                DB::raw('MAX(attendee_payments.is_refund_required) as refund_required')
             )
             ->groupBy(
                 'attendee_payments.id',
@@ -67,8 +73,10 @@ class EventTicketsController extends Controller
             )
             ->latest()
             ->get();
+
         return Inertia::render('Organizer/Events/Tickets/EventAppTickets', compact(['tickets']));
     }
+
 
     public function deleteTickets(AttendeePayment $attendeepayment)
     {

@@ -8,6 +8,7 @@ use App\Models\EventApp;
 use App\Models\OrganizerPaymentKeys;
 use App\Models\AttendeePurchasedTicket;
 use App\Models\AttendeePurchasedTickets;
+use App\Models\EventAppTicket;
 use App\Services\StripeService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -95,51 +96,76 @@ class UpgradeTicketToTicketController extends Controller
             'note' => 'nullable|string',
             'stripe_payment_intent' => 'nullable|string',
             'stripe_payment_id' => 'nullable|string',
+            'refund_required' => 'nullable|boolean',
         ]);
 
         DB::beginTransaction();
 
         try {
-            // Create Payment
+            $oldTicket = EventAppTicket::findOrFail($data['old_ticket_id']);
+            $newTicket = EventAppTicket::findOrFail($data['new_ticket_id']);
+
+            $oldPrice = (float) $oldTicket->base_price;
+            $newPrice = (float) $newTicket->base_price;
+            $difference = $newPrice - $oldPrice;
+
+            // Determine payment amount
+            $amountPaid = $difference > 0 ? $difference : 0;
+
+            // Create Payment record
             $payment = $attendee->attendeePayments()->create([
                 'uuid' => Str::uuid(),
                 'event_app_id' => $attendee->event_app_id,
                 'attendee_id' => $attendee->id,
-                'amount_paid' => $data['amount'] ?? 0,
+                'amount_paid' => $amountPaid,
                 'payment_method' => $data['payment_method'],
                 'organizer_payment_note' => $data['note'] ?? null,
                 'stripe_intent' => $data['stripe_payment_intent'] ?? null,
                 'stripe_id' => $data['stripe_payment_id'] ?? null,
                 'status' => 'paid',
+                'is_refund_required' => $difference < 0, // add this column to track refund logic
             ]);
 
-            // Remove all old tickets (if multiple)
+            // Assign new upgraded ticket
+            $attendee->attendeePurchasedTickets()->create([
+                'event_app_ticket_id' => $data['new_ticket_id'],
+                'price' => $newPrice,
+                'total' => $newPrice,
+                'original_ticket_price' => $oldPrice,
+                'upgrade_amount' => $amountPaid,
+                'attendee_payment_id' => $payment->id,
+                'is_upgrade' => true, // add this boolean column for clarity
+            ]);
+
+            // Remove old ticket(s)
             AttendeePurchasedTickets::where('attendee_id', $attendee->id)
                 ->where('event_app_ticket_id', $data['old_ticket_id'])
                 ->delete();
-
-            // Assign new ticket
-            $attendee->attendeePurchasedTickets()->create([
-                'event_app_ticket_id' => $data['new_ticket_id'],
-                'price' => $data['amount'] ?? 0,
-                'total' => $data['amount'] ?? 0,
-                'attendee_payment_id' => $payment->id,
-            ]);
 
             DB::commit();
 
             return response()->json([
                 'message' => 'Ticket upgraded successfully.',
-                'payment' => $payment
+                'payment' => $payment,
+                'financial_summary' => [
+                    'original_price' => $oldPrice,
+                    'upgrade_difference' => $difference,
+                    'total_new_price' => $newPrice,
+                    'amount_paid_now' => $amountPaid,
+                ]
             ]);
         } catch (\Throwable $e) {
             DB::rollBack();
             report($e);
+
             return response()->json([
-                'message' => 'Upgrade failed. Please try again.'
+                'message' => 'Upgrade failed. Please try again.',
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
+
+
 
     /**
      * Success view

@@ -24,7 +24,11 @@ class AttendeePurchasedTickets extends Model
         'addons_sub_total',
         'total',
         'qr_code',
-        'code'
+        'code',
+        // newly added upgrade fields 👇
+        'original_ticket_price',
+        'upgrade_amount',
+        'is_upgrade',
     ];
 
     public function payment()

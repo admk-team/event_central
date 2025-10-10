@@ -22,7 +22,9 @@ class AttendeePayment extends Model
         'payment_method',
         'stripe_id',
         'organizer_payment_note',
-        'extra_services'
+        'extra_services',
+        // new field 👇
+        'is_refund_required',
     ];
 
     protected $with = [
