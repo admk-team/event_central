@@ -301,20 +301,19 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
-        {
-            id: "upgradeTicket",
-            label: t("Upgrade Tickets Sessions"),
-            icon: "bx bxs-credit-card",
-            link: route("attendee.tickets.upgrade"),
-            stateVariables: isUpgradeTicket,
-            click: function (e: any) {
-                e.preventDefault();
-                setPurchaseTickets(!isUpgradeTicket);
-                setIscurrentState("upgradeTicket");
-                updateIconSidebar(e);
-            },
-            hasPermissions: ["refund_ticket"],
-        },
+        // {
+        //     id: "upgradeTicket",
+        //     label: t("Upgrade Tickets Sessions"),
+        //     icon: "bx bxs-credit-card",
+        //     link: route("attendee.tickets.upgrade"),
+        //     stateVariables: isUpgradeTicket,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setPurchaseTickets(!isUpgradeTicket);
+        //         setIscurrentState("upgradeTicket");
+        //         updateIconSidebar(e);
+        //     },
+        // },
         {
             id: "refundtickets",
             label: t("Refund Tickets"),
