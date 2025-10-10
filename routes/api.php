@@ -283,4 +283,5 @@ Route::prefix('attendee')->group(function () {
         //save fcm_token for notification
         Route::post('/save-fcm-token', [NotificationController::class, 'saveFcmToken']);
     });
+    Route::post('/test-fcm', [NotificationController::class, 'testFcm']);
 });

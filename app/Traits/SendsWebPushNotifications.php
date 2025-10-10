@@ -48,7 +48,7 @@ trait SendsWebPushNotifications
     /**
      * Send mobile push via Firebase Cloud Messaging (HTTP v1)
      */
-    protected function sendFcmV1Notification($fcmToken, $title, $body, $deepLink)
+    public function sendFcmV1Notification($fcmToken, $title, $body, $deepLink)
     {
         try {
             $client = new Client();
