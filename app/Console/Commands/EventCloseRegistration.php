@@ -7,6 +7,7 @@ use App\Models\EventAppDate;
 use App\Models\EventAppTicket;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class EventCloseRegistration extends Command
 {
@@ -24,28 +25,30 @@ class EventCloseRegistration extends Command
      */
     protected $description = 'close event registration';
 
-    /**
-     * Execute the console command.
-     */
     public function handle()
     {
         $eventAppIds = EventApp::pluck('id');
-
         foreach ($eventAppIds as $eventAppId) {
+            // Get the latest event date
             $latestEventDate = EventAppDate::where('event_app_id', $eventAppId)
                 ->latest('date')
                 ->first();
+            // Check if all limited tickets are sold
+            $tickets = EventAppTicket::where('event_app_id', $eventAppId)->get();
 
-            $eventFull = EventAppTicket::where('event_app_id', $eventAppId)->get();
-
-            $allTicketsFull = $eventFull->every(function ($ticket) {
-                return $ticket->qty_sold >= $ticket->qty_total;
+            $limitedTickets = $tickets->filter(function ($ticket) {
+                return !is_null($ticket->qty_total);
             });
 
-            if ($latestEventDate && Carbon::parse($latestEventDate->date)->lessThan(Carbon::today())) {
-                $closeRegistration = eventSettings($eventAppId)->set('close_registration', true);
-            } elseif ($allTicketsFull) {
-                $closeRegistration = eventSettings($eventAppId)->set('close_registration', true);
+            $allTicketsFull = $limitedTickets->isNotEmpty() && $limitedTickets->every(function ($ticket) {
+                return $ticket->qty_sold >= $ticket->qty_total;
+            });
+            // Close registration if event has ended or tickets sold out
+            if (
+                ($latestEventDate && Carbon::parse($latestEventDate->date)->lessThanOrEqualTo(Carbon::today())) ||
+                $allTicketsFull
+            ) {
+                eventSettings($eventAppId)->set('close_registration', true);
             }
         }
     }
