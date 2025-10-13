@@ -9,19 +9,25 @@ use App\Http\Controllers\Attendee\Auth\PasswordController;
 use App\Http\Controllers\Attendee\Auth\RegisteredUserController;
 use App\Http\Controllers\Attendee\BadgeAchievementController;
 use App\Http\Controllers\Attendee\ChatController;
+use App\Http\Controllers\Attendee\EventBoothController;
+use App\Http\Controllers\Attendee\EventCalendarController;
 use App\Http\Controllers\Attendee\EventController;
 use App\Http\Controllers\Attendee\EventSessionController;
 use App\Http\Controllers\Attendee\Payment\PaymentController;
 use App\Http\Controllers\Attendee\EventPostController;
 use App\Http\Controllers\Attendee\EventQuestionnaireFormController;
 use App\Http\Controllers\Attendee\EventRegistrationFormController;
+use App\Http\Controllers\Attendee\EventShopController;
+use App\Http\Controllers\Attendee\EventStaffController;
 use App\Http\Controllers\Attendee\FriendRequestController;
 use App\Http\Controllers\Attendee\GoogleController;
+use App\Http\Controllers\Attendee\LiveStreamController;
 use App\Http\Controllers\Attendee\Payment\RefundPaymentController;
 use App\Http\Controllers\Attendee\PrayerRequestController;
 use App\Http\Controllers\Attendee\ProfileController;
 use App\Http\Controllers\Attendee\QrCodeController;
 use App\Http\Controllers\Attendee\QuestionAttendeeController as AttendeeQuestionAttendeeController;
+use App\Http\Controllers\Attendee\WaitingListController;
 use App\Http\Controllers\QuestionAttendeeController;
 use Illuminate\Support\Facades\Route;
 
@@ -70,11 +76,21 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::get('profile-edit', [ProfileController::class, 'edit'])->name('attendee.profile.edit');
 
         Route::get('dashboard', [EventController::class, 'getEventDetailDashboard'])->name('attendee.event.detail.dashboard');
+        Route::get('calendar/download/{eventApp}', [EventCalendarController::class, 'downloadIcs'])->name('calendar.download');
         Route::get('agenda', [EventController::class, 'getEventDetailAgenda'])->name('attendee.event.detail.agenda');
         Route::get('session/{eventSession}', [EventController::class, 'getEventSessionDetail'])->name('attendee.event.detail.session');
+        Route::get('download/{eventSession}', [EventController::class, 'downloadCertificate'])->name('attendee.session.certificate');
         Route::get('speakers/{eventSpeaker?}', [EventController::class, 'getEventSpeakerDetail'])->name('attendee.event.detail.speakers');
         Route::get('more', [EventController::class, 'getEventDetailMore'])->name('attendee.event.detail.more');
         Route::post('contact-form', [EventController::class, 'submitContectForm'])->name('attendee.event.detail.contact');
+
+        //Event Shop
+        Route::get('products', [EventShopController::class, 'index'])->name('attendee.event.products');
+        Route::post('puchase/product', [EventShopController::class, 'checkout'])->name('attendee.product.purchase');
+        Route::post('product/update/{paymentId}', [EventShopController::class, 'updateOrder'])->name('attendee.product.update');
+        Route::get('product/checkout/{data}', [EventShopController::class, 'checkoutPage'])->name('attendee.product.checkout');
+        Route::get('success/checkout', [EventShopController::class, 'paymentSuccess'])->name('attendee.product.checkout.success');
+        Route::get('cancel/checkout', [EventShopController::class, 'paymentCancel'])->name('attendee.product.checkout.cancel');
 
         //QR Routes
         Route::get('/qr-code/{eventApp}', [QrCodeController::class, 'getQrCode'])->name('attendee.qr-code.get');
@@ -84,6 +100,13 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::get('view-tickets', [PaymentController::class, 'viewTickets'])->name('attendee.tickets.get');
         Route::get('purchased-tickets', [PaymentController::class, 'attendeepurchasedTickets'])->name('attendee.tickets.purchased');
         Route::post('submit-ticket-emails', [PaymentController::class, 'submitTicketTransfer'])->name('attendee.tickets.transfer');
+
+        // Cancel Ticket
+        Route::post('cancel-ticket/{id}', [PaymentController::class, 'cancelTicket'])->name('attendee.tickets.cancel');
+
+        // waitList Attendee
+        Route::post('waitlist-ticket', [WaitingListController::class, 'store'])->name('attendee.waitlist.post');
+        Route::delete('waitlist-ticket', [WaitingListController::class, 'destroy'])->name('attendee.delete.waitlist');
 
         //Refund of Tickets
         Route::get('refund-tickets', [RefundPaymentController::class, 'refundAttendeeTicket'])->name('attendee.tickets.refund');
@@ -126,10 +149,19 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
 
         // Chat
         Route::get('chat', [ChatController::class, 'index'])->name('attendee.event.chat');
-        Route::get('get-chat', [ChatController::class, 'getMessages'])->name('attendee.event.get-messages');
+        Route::get('get-chat/{id}', [ChatController::class, 'getMessages'])->name('attendee.event.get-messages');
+        Route::get('private-chat/{id}', [ChatController::class, 'getOneToOneChat']);
+        Route::get('group-chat/{id}', [ChatController::class, 'getGroupChat']);
+        Route::post('chat/mark-as-read/{id}', [ChatController::class, 'markAsRead']);
         Route::post('send-message', [ChatController::class, 'store']);
+        Route::post('group-join/{id}', [ChatController::class, 'join'])->name('attendee.join.group');
+        // Event Staff
+        Route::get('staff', [EventStaffController::class, 'index'])->name('attendee.event.staff');
+        Route::post('initiate-chat', [EventStaffController::class, 'initiateChat'])->name('attendee.event.chat-initate');
         // Friends system
         Route::resource('friend', FriendRequestController::class);
+        Route::post('accept', [FriendRequestController::class, 'AcceptRequest'])->name('friend.accept');
+        Route::post('unfollow', [FriendRequestController::class, 'remove'])->name('friend.unfollow');
 
         //Prayer Request
         Route::get('/prayer-requests', [PrayerRequestController::class, 'index'])->name('attendee.prayer');
@@ -137,6 +169,8 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::put('/prayer-requests/{id}', [PrayerRequestController::class, 'update'])->name('attendee.prayer.update');
         Route::delete('/prayer-requests/{id}', [PrayerRequestController::class, 'destroy'])->name('attendee.prayer.destroy');
         Route::post('/prayer-request/view/{id}', [PrayerRequestController::class, 'view'])->name('attendee.prayer.view');
+
+        Route::get('/eventcalendar', [EventCalendarController::class, 'index'])->name('event.calendar');
     });
 
     Route::put('/attendee-profile-update/{attendee}', [ProfileController::class, 'update'])->name('attendee.profile.update');
@@ -165,6 +199,18 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
     //fav session
     Route::get('/favsession/{sessionid}', [EventController::class, 'favsession'])->name('fav.sessions');
     Route::get('/allfav', [EventController::class, 'allfavouriteSession'])->name('all.fav.sessions');
+
+    Route::get('/streams/index', [LiveStreamController::class, 'index'])->name('stream.index');
+    Route::get('/join/stream/{id}', [LiveStreamController::class, 'joinLiveStreams'])->name('join.live.streams');
+
+    // List booths
+    Route::get('booths', [EventBoothController::class, 'index'])->name('attendee.event.booths');
+    Route::get('booths/checkout/{booth}', [EventBoothController::class, 'checkoutPage'])->name('attendee.booth.checkout');
+    // Frontend posts here after Stripe confirms payment (like product.update)
+
+    Route::post('booths/update/{booth}', [EventBoothController::class, 'updateBooth'])->name('attendee.booth.update');
+    Route::get('/boothss/checkouts/success', [EventBoothController::class, 'successView'])->name('attendee.booth.checkout.success');
+    Route::get('boothss/checkouts/cancel',  [EventBoothController::class, 'paymentCancel'])->name('attendee.booth.checkout.cancel');
 });
 
 // Event questionnaire Form For Web

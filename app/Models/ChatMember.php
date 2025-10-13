@@ -12,6 +12,9 @@ class ChatMember extends Model
 
     protected $fillable = [
         'event_id',
+        'group_id',
+        'user_id',
+        'user_type',
         'participant_id',
         'participant_type',
         'unread_count'
@@ -25,6 +28,15 @@ class ChatMember extends Model
     public function participant(): MorphTo
     {
         return $this->morphTo(); // can be User or Attendee
+    }
+    public function user(): MorphTo
+    {
+        return $this->morphTo(); // can be User or Attendee
+    }
+    
+    public function group()
+    {
+        return $this->belongsTo(ChatGroup::class, 'group_id');
     }
 
     public function scopeCurrentEvent($query)

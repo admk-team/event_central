@@ -1,8 +1,12 @@
 <?php
 
 use App\Http\Controllers\Api\v1\Attendee\BadgeAchievementController;
+use App\Http\Controllers\Api\v1\Attendee\ChatController;
+use App\Http\Controllers\Api\v1\Attendee\EventBoothController;
+use App\Http\Controllers\Api\v1\Organizer\ChatController as OrganizerChatController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Broadcast;
 use App\Http\Controllers\Api\v1\AuthController;
 use App\Http\Controllers\Api\v1\Attendee\EventPostController;
 use App\Http\Controllers\Api\v1\Organizer\EventController;
@@ -11,12 +15,16 @@ use App\Http\Controllers\Api\v1\Attendee\ProfileController;
 use App\Http\Controllers\Api\v1\Attendee\RegisterController;
 use App\Http\Controllers\Api\v1\Organizer\EventSessionController;
 use App\Http\Controllers\Api\v1\Attendee\EventController as AttendeeEventController;
+use App\Http\Controllers\Api\v1\Attendee\EventShopController;
+use App\Http\Controllers\Api\v1\Attendee\EventStaffController;
+use App\Http\Controllers\Api\v1\Attendee\FriendRequestController;
 use App\Http\Controllers\Api\v1\Attendee\PrayerRequestController as AttendeePrayerRequestController;
 use App\Http\Controllers\Api\v1\Attendee\QuestionAttendeeController as AttendeeQuestionAttendeeController;
 use App\Http\Controllers\Api\v1\Organizer\AddonController;
 use App\Http\Controllers\Api\v1\Organizer\AssignTicketApiController;
 use App\Http\Controllers\Api\v1\Organizer\QAController;
 use App\Http\Controllers\Api\v1\Organizer\AttendeeController;
+use App\Http\Controllers\Api\v1\Organizer\CustomBadgeController;
 use App\Http\Controllers\Api\v1\Organizer\EmailTemplateController;
 use App\Http\Controllers\Api\v1\Organizer\TicketController;
 use App\Http\Controllers\Api\v1\Organizer\EventPostsController;
@@ -24,6 +32,10 @@ use App\Http\Controllers\Api\v1\Organizer\PasswordController;
 use App\Http\Controllers\Api\v1\Organizer\PaymentController as OrganizerPaymentController;
 use App\Http\Controllers\Api\v1\Organizer\PrayerRequestController;
 use App\Http\Controllers\Api\v1\Organizer\ProfileController as OrganizerProfileController;
+use App\Http\Controllers\Api\v1\Attendee\LiveStreamController;
+use App\Http\Controllers\Api\v1\Attendee\NotificationController;
+use App\Http\Controllers\Api\v1\Organizer\EventShop\OrdersController;
+use App\Http\Controllers\Api\v1\Organizer\EventShop\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,7 +52,11 @@ Route::prefix('user')->group(function () {
 
     Route::post('/login', [AuthController::class, 'login'])->defaults('type', 'user');
     Route::post('email-template-update/{EmailTemplate}', [EmailTemplateController::class, 'update'])->name('email.template.update');
+    Route::post('badge-template-update/{EmailTemplate}', [CustomBadgeController::class, 'update'])->name('badge.template.update');
     Route::middleware(['auth:sanctum', 'ability:role:user'])->group(function () {
+        Route::post('/broadcasting/auth', function (Request $request) {
+            return Broadcast::auth($request);
+        });
         Route::delete('delete/{user}', [AuthController::class, 'delete'])->name('user.delete')->defaults('type', 'user');
         Route::get('/me', function (Request $request) {
             return $request->user();
@@ -91,6 +107,7 @@ Route::prefix('user')->group(function () {
         Route::get('events/{event}/attendees/{attendee}', [AttendeeController::class, 'show']);
         Route::put('events/{event}/attendees/{attendee}', [AttendeeController::class, 'update']);
         Route::get('purchased-tickets/attendees/{attendee}', [AttendeeController::class, 'attendeeTickets']);
+        Route::post('attendee/chat-initiate/{attendee}', [AttendeeController::class, 'initiateChat']);
 
         // Event Tickets
         Route::get('events/{event}/tickets', [TicketController::class, 'index']);
@@ -119,10 +136,29 @@ Route::prefix('user')->group(function () {
         // Payments
         Route::get('events/{event}/payments', [OrganizerPaymentController::class, 'index']);
         Route::get('/events/{event}/payments/search', [OrganizerPaymentController::class, 'search']);
-        //prayer request 
+        //prayer request
         Route::get('events/organizer/prayer-requests/{event_id}', [PrayerRequestController::class, 'index']);
         Route::put('events/organizer/prayer-requests/update/{id}', [PrayerRequestController::class, 'update']);
         Route::delete('events/organizer/prayer-requests/delete/{id}', [PrayerRequestController::class, 'destroy']);
+
+        // chats (private + group)
+        Route::get('/chat/{event}', [OrganizerChatController::class, 'index']);
+        Route::get('/chat/messages/{event}', [OrganizerChatController::class, 'getMessages']);
+        Route::get('/chat/one-to-one/{participant_id}/{event}', [OrganizerChatController::class, 'getOneToOneChat']);
+        Route::get('/group-chat/{id}/{event}', [OrganizerChatController::class, 'getGroupChat']);
+        Route::post('/chat/send/{event}', [OrganizerChatController::class, 'store']);
+        Route::post('/chat/mark-as-read/{chatWithUserId}/{event}', [OrganizerChatController::class, 'markAsRead']);
+        Route::post('/create/chat-room/{event}', [OrganizerChatController::class, 'createRoom']);
+        Route::get('/group-join/{id}/{event}', [OrganizerChatController::class, 'join']);
+        Route::delete('/group-delete/{id}/{event}', [OrganizerChatController::class, 'destroy']);
+        // Event Store
+        Route::get('/products/{event}', [ProductController::class, 'index']);
+        Route::post('/products/{event}', [ProductController::class, 'store']);
+        Route::post('/products/{product}/{event}', [ProductController::class, 'update']);
+        Route::delete('/products/{product}', [ProductController::class, 'destroy']);
+        // Event Product Orders
+        Route::get('/orders/{event}', [OrdersController::class, 'index']);
+        Route::delete('/orders/{order}', [OrdersController::class, 'destroy']);
     });
 });
 
@@ -135,7 +171,6 @@ Route::prefix('attendee')->group(function () {
 
     Route::get('event/{eventApp}', [AttendeeEventController::class, 'getEventDetailDashboard']);
     Route::get('event/{eventApp}/session', [AttendeeEventController::class, 'getEventDetailAgenda']);
-    Route::get('event/{eventApp}/session/{eventSession}', [AttendeeEventController::class, 'eventsessions']);
     Route::get('event/ticket/{eventApp}', [AttendeeEventController::class, 'ticket']);
     Route::get('event/speaker/{eventApp}', [AttendeeEventController::class, 'speaker']);
     Route::get('event/contact/{eventApp}', [AttendeeEventController::class, 'contact']);
@@ -145,6 +180,11 @@ Route::prefix('attendee')->group(function () {
 
 
     Route::middleware(['auth:sanctum', 'ability:role:attendee'])->group(function () {
+        Route::get('event/{eventApp}/session/{eventSession}', [AttendeeEventController::class, 'eventsessions']);
+
+        Route::post('/broadcasting/auth', function (Request $request) {
+            return Broadcast::auth($request);
+        });
 
         Route::get('/me', function (Request $request) {
             return $request->user();
@@ -196,6 +236,7 @@ Route::prefix('attendee')->group(function () {
         Route::get('/session/{eventSession}/ratings', [AttendeeEventController::class, 'getSessionRatings'])
             ->name('attendee.session.ratings');
         Route::post('/attendee-save-rating/{eventSession}', [AttendeeEventController::class, 'saveRating'])->name('attendee.save.rating');
+        Route::get('download/{eventSession}', [AttendeeEventController::class, 'downloadCertificate']);
 
         //fav session
         Route::get('/favsession/{sessionid}', [AttendeeEventController::class, 'favsession']);
@@ -208,5 +249,39 @@ Route::prefix('attendee')->group(function () {
         Route::put('/prayer-requests/{id}', [AttendeePrayerRequestController::class, 'update']);
         Route::delete('/prayer-requests/{id}', [AttendeePrayerRequestController::class, 'destroy']);
         Route::post('/prayer-request/view/{id}', [AttendeePrayerRequestController::class, 'view']);
+
+        Route::get('/live/stream', [LiveStreamController::class, 'index']);
+        Route::get('/join/stream/{id}', [LiveStreamController::class, 'joinLiveStreams']);
+
+        // chats (private + group)
+        Route::get('/chat/{event}', [ChatController::class, 'index']);
+        Route::get('/chat/messages/{event}', [ChatController::class, 'getMessages']);
+        Route::get('/chat/one-to-one/{participant_id}/{event}', [ChatController::class, 'getOneToOneChat']);
+        Route::get('/group-chat/{id}/{event}', [ChatController::class, 'getGroupChat']);
+        Route::post('/chat/send/{event}', [ChatController::class, 'store']);
+        Route::post('/chat/mark-as-read/{chatWithUserId}/{event}', [ChatController::class, 'markAsRead']);
+        Route::post('/chat/group-join/{id}', [ChatController::class, 'join'])->name('attendee.join.group');
+        // Friend Request
+        Route::get('/friends', [FriendRequestController::class, 'index']);
+        Route::post('/friends/send', [FriendRequestController::class, 'store']);
+        Route::post('/friends/accept', [FriendRequestController::class, 'accept']);
+        Route::post('/friends/remove', [FriendRequestController::class, 'remove']);
+        // Event Staff
+        Route::get('staff', [EventStaffController::class, 'index']);
+        Route::post('initiate-chat', [EventStaffController::class, 'initiateChat']);
+        //Event Shop
+        Route::get('products', [EventShopController::class, 'index']);
+        Route::post('puchase/product', [EventShopController::class, 'checkout']);
+        Route::post('product/update/{paymentId}', [EventShopController::class, 'updateOrder']);
+        // Route::get('success/checkout', [EventShopController::class, 'paymentSuccess']);
+        // Route::get('cancel/checkout', [EventShopController::class, 'paymentCancel']);
+        //Event booth Functionality
+        Route::get('booths', [EventBoothController::class, 'index']);
+        Route::get('booths/checkout/{booth}', [EventBoothController::class, 'checkoutPage']);
+        Route::post('booths/update/{booth}', [EventBoothController::class, 'updateBooth']);
+
+        //save fcm_token for notification
+        Route::post('/save-fcm-token', [NotificationController::class, 'saveFcmToken']);
     });
+    Route::post('/test-fcm', [NotificationController::class, 'testFcm']);
 });

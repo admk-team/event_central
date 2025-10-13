@@ -4,6 +4,7 @@ import Layout from "../../../Layouts/Attendee";
 import { Card, Col, Container, Row, Modal, Button } from "react-bootstrap";
 import moment from "moment";
 import "../../../css/badge.css";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 interface BadgeDetail {
   achieved_points?: number;
@@ -32,6 +33,7 @@ interface Props {
 const Index = ({ data }: Props) => {
   const [showModal, setShowModal] = useState(false);
   const [copied, setCopied] = useState(false);
+  const { t } = useLaravelReactI18n();
 
   const copyReferralLink = () => {
     navigator.clipboard.writeText(data.referral_link).then(() => {
@@ -44,28 +46,28 @@ const Index = ({ data }: Props) => {
 
   return (
     <>
-      <Head title="Badges" />
+      <Head title={t("Badges")} />
       <section className="section-bg py-5 mt-5 mb-5">
         <Container>
-          <h1 className="heading text-center mb-5">🎖️ My Achievements</h1>
+          <h1 className="heading text-center mb-5">🎖️ {t("My Achievements")}</h1>
 
           <Row className="gap-4 mb-5 justify-content-center">
             {[
               {
-                title: "Total Points",
+                title: t("Total Points"),
                 value: data.total_points,
                 icon: "bx bxs-star",
                 gradient: "linear-gradient(135deg, #ff6a00, #ee0979)",
               },
               {
-                title: `${currentMonth} Points`,
+                title: `${currentMonth} ${t("Points")}`,
                 value: data.current_month_points,
                 icon: "bx bxs-trophy",
                 gradient: "linear-gradient(135deg, #1dd1a1, #10ac84)",
               },
               {
-                title: "Referral Link",
-                value: "Share Now",
+                title: t("Referral Link"),
+                value: t("Share Now"),
                 icon: "bx bx-link",
                 gradient: "linear-gradient(135deg, #00b7eb, #0052cc)",
                 onClick: () => setShowModal(true),
@@ -99,12 +101,12 @@ const Index = ({ data }: Props) => {
 
           <Modal centered show={showModal} onHide={() => setShowModal(false)}>
             <Modal.Header closeButton>
-              <Modal.Title>Share Your Referral Link</Modal.Title>
+              <Modal.Title>{t("Share Your Referral Link")}</Modal.Title>
             </Modal.Header>
             <Modal.Body className="text-center">
               <p className="referral-box">{data.referral_link}</p>
               <Button className={`btn-copy ${copied ? "copied" : ""}`} onClick={copyReferralLink}>
-                {copied ? "Copied!" : "Copy Link"}
+                {copied ? t("Copied!") : t("Copy Link")}
               </Button>
             </Modal.Body>
           </Modal>
@@ -139,29 +141,29 @@ const Index = ({ data }: Props) => {
                         </svg>
                         <img
                           src={`/storage/${badge.icon}`}
-                          alt="Badge"
+                          alt={t("Badge")}
                           className="badge-image"
                         />
                       </div>
                       <div className="badge-details text-center">
                         <h5 className="fw-bold">{badge.title}</h5>
                         <div className="points-breakdown">
-                          <p><strong>Points:</strong> {badge.points}</p>
-                          <p><strong>Achieved:</strong> {achieved}</p>
-                          <p><strong>Remaining:</strong> {remaining}</p>
-                          <p><strong>Milestone:</strong> {badge.milestone}</p>
+                          <p><strong>{t("Points")}:</strong> {badge.points}</p>
+                          <p><strong>{t("Achieved")}:</strong> {achieved}</p>
+                          <p><strong>{t("Remaining")}:</strong> {remaining}</p>
+                          <p><strong>{t("Milestone")}:</strong> {badge.milestone}</p>
                         </div>
                         <div className="badge-status mt-2">
                           {isCompleted ? (
                             <>
-                              <span className="status complete">🏆 Achieved</span>
+                              <span className="status complete">🏆 {t("Achieved")}</span>
                               <br />
                               <small className="text-muted">
                                 {moment(badge.details?.completed_at).format("DD MMM YYYY")}
                               </small>
                             </>
                           ) : (
-                            <span className="status in-progress">🔥 In Progress</span>
+                            <span className="status in-progress">🔥 {t("In Progress")}</span>
                           )}
                         </div>
                       </div>
@@ -170,7 +172,7 @@ const Index = ({ data }: Props) => {
                 );
               })
             ) : (
-              <div className="no-badges text-center mt-5">No badges available yet. Come back soon!</div>
+              <div className="no-badges text-center mt-5">{t("No badges available yet. Come back soon!")}</div>
             )}
           </Row>
         </Container>

@@ -7,12 +7,14 @@ use App\Models\EventApp;
 use App\Models\EventPartner;
 use App\Models\EventPartnerCategory;
 use App\Models\EventPlatform;
+use App\Models\EventProduct;
 use App\Models\Page;
 use App\Models\ReferralLink;
 use App\Models\Track;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Route;
 
 class WebsiteController extends Controller
 {
@@ -20,7 +22,11 @@ class WebsiteController extends Controller
     {
         $event = EventApp::where('uuid', $uuid)->first();
 
-        if (! $event || !eventSettings($event->id)->getValue('website_status', false)) {
+        // if (! $event || !eventSettings($event->id)->getValue('website_status', false)) {
+        //     abort(404);
+        // }
+        $isPreviewParam = $request->query('preview') === 'true';
+        if (! $event || (!eventSettings($event->id)->getValue('website_status', false) && ! $isPreviewParam)) {
             abort(404);
         }
 
@@ -46,128 +52,121 @@ class WebsiteController extends Controller
             }
         }
         $exhibitors = EventPartner::where('event_app_id', $event->id)->where('type', 'exhibitor')->orderBy('company_name', 'asc')->get();
-        return view('event-website.index', compact('event', 'colors', 'partnerCategories', 'exhibitors'));
+        $privateRegister = eventSettings($event->id)->getValue('private_register', false);
+        return view('event-website.index', compact('event', 'colors', 'partnerCategories', 'exhibitors', 'privateRegister'));
     }
 
-    public function schedule($uuid)
+    public function schedule(Request $request, $uuid)
     {
         $event = EventApp::where('uuid', $uuid)->first();
 
-        if (! $event || !eventSettings($event->id)->getValue('website_status', false)) {
+        // if (! $event || !eventSettings($event->id)->getValue('website_status', false)) {
+        //     abort(404);
+        // }
+        $isPreviewParam = $request->query('preview') === 'true';
+        if (! $event || (!eventSettings($event->id)->getValue('website_status', false) && ! $isPreviewParam)) {
             abort(404);
         }
-
         $colors = eventSettings($event->id)->getValue('website_colors', config('event_website.colors'));
         $partnerCategories = EventPartnerCategory::where('event_app_id', $event->id)->with(['partners'])->get();
         $tracks = Track::where('event_app_id', $event->id)->get();
         $enableTracks = eventSettings($event->id)->getValue('enable_tracks', false);
         $eventPlatforms = EventPlatform::where('event_app_id', $event->id)->get();
+        $privateRegister = eventSettings($event->id)->getValue('private_register', false);
 
-        return view('event-website.schedule', compact('event', 'colors', 'partnerCategories', 'tracks', 'enableTracks', 'eventPlatforms'));
+        return view('event-website.schedule', compact('event', 'colors', 'partnerCategories', 'tracks', 'enableTracks', 'eventPlatforms', 'privateRegister'));
     }
 
-    public function speakers($uuid)
+    public function speakers(Request $request, $uuid)
     {
         $event = EventApp::where('uuid', $uuid)->first();
 
-        if (! $event || !eventSettings($event->id)->getValue('website_status', false)) {
+        // if (! $event || !eventSettings($event->id)->getValue('website_status', false)) {
+        //     abort(404);
+        // }
+        $isPreviewParam = $request->query('preview') === 'true';
+        if (! $event || (!eventSettings($event->id)->getValue('website_status', false) && ! $isPreviewParam)) {
             abort(404);
         }
         // Sort speakers alphabetically by name
         $event->event_speakers = $event->event_speakers->sortBy('name')->values();
         $colors = eventSettings($event->id)->getValue('website_colors', config('event_website.colors'));
-        return view('event-website.speakers', compact('event', 'colors'));
+        $privateRegister = eventSettings($event->id)->getValue('private_register', false);
+
+        return view('event-website.speakers', compact('event', 'colors', 'privateRegister'));
     }
 
-    public function sponsors($uuid)
+    public function sponsors(Request $request, $uuid)
     {
-        $event = EventApp::where('uuid', $uuid)->first();
-        if (! $event || !eventSettings($event->id)->getValue('website_status', false)) {
-            abort(404);
-        }
+        $data = $this->getEventData($request, $uuid);
+        $partnerCategories = EventPartnerCategory::where('event_app_id', $data['event']->id)->with(['partners'])->get();
+        $exhibitors = EventPartner::where('event_app_id', $data['event']->id)->where('type', 'sponsor')->orderBy('company_name', 'asc')->get();
 
-        $colors = eventSettings($event->id)->getValue('website_colors', config('event_website.colors'));
-        $partnerCategories = EventPartnerCategory::where('event_app_id', $event->id)->with(['partners'])->get();
-        $exhibitors = EventPartner::where('event_app_id', $event->id)->where('type', 'sponsor')->orderBy('company_name', 'asc')->get();
-
-        return view('event-website.sponsors', compact('event', 'colors', 'partnerCategories', 'exhibitors'));
+        return view('event-website.sponsors', array_merge($data, compact('partnerCategories', 'exhibitors')));
     }
 
-    public function sponsorsSingle($uuid, $id)
+    public function sponsorsSingle(Request $request, $uuid, $id)
     {
-        $event = EventApp::where('uuid', $uuid)->first();
-        if (! $event || !eventSettings($event->id)->getValue('website_status', false)) {
-            abort(404);
-        }
-
-        $colors = eventSettings($event->id)->getValue('website_colors', config('event_website.colors'));
-        $partnerCategories = EventPartnerCategory::where('id', $event->id)
-            // ->whereHas('partners', function ($query) use ($id) {
-            //     $query->where('id', $id);
-            // })
-            ->with(['partners' => function ($query) use ($id) {
-                $query->where('id', $id);
-            }])
-            ->get();
-
+        $data = $this->getEventData($request, $uuid);
+        $partnerCategories = EventPartnerCategory::where('id', $data['event']->id)->with(['partners' => function ($query) use ($id) {
+            $query->where('id', $id);
+        }])->get();
         // dd($partnerCategories);
         $partner = EventPartner::where('id', $id)->first();
-        return view('event-website.sponsor-single', compact('event', 'colors', 'partnerCategories', 'partner'));
+        return view('event-website.sponsor-single', array_merge($data, compact('partnerCategories', 'partner')));
     }
 
-    public function exhibitors($uuid)
+    public function exhibitors(Request $request, $uuid)
+    {
+        $data = $this->getEventData($request, $uuid);
+        $exhibitors = EventPartner::where('event_app_id', $data['event']->id)->where('type', 'exhibitor')->orderBy('company_name', 'asc')->get();
+        return view('event-website.exhibitors', array_merge($data, compact('exhibitors')));
+    }
+
+    public function tickets(Request $request, $uuid)
+    {
+        $data = $this->getEventData($request, $uuid);
+        $partnerCategories = EventPartnerCategory::where('event_app_id', $data['event']->id)->with(['partners'])->get();
+        // return view('event-website.tickets', compact('event', 'colors', 'partnerCategories'));
+        return view('event-website.tickets', array_merge($data, compact('partnerCategories')));
+    }
+
+    public function products(Request $request, $uuid)
     {
         $event = EventApp::where('uuid', $uuid)->first();
-        if (! $event || !eventSettings($event->id)->getValue('website_status', false)) {
+        $isPreviewParam = $request->query('preview') === 'true';
+        if (! $event || (!eventSettings($event->id)->getValue('website_status', false) && ! $isPreviewParam)) {
             abort(404);
         }
-
         $colors = eventSettings($event->id)->getValue('website_colors', config('event_website.colors'));
-        $exhibitors = EventPartner::where('event_app_id', $event->id)->where('type', 'exhibitor')->orderBy('company_name', 'asc')->get();
-
-        return view('event-website.exhibitors', compact('event', 'colors', 'exhibitors'));
+        $event_products = EventProduct::where('event_app_id', $event->id)->get();
+        return view('event-website.products', compact('event', 'colors', 'event_products'));
     }
 
-    public function tickets($uuid)
+    public function privacypolicy(Request $request, $uuid)
+    {
+        $data = $this->getEventData($request, $uuid);
+        return view('event-website.privacy', $data);
+    }
+
+    public function contactus(Request $request, $uuid)
+    {
+        $data = $this->getEventData($request, $uuid);
+        return view('event-website.contactus', $data);
+    }
+    private function getEventData($request, $uuid)
     {
         $event = EventApp::where('uuid', $uuid)->first();
-
-        if (! $event || !eventSettings($event->id)->getValue('website_status', false)) {
+        $isPreviewParam = $request->query('preview') === 'true';
+        if (! $event || (!eventSettings($event->id)->getValue('website_status', false) && ! $isPreviewParam)) {
             abort(404);
         }
-
-        $colors = eventSettings($event->id)->getValue('website_colors', config('event_website.colors'));
-        $partnerCategories = EventPartnerCategory::where('event_app_id', $event->id)->with(['partners'])->get();
-
-        return view('event-website.tickets', compact('event', 'colors', 'partnerCategories'));
+        return [
+            'event' => $event,
+            'colors' => eventSettings($event->id)->getValue('website_colors', config('event_website.colors')),
+            'privateRegister' => eventSettings($event->id)->getValue('private_register', false),
+        ];
     }
-
-    public function privacypolicy($uuid)
-    {
-        $event = EventApp::where('uuid', $uuid)->first();
-
-        if (! $event || !eventSettings($event->id)->getValue('website_status', false)) {
-            abort(404);
-        }
-
-        $colors = eventSettings($event->id)->getValue('website_colors', config('event_website.colors'));
-
-        return view('event-website.privacy', compact('event', 'colors'));
-    }
-
-    public function contactus($uuid)
-    {
-        $event = EventApp::where('uuid', $uuid)->first();
-
-        if (! $event || !eventSettings($event->id)->getValue('website_status', false)) {
-            abort(404);
-        }
-
-        $colors = eventSettings($event->id)->getValue('website_colors', config('event_website.colors'));
-
-        return view('event-website.contactus', compact('event', 'colors'));
-    }
-
     // public function index($uuid)
     // {
     //     $event = EventApp::where('uuid', $uuid)->first();

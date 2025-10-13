@@ -10,17 +10,23 @@ import HasPermission from '../../../../../Components/HasPermission';
 import Features from './Components/Features';
 import Images from './Components/Images';
 import AddtoGoogleCalendar from './Components/AddtoGoogleCalendar';
+import RegisterFeatures from './Components/RegisterFeatures';
+import ReminderDays from './Components/ReminderDays';
+import AfterEvent from './Components/AfterEvent';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 function Event() {
+    const { t } = useLaravelReactI18n();
+
     return (
         <React.Fragment>
-            <Head title='Event Settings' />
+            <Head title={t('Event Settings')} />
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb2
-                        title="Event"
+                        title={t("Event")}
                         items={[
-                            { title: "Settings", link: route('organizer.events.settings.event.index') }
+                            { title: t("Settings"), link: route('organizer.events.settings.event.index') }
                         ]}
                     />
                     <Row>
@@ -45,6 +51,21 @@ function Event() {
                                 <Col xs={12}>
                                     <HasPermission permission="edit_events">
                                         <Features />
+                                    </HasPermission>
+                                </Col>
+                                <Col xs={12}>
+                                    <HasPermission permission="edit_events">
+                                        <RegisterFeatures />
+                                    </HasPermission>
+                                </Col>
+                                <Col xs={12}>
+                                    <HasPermission permission="edit_events">
+                                        <ReminderDays />
+                                    </HasPermission>
+                                </Col>
+                                <Col xs={12}>
+                                    <HasPermission permission="edit_events">
+                                        <AfterEvent />
                                     </HasPermission>
                                 </Col>
                                 <Col xs={12}>

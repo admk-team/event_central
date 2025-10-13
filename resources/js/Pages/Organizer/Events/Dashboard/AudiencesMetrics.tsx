@@ -3,7 +3,7 @@ import { Card, Col, Row } from 'react-bootstrap';
 import CountUp from 'react-countup';
 import { AudiencesCharts ,PieChart} from './DashboardAnalyticsCharts'; // Adjust path
 import { Link } from '@inertiajs/react';
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 // Define the structure of each ticket data item
 interface TicketData {
     ticketName: string;
@@ -24,7 +24,8 @@ interface AudiencesMetricsProps {
     ticketsMetrics: TicketsMetrics;
 }
 
-const AudiencesMetrics = ({ ticketsMetrics }: AudiencesMetricsProps) => {
+const AudiencesMetrics = ({ ticketsMetrics, getCurrency  }: AudiencesMetricsProps & {getCurrency: string}) => {
+     const { t } = useLaravelReactI18n();
     const [chartData, setChartData] = useState<{ name: string; data: number[] }[]>([]);
 
     console.log(ticketsMetrics);
@@ -48,7 +49,7 @@ const AudiencesMetrics = ({ ticketsMetrics }: AudiencesMetricsProps) => {
                 <Link title='View ticket report' href={route('organizer.events.report.ticket.index')} className="link-primary cursor-pointer">
                     <Card>
                         <Card.Header className="border-0 align-items-center d-flex">
-                            <h4 className="card-title mb-0 flex-grow-1">Tickets Metrics</h4>
+                            <h4 className="card-title mb-0 flex-grow-1">{t("Tickets Metrics")}</h4>
                         </Card.Header>
                         <Card.Header className="p-0 border-0 bg-light-subtle">
                             <Row className="g-0 text-center">
@@ -57,7 +58,7 @@ const AudiencesMetrics = ({ ticketsMetrics }: AudiencesMetricsProps) => {
                                         <h5 className="mb-1">
                                             <CountUp start={0} end={ticketsMetrics.totalTickets} duration={3} />
                                         </h5>
-                                        <p className="text-muted mb-0">Total Tickets</p>
+                                        <p className="text-muted mb-0">{t("Total Tickets")}</p>
                                     </div>
                                 </Col>
                                 <Col xs={6} sm={4}>
@@ -65,7 +66,7 @@ const AudiencesMetrics = ({ ticketsMetrics }: AudiencesMetricsProps) => {
                                         <h5 className="mb-1">
                                             <CountUp start={0} end={ticketsMetrics.totalTicketsSold} duration={3} />
                                         </h5>
-                                        <p className="text-muted mb-0">Total Tickets Sold</p>
+                                        <p className="text-muted mb-0">{t("Total Tickets Sold")}</p>
                                     </div>
                                 </Col>
                                 <Col xs={6} sm={4}>
@@ -76,11 +77,10 @@ const AudiencesMetrics = ({ ticketsMetrics }: AudiencesMetricsProps) => {
                                                 end={ticketsMetrics.totalRevenue}
                                                 duration={3}
                                                 separator=","
-                                                prefix="$"
+                                                prefix={getCurrency}
                                             />
                                         </h5>
-                                        <p className="text-muted mb-0">Total Revenue</p>
-                                    </div>
+                                        <p className="text-muted mb-0">{t("Total Revenue")}"</p></div>
                                 </Col>
                             </Row>
                         </Card.Header>

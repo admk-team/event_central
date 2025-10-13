@@ -11,18 +11,22 @@ import WebsiteHeaders from './Components/WebsiteHeaders';
 import WebsiteFooters from './Components/WebsiteFooters';
 import Colors from './Components/Colors';
 import HasPermission from '../../../../../Components/HasPermission';
+import WebsiteThemeDesgin from './Components/WebsiteThemeDesgin';
+import { useLaravelReactI18n } from 'laravel-react-i18n';
 
 function Website() {
+    const { t } = useLaravelReactI18n();
+    const previewUrl = usePage().props.previewUrl as string;
 
     return (
         <React.Fragment>
-            <Head title='Website Settings' />
+            <Head title={t('Website Settings')} />
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb2
-                        title="Website"
+                        title={t("Website")}
                         items={[
-                            { title: "Settings", link: route('organizer.events.settings.event.index') }
+                            { title: t("Settings"), link: route('organizer.events.settings.event.index') }
                         ]}
                     />
                     <Row>
@@ -56,10 +60,13 @@ function Website() {
                                         <WebsiteStatus />
                                     </HasPermission>
                                 </Col>
+                                <Col>
+                                    <WebsiteThemeDesgin />
+                                </Col>
                             </Row>
                         </Col>
                     </Row>
-                    
+
                 </Container>
             </div>
         </React.Fragment>

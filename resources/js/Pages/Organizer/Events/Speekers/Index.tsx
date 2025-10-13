@@ -1,46 +1,44 @@
 import React, { useState } from 'react';
-import { Button, Col, Container, Row, Table } from 'react-bootstrap';
+import { Button, Col, Container, Row } from 'react-bootstrap';
 import { Head, Link, useForm } from '@inertiajs/react';
 import BreadCrumb from '../../../../Components/Common/BreadCrumb';
 import Layout from '../../../../Layouts/Event';
-// import Pagination2 from '../../../Pages/Admin/';
 import DeleteModal from '../../../../Components/Common/DeleteModal';
-import DataTable, { ColumnDef } from '../../../../Components/DataTable';
 import DeleteManyModal from '../../../../Components/Common/DeleteManyModal';
+import DataTable, { ColumnDef } from '../../../../Components/DataTable';
 import HasPermission from '../../../../Components/HasPermission';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 function Index({ speakers }: any) {
-    const [deletespeaker, setDeleteSpeaker] = React.useState<any>(null);
+    const [deletespeaker, setDeleteSpeaker] = useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
 
-    const { get } = useForm()
+    const { get } = useForm();
+    const deleteForm = useForm({ _method: 'DELETE' });
+    const deleteManyForm = useForm<{ _method: string; ids: number[] }>({ _method: 'DELETE', ids: [] });
 
-
-    const deleteForm = useForm({
-        _method: 'DELETE'
-    });
-    const deleteManyForm = useForm<{ _method: string; ids: number[] }>({
-        _method: 'DELETE',
-        ids: [],
-    });
-
+    const { t } = useLaravelReactI18n();
 
     const editAction = (speaker: any) => {
         get(route('organizer.events.speaker.edit', speaker))
     }
+
     const deleteAction = (speaker: any) => {
         setDeleteSpeaker(speaker);
         setShowDeleteConfirmation(true);
     }
+
     const handleDelete = () => {
         deleteForm.post(route('organizer.events.speaker.destroy', deletespeaker.id));
         setShowDeleteConfirmation(false);
     }
+
     const deleteManyAction = (ids: number[]) => {
         deleteManyForm.setData(data => ({ ...data, ids: ids }));
         setShowDeleteManyConfirmation(true);
     }
+
     const handleDeleteMany = () => {
         deleteManyForm.delete(route('organizer.events.speakers.destroy.many'));
         setShowDeleteManyConfirmation(false);
@@ -48,34 +46,38 @@ function Index({ speakers }: any) {
 
     const columns: ColumnDef<typeof speakers.data[0]> = [
         {
-            header: () => 'ID',
+            header: () => t('ID'),
             cell: (speaker) => speaker.id,
             cellClass: "fw-medium"
         },
         {
-            header: () => 'Avatar',
+            header: () => t('Avatar'),
             cell: (speaker) => (
                 <img src={speaker.avatar} alt={speaker.name} width="50" height="50" className="rounded-circle" />
             ),
         },
         {
-            header: () => 'Name',
+            accessorKey: 'name',
+            header: () => t('Name'),
             cell: (speaker) => speaker.name,
+            searchable: true,
         },
         {
-            header: () => 'Company',
+            header: () => t('Company'),
             cell: (speaker) => speaker.company,
         },
         {
-            header: () => 'Position',
+            header: () => t('Position'),
             cell: (speaker) => speaker.position,
         },
         {
-            header: () => 'Action',
+            header: () => t('Action'),
             cell: (speaker) => (
                 <div className="hstack gap-3 fs-15">
                     <HasPermission permission="edit_speakers">
-                        <span className="link-primary cursor-pointer" onClick={() => editAction(speaker)}><i className="ri-edit-fill"></i></span>
+                        <span className="link-primary cursor-pointer" onClick={() => editAction(speaker)}>
+                            <i className="ri-edit-fill"></i>
+                        </span>
                     </HasPermission>
                     <HasPermission permission="delete_speakers">
                         <span className="link-danger cursor-pointer" onClick={() => deleteAction(speaker)}>
@@ -87,52 +89,49 @@ function Index({ speakers }: any) {
         },
     ];
 
-
     return (
         <React.Fragment>
             <Head>
-                <title>Speakers Management | Organizer Dashboard</title>
-                <meta name="description" content="Manage event speakers, edit details, and delete records from the organizer's dashboard." />
-                <meta name="keywords" content="event speakers, speaker management, conference speakers, admin dashboard" />
+                <title>{t("Speakers Management | Organizer Dashboard")}</title>
+                <meta name="description" content={t("Manage event speakers, edit details, and delete records from the organizer's dashboard.")} />
+                <meta name="keywords" content={t("event speakers, speaker management, conference speakers, admin dashboard")} />
                 <meta name="robots" content="index, follow" />
-
-                {/* Open Graph Meta Tags */}
-                <meta property="og:title" content="Speakers Management | Organizer Dashboard" />
-                <meta property="og:description" content="Manage event speakers, edit details, and delete records from the organizer's dashboard." />
+                <meta property="og:title" content={t("Speakers Management | Organizer Dashboard")} />
+                <meta property="og:description" content={t("Manage event speakers, edit details, and delete records from the organizer's dashboard.")} />
                 <meta property="og:type" content="website" />
                 <meta property="og:url" content={route('organizer.events.speaker.index')} />
             </Head>
 
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Speakers" pageTitle="Dashboard" />
+                    <BreadCrumb title={t("Speakers")} pageTitle={t("Dashboard")} />
                     <Row>
                         <Col xs={12}>
                             <HasPermission permission="view_speakers">
                                 <DataTable
                                     data={speakers}
                                     columns={columns}
-                                    title="Speakers"
+                                    title={t("Speakers")}
                                     actions={[
-                                        // Delete multiple
                                         {
                                             render: (dataTable) => (
                                                 <HasPermission permission="delete_speakers">
-                                                    <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>
+                                                    <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}>
+                                                        <i className="ri-delete-bin-5-line"></i> {t("Delete")} ({dataTable.getSelectedRows().length})
+                                                    </Button>
                                                 </HasPermission>
                                             ),
                                             showOnRowSelection: true,
                                         },
-
-                                        // Add new
                                         {
                                             render: (
                                                 <HasPermission permission="create_speakers">
-                                                    <Link href={route('organizer.events.speaker.create')}><Button><i className="ri-add-fill"></i> Add New</Button></Link>
+                                                    <Link href={route('organizer.events.speaker.create')}>
+                                                        <Button><i className="ri-add-fill"></i> {t("Add New")}</Button>
+                                                    </Link>
                                                 </HasPermission>
                                             )
                                         },
-
                                     ]}
                                 />
                             </HasPermission>
@@ -140,16 +139,17 @@ function Index({ speakers }: any) {
                     </Row>
                 </Container>
             </div>
+
             <DeleteModal
                 show={showDeleteConfirmation}
                 onDeleteClick={handleDelete}
-                onCloseClick={() => { setShowDeleteConfirmation(false) }}
+                onCloseClick={() => setShowDeleteConfirmation(false)}
             />
 
             <DeleteManyModal
                 show={showDeleteManyConfirmation}
                 onDeleteClick={handleDeleteMany}
-                onCloseClick={() => { setShowDeleteManyConfirmation(false) }}
+                onCloseClick={() => setShowDeleteManyConfirmation(false)}
             />
         </React.Fragment>
     )

@@ -1,10 +1,11 @@
 import { Head } from "@inertiajs/react"
-import React from "react"
+import React, { useState } from "react"
 import Layout from "../../../Layouts/Attendee"
-import { useState } from "react";
 import { Button, Form } from 'react-bootstrap';
 import { router } from '@inertiajs/react';
 import '../../../css/passes.css';
+import CancelTicketButton from "./Components/CancelTicket";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 interface AttendeePassProps {
     event: {
@@ -22,6 +23,8 @@ interface AttendeePassProps {
 }
 
 const PaymentSuccess = ({ eventApp, attendee, image = [], hasTickets }) => {
+    const { t } = useLaravelReactI18n();
+
     const formatDate = (dateString) => {
         if (!dateString) return "";
         const date = new Date(dateString);
@@ -37,25 +40,29 @@ const PaymentSuccess = ({ eventApp, attendee, image = [], hasTickets }) => {
 
     return (
         <React.Fragment>
-            <Head title="Attendee Pass" />
+            <Head title={t("Attendee Pass")} />
             <div className="passWrapper" style={{ marginTop: "100px" }}>
                 <div className="passes-container mb-4">
                     {!hasTickets ? (
                         <div className="text-center mt-5">
-                            <h4>No tickets purchased yet.</h4>
-                            <p>Please check back later or contact support.</p>
+                            <h4>{t("No tickets purchased yet.")}</h4>
+                            <p>{t("Please check back later or contact support.")}</p>
                         </div>
                     ) : (
                         <>
                             {images.map((img, index) => (
                                 <div key={index} className="pass div-gradient mt-4 mb-4">
                                     <div className="heading-wraper">
-                                        <img
+                                        <img style={{ height: "160px", width: "160px", objectFit: "cover", margin: "0 auto" }}
                                             className="circle"
                                             src={eventApp?.logo_img || "/placeholder.svg?height=80&width=80"}
-                                            alt="event logo"
+                                            alt={t("event logo")}
                                         />
-                                        <p className="event-location">{formatDate(eventApp?.start_date)} {eventApp?.start_date && eventApp?.location_base ? ' | ' : ''} {eventApp?.location_base}</p>
+                                        <p className="event-location">
+                                            {formatDate(eventApp?.start_date)}{" "}
+                                            {eventApp?.start_date && eventApp?.location_base ? " | " : ""}{" "}
+                                            {eventApp?.location_base}
+                                        </p>
                                         <h1 className="attendee-name">{attendee?.name}</h1>
                                         <h3 className="attendee-name">{attendee?.position}</h3>
                                     </div>
@@ -64,7 +71,7 @@ const PaymentSuccess = ({ eventApp, attendee, image = [], hasTickets }) => {
                                         <img
                                             className="qr-code-img"
                                             src={img.qr_code}
-                                            alt={`QR code ${index + 1}`}
+                                            alt={`${t("QR code")} ${index + 1}`}
                                         />
                                     </div>
 
@@ -73,18 +80,17 @@ const PaymentSuccess = ({ eventApp, attendee, image = [], hasTickets }) => {
                                         <p className="attendee-name">{img.ticket_type_name}</p>
                                     </div>
 
-                                    {/* Conditional: Only show input if transfer_check is false */}
                                     {!img.transfer_check && (
                                         <>
                                             <label htmlFor={`email-${index}`} className="form-label-pass">
-                                                Transfer Ticket <span className="text-danger ms-1">*</span>
+                                                {t("Transfer Ticket")} <span className="text-danger ms-1">*</span>
                                             </label>
                                             <input
-                                                className="input-email-qrcode"
+                                                className="input-email-qrcode mb-3"
                                                 id={`email-${img.purchased_id}`}
                                                 type="text"
                                                 name={`email-${img.purchased_id}`}
-                                                placeholder="Enter New Email"
+                                                placeholder={t("Enter New Email")}
                                                 value={emails[img.purchased_id]}
                                                 autoComplete="email"
                                                 onBlur={(e) => {
@@ -93,6 +99,7 @@ const PaymentSuccess = ({ eventApp, attendee, image = [], hasTickets }) => {
                                                     setEmails(newEmails);
                                                 }}
                                             />
+                                            <CancelTicketButton purchased_id={img.purchased_id} />
                                         </>
                                     )}
                                 </div>
@@ -106,7 +113,7 @@ const PaymentSuccess = ({ eventApp, attendee, image = [], hasTickets }) => {
                                         });
                                     }}
                                 >
-                                    Transfer Tickets
+                                    {t("Transfer Tickets")}
                                 </button>
                             )}
                         </>
@@ -114,10 +121,8 @@ const PaymentSuccess = ({ eventApp, attendee, image = [], hasTickets }) => {
                 </div>
             </div>
         </React.Fragment>
-
     )
 }
 
 PaymentSuccess.layout = (page: any) => <Layout children={page} />
 export default PaymentSuccess
-

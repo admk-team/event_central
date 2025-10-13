@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1\Organizer;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\AttendeeResource;
 use App\Models\Attendee;
+use App\Models\ChatMember;
 use App\Models\EventApp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -160,5 +161,48 @@ class AttendeeController extends Controller
             'image' => $image,
             'hasTickets' => true,
         ]);
+    }
+
+    public function initiateChat(Attendee $attendee)
+    {
+        $event = EventApp::find($attendee->event_app_id);
+
+        if (!$event) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No active event found.'
+            ], 400);
+        }
+        if (!$attendee) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No attendee found.'
+            ], 400);
+        }
+
+        $existing = ChatMember::where('event_id', $event->id)
+            ->where('user_id', Auth::user()->id)
+            ->where('participant_id', $attendee->id)
+            ->first();
+
+        if ($existing) {
+            return response()->json([
+                'status' => false,
+                'message' => 'A chat with this attendee already exists.'
+            ], 400);
+        }
+
+        ChatMember::create([
+            'event_id' => $event->id,
+            'user_id' => Auth::user()->id,
+            'user_type' => \App\Models\User::class,
+            'participant_id' => $attendee->id,
+            'participant_type' => \App\Models\Attendee::class,
+        ]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Chat initiated successfully.'
+        ], 200);
     }
 }

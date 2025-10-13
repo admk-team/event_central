@@ -21,6 +21,7 @@ import {
 import axios from "axios";
 import toast from "react-hot-toast";
 import Select, { StylesConfig } from "react-select";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 type AttendeeOption = {
     id: number;
@@ -28,9 +29,10 @@ type AttendeeOption = {
     label: string;
 };
 
-const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, purchasedTickets }: any) => {
+const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, purchasedTickets, getCurrency }: any) => {
 
     // console.log(organizerView, attendees, attendee_id, sessions, purchasedTickets);
+    const { t } = useLaravelReactI18n();
 
     const Layout = organizerView ? EventLayout : AttendeeLayout;
     const foundAttendee = attendees.find(
@@ -247,7 +249,7 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
         e.preventDefault();
 
         if (organizerView && paymentNote.length === 0) {
-            toast.error('Enter Organizer Note to proceed further');
+            toast.error(t('Enter Organizer Note to proceed further'));
             paymentNoteRef.current?.focus();
             return;
         }
@@ -264,7 +266,7 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                         ),
                         {
                             amount: totalAmount,
-                            currency: "usd",
+                            currency: getCurrency.currency,
                         }
                     )
                     .then((response) => {
@@ -313,7 +315,7 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                 axios
                     .post(route("attendee.upgrade.ticket.proceed.checkout", [currentAttendee]), {
                         amount: totalAmount,
-                        currency: "usd",
+                        currency: getCurrency.currency,
                     })
                     .then((response) => {
                         console.log(response);
@@ -396,7 +398,7 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
         setTotalAmount(newV);
         setDiscountCodeApplied(discountCode);
         setDiscountCode("");
-        toast.success("Coupon Code applied successfuly");
+        toast.success(t("Coupon Code applied successfuly"));
     };
 
     const customSelect2Styles = {
@@ -420,7 +422,7 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
     return (
         <Layout>
             <React.Fragment>
-                <Head title="Upgrade Ticket" />
+                <Head title={t("Upgrade Ticket")} />
                 <section className="section bg-light" id="tickets">
                     <Container>
                         {organizerView && (
@@ -428,8 +430,8 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                 <Row className="justify-content-center mt-5 mb-2 mt-md-0">
                                     <Col md={12} className="text-center">
                                         <h2>
-                                            Choose Attendee and Purchased Ticket
-                                            to upgrade it's Sessions
+                                            {t("Choose Attendee and Purchased Ticket")}{" "}
+                                            {t("to upgrade it's Sessions")}
                                         </h2>
                                         <hr />
                                     </Col>
@@ -439,7 +441,7 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                                 htmlFor="attendee"
                                                 className="form-label text-start w-100"
                                             >
-                                                Attendee
+                                                {t("Attendee")}
                                             </Form.Label>
                                             <Select
                                                 styles={customSelect2Styles}
@@ -458,7 +460,7 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                                 htmlFor="payment_method"
                                                 className="form-label text-start w-100"
                                             >
-                                                Ticket To Upgrade
+                                                {t("Ticket To Upgrade")}
                                             </Form.Label>
                                             <Form.Select
                                                 aria-label="Default select example"
@@ -472,7 +474,7 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                                 }
                                             >
                                                 <option value={""}>
-                                                    Choose Ticket To Upgrade
+                                                    {t("Choose Ticket To Upgrade")}
                                                 </option>
                                                 {ticketOptions &&
                                                     ticketOptions.map(
@@ -493,7 +495,7 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                     <Col>
                                         <FormGroup className="mb-3">
                                             <Form.Label className="">
-                                                Organizer Note
+                                                {t("Organizer Note")}
                                             </Form.Label>
                                             <Form.Control
                                                 ref={paymentNoteRef}
@@ -515,11 +517,11 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                         <Col>
                                             <FormGroup className="mb-3">
                                                 <Form.Label className="form-label text-start w-100">
-                                                    Filter Event Sessions
+                                                    {t("Filter Event Sessions")}
                                                 </Form.Label>
                                                 <Form.Control
                                                     type="text"
-                                                    placeholder="Search by session Name"
+                                                    placeholder={t("Search by session Name")}
                                                     maxLength={150}
                                                     onChange={(e) =>
                                                         setSearchName(
@@ -535,7 +537,7 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                                     htmlFor="payment_method2"
                                                     className="form-label text-start w-100"
                                                 >
-                                                    Payment Method
+                                                    {t("Payment Method")}
                                                 </Form.Label>
                                                 <Form.Select
                                                     aria-label="Default select example"
@@ -551,19 +553,19 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                                         key={22}
                                                         value="stripe"
                                                     >
-                                                        Stripe
+                                                        {t("Stripe")}
                                                     </option>
                                                     <option
                                                         key={23}
                                                         value="cash"
                                                     >
-                                                        Cash
+                                                        {t("Cash")}
                                                     </option>
                                                     <option
                                                         key={24}
                                                         value="other"
                                                     >
-                                                        Other
+                                                        {t("Other")}
                                                     </option>
                                                 </Form.Select>
                                             </FormGroup>
@@ -578,8 +580,8 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                 <Row className="d-flex flex-col justify-content-center mt-5 mt-md-0">
                                     <Col md={6} lg={6} className="text-center">
                                         <h2>
-                                            Choose Purchased Ticket
-                                            to upgrade it's Sessions
+                                            {t("Choose Purchased Ticket")}{" "}
+                                            {t("to upgrade it's Sessions")}
                                         </h2>
                                         <hr />
                                     </Col>
@@ -591,7 +593,7 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                                 htmlFor="purchased_ticket"
                                                 className="form-label text-start w-100"
                                             >
-                                                Choose Ticket To Upgrade
+                                                {t("Choose Ticket To Upgrade")}
                                             </Form.Label>
                                             <Form.Select
                                                 aria-label="Default select example"
@@ -605,7 +607,7 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                                 }
                                             >
                                                 <option value={""}>
-                                                    Choose Ticket For Upgrade
+                                                    {t("Choose Ticket For Upgrade")}
                                                 </option>
                                                 {purchasedTickets &&
                                                     purchasedTickets.map(
@@ -634,7 +636,7 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                         <div className="d-flex justify-content-between align-items-center">
                                             <div className="d-flex flex-row justify-content-start align-items-center">
                                                 <h5 className="fw-bold fs-5 mr-2">
-                                                    Event Sessions
+                                                    {t("Event Sessions")}
                                                 </h5>
                                                 {fetchingSessions && <Spinner
                                                     animation="border"
@@ -643,14 +645,14 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                                     className="mb-2"
                                                 >
                                                     <span className="visually-hidden">
-                                                        Fetching sessions...
+                                                        {t("Fetching sessions...")}
                                                     </span>
                                                 </Spinner>}
                                             </div>
 
                                             <h5 className="fw-bold fs-5 mb-2">
-                                                Total Amount : <sup>
-                                                    <small>$</small>
+                                                {t("Total Amount :")} <sup>
+                                                    <small>{getCurrency.currency_symbol}</small>
                                                 </sup>{grandTotal}
                                             </h5>
                                         </div>
@@ -661,7 +663,7 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                                     (s: any) => (
                                                         <div className="col-12 col-md-6 col-lg-4 mb-3" key={'div-' + s.id}>
                                                             {alreadyPurchasedSessionIds.includes(s.id) && <Form.Check
-                                                                title="Session alreay available to Attendee"
+                                                                title={t("Session alreay available to Attendee")}
                                                                 disabled
                                                                 defaultChecked
                                                                 key={'checkbox-checked-' + s.id}
@@ -673,10 +675,10 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                                                 label={
                                                                     s.name +
                                                                     (s.price
-                                                                        ? "  ($" +
+                                                                        ? "  (" + getCurrency.currency_symbol  +
                                                                         s.price +
                                                                         ")"
-                                                                        : "  (free)")
+                                                                        : "  (" + t("free") + ")")
                                                                 }
                                                                 onChange={(e) => { handleCheckboxChange(e, s) }
                                                                 }
@@ -688,10 +690,10 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                                                 label={
                                                                     s.name +
                                                                     (s.price
-                                                                        ? "  ($" +
+                                                                        ? "  (" + getCurrency.currency_symbol +
                                                                         s.price +
                                                                         ")"
-                                                                        : "  (free)")
+                                                                        : "  (" + t("free") + ")")
                                                                 }
                                                                 onChange={(e) => { handleCheckboxChange(e, s) }
                                                                 }
@@ -716,7 +718,7 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                                 className="d-flex align-items-center"
                                             >
                                                 <h5 className="fw-bold mb-0">
-                                                    Coupon Code
+                                                    {t("Coupon Code")}
                                                 </h5>
                                             </Col>
                                             <Col md={4} lg={4}>
@@ -729,7 +731,7 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                                         type="text"
                                                         isInvalid={codeError}
                                                         name="coupon code"
-                                                        placeholder="Enter Coupon Code Here"
+                                                        placeholder={t("Enter Coupon Code Here")}
                                                         value={discountCode}
                                                         onChange={(e: any) =>
                                                             setDiscountCode(
@@ -741,12 +743,12 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                                         disabled={grandTotal === 0}
                                                         onClick={validateCode}
                                                     >
-                                                        Apply
+                                                        {t("Apply")}
                                                     </Button>
                                                 </InputGroup>
                                                 {codeError && (
                                                     <div className="invalid-feedback d-block">
-                                                        Invalid or Expired Code
+                                                        {t("Invalid or Expired Code")}
                                                     </div>
                                                 )}
                                             </Col>
@@ -756,9 +758,9 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                                 className="d-flex justify-content-end align-items-center"
                                             >
                                                 <h5 className="mb-1 pt-2 pb-2 mr-2 text-end fs-5">
-                                                    Discount :{" "}
+                                                    {t("Discount :")}{" "}
                                                     <sup>
-                                                        <small>$</small>
+                                                        <small>{ getCurrency.currency_symbol }</small>
                                                     </sup>
                                                     {discount}
                                                 </h5>
@@ -779,8 +781,8 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                                     className="btn btn-success w-100"
                                                 >
                                                     {totalAmount > 0
-                                                        ? "Proceed Checkout"
-                                                        : "Process Free Upgrade"}
+                                                        ? t("Proceed Checkout")
+                                                        : t("Process Free Upgrade")}
                                                     {processing && (
                                                         <Spinner
                                                             animation="border"
@@ -789,7 +791,7 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                                             size="sm"
                                                         >
                                                             <span className="visually-hidden">
-                                                                Loading...
+                                                                {t("Loading...")}
                                                             </span>
                                                         </Spinner>
                                                     )}
@@ -801,9 +803,9 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                                 className="d-flex justify-content-end align-items-center"
                                             >
                                                 <h5 className="mb-1 pt-2 pb-2 mr-2 text-end fs-5">
-                                                    Total Payable :{" "}
+                                                    {t("Total Payable :")}{" "}
                                                     <sup>
-                                                        <small>$</small>
+                                                        <small>{getCurrency.currency_symbol}</small>
                                                     </sup>
                                                     {totalAmount}
                                                 </h5>
@@ -824,7 +826,7 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                 role="status"
                             >
                                 <span className="visually-hidden">
-                                    Loading...
+                                    {t("Loading...")}
                                 </span>
                             </Spinner>
                         </div>}
@@ -844,6 +846,8 @@ const Index = React.memo(({ organizerView, attendees, attendee_id, sessions, pur
                                         }}
                                     >
                                         <StripeCheckoutForm
+                                            currency={getCurrency.currency}
+                                            currency_symbol={getCurrency.currency_symbol}
                                             amount={totalAmount}
                                             onPaymentSuccess={
                                                 handlePaymentSuccess

@@ -11,6 +11,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
+use Pusher\PushNotifications\PushNotifications;
 
 class Controller extends BaseController
 {
@@ -25,20 +26,22 @@ class Controller extends BaseController
         $search = $request->search ? json_decode($request->search, true) : null;
 
         if ($search && $search['query']) {
-            foreach ($search['columns'] as $i => $column) {
-                if ($i === 0) {
-                    $query->where($column, 'like', "%{$search['query']}%");
-                } else {
-                    $query->orWhere($column, 'like', "%{$search['query']}%");
+            $query->where(function ($query) use ($search) {
+                foreach ($search['columns'] as $i => $column) {
+                    if ($i === 0) {
+                        $query->where($column, 'like', "%{$search['query']}%");
+                    } else {
+                        $query->orWhere($column, 'like', "%{$search['query']}%");
+                    }
                 }
-            }
 
-            if (isset($search['combinations'])) {
-                foreach ($search['combinations'] as $combination) {
-                    $columnRaw = DB::raw("CONCAT(" . implode(", ' ', ", $combination) . ")");
-                    $query->orWhere($columnRaw, 'like', "%{$search['query']}%");
+                if (isset($search['combinations'])) {
+                    foreach ($search['combinations'] as $combination) {
+                        $columnRaw = DB::raw("CONCAT(" . implode(", ' ', ", $combination) . ")");
+                        $query->orWhere($columnRaw, 'like', "%{$search['query']}%");
+                    }
                 }
-            }
+            });
 
             $appendParams['search'] = $request->search;
         }
@@ -170,4 +173,25 @@ class Controller extends BaseController
             ]);
         }
     }
+
+    // protected function webPushNotification($userId, $title, $body, $deep_link): void
+    // {
+    //     $beamsClient = new PushNotifications([
+    //         "instanceId" => config('services.pusher_beams.instance_id'),
+    //         "secretKey" => config('services.pusher_beams.secret_key'),
+    //     ]);
+
+    //     $beamsClient->publishToInterests(
+    //         ['attendee-' . $userId], // Matches frontend subscription
+    //         [
+    //             "web" => [
+    //                 "notification" => [
+    //                     "title" => $title,
+    //                     "body" => $body,
+    //                     "deep_link" => $deep_link,
+    //                 ]
+    //             ]
+    //         ]
+    //     );
+    // }
 }

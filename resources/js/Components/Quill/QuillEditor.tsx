@@ -52,10 +52,18 @@ const QuillEditor: React.FC<Props> = ({ value, onChange, className, placeholder 
 
   // Sync external value changes
   useEffect(() => {
-    if (quillRef.current && quillRef.current.root.innerHTML !== value) {
-      quillRef.current.root.innerHTML = value || "";
+  if (quillRef.current) {
+    const html = quillRef.current.root.innerHTML;
+    if (value && value !== html) {
+      const selection = quillRef.current.getSelection();
+      quillRef.current.clipboard.dangerouslyPasteHTML(value);
+      if (selection) {
+        quillRef.current.setSelection(selection);
+      }
     }
-  }, [value]);
+  }
+}, [value]);
+
 
   return <div className={className} ref={editorRef} style={{ minHeight: "200px" }} />;
 };

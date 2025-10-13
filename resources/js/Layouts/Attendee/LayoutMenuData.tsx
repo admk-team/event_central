@@ -1,6 +1,6 @@
 import { usePage } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 const Navdata = () => {
     const user: any = usePage().props.auth.user;
     const eventApp: any = usePage().props.eventApp;
@@ -18,7 +18,10 @@ const Navdata = () => {
     const [IsPrayerRequest, setIsPrayerRequest] = useState<boolean>(false);
     const [isChat, setIsChat] = useState<boolean>(false);
     const [isFriend, setIsFriend] = useState<boolean>(false);
-
+    const [isEventStaff, setIsEventStaff] = useState<boolean>(false);
+    const [isEventShop, setIsEventShop] = useState<boolean>(false);
+    const [isEventBooth, setIsEventBooth] = useState<boolean>(false);
+    const { t } = useLaravelReactI18n();
     const [iscurrentState, setIscurrentState] = useState<any>("Dashboard");
     // const [IsQA, setIsQA] = useState<boolean>(false);
 
@@ -68,8 +71,17 @@ const Navdata = () => {
         if (iscurrentState !== "friend") {
             setIsFriend(false);
         }
-         if (iscurrentState !== "PrayerRequest") {
+        if (iscurrentState !== "PrayerRequest") {
             setIsPrayerRequest(false);
+        }
+        if (iscurrentState !== "eventStaff") {
+            setIsEventStaff(false);
+        }
+        if (iscurrentState !== "eventShop") {
+            setIsEventShop(false);
+        }
+        if (iscurrentState !== "eventBooth") {
+            setIsEventBooth(false);
         }
         // if (iscurrentState !== "Q&A") {
         //     setIsQA(false);
@@ -90,16 +102,19 @@ const Navdata = () => {
         isUpgradeTicket,
         IsAchievement,
         IsPrayerRequest,
+        isEventStaff,
+        isEventShop,
+        isEventBooth,
     ]);
 
     const menuItems: any = [
         {
-            label: "Menu",
+            label: t("🎛 Dashboard"),
             isHeader: true,
         },
         {
             id: "dashboard",
-            label: "Dashboard",
+            label: t("Dashboard"),
             icon: "bx bxs-dashboard",
             link: route("attendee.event.detail.dashboard"),
             stateVariables: isDashboard,
@@ -110,9 +125,45 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
+
+        {
+            label: t("🛍 Event Shop & Sponsorships"),
+            isHeader: true,
+        },
+        {
+            id: "eventShop",
+            label: t("Event Shop"),
+            icon: "bx bx-store",
+            link: route("attendee.event.products"),
+            stateVariables: isDashboard,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsEventShop(!isEventShop);
+                setIscurrentState("eventShop");
+                updateIconSidebar(e);
+            },
+        },
+        {
+            id: "eventBooth",
+            label: t("Sponsorship"),
+            icon: "bx bx-gift",
+            link: route("attendee.event.booths"),
+            stateVariables: isDashboard,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsEventBooth(!isEventBooth);
+                setIscurrentState("eventBooth");
+                updateIconSidebar(e);
+            },
+        },
+
+        {
+            label: t("📅 Event Info & Participation"),
+            isHeader: true,
+        },
         {
             id: "program",
-            label: "Event Agenda",
+            label: t("Event Agenda"),
             icon: "bx bx-heart",
             link: route("attendee.event.detail.agenda"),
             stateVariables: isProgram,
@@ -125,7 +176,7 @@ const Navdata = () => {
         },
         {
             id: "speaker",
-            label: "Speakers",
+            label: t("Speakers"),
             icon: "bx bx-group",
             link: route("attendee.event.detail.speakers"),
             stateVariables: isSpeakers,
@@ -136,35 +187,79 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
-        // {
-        //     id: "chat",
-        //     label: "Chat",
-        //     icon: "bx bx-message-rounded-dots",
-        //     link: route("attendee.event.chat"),
-        //     stateVariables: isChat,
-        //     click: function (e: any) {
-        //         e.preventDefault();
-        //         setIsChat(!isChat);
-        //         setIscurrentState("chat");
-        //         updateIconSidebar(e);
-        //     },
-        // },
-        // {
-        //     id: "friend",
-        //     label: "Freind System",
-        //     icon: "bx bx-info-circle",
-        //     link: route("friend.index"),
-        //     stateVariables: isFriend,
-        //     click: function (e: any) {
-        //         e.preventDefault();
-        //         setIsFriend(!isFriend);
-        //         setIscurrentState("friend");
-        //         updateIconSidebar(e);
-        //     },
-        // },
+        {
+            id: "eventStaff",
+            label: t("Event Staff"),
+            icon: "bx bx-group",
+            link: route("attendee.event.staff"),
+            stateVariables: isMore,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsMore(!isMore);
+                setIscurrentState("More");
+                updateIconSidebar(e);
+            },
+        },
+        {
+            id: "eventCalendar",
+            label: t("Event Calendar"),
+            icon: "bx bxs-calendar",
+            link: route("event.calendar"),
+            stateVariables: isMore,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsMore(!isMore);
+                setIscurrentState("More");
+                updateIconSidebar(e);
+            },
+        },
+        {
+            id: "liveStream",
+            label: t("Live Streams"),
+            icon: "bx bx-broadcast",
+            link: route("stream.index"),
+            stateVariables: isMore,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsMore(!isMore);
+                setIscurrentState("More");
+                updateIconSidebar(e);
+            },
+        },
+
+        {
+            label: t("💬 Interaction & Networking"),
+            isHeader: true,
+        },
+        {
+            id: "chat",
+            label: t("Chat Room"),
+            icon: "bx bx-message-rounded-dots",
+            link: route("attendee.event.chat"),
+            stateVariables: isChat,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsChat(!isChat);
+                setIscurrentState("chat");
+                updateIconSidebar(e);
+            },
+        },
+        {
+            id: "friend",
+            label: t("Friend System"),
+            icon: "las la-user-friends",
+            link: route("friend.index"),
+            stateVariables: isFriend,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsFriend(!isFriend);
+                setIscurrentState("friend");
+                updateIconSidebar(e);
+            },
+        },
         {
             id: "more",
-            label: "Contact",
+            label: t("Contact"),
             icon: "bx bx-info-circle",
             link: route("attendee.event.detail.more"),
             stateVariables: isMore,
@@ -175,22 +270,14 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
+
         {
-            id: "more",
-            label: "Favorites",
-            icon: "bx bxs-heart",
-            link: route("all.fav.sessions"),
-            stateVariables: isMore,
-            click: function (e: any) {
-                e.preventDefault();
-                setIsMore(!isMore);
-                setIscurrentState("More");
-                updateIconSidebar(e);
-            },
+            label: t("🎟 Tickets & Access"),
+            isHeader: true,
         },
         {
             id: "tickets",
-            label: "Tickets",
+            label: t("Tickets"),
             icon: "bx bx-qr",
             link: route("attendee.tickets.get"),
             stateVariables: isMore,
@@ -203,7 +290,7 @@ const Navdata = () => {
         },
         {
             id: "purchasedtickets",
-            label: "Purchased Tickets",
+            label: t("Purchased Tickets"),
             icon: "bx bx-qr",
             link: route("attendee.tickets.purchased"),
             stateVariables: isMore,
@@ -214,25 +301,22 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
-        {
-            id: "upgradeTicket",
-            label: "Upgrade Tickets",
-            icon: "bx bxs-credit-card",
-            link: route('attendee.tickets.upgrade'),
-            stateVariables: isUpgradeTicket,
-            click: function (e: any) {
-                e.preventDefault();
-                setPurchaseTickets(!isUpgradeTicket);
-                setIscurrentState('upgradeTicket');
-                updateIconSidebar(e);
-            },
-            hasPermissions: [
-                'refund_ticket'
-            ],
-        },
+        // {
+        //     id: "upgradeTicket",
+        //     label: t("Upgrade Tickets Sessions"),
+        //     icon: "bx bxs-credit-card",
+        //     link: route("attendee.tickets.upgrade"),
+        //     stateVariables: isUpgradeTicket,
+        //     click: function (e: any) {
+        //         e.preventDefault();
+        //         setPurchaseTickets(!isUpgradeTicket);
+        //         setIscurrentState("upgradeTicket");
+        //         updateIconSidebar(e);
+        //     },
+        // },
         {
             id: "refundtickets",
-            label: "Refund Tickets",
+            label: t("Refund Tickets"),
             icon: "bx bx-qr",
             link: route("attendee.tickets.refund"),
             stateVariables: isMore,
@@ -245,7 +329,7 @@ const Navdata = () => {
         },
         {
             id: "tickets",
-            label: "Post Event Questionnaire",
+            label: t("Post Event Questionnaire"),
             icon: "bx bxs-notepad",
             link: route("attendee.event-questionnaire-form"),
             stateVariables: isMore,
@@ -256,9 +340,27 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
+
+        {
+            label: t("🏆 Engagement & Extras"),
+            isHeader: true,
+        },
+        {
+            id: "more",
+            label: t("Favorites"),
+            icon: "bx bxs-heart",
+            link: route("all.fav.sessions"),
+            stateVariables: isMore,
+            click: function (e: any) {
+                e.preventDefault();
+                setIsMore(!isMore);
+                setIscurrentState("More");
+                updateIconSidebar(e);
+            },
+        },
         {
             id: "achievement",
-            label: "Achievements",
+            label: t("Achievements"),
             icon: "bx bxs-medal",
             link: route("attendee.achievement"),
             stateVariables: isMore,
@@ -269,7 +371,9 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
-        //   {
+
+        // commented code preserved
+        // {
         //     id: "PrayerRequest",
         //     label: "Prayer Request",
         //     icon: "bx bx-donate-heart",
@@ -282,7 +386,6 @@ const Navdata = () => {
         //         updateIconSidebar(e);
         //     },
         // },
-
         // {
         //     id: "attendee-pass",
         //     label: "Attendee Pass",
@@ -310,6 +413,7 @@ const Navdata = () => {
         //     },
         // },
     ];
+
     return <React.Fragment>{menuItems}</React.Fragment>;
 };
 export default Navdata;

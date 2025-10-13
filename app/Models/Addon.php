@@ -18,6 +18,7 @@ class Addon extends Model
         'qty_total',
         'qty_sold',
         'enable_discount',
+        'extra_fields'
     ];
 
     protected $appends = ['full_name'];
@@ -68,6 +69,6 @@ class Addon extends Model
 
     public function getFullNameAttribute()
     {
-        return $this->name . ($this->price > 0 ? ' ($' . $this->price . ')' : ' (Free)');
+        return $this->name . (($this->variants[0]?->price ?? $this->price) > 0 ? ' ($' . ($this->variants[0]?->price ?? $this->price) . ')' : ' (Free)');
     }
 }

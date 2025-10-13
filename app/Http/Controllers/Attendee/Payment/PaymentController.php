@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Attendee\Payment;
 
+use App\Events\UpdateEventDashboard;
 use Exception;
 use Inertia\Inertia;
 use App\Models\Addon;
@@ -33,6 +34,9 @@ use Illuminate\Console\Scheduling\Event;
 use App\Mail\AttendeeTicketPurchasedEmail;
 use App\Mail\EventTicketPurchasedNotification;
 use App\Http\Requests\Attendee\AttendeeCheckoutRequest;
+use App\Mail\AvailableTicketMail;
+use App\Models\WaitingList;
+use App\Models\OrganizerPaymentKeys;
 
 class PaymentController extends Controller
 {
@@ -58,12 +62,16 @@ class PaymentController extends Controller
         $eventApp = null;
         $attendees = [];
         $lasteventDate = [];
+        $organizerId = EventApp::findOrFail(auth()->user()->event_app_id ?? session('event_id'));
+        $getCurrency = OrganizerPaymentKeys::getCurrencyForUser($organizerId->organizer_id);
+
+        $attendee_id = auth()->user()->id;
         //If Page is being visited by Organizer
         if ($organizerView) {
             $eventApp = EventApp::with('dates')->find(session('event_id'));
             $lasteventDate = $eventApp->dates()->orderBy('date', 'desc')->get();
 
-            $attendees = $eventApp->attendees()->select(['id as value', DB::raw("CONCAT(first_name, ' ', last_name) as label")])->get();
+            $attendees = $eventApp->attendees()->select(['id as value', DB::raw("CONCAT(first_name, ' ', last_name, ' || ', email) as label")])->get();
         } else {
             $eventApp =  EventApp::with('dates')->find(auth()->user()->event_app_id);
             $lasteventDate = $eventApp->dates()->orderBy('date', 'desc')->get();
@@ -136,7 +144,8 @@ class PaymentController extends Controller
             'organizerView',
             'attendees',
             'attendee_id',
-            'lasteventDate'
+            'lasteventDate',
+            'getCurrency',
         ]));
     }
 
@@ -145,7 +154,7 @@ class PaymentController extends Controller
     // Create PayPal Order
     public function createPaypalOrder(Request $request)
     {
-        $order = $this->paypal_service->createOrder($request->amount);
+        $order = $this->paypal_service->createOrder($request->amount, $request->currency);
         return response()->json($order);
     }
 
@@ -180,13 +189,17 @@ class PaymentController extends Controller
         // return $payment;
         if ($payment->status === 'pending') {
             $stripe_pub_key = $this->stripe_service->StripKeys($payment->event_app_id)->stripe_publishable_key;
-            $paypal_client_id = null;
-            // $paypal_client_id = $this->paypal_service->payPalKeys()->paypal_pub;
+            $eventApp =  EventApp::find(auth()->user()->event_app_id ?? session('event_id'));
+            $getCurrency = OrganizerPaymentKeys::getCurrencyForUser($eventApp->organizer_id);
+
+            // $paypal_client_id = null;
+            $paypal_client_id = $this->paypal_service->payPalKeys()->paypal_pub;
             return Inertia::render('Attendee/Payment/Index', compact([
                 'payment',
                 'stripe_pub_key',
                 'paypal_client_id',
-                'organizerView'
+                'organizerView',
+                'getCurrency'
             ]));
         } else {
             return redirect()->route('attendee.tickets.get')->withError("Payment has already been processed against this Payment ID");
@@ -201,9 +214,15 @@ class PaymentController extends Controller
         $user = auth()->user();
         $attendee = $organizerView ? $attendee : auth()->user();
         $amount = $data['totalAmount'];
-        $stripe_response = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount);
+
+        $organizerId = EventApp::findOrFail(auth()->user()->event_app_id ?? session('event_id'));
+        $getCurrency = OrganizerPaymentKeys::getCurrencyForUser($organizerId->organizer_id);
+
+        $currency_code = $getCurrency->currency ?? 'USD';
+        $stripe_response = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount, $currency_code);
         $client_secret = $stripe_response['client_secret'];
         $payment_id = $stripe_response['payment_id'];
+        $extra_services = $data['ticketsDetails'][0]['extra_services'] ?? null;
 
         $payment = $user->attendeePayments()->create([
             'uuid' => Str::uuid(),
@@ -218,6 +237,7 @@ class PaymentController extends Controller
             'status' => 'pending',
             'organizer_payment_note' => $data['organizer_payment_note'] ?? null,
             'payment_method' => $organizerView ? $payment_method : 'stripe',
+            'extra_services' => $extra_services
         ]);
 
         foreach ($data['ticketsDetails'] as $ticketsDetail) {
@@ -237,10 +257,14 @@ class PaymentController extends Controller
             ]);
 
             foreach ($addons as $addon) {
+                $extraFields = $addon['extraFields'] ?? null;
+                $extraFieldsJson = isset($extraFields) ? json_encode($extraFields) : null;
+
                 DB::table('addon_purchased_ticket')->insert([
                     'attendee_purchased_ticket_id' => $attendee_purchased_ticket->id,
                     'addon_id' => $addon['id'],
                     'addon_variant_id' => isset($addon['selectedVariant']) ? $addon['selectedVariant']['id'] : null,
+                    'extra_fields_values' => $extraFieldsJson,
                 ]);
             }
         }
@@ -272,6 +296,7 @@ class PaymentController extends Controller
             'status' => 'pending',
             'organizer_payment_note' => $data['organizer_payment_note'] ?? null,
             'payment_method' => $organizerView ? $payment_method : 'stripe',
+            'extra_services' => $data['extra_services'] ?? null,
         ]);
 
         foreach ($data['ticketsDetails'] as $ticketsDetail) {
@@ -301,6 +326,7 @@ class PaymentController extends Controller
         }
         //Update Attendee Payment status and session etc
         $this->updateAttendeePaymnet($payment->uuid);
+        broadcast(new UpdateEventDashboard($attendee->event_app_id, 'New Ticket Purchased'))->toOthers();
         return $payment;
     }
 
@@ -411,7 +437,7 @@ class PaymentController extends Controller
     {
         try {
             $attendee = auth()->user();
-            $attendee->load('payments.purchased_tickets');
+            $attendee->load(['payments.purchased_tickets.purchased_addons']);
             $attendee_purchased_tickets = [];
             foreach ($attendee->payments as $payment) {
                 foreach ($payment->purchased_tickets as $ticket)
@@ -465,6 +491,8 @@ class PaymentController extends Controller
         if ($payment) {
             foreach ($payment->purchased_tickets as $ticket_purchased) {
                 $purchasedticket = AttendeePurchasedTickets::find($ticket_purchased->id);
+
+
                 $code = $purchasedticket->generateUniqueKey();
                 $qrData = $code;
 
@@ -491,6 +519,34 @@ class PaymentController extends Controller
                     'qr_code' => 'qr-codes/' . $code . '.png',
                     'code' => $code
                 ]);
+
+                // ✅ Handle extra_services quantity decrease
+                $extraServices = $payment->extra_services;
+
+                if (is_array($extraServices)) {
+                    foreach ($extraServices as $service) {
+                        // Get the event ticket linked to purchased ticket
+                        $ticket = EventAppTicket::find($purchasedticket->event_app_ticket_id);
+
+                        if ($ticket) {
+                            $EventTicketExtraServices = $ticket->extra_services;
+
+                            if (is_array($EventTicketExtraServices)) {
+                                foreach ($EventTicketExtraServices as &$extra) {
+                                    if ($extra['name'] === $service['name']) {
+                                        // Decrease the quantity
+                                        $extra['quantity'] = max(0, $extra['quantity'] - $service['quantity']);
+                                    }
+                                }
+
+                                // Save updated services back into ticket
+                                $ticket->update([
+                                    'extra_services' => $EventTicketExtraServices
+                                ]);
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -512,7 +568,6 @@ class PaymentController extends Controller
                     $purchasedTicket->ticket->ticketType->name : '', // <-- added line
             ];
         }
-
         return Inertia::render('Attendee/Tickets/PurchasedTickets', [
             'eventApp' => $eventApp,
             'attendee' => $attendee,
@@ -549,5 +604,49 @@ class PaymentController extends Controller
         }
 
         return redirect()->back()->withSuccess('Emails submitted successfully!');
+    }
+
+
+
+    public function cancelTicket($id)
+    {
+        DB::beginTransaction();
+        try {
+            $attendee = Auth::user();
+            $eventApp = EventApp::find($attendee->event_app_id);
+            $AttendeeTicket = AttendeePurchasedTickets::where('attendee_id', $attendee->id)
+                ->where('id', $id)
+                ->where('event_app_id', $attendee->event_app_id)
+                ->firstOrFail();
+            $eventTicket = EventAppTicket::where('id', $AttendeeTicket->event_app_ticket_id)
+                ->where('event_app_id', $attendee->event_app_id)
+                ->first();
+            if ($eventTicket) {
+                $eventTicket->decrement('qty_sold'); // Better than manual subtraction
+            }
+
+            $waiting_attendees = WaitingList::with('attendee')
+                ->where('event_app_ticket_id', $AttendeeTicket->event_app_ticket_id)
+                ->get();
+
+            foreach ($waiting_attendees as $waiting) {
+                $ticketUrl = url('/') . '/attendee' . '/' . $eventTicket->event_app_id . '/login';
+                if (!empty($waiting->attendee?->email)) {
+                    Mail::to($waiting->attendee->email)->queue(
+                        new AvailableTicketMail($waiting->attendee, $eventTicket, $ticketUrl, $eventApp)
+                    );
+                } else {
+                    Log::error("Attendee email missing for waiting ID: {$waiting->id}");
+                }
+            }
+
+            $AttendeeTicket->delete();
+            DB::commit();
+            return back()->withSuccess('Ticket cancelled and waiting list notified.');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            Log::error('Failed to cancel ticket: ' . $e->getMessage());
+            return back()->withErrors(['error' => 'Failed to process cancellation.']);
+        }
     }
 }

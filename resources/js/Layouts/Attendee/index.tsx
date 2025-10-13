@@ -28,6 +28,7 @@ import { createSelector } from 'reselect';
 import { LAYOUT_TYPES } from '../../Components/constants/layout';
 import useToastMessages from '../../hooks/useToastMessages';
 import { Toaster } from 'react-hot-toast';
+import PusherBeamInit from '../../Components/PusherBeamInit';
 
 
 const Layout = ({ children }: any) => {
@@ -139,6 +140,7 @@ const Layout = ({ children }: any) => {
     useToastMessages();
     return (
         <React.Fragment>
+            <PusherBeamInit />
             <div id="layout-wrapper">
                 <HeaderAttendee headerClass={headerClass}
                     layoutModeType={layoutModeType}

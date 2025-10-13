@@ -15,6 +15,7 @@ class EventAppTicket extends Model
         'name',
         'description',
         'type',
+        'original_price',
         'base_price',
         'qty_total',
         'qty_sold',
@@ -25,10 +26,21 @@ class EventAppTicket extends Model
         'end_increment',
         'show_on_attendee_side',
         'position',
+        'bulk_purchase_status',
+        'bulk_purchase_discount_type',
+        'bulk_purchase_discount_value',
+        'bulk_purchase_qty',
+        'extra_service_name',
+        'extra_services',
+        'hide_quantity',
     ];
 
     protected $casts = [
-        'show_on_attendee_side' => 'boolean'
+        'show_on_attendee_side' => 'boolean',
+        'extra_services' => 'json',
+        'bulk_purchase_discount_type' => 'array',
+        'bulk_purchase_discount_value' => 'array',
+        'bulk_purchase_qty' => 'array',
     ];
 
     //Being used by Select2 in Ticket Create/Edit Model
@@ -70,7 +82,7 @@ class EventAppTicket extends Model
 
     public function getSelectedSessionsAttribute()
     {
-        return $this->sessions()->select(['id as value', 'name as label'])->get();
+        return $this->sessions()->select(['id as value', 'name as label', 'capacity', 'sync_with_tickets'])->get();
     }
 
     public function getTotalRevenueAttribute()
@@ -83,10 +95,10 @@ class EventAppTicket extends Model
         // Ordering and selecting appended property of model
         // and being used as preselected Select2 Options
 
-        $addons_collection = $this->addons()->orderBy('name')->get();
+        $addons_collection = $this->addons()->with('variants')->orderBy('name')->get();
 
         return $addons_collection->map(function ($addon) {
-            return ['value' => $addon->id, 'label' => $addon->full_name];
+            return ['value' => $addon->id, 'label' => $addon->full_name, 'variants' => $addon->variants];
         });
     }
 

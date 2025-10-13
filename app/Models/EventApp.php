@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 
@@ -30,6 +31,8 @@ class EventApp extends Model
         'event_app_category_id',
         'is_recurring',
         'recurring_type_id',
+        'custom_theme',
+        'custome_domain',
     ];
 
     protected $appends = [
@@ -181,6 +184,17 @@ class EventApp extends Model
         return $this->hasMany(EventCheckIns::class);
     }
 
+    public function liveStreams()
+    {
+        return $this->hasMany(LiveStream::class);
+    }
+
+    public function authorizedUsers(): MorphToMany
+    {
+        return $this->morphToMany(User::class, 'model', 'model_permissions', 'model_id', 'authorizable_id')
+            ->where('authorizable_type', User::class);
+    }
+
     public function getFeaturedImageAttribute()
     {
         return Cache::remember('event_image_' . $this->id, now()->addMinutes(5), function () {
@@ -233,8 +247,14 @@ class EventApp extends Model
             }
         });
     }
+
     public function prayerRequest()
     {
         return $this->hasMany(PrayerRequest::class);
+    }
+
+    public function badgeDesign()
+    {
+        return $this->hasOne(EventBadgeDesign::class);
     }
 }

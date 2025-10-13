@@ -19,6 +19,9 @@ class OrganizerPaymentKeys extends Model
         'paypal_base_url',
         'paypal_pub',
         'paypal_secret',
+
+        'currency',
+        'currency_symbol'
     ];
 
     // Encrypt the secret key automatically when saving
@@ -54,4 +57,22 @@ class OrganizerPaymentKeys extends Model
             return '';
         }
     }
+
+    public static function getCurrencyForUser($userId)
+{
+    $currency = self::where('user_id', $userId)
+        ->select('currency', 'currency_symbol')
+        ->first();
+
+    if (!$currency || !$currency->currency) {
+        // Return as stdClass object, not array
+        return (object)[
+            'currency' => 'USD',
+            'currency_symbol' => '$'
+        ];
+    }
+
+    return $currency; // still an object
+}
+
 }

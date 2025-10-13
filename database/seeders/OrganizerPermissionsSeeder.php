@@ -35,6 +35,9 @@ class OrganizerPermissionsSeeder extends Seeder
         // Payments Settings
         'edit_payment_settings',
 
+        // Live Stream Settings
+        'edit_live_stream_settings',
+
         // Event Dashboard
         'view_event_dashboard',
 
@@ -125,6 +128,7 @@ class OrganizerPermissionsSeeder extends Seeder
 
         // Chat
         'view_chat',
+        'create_chat_room',
 
         // Referral links
         'view_referral_link',
@@ -154,7 +158,7 @@ class OrganizerPermissionsSeeder extends Seeder
         'create_event_badge',
         'delete_event_badge',
         'edit_event_badge',
-        //Reports 
+        //Reports
         'view_attendees_report',
 
         //contact forms
@@ -166,11 +170,44 @@ class OrganizerPermissionsSeeder extends Seeder
         'view_session_report',
         'view_ticket_report',
         'view_refund_ticket_report',
-        
+
         // //Prayer Request
         // 'view_prayer_request',
         // 'edit_prayer_request',
         // 'delete_prayer_request',
+
+        'view_private_registration',
+        'delete_private_registration',
+
+        // Live Streams
+        'view_live_streams',
+        'create_live_streams',
+        'edit_live_streams',
+        'delete_live_streams',
+
+        // Event store product
+        'view_product',
+        'create_product',
+        'edit_product',
+        'delete_product',
+
+        //Event store order
+        'view_orders',
+        'delete_orders',
+
+        //demo graphic detail
+        'view_demographic_detail',
+
+        //Event booth
+        'view_event_booth',
+        'create_event_booth',
+        'edit_event_booth',
+        'delete_event_booth',
+
+        //Event upgrade_ticket to ticket
+        'upgrade_ticket_to_ticket',
+        'upgrade_ticket_sessions',
+
     ];
 
     public function run(): void

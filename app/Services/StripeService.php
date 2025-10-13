@@ -24,13 +24,13 @@ class StripeService
         return $this->StripKeys(null)->stripe_publishable_key;
     }
 
-    public function createPaymentIntent($event_app_id, $amount, $currency = 'USD')
+    public function createPaymentIntent($event_app_id, $amount, $currency)
     {
         try {
             $stripe = new \Stripe\StripeClient($this->StripKeys($event_app_id)->stripe_secret_key);
 
             $paymentIntent = $stripe->paymentIntents->create([
-                'amount' => $amount * 100,
+                'amount' =>intval( $amount * 100),
                 'currency' => $currency,
                 'receipt_email' => auth()->user()->email,
                 "description" => 'Event Central Ticket Purchasing',

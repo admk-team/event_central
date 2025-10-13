@@ -21,13 +21,17 @@ use App\Models\EventPartnerCategory;
 use App\Models\SessionCheckIn;
 use App\Models\SessionRating;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Storage;
 
 class EventController extends Controller
 {
     public function getEventDetailDashboard(String $eventApp)
     {
         $eventApp = EventApp::find(Auth::user() ? Auth::user()->event_app_id : $eventApp);
-        $eventApp->load(['event_sessions.eventSpeakers', 'event_sessions.eventPlatform']);
+        $eventApp->load(['event_sessions.eventSpeakers', 'event_sessions.eventPlatform', 'dates' => function ($query) {
+            $query->orderBy('date', 'desc');
+        }]);
         $eventApp->setRelation(
             'event_sessions',
             $eventApp->event_sessions->filter(function ($session) {
@@ -67,6 +71,7 @@ class EventController extends Controller
     {
 
         $eventApp->load([
+            'tickets',
             'public_tickets' => function ($query) {
                 $query->orderBy('position', 'asc')
                     ->with(['sessions']);
@@ -307,6 +312,30 @@ class EventController extends Controller
 
         return response()->json([
             'data' => EventSpeakerResource::collection($speakers),
+        ]);
+    }
+
+    public function downloadCertificate(EventSession $eventSession)
+    {
+        $eventSession->load(['eventApp']);
+        $attendee = auth()->user();
+
+        // Generate PDF
+        $pdf = Pdf::loadView('certificate.event-certificate', [
+            'session_name' => $eventSession->name,
+            'attendee'     => $attendee->name,
+            'event_name'   => $eventSession->eventApp->name,
+            'start_date'   => $eventSession->start_date_time,
+        ])->setPaper('a4', 'landscape');
+
+        // Store the PDF file
+        $filename = 'Session_certificate_' . now()->format('Y-m-d') . '.pdf';
+
+        Storage::disk('public')->put($filename, $pdf->output());
+
+        // Return the public URL
+        return response()->json([
+            'certificate_url' => asset(Storage::url($filename)),
         ]);
     }
 }

@@ -1,52 +1,52 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Mobile menu toggle
-    const menuToggle = document.querySelector(".menu-toggle")
-    const navLinks = document.querySelector(".nav-links")
+    // // Mobile menu toggle
+    // const menuToggle = document.querySelector(".menu-toggle")
+    // const navLinks = document.querySelector(".nav-links")
   
-    if (menuToggle && navLinks) {
-      menuToggle.addEventListener("click", () => {
-        navLinks.classList.toggle("active")
+    // if (menuToggle && navLinks) {
+    //   menuToggle.addEventListener("click", () => {
+    //     navLinks.classList.toggle("active")
   
-        if (navLinks.classList.contains("active")) {
-          navLinks.style.display = "flex"
-          navLinks.style.flexDirection = "column"
-          navLinks.style.position = "absolute"
-          navLinks.style.top = "100%"
-          navLinks.style.left = "0"
-          navLinks.style.width = "100%"
-          navLinks.style.padding = "1rem"
-          navLinks.style.backgroundColor = "var(--color-background)"
-          navLinks.style.boxShadow = "var(--shadow-lg)"
-          navLinks.style.zIndex = "50"
-        } else {
-          navLinks.style.display = ""
-        }
-      })
-    }
+    //     if (navLinks.classList.contains("active")) {
+    //       navLinks.style.display = "flex"
+    //       navLinks.style.flexDirection = "column"
+    //       navLinks.style.position = "absolute"
+    //       navLinks.style.top = "100%"
+    //       navLinks.style.left = "0"
+    //       navLinks.style.width = "100%"
+    //       navLinks.style.padding = "1rem"
+    //       navLinks.style.backgroundColor = "var(--color-background)"
+    //       navLinks.style.boxShadow = "var(--shadow-lg)"
+    //       navLinks.style.zIndex = "50"
+    //     } else {
+    //       navLinks.style.display = ""
+    //     }
+    //   })
+    // }
   
-    // Theme toggle
-    const themeToggle = document.querySelector(".theme-toggle")
+    // // Theme toggle
+    // const themeToggle = document.querySelector(".theme-toggle")
   
-    if (themeToggle) {
-      // Check for saved theme preference or use system preference
-      const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)")
-      const savedTheme = localStorage.getItem("theme")
+    // if (themeToggle) {
+    //   // Check for saved theme preference or use system preference
+    //   const prefersDarkScheme = window.matchMedia("(prefers-color-scheme: dark)")
+    //   const savedTheme = localStorage.getItem("theme")
   
-      if (savedTheme === "dark" || (!savedTheme && prefersDarkScheme.matches)) {
-        document.documentElement.classList.add("dark")
-      }
+    //   if (savedTheme === "dark" || (!savedTheme && prefersDarkScheme.matches)) {
+    //     document.documentElement.classList.add("dark")
+    //   }
   
-      themeToggle.addEventListener("click", () => {
-        document.documentElement.classList.toggle("dark")
+    //   themeToggle.addEventListener("click", () => {
+    //     document.documentElement.classList.toggle("dark")
   
-        // Save preference to localStorage
-        if (document.documentElement.classList.contains("dark")) {
-          localStorage.setItem("theme", "dark")
-        } else {
-          localStorage.setItem("theme", "light")
-        }
-      })
-    }
+    //     // Save preference to localStorage
+    //     if (document.documentElement.classList.contains("dark")) {
+    //       localStorage.setItem("theme", "dark")
+    //     } else {
+    //       localStorage.setItem("theme", "light")
+    //     }
+    //   })
+    // }
   
     // Schedule tabs
     const tabBtns = document.querySelectorAll(".tab-btn")
@@ -131,31 +131,31 @@ document.addEventListener("DOMContentLoaded", () => {
       })
     }
   
-    // Smooth scrolling for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-      anchor.addEventListener("click", function (e) {
-        if (this.getAttribute("href") !== "#") {
-          e.preventDefault()
+    // // Smooth scrolling for anchor links
+    // document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+    //   anchor.addEventListener("click", function (e) {
+    //     if (this.getAttribute("href") !== "#") {
+    //       e.preventDefault()
   
-          const targetId = this.getAttribute("href")
-          const targetElement = document.querySelector(targetId)
+    //       const targetId = this.getAttribute("href")
+    //       const targetElement = document.querySelector(targetId)
   
-          if (targetElement) {
-            // Close mobile menu if open
-            if (navLinks && navLinks.classList.contains("active")) {
-              navLinks.classList.remove("active")
-              navLinks.style.display = ""
-            }
+    //       if (targetElement) {
+    //         // Close mobile menu if open
+    //         if (navLinks && navLinks.classList.contains("active")) {
+    //           navLinks.classList.remove("active")
+    //           navLinks.style.display = ""
+    //         }
   
-            // Scroll to target
-            window.scrollTo({
-              top: targetElement.offsetTop - 80, // Adjust for header height
-              behavior: "smooth",
-            })
-          }
-        }
-      })
-    })
+    //         // Scroll to target
+    //         window.scrollTo({
+    //           top: targetElement.offsetTop - 80, // Adjust for header height
+    //           behavior: "smooth",
+    //         })
+    //       }
+    //     }
+    //   })
+    // })
   
     // Animation on scroll
     const animateOnScroll = () => {
@@ -175,13 +175,13 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("load", animateOnScroll)
     window.addEventListener("scroll", animateOnScroll)
   
-    // Resize handler for mobile menu
-    window.addEventListener("resize", () => {
-      if (window.innerWidth >= 1024 && navLinks) {
-        navLinks.style = ""
-        navLinks.classList.remove("active")
-      }
-    })
+    // // Resize handler for mobile menu
+    // window.addEventListener("resize", () => {
+    //   if (window.innerWidth >= 1024 && navLinks) {
+    //     navLinks.style = ""
+    //     navLinks.classList.remove("active")
+    //   }
+    // })
   })
   
   

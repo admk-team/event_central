@@ -1,9 +1,11 @@
 import { useForm } from '@inertiajs/react'
 import React from 'react'
 import { Button } from 'react-bootstrap'
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 export default function EventCheckinButton({ attendee }: { attendee: any }) {
     const { post, processing } = useForm();
+    const { t } = useLaravelReactI18n();
 
     const submit = () => {
         post(route('organizer.events.attendee.event-checkin', attendee.id), {
@@ -12,6 +14,6 @@ export default function EventCheckinButton({ attendee }: { attendee: any }) {
     }
 
     return (
-        <Button size="sm" variant="secondary" onClick={submit} disabled={attendee.event_checkin || processing}>Event Checkin</Button>
+        <Button size="sm" variant="secondary" onClick={submit} disabled={attendee.event_checkin || processing}>{t("Event Checkin")}</Button>
     )
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Organizer\Event\Reports;
 
+use App\Helpers\CsvExporter;
 use App\Http\Controllers\Controller;
 use App\Models\Attendee;
 use Illuminate\Http\Request;
@@ -72,5 +73,33 @@ class AttendeesReportController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function exportAttendeeData()
+    {
+        $attendees = Attendee::currentEvent()
+            ->with(['attendeeEventSessions', 'attendeeFavSession', 'payments', 'eventSelectedSessions', 'attendeePurchasedTickets'])
+            ->get()
+            ->map(function ($attendee) {
+                return [
+                    $attendee->id,
+                    $attendee->first_name,
+                    $attendee->last_name,
+                    $attendee->email,
+                    $attendee->position,
+                    $attendee->attendeeEventSessions->count(),
+                    $attendee->attendeeFavSession->count(),
+                    $attendee->eventSelectedSessions->count(),
+                    $attendee->payments->count(),
+                    $attendee->attendeePurchasedTickets->count(),
+                ];
+            })->toArray();
+
+        return CsvExporter::export('attendees_report.csv', [
+            [
+                'columns' => ['ID', 'First Name', 'Last Name', 'Email', 'Position', 'Sessions', 'Favorite Sessions', 'Selected Sessions', 'Payments', 'Tickets'],
+                'rows' => $attendees,
+            ]
+        ]);
     }
 }

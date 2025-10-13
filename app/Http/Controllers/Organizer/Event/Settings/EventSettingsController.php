@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Organizer\Event\Settings;
 
 use App\Http\Controllers\Controller;
 use App\Models\EventApp;
+use App\Models\ReminderEventEmail;
 use App\Models\Track;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,12 +25,21 @@ class EventSettingsController extends Controller
         $event = EventApp::with('images')->find(session('event_id'));
         $tracks = Track::where('event_app_id', session('event_id'))->latest()->get(); // For Track Manager
         $lasteventDate = $event->dates()->orderBy('date', 'desc')->get();
+        $closeRegistration = eventSettings()->getValue('close_registration', false);
+        $reminderDays = ReminderEventEmail::where('event_app_id', $event->id)->get(['id', 'days']);
+        $after_days = eventSettings()->getValue('after_days', '7');
+        $follow_up_event = eventSettings()->getValue('follow_up_event', false);
         return Inertia::render("Organizer/Events/Settings/Event/Index", [
             'event' => $event,
             'enableTracks' => eventSettings()->getValue('enable_tracks', false),
             'enableCheckIn' => eventSettings()->getValue('enable_check_in', false),
+            'enablePrivateRegistraion' => eventSettings()->getValue('private_register', false),
+            'reminderDays' => $reminderDays,
+            'after_days' => $after_days,
             'tracks' => $tracks,
-            'lasteventDate' => $lasteventDate
+            'lasteventDate' => $lasteventDate,
+            'closeRegistration' => $closeRegistration,
+            'follow_up_event' => $follow_up_event,
         ]);
     }
 
@@ -37,6 +47,13 @@ class EventSettingsController extends Controller
     {
         if (! Auth::user()->can('edit_events')) {
             abort(403);
+        }
+        $event = EventApp::find(session('event_id'));
+
+        if ($request->filled('custom_theme')) {
+            $event->update([
+                'custom_theme' => $request->custom_theme,
+            ]);
         }
 
         $input = $request->validate([
@@ -47,9 +64,9 @@ class EventSettingsController extends Controller
             'location_base' => 'required',
             'registration_private' => 'required',
             'registration_link' => $request->get('registration_private') == 1 ? 'required' : '',
+            'custom_theme' => 'required',
         ]);
 
-        $event = EventApp::find(session('event_id'));
         // Log::info($input);
 
         eventSettings()->set('registration_private', $input['registration_private']);
@@ -58,8 +75,8 @@ class EventSettingsController extends Controller
         } else {
             eventSettings()->set('registration_link', '');
         }
-  
-        if($request->hasFile('logo')) {
+
+        if ($request->hasFile('logo')) {
             $name = uniqid() . '.' . $request->file('logo')->getClientOriginalExtension();
             $event->logo = $request->file('logo')->storeAs('events-avatars', $name, 'public');
             $event->save();
@@ -111,5 +128,69 @@ class EventSettingsController extends Controller
     {
         $enableTracks = eventSettings()->getValue('enable_check_in', false);
         eventSettings()->set('enable_check_in', !$enableTracks);
+    }
+    public function togglePrivateRegister()
+    {
+        $enableTracks = eventSettings()->getValue('private_register', false);
+        eventSettings()->set('private_register', !$enableTracks);
+    }
+
+    public function closeOpenRegistration($eventId)
+    {
+
+        $closeOpenRegistration = eventSettings()->getValue('close_registration', false);
+        eventSettings()->set('close_registration', !$closeOpenRegistration);
+
+        if ($closeOpenRegistration) {
+            return redirect()->route('organizer.events.settings.event.index')->withSuccess('Event registration open successfully');
+        } else {
+            return redirect()->route('organizer.events.settings.event.index')->withSuccess('Event registration close successfully');
+        }
+    }
+
+    public function changeReminderDays(Request $request)
+    {
+        $validated = $request->validate([
+            'id' => 'nullable|integer',
+            'days_before_event' => 'required|integer',
+        ]);
+        $eventId = session('event_id');
+
+        ReminderEventEmail::updateOrCreate(
+            ['id' => $validated['id'] ?? null],
+            [
+                'event_app_id' => $eventId,
+                'days' => $validated['days_before_event'],
+            ]
+        );
+
+        return back()->withSuccess('Reminder day updated successfully.');
+    }
+
+    public function removeReminderDays(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer',
+        ]);
+
+        ReminderEventEmail::destroy($request->id);
+
+       return back()->withSuccess('Reminder day removed successfully.');
+    }
+
+    public function changeAfterEvent(Request $request)
+    {
+        $request->validate([
+            'days_after_event' => 'required|integer|min:1|max:365',
+        ]);
+        eventSettings()->set('after_days', $request->days_after_event);
+
+        return back()->withSuccess('After Event days updated successfully.');
+    }
+    public function followUpToggle(Request $request)
+    {
+        $follow_up_event = eventSettings()->getValue('follow_up_event', false);
+        eventSettings()->set('follow_up_event', !$follow_up_event);
+        return back()->withSuccess('After Event days updated successfully.');
     }
 }

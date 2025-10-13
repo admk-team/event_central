@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useForm, usePage } from '@inertiajs/react';
 import { Spinner, Col, Form, FormGroup, Modal, Nav, Row, Tab } from 'react-bootstrap';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 export default function CreateEditModal({ show, hide, onHide, fee }: { show: boolean, hide: () => void, onHide: () => void, fee: any }) {
 
+      const { t } = useLaravelReactI18n();
 
     const isEdit = fee != null ? true : false;
     const event_app_id = usePage().props.currentEvent?.id ?? null;
@@ -25,9 +27,9 @@ export default function CreateEditModal({ show, hide, onHide, fee }: { show: boo
 
     useEffect(() => {
         if (!fee || fee.fee_type === 'flat') {
-            setAmountLabel('Flat Value');
+            setAmountLabel(t("Flat Value"));
         } else {
-            setAmountLabel('Percentage Value');
+            setAmountLabel(t("Percentage Value"));
         }
     }, [fee]);
 
@@ -57,13 +59,13 @@ export default function CreateEditModal({ show, hide, onHide, fee }: { show: boo
         <Modal show={show} onHide={onHide} centered>
             <Modal.Header className="bg-light p-3" closeButton>
                 <h5 className="modal-title">
-                    {isEdit ? 'Edit Ticket Fee' : 'Add New Ticket Fee'}
+                    {isEdit ? t('Edit Ticket Fee') : t('Add New Ticket Fee')}
                 </h5>
             </Modal.Header>
             <Form onSubmit={submit} className="tablelist-form">
                 <Modal.Body>
                     <FormGroup className="mb-3">
-                        <Form.Label>Name</Form.Label>
+                        <Form.Label>{t("Name")}</Form.Label>
                         <Form.Control
                             type="Code"
                             // style={{ textTransform: 'uppercase' }}
@@ -77,7 +79,7 @@ export default function CreateEditModal({ show, hide, onHide, fee }: { show: boo
                     <Row>
                         <Col md={6} lg={6}>
                             <FormGroup className="mb-3">
-                                <Form.Label htmlFor="fee_type" className="form-label text-start w-100">Fee Type</Form.Label>
+                                <Form.Label htmlFor="fee_type" className="form-label text-start w-100">{t("Fee Type")}</Form.Label>
                                 <Form.Select aria-label="Default select example" className="form-control" id="fee_type"
                                     value={data.fee_type}
                                     onChange={(e) => {
@@ -85,15 +87,15 @@ export default function CreateEditModal({ show, hide, onHide, fee }: { show: boo
 
                                         setData('fee_type', e.target.value);
                                         if (e.target.value === 'percentage') {
-                                            setAmountLabel('Percentage Value');
+                                            setAmountLabel(t("Percentage Value"));
                                         } else {
-                                            setAmountLabel('Flat Value');
+                                            setAmountLabel(t("Flat Value"));
                                         }
                                     }}
                                     isInvalid={!!errors.fee_type}>
                                     {/* <option key={1}>Select Fee Type</option> */}
-                                    <option key={3} value='flat'>Flat</option>
-                                    <option key={4} value='percentage'>Percentage</option>
+                                    <option key={3} value='flat'>{t("Flat")}</option>
+                                    <option key={4} value='percentage'>{t("Percentage")}</option>
                                 </Form.Select>
                                 {errors.fee_type && <Form.Control.Feedback type="invalid"> {errors.fee_type} </Form.Control.Feedback>}
                             </FormGroup>
@@ -112,7 +114,7 @@ export default function CreateEditModal({ show, hide, onHide, fee }: { show: boo
                         </Col>
                     </Row>
                     <FormGroup className="mb-3">
-                        <Form.Label>Description</Form.Label>
+                        <Form.Label>{t("Description")}</Form.Label>
 
                         <Form.Control
                             as='textarea'
@@ -127,13 +129,13 @@ export default function CreateEditModal({ show, hide, onHide, fee }: { show: boo
 
 
                     <FormGroup className="mb-3">
-                        <Form.Label htmlFor="fee_status" className="form-label text-start w-100">Status</Form.Label>
+                        <Form.Label htmlFor="fee_status" className="form-label text-start w-100">{t("Status")}</Form.Label>
                         <Form.Select aria-label="Code Status" className="form-control" id="fee_status"
                             value={data.status}
                             onChange={(e) => setData('status', e.target.value)}
                             isInvalid={!!errors.status}>
-                            <option key={1} value='active'>Active</option>
-                            <option key={2} value='in-active'>In Active</option>
+                            <option key={1} value='active'>{t("Active")}</option>
+                            <option key={2} value='in-active'>{t("In Active")}</option>
                         </Form.Select>
                         {errors.status && <Form.Control.Feedback type="invalid"> {errors.status} </Form.Control.Feedback>}
                     </FormGroup>
@@ -141,15 +143,15 @@ export default function CreateEditModal({ show, hide, onHide, fee }: { show: boo
                 </Modal.Body>
 
                 <div className="modal-footer">
-                    <button type="button" className="btn btn-light" onClick={hide}>Close</button>
+                    <button type="button" className="btn btn-light" onClick={hide}>{t("Close")}</button>
                     <button type="submit" className="btn btn-success" disabled={processing}>
                         {processing ? (
                             <span className="d-flex gap-1 align-items-center">
                                 <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" />
-                                {isEdit ? 'Updating' : 'Creating'}
+                                {isEdit ? t('Updating') : t('Creating')}
                             </span>
                         ) : (
-                            <span>{isEdit ? 'Update' : 'Create'}</span>
+                            <span>{isEdit ? t('Update') : t('Create')}</span>
                         )}
                     </button>
                 </div>

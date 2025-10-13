@@ -1,8 +1,10 @@
 import { useForm } from '@inertiajs/react';
 import { Form, FormGroup, Modal, Spinner } from "react-bootstrap";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 export default function CreateEditModal({ show, hide, onHide, organizer }: { show: boolean, hide: () => void, onHide: () => void, organizer: any|null }) {
     const isEdit = organizer != null ? true : false;
+         const { t } = useLaravelReactI18n();
 
     const { data, setData, post, put, processing, errors, reset } = useForm({
         _method: isEdit ? "PUT" : "POST",
@@ -36,17 +38,17 @@ export default function CreateEditModal({ show, hide, onHide, organizer }: { sho
         <Modal show={show} onHide={onHide} centered>
             <Modal.Header className="bg-light p-3" closeButton>
                 <h5 className="modal-title">
-                    {isEdit ? 'Edit Organizer' : 'Add Organizer'}
+                    {isEdit ? t('Edit Organizer') : t('Add Organizer')}
                 </h5>
             </Modal.Header>
 
             <Form onSubmit={submit} className="tablelist-form">
                 <Modal.Body>
                     <FormGroup className="mb-3">
-                        <Form.Label className="form-label">Name</Form.Label>
-                        <Form.Control 
-                            type="text" 
-                            className="form-control" 
+                        <Form.Label className="form-label">{t("Name")}</Form.Label>
+                        <Form.Control
+                            type="text"
+                            className="form-control"
                             value={data.name}
                             onChange={(e) => setData({...data, name: e.target.value})}
                             isInvalid={!!errors.name}
@@ -56,9 +58,9 @@ export default function CreateEditModal({ show, hide, onHide, organizer }: { sho
                         )}
                     </FormGroup>
                     <FormGroup className="mb-3">
-                        <Form.Label className="form-label">Email</Form.Label>
-                        <Form.Control 
-                            type="email" 
+                        <Form.Label className="form-label">{t("Email")}</Form.Label>
+                        <Form.Control
+                            type="email"
                             className="form-control"
                             value={data.email}
                             onChange={(e) => setData({...data, email: e.target.value})}
@@ -69,9 +71,9 @@ export default function CreateEditModal({ show, hide, onHide, organizer }: { sho
                         )}
                     </FormGroup>
                     <FormGroup className="mb-3">
-                        <Form.Label className="form-label">Pasword</Form.Label>
-                        <Form.Control 
-                            type="password" 
+                        <Form.Label className="form-label">{t("Pasword")}</Form.Label>
+                        <Form.Control
+                            type="password"
                             className="form-control"
                             value={data.password}
                             onChange={(e) => setData({...data, password: e.target.value})}
@@ -89,7 +91,7 @@ export default function CreateEditModal({ show, hide, onHide, organizer }: { sho
                             className="btn btn-light"
                             onClick={hide}
                         >
-                            Close
+                            {t("Close")}
                         </button>
 
                         <button type="submit" className="btn btn-success" disabled={processing}>
@@ -102,10 +104,10 @@ export default function CreateEditModal({ show, hide, onHide, organizer }: { sho
                                         role="status"
                                         aria-hidden="true"
                                     />
-                                    {isEdit ? 'Updating': 'Creating'}
+                                    {isEdit ? t('Updating'): t('Creating')}
                                 </span>
                             ) : (
-                                <span>{isEdit ? 'Update': 'Create'}</span>
+                                <span>{isEdit ? t('Update'): t('Create')}</span>
                             )}
                         </button>
                     </div>

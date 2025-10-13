@@ -1,18 +1,17 @@
 import Layout from "../../../../../Layouts/Event";
 import React, { useState } from "react";
-import { Head, useForm, Link } from "@inertiajs/react";
+import { Head, useForm } from "@inertiajs/react";
 import { Button, Col, Container, Row, Modal, Card } from "react-bootstrap";
 import BreadCrumb from "../../../../../Components/Common/BreadCrumb";
 import HasPermission from "../../../../../Components/HasPermission";
 import DataTable, { ColumnDef } from "../../../../../Components/DataTable";
 import DeleteModal from "../../../../../Components/Common/DeleteModal";
 import DeleteManyModal from "../../../../../Components/Common/DeleteManyModal";
-import RenderQuestionnaireForm from "../../../../../Components/FormBuilder/RenderQuestionnaireForm";
 import RenderQuestionnaireResponse from "../../../../../Components/FormBuilder/RenderQuestionnaireResponse";
 import moment from "moment";
-
-
+import { useLaravelReactI18n } from 'laravel-react-i18n';
 function Response({ form, submissions }: any) {
+    const { t } = useLaravelReactI18n();
     const [deleteformSubmission, setDeleteformSubmission] = useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
@@ -59,24 +58,25 @@ function Response({ form, submissions }: any) {
 
     const columns: ColumnDef<(typeof submissions)[0]> = [
         {
-            header: () => "ID",
+            header: () => t("ID"),
             cell: (submission) => submission.id,
             cellClass: "fw-medium",
         },
         {
-            header: () => "Name",
-            cell: (submission) => submission.attendee?.first_name ?? "N/A",
+            header: () => t("Name"),
+            cell: (submission) => submission.attendee?.first_name ?? t("N/A"),
         },
         {
-            header: () => "Email",
-            cell: (submission) => submission.attendee?.email ?? "N/A",
+            header: () => t("Email"),
+            cell: (submission) => submission.attendee?.email ?? t("N/A"),
         },
         {
-            header: () => "Responsed At",
-            cell: (submission) => moment(submission.created_at).format("MMM DD, YYYY") ?? "N/A",
+            header: () => t("Responded At"),
+            cell: (submission) =>
+                moment(submission.created_at).format("MMM DD, YYYY") ?? t("N/A"),
         },
         {
-            header: () => "Action",
+            header: () => t("Action"),
             cell: (submission) => (
                 <div className="hstack gap-3 fs-15">
                     <HasPermission permission="delete_questionnaire_response">
@@ -105,12 +105,12 @@ function Response({ form, submissions }: any) {
 
     return (
         <React.Fragment>
-            <Head title="Event Questionnaire Response" />
+            <Head title={t("Event Questionnaire Response")} />
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb
-                        title="Event Questionnaire Response"
-                        pageTitle="Dashboard"
+                        title={t("Event Questionnaire Response")}
+                        pageTitle={t("Dashboard")}
                     />
                     <Row>
                         <Col xs={12}>
@@ -118,7 +118,7 @@ function Response({ form, submissions }: any) {
                                 <DataTable
                                     data={submissions}
                                     columns={columns}
-                                    title="Questionnaire Response"
+                                    title={t("Questionnaire Response")}
                                     actions={[
                                         {
                                             render: (dataTable) => (
@@ -130,14 +130,13 @@ function Response({ form, submissions }: any) {
                                                                 dataTable
                                                                     .getSelectedRows()
                                                                     .map(
-                                                                        (row) =>
-                                                                            row.id
+                                                                        (row) => row.id
                                                                     )
                                                             )
                                                         }
                                                     >
                                                         <i className="ri-delete-bin-5-line"></i>{" "}
-                                                        Delete (
+                                                        {t("Delete")} (
                                                         {
                                                             dataTable.getSelectedRows()
                                                                 .length
@@ -177,14 +176,14 @@ function Response({ form, submissions }: any) {
                     centered
                 >
                     <Modal.Header closeButton>
-                        <Modal.Title>Submission Details</Modal.Title>
+                        <Modal.Title>{t("Submission Details")}</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <Card className="p-4">
-                                <RenderQuestionnaireResponse
-                                    form={form}
-                                    submission={viewSubmission}
-                                />
+                            <RenderQuestionnaireResponse
+                                form={form}
+                                submission={viewSubmission}
+                            />
                         </Card>
                     </Modal.Body>
                 </Modal>

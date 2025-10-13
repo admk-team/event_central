@@ -4,18 +4,28 @@ import { Head, Link } from "@inertiajs/react";
 import Layout from "../../../../../../Layouts/Event";
 import CheckInModal from "./Component/CheckInModal";
 import TicketAddonsModal from "./Component/TicketAddonsModal";
+import TicketExtrasModal from "./Component/TicketExtrasModal";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
-const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
+const Profile = ({ attendee, user, sessions, tickets, sessionsPurchased }: any) => {
     console.log(tickets);
 
     const [showModal, setShowModal] = useState(false);
     const [currentTicketId, setCurrentTicketId] = useState<number | null>(null);
     const [showAddonModal, setShowAddonsModal] = useState(false);
+    const [showExtraModal, setShowExtraModal] = useState(false);
+    const [currentExtras, setCurrentExtras] = useState<any[]>([]);
     const handleShowAddonsModal = (ticketId: number) => {
         setCurrentTicketId(ticketId);
         setShowAddonsModal(true);
     }
+    const { t } = useLaravelReactI18n();
 
+
+    const handleShowExtraModal = (extras: any[]) => {
+        setCurrentExtras(extras);
+        setShowExtraModal(true);
+    };
 
 
 
@@ -35,7 +45,7 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                             <div className="col-auto">
                                 <div className="avatar-lg">
                                     <img
-                                        src={user.avatar ??user.avatar_img}
+                                        src={user.avatar ?? user.avatar_img}
                                         alt="user-img"
                                         className="img-thumbnail rounded-circle"
                                     />
@@ -57,7 +67,7 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                                 <Row className="text text-white-50 text-center">
                                     <Col lg={12} xs={12}>
                                         <Button className="p-2 fw-bold" onClick={() => setShowModal(true)}>
-                                            Check In
+                                            {t("Check In")}
                                         </Button>
                                     </Col>
                                 </Row>
@@ -72,7 +82,7 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                                     <Card>
                                         <Card.Body>
                                             <h5 className="card-title mb-3">
-                                                Info
+                                                {t("Info")}
                                             </h5>
                                             <div className="table-responsive">
                                                 <Table className="table-borderless mb-0">
@@ -82,7 +92,7 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                                                                 className="ps-0"
                                                                 scope="row"
                                                             >
-                                                                Full Name :
+                                                                {t("Full Name")} :
                                                             </th>
                                                             <td className="text-muted">
                                                                 {
@@ -98,7 +108,7 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                                                                 className="ps-0"
                                                                 scope="row"
                                                             >
-                                                                Mobile :
+                                                                {t("Mobile")} :
                                                             </th>
                                                             <td className="text-muted">
                                                                 {user.phone ??
@@ -110,7 +120,7 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                                                                 className="ps-0"
                                                                 scope="row"
                                                             >
-                                                                E-mail :
+                                                                {t("E-mail")} :
                                                             </th>
                                                             <td className="text-muted">
                                                                 {user.email}
@@ -121,10 +131,10 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                                                                 className="ps-0"
                                                                 scope="row"
                                                             >
-                                                                Location :
+                                                                {t("Location")} :
                                                             </th>
                                                             <td className="text-muted">
-                                                                {user.location ?? 'N/A'}
+                                                                {user.location ?? t('N/A')}
                                                             </td>
                                                         </tr>
                                                         <tr>
@@ -132,10 +142,10 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                                                                 className="ps-0"
                                                                 scope="row"
                                                             >
-                                                                Joining Date
+                                                                {t("Joining Date")}
                                                             </th>
                                                             <td className="text-muted">
-                                                                {new Date(user.created_at).toLocaleString() ?? 'N/A'}
+                                                                {new Date(user.created_at).toLocaleString() ?? t('N/A')}
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -147,7 +157,7 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                                     <Card>
                                         <Card.Body>
                                             <h5 className="card-title mb-4">
-                                                Portfolio
+                                                {t("Portfolio")}
                                             </h5>
                                             <div className="d-flex flex-wrap gap-2">
                                                 <div>
@@ -156,7 +166,7 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                                                         className="avatar-xs d-block"
                                                         target="_blank"
                                                     >
-                                                        <span className="avatar-title rounded-circle fs-16 text-light" style={{background:'blue'}}>
+                                                        <span className="avatar-title rounded-circle fs-16 text-light" style={{ background: 'blue' }}>
                                                             <i className="ri-facebook-fill"></i>
                                                         </span>
                                                     </a>
@@ -167,8 +177,8 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                                                         className="avatar-xs d-block"
                                                         target="_blank"
                                                     >
-                                                        <span className="avatar-title rounded-circle fs-16 text-light" style={{ background:'DodgerBlue'}}>
-                                                            <i className="ri-linkdin-fill fw-bold cursor-pointer">In</i>
+                                                        <span className="avatar-title rounded-circle fs-16 text-light" style={{ background: 'DodgerBlue' }}>
+                                                            <i className="ri-linkdin-fill fw-bold cursor-pointer">{t("In")}</i>
                                                         </span>
                                                     </a>
                                                 </div>
@@ -185,11 +195,11 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                                                 </div>
                                                 <div>
                                                     <a
-                                                    target="blank"
+                                                        target="blank"
                                                         href={user.twitter_link}
                                                         className="avatar-xs d-block"
                                                     >
-                                                        <span className="avatar-title rounded-circle fs-16" style={{ background:'black'}}>
+                                                        <span className="avatar-title rounded-circle fs-16" style={{ background: 'black' }}>
                                                             <i className="ri-twitter-x-line"></i>
                                                         </span>
                                                     </a>
@@ -202,98 +212,145 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                                 <Col xxl={9}>
                                     <Card>
                                         <Card.Body>
-                                            <h5 className="card-title mb-3">Other Information</h5>
+                                            <h5 className="card-title mb-3">{t("Other Information")}</h5>
                                             {attendee[0]?.field_values.length > 0 && attendee[0]?.form_fields.length > 0 ? (
-                                                    attendee[0]?.form_fields.map((field:any, index:any) => (
+                                                attendee[0]?.form_fields.map((field: any, index: any) => {
+                                                    let rawValue = attendee[0]?.field_values[index].value;
+                                                    let displayValue;
+
+                                                    try {
+                                                        // Attempt to parse JSON
+                                                        const parsed = JSON.parse(rawValue);
+
+                                                        // If it’s an array, join with commas
+                                                        if (Array.isArray(parsed)) {
+                                                            displayValue = parsed.join(", ");
+                                                        } else {
+                                                            displayValue = parsed;
+                                                        }
+                                                    } catch {
+                                                        // Fallback in case it's not JSON
+                                                        displayValue = rawValue;
+                                                    }
+
+                                                    return (
                                                         <div className="row p-2" key={index}>
                                                             <div className="col">
-                                                                <h6 className="mb-0">{field.label}:
-                                                                    <span className="text-secondary">{" "}{attendee[0]?.field_values[index].value}
-                                                                        </span></h6>
+                                                                <h6 className="mb-0">
+                                                                    {field.label}:
+                                                                    <span className="text-secondary">{" "}{displayValue}</span>
+                                                                </h6>
                                                             </div>
                                                         </div>
-                                                    ))
-                                            ): (<p className="text-center">No Info available</p>)}
+                                                    );
+                                                })
+                                            ) : (
+                                                <p className="text-center">{t("No Info available")}</p>
+                                            )}
+
                                         </Card.Body>
                                     </Card>
                                     <Card>
                                         <Card.Body>
-                                            <h5 className="card-title mb-3">Tickets</h5>
+                                            <h5 className="card-title mb-3">{t("Tickets")}</h5>
                                             <div className="table-responsive">
-                                            <Table className="table-striped table-nowrap align-middle mb-0">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col">Name</th>
-                                                        <th scope="col">Price</th>
-                                                        <th scope="col">Quantity</th>
-                                                        <th scope="col">Type</th>
-                                                        <th scope="col">Status</th>
-                                                            <th scope="col">Addons</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                {tickets && tickets.length > 0 ? (
-                                                        tickets.map((ticket: any, index: number) => (
-                                                            <tr key={index}>
-                                                                <td>{ticket.ticket_name}</td>
-                                                                <td>{ticket.amount}</td>
-                                                                <td>{ticket.qty}</td>
-                                                                <td>{ticket.type}</td>
-                                                                <td style={{ color: "#0d6efd" }}><i className="ri-checkbox-circle-line fs-17 align-middle"></i> Paid</td>
-                                                                <td>
-                                                                    <Button variant="primary" onClick={(e) => handleShowAddonsModal(ticket.attendee_purchased_ticket_id)} size="sm" disabled={ticket.addons_count === 0}>
-                                                                        Addons ({ticket.addons_count})
-                                                                    </Button>
-
-                                                                </td>
-                                                            </tr>
-                                                        ))
-                                                    ) : (
+                                                <Table className="table-striped table-nowrap align-middle mb-0">
+                                                    <thead>
                                                         <tr>
-                                                            <td colSpan={5} className="text-center">No record found !!</td>
+                                                            <th scope="col">{t("Name")}</th>
+                                                            <th scope="col">{t("Unit Price")}</th>
+                                                            <th scope="col">{t("Total Price")}</th>
+                                                            <th scope="col">{t("Quantity")}</th>
+                                                            <th scope="col">{t("Type")}</th>
+                                                            <th scope="col">{t("Status")}</th>
+                                                            <th scope="col">{("Addons")}</th>
+                                                            <th scope="col">{t("Extra Services")}</th>
                                                         </tr>
-                                                    )}
-                                                </tbody>
-                                            </Table>
+                                                    </thead>
+                                                    <tbody>
+                                                        {tickets && tickets.length > 0 ? (
+                                                            tickets.map((ticket: any, index: number) => (
+                                                                <tr key={index}>
+                                                                    <td>{ticket.ticket_name}</td>
+                                                                    <td>{ticket.ticket_total_price}</td>
+                                                                    <td>{ticket.amount}</td>
+                                                                    <td>{ticket.qty}</td>
+                                                                    <td>{ticket.type}</td>
+                                                                    <td style={{ color: "#0d6efd" }}><i className="ri-checkbox-circle-line fs-17 align-middle"></i> Paid</td>
+                                                                    <td>
+                                                                        <Button variant="primary" onClick={(e) => handleShowAddonsModal(ticket.attendee_purchased_ticket_id)} size="sm" disabled={ticket.addons_count === 0}>
+                                                                            {t("Addons")} ({ticket.addons_count})
+                                                                        </Button>
+
+                                                                    </td>
+                                                                    <td>
+                                                                        {(() => {
+                                                                            let extraServices: any[] = [];
+                                                                            try {
+                                                                                extraServices = JSON.parse(ticket.extra_services ?? "[]");
+                                                                            } catch (e) {
+                                                                                extraServices = [];
+                                                                            }
+                                                                            return (
+                                                                                <Button
+                                                                                    variant="secondary"
+                                                                                    size="sm"
+                                                                                    onClick={() => handleShowExtraModal(extraServices)}
+                                                                                    disabled={extraServices.length === 0}
+                                                                                >
+                                                                                    {ticket.ticket_extra_service_name ?? t("Extra Services")} ({extraServices.length})
+                                                                                </Button>
+                                                                            );
+                                                                        })()}
+                                                                    </td>
+                                                                </tr>
+                                                            ))
+                                                        ) : (
+                                                            <tr>
+                                                                <td colSpan={5} className="text-center">{t("No record found")}</td>
+                                                            </tr>
+                                                        )}
+                                                    </tbody>
+                                                </Table>
                                             </div>
                                         </Card.Body>
                                     </Card>
                                     <Card>
                                         <Card.Body>
-                                            <h5 className="card-title mb-3">Sessions</h5>
+                                            <h5 className="card-title mb-3">{t("Sessions")}</h5>
                                             <div className="table-responsive">
-                                            <Table className="table-striped table-nowrap align-middle mb-0">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col">Name</th>
-                                                        <th scope="col">Start Time</th>
-                                                        <th scope="col">End Time</th>
-                                                        <th scope="col">Check In</th>
-                                                        <th scope="col">Status</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                {sessions && sessions.length > 0 ? (
-                                                        sessions.map((data: any, index: number) => (
-                                                            <tr key={index}>
-                                                                <td>{data.session_name}</td>
-                                                                <td>{data.start_time}</td>
-                                                                <td>{data.end_time}</td>
-                                                                <td>{data?.check_in_time ? new Date(data.check_in_time).toLocaleString() : "N/A"}</td>
-                                                                <td>
-                                                                    <span className={`badge ${data.status === 'Checked In' ? 'bg-info' : 'bg-success'}`}>
-                                                                        {data.status}
-                                                                    </span>
-                                                                </td>
-                                                            </tr>
-                                                        ))
-                                                    ) : (
+                                                <Table className="table-striped table-nowrap align-middle mb-0">
+                                                    <thead>
                                                         <tr>
-                                                            <td colSpan={5} className="text-center">No record found !!</td>
+                                                            <th scope="col">{t("Name")}</th>
+                                                            <th scope="col">{t("Start Time")}</th>
+                                                            <th scope="col">{t("End Time")}</th>
+                                                            <th scope="col">{t("Check In")}</th>
+                                                            <th scope="col">{t("Status")}</th>
                                                         </tr>
-                                                    )}
-                                                </tbody>
-                                            </Table>
+                                                    </thead>
+                                                    <tbody>
+                                                        {sessions && sessions.length > 0 ? (
+                                                            sessions.map((data: any, index: number) => (
+                                                                <tr key={index}>
+                                                                    <td>{data.session_name}</td>
+                                                                    <td>{data.start_time}</td>
+                                                                    <td>{data.end_time}</td>
+                                                                    <td>{data?.check_in_time ? new Date(data.check_in_time).toLocaleString() : "N/A"}</td>
+                                                                    <td>
+                                                                        <span className={`badge ${data.status === 'Checked In' ? 'bg-info' : 'bg-success'}`}>
+                                                                            {data.status}
+                                                                        </span>
+                                                                    </td>
+                                                                </tr>
+                                                            ))
+                                                        ) : (
+                                                            <tr>
+                                                                <td colSpan={5} className="text-center">{t("No record found")}</td>
+                                                            </tr>
+                                                        )}
+                                                    </tbody>
+                                                </Table>
                                             </div>
                                         </Card.Body>
                                     </Card>
@@ -308,7 +365,7 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                 show={showModal}
                 onHide={() => setShowModal(false)}
                 attendee={user}
-                purchasedSession= {sessionsPurchased}
+                purchasedSession={sessionsPurchased}
             />
 
             <TicketAddonsModal
@@ -316,6 +373,13 @@ const Profile = ({ attendee,user,sessions,tickets,sessionsPurchased }: any) => {
                 onHide={() => setShowAddonsModal(false)}
                 puchasedTicketId={currentTicketId}
             />
+
+            <TicketExtrasModal
+                show={showExtraModal}
+                onHide={() => setShowExtraModal(false)}
+                extras={currentExtras}
+            />
+
         </React.Fragment>
     );
 };

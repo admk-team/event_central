@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Organizer\Event;
 
+use App\Events\UpdateEventDashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organizer\Event\EventAppTicketRequest;
 use App\Models\Addon;
@@ -10,6 +11,7 @@ use App\Models\EventAppTicket;
 use App\Models\EventSession;
 use App\Models\EventTicketType;
 use App\Models\TicketFeature;
+use App\Notifications\LowCapacityNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -35,12 +37,14 @@ class EventAppTicketController extends Controller
             return [
                 'value' => $session->id,
                 'label' => $session->name . ($session->tracks->count() > 0 ? " | {$session->tracks[0]->name}" : ''),
+                'capacity' => $session->capacity,
+                'sync_with_tickets' => $session->sync_with_tickets,
             ];
         });
         $event_ticket_type = EventTicketType::where('event_app_id', session('event_id'))->latest()->get();
-        $addons_collection = Addon::currentEvent()->orderBy('name')->get();
+        $addons_collection = Addon::currentEvent()->with('variants')->orderBy('name')->get();
         $addonsAll = $addons_collection->map(function ($addon) {
-            return ['value' => $addon->id, 'label' => $addon->full_name, 'event_app_ticket_id' => $addon->event_app_ticket_id];
+            return ['value' => $addon->id, 'label' => $addon->full_name, 'event_app_ticket_id' => $addon->event_app_ticket_id, 'variants' => $addon->variants];
         });
 
         $fees = EventAppFee::where('status', 'active')->currentEvent()->orderBy('name')->get();
@@ -68,6 +72,12 @@ class EventAppTicketController extends Controller
         $data['sessions'] = $this->transformSessions($data);
         // $data['addons'] = $this->transformAddons($data);
         $data['fees'] = $this->transformFees($data);
+        $data['original_price'] = $data['base_price'];
+
+        $data['bulk_purchase_status'] = (bool) $data['bulk_purchase_status'];
+        $data['bulk_purchase_discount_type']  = $data['bulk_purchase_discount_type'] ?? [];
+        $data['bulk_purchase_discount_value'] = $data['bulk_purchase_discount_value'] ?? [];
+        $data['bulk_purchase_qty']            = $data['bulk_purchase_qty'] ?? [];
 
         // Log::info($data['sessions']);
         $ticket = EventAppTicket::create($data);
@@ -76,6 +86,21 @@ class EventAppTicketController extends Controller
         $ticket->addons()->sync($data['addons']);
         $ticket->fees()->sync($data['fees']);
 
+        foreach ($data['sessions'] as $sessionId) {
+
+            $session = EventSession::find($sessionId);
+            //dd($session);
+            if ($session && $session->current_capacity > 0) {
+                $session->decrement('current_capacity');
+                $threshold = ceil($session->capacity * 0.10);
+                if ($session->current_capacity <= $threshold) {
+                    if ($session->eventApp && $session->eventApp->organiser) {
+                        $session->eventApp->organiser->notify(new LowCapacityNotification($session));
+                    }
+                }
+            }
+        }
+        broadcast(new UpdateEventDashboard(session('event_id'), 'New Ticket Created'))->toOthers();
         return back()->withSuccess('Ticket created successfully');
     }
 
@@ -93,6 +118,12 @@ class EventAppTicketController extends Controller
         $data['sessions'] = $this->transformSessions($data);
         // $data['addons'] = $this->transformAddons($data);
         $data['fees'] = $this->transformFees($data);
+
+
+        $data['bulk_purchase_status'] = (bool) $request->bulk_purchase_status;
+        $data['bulk_purchase_discount_type']  = $request->bulk_purchase_discount_type ?? [];
+        $data['bulk_purchase_discount_value'] = $request->bulk_purchase_discount_value ?? [];
+        $data['bulk_purchase_qty']            = $request->bulk_purchase_qty ?? [];
 
         $ticket->update($data);
 
@@ -113,6 +144,7 @@ class EventAppTicketController extends Controller
         }
 
         $ticket->delete();
+        broadcast(new UpdateEventDashboard(session('event_id'), 'Ticket Deleted'))->toOthers();
         return back()->withSuccess('Ticket Removed Successfully');
     }
 
@@ -130,6 +162,7 @@ class EventAppTicketController extends Controller
         foreach ($ids as $id) {
             EventAppTicket::find($id)?->delete();
         }
+        broadcast(new UpdateEventDashboard(session('event_id'), 'Ticket Deleted'))->toOthers();
     }
 
     private function transformSessions($data)

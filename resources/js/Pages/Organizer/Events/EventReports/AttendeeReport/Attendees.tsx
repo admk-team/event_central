@@ -11,9 +11,11 @@ import HasPermission from '../../../../../Components/HasPermission';
 import { Check, CircleCheck, CircleX } from 'lucide-react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 function Attendees({ attendees }: any) {
     // Date range state for the picker
+    const { t } = useLaravelReactI18n();
     const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
     const [startDate, endDate] = dateRange;
 
@@ -51,13 +53,13 @@ function Attendees({ attendees }: any) {
     };
     const columns: ColumnDef<typeof attendees.data[0]> = [
         {
-            header: () => 'ID',
+            header: () => t('ID'),
             headerStyle: { width: '70px' },
             cell: (attendee) => attendee.id,
             cellClass: 'fw-medium',
         },
         {
-            header: () => 'Avatar',
+            header: () => t('Avatar'),
             headerStyle: { width: '90px' },
             cell: (attendee) => (
                 <img src={attendee.avatar_img} alt={attendee.name} width="50" height="50" className="rounded-circle" />
@@ -65,7 +67,7 @@ function Attendees({ attendees }: any) {
         },
         {
             accessorKey: 'first_name',
-            header: () => 'First Name',
+            header: () => t('First Name'),
             headerStyle: { width: '100px', textWrap: 'wrap' },
             cell: (attendee) => attendee.first_name,
             cellStyle: { width: '100px', textWrap: 'wrap' },
@@ -73,7 +75,7 @@ function Attendees({ attendees }: any) {
         },
         {
             accessorKey: 'last_name',
-            header: () => 'Last Name',
+            header: () => t('Last Name'),
             headerStyle: { width: '100px', textWrap: 'wrap' },
             cell: (attendee) => attendee.last_name,
             cellStyle: { width: '100px', textWrap: 'wrap' },
@@ -81,31 +83,31 @@ function Attendees({ attendees }: any) {
         },
         {
             accessorKey: 'email',
-            header: () => 'Email',
+            header: () => t('Email'),
             headerStyle: { width: '150px', textWrap: 'wrap' },
             cell: (attendee) => attendee.email,
             cellStyle: { width: '150px', textWrap: 'wrap' },
             searchable: true,
         },
         {
-            header: () => 'Position',
+            header: () => t('Position'),
             headerStyle: { width: '200px', textWrap: 'wrap' },
             cell: (attendee) => attendee.position,
             cellStyle: { width: '200px', textWrap: 'wrap' },
         },
         {
-            header: () => 'Checked In',
+            header: () => t('Checked In'),
             headerStyle: { width: '100px', textWrap: 'wrap' },
             cell: (attendee) => (attendee.event_checkin ? <CircleCheck color="green" /> : <CircleX color="red" />),
             cellClass: 'ps-4',
             cellStyle: { width: '100px', textWrap: 'wrap' },
         },
         {
-            header: () => 'Actions',
+            header: () => t('Actions'),
             headerStyle: { width: '100px', textWrap: 'wrap' },
             cell: (attendee) => (
                 <Link
-                    title="Attendee Reports"
+                    title={t("Attendee Reports")}
                     href={route('organizer.attendee.report.info', { id: attendee.id })}
                     className="link-primary cursor-pointer"
                 >
@@ -118,7 +120,7 @@ function Attendees({ attendees }: any) {
     return (
         <React.Fragment>
             <Head>
-                <title>Attendees Report</title>
+                <title>{t("Attendees Report")}</title>
                 <meta name="description" content="Manage event attendees, edit details, and delete records from the organizer's dashboard." />
                 <meta name="keywords" content="event attendees, attendee management, conference attendees, admin dashboard" />
                 <meta name="robots" content="index, follow" />
@@ -134,7 +136,7 @@ function Attendees({ attendees }: any) {
                     <Row className="d-flex justify-content-end mb-3" >
                         <Col md={3}>
                             <Form.Group className="d-flex justify-content-end mb-1 gap-1">
-                            <Form.Label className="mt-2">Date Range Filter</Form.Label>
+                            <Form.Label className="mt-2">{t("Date Range Filter")}</Form.Label>
                                 {DatePicker ? (
                                     <DatePicker
                                         selectsRange
@@ -146,7 +148,7 @@ function Attendees({ attendees }: any) {
                                         isClearable
                                     />
                                 ) : (
-                                    <p>Loading date picker...</p>
+                                    <p>{t("Loading date picker...")}</p>
                                 )}
                             </Form.Group>
                         </Col>
@@ -157,7 +159,7 @@ function Attendees({ attendees }: any) {
                                 disabled={processing || (!data.start_date && !data.end_date)}
                                 className="w-100 mb-1"
                             >
-                                Apply Filter
+                                {t("Apply Filter")}
                             </Button>
                         </Col>
                         <Col md={1}>
@@ -167,7 +169,7 @@ function Attendees({ attendees }: any) {
                                 disabled={processing}
                                 className="w-100"
                             >
-                                Clear Filter
+                                {t("Clear Filter")}
                             </Button>
                         </Col>
                     </Row>
@@ -177,9 +179,9 @@ function Attendees({ attendees }: any) {
                                 <DataTable
                                     data={attendees}
                                     columns={columns}
-                                    title="Attendees"
+                                    title={t("Attendees")}
                                     tableLayoutFixed={true}
-                                    searchCombinations={[['first_name', 'last_name']]}
+                                    searchCombinations={[[t('first_name'), t('last_name')]]}
                                     actions={[]}
                                 />
                             </HasPermission>

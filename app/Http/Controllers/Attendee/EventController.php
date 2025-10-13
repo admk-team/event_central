@@ -18,8 +18,10 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\Api\AttendeeFavSessionResource;
+use App\Models\Attendee;
 use App\Models\AttendeeContactForm;
 use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class EventController extends Controller
 {
@@ -36,7 +38,8 @@ class EventController extends Controller
         );
         $lasteventDate = $eventApp->dates()->orderBy('date', 'desc')->get();
         return Inertia::render('Attendee/AttendeeDashboard', compact([
-            'eventApp','lasteventDate'
+            'eventApp',
+            'lasteventDate'
         ]));
     }
 
@@ -82,7 +85,10 @@ class EventController extends Controller
     {
         $checkin = SessionCheckIn::where('attendee_id', auth()->user()->id)->where('session_id', $eventSession->id)->exists();
         $eventApp = EventApp::find(Auth::user()->event_app_id);
-
+        $download_certificate = false;
+        if (!now()->lt(Carbon::parse($eventSession->end_date_time)) && $checkin) {
+            $download_certificate = true;
+        }
         // Finding previous and next session IDs with reference to current session
         $next_session_id = null;
         $prev_session_id = null;
@@ -93,7 +99,6 @@ class EventController extends Controller
                 $next_session_id = $index < (count($sessions) - 1) ? $sessions[$index + 1] : null;
             }
         }
-
         // Note: After upgrading to Laravel 11, the above code can be replaced with:
         // $next_session_id = $sessions->after($eventSession->id);
         // $prev_session_id = $sessions->before($eventSession->id);
@@ -115,6 +120,7 @@ class EventController extends Controller
             'next_session_id',
             'checkin',
             'attendeeRating',
+            'download_certificate'
         ]));
     }
 
@@ -196,5 +202,26 @@ class EventController extends Controller
         }
 
         return back()->withSuccess("Session added to favourite");
+    }
+
+    // download the certificate
+    public function downloadCertificate(EventSession $eventSession)
+    {
+        $eventSession->load(['eventApp']);
+        $attendee = auth()->user();
+
+        $pdf = Pdf::loadView('certificate.event-certificate', [
+            'session_name' => $eventSession->name,
+            'attendee' => $attendee->name,
+            'event_name' => $eventSession->eventApp->name,
+            'start_date' => $eventSession->start_date_time,
+        ])->setPaper('a4', 'landscape');;
+        return $pdf->download('certificate.pdf');
+        return view('certificate.event-certificate', [
+            'session_name' => $eventSession->name,
+            'attendee' => $attendee->name,
+            'event_name' => $eventSession->eventApp->name,
+        ]);
+        // dd($eventSession->name, $attendee->name, $eventSession->eventApp->name);
     }
 }

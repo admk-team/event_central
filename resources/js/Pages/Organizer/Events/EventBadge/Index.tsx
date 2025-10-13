@@ -9,6 +9,7 @@ import DataTable, { ColumnDef } from '../../../../Components/DataTable';
 import DeleteModal from "../../../../Components/Common/DeleteModal";
 import DeleteManyModal from "../../../../Components/Common/DeleteManyModal";
 import CreateEditModal from './Components/CreateEditModal'; // Updated to badge-specific modal
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 function Index({ data }: any) {
     const [showCreateEditModal, setShowCreateEditModal] = useState(false);
@@ -16,6 +17,7 @@ function Index({ data }: any) {
     const [deleteBadge, setDeleteBadge] = useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
+         const { t } = useLaravelReactI18n();
 
     const deleteForm = useForm({
         _method: 'DELETE',
@@ -54,16 +56,17 @@ function Index({ data }: any) {
     const columns: ColumnDef<typeof data.data[0]> = [
         {
             accessorKey: 'id',
-            header: () => 'ID',
+            header: () => t('ID'),
             cell: (badge) => badge.id,
             cellClass: 'fw-medium',
             enableSorting: true,
         },
         {
             accessorKey: 'title',
-            header: () => 'Title',
+            header: () => t('Title'),
             cell: (badge) => badge.title,
             enableSorting: true,
+            searchable: true,
         },
         // {
         //     accessorKey: 'description',
@@ -73,7 +76,7 @@ function Index({ data }: any) {
         // },
         {
             accessorKey: 'icon',
-            header: () => 'Icon',
+            header: () => t('Icon'),
             cell: (badge) => (
                 badge.icon ? (
                     <img src={`/storage/${badge.icon}`} alt={badge.title} style={{ width: '32px', height: '32px' }} />
@@ -85,24 +88,24 @@ function Index({ data }: any) {
         },
         {
             accessorKey: 'type',
-            header: () => 'Type',
+            header: () => t('Type'),
             cell: (badge) => badge.type,
             enableSorting: true,
         },
         {
             accessorKey: 'points',
-            header: () => 'Points',
+            header: () => t('Points'),
             cell: (badge) => badge.points,
             enableSorting: true,
         },
         {
             accessorKey: 'milestone',
-            header: () => 'Milestone',
+            header: () => t('Milestone'),
             cell: (badge) => badge.milestone || 'N/A',
             enableSorting: true,
         },
         {
-            header: () => 'Action',
+            header: () => t('Action'),
             cell: (badge) => (
                 <div className="hstack gap-3 fs-15">
                     <HasPermission permission="edit_event_badge">
@@ -125,19 +128,19 @@ function Index({ data }: any) {
 
     return (
         <React.Fragment>
-            <Head title="Badges" />
+            <Head title={t("Badges")} />
             <div className="page-content">
                 <Container fluid>
                     <BreadCrumb
-                        title={`Event`}
-                        pageTitle="Badges"
+                        title={t(`Event`)}
+                        pageTitle={t("Badges")}
                     />
                     <Row>
                         <Col xs={12}>
                             <DataTable
                                 data={data}
                                 columns={columns}
-                                title="Badges"
+                                title={t("Badges")}
                                 actions={[
                                     // Delete multiple
                                     {
@@ -153,7 +156,7 @@ function Index({ data }: any) {
                                                         )
                                                     }
                                                 >
-                                                    <i className="ri-delete-bin-5-line"></i> Delete (
+                                                    <i className="ri-delete-bin-5-line"></i> {t("Delete")} (
                                                     {dataTable.getSelectedRows().length})
                                                 </Button>
                                             </HasPermission>
@@ -165,7 +168,7 @@ function Index({ data }: any) {
                                         render: (
                                             <HasPermission permission="create_event_badge">
                                                 <Button onClick={() => setShowCreateEditModal(true)}>
-                                                    <i className="ri-add-fill"></i> Add New
+                                                    <i className="ri-add-fill"></i> {t("Add New")}
                                                 </Button>
                                             </HasPermission>
                                         ),

@@ -3,7 +3,7 @@ import React, { useCallback, useRef, useState } from 'react'
 import Flatpickr from "react-flatpickr";
 import { Button, Col, Form, FormGroup, Modal, Nav, Row, Tab } from 'react-bootstrap';
 import { GoogleMap, LoadScript, Marker, InfoWindow, Autocomplete } from '@react-google-maps/api';
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 const containerStyle = {
     width: '100%',
@@ -20,7 +20,7 @@ interface CreateModalProps {
     showModal: () => void;
 }
 function CreateModal({ addEventModal, showModal }: CreateModalProps) {
-
+    const { t } = useLaravelReactI18n();
     const { data, setData, post, processing, errors, reset } = useForm({
         name: "",
         start_date: "",
@@ -84,7 +84,7 @@ function CreateModal({ addEventModal, showModal }: CreateModalProps) {
     return (
         <Modal className='modal-dialog-centered' centered show={addEventModal} onHide={() => showModal()} backdrop={'static'}>
             <Modal.Header>
-                <h5 className="modal-title" id="staticBackdropLabel">Create Event</h5>
+                <h5 className="modal-title" id="staticBackdropLabel">{t("Create Event")}</h5>
                 <Button type="button" className="btn-close"
                     onClick={() => {
                         showModal();
@@ -95,12 +95,12 @@ function CreateModal({ addEventModal, showModal }: CreateModalProps) {
                     <Row className="gy-3">
                         <Col md={12}>
                             <div className="">
-                                <Form.Label htmlFor="name" className="form-label text-start w-100">Event Name</Form.Label>
+                                <Form.Label htmlFor="name" className="form-label text-start w-100">{("Event Name")}</Form.Label>
                                 <Form.Control
                                     type="text"
                                     className="form-control"
                                     id="name"
-                                    placeholder="Enter name"
+                                    placeholder={t("Enter name")}
                                     value={data.name}
                                     onChange={(e) => setData('name', e.target.value)}
                                 />
@@ -109,7 +109,7 @@ function CreateModal({ addEventModal, showModal }: CreateModalProps) {
                         </Col>
                         <Col md={6}>
                             <div className="">
-                                <Form.Label htmlFor="name" className="form-label text-start w-100">Start Date</Form.Label>
+                                <Form.Label htmlFor="name" className="form-label text-start w-100">{("Start Date")}</Form.Label>
                                 <Flatpickr
                                     className="form-control"
                                     options={{
@@ -128,7 +128,7 @@ function CreateModal({ addEventModal, showModal }: CreateModalProps) {
                         </Col>
                         <Col md={6}>
                             <div className="">
-                                <Form.Label htmlFor="name" className="form-label text-start w-100">End Date</Form.Label>
+                                <Form.Label htmlFor="name" className="form-label text-start w-100">{("End Date")}</Form.Label>
                                 <Flatpickr
                                     className="form-control"
                                     options={{
@@ -151,19 +151,19 @@ function CreateModal({ addEventModal, showModal }: CreateModalProps) {
                                     <Nav.Item
                                         onClick={() => setData('type', 'virtual')}>
                                         <Nav.Link eventKey="1">
-                                            Virtual Event
+                                            {t("Virtual Event")}
                                         </Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item
                                         onClick={() => setData('type', 'hybrid')}>
                                         <Nav.Link eventKey="2">
-                                            Hybrid Event
+                                            {t("Hybrid Event")}
                                         </Nav.Link>
                                     </Nav.Item>
                                     <Nav.Item
                                         onClick={() => setData('type', 'in-person')}>
                                         <Nav.Link eventKey="3">
-                                            In-Person Event
+                                            {t("In-Person Event")}
                                         </Nav.Link>
                                     </Nav.Item>
                                 </Nav>
@@ -171,12 +171,12 @@ function CreateModal({ addEventModal, showModal }: CreateModalProps) {
                                 <Tab.Content className="text-muted">
                                     <Tab.Pane eventKey="1" id="base-justified-home">
                                         <div className="">
-                                            <Form.Label htmlFor="virtual-location" className="form-label text-start w-100">Location</Form.Label>
+                                            <Form.Label htmlFor="virtual-location" className="form-label text-start w-100">{t("Location")}</Form.Label>
                                             <Form.Control
                                                 type="text"
                                                 className="form-control"
                                                 id="virtual-location"
-                                                placeholder="Country used for default timezone"
+                                                placeholder={t("Country used for default timezone")}
                                                 value={data.location_base}
                                                 onChange={(e) => setData('location_base', e.target.value)}
                                             />
@@ -187,12 +187,12 @@ function CreateModal({ addEventModal, showModal }: CreateModalProps) {
 
                                     <Tab.Pane eventKey="2" id="product">
                                         <div className="">
-                                            <Form.Label htmlFor="in-person-location" className="form-label text-start w-100">Location</Form.Label>
+                                            <Form.Label htmlFor="in-person-location" className="form-label text-start w-100">{t("Location")}</Form.Label>
                                             <Form.Control
                                                 type="text"
                                                 className="form-control"
                                                 id="in-person-location"
-                                                placeholder="Where does your event take place?"
+                                                placeholder={t("Where does your event take place?")}
                                                 value={data.location_base}
                                                 onChange={(e) => setData('location_base', e.target.value)}
                                             />
@@ -201,7 +201,7 @@ function CreateModal({ addEventModal, showModal }: CreateModalProps) {
                                     </Tab.Pane>
                                     <Tab.Pane eventKey="3" id="in-person">
                                         <div className="">
-                                            <Form.Label htmlFor="hybrid-location" className="form-label text-start w-100">Location</Form.Label>
+                                            <Form.Label htmlFor="hybrid-location" className="form-label text-start w-100">{t("Location")}</Form.Label>
                                             {/* <Autocomplete
                                                 onLoad={(autocomplete) => (autocompleteRef.current = autocomplete)}
                                                 onPlaceChanged={onPlaceChanged}
@@ -210,7 +210,7 @@ function CreateModal({ addEventModal, showModal }: CreateModalProps) {
                                                     type="text"
                                                     className="form-control mb-3"
                                                     id="hybrid-location"
-                                                    placeholder="Where does your event take place?"
+                                                    placeholder={t("Where does your event take place?")}
                                                     value={data.location_base}
                                                     // onChange={handleLocationChange}
                                                 />
@@ -233,11 +233,11 @@ function CreateModal({ addEventModal, showModal }: CreateModalProps) {
                         </Col>
                         <Col md={12}>
                             <div className="">
-                                <Form.Label htmlFor="description" className="form-label text-start w-100">Event Description</Form.Label>
+                                <Form.Label htmlFor="description" className="form-label text-start w-100">{t("Event Description")}</Form.Label>
                                 <textarea
                                     className="form-control"
                                     id="description"
-                                    placeholder="Enter description"
+                                    placeholder={t("Enter description")}
                                     value={data.description}
                                     onChange={(e) => setData('description', e.target.value)}
                                 />
@@ -245,12 +245,12 @@ function CreateModal({ addEventModal, showModal }: CreateModalProps) {
                             </div>
                         </Col>
                         <div className="">
-                            <Form.Label htmlFor="location-type" className="form-label text-start w-100">Location Type</Form.Label>
+                            <Form.Label htmlFor="location-type" className="form-label text-start w-100">{t("Location Type")}</Form.Label>
                             <Form.Control
                                 type="text"
                                 className="form-control"
                                 id="location-type"
-                                placeholder="Enter location type"
+                                placeholder={t("Enter location type")}
                                 value={data.location_type}
                                 onChange={(e) => setData('location_type', e.target.value)}
                             />
@@ -258,7 +258,7 @@ function CreateModal({ addEventModal, showModal }: CreateModalProps) {
                         </div>
                         <div className="d-flex align-items-center justify-content-between w-100">
                             <div>
-                                <Form.Label htmlFor="singleDay" className="form-label text-start w-100">Single Day</Form.Label>
+                                <Form.Label htmlFor="singleDay" className="form-label text-start w-100">{t("Single Day")}</Form.Label>
                                 <Form.Check.Input
                                     type="radio"
                                     name='schedualType'
@@ -270,7 +270,7 @@ function CreateModal({ addEventModal, showModal }: CreateModalProps) {
                                 <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.schedual_type} </Form.Control.Feedback>
                             </div>
                             <div>
-                                <Form.Label htmlFor="multiDays" className="form-label text-start w-100">Multi Days</Form.Label>
+                                <Form.Label htmlFor="multiDays" className="form-label text-start w-100">{t("Multi Days")}</Form.Label>
                                 <Form.Check.Input
                                     type="radio"
                                     name='schedualType'
@@ -282,7 +282,7 @@ function CreateModal({ addEventModal, showModal }: CreateModalProps) {
                                 <Form.Control.Feedback type="invalid" className='d-block mt-2'> {errors.schedual_type} </Form.Control.Feedback>
                             </div>
                             <div>
-                                <Form.Label htmlFor="recurring" className="form-label text-start w-100">Recurring</Form.Label>
+                                <Form.Label htmlFor="recurring" className="form-label text-start w-100">{t("Recurring")}</Form.Label>
                                 <Form.Check.Input
                                     type="radio"
                                     name='schedualType'
@@ -297,8 +297,8 @@ function CreateModal({ addEventModal, showModal }: CreateModalProps) {
                     </Row>
 
                     <div className="hstack gap-2 justify-content-center mt-4">
-                        <Button disabled={processing} className="btn btn-light" onClick={() => showModal()}>Close</Button>
-                        <Button type='submit' disabled={processing} className="btn btn-success">Create</Button>
+                        <Button disabled={processing} className="btn btn-light" onClick={() => showModal()}>{t("Close")}</Button>
+                        <Button type='submit' disabled={processing} className="btn btn-success">{t("Create")}</Button>
                     </div>
                 </form>
             </Modal.Body>

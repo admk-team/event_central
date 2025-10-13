@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Organizer\Event;
 use Exception;
 use App\Http\Controllers\Controller;
 use App\Models\EventApp;
+use App\Models\Attendee;
 use App\Models\EventAppCategory;
 use App\Models\EventAppDate;
 use App\Models\RecurringType;
@@ -93,7 +94,7 @@ class EventController extends Controller
         if ($back) {
             return back();
         }
-    
+
         return redirect()->route('organizer.events.dashboard');
     }
 
@@ -217,5 +218,18 @@ class EventController extends Controller
     {
         $eventAppImage->delete();
         return back()->withSuccess('Deleted successfully.');
+    }
+    public function demographic($eventUuid)
+    {
+        $event = EventApp::where('uuid', $eventUuid)->firstOrFail();
+
+        $attendees = Attendee::where('event_app_id', $event->id)
+            ->select('country', 'location', 'position')
+            ->get();
+         //dd($attendees);
+        return Inertia::render('Organizer/Events/Demographic', [
+            'event' => $event,
+            'attendees' => $attendees,
+        ]);
     }
 }

@@ -27,7 +27,7 @@ class EventStoreRequest extends FormRequest
             'tagline'       => ['nullable', 'string'],
             'description'   => ['required', 'string'],
             'start_date'    => ['required', 'date', 'after_or_equal:today'],
-            'location_type' => ['required', 'string', 'max:255'],
+            'location_type' => ['nullable', 'string', 'max:255'],
             'location_base' => ['nullable', 'string', 'max:255'],
             'type'          => ['required', 'string', 'max:255'],
             'schedual_type' => ['required', 'in:singleday,multiday'],
@@ -35,7 +35,7 @@ class EventStoreRequest extends FormRequest
             'recurring_type_id' => 'required_if_accepted:is_recurring',
             'is_recurring' => ['boolean'],
             'logo_file' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp'],
-            'image_files' => ['required', 'array', 'min:1'],
+            'image_files' => ['nullable', 'array'],
         ];
     }
 

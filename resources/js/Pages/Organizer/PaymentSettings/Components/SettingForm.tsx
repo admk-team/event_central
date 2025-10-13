@@ -17,10 +17,14 @@ import {
 import stripe from "../../../../../images/stripe.png";
 import paypal from "../../../../../images/paypal.png";
 import toast from "react-hot-toast";
+import CurrencySelect from "../../../../Components/CurrencySelect";
+import { useLaravelReactI18n } from "laravel-react-i18n";
+
 
 export default function SettingForm({ keys }: any) {
     // console.log(keys);
 
+    const { t } = useLaravelReactI18n();
     const { data, setData, post, processing, errors } = useForm({
         _method: "PUT",
 
@@ -32,6 +36,7 @@ export default function SettingForm({ keys }: any) {
         //Stripe fields
         stripe_publishable_key: keys?.stripe_publishable_key ?? "",
         stripe_secret_key: keys?.stripe_secret_key ?? "",
+        currency: keys?.currency ?? "",
     });
 
     const submit: React.FormEventHandler<HTMLFormElement> = (e) => {
@@ -68,7 +73,7 @@ export default function SettingForm({ keys }: any) {
                             )}
                         </CardTitle>
                         <CardText>
-                            Edit global Stripe Setting for all events.
+                            {t("Stripe Info")}
                         </CardText>
                     </div>
                 </CardHeader>
@@ -146,7 +151,7 @@ export default function SettingForm({ keys }: any) {
                             )}
                         </CardTitle>
                         <CardText>
-                            Edit global Paypal Setting for all events.
+                            {t("PayPal Info")}
                         </CardText>
                     </div>
                 </CardHeader>
@@ -234,7 +239,35 @@ export default function SettingForm({ keys }: any) {
                     </InputGroup>
                 </CardBody>
             </Card>
-            <Row className="justify-content-center">
+            <Card>
+                <CardHeader className="d-flex justify-content-between align-items-center gap-2">
+                    <div>
+                        <CardTitle>
+                            <strong>{t("Currency")}</strong>
+                        </CardTitle>
+                        <CardText>
+                            {t("Currency Info")}
+                        </CardText>
+                    </div>
+                </CardHeader>
+                <CardBody>
+                    <InputGroup className="mb-3">
+                        <CurrencySelect
+                            value={data.currency} // now an object like { code: "ZWL", symbol: "Z$" }
+                            onChange={(val) => setData({
+                                ...data,
+                                currency: val,
+                                currency_code: val.code,
+                                currency_symbol: val.symbol
+                            })}
+                            error={errors.currency}
+                        />
+                    </InputGroup>
+
+                </CardBody>
+            </Card>
+
+            <Row className="justify-content-center mb-3">
                 <Col md={6} lg={6}>
                     <Button
                         type="submit"
@@ -250,10 +283,10 @@ export default function SettingForm({ keys }: any) {
                                     role="status"
                                     aria-hidden="true"
                                 />
-                                Saving
+                                {t("Saving")}
                             </span>
                         ) : (
-                            <span>Save</span>
+                            <span>{t("Save")}</span>
                         )}
                     </Button>
                 </Col>

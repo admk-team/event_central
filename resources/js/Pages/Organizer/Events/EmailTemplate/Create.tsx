@@ -4,8 +4,11 @@ import { Head, router, useForm } from '@inertiajs/react';
 import Layout from '../../../../Layouts/Event';
 import { Button, Col, Container, Row, Form, Card } from 'react-bootstrap';
 import BreadCrumb from '../../../../Components/Common/BreadCrumb';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 const Create = () => {
+    const { t } = useLaravelReactI18n();
+
     const emailEditorRef = useRef<EditorRef>(null);
 
     const { data, setData, errors, processing, setError, reset } = useForm({
@@ -68,28 +71,28 @@ const Create = () => {
 
     return (
         <>
-            <Head title="Create Email Template" />
+            <Head title={t("Create Email Template")} />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Create Email Template" pageTitle="Dashboard" />
+                    <BreadCrumb title={t("Create Email Template")} pageTitle={t("Dashboard")} />
                     <Row>
                         <Card className="mt-4">
                             <Card.Header className="d-flex justify-content-between align-items-center">
-                                <div className="card-title">Create Email Template</div>
+                                <div className="card-title">{t("Create Email Template")}</div>
                                 <Button
                                     type="button"
                                     className="btn btn-success px-3"
                                     onClick={handleSubmit}
                                     disabled={isSubmitting || processing}
                                 >
-                                    {isSubmitting ? 'Saving...' : 'Create'}
+                                    {isSubmitting ? t('Saving...') : t('Create')}
                                 </Button>
                             </Card.Header>
                             <Card.Body>
                                 <Row className="mb-4">
                                     <Col xxl={6} md={6}>
                                         <Form.Group>
-                                            <Form.Label htmlFor="name">Template Name</Form.Label>
+                                            <Form.Label htmlFor="name">{t("Template Name")}</Form.Label>
                                             <Form.Control
                                                 type="text"
                                                 id="name"
@@ -106,7 +109,7 @@ const Create = () => {
                                     </Col>
                                     <Col xxl={6} md={6}>
                                         <Form.Group>
-                                            <Form.Label htmlFor="image">Preview Image</Form.Label>
+                                            <Form.Label htmlFor="image">{t("Preview Image")}</Form.Label>
                                             <Form.Control
                                                 type="file"
                                                 id="image"

@@ -25,14 +25,14 @@ class EventPlatformRequest extends FormRequest
         return [
             'name' => 'required|string',
             'type' => 'required|string',
+            'seats' => 'required|integer',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'name' => 'required|string',
-            'type.required' => 'Platform is required',
+            'type.required' => 'Location is required',
         ];
     }
 }

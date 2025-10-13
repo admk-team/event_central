@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Events\UpdateEventDashboard;
 use App\Models\Attendee;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -47,5 +48,6 @@ class ImportAttendeeJob implements ShouldQueue
                     $new->save();
                 }
             });
+        broadcast(new UpdateEventDashboard(session('event_id'),'New Attendee Created'))->toOthers();
     }
 }

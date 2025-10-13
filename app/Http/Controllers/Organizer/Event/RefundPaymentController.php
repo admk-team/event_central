@@ -4,14 +4,21 @@ namespace App\Http\Controllers\Organizer\Event;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organizer\Event\OrganizerRefundRequest;
+use App\Mail\AvailableTicketMail;
 use App\Models\Attendee;
 use App\Models\AttendeePayment;
 use App\Models\AttendeeRefundTicket;
+use App\Models\EventApp;
+use App\Models\EventAppTicket;
+use App\Models\OrganizerPaymentKeys;
+use App\Models\WaitingList;
 use App\Services\StripeService;
 use Error;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 
 use function Laravel\Prompts\table;
@@ -27,9 +34,11 @@ class RefundPaymentController extends Controller
 
     public function refundTickets()
     {
+        $eventApp = EventApp::findOrFail(Auth::user()->event_app_id ?? session('event_id'));
+        $getCurrency = OrganizerPaymentKeys::getCurrencyForUser($eventApp->organizer_id);
         $refundPayments = $this->datatable(AttendeeRefundTicket::currentEvent()->with('attendee', 'attendeePayment'));
         // dd($refundPayments);
-        return Inertia::render('Organizer/Events/RefundTickets/Index', compact('refundPayments'));
+        return Inertia::render('Organizer/Events/RefundTickets/Index', compact('refundPayments', 'getCurrency'));
     }
 
     public function attendeeRefund(OrganizerRefundRequest $request)
@@ -69,6 +78,23 @@ class RefundPaymentController extends Controller
             $attendee_payment = AttendeePayment::find($refund->attendee_payment_id);
             foreach ($attendee_payment->purchased_tickets as $purchase_ticket) {
                 DB::table('attendee_event_session')->where('attendee_purchased_ticket_id', $purchase_ticket->id)->delete();
+                $waiting_attendees = WaitingList::with('attendee')
+                    ->where('event_app_ticket_id', $purchase_ticket->event_app_ticket_id)
+                    ->get();
+                $eventApp = EventApp::find($purchase_ticket->event_app_id);
+                $eventTicket = EventAppTicket::where('id', $purchase_ticket->event_app_ticket_id)
+                    ->where('event_app_id', $purchase_ticket->event_app_id)
+                    ->first();
+                foreach ($waiting_attendees as $waiting) {
+                    $ticketUrl = url('/') . '/attendee' . '/' . $purchase_ticket->event_app_id . '/login';
+                    if (!empty($waiting->attendee?->email) && $eventApp && $eventTicket && $ticketUrl) {
+                        Mail::to($waiting->attendee->email)->queue(
+                            new AvailableTicketMail($waiting->attendee, $eventTicket, $ticketUrl, $eventApp)
+                        );
+                    } else {
+                        Log::error("Attendee email missing for waiting ID: {$waiting->id}");
+                    }
+                }
                 $purchase_ticket->delete();
             }
         }

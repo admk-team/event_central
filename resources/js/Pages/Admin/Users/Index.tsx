@@ -8,6 +8,7 @@ import DataTable, { ColumnDef } from '../../../Components/DataTable';
 import BreadCrumb2 from '../../../Components/Common/BreadCrumb2';
 import DeleteManyModal from '../../../Components/Common/DeleteManyModal';
 import HasPermission from '../../../Components/HasPermission';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 function Index({ users }: any) {
     const [showCreateEditModal, _setShowCreateEditModal] = React.useState(false);
@@ -15,6 +16,7 @@ function Index({ users }: any) {
     const [deleteUser, setDeleteUser] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
+      const { t } = useLaravelReactI18n();
 
     const setShowCreateEditModal = (state: boolean) => {
         _setShowCreateEditModal(state);
@@ -60,31 +62,31 @@ function Index({ users }: any) {
     const columns: ColumnDef<typeof users.data[0]> = [
         {
             accessorKey: 'id',
-            header: () => 'ID',
+            header: () => t('ID'),
             cell: (user) => user.id,
             cellClass: "fw-medium",
             enableSorting: true,
         },
         {
             accessorKey: 'name',
-            header: () => 'Name',
+            header: () => t('Name'),
             cell: (user) => user.name,
             enableSorting: true,
         },
         {
             accessorKey: 'email',
-            header: () => 'Email',
+            header: () => t('Email'),
             cell: (user) => user.email,
             enableSorting: true,
         },
         {
             accessorKey: 'role',
-            header: () => 'Role',
+            header: () => t('Role'),
             cell: (user) => <span className="badge bg-success-subtle text-success">{user.roles[0]?.name}</span>,
             enableSorting: true,
         },
         {
-            header: () => 'Action',
+            header: () => t('Action'),
             cell: (user) => (
                 <div className="hstack gap-3 fs-15">
                     <HasPermission permission="edit_users">
@@ -105,7 +107,7 @@ function Index({ users }: any) {
             <Head title='Users - Admin' />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb2 
+                    <BreadCrumb2
                         title="Users"
                     />
                     <Row>
@@ -119,7 +121,7 @@ function Index({ users }: any) {
                                     {
                                         render: (dataTable) => (
                                             <HasPermission permission="delete_users">
-                                                <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>
+                                                <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> {t("Delete")} ({dataTable.getSelectedRows().length})</Button>
                                             </HasPermission>
                                         ),
                                         showOnRowSelection: true,
@@ -128,7 +130,7 @@ function Index({ users }: any) {
                                     {
                                         render: (
                                             <HasPermission permission="create_users">
-                                                <Button onClick={() => setShowCreateEditModal(true)}><i className="ri-add-fill"></i> Add New</Button>
+                                                <Button onClick={() => setShowCreateEditModal(true)}><i className="ri-add-fill"></i> {t("Add New")}</Button>
                                             </HasPermission>
                                         )
                                     },

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Organizer\Event\Reports;
 
+use App\Helpers\CsvExporter;
 use App\Http\Controllers\Controller;
 use App\Models\AttendeeRefundTicket;
 use Illuminate\Http\Request;
@@ -68,5 +69,46 @@ class RefundTicketReportController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function exportRefundTicketData()
+    {
+        $refunds = AttendeeRefundTicket::currentEvent()
+            ->with(['attendee', 'attendeePayment'])
+            ->get()
+            ->map(function ($refund) {
+                return [
+                    $refund->id,
+                    $refund->attendee
+                        ? $refund->attendee->first_name . ' ' . $refund->attendee->last_name
+                        : '',
+                    $refund->attendeePayment
+                        ? '$' . $refund->attendeePayment->amount_paid
+                        : '$0',
+                    $refund->attendeePayment
+                        ? $refund->attendeePayment->payment_method
+                        : '',
+                    '$' . $refund->refund_requested_amount,
+                    $refund->refund_approved_amount > 0
+                        ? '$' . $refund->refund_approved_amount
+                        : '$0',
+                    ucfirst($refund->status),
+                ];
+            })->toArray();
+
+        return CsvExporter::export('refund_tickets_report.csv', [
+            [
+                'columns' => [
+                    'ID',
+                    'Attendee Name',
+                    'Total Amount',
+                    'Payment Method',
+                    'Amount Requested',
+                    'Refund Approved',
+                    'Status',
+                ],
+                'rows' => $refunds,
+            ]
+        ]);
     }
 }

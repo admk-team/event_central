@@ -21,10 +21,10 @@ import OrganizerProfileDropdown from "../../Components/Common/OrganizerProfileDr
 import moment from "moment";
 import { Share2 } from "lucide-react";
 import ShareEventButton from "../../Components/ShareEventButton";
-
+import { useLaravelReactI18n } from 'laravel-react-i18n'
 const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
     const dispatch: any = useDispatch();
-
+ const { t } = useLaravelReactI18n()
     const selectDashboardData = createSelector(
         (state: any) => state.Layout,
         (sidebarVisibilitytype: any) =>
@@ -199,7 +199,7 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
                                                 )
                                             }
                                         >
-                                            See all events
+                                            {t("See all events")}
                                         </Dropdown.Item>
                                     </Dropdown.Menu>
                                 </Dropdown>
@@ -217,6 +217,19 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
                                     <span></span>
                                 </span>
                             </button>
+                            {currentEvent?.uuid && (
+                                <a
+                                    href={route(
+                                        "organizer.events.settings.website.preview",
+                                        currentEvent.uuid
+                                    )}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="d-flex align-items-center gap-1"
+                                >
+                                    <span>{t('Preview Website')}</span>
+                                </a>
+                            )}
                             {/* <SearchOption /> */}
                         </div>
                         {/* <div style={{ width: '800px' }}>
@@ -282,7 +295,10 @@ const Header = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
                                 </Dropdown.Menu>
                             </Dropdown>
 
-                            <ShareEventButton event={currentEvent} className="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle light-dark-mode">
+                            <ShareEventButton
+                                event={currentEvent}
+                                className="btn btn-icon btn-topbar btn-ghost-secondary rounded-circle light-dark-mode"
+                            >
                                 <Share2 size={20} />
                             </ShareEventButton>
 

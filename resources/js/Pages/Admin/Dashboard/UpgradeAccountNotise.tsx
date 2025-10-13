@@ -1,14 +1,15 @@
 import React from 'react';
 import { Alert, Card, Col, Row } from 'react-bootstrap';
-
-//Import Icons
 import FeatherIcon from "feather-icons-react";
+import { Link } from '@inertiajs/react';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 //import images
 import illustarator from "../../../../images/user-illustarator-2.png";
-import { Link } from '@inertiajs/react';
 
 const UpgradeAccountNotise = () => {
+    const { t } = useLaravelReactI18n();
+
     return (
         <React.Fragment>
             <Row>
@@ -21,20 +22,21 @@ const UpgradeAccountNotise = () => {
                                     className="text-warning me-2 icon-sm"
                                 />
                                 <div className="flex-grow-1 text-truncate">
-                                    Your free trial expired in <b>17</b> days.
+                                    {t("free_trial_expired")} <b>17</b> {t("days")}
                                 </div>
                                 <div className="flex-shrink-0">
-                                    <Link href="/pages-pricing" className="text-reset text-decoration-underline"><b>Upgrade</b></Link>
+                                    <Link href="/pages-pricing" className="text-reset text-decoration-underline"><b>{t("upgrade")}</b></Link>
                                 </div>
                             </Alert>
 
                             <Row className="align-items-end">
                                 <Col sm={8}>
                                     <div className="p-3">
-                                        <p className="fs-17 lh-base">Upgrade your plan from a <span className="fw-semibold">Free
-                                            trial</span>, to ‘Premium Plan’ <i className="mdi mdi-arrow-right"></i></p>
+                                        <p className="fs-17 lh-base">
+                                            {t("upgrade_plan_from")} <span className="fw-semibold">{t("free_trial")}</span>, {t("to_premium_plan")} <i className="mdi mdi-arrow-right"></i>
+                                        </p>
                                         <div className="mt-3">
-                                            <Link href="/pages-pricing" className="btn btn-success">Upgrade Account!</Link>
+                                            <Link href="/pages-pricing" className="btn btn-success">{t("upgrade_account")}</Link>
                                         </div>
                                     </div>
                                 </Col>

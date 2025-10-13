@@ -16,7 +16,7 @@ import { useEffect, useReducer, useState } from 'react'
 import InputGroup from 'react-bootstrap/InputGroup';;
 import { add } from 'date-fns';
 import { Plus, Trash, Trash2 } from 'lucide-react';
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 type Attribute = {
     id?: number;
     name: string;
@@ -125,7 +125,6 @@ type UpdateDefaultPrice = {
 }
 
 type Action = AddAttribute | EditAttributeAction | UpdateAttributeName | DeleteAttribute | AddOption | UpdateOptionValue | DeleteOption | UpdateVariantPrice | UpdateVariantQty | UpdateDefaultPrice;
-
 const reducer = (state: State, action: Action): State => {
     switch (action.type) {
         case 'add_attribute': {
@@ -146,7 +145,7 @@ const reducer = (state: State, action: Action): State => {
         case 'edit_attribute': {
             let newState = {
                 ...state,
-                attributes: state.attributes.map((attribute, i) => i === action.index ? {...attribute, edit: action.edit} : attribute)
+                attributes: state.attributes.map((attribute, i) => i === action.index ? { ...attribute, edit: action.edit } : attribute)
             };
             newState = generateVariants(newState);
             return newState;
@@ -154,7 +153,7 @@ const reducer = (state: State, action: Action): State => {
         case 'update_attribute_name': {
             let newState = {
                 ...state,
-                attributes: state.attributes.map((attribute, i) => i === action.index ? {...attribute, name: action.name} : attribute)
+                attributes: state.attributes.map((attribute, i) => i === action.index ? { ...attribute, name: action.name } : attribute)
             };
             newState = generateVariants(newState);
             return newState;
@@ -192,7 +191,7 @@ const reducer = (state: State, action: Action): State => {
                     if (aIndex === action.attributeIndex) {
                         return {
                             ...attribute,
-                            options: attribute.options.map((option, oIndex) => oIndex === action.optionIndex ? {...option, value: action.value} : option)
+                            options: attribute.options.map((option, oIndex) => oIndex === action.optionIndex ? { ...option, value: action.value } : option)
                         };
                     }
                     return attribute;
@@ -215,7 +214,7 @@ const reducer = (state: State, action: Action): State => {
                 }),
                 deletedOptions: [
                     ...state.deletedOptions,
-                    ...(action.optionId ? [action.optionId]: [])
+                    ...(action.optionId ? [action.optionId] : [])
                 ]
             };
             newState = generateVariants(newState);
@@ -224,13 +223,13 @@ const reducer = (state: State, action: Action): State => {
         case 'update_variant_price': {
             return {
                 ...state,
-                variants: state.variants.map((variant, i) => i === action.index ? {...variant, price: action.price} : variant)
+                variants: state.variants.map((variant, i) => i === action.index ? { ...variant, price: action.price } : variant)
             }
         }
         case 'update_variant_qty': {
             return {
                 ...state,
-                variants: state.variants.map((variant, i) => i === action.index ? {...variant, qty: action.qty} : variant)
+                variants: state.variants.map((variant, i) => i === action.index ? { ...variant, qty: action.qty } : variant)
             }
         }
         case 'update_default_price': {
@@ -246,6 +245,7 @@ const reducer = (state: State, action: Action): State => {
 }
 
 export default function Variants({ data, onDataChange }: VariantsProps) {
+    const { t } = useLaravelReactI18n();
     const [state, dispatch] = useReducer(reducer, {
         attributes: data.attributes,
         variants: data.variants,
@@ -272,7 +272,7 @@ export default function Variants({ data, onDataChange }: VariantsProps) {
     return (
         <>
             <Col md={12} className="mb-4">
-                <Form.Label>Attributes</Form.Label>
+                <Form.Label>{t('Attributes')}</Form.Label>
                 {/* Attributes */}
                 <div>
                     <ListGroup className="mb-1">
@@ -290,7 +290,7 @@ export default function Variants({ data, onDataChange }: VariantsProps) {
                                 ) : (
                                     <div className="px-4 py-4">
                                         <FormGroup className="mb-3">
-                                            <Form.Label>Attribute Name</Form.Label>
+                                            <Form.Label>{t('Attribute Name')}</Form.Label>
                                             <Form.Control
                                                 type="text"
                                                 value={attribute.name}
@@ -298,7 +298,7 @@ export default function Variants({ data, onDataChange }: VariantsProps) {
                                             />
                                         </FormGroup>
                                         <FormGroup className="mb-3">
-                                            <Form.Label>Attribute options</Form.Label>
+                                            <Form.Label>{t('Attribute options')}</Form.Label>
                                             {attribute.options.map((option, optionIndex) => (
                                                 <InputGroup key={optionIndex} className='mb-1'>
                                                     <Form.Control
@@ -307,19 +307,19 @@ export default function Variants({ data, onDataChange }: VariantsProps) {
                                                         onChange={(e) => dispatch({ type: 'update_option_value', attributeIndex: index, optionIndex, value: e.target.value })}
                                                     />
                                                     {attribute.options.length > 1 && (
-                                                        <Button size="sm" variant="danger" onClick={() => dispatch({ type: 'delete_option', attributeIndex: index, optionIndex, optionId: option.id})}><Trash2 size={16} /></Button>
+                                                        <Button size="sm" variant="danger" onClick={() => dispatch({ type: 'delete_option', attributeIndex: index, optionIndex, optionId: option.id })}><Trash2 size={16} /></Button>
                                                     )}
                                                 </InputGroup>
                                             ))}
                                             <Button variant="light" className="w-100" onClick={() => dispatch({ type: 'add_option', attributeIndex: index })}><Plus size={16} /></Button>
                                         </FormGroup>
                                         <div className="d-flex justify-content-between align-items-center">
-                                            <Button variant="danger" onClick={() => dispatch({ type: 'delete_attribute', index, id: attribute.id })}>Delete</Button>
+                                            <Button variant="danger" onClick={() => dispatch({ type: 'delete_attribute', index, id: attribute.id })}>{t('Delete')}</Button>
                                             <Button
                                                 variant="secondary"
                                                 onClick={() => dispatch({ type: 'edit_attribute', index, edit: false })}
                                                 disabled={!attribute.name || !attribute.options[0].value}
-                                            >Done</Button>
+                                            >{t('Done')}</Button>
                                         </div>
                                     </div>
                                 )}
@@ -331,21 +331,21 @@ export default function Variants({ data, onDataChange }: VariantsProps) {
                         className="d-block w-100 d-flex align-items-center justify-content-center"
                         onClick={() => dispatch({ type: 'add_attribute' })}
                     >
-                        Add new attribute
+                        {t('Add new attribute')}
                     </Button>
                 </div>
             </Col>
 
             <Col md={12}>
                 <div className="d-flex justify-content-between align-items=center mb-3">
-                    <Form.Label className="mb-0">Variants</Form.Label>
+                    <Form.Label className="mb-0">{t('Variants')}</Form.Label>
                 </div>
                 <Table bordered size="sm">
                     <thead className="bg-light">
                         <tr>
-                            <th>Variant</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
+                            <th>{t('Variant')}</th>
+                            <th>{t('Price')}</th>
+                            <th>{t('Quantity')}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -390,9 +390,9 @@ function generateVariants(state: State): State {
     getNonEmptyAttributes(state.attributes).forEach((attribute, attrIndex) => {
         const nonEmptyOption = getNonEmptyOptions(attribute);
         const optionsCount = nonEmptyOption.length;
-        
+
         if (optionsCount === 0) return;
-        
+
         if (newVariants.length === 0) {
             nonEmptyOption.forEach((_, optIndex) => {
                 newVariants.push({
@@ -408,7 +408,7 @@ function generateVariants(state: State): State {
             })
             return;
         }
-        
+
         const variantGroups: Variant[][] = [];
         newVariants.forEach((variant) => {
             const group: Variant[] = [];
@@ -418,7 +418,7 @@ function generateVariants(state: State): State {
             variantGroups.push(group);
         });
         newVariants = variantGroups.flat();
-    
+
         newVariants.forEach((_, variantIndex) => {
             const optionIndex = variantIndex % (optionsCount);
             newVariants[variantIndex].attribute_values.push({
@@ -479,7 +479,7 @@ function generateVariants(state: State): State {
             state.deletedVariants.push(oldVariant.id);
         }
     })
-    
+
     state.variants = newVariants;
 
     return state;

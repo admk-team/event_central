@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -13,6 +14,7 @@ class Attendee extends Authenticatable
     use HasFactory, HasApiTokens;
 
     protected $fillable = [
+        'parent_id',
         'email',
         'password',
         'event_app_id',
@@ -33,13 +35,15 @@ class Attendee extends Authenticatable
         'location',
         'personal_url',
         'referral_link',
-        'google_id'
+        'google_id',
+        'is_public',
+        'fcm_token',
     ];
 
     protected $appends = [
         'avatar' => 'avatar_img',
         'qr_code' => 'qr_code_img',
-        'name'
+        'name',
     ];
 
     protected $hidden = [
@@ -59,7 +63,6 @@ class Attendee extends Authenticatable
     {
         return $this->first_name . " " . $this->last_name;
     }
-
     public function getQrCodeImgAttribute()
     {
         return $this->qr_code != 'EMPTY' ? url(Storage::url($this->qr_code)) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s';
@@ -168,6 +171,7 @@ class Attendee extends Authenticatable
     public function hasFriendRequestPending(Attendee $attendee)
     {
         return $this->sentFriendRequests()
+            ->where('event_app_id', $attendee->event_app_id)
             ->where('receiver_id', $attendee->id)
             ->where('status', 'pending')
             ->exists();
@@ -177,6 +181,7 @@ class Attendee extends Authenticatable
     public function hasFriendRequestReceived(Attendee $attendee)
     {
         return $this->receivedFriendRequests()
+            ->where('event_app_id', $attendee->event_app_id)
             ->where('sender_id', $attendee->id)
             ->where('status', 'pending')
             ->exists();
@@ -185,7 +190,7 @@ class Attendee extends Authenticatable
     // Check if a user is a friend
     public function isFriendsWith(Attendee $attendee)
     {
-        return $this->friends()->where('friend_id', $attendee->id)->exists();
+        return $this->friends()->where('friend_id', $attendee->id)->where('event_app_id', $attendee->event_app_id)->exists();
     }
 
     // Add a friend
@@ -193,6 +198,7 @@ class Attendee extends Authenticatable
     {
         if (!$this->isFriendsWith($attendee) && !$this->hasFriendRequestPending($attendee)) {
             return FriendRequest::create([
+                'event_app_id' => $this->event_app_id,
                 'sender_id' => $this->id,
                 'receiver_id' => $attendee->id,
                 'status' => 'pending'
@@ -205,6 +211,7 @@ class Attendee extends Authenticatable
     public function acceptFriendRequest(Attendee $attendee)
     {
         $request = $this->receivedFriendRequests()
+            ->where('event_app_id', $attendee->event_app_id)
             ->where('sender_id', $attendee->id)
             ->where('status', 'pending')
             ->first();
@@ -248,19 +255,22 @@ class Attendee extends Authenticatable
         $this->removeFriend($attendee);
 
         // Update any existing requests to blocked
-        FriendRequest::where(function($query) use ($attendee) {
-            $query->where('sender_id', $this->id)
-                  ->where('receiver_id', $attendee->id);
-        })->orWhere(function($query) use ($attendee) {
-            $query->where('sender_id', $attendee->id)
-                  ->where('receiver_id', $this->id);
+        FriendRequest::where(function ($query) use ($attendee) {
+            $query->where('event_app_id', $this->event_app_id)
+                ->where('sender_id', $this->id)
+                ->where('receiver_id', $attendee->id);
+        })->orWhere(function ($query) use ($attendee) {
+            $query->where('event_app_id', $this->event_app_id)
+                ->where('sender_id', $attendee->id)
+                ->where('receiver_id', $this->id);
         })->update(['status' => 'blocked']);
 
         // Create a blocked record if no existing request
-        if (!FriendRequest::where('sender_id', $this->id)
+        if (!FriendRequest::where('event_app_id', $this->event_app_id)->where('sender_id', $this->id)
             ->where('receiver_id', $attendee->id)
             ->exists()) {
             FriendRequest::create([
+                'event_app_id' => $this->event_app_id,
                 'sender_id' => $this->id,
                 'receiver_id' => $attendee->id,
                 'status' => 'blocked'
@@ -278,19 +288,25 @@ class Attendee extends Authenticatable
         $attendee->friends()->detach($this->id);
 
         // Update any friend requests
-        FriendRequest::where(function($query) use ($attendee) {
-            $query->where('sender_id', $this->id)
-                  ->where('receiver_id', $attendee->id);
-        })->orWhere(function($query) use ($attendee) {
-            $query->where('sender_id', $attendee->id)
-                  ->where('receiver_id', $this->id);
+        FriendRequest::where(function ($query) use ($attendee) {
+            $query->where('event_app_id', $this->event_app_id)
+                ->where('sender_id', $this->id)
+                ->where('receiver_id', $attendee->id);
+        })->orWhere(function ($query) use ($attendee) {
+            $query->where('event_app_id', $this->event_app_id)
+                ->where('sender_id', $attendee->id)
+                ->where('receiver_id', $this->id);
         })->delete();
 
         return true;
     }
-    
+
     public function prayerRequest()
     {
         return $this->hasMany(PrayerRequest::class);
+    }
+    public function waitingAttendee()
+    {
+        return $this->hasMany(WaitingList::class);
     }
 }

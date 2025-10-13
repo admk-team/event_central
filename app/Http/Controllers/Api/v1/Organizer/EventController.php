@@ -204,10 +204,19 @@ class EventController extends Controller
     }
     public function organizerEvents($organizer_id)
     {
+        $today = now()->toDateString();
+
         $events = EventApp::where('organizer_id', $organizer_id)
-            ->with(['images', 'dates' => function ($query) {
-                $query->orderBy('date', 'asc');
-            }])->get();
+            ->whereHas('dates', function ($query) use ($today) {
+                $query->whereDate('date', '>=', $today);
+            })
+            ->with([
+                'images',
+                'dates' => function ($query) use ($today) {
+                    $query->whereDate('date', '>=', $today)
+                        ->orderBy('date', 'asc');
+                }
+            ])->get();
 
         return $this->successResponse(EventResource::collection($events));
     }

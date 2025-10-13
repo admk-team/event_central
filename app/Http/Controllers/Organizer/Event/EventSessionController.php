@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Organizer\Event;
 
+use App\Events\UpdateEventDashboard;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Organizer\Event\EventSessionRequest;
 use App\Models\EventPlatform;
@@ -47,11 +48,12 @@ class EventSessionController extends Controller
         $data = $request->validated();
         if ($data['type'] == "Break") {
             $data['qa_status'] = false;
+            $data['enable_certificate'] = false;
             $data['posts'] = false;
             $data['rating_status'] = false;
         }
         $data['event_app_id'] = session('event_id');
-
+        $data['current_capacity'] = $data['capacity'];
         // Remove event_speaker_id from main data since we'll handle it separately
         $speakers = $data['event_speaker_id'] ?? [];
         unset($data['event_speaker_id']);
@@ -70,7 +72,7 @@ class EventSessionController extends Controller
         }
 
         $session->tracks()->sync($tracksIds);
-
+        broadcast(new UpdateEventDashboard(session('event_id'), 'New Session Created'))->toOthers();
         return back()->withSuccess("Session Created Successfully");
     }
 
@@ -84,6 +86,7 @@ class EventSessionController extends Controller
         if ($data['type'] == "Break") {
             $data['qa_status'] = false;
             $data['posts'] = false;
+            $data['enable_certificate'] = false;
             $data['rating_status'] = false;
         }
 
@@ -109,6 +112,7 @@ class EventSessionController extends Controller
         }
 
         $schedule->delete();
+        broadcast(new UpdateEventDashboard(session('event_id'), 'Session Deleted'))->toOthers();
         return back()->withSuccess("Session Deleted Successfully");
     }
 
@@ -127,5 +131,6 @@ class EventSessionController extends Controller
 
             $eventSession?->delete();
         }
+        broadcast(new UpdateEventDashboard(session('event_id'), 'Session Deleted'))->toOthers();
     }
 }

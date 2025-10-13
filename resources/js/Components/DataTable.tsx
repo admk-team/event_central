@@ -4,7 +4,7 @@ import Pagination from './Common/Pagination'
 import { router } from '@inertiajs/react'
 import { ArrowDown, ArrowUp, ChevronDown, ChevronsUpDown, ChevronUp, Search, X } from 'lucide-react'
 import Dropdown from 'react-bootstrap/Dropdown';
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 type Column<T> = {
     accessorKey?: string;
     header: () => React.ReactNode;
@@ -53,8 +53,8 @@ export default function DataTable<T>({
     tableLayoutFixed,
     searchCombinations
 }: DataTableProps<T>) {
+    const { t } = useLaravelReactI18n();
     const rowSelector = useRowSelector(data.data);
-    console.log('testing', columns.map((col, colIndex) => col.header.name));
     const [sort, setSort] = useSort();
 
     const { hasSearch, searchQuery, setSearchQuery, search, searchProcessing } = useSearch(columns, searchCombinations);
@@ -62,6 +62,7 @@ export default function DataTable<T>({
     const dataTable: DataTable<T> = {
         data: data.data,
         getSelectedRows: rowSelector.getSelectedRows,
+        getCurrentPageRows: () => data.data
     };
     // toggle the columns
     const [visibleColumnsIndexes, setVisibleColumnsIndexes] = useState<number[]>([]);
@@ -90,7 +91,6 @@ export default function DataTable<T>({
     };
 
     const filteredColumns = columns.filter((_, index) => visibleColumnsIndexes.includes(index));
-    console.log(`filterColumns of ${title}`, filteredColumns);
 
     return (
         <div className="card">
@@ -105,15 +105,21 @@ export default function DataTable<T>({
                 {hasSearch && (
                     <form onSubmit={(e) => {
                         e.preventDefault();
-                        search();
+                        // search();
                     }}>
                         <div className="input-group w-auto position-relative">
+                            <Search 
+                                size={16} 
+                                className="position-absolute" 
+                                style={{ top: '10px', left: '6px', zIndex: '6' }}
+                            />
                             <Form.Control
                                 type="text"
                                 placeholder="Search"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 style={{
+                                    paddingLeft: '28px',
                                     paddingRight: '25px',
                                 }}
                             />
@@ -121,13 +127,14 @@ export default function DataTable<T>({
                                 <X
                                     className="position-absolute cursor-pointer"
                                     size={20}
-                                    style={{ top: '8px', right: '38px' }}
+                                    style={{ top: '9px', right: '4px', zIndex: '6' }}
                                     onClick={() => {
                                         search('');
                                     }}
                                 />
                             )}
-                            <Button type="submit" size="sm">
+                            
+                            {/* <Button type="submit" size="sm">
                                 {searchProcessing ? (
                                     <Spinner
                                         as="span"
@@ -139,7 +146,7 @@ export default function DataTable<T>({
                                 ) : (
                                     <Search size={16} />
                                 )}
-                            </Button>
+                            </Button> */}
                         </div>
                     </form>
                 )}
@@ -149,7 +156,7 @@ export default function DataTable<T>({
 
                     <Dropdown>
                         <Dropdown.Toggle variant="success" id="dropdown-basic">
-                            Toggle Columns
+                            {t("Toggle Columns")}
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
                             {columns
@@ -249,7 +256,7 @@ export default function DataTable<T>({
                                         colSpan={filteredColumns.length + (!disableRowSelection ? 1 : 0)}
                                         className="text-center fw-semibold"
                                     >
-                                        No data found
+                                        {t("No data found")}
                                     </td>
                                 </tr>
                             )}
@@ -386,9 +393,25 @@ function useSearch<T>(columns: ColumnDef<T>, combinations: DataTableProps<T>['se
         setSearchProcessing(true);
 
         router.visit(url.toString(), {
+            preserveState: true,
             onFinish: () => setSearchProcessing(false),
         });
     }
+
+    const debounceTimeout = React.useRef<null | ReturnType<typeof setTimeout>>(null);
+
+    React.useEffect(() => {
+        if (searchQuery && searchQuery !== (search?.query ?? '')) {
+            debounceTimeout.current && clearTimeout(debounceTimeout.current);
+            debounceTimeout.current = setTimeout(() => {
+                doSearch();
+            }, 700);
+        }
+        
+        return () => {
+            debounceTimeout.current && clearTimeout(debounceTimeout.current);
+        }
+    }, [searchQuery]);
 
     return {
         hasSearch: searchableColumns.length > 0,

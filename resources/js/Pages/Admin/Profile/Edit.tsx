@@ -2,8 +2,10 @@ import React from 'react';
 import { Head } from '@inertiajs/react';
 import Layout from '../../../Layouts/Admin';
 import EditProfile from '../../../Components/Profile/EditProfile';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 function Edit({ auth, mustVerifyEmail, status }: any) {
+         const { t } = useLaravelReactI18n();
     console.log("dsfdsf");
     return (
         <React.Fragment>

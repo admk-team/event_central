@@ -21,7 +21,10 @@ class AttendeePayment extends Model
         'status',
         'payment_method',
         'stripe_id',
-        'organizer_payment_note'
+        'organizer_payment_note',
+        'extra_services',
+        // new field 👇
+        'is_refund_required',
     ];
 
     protected $with = [
@@ -31,6 +34,10 @@ class AttendeePayment extends Model
         'total_amount',
         'with_me_amount',
         'transfered_amount'
+    ];
+
+    protected $casts = [
+        'extra_services' => 'json',
     ];
 
     public function purchased_tickets()

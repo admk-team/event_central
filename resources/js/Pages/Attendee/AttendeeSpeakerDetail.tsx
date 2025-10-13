@@ -10,10 +10,10 @@ import Layout from '../../Layouts/Attendee';
 
 import speakerAvatar from '../../../images/speaker_avatar.svg';
 import moment from 'moment';
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 const AttendeeSpeakerDetail = ({ eventApp, eventSpeaker }: any) => {
-
+const { t } = useLaravelReactI18n();
 
     const [sessions, setSessions] = useState([]);
     const [currentSpeaker, setCurrentSpeaker] = useState(eventSpeaker);
@@ -57,7 +57,7 @@ const AttendeeSpeakerDetail = ({ eventApp, eventSpeaker }: any) => {
     }, []);
 
     useEffect(() => {
-        setSessions(currentSpeaker.event_sessions);
+        setSessions(currentSpeaker?.event_sessions);
     }, [currentSpeaker]);
 
     return (
@@ -72,7 +72,7 @@ const AttendeeSpeakerDetail = ({ eventApp, eventSpeaker }: any) => {
                                     <Card >
                                         <CardHeader>
                                             <div className='d-flex justify-content-center align-items-center'>
-                                                <span className='fs-3'>Event Speakers</span>
+                                                <span className='fs-3'>{t("Event Speakers")}</span>
                                             </div>
                                         </CardHeader>
                                         <CardBody>
@@ -93,7 +93,7 @@ const AttendeeSpeakerDetail = ({ eventApp, eventSpeaker }: any) => {
                                         </CardBody>
                                     </Card>
                                     <Card className='p-2'>
-                                        <span className='fs-4'>Speaker Sessions</span>
+                                        <span className='fs-4'>{t("Speaker Sessions")}</span>
                                     </Card>
                                     {sessions && sessions.sort((a:any, b:any) => new Date(a.start_date_time).getTime() - new Date(b.start_date_time).getTime()).map((session: any) =>
                                         <Link href={route('attendee.event.detail.session', [session.id])} key={session.id}>

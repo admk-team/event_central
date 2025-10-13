@@ -1,12 +1,11 @@
-import { useForm, usePage } from '@inertiajs/react'
-import { Key } from 'lucide-react';
-import React from 'react'
-import { Button, Card, CardBody, CardHeader, CardTitle, Col, Form, FormGroup, ListGroup, ListGroupItem, Row, Spinner } from 'react-bootstrap'
-import { object } from 'yup';
+import { useForm, usePage } from '@inertiajs/react';
+import React from 'react';
+import { Button, Card, CardBody, CardHeader, CardTitle, Col, Form, ListGroup, ListGroupItem, Row, Spinner } from 'react-bootstrap';
+import { useLaravelReactI18n } from 'laravel-react-i18n';
 
 export default function Colors() {
     const colors = usePage().props.colors as any;
-
+    const { t } = useLaravelReactI18n();
     const { data, setData, post, processing } = useForm({
         'colors': colors,
     });
@@ -17,13 +16,21 @@ export default function Colors() {
         post(route('organizer.events.settings.website.save-colors'), {
             preserveScroll: true,
         });
-    }
+    };
+
+    // 🔹 Translatable color labels
+    const colorLabels: Record<string, string> = {
+        primary: t("Primary Theme Active"),
+        primary_light: t("Primary Text Color"),
+        primary_dark: t("Primary Background Color"),
+        primary_foreground: t("Primary Foreground Color")
+    };
 
     return (
         <Form onSubmit={submit}>
             <Card>
                 <CardHeader className="d-flex justify-content-between align-items-center gap-2">
-                    <CardTitle className="mb-0">Colors</CardTitle>
+                    <CardTitle className="mb-0">{t('Colors')}</CardTitle>
                     <div>
                         <Button type="submit" disabled={processing}>
                             {processing ? (
@@ -35,10 +42,10 @@ export default function Colors() {
                                         role="status"
                                         aria-hidden="true"
                                     />
-                                    Saving
+                                    {t('Saving')}
                                 </span>
                             ) : (
-                                <span>Save</span>
+                                <span>{t('Save')}</span>
                             )}
                         </Button>
                     </div>
@@ -49,12 +56,14 @@ export default function Colors() {
                             {Object.entries(groupColors).map(([name, value]) => (
                                 <ListGroupItem className="py-2" key={name}>
                                     <Row>
-                                        <Col lg={2}>
+                                        <Col lg={3}>
                                             <div className="d-flex align-items-center h-100">
-                                                <Form.Label className="form-label mb-0 text-capitalize">{name.replaceAll('_', ' ')}</Form.Label>
+                                                <Form.Label className="form-label mb-0">
+                                                    {colorLabels[name] ?? t(name.replaceAll('_', ' '))}
+                                                </Form.Label>
                                             </div>
                                         </Col>
-                                        <Col md={10}>
+                                        <Col md={9}>
                                             <Form.Control
                                                 type="color"
                                                 className="form-control"
@@ -74,5 +83,5 @@ export default function Colors() {
                 </CardBody>
             </Card>
         </Form>
-    )
+    );
 }

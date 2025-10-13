@@ -22,13 +22,15 @@ class EventSessionRequest extends FormRequest
             'type' => 'required|in:Session,Workshop,Break',
             'description' => 'nullable|string',
             'capacity' => 'nullable|integer|min:1',
+            'sync_with_tickets' => 'boolean',
             'start_time' => 'required',
             'end_time' => 'required',
             'qa_status' => 'boolean',
+            'enable_certificate' => 'boolean',
             'posts' => 'required',
             'tracks' => 'array',
             'rating_status' => 'boolean',
-            'price'=> 'nullable|numeric|min:0',
+            'price' => 'nullable|numeric|min:0',
         ];
     }
 }

@@ -1,61 +1,71 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AnswerController;
-use App\Http\Controllers\Organizer\Event\RefundPaymentController;
-use App\Http\Controllers\Organizer\Event\AddonController;
-use App\Http\Controllers\Organizer\Event\AssignTicketController;
-use App\Http\Controllers\Organizer\Event\BadgePrintController;
+use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\Organizer\RoleController;
+use App\Http\Controllers\Organizer\UserController;
+use App\Http\Controllers\Organizer\ZohoController;
+use App\Http\Controllers\Organizer\ProfileController;
 use App\Http\Controllers\Organizer\Event\ChatController;
-use App\Http\Controllers\Organizer\Event\ContactFormController;
-use App\Http\Controllers\Organizer\Event\CustomMenuController;
-use App\Http\Controllers\Organizer\Event\DashboardController;
-use App\Http\Controllers\Organizer\Event\EmailCampaignController;
-use App\Http\Controllers\Organizer\Event\EmailTemplateController;
-use App\Http\Controllers\Organizer\Event\Engagement\NewsfeedController;
-use App\Http\Controllers\Organizer\Event\EventAppFeeController;
+use App\Http\Controllers\Organizer\Event\PageController;
+use App\Http\Controllers\Organizer\Event\AddonController;
 use App\Http\Controllers\Organizer\Event\EventController;
-use App\Http\Controllers\Organizer\Event\EventPartnerCategoryController;
-use App\Http\Controllers\Organizer\Event\EventPartnerController;
-use App\Http\Controllers\Organizer\Event\EventPlatformController;
-use App\Http\Controllers\Organizer\Event\EventSessionController;
-use App\Http\Controllers\Organizer\Event\EventSpeakerController;
-use App\Http\Controllers\Organizer\Event\EventTicketsController;
+use App\Http\Controllers\Organizer\Event\TrackController;
 use App\Http\Controllers\Organizer\Event\FooterController;
 use App\Http\Controllers\Organizer\Event\HeaderController;
 use App\Http\Controllers\Organizer\Event\ImportController;
-use App\Http\Controllers\Organizer\Event\PageController;
-use App\Http\Controllers\Organizer\Event\Settings\EventAppPaymentController;
-use App\Http\Controllers\Organizer\Event\Settings\EventSettingsController;
-use App\Http\Controllers\Organizer\Event\User\AttendeeController;
-use App\Http\Controllers\Organizer\Event\EventAppTicketController;
-use App\Http\Controllers\Organizer\Event\EventBadgeController;
-use App\Http\Controllers\Organizer\Event\EventDateController;
-use App\Http\Controllers\Organizer\Event\EventPromoCodeController;
-use App\Http\Controllers\Organizer\Event\EventTicketTypeController;
-use App\Http\Controllers\Organizer\Event\FormFieldController;
-use App\Http\Controllers\Organizer\Event\PrayerRequestController;
-use App\Http\Controllers\Organizer\Event\QuestionnaireFormFieldController;
-use App\Http\Controllers\Organizer\Event\RefferalLinkController;
-use App\Http\Controllers\Organizer\Event\Reports\AttendeesReportController;
-use App\Http\Controllers\Organizer\Event\Reports\RefundTicketReportController;
-use App\Http\Controllers\Organizer\Event\Reports\SessionReportController;
-use App\Http\Controllers\Organizer\Event\Reports\TicketsReportController;
-use App\Http\Controllers\Organizer\Event\SessionAttendanceController;
-use App\Http\Controllers\Organizer\Event\SessionRatingsController;
-use App\Http\Controllers\Organizer\Event\Settings\QuestionnaireFormSettingsController;
-use App\Http\Controllers\Organizer\Event\Settings\RegistrationFormSettingsController;
-use App\Http\Controllers\Organizer\Event\Settings\WebsiteSettingsController;
-use App\Http\Controllers\Organizer\Event\TrackController;
-use App\Http\Controllers\Organizer\Event\UpgradeTicketController;
 use App\Http\Controllers\Organizer\Event\WebsiteController;
 use App\Http\Controllers\Organizer\Event\WorkshopController;
-use App\Http\Controllers\Organizer\ProfileController;
-use App\Http\Controllers\Organizer\RoleController;
+use App\Http\Controllers\Organizer\Event\DashboardController;
+use App\Http\Controllers\Organizer\Event\EventDateController;
+use App\Http\Controllers\Organizer\Event\FormFieldController;
+use App\Http\Controllers\Organizer\Event\BadgePrintController;
+use App\Http\Controllers\Organizer\Event\CustomMenuController;
+use App\Http\Controllers\Organizer\Event\EventBadgeController;
+use App\Http\Controllers\Organizer\Event\LiveStreamController;
+use App\Http\Controllers\Organizer\Event\ContactFormController;
+use App\Http\Controllers\Organizer\Event\CustomBadgeController;
+use App\Http\Controllers\Organizer\Event\EventAppFeeController;
+use App\Http\Controllers\Organizer\Event\AssignTicketController;
+use App\Http\Controllers\Organizer\Event\EventPartnerController;
+use App\Http\Controllers\Organizer\Event\EventSessionController;
+use App\Http\Controllers\Organizer\Event\EventSpeakerController;
+use App\Http\Controllers\Organizer\Event\EventTicketsController;
+use App\Http\Controllers\Organizer\Event\RefferalLinkController;
+use App\Http\Controllers\Organizer\Event\EmailCampaignController;
+use App\Http\Controllers\Organizer\Event\EmailTemplateController;
+use App\Http\Controllers\Organizer\Event\EventPlatformController;
+use App\Http\Controllers\Organizer\Event\PrayerRequestController;
+use App\Http\Controllers\Organizer\Event\RefundPaymentController;
+use App\Http\Controllers\Organizer\Event\UpgradeTicketController;
+use App\Http\Controllers\Organizer\Event\User\AttendeeController;
+use App\Http\Controllers\Organizer\Event\EventAppTicketController;
+use App\Http\Controllers\Organizer\Event\EventPromoCodeController;
+use App\Http\Controllers\Organizer\Event\SessionRatingsController;
+use App\Http\Controllers\Organizer\Event\EventTicketTypeController;
+use App\Http\Controllers\Organizer\Event\SessionAttendanceController;
+use App\Http\Controllers\Organizer\Event\EventStore\ProductController;
+use App\Http\Controllers\Organizer\Event\Engagement\NewsfeedController;
+use App\Http\Controllers\Organizer\Event\EventBoothController;
+use App\Http\Controllers\Organizer\Event\EventBoothPurchaseController;
+use App\Http\Controllers\Organizer\Event\EventPartnerCategoryController;
+use App\Http\Controllers\Organizer\Settings\LiveStreamSettingController;
+use App\Http\Controllers\Organizer\Event\EventStore\EventOrderController;
+use App\Http\Controllers\Organizer\Event\Reports\SessionReportController;
+use App\Http\Controllers\Organizer\Event\Reports\TicketsReportController;
+use App\Http\Controllers\Organizer\Event\QuestionnaireFormFieldController;
+use App\Http\Controllers\Organizer\Event\Settings\EventSettingsController;
+use App\Http\Controllers\Organizer\Event\Reports\AttendeesReportController;
+use App\Http\Controllers\Organizer\Event\Settings\EventAppPaymentController;
+use App\Http\Controllers\Organizer\Event\Settings\WebsiteSettingsController;
+use App\Http\Controllers\Organizer\Event\Reports\RefundTicketReportController;
 use App\Http\Controllers\Organizer\Settings\OrganizerPaymentSettingController;
-use App\Http\Controllers\Organizer\UserController;
-use App\Http\Controllers\QuestionController;
-use App\Http\Middleware\CheckAttendeeRegistrationForm;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Organizer\Event\PrivateRegistrationViaEmailController;
+use App\Http\Controllers\Organizer\Event\Settings\RegistrationFormSettingsController;
+use App\Http\Controllers\Organizer\Event\Settings\QuestionnaireFormSettingsController;
+use App\Http\Controllers\Organizer\Event\UpgradeTicketToTicketController;
+use App\Http\Controllers\Organizer\MailChimpController;
 
 // Event Website
 Route::prefix('e/{uuid}')->name('organizer.events.website')->group(function () {
@@ -66,6 +76,7 @@ Route::prefix('e/{uuid}')->name('organizer.events.website')->group(function () {
     Route::get('sponsors/{id}', [WebsiteController::class, 'sponsorsSingle'])->name('.sponsors.single');
     Route::get('exhibitors', [WebsiteController::class, 'exhibitors'])->name('.exhibitors');
     Route::get('tickets', [WebsiteController::class, 'tickets'])->name('.tickets');
+    Route::get('products', [WebsiteController::class, 'products'])->name('.products');
     Route::get('privacy-policy', [WebsiteController::class, 'privacypolicy'])->name('.privacy');
     Route::get('contact-us', [WebsiteController::class, 'contactus'])->name('.contactus');
     Route::get('{slug}', [WebsiteController::class, 'page'])->name('.page');
@@ -89,6 +100,29 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
         });
     });
 
+    Route::get('/zoho/settings', [ZohoController::class, 'index'])->name('zoho.index');
+    Route::post('/zoho/store', [ZohoController::class, 'store'])->name('zoho.store');
+    Route::get('/zoho/form', [ZohoController::class, 'form'])->name('zoho.form');
+    Route::post('/zoho/save-keys', [ZohoController::class, 'saveKeys'])->name('zoho.save');
+    Route::get('/zoho/connect', [ZohoController::class, 'connect'])->name('zoho.connect');
+    Route::get('/zoho/callback', [ZohoController::class, 'callback'])->name('zoho.callback');
+    Route::get('/zoho/sync', [ZohoController::class, 'showSyncPage'])->name('zoho.sync.page');
+    Route::post('/zoho/sync/{event}', [ZohoController::class, 'sync'])->name('zoho.sync');
+
+    // MailChimp
+    Route::get('/mailchimp/settings', [MailChimpController::class, 'index'])->name('mailchimp.index');
+    Route::post('/mailchimp/store', [MailChimpController::class, 'store'])->name('mailchimp.store');
+    Route::get('/mailchimp/sync', [MailChimpController::class, 'showSyncPage'])->name('mailchimp.sync.page');
+    Route::post('/mailchimp/sync/{event}', [MailChimpController::class, 'sync'])->name('mailchimp.sync');
+    Route::post('/mailchimp/compaign/{campaignId}', [MailChimpController::class, 'sendCampaign'])->name('mailchimp.send.compaign');
+
+    // Live Stream Settings
+    Route::prefix('settings')->name('settings.')->group(function () {
+        Route::prefix('live-stream')->name('live-stream.')->group(function () {
+            Route::get('/', [LiveStreamSettingController::class, 'index'])->name('index');
+            Route::put('update', [LiveStreamSettingController::class, 'update'])->name('update');
+        });
+    });
 
     //Events
     Route::prefix('events')->name('events.')->group(function () {
@@ -98,6 +132,8 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
         Route::delete('/{event_app}', [EventController::class, 'destroy'])->name('destroy');
         Route::delete('/delete/many', [EventController::class, 'destroyMany'])->name('destroy.many');
         Route::get('{id}/select', [EventController::class, 'selectEvent'])->name('select');
+        Route::get('{eventUuid}/demographic', [EventController::class, 'demographic'])
+            ->name('demographic');
 
         // Event Images
         Route::post('{event_app}/images ', [EventController::class, 'storeImage'])->name('images.store');
@@ -105,6 +141,10 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
 
         Route::middleware('event_is_selected')->group(function () {
             Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+            // Venue Management
+            Route::resource('event-platforms', EventPlatformController::class);
+            Route::delete('event-platforms/delete/many', [EventPlatformController::class, 'destroyMany'])->name('event-platforms.destroy.many');
+            Route::post('event-platforms/blueprint-import', [EventPlatformController::class, 'blueprintImport'])->name('event-platforms.blueprint-import');
 
             // Schedule (Event Sessions)
             Route::resource('schedule', EventSessionController::class);
@@ -114,6 +154,11 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::resource('speaker', EventSpeakerController::class);
             Route::delete('speakers/delete/many', [EventSpeakerController::class, 'destroyMany'])->name('speakers.destroy.many');
 
+            // Event Store
+            Route::resource('products', ProductController::class);
+            Route::post('products/update/{product}', [ProductController::class, 'update'])->name('update.product');
+            // order
+            Route::resource('orders', EventOrderController::class);
             // Attendies
             Route::resource('attendees', AttendeeController::class);
             Route::delete('attendees/delete/many', [AttendeeController::class, 'destroyMany'])->name('attendees.destroy.many');
@@ -124,8 +169,8 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::post('/attendee/checkin', [AttendeeController::class, 'chechIn'])->name('attendee.checkin');
             Route::get('get-attendee-puchased-addons/{attendeePurchasedTicket}', [AttendeeController::class, 'getPurchasedTicketAddons'])->name('attendee.puchased-ticket.adddons');
             Route::post('attendee/import/event', [AttendeeController::class, 'importFromEvent'])->name('attendee.importevent');
-
-
+            Route::post('attendee/return/ticket/{id}', [AttendeeController::class, 'returnTicket'])->name('attendee.return.ticket');
+            Route::post('attendee/chat-initiate/{id}', [AttendeeController::class, 'initiateChat'])->name('attendee.chat.initiate');
             // Wordshop
             Route::resource('workshop', WorkshopController::class);
             Route::resource('custom-menu', CustomMenuController::class);
@@ -160,12 +205,21 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::post('attendee/refundticket', [RefundPaymentController::class, 'attendeeRefund'])->name('attendee.refund');
 
             //Upgrade payments
-            Route::get('upgrade/tickets', [UpgradeTicketController::class, 'upgradeTickets'])->name('tickets.upgrade');
+            Route::get('upgrade/tickets/sessions', [UpgradeTicketController::class, 'upgradeTickets'])->name('tickets.sessions.upgrade');
             Route::post('upgrade/tickets', [UpgradeTicketController::class, 'saveTicketUpgrade'])->name('save.ticket.upgrade');
             Route::post('save/upgraded-sessions/{attendee}', [UpgradeTicketController::class, 'saveUpgradedSessions'])->name('save.upgraded.sessions');
             Route::post('save/free-upgraded-sessions/{attendee}', [UpgradeTicketController::class, 'saveUpgradedSessionsFree'])->name('save.upgraded.sessions.free');
             Route::post('proceed-for-checkout/{attendee}', [UpgradeTicketController::class, 'getStripPaymentIntent'])->name('upgrade.ticket.proceed.checkout');
             Route::get('upgrade-payment-success/{paymentUuid}', [UpgradeTicketController::class, 'showTicketUpgradeSuccess'])->name('upgrade.payment.success');
+
+            //upgrade purchased ticket to ticket
+            Route::prefix('upgrade/ticket-to-ticket')->group(function () {
+                Route::get('/', [UpgradeTicketToTicketController::class, 'index'])->name('tickets.toticket.index');
+                Route::get('/attendee-tickets/{attendee}', [UpgradeTicketToTicketController::class, 'getAttendeeTickets'])->name('tickets.toticket.attendee.tickets');
+                Route::post('/save/{attendee}', [UpgradeTicketToTicketController::class, 'saveUpgrade'])->name('tickets.toticket.save');
+                Route::post('/proceed-checkout/{attendee}', [UpgradeTicketToTicketController::class, 'proceedCheckout'])->name('tickets.toticket.checkout');
+                Route::get('/success/{uuid}', [UpgradeTicketToTicketController::class, 'success'])->name('tickets.toticket.success');
+            });
 
             // Promo Codes
             Route::resource('promo-codes', EventPromoCodeController::class)->only(['index', 'store', 'update', 'destroy']);
@@ -173,9 +227,15 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
 
             // Chat
             Route::resource('chat', ChatController::class);
-            Route::get('get-chat', [ChatController::class, 'getMessages'])->name('get-messages');
+            // organizer chat delete
+            Route::delete('/attendee/chat/group/{id}', [ChatController::class, 'deleteGroup'])->name('attendee.chat.group.delete');
+            Route::get('get-chat/{id}', [ChatController::class, 'getMessages'])->name('get-messages');
+            Route::get('private-chat/{id}', [ChatController::class, 'getOneToOneChat']);
+            Route::get('group-chat/{id}', [ChatController::class, 'getGroupChat']);
+            Route::post('chat/mark-as-read/{id}', [ChatController::class, 'markAsRead']);
             Route::post('send-message', [ChatController::class, 'store']);
-
+            Route::post('chat-room', [ChatController::class, 'createRoom'])->name('chat.room');
+            Route::post('group-join/{id}', [ChatController::class, 'join'])->name('join.group');
             // Ticket Fees
             Route::resource('ticket-fees', EventAppFeeController::class)->only(['index', 'store', 'update', 'destroy']);
             Route::delete('ticket-fees/delete/many', [EventAppFeeController::class, 'destroyMany'])->name('ticket-fees.destroy.many');
@@ -222,6 +282,12 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                     Route::get('generate-link', [EventSettingsController::class, 'generateLink'])->name('link');
                     Route::post('toggle-tracks', [EventSettingsController::class, 'toggleTracks'])->name('toggle-tracks');
                     Route::post('toggle-checkin', [EventSettingsController::class, 'toggleCheckIn'])->name('toggle-checkin');
+                    Route::post('toggle-register', [EventSettingsController::class, 'togglePrivateRegister'])->name('toggle-register');
+                    Route::post('reminder-closer', [EventSettingsController::class, 'changeReminderDays'])->name('reminder-closer');
+                    Route::post('after-event', [EventSettingsController::class, 'changeAfterEvent'])->name('after-event');
+                    Route::post('follow-up-event', [EventSettingsController::class, 'followUpToggle'])->name('follow-up-event');
+                    Route::post('close-open-registration/{event}', [EventSettingsController::class, 'closeOpenRegistration'])->name('close.open.registration');
+                    Route::get('remove-reminder-closer', [EventSettingsController::class, 'removeReminderDays'])->name('remove-reminder-closer');
                 });
 
                 // Payment
@@ -252,6 +318,9 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                     Route::get('/', [WebsiteSettingsController::class, 'index'])->name('index');
                     Route::post('/toggle-status', [WebsiteSettingsController::class, 'toggleStatus'])->name('toggle-status');
                     Route::post('/save-colors', [WebsiteSettingsController::class, 'saveColors'])->name('save-colors');
+                    Route::get('/preview/{uuid}', [WebsiteSettingsController::class, 'preview'])->name('preview');
+                    Route::get('/customize-the-event-website-domain', [WebsiteSettingsController::class, 'customizeWebsiteDomain'])->name('customize.the.event.website.domain');
+                    Route::post('/store-custome-website-domain', [WebsiteSettingsController::class, 'storeCustomizeWebsiteDomain'])->name('store.custome.website.domain');
                 });
             });
 
@@ -261,6 +330,11 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                 Route::resource('session', SessionReportController::class);
                 Route::resource('ticket', TicketsReportController::class);
                 Route::resource('refund-ticket', RefundTicketReportController::class);
+
+                Route::get("attendee-data", [AttendeesReportController::class, 'exportAttendeeData'])->name('export.attendee.data');
+                Route::get("session-data", [SessionReportController::class, 'exportSessionData'])->name('export.session.data');
+                Route::get("ticket-data", [TicketsReportController::class, 'exportTicketData'])->name('export.ticket.data');
+                Route::get("refund-ticket-data", [RefundTicketReportController::class, 'exportRefundTicketData'])->name('export.refund.ticket.data');
             });
 
             Route::post('import/{importType}', [ImportController::class, 'import'])->name('import');
@@ -286,9 +360,13 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::get('base-template', [EmailTemplateController::class, 'baseTemplate'])->name('base.template');
             Route::get('base-template/{baseTemplate}', [EmailTemplateController::class, 'viewBaseTemplate'])->name('base.template.view');
             Route::post('use-template/{baseTemplate}', [EmailTemplateController::class, 'setEmailTemplate'])->name('use.template');
-
+            Route::post('use-base-badge/{baseTemplate}', [CustomBadgeController::class, 'setBaseBadgeTemplate'])->name('use.badge.template');
+            Route::post('use-badge/{baseTemplate}', [CustomBadgeController::class, 'setBadgeTemplate'])->name('use.badge.design');
+            Route::get('print-badge', [BadgePrintController::class, 'customBadgePrint'])->name('print.badge.design');
             //Email Template
             Route::resource('email-template', EmailTemplateController::class);
+            //Custom Badge Template
+            Route::resource('badge-template', CustomBadgeController::class);
 
             //Email Campaign
             Route::resource('email-campaign', EmailCampaignController::class);
@@ -317,6 +395,13 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
         Route::delete('/attendance/{id}', [SessionAttendanceController::class, 'destroy'])->name('attendance.destroy');
         Route::delete('/attendance/destroy/many', [SessionAttendanceController::class, 'destroyMany'])->name('attendance.destroy.many');
         // Route::post('/attendance/destroy/many', [SessionAttendanceController::class, 'destroyMany'])->name('attendance.destroy.many');
+        Route::get('export-data/{session_id?}', [SessionAttendanceController::class, 'exportData'])->name('attendance.export.data');
+
+        // Live Streams
+        Route::resource('live-streams', LiveStreamController::class);
+        Route::get('live-streams/status/{id}', [LiveStreamController::class, 'status'])->name('live-streams.status');
+        Route::post('live-streams/start', [LivestreamController::class, 'startStream'])->name('live-streams.start');
+        Route::delete('users/delete/many', [LiveStreamController::class, 'destroyMany'])->name('live-streams.destroy.many');
     });
     // Event
     Route::prefix('posts')->name('posts.')->group(function () {
@@ -348,14 +433,29 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
     //Session ratings
     Route::get('/ratings/{eventSession}', [SessionRatingsController::class, 'index'])->name('sessions.ratings.index');
 
-    // Attendee Report 
+    // Attendee Report
     Route::get('/attendees/report', [AttendeesReportController::class, 'index'])->name('attendees.report');
     Route::get('/attendees/report/{id}', [AttendeeController::class, 'showRating'])->name('attendee.report.info');
     Route::get('/ratings/{eventSession}', [SessionRatingsController::class, 'index'])->name('sessions.ratings.index');
 
-    //prayer request 
+    //prayer request
     Route::get('prayer-requests', [PrayerRequestController::class, 'index'])->name('prayer-requests.index');
     Route::put('prayer-requests/{id}', [PrayerRequestController::class, 'update'])->name('prayer-requests.update');
     Route::delete('prayer-requests/{id}', [PrayerRequestController::class, 'destroy'])->name('prayer-requests.destroy');
     Route::delete('prayer-requests/delete/many', [PrayerRequestController::class, 'destroyMany'])->name('prayer-requests.destroy.many');
+
+    //Private Registration Via Email
+    Route::get('private-registration', [PrivateRegistrationViaEmailController::class, 'index'])->name('private-registration.index');
+    Route::post('/private-registration/send', [PrivateRegistrationViaEmailController::class, 'send'])->name('private-registration.send');
+    Route::delete('prayer-requests/{id}', [PrivateRegistrationViaEmailController::class, 'destroy'])->name('private-registration.destroy');
+    Route::delete('prayer-requests/delete/many', [PrivateRegistrationViaEmailController::class, 'destroyMany'])->name('private-registration.destroy.many');
+    // event booths
+    Route::resource('booths', EventBoothController::class);
+    Route::delete('booths/delete/many', [EventBoothController::class, 'destroyMany'])->name('booths.destroy.many');
+    Route::prefix('/booth-purchases')->name('booth-purchases.')->group(function () {
+        Route::get('/', [EventBoothPurchaseController::class, 'index'])->name('index');
+        Route::get('/booth/{booth}', [EventBoothPurchaseController::class, 'index'])->name('booth'); // purchases by booth
+        Route::delete('{id}', [EventBoothPurchaseController::class, 'destroy'])->name('destroy');
+    });
+    Route::delete('/destroy-many', [EventBoothPurchaseController::class, 'destroyMany'])->name('booth-purchases.destroy.many');
 });

@@ -4,10 +4,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { createSelector } from 'reselect';
 import { ongetAudiencesSessionsChartsData } from '../../../../slices/thunk';
 import { AudiencesSessionsCharts } from './DashboardAnalyticsCharts';
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 const AudiencesSessions = () => {
     const dispatch:any = useDispatch();
-
+    const { t } = useLaravelReactI18n();
     const [chartData, setchartData] = useState<any>([]);
 
     const sessionsData = createSelector(
@@ -36,35 +36,35 @@ const AudiencesSessions = () => {
             <Col xl={6}>
                 <Card className="card-height-100">
                     <Card.Header className="align-items-center d-flex">
-                        <h4 className="card-title mb-0 flex-grow-1">Audiences Sessions by Country</h4>
+                        <h4 className="card-title mb-0 flex-grow-1">{t("Audiences Sessions by Country")}</h4>
                         <div className="flex-shrink-0">
                             <Dropdown className="card-header-dropdown">
                                 <Dropdown.Toggle as="a" className="text-reset dropdown-btn arrow-none" role="button">
-                                    <span className="fw-semibold text-uppercase fs-12">Sort by: </span><span className="text-muted">
+                                    <span className="fw-semibold text-uppercase fs-12">{t("Sort by:")} </span><span className="text-muted">
                                         {seletedMonth.charAt(0).toUpperCase() + seletedMonth.slice(1)}
                                         <i className="mdi mdi-chevron-down ms-1"></i></span>
                                 </Dropdown.Toggle>
                                 <Dropdown.Menu className="dropdown-menu-end">
-                                    <Dropdown.Item 
+                                    <Dropdown.Item
                                     onClick={() => { onChangeChartPeriod("today"); }} className={seletedMonth === "today" ? "active" : ""}
-                                    >Today</Dropdown.Item>
-                                    <Dropdown.Item 
+                                    >{t("Today")}</Dropdown.Item>
+                                    <Dropdown.Item
                                     onClick={() => { onChangeChartPeriod("lastWeek"); }} className={seletedMonth === "lastWeek" ? "active" : ""}
-                                    >Last Week</Dropdown.Item>
-                                    <Dropdown.Item 
+                                    >{t("Last Week")}</Dropdown.Item>
+                                    <Dropdown.Item
                                     onClick={() => { onChangeChartPeriod("lastMonth"); }} className={seletedMonth === "lastMonth" ? "active" : ""}
-                                    >Last Month</Dropdown.Item>
-                                    <Dropdown.Item 
+                                    >{t("Last Month")}</Dropdown.Item>
+                                    <Dropdown.Item
                                     onClick={() => { onChangeChartPeriod("currentYear"); }} className={seletedMonth === "currentYear" ? "active" : ""}
-                                    >Current Year</Dropdown.Item>
+                                    >{t("Current Year")}</Dropdown.Item>
                                 </Dropdown.Menu>
                             </Dropdown>
                         </div>
                     </Card.Header>
                     <div className="card-body p-0">
                         <div>
-                            <AudiencesSessionsCharts 
-                            series={chartData} 
+                            <AudiencesSessionsCharts
+                            series={chartData}
                             dataColors='["--vz-success", "--vz-info"]' />
                         </div>
                     </div>

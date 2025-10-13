@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 
 //import Components
@@ -16,6 +16,10 @@ import Layout from "../../../../Layouts/Event";
 import Widgets1 from "../../../Theme/DashboardCrypto/Widgets1";
 import Widget1 from "./Widget1";
 import HasPermission from "../../../../Components/HasPermission";
+import { router } from "@inertiajs/react";
+import { useEchoPublic } from "@laravel/echo-react";
+import toast, { Toaster } from 'react-hot-toast';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 const DashboardAnalytics = ({
     totalAttendee,
@@ -29,13 +33,33 @@ const DashboardAnalytics = ({
     topSession,
     ticketsMetrics,
     top10Attendee,
+    event_id,
+    getCurrency
 }: any) => {
+
+    // Real-time subscription to public channel
+    const eventChannelName = `event-dashboard-${event_id}`;
+    useEchoPublic(eventChannelName, "UpdateEventDashboard", (e: any) => {
+        if (e && e.event_id == event_id) {
+            toast.success(e.message);
+            router.get(
+                route("organizer.events.dashboard"),
+                {},
+                {
+                    preserveScroll: true,
+                    preserveState: true,
+                    replace: true,
+                }
+            );
+        }
+    });
+     const { t } = useLaravelReactI18n();
     return (
         <React.Fragment>
-            <Head title="Analytics " />
+            <Head title={t("analytics")} />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Analytics" pageTitle="Dashboards" />
+                    <BreadCrumb title={t("analytics")} pageTitle={t("dashboards")} />
                     <Row>
                         <Col xxl={12}>
                             {/* <UpgradeAccountNotise /> */}
@@ -61,16 +85,21 @@ const DashboardAnalytics = ({
                                 totalSpeakers={totalSpeakers}
                                 totalPartners={totalPartners}
                                 totalRevenue={totalRevenue}
+                                getCurrency={getCurrency.currency_symbol}
                             />
                         </Col>
                         <LiveUsers
+                                getCurrency={getCurrency.currency_symbol}
                             sessionAttendance={sessionAttendance}
                             top10Attendee={top10Attendee}
                         />
                     </Row>
                     <Row>
                         <TopPages topSession={topSession} />
-                        <AudiencesMetrics ticketsMetrics={ticketsMetrics} />
+                        <AudiencesMetrics
+                        ticketsMetrics={ticketsMetrics}
+                        getCurrency={getCurrency.currency_symbol}
+                        />
 
                         {/* <AudiencesSessions /> */}
                     </Row>

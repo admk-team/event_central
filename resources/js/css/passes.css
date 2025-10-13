@@ -19,6 +19,73 @@
 .pass {
     width: 100%;
     max-width: 400px;
+    max-height: 600px;
+    border-radius: 16px;
+    overflow: hidden;
+    padding: 30px 20px;
+    text-align: center;
+    box-sizing: border-box;
+}
+ 
+.pass-4x6 {
+    width: 100%;
+    max-width: 400px;
+    max-height: 600px;
+    border-radius: 16px;
+    overflow: hidden;
+    padding: 30px 20px;
+    text-align: center;
+    box-sizing: border-box;
+}
+ 
+.pass-3_5x5_5 {
+    width: 100%;
+    max-width: 350px;
+    max-height: 550px;
+    border-radius: 16px;
+    overflow: hidden;
+    padding: 30px 20px;
+    text-align: center;
+    box-sizing: border-box;
+}
+ 
+.pass-3x5 {
+    width: 100%;
+    max-width: 300px;
+    max-height: 500px;
+    border-radius: 16px;
+    overflow: hidden;
+    padding: 30px 20px;
+    text-align: center;
+    box-sizing: border-box;
+}
+ 
+.pass-4x4 {
+    width: 100%;
+    max-width: 400px;
+    max-height: 400px;
+    border-radius: 16px;
+    overflow: hidden;
+    padding: 30px 20px;
+    text-align: center;
+    box-sizing: border-box;
+}
+ 
+.pass-2_5x3_5 {
+    width: 100%;
+    max-width: 250px;
+    max-height: 350px;
+    border-radius: 16px;
+    overflow: hidden;
+    padding: 30px 20px;
+    text-align: center;
+    box-sizing: border-box;
+}
+ 
+.pass-cr80 {
+    width: 100%;
+    max-width: 337.5px;
+    max-height: 212.5px;
     border-radius: 16px;
     overflow: hidden;
     padding: 30px 20px;
@@ -41,11 +108,25 @@
     margin-right: 0;
     margin-bottom: 5px;
 }
+.heading-wraper-3 {
+    margin-top:-5%;
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 5px;
+}
+.attendee-details-3 {
+    margin-top: -5%;
+}
+.footer-wraper {
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 0px;
+}
 
 .circle {
     width: 250px;
     object-fit: cover;
-    margin-left: 15%;
+    margin-left: 10%;
     margin-right: 50%;
 }
 
@@ -70,11 +151,66 @@
     display: inline-block;
     margin-bottom: 5px;
 }
+.qrWrapper2 {
+    padding-right: 20px;
+    padding-left: 20px;
+    border-radius: 12px;
+    display: inline-block;
+}
 
+.qrWrapper4 {
+    padding-right: 20px;
+    padding-bottom: 5px;
+    padding-left: 20px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+.qrWrapper3 {
+    padding-right: 20px;
+    padding-bottom: 5px;
+    padding-left: 20px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+.logo-img {
+    width: 100%;
+    max-width: 150px;
+    height: auto;
+}
 .qr-code-img {
     width: 100%;
     max-width: 200px;
     height: auto;
+}
+.qr-code-img-3 {
+    margin-top: -15%;
+    width: 100%;
+    max-width: 200px;
+    height: auto;
+}
+
+.avatarWrapper {
+    padding: 10px 20px;
+    border-radius: 12px;
+    display: inline-block;
+    margin-bottom: 5px;
+}
+
+.avatar-img {
+    /* width: 100%; */
+    width: 130px;
+    height: 130px;
+    /* height: auto; */
+    border-radius: 50%;
+    /* makes it circular */
+    object-fit: contain;
+    /* prevents distortion */
+    background-color: #f0f0f0;
+    /* optional: add bg for non-square images */
 }
 
 .event-location {
@@ -85,12 +221,21 @@
     font-size: medium;
     font-weight: 800;
 }
+
 .attendee-name {
     font-size: 25px;
     font-weight: 900;
     letter-spacing: 0.5px;
     color: black !important;
 }
+.purchased-ticket-5 {
+    margin-top: 10px;
+    font-size: 25px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    color: black !important;
+}
+
 .location {
     font-size: 15px;
     font-weight: 900;
@@ -122,6 +267,48 @@
     margin-bottom: 80px;
 }
 
+.location1 {
+    font-size: 13px;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+    color: black !important;
+}
+
+.attendee-name1 {
+    font-size: 19px;
+    font-weight: 900;
+    color: black !important;
+}
+.attendee-name3 {
+    margin-top: -5%;
+    font-size: 19px;
+    font-weight: 900;
+    color: black !important;
+}
+.attendee-name-5 {
+    margin-top: -3%;
+    font-size: 25px;
+    font-weight: 900;
+    color: black !important;
+}
+.attendee-position-5 {
+    font-size: 15px;
+    font-weight: 900;
+    color: black !important;
+}
+.event-location1 {
+    margin-bottom: 1px;
+    margin-right: auto;
+    margin-left: auto;
+    max-width: 300px;
+    font-size: medium;
+    font-weight: 800;
+}
+.evnet-name-5{
+      font-size: 30px;
+    font-weight: 900;
+    color: black !important;
+}
 @media (max-width: 420px) {
     .passWrapper {
         padding: 10px;
@@ -135,4 +322,3 @@
         max-width: 150px;
     }
 }
-

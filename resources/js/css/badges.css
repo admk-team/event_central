@@ -1,0 +1,380 @@
+.badge-1-badge-container {
+    width: 100%;
+    max-width: 400px;
+    background: url("../Images/design_1.png");
+    background-size: 100% 100%;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    height: 650px;
+}
+
+.badge-1-badge-header {
+    padding: 25px 20px;
+    text-align: center;
+    color: #5d9edf;
+}
+
+.badge-1-badge-header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.badge-1-badge-body {
+    padding: 30px 20px;
+    text-align: center;
+}
+
+.badge-1-profile-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 5px solid #ecf0f1;
+    margin: 0 auto 20px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+}
+
+.badge-1-profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+}
+
+.badge-1-name {
+    font-size: 26px;
+    font-weight: 700;
+    color: #5d9edf;
+    margin-bottom: 5px;
+}
+
+.badge-1-title {
+    font-size: 18px;
+    color: #7f8c8d;
+    margin-bottom: 20px;
+}
+
+.badge-1-badge-footer {
+    padding: 20px;
+    text-align: center;
+    border-top: 1px solid #ddd;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.badge-1-company {
+    font-size: 20px;
+    font-weight: 600;
+    color: #5d9edf;
+    margin-bottom: 10px;
+}
+
+.badge-1-event {
+    font-size: 16px;
+    color: #7f8c8d;
+}
+
+.barcode {
+    margin: 0 auto 20px;
+    padding: 10px;
+    width: 120px;
+    height: 120px;
+    border-radius: 5px;
+}
+.barcode img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+}
+
+.badge-id {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #7f8c8d;
+}
+
+@media (max-width: 480px) {
+    .badge-1-badge-container {
+        max-width: 100%;
+    }
+
+    .badge-1-badge-header h1 {
+        font-size: 24px;
+    }
+
+    .badge-1-name {
+        font-size: 22px;
+    }
+
+    .badge-1-title {
+        font-size: 16px;
+    }
+}
+
+/* css for badge 2  */
+.badge-2-badge-container {
+    width: 100%;
+    max-width: 400px;
+    background: url("../Images/design_2.png");
+    background-size: 100% 100%;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    height: 650px;
+}
+
+.badge-2-badge-header {
+    padding: 25px 20px;
+    text-align: center;
+    color: #5d9edf;
+}
+.badge-2-event-image {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+}
+.badge-2-event-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+}
+.badge-2-badge-header h1 {
+    color: #000;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+.badge-2-badge-body {
+    text-align: center;
+    color: #000;
+}
+.badge-2-profile-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 10%;
+    border: 2px solid #ecf0f1;
+    margin: 0 auto 20px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+}
+.badge-2-profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+}
+.badge-2-event-detail {
+    padding: 0 25px;
+}
+.badge-2-event-detail-content {
+    display: flex;
+    gap: 5px;
+}
+.badge-2-badge-footer {
+    text-align: center;
+}
+
+/* css for badge 3  */
+.badge-3-badge-container {
+    width: 100%;
+    max-width: 400px;
+    background: url("../Images/design_3.png");
+    background-size: 100% 100%;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    height: 600px;
+}
+
+.badge-3-badge-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 70px 20px 0px 20px;
+    color: #5d9edf;
+}
+.badge-3-badge-header h3 {
+    color: #000;
+}
+.badge-3-event-image {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 2px solid #ecf0f1;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+}
+.badge-3-event-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+}
+.badge-3-badge-body {
+    text-align: center;
+    color: #000;
+}
+.badge-3-profile-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 5px solid #0b3742;
+    margin: 0 auto 20px;
+    overflow: hidden;
+    background: #3498db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+}
+.badge-3-profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+}
+.badge-3-title {
+    margin: 0 auto 20px;
+    width: fit-content;
+    border-radius: 20px;
+    padding: 2px 7px;
+    background-color: #0b3742;
+    color: white;
+}
+.badge-3-footer-outer {
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* css for badge 4  */
+.badge-4-badge-container {
+    width: 100%;
+    max-width: 400px;
+    background: url("../Images/design_4.png");
+    background-size: 100% 100%;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    height: 600px;
+}
+.badge-4-badge-header {
+    width: 300px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 20px 0px 20px;
+}
+.badge-4-badge-header h3 {
+    text-wrap: wrap;
+    color: #ddd;
+}
+.badge-4-event-image {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+}
+.badge-4-event-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+}
+.badge-4-footer-outer {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    justify-content: center;
+    align-items: center;
+}
+.badge-4-profile-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    border: 5px solid #0b3742;
+    margin: 0 auto 20px;
+    overflow: hidden;
+    background: #3498db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+}
+.badge-4-profile-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+}
+.badge-4-title {
+    margin: 0 auto 20px;
+    width: fit-content;
+    border-radius: 20px;
+    padding: 2px 7px;
+    background-color: #3498db;
+    color: white;
+}
+
+/* css for badge 4  */
+.badge-5-badge-container {
+    width: 100%;
+    max-width: 400px;
+    background: url("../Images/design_5.png");
+    background-size: 100% 100%;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    height: 650px;
+}
+.badge-5-badge-header {
+    padding: 25px 20px;
+    text-align: center;
+    color: white;
+}
+.badge-5-badge-footer {
+    padding: 30px;
+    text-align: center;
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+    background: rgba(255, 0, 0, 0.342);
+}

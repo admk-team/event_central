@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card, Col, Dropdown } from 'react-bootstrap';
 import { Link, usePage } from '@inertiajs/react';
 import { SimpleDonut } from './DashboardAnalyticsCharts';
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 interface TopSession {
     sessionName: string;
     registeredAttendees: number;
@@ -22,14 +22,14 @@ const TopPages  = ({topSession}: any) => {
 
     const sessionSeries = topSession.length > 0 ? topSession.map((item:any) => item.joinedAttendees): [];
     const sessionLabels = topSession.length > 0 ? topSession.map((item:any) => item.sessionName): [];
-
+    const { t } = useLaravelReactI18n();
     return (
         <React.Fragment>
             <Col xl={6} md={6}>
                 <Link title='View session report' href={route('organizer.events.report.session.index')} className="link-primary cursor-pointer">
                     <Card className="card-height-100">
                         <Card.Header className="align-items-center d-flex">
-                            <h4 className="card-title mb-0 flex-grow-1">Top Sessions</h4>
+                            <h4 className="card-title mb-0 flex-grow-1">{t("Top Sessions")}</h4>
                             <div className="flex-shrink-0">
                                 {/* Uncomment and adjust if you want the dropdown */}
                                 {/* <Dropdown show={isTopPageDropdown} onClick={toggleDropdown} className="card-header-dropdown">

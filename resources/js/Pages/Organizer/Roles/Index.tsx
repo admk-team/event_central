@@ -7,9 +7,11 @@ import DeleteModal from '../../../Components/Common/DeleteModal';
 import DataTable, { ColumnDef } from '../../../Components/DataTable';
 import BreadCrumb2 from '../../../Components/Common/BreadCrumb2';
 import HasPermission from '../../../Components/HasPermission';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 function Index({ roles }: any) {
     const [deleteRole, setDeleteRole] = React.useState<any>(null);
+    const { t } = useLaravelReactI18n();
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
 
     const deleteForm = useForm({
@@ -38,19 +40,20 @@ function Index({ roles }: any) {
     const columns: ColumnDef<typeof roles.data[0]> = [
         {
             accessorKey: 'id',
-            header: () => 'ID',
+            header: () => t('ID'),
             cell: (role) => role.id,
             cellClass: "fw-medium",
             enableSorting: true,
         },
         {
             accessorKey: 'name',
-            header: () => 'Name',
+            header: () => t('Name'),
             cell: (role) => role.name,
             enableSorting: true,
+            searchable: true,
         },
         {
-            header: () => 'Action',
+            header: () => t('Action'),
             cell: (role) => (
                 <div className="hstack gap-3 fs-15">
                     <HasPermission permission="edit_roles">
@@ -68,23 +71,23 @@ function Index({ roles }: any) {
 
     return (
         <React.Fragment>
-            <Head title='Roles' />
+            <Head title={t('Roles')} />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb2 
-                        title="Roles"
+                    <BreadCrumb2
+                        title={t("Roles")}
                     />
                     <Row>
                         <Col xs={12}>
                             <DataTable
                                 data={roles}
                                 columns={columns}
-                                title="Roles"
+                                title={t("Roles")}
                                 actions={[
                                     {
                                         render: (
                                             <HasPermission permission="create_roles">
-                                                <Link href={route('organizer.roles.create')}><Button>Add New</Button></Link>
+                                                <Link href={route('organizer.roles.create')}><Button>{t('Add New')}</Button></Link>
                                             </HasPermission>
                                         )
                                     }

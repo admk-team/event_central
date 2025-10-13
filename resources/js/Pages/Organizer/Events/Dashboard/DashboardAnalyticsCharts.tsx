@@ -2,6 +2,7 @@ import React from 'react';
 import ReactApexChart from "react-apexcharts";
 import ReactEcharts from "echarts-for-react";
 import getChartColorsArray from "../../../../Components/Common/ChartsDynamicColor";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 interface CountriesChartsProps {
     dataColors: string; // String of color array (e.g., '["--vz-primary", "--vz-success"]')
     series: { data: number[] }[]; // ApexCharts expects an array of objects with data
@@ -349,8 +350,9 @@ const PieChart: React.FC<PieChartProps> = ({ dataColors, data }) => {
     )
 }
 
-// dount chart 
+// dount chart
 const SimpleDonut = ({ dataColors, series, labels }: SimpleDonutProps) => {
+    const { t } = useLaravelReactI18n();
     const chartDonutBasicColors = getChartColorsArray(dataColors);
     const options: any = {
         chart: {

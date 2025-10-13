@@ -3,10 +3,12 @@ import { Dropdown } from 'react-bootstrap';
 import { Link, usePage } from '@inertiajs/react';
 //import images
 import avatar1 from "../../../images/users/avatar-1.jpg";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 const OrganizerProfileDropdown = () => {
 
     const user = usePage().props.auth.user;
+    const { t } = useLaravelReactI18n();
 
     //Dropdown Toggle
     const [isProfileDropdown, setIsProfileDropdown] = useState<boolean>(false);
@@ -25,16 +27,16 @@ const OrganizerProfileDropdown = () => {
                             alt="Header Avatar" />
                         <span className="text-start ms-xl-2">
                             <span className="d-none d-xl-inline-block ms-1 fw-medium user-name-text">{user.name}</span>
-                            <span className="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text">Organizer</span>
+                            <span className="d-none d-xl-block ms-1 fs-12 text-muted user-name-sub-text">{t("Organizers")}</span>
                         </span>
                     </span>
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="dropdown-menu-end">
-                    <h6 className="dropdown-header">Welcome {user.name}!</h6>
+                    <h6 className="dropdown-header">{t("Welcome")} {user.name}!</h6>
 
                     <Link href={route('organizer.profile.edit')} className="dropdown-item">
                         <i className="mdi mdi-account-circle text-muted fs-16 align-middle me-1"></i>
-                        <span className="align-middle">Edit Profile</span>
+                        <span className="align-middle">{t("Edit Profile")}</span>
                     </Link>
 
                     {/* <Dropdown.Item href="/apps-chat" className="dropdown-item">
@@ -72,7 +74,7 @@ const OrganizerProfileDropdown = () => {
                     </Dropdown.Item> */}
                     <Link className="dropdown-item" as="button" method="post" href={route('logout')}><i
                             className="mdi mdi-logout text-muted fs-16 align-middle me-1"></i> <span
-                                className="align-middle" data-key="t-logout">Logout</span></Link>
+                                className="align-middle" data-key="t-logout">{t("Logout")}</span></Link>
                 </Dropdown.Menu>
             </Dropdown>
         </React.Fragment>

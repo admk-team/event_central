@@ -13,10 +13,13 @@ import {
     Tab,
     Table,
     Button,
+    ListGroup,
 } from "react-bootstrap";
 import FormCheckInput from "react-bootstrap/esm/FormCheckInput";
 import Variants from "./Variants";
-
+import { Container, Plus, Trash } from 'lucide-react';
+import { boolean } from "yup";
+import { useLaravelReactI18n } from "laravel-react-i18n";
 export default function CreateEditModal({
     show,
     hide,
@@ -26,13 +29,14 @@ export default function CreateEditModal({
     show: boolean;
     hide: () => void;
     onHide: () => void;
-        addon: any;
+    addon: any;
 }) {
     const isEdit = addon != null ? true : false;
     const editorRef = useRef<ClassicEditor>();
     const eventApp = usePage().props.currentEvent;
     const tickets = usePage().props.tickets as any[];
-
+    const [displayNewField, setDisplayNewField] = useState(false);
+    const { t } = useLaravelReactI18n();
     // console.log(eventApp);
 
     const { data, setData, post, put, processing, errors, reset, transform } =
@@ -50,6 +54,7 @@ export default function CreateEditModal({
             variants: any[];
             deletedAttributes?: number[];
             deletedOptions?: number[];
+            newField: string[];
         }>({
             _method: isEdit ? "PUT" : "POST",
             event_app_id: addon?.event_app_id ?? eventApp.id,
@@ -64,6 +69,7 @@ export default function CreateEditModal({
             variants: addon?.variants ?? [],
             deletedAttributes: [],
             deletedOptions: [],
+            newField: addon?.extra_fields ? JSON.parse(addon.extra_fields) : [],
         });
 
     const submit = (e: any) => {
@@ -93,14 +99,27 @@ export default function CreateEditModal({
     };
 
     useEffect(() => {
-        setData('qty_total', data.variants.reduce((total, variant) => total = total + variant.qty, 0));
+        if (data.variants.length > 0) {
+            setData('qty_total', data.variants.reduce((total, variant) => total = total + variant.qty, 0));
+        }
     }, data.variants);
+
+    function showNewField() {
+        setDisplayNewField(true);
+        setData("newField", [...data.newField, ""]);
+    }
+
+    function handleDeleteField(index: number) {
+        const updatedFields = [...data.newField];
+        updatedFields.splice(index, 1);
+        setData("newField", updatedFields);
+    }
 
     return (
         <Modal show={show} onHide={onHide} centered size="lg">
             <Modal.Header className="bg-light p-3" closeButton>
                 <h5 className="modal-title">
-                    {isEdit ? "Edit Add-ons" : "Create Add-ons"}
+                    {isEdit ? t('Edit Add-ons') : t('Create Add-ons')}
                 </h5>
             </Modal.Header>
 
@@ -109,7 +128,7 @@ export default function CreateEditModal({
                     <Row>
                         <Col md={12}>
                             <FormGroup className="mb-3">
-                                <Form.Label>Name</Form.Label>
+                                <Form.Label>{t('Name')}</Form.Label>
                                 <Form.Control
                                     type="text"
                                     value={data.name}
@@ -159,11 +178,11 @@ export default function CreateEditModal({
                         <Col md={12}>
                             <FormGroup className="mb-3">
                                 <Form.Label className="m-0 d-flex justify-content-between align-items-center border p-3 cursor-pointer rounded" htmlFor="useTicketInventory">
-                                    <Form.Label className="m-0 cursor-pointer" htmlFor="useTicketInventory">Use ticket inventory</Form.Label>
+                                    <Form.Label className="m-0 cursor-pointer" htmlFor="useTicketInventory">{t('Use ticket inventory')}</Form.Label>
                                     <div className="form-check form-switch form-switch-lg" dir='ltr'>
                                         <FormCheckInput
                                             id="useTicketInventory"
-                                            type="checkbox" 
+                                            type="checkbox"
                                             className="form-check-input"
                                             checked={useTicketInventory}
                                             onChange={(e: any) => {
@@ -181,12 +200,12 @@ export default function CreateEditModal({
                         {useTicketInventory && (
                             <Col md={12}>
                                 <FormGroup className="mb-3">
-                                    <Form.Label>Ticket</Form.Label>
+                                    <Form.Label>{t('Ticket')}</Form.Label>
                                     <Form.Select
                                         value={data.event_app_ticket_id}
                                         onChange={(e) => setData('event_app_ticket_id', e.target.value)}
                                     >
-                                        <option value="">Select</option>
+                                        <option value="">{t('Select')}</option>
                                         {tickets.map(ticket => (
                                             <option value={ticket.id} key={ticket.id}>{ticket.name}</option>
                                         ))}
@@ -196,7 +215,7 @@ export default function CreateEditModal({
                         )}
                         <Col md={4}>
                             <FormGroup className="mb-3">
-                                <Form.Label>Price</Form.Label>
+                                <Form.Label>{t('Price')}</Form.Label>
                                 <Form.Control
                                     type="number"
                                     value={data.price}
@@ -214,7 +233,7 @@ export default function CreateEditModal({
                         </Col>
                         <Col md={4}>
                             <FormGroup className="mb-3">
-                                <Form.Label>Total Qty</Form.Label>
+                                <Form.Label>{t('Total Qty')}</Form.Label>
                                 <Form.Control
                                     type="text"
                                     value={data.qty_total}
@@ -234,7 +253,7 @@ export default function CreateEditModal({
 
                         <Col md={4}>
                             <FormGroup className="mb-3">
-                                <Form.Label>Qty Sold</Form.Label>
+                                <Form.Label>{t('Qty Sold')}</Form.Label>
                                 <Form.Control
                                     title="Automatically calculated on Ticket Purchase Action"
                                     type="number"
@@ -253,14 +272,67 @@ export default function CreateEditModal({
                             </FormGroup>
                         </Col>
 
+                        <Col md={12} className="mb-2">
+                            <Form.Label>{t('Add Extra Fields')}</Form.Label>
+
+                            {data.newField.map((fieldValue, i) => (
+                                <div key={i}>
+                                    <Form.Label>{t('Field Label')}</Form.Label>
+                                    <FormGroup className="mb-3">
+                                        <div className="input-group">
+                                            <Form.Control
+                                                type="text"
+                                                value={fieldValue}
+                                                onChange={(e) => {
+                                                    const updated = [...data.newField];
+                                                    updated[i] = e.target.value;
+                                                    setData("newField", updated);
+                                                }}
+                                            />
+                                            <button
+                                                type="button"
+                                                className="btn btn-danger btn-sm"
+                                                onClick={() => handleDeleteField(i)}
+                                            >
+                                                {/* trash icon */}
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                                    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                                                    className="lucide lucide-trash2"
+                                                >
+                                                    <path d="M3 6h18"></path>
+                                                    <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                                                    <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                                                    <line x1="10" x2="10" y1="11" y2="17"></line>
+                                                    <line x1="14" x2="14" y1="11" y2="17"></line>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </FormGroup>
+                                </div>
+                            ))}
+
+                            <Button variant="light" className="w-100" onClick={showNewField}>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                                    className="lucide lucide-plus">
+                                    <path d="M5 12h14"></path>
+                                    <path d="M12 5v14"></path>
+                                </svg>
+                            </Button>
+                        </Col>
+
+
+
                         <Col md={12}>
                             <FormGroup className="mb-3">
                                 <Form.Label className="m-0 d-flex justify-content-between align-items-center border p-3 cursor-pointer rounded" htmlFor="enableDiscount">
-                                    <Form.Label className="m-0 cursor-pointer" htmlFor="enableDiscount">Enable Discount</Form.Label>
+                                    <Form.Label className="m-0 cursor-pointer" htmlFor="enableDiscount">{t('Enable Discount')}</Form.Label>
                                     <div className="form-check form-switch form-switch-lg" dir='ltr'>
                                         <FormCheckInput
                                             id="enableDiscount"
-                                            type="checkbox" 
+                                            type="checkbox"
                                             className="form-check-input"
                                             checked={data.enable_discount}
                                             onChange={(e: any) => setData('enable_discount', e.target.checked)}
@@ -270,7 +342,7 @@ export default function CreateEditModal({
                             </FormGroup>
                         </Col>
 
-                        <Variants 
+                        <Variants
                             data={{
                                 attributes: data.attributes,
                                 variants: data.variants,
@@ -292,7 +364,7 @@ export default function CreateEditModal({
 
             <div className="modal-footer">
                 <button type="button" className="btn btn-light" onClick={hide}>
-                    Close
+                    {t('Close')}
                 </button>
                 <button
                     type="button"
@@ -309,10 +381,10 @@ export default function CreateEditModal({
                                 role="status"
                                 aria-hidden="true"
                             />
-                            {isEdit ? "Updating" : "Creating"}
+                            {isEdit ? t('Updating') : t('Creating')}
                         </span>
                     ) : (
-                        <span>{isEdit ? "Update" : "Create"}</span>
+                        <span>{isEdit ? t('Update') : t('Create')}</span>
                     )}
                 </button>
             </div>

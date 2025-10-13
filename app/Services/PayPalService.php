@@ -9,7 +9,7 @@ class PayPalService
 {
     public function PayPalKeys()
     {
-        $eventApp = EventApp::find(auth()->user()->event_app_id);
+        $eventApp = EventApp::find(auth()->user()->event_app_id ?? session('event_id'));
         return $eventApp->organiser->payment_keys;
     }
 
@@ -46,7 +46,7 @@ class PayPalService
             'purchase_units' => [
                 [
                     'amount' => [
-                        'currency_code' => $currency,
+                        'currency_code' =>  $keys->currency,
                         'value' => $amount
                     ]
                 ]

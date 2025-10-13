@@ -32,6 +32,15 @@ class PublicTicketResource extends JsonResource
             'sessions' => $this->sessions ? EventSessionResource::collection($this->whenLoaded('sessions')) : [],
             'addons' => $this->addons ? AddonResource::collection($this->whenLoaded('addons')) : [],
             'fees' => $this->addons ? TicketFeeResource::collection($this->whenLoaded('fees')) : [],
+            'extra_services' => $this->extra_services,
+            'extra_service_name' => $this->extra_service_name,
+            'bulk_purchase_status' => $this->bulk_purchase_status,
+            'bulk_purchase_discount_type' => $this->bulk_purchase_discount_type,
+            'bulk_purchase_discount_value' => $this->bulk_purchase_discount_value,
+            'bulk_purchase_qty' => $this->bulk_purchase_qty,
+            'hide_quantity' => $this->hide_quantity,
+            'qty_total' => $this->qty_total,
+            'qty_sold' => $this->qty_sold,
         ];
     }
 }

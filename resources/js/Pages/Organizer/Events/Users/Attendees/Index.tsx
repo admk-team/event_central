@@ -15,6 +15,10 @@ import ImportFromEvent from './Component/ImportFromEvent';
 import HasPermission from '../../../../../Components/HasPermission';
 import { Check, CircleCheck, CircleX } from 'lucide-react';
 import EventCheckinButton from './Component/EventCheckinButton';
+import AssignTicketButton from './Component/AssignTicketButton';
+import axios from 'axios';
+import { useLaravelReactI18n } from "laravel-react-i18n";
+
 
 function Index({ attendees, eventList }: any) {
 
@@ -29,10 +33,14 @@ function Index({ attendees, eventList }: any) {
     const [isEdit, setIsEdit] = useState(false);
 
     const { get } = useForm()
+    const { t } = useLaravelReactI18n();
 
 
     const deleteForm = useForm({
         _method: 'DELETE'
+    });
+    const chatForm = useForm({
+        _method: 'POST'
     });
     const deleteManyForm = useForm<{ _method: string; ids: number[] }>({
         _method: 'DELETE',
@@ -66,6 +74,9 @@ function Index({ attendees, eventList }: any) {
         setShowDeleteManyConfirmation(false);
     }
 
+    const initiateChat = (attendee: any) => {
+        chatForm.post(route('organizer.events.attendee.chat.initiate', attendee.id));
+    }
     // const exportSchema: any = [
     //     {
     //         column: 'Name',
@@ -99,13 +110,13 @@ function Index({ attendees, eventList }: any) {
     // }
     const columns: ColumnDef<typeof attendees.data[0]> = [
         {
-            header: () => 'ID',
+            header: () => t('ID'),
             headerStyle: { width: '70px' },
             cell: (attendee) => attendee.id,
             cellClass: "fw-medium"
         },
         {
-            header: () => 'Avatar',
+            header: () => t('Avatar'),
             headerStyle: { width: '90px' },
             cell: (attendee) => (
                 <img src={attendee.avatar_img} alt={attendee.name} width="50" height="50" className="rounded-circle" />
@@ -113,7 +124,7 @@ function Index({ attendees, eventList }: any) {
         },
         {
             accessorKey: 'first_name',
-            header: () => 'First Name',
+            header: () => t('First Name'),
             headerStyle: { width: '100px', textWrap: 'wrap' },
             cell: (attendee) => attendee.first_name,
             cellStyle: { width: '100px', textWrap: 'wrap' },
@@ -121,7 +132,7 @@ function Index({ attendees, eventList }: any) {
         },
         {
             accessorKey: 'last_name',
-            header: () => 'Last Name',
+            header: () => t('Last Name'),
             headerStyle: { width: '100px', textWrap: 'wrap' },
             cell: (attendee) => attendee.last_name,
             cellStyle: { width: '100px', textWrap: 'wrap' },
@@ -129,7 +140,7 @@ function Index({ attendees, eventList }: any) {
         },
         {
             accessorKey: 'email',
-            header: () => 'Email',
+            header: () => t('Email'),
             headerStyle: { width: '150px', textWrap: 'wrap' },
             cell: (attendee) => attendee.email,
             cellStyle: { width: '150px', textWrap: 'wrap' },
@@ -144,7 +155,7 @@ function Index({ attendees, eventList }: any) {
         //     cell: (attendee) => attendee.company,
         // },
         {
-            header: () => 'Position',
+            header: () => t('Position'),
             headerStyle: { width: '200px', textWrap: 'wrap' },
             cell: (attendee) => attendee.position,
             cellStyle: { width: '200px', textWrap: 'wrap' },
@@ -154,25 +165,27 @@ function Index({ attendees, eventList }: any) {
         //     cell: (attendee) => attendee.phone,
         // },
         {
-            header: () => 'Checked In',
+            header: () => t('Checked In'),
             headerStyle: { width: '100px', textWrap: 'wrap' },
             cell: (attendee) => attendee.event_checkin ? <CircleCheck color='green' /> : <CircleX color='red' />,
             cellClass: 'ps-4',
             cellStyle: { width: '100px', textWrap: 'wrap' },
         },
         {
-            header: () => "Actions",
+            header: () => t("Actions"),
             cell: (attendee) => (
                 <div className="hstack gap-4 fs-15 text-center">
                     <HasPermission permission="scan_events">
                         <EventCheckinButton attendee={attendee} />
                     </HasPermission>
-                    <Link title='View attendee details' href={route('organizer.events.attendee.info', { id: attendee.id })} className="link-primary cursor-pointer"><i className="ri-eye-fill"></i></Link>
-                    <Link title='View QR Code attendee' href={route('organizer.events.attendee.qrcode', { id: attendee.id })} className="link-primary cursor-pointer"><i className="ri-qr-code-line"></i></Link>
-                    <Link title='Purchase ticket for this attendee' href={route('organizer.events.attendee.tickets.assign', attendee.id)} className="link-primary cursor-pointer">
+                    {/* <AssignTicketButton attendee={attendee} /> */}
+                    <Link title={t('View attendee details')} href={route('organizer.events.attendee.info', { id: attendee.id })} className="link-primary cursor-pointer"><i className="ri-eye-fill"></i></Link>
+                    <Link title={t('View QR Code attendee')} href={route('organizer.events.attendee.qrcode', { id: attendee.id })} className="link-primary cursor-pointer"><i className="ri-qr-code-line"></i></Link>
+                    <Link title={t('Purchase ticket for this attendee')} href={route('organizer.events.attendee.tickets.assign', attendee.id)} className="link-primary cursor-pointer">
                         <i className="bx bxs-coupon"></i>
                     </Link>
                     <a className="link-primary cursor-pointer" onClick={() => editAction(attendee)} ><i className="ri-edit-fill"></i></a>
+                    <a className="link-primary cursor-pointer" onClick={() => initiateChat(attendee)}><i className="bx bx-message-rounded-dots"></i></a>
                     <a className="link-red cursor-pointer" onClick={() => deleteAction(attendee)}>
                         <i className="ri-delete-bin-5-line"></i>
                     </a>
@@ -199,14 +212,14 @@ function Index({ attendees, eventList }: any) {
 
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Attendees" pageTitle="Dashboard" />
+                    <BreadCrumb title={t("Attendees")} pageTitle={t("Dashboard")} />
                     <Row>
                         <Col xs={12}>
                             <HasPermission permission="view_attendees">
                                 <DataTable
                                     data={attendees}
                                     columns={columns}
-                                    title="Attendees"
+                                    title={t("Attendees")}
                                     tableLayoutFixed={true}
                                     searchCombinations={[['first_name', 'last_name']]}
                                     actions={[
@@ -214,7 +227,7 @@ function Index({ attendees, eventList }: any) {
                                         {
                                             render: (dataTable) => (
                                                 <HasPermission permission="delete_attendees">
-                                                    <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>
+                                                    <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> {t("Delete")} ({dataTable.getSelectedRows().length})</Button>
                                                 </HasPermission>
                                             ),
                                             showOnRowSelection: true,
@@ -224,21 +237,21 @@ function Index({ attendees, eventList }: any) {
                                         {
                                             render: (
                                                 <HasPermission permission="create_attendees">
-                                                    <Button className='btn btn-outline-primary' onClick={() => showImportModal()}><i className="ri-login-box-line"></i> Import</Button>
+                                                    <Button className='btn btn-outline-primary' onClick={() => showImportModal()}><i className="ri-login-box-line"></i> {t("Import")}</Button>
                                                 </HasPermission>
                                             )
                                         },
                                         {
                                             render: (
                                                 <HasPermission permission="create_attendees">
-                                                    <Button onClick={() => setShowEddModal(true)}><i className="ri-add-fill"></i> Add New</Button>
+                                                    <Button onClick={() => setShowEddModal(true)}><i className="ri-add-fill"></i> {t("Add New")}</Button>
                                                 </HasPermission>
                                             )
                                         },
                                         {
                                             render: (
                                                 <HasPermission permission="create_attendees">
-                                                    <Button onClick={() => setShowImportAttendeeModal(true)}><i className="ri-add-fill"></i> Import From Event</Button>
+                                                    <Button onClick={() => setShowImportAttendeeModal(true)}><i className="ri-add-fill"></i> {t("Import From Event")}</Button>
                                                 </HasPermission>
                                             )
                                         },

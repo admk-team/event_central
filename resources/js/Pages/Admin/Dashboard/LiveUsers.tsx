@@ -3,14 +3,15 @@ import { Card, Col, Row } from 'react-bootstrap';
 import classNames from "classnames";
 import { useSelector, useDispatch } from "react-redux";
 import { CountriesCharts } from './DashboardAnalyticsCharts';
-
-import { VectorMap } from '@south-paw/react-vector-maps'
+import { VectorMap } from '@south-paw/react-vector-maps';
 import world from '../../../common/world.svg.json';
 import { createSelector } from 'reselect';
 import { ongetAllData } from '../../../slices/thunk';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 const LiveUsers = () => {
     const dispatch: any = useDispatch();
+    const { t } = useLaravelReactI18n();
 
     const [countryData, setcountryData] = useState<any>([]);
     const [periodType, setPeriodType] = useState<string>("halfyearly");
@@ -19,7 +20,6 @@ const LiveUsers = () => {
         (state: any) => state.DashboardAnalytics,
         (chartData: any) => chartData.chartData
     );
-    // Inside your component
     const chartData: any = useSelector(liveuserData);
 
     useEffect(() => {
@@ -42,21 +42,19 @@ const LiveUsers = () => {
                     <Col xl={6}>
                         <Card className="card-height-100">
                             <div className="card-header align-items-center d-flex">
-                                <h4 className="card-title mb-0 flex-grow-1">Live Users By Country</h4>
+                                <h4 className="card-title mb-0 flex-grow-1">{t("live_users_by_country")}</h4>
                                 <div className="flex-shrink-0">
                                     <button type="button" className="btn btn-soft-primary btn-sm">
-                                        Export Report
+                                        {t("export_report")}
                                     </button>
                                 </div>
                             </div>
-
 
                             <Card.Body>
                                 <div
                                     className="text-center"
                                     style={{ height: "252px" }}
                                 >
-
                                     <div id="world_map_line_markers" className="custom-vector-map">
                                         <VectorMap {...world} />
                                     </div>
@@ -66,9 +64,9 @@ const LiveUsers = () => {
                                     <table className="table table-borderless table-sm table-centered align-middle table-nowrap mb-1">
                                         <thead className="text-muted border-dashed border border-start-0 border-end-0 bg-light-subtle">
                                             <tr>
-                                                <th>Duration (Secs)</th>
-                                                <th style={{ width: "30%" }}>Sessions</th>
-                                                <th style={{ width: "30%" }}>Views</th>
+                                                <th>{t("duration_secs")}</th>
+                                                <th style={{ width: "30%" }}>{t("sessions")}</th>
+                                                <th style={{ width: "30%" }}>{t("views")}</th>
                                             </tr>
                                         </thead>
                                         <tbody className="border-0">
@@ -96,23 +94,22 @@ const LiveUsers = () => {
                                     </table>
                                 </div>
                             </Card.Body>
-
                         </Card>
                     </Col>
 
                     <Col xl={6}>
                         <Card className="card-height-100">
                             <div className="card-header align-items-center d-flex">
-                                <h4 className="card-title mb-0 flex-grow-1">Sessions by Countries</h4>
+                                <h4 className="card-title mb-0 flex-grow-1">{t("sessions_by_countries")}</h4>
                                 <div className="d-flex gap-1">
                                     <button type="button" className={classNames({ active: periodType === "all" }, "btn btn-soft-secondary btn-sm")} onClick={() => { onChangeChartPeriod("all"); }}>
-                                        ALL
+                                        {t("all")}
                                     </button>
                                     <button type="button" className={classNames({ active: periodType === "monthly" }, "btn btn-soft-primary btn-sm")} onClick={() => { onChangeChartPeriod("monthly"); }}>
-                                        1M
+                                        {t("1m")}
                                     </button>
                                     <button type="button" className={classNames({ active: periodType === "halfyearly" }, "btn btn-soft-secondary btn-sm")} onClick={() => { onChangeChartPeriod("halfyearly"); }}>
-                                        6M
+                                        {t("6m")}
                                     </button>
                                 </div>
                             </div>
@@ -123,7 +120,6 @@ const LiveUsers = () => {
                             </div>
                         </Card>
                     </Col>
-
                 </Row>
             </Col>
         </React.Fragment>

@@ -1,0 +1,300 @@
+/* =========================================================
+   DESIGN 2 • Schedule (Rail Theme)
+   Two‑column layout: sticky filters aside + sessions pane
+   Works with your Blade template as-is
+========================================================= */
+
+:root{
+  --sch-ink-1: var(--ink);
+  --sch-ink-2: var(--ink);
+
+  --sch-glass-a: var(--color-background);
+  --sch-glass-b: rgba(255,255,255,.03);
+  --sch-bd: var(--ink);
+
+  --sch-shadow: 0 16px 40px rgba(0,0,0,.35);
+  --sch-radius: 18px;
+
+  --sch-brand: var(--color-primary, #6a5df6);
+  --sch-brand-2: color-mix(in srgb, var(--sch-brand), white 18%);
+  --sch-accent: var(--color-background, #ff7a59);
+}
+
+/* Section shell (keeps your classes) */
+.schedule.register{
+  padding: clamp(2rem, 5vw, 4rem) 0;
+  color: var(--sch-ink-1);
+}
+
+/* --------- Header --------- */
+.section-header{ text-align:left; margin-bottom: 1rem; }
+.section-header .section-tag{
+  display:inline-block; letter-spacing:.12em; text-transform:uppercase;
+  background: color-mix(in srgb, var(--sch-brand) 18%, transparent);
+  border: 1px dashed var(--sch-brand-2);
+  color: var(--sch-ink-1);
+  padding:.32rem .6rem; border-radius:999px;
+}
+.section-header .section-title{ margin:.4rem 0 0; color:var(--sch-ink-1) }
+
+/* --------- Day tabs --------- */
+.schedule-tabs{
+  display:flex; flex-wrap:wrap; gap:.5rem; margin-bottom:1rem;
+}
+.tab-btn{
+  appearance:none; border:1px solid var(--sch-bd);
+  background: linear-gradient(180deg, var(--sch-glass-a), var(--sch-glass-b));
+  color: var(--sch-ink-1); font-weight:800;
+  padding:.6rem .9rem; border-radius:12px; cursor:pointer;
+  transition: background .2s, border-color .2s, transform .2s, box-shadow .2s;
+}
+.tab-btn span{ color: var(--sch-ink-2); margin-left:.35rem; font-weight:600 }
+.tab-btn:hover{ transform: translateY(-1px); border-color: rgba(255,255,255,.22) }
+.tab-btn.active{
+  border-color: color-mix(in srgb, var(--sch-brand), black 25%);
+  background: linear-gradient(180deg, var(--sch-brand), color-mix(in srgb, var(--sch-brand), black 16%));
+  box-shadow: 0 12px 28px rgba(106,93,246,.28);
+}
+
+/* =========================================================
+   LAYOUT: Filters aside + Sessions pane
+========================================================= */
+.schedule-layout{
+  display:grid;
+  grid-template-columns: 300px 1fr;
+  gap: clamp(1rem, 2.5vw, 1.6rem);
+}
+
+/* Filters aside (sticky on desktop) */
+.filters-aside{
+  position: sticky;
+  top: clamp(70px, 10vh, 120px); /* sits below your rail/header */
+  align-self: start;
+  display: grid;
+  gap: .9rem;
+}
+
+/* Panel shell used in filters */
+.panel{
+  background: linear-gradient(180deg, var(--sch-glass-a), var(--sch-glass-b));
+  border:1px solid var(--sch-bd);
+  border-radius: var(--sch-radius);
+  box-shadow: var(--sch-shadow);
+  padding: .9rem;
+  backdrop-filter: blur(8px);
+}
+.panel__head{
+  display:flex; align-items:center; justify-content:space-between; gap:.75rem;
+  margin-bottom:.6rem;
+}
+.panel__head h4{
+  margin:0; font-size: .95rem; letter-spacing:.02em;
+  color: var(--sch-ink-2); font-weight:800;
+}
+.btn-clear{
+  /* background: rgba(255,255,255,.06); */
+  border: 1px solid rgba(255,255,255,.25);
+  color:#fff; font-weight:800; border-radius: 10px; padding:.35rem .6rem;
+}
+
+/* Chips shared styles */
+.chip-btn{
+  border:1px solid var(--sch-bd);
+  background: linear-gradient(180deg, var(--sch-glass-a), var(--sch-glass-b));
+  color: var(--sch-ink-1); font-weight:800; border-radius:12px;
+  padding:.5rem .8rem; transition: background .2s, border-color .2s, transform .2s;
+  box-shadow: var(--sch-shadow);
+}
+.chip-btn:hover{ transform: translateY(-1px); filter: brightness(1.05); }
+
+/* Tracks */
+.tracks-filter{ display:flex; flex-wrap:wrap; gap:.5rem; }
+.tracks .btn.btn-secondary{
+  /* background: rgba(255,255,255,.06); */
+  border:1px solid rgba(255,255,255,.25);
+  color:#fff;
+}
+
+/* Locations */
+.locations-filter{ display:flex; flex-wrap:wrap; gap:.5rem; }
+.platform-btn.active{
+  border-color: color-mix(in srgb, var(--sch-accent), black 30%);
+  background: linear-gradient(180deg, var(--sch-accent), color-mix(in srgb, var(--sch-accent), black 18%));
+  box-shadow: 0 14px 28px rgba(255,122,89,.25);
+}
+
+/* Active filter summary */
+.filter-summary{
+  display:flex; flex-wrap:wrap; gap:.5rem;
+}
+.summary-chip{
+  background: rgba(255,255,255,.06);
+  border:1px dashed rgba(255,255,255,.2);
+  color: var(--sch-ink-2);
+  padding:.35rem .6rem; border-radius: 999px;
+}
+
+/* Sessions pane */
+.sessions-pane{
+  min-width: 0; /* fixes overflow issues in grid children */
+}
+
+/* =========================================================
+   Timeline + Session cards
+========================================================= */
+.schedule-content{ margin-top: .25rem }
+.schedule-day{ display:none }
+.schedule-day.active{ display:block }
+
+.schedule-timeline{
+  display:grid; gap: .9rem;
+}
+
+/* Each item */
+.timeline-item{
+  display:grid; grid-template-columns: auto 1fr; gap:.9rem; align-items:stretch;
+  border-radius: var(--sch-radius);
+  border:1px solid var(--sch-bd);
+  background: linear-gradient(180deg, var(--sch-glass-a), var(--sch-glass-b));
+  box-shadow: var(--sch-shadow);
+  cursor:pointer; transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  padding:.85rem;
+}
+.timeline-item:hover{
+  transform: translateY(-4px);
+  border-color: rgba(255,255,255,.24);
+  box-shadow: 0 22px 48px rgba(0,0,0,.45);
+}
+
+.timeline-time{
+  display:flex; gap:.35rem; align-items:center; justify-content:center;
+  min-width: 142px;
+  background: rgba(255,255,255,.06);
+  border:1px dashed rgba(255,255,255,.18);
+  border-radius: 12px;
+  padding: .65rem .8rem;
+  font-weight:900;
+}
+
+/* Content */
+.timeline-content{ display:flex; align-items:center }
+.session-card{ width:100% }
+.session-title{ margin:0 0 .25rem; font-size:1.1rem; font-weight:900; letter-spacing:.2px }
+.session-details{
+  display:flex; gap: .9rem; flex-wrap: wrap; align-items:center;justify-content: space-between;
+}
+.track-swatches{ display:flex; gap:.4rem }
+.swatch{ width:28px; height:8px; border-radius: 999px; display:inline-block; }
+
+.speaker-avatar{
+  width:32px; height:32px; border-radius:999px; object-fit:cover;
+  border:1px solid rgba(255,255,255,.15);
+}
+.session-speaker{ display:flex; align-items:center; gap:.4rem }
+.session-speaker span{ font-weight:700 }
+
+.session-location{
+  display:inline-flex; align-items:center; gap:.45rem;
+  color: var(--sch-ink-2);
+  background: rgba(255,255,255,.05);
+  border:1px dashed rgba(255,255,255,.18);
+  padding:.35rem .55rem; border-radius:10px;
+}
+
+/* Bootstrap modal soft theming (content remains light) */
+.modal-content{
+  border-radius: 18px; border:1px solid #e9ecef; box-shadow: 0 20px 50px rgba(0,0,0,.25);
+}
+
+/* =========================================================
+   Responsive
+========================================================= */
+@media (max-width: 1100px){
+  .schedule-layout{
+    grid-template-columns: 260px 1fr;
+  }
+}
+@media (max-width: 992px){
+  /* Stack: filters above sessions, remove sticky to avoid jumpiness */
+  .schedule-layout{
+    grid-template-columns: 1fr;
+  }
+  .filters-aside{
+    position: static;
+    top: auto;
+    order: 0;
+  }
+  .sessions-pane{ order: 1; }
+}
+
+@media (max-width: 640px){
+  .timeline-item{ grid-template-columns: 1fr; }
+  .timeline-time{ min-width: auto; justify-content:flex-start }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .timeline-item, .tab-btn, .chip-btn{ transition: none !important; }
+}
+
+/* Focus ring */
+:where(button,a,[role="button"],.chip-btn,.tab-btn,.btn):focus{
+  outline: 2px solid var(--sch-brand-2);
+  outline-offset: 2px;
+}
+/* The sticky filters column should be scrollable within the viewport */
+.filters-aside{
+  position: sticky;
+  top: var(--filters-top);
+  max-height: calc(100vh - var(--filters-top));
+  overflow: auto;
+  overscroll-behavior: contain;        /* keep scroll contained here */
+  scrollbar-gutter: stable both-edges; /* nicer layout when scrollbar shows */
+}
+
+/* If your filters are wrapped in .panel, give the body a scrollable area */
+.panel__body{
+  max-height: none; /* default desktop */
+  overflow: visible;
+}
+
+/* Locations list: grid + its own scroll if there are many items */
+.locations-filter{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: .5rem;
+  max-height: min(48vh, 420px); /* cap height so it doesn't push below fold */
+  overflow: auto;
+  padding-right: .25rem;        /* room for scrollbar */
+  -webkit-overflow-scrolling: touch; /* momentum scroll on iOS */
+}
+
+/* Optional: also cap Tracks if you have many */
+.tracks-filter{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: .5rem;
+  max-height: min(36vh, 320px);
+  overflow: auto;
+  padding-right: .25rem;
+}
+
+/* Small screens: let each filter panel scroll itself instead of the whole aside */
+@media (max-width: 992px){
+  .filters-aside{
+    position: static;
+    top: auto;
+    max-height: none;
+    overflow: visible;
+  }
+  .panel__body{
+    max-height: 50vh;      /* each filter block gets its own scroll region */
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+/* “Show more” button look */
+.show-more-btn{
+  color: var(--color-primary); font-weight:800; background:transparent; border:0; cursor:pointer;
+}
+.show-more-btn:hover{ text-decoration: underline }

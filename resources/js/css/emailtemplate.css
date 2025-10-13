@@ -4,7 +4,7 @@
 }
 
 .templateImageWrapper {
-    height: 350px;
+    /* height: 350px; */
     overflow: hidden;
 }
 
@@ -34,4 +34,41 @@
 
 .templateCard:hover .hoverButtons {
     opacity: 1;
+}
+.hoverInstructions {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  padding: 20px;
+  text-align: left;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  overflow-y: auto;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.templateCard:hover .hoverInstructions {
+  opacity: 1;
+}
+
+.instructionList {
+  list-style: none;
+  padding-left: 0;
+}
+
+.instructionList li {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+}
+
+.instructionList li span {
+  margin-right: 8px;
+  font-size: 1rem;
+}
+.templateCard.selected {
+  border: 2px solid #198754;            /* Bootstrap success */
+  box-shadow: 0 0 0 3px rgba(25,135,84,0.15);
 }

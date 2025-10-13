@@ -7,15 +7,13 @@ import TicketCard from "./TicketCard";
 import axios from "axios";
 import toast from "react-hot-toast";
 import Select, { StylesConfig } from 'react-select';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
-
-const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate }: any) => {
-
-    //Set Page Layout as per User [Organizer, Attendee]
+const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate, getCurrency }: any) => {
+    const { t } = useLaravelReactI18n();
     const Layout = organizerView ? EventLayout : AttendeeLayout;
     const foundAttendee = attendees.find(attendee => attendee.value === parseInt(attendee_id));
 
-    //Options for Procession of Tickets from Organizer side
     const [currentAttendee, setCurrentAttendee] = useState<any>(attendee_id);
     const [paymentMethod, setPaymentMethod] = useState<any>('stripe');
     const [paymnetNote, setPaymentNote] = useState<any>('');
@@ -38,7 +36,6 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
 
     const getDiscountAmount = (discount: any, total: number) => {
         if (!discount) return 0;
-
         switch (discount.type) {
             case "fixed":
                 return discount.value;
@@ -48,7 +45,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
     }
 
     const scrollToNoteField = () => {
-        const offset = 120; // your custom offset
+        const offset = 120;
         const element = paymentNoteRef.current;
         const y = element.getBoundingClientRect().top + window.pageYOffset - offset;
         window.scrollTo({ top: y, behavior: 'smooth' });
@@ -59,7 +56,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
         e.preventDefault();
 
         if ((paymentMethod === 'cash' || paymentMethod === 'other') && paymnetNote.length <= 0) {
-            toast.error('Payment Note is mandaory when paymnet method is cash or other, Enter Payment Note please');
+            toast.error(t("Payment Note is mandaory when paymnet method is cash or other, Enter Payment Note please"));
             scrollToNoteField();
             return;
         }
@@ -77,50 +74,41 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
         if (organizerView && currentAttendee > 0) {
             if (totalAmount > 0 && paymentMethod === 'stripe') {
                 axios.post(route("organizer.events.tickets.checkout", [currentAttendee, paymentMethod]), data).then((response) => {
-                    // console.log(response);
                     router.visit(route('organizer.events.tickets.checkout.page', response.data.uuid));
                 }).catch((error) => {
-                    console.log(error);
+                    toast.error(t("Minimum amount required is 50 cents. Please increase the amount."));
                 }).finally(() => {
                     setProcessing(false);
                 })
             } else if (totalAmount === 0 || paymentMethod !== 'stripe') {
                 axios.post(route("organizer.events.tickets.checkout.free", [currentAttendee, paymentMethod]), data).then((response) => {
-                    // console.log(response);
                     router.visit(route('organizer.events.payment.success', response.data.uuid));
                 }).catch((error) => {
-                    console.log(error);
+                    toast.error(t("Minimum amount required is 50 cents. Please increase the amount."));
                 }).finally(() => {
                     setProcessing(false);
                 })
             }
         } else {
             if (totalAmount > 0) {
-                //Process Stripe payment for Attendee
                 axios.post(route("attendee.tickets.checkout"), data).then((response) => {
-                    // console.log(response);
                     router.visit(route('attendee.tickets.checkout.page', response.data.uuid));
                 }).catch((error) => {
-                    //
-                    console.log(error);
+                    toast.error(t("Minimum amount required is 50 cents. Please increase the amount."));
                 }).finally(() => {
                     setProcessing(false);
                 })
             } else {
-                //Process free tickets for Attendee
                 axios.post(route("attendee.tickets.checkout.free"), data).then((response) => {
-                    console.log(response);
                     router.visit(route('attendee.payment.success', response.data.uuid));
                 }).catch((error) => {
-                    console.log(error);
+                    toast.error(t("Minimum amount required is 50 cents. Please increase the amount."));
                 }).finally(() => {
                     setProcessing(false);
                 })
             }
         }
     };
-
-
 
     const validateCode = () => {
         setCodeError(false);
@@ -131,22 +119,10 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
                 type: codeObj.discount_type,
                 value: codeObj.discount_value,
             });
-             setDiscountCodeApplied(discountCode);
-            toast.success("Coupon Code applied successfuly");
-            // let disc = parseFloat(codeObj.discount_value);
-            // switch (codeObj.discount_type) {
-            //     case "fixed":
-            //         disc = codeObj.discount_value;
-            //         updateTotalAmount(disc);
-            //         return;
-            //     case "percentage":
-            //         disc = grandTotal * (codeObj.discount_value / 100);
-            //         updateTotalAmount(disc);
-            //         return;
-            // }
+            setDiscountCodeApplied(discountCode);
+            toast.success(t("Coupon Code applied successfuly"));
         })
             .catch((error) => {
-                console.log(error);
                 setCodeError(error.response.data.message);
                 setDiscount(null);
                 setTotalAmount(grandTotal);
@@ -154,21 +130,8 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
     };
 
     useEffect(() => {
-        // console.log("Ticket Details", allTicketDetails);
-        // setDiscount(0);
-        // setDiscountCode('');
         updateGrandTotal();
     }, [allTicketDetails]);
-
-    // const updateTotalAmount = (disc: any) => {
-    //     //let newV = grandTotal - disc;
-    //     //console.log(grandTotal, disc, newV);
-    //     setDiscount(disc);
-    //     //setTotalAmount(newV);
-    //     setDiscountCodeApplied(discountCode);
-    //     setDiscountCode('');
-    //     toast.success("Coupon Code applied successfuly");
-    // }
 
     useEffect(() => {
         updateGrandTotal();
@@ -181,10 +144,8 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
         allTicketDetails.forEach((ticketDetail) => {
             gTotal += parseFloat(ticketDetail.ticket.base_price);
             gTotal += parseFloat(ticketDetail.fees_sub_total);
-            // gTotal += parseFloat(ticketDetail.addons_sub_total);
             ticketDetail.addons.forEach((addon: any) => {
                 if (addon.enable_discount) {
-
                     gTotal += parseFloat(addon.selectedVariant?.price ?? addon.price);
                 } else {
                     noDiscountAddons.push(addon);
@@ -192,7 +153,6 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
             });
         });
 
-        // Apply Discount
         const discountAmt = getDiscountAmount(discount, gTotal);
         gTotal = gTotal - discountAmt;
         setDiscountAmount(discountAmt);
@@ -207,14 +167,12 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
     }
 
     const handleTicketCardChanged = (ticketDetails: any, removedIds: any) => {
-
         setAllTicketsDetails((prev) => {
             const objectMap = new Map(prev.map((obj) => [obj.id, obj]));
             removedIds.forEach((id: any) => objectMap.delete(id));
             ticketDetails.forEach((obj: any) => {
-                objectMap.set(obj.id, obj); // Add new or update existing
+                objectMap.set(obj.id, obj);
             });
-            // console.log(objectMap);
             let newList = Array.from(objectMap.values());
             newList.sort((a, b) => a.id - b.id);
             return newList;
@@ -225,7 +183,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
         control: (base: any) => ({
             ...base,
             fontWeight: '400',
-            fontSize: '1.03125rem', // increase text size
+            fontSize: '1.03125rem',
             border: 'var(--vz- primary - border - subtle)'
         }),
         valueContainer: (base: any) => ({
@@ -238,29 +196,22 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
         }),
     };
 
-    // console.log('eventApp');
-    // console.log(lasteventDate);
-
-
-
     const formatted = (evnetDate: any) => new Date(evnetDate).toLocaleDateString('en-GB').replace(/\//g, '-');
-
 
     return (
         <Layout>
             <React.Fragment>
-                <Head title="Tickets" />
+                <Head title={t("Tickets")} />
                 <section className="section bg-light" id="tickets">
-                    {/* <div className="bg-overlay bg-overlay-pattern"></div> */}
                     <Container>
                         {organizerView && <Row className="justify-content-center mt-5 mb-2 mt-md-0">
                             <Col md={12} className="text-center">
-                                <h2>Purchase Ticket For Attendees</h2>
+                                <h2>{t("Purchase Ticket For Attendees")}</h2>
                                 <hr />
                             </Col>
                             <Col>
                                 <FormGroup className="mb-3">
-                                    <Form.Label htmlFor="attendee" className="form-label fs-4 text-start w-100">Attendee</Form.Label>
+                                    <Form.Label htmlFor="attendee" className="form-label fs-4 text-start w-100">{t("Attendee")}</Form.Label>
                                     <Select
                                         styles={customSelect2Styles}
                                         className="react-select-container15"
@@ -273,12 +224,12 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
                             </Col>
                             <Col>
                                 <FormGroup className="mb-3">
-                                    <Form.Label htmlFor="payment_method" className="form-label fs-4 text-start w-100">Payment Method</Form.Label>
+                                    <Form.Label htmlFor="payment_method" className="form-label fs-4 text-start w-100">{t("Payment Method")}</Form.Label>
                                     <Form.Select size="lg" aria-label="Default select example" className="form-control"
                                         id="payment_method" onChange={(e) => setPaymentMethod(e.target.value)}>
-                                        <option key={22} value="stripe">Stripe</option>
-                                        <option key={23} value="cash">Cash</option>
-                                        <option key={24} value="other">Other</option>
+                                        <option key={22} value="stripe">{t("Stripe")}</option>
+                                        <option key={23} value="cash">{t("Cash")}</option>
+                                        <option key={24} value="other">{t("Other")}</option>
                                     </Form.Select>
                                 </FormGroup>
                             </Col>
@@ -286,7 +237,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
                         {organizerView && (paymentMethod === 'cash' || paymentMethod === 'other') && < Row >
                             <Col>
                                 <FormGroup className="mb-3">
-                                    <Form.Label className="fs-4">Paymnet Note</Form.Label>
+                                    <Form.Label className="fs-4">{t("Paymnet Note")}</Form.Label>
                                     <Form.Control
                                         ref={paymentNoteRef}
                                         as='textarea'
@@ -302,10 +253,10 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
                             <Col lg={8}>
                                 <div className="text-center mb-5">
                                     <h1 className="mb-3 fw-bold" style={{ fontSize: '30px' }}>
-                                        Choose the Ticket that's right for you
+                                        {t("Choose the Ticket that's right for you")}
                                     </h1>
                                     <p className="text-muted mb-4">
-                                        Simple pricing. No hidden fees.
+                                        {t("Simple pricing. No hidden fees.")}
                                     </p>
                                 </div>
                             </Col>
@@ -313,13 +264,14 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
                         {(!organizerView || currentAttendee > 0) &&
                             <>
                                 <div className="d-flex justify-content-end gap-3">
-                                    <p>Event Start : <span className="fw-bold"> {formatted(eventApp.start_date)}</span></p>
-                                    <p>Event End : <span className="fw-bold"> {formatted(lasteventDate[0].date)}</span></p>
+                                    <p>{t("Event Start :")} <span className="fw-bold"> {formatted(eventApp.start_date)}</span></p>
+                                    <p>{t("Event End :")} <span className="fw-bold"> {formatted(lasteventDate[0].date)}</span></p>
                                 </div>
                                 <Row className=" justify-content-center gy-4">
                                     {organizerView && eventApp.tickets.length > 0 &&
                                         eventApp.tickets.map((ticket: any) => (
                                             <TicketCard
+                                                currency_symbol={getCurrency.currency_symbol}
                                                 ticket={ticket}
                                                 key={ticket.id}
                                                 ticket_array={allTicketDetails}
@@ -327,11 +279,13 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
                                                     handleTicketCardChanged
                                                 }
                                                 onBlockCheckout={setBlockCheckout}
+                                                attendee_id={attendee_id}
                                             ></TicketCard>
                                         ))}
                                     {!organizerView && eventApp.public_tickets.length > 0 &&
                                         eventApp.public_tickets.map((ticket: any) => (
                                             <TicketCard
+                                                currency_symbol={getCurrency.currency_symbol}
                                                 ticket={ticket}
                                                 key={ticket.id}
                                                 ticket_array={allTicketDetails}
@@ -340,6 +294,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
                                                     handleTicketCardChanged
                                                 }
                                                 onBlockCheckout={setBlockCheckout}
+                                                attendee_id={attendee_id}
                                             ></TicketCard>
                                         ))}
                                 </Row>
@@ -348,7 +303,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
                                     <CardBody>
                                         <Row>
                                             <Col md={4} lg={4} className="d-flex align-items-center">
-                                                <h5 className="fw-bold mb-0">Coupon Code</h5>
+                                                <h5 className="fw-bold mb-0">{t("Coupon Code")}</h5>
                                             </Col>
                                             <Col md={4} lg={4}>
                                                 <InputGroup >
@@ -358,7 +313,7 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
                                                         type="text"
                                                         isInvalid={codeError}
                                                         name="coupon code"
-                                                        placeholder="Enter Coupon Code Here"
+                                                        placeholder={t("Enter Coupon Code Here")}
                                                         value={discountCode}
                                                         onChange={(e: any) =>
                                                             setDiscountCode(
@@ -370,18 +325,18 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
                                                     <Button disabled={allTicketDetails.length === 0}
                                                         onClick={validateCode}
                                                     >
-                                                        Apply
+                                                        {t("Apply")}
                                                     </Button>
                                                 </InputGroup>
                                                 {codeError && (
                                                     <div className="invalid-feedback d-block">
-                                                        Invalid or Expired Code
+                                                        {t("Invalid or Expired Code")}
                                                     </div>
                                                 )}
                                             </Col>
                                             <Col md={4} lg={4} className="d-flex justify-content-end align-items-center">
-                                                <h5 className="mb-1 pt-2 pb-2 mr-2 text-end fs-4">Discount : <sup>
-                                                    <small>$</small>
+                                                <h5 className="mb-1 pt-2 pb-2 mr-2 text-end fs-4">{t("Discount : ")}<sup>
+                                                    <small>{getCurrency.currency_symbol}</small>
                                                 </sup>{Math.round(discountAmount).toFixed(2)}</h5>
                                             </Col>
                                         </Row>
@@ -397,17 +352,17 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate 
                                                     onClick={submitCheckOut}
                                                     className="btn btn-success w-100"
                                                 >
-                                                    Checkout
+                                                    {t("Checkout")}
                                                     {processing && <Spinner animation="border" role="status" className="ml-3" size="sm">
-                                                        <span className="visually-hidden">Loading...</span>
+                                                        <span className="visually-hidden">{t("Loading...")}</span>
                                                     </Spinner>}
                                                 </Button>
                                             </Col>
                                             <Col md={4} lg={4} className="d-flex justify-content-end align-items-center">
                                                 <h5 className="mb-1 pt-2 pb-2 mr-2 text-end fs-4">
-                                                    Total Payable :{" "}
+                                                    {t("Total Payable :")}{" "}
                                                     <sup>
-                                                        <small>$</small>
+                                                        <small>{getCurrency.currency_symbol}</small>
                                                     </sup>
                                                     {totalAmount.toFixed(2)}
                                                 </h5>

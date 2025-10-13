@@ -3,9 +3,11 @@ import { Button, Modal } from 'react-bootstrap';
 import TracksManager from '../../../../../Components/TracksManager/TracksManager';
 import { Check, Plus } from 'lucide-react';
 import { usePage } from '@inertiajs/react';
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 export default function TracksSelector({ value, onChange }: { value: number[]; onChange: (value: number[]) => void }) {
     const tracks = usePage().props.tracks as any;
+    const { t } = useLaravelReactI18n();
 
     const [selectedTracks, _setSelectedTracks] = React.useState<any[]>([]);
     const [openTracksManager, setOpenTracksManager] = React.useState(false);
@@ -47,13 +49,13 @@ export default function TracksSelector({ value, onChange }: { value: number[]; o
                         {track.name}
                     </Button>
                 ))}
-                <Button variant="light" onClick={() => setOpenTracksModal(true)}><Plus size={16} /> Add Track</Button>
+                <Button variant="light" onClick={() => setOpenTracksModal(true)}><Plus size={16} /> {t("Add Track")}</Button>
             </div>
 
             <Modal show={openTracksModal} onHide={() => setOpenTracksModal(false)} size="sm" centered className="backdrop-modal">
                 <Modal.Header className="bg-light p-3" closeButton>
                     <h5 className="modal-title">
-                        Select Tracks
+                        {t("Select Tracks")}
                     </h5>
                 </Modal.Header>
                 <Modal.Body>
@@ -76,8 +78,8 @@ export default function TracksSelector({ value, onChange }: { value: number[]; o
                     <Button variant="light" onClick={() => {
                         setOpenTracksModal(false);
                         setOpenTracksManager(true);
-                    }}>Manage</Button>
-                    <Button onClick={() => setOpenTracksModal(false)}>Select</Button>
+                    }}>{t("Manage")}</Button>
+                    <Button onClick={() => setOpenTracksModal(false)}>{t("Select")}</Button>
                 </Modal.Footer>
             </Modal>
 

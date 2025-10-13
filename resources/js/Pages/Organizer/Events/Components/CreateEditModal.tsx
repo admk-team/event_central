@@ -19,7 +19,7 @@ import {
 } from "@react-google-maps/api";
 
 import QuillEditor from "../../../../Components/Quill/QuillEditor";
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 const containerStyle = {
     width: "100%",
     height: "200px",
@@ -31,7 +31,6 @@ const center = { lat: 37.778519, lng: -122.40564 };
 const second = { lat: 54.526, lng: 15.2551 };
 const third = { lat: 8.7832, lng: 34.5085 };
 const fourth = { lat: 19.076, lng: 72.8777 };
-
 type EventImage = {
     image_url: string | ArrayBuffer | null;
     id: string;
@@ -53,6 +52,7 @@ function CreateEditModal({
     recurring_types: any;
     event_category_types: any;
 }) {
+    const { t } = useLaravelReactI18n();
     const fileInput = useRef<HTMLInputElement>(null);
     const logoFileInput = useRef<HTMLInputElement>(null);
     const [imageHash, setImageHash] = useState(Date.now()); //Causing image to be reloaded (overriding cache)
@@ -87,8 +87,8 @@ function CreateEditModal({
             tagline: event?.tagline ?? "",
             start_date: event?.dates[0].date ?? "",
             description: event?.description ?? "",
-            location_type: event?.location_type ?? "test",
-            location_base: event?.location_base ?? "test",
+            location_type: event?.location_type ?? "",
+            location_base: event?.location_base ?? "",
             type: "in-person",
             is_recurring: event?.is_recurring ?? false,
             schedual_type: event?.schedual_type ?? "singleday",
@@ -96,11 +96,13 @@ function CreateEditModal({
             image_files: [],
         });
 
+        console.log("form data", data);
+
     useEffect(() => {
         setEventImagePreviews(event?.images ?? []);
     }, [event]);
 
-    const btnTitle = event ? "UPDATE" : "CREATE";
+    const btnTitle = event ? t("update") : t("Create");
 
     const afterSumbitAction = {
         preserveScroll: true,
@@ -288,7 +290,7 @@ function CreateEditModal({
                 style={{ top: "15px", left: "0px" }}
                 disabled={removeImageForm.processing}
             >
-                Remove
+                {t("Remove")}
             </Button>
         </div>
     ));
@@ -305,7 +307,7 @@ function CreateEditModal({
             >
                 <Modal.Header>
                     <h5 className="modal-title" id="staticBackdropLabel">
-                        Create Event
+                        {t("Create Event")}
                     </h5>
                     <Button
                         type="button"
@@ -325,7 +327,7 @@ function CreateEditModal({
                                         htmlFor="event_app_category_id"
                                         className="form-label text-start w-100"
                                     >
-                                        Event Category
+                                        {t("Event Category")}
                                     </Form.Label>
                                     <Form.Select
                                         aria-label="Default select example"
@@ -342,7 +344,7 @@ function CreateEditModal({
                                             !!errors.event_app_category_id
                                         }
                                     >
-                                        <option>Select Event Type</option>
+                                        <option>{t("Select Event Type")}</option>
                                         {event_category_types &&
                                             event_category_types.map(
                                                 (type: any) => (
@@ -364,13 +366,13 @@ function CreateEditModal({
                                         htmlFor="name"
                                         className="form-label text-start w-100"
                                     >
-                                        Event Name
+                                        {t("Event Name")}
                                     </Form.Label>
                                     <Form.Control
                                         type="text"
                                         className="form-control"
                                         id="name"
-                                        placeholder="Enter name"
+                                        placeholder={t("Enter name")}
                                         value={data.name}
                                         onChange={(e) =>
                                             setData("name", e.target.value)
@@ -387,7 +389,7 @@ function CreateEditModal({
                                         htmlFor="start_date"
                                         className="form-label text-start w-100"
                                     >
-                                        Start Date
+                                        {t("Start Date")}
                                     </Form.Label>
                                     <Flatpickr
                                         id="start_date"
@@ -422,13 +424,13 @@ function CreateEditModal({
                                         htmlFor="tagline"
                                         className="form-label text-start w-100"
                                     >
-                                        Tagline
+                                        {t("Tagline")}
                                     </Form.Label>
                                     <Form.Control
                                         type="text"
                                         className="form-control"
                                         id="tagline"
-                                        placeholder="Enter tagline"
+                                        placeholder={t("Enter tagline")}
                                         value={data.tagline}
                                         onChange={(e) =>
                                             setData("tagline", e.target.value)
@@ -445,12 +447,16 @@ function CreateEditModal({
                                         htmlFor="description"
                                         className="form-label text-start w-100"
                                     >
-                                        Event Description
+                                        {t("Event Description")}
                                     </Form.Label>
                                     <div className={!!errors.description ? "is-invalid" : ""}>
                                         <QuillEditor
                                         value={data.description}
-                                        onChange={(val) => setData("description", val)}
+                                        onChange={(val) => setData((state) => {
+                                            const newState = {...state};
+                                            newState.description = val;
+                                            return newState;
+                                        })}
                                         placeholder="Enter description"
                                         className="form-control"
                                         />
@@ -473,7 +479,7 @@ function CreateEditModal({
                                                     !!errors.is_recurring
                                                 }
                                                 id="is_recurring"
-                                                label="Recurring"
+                                                label={t("Recurring")}
                                                 checked={data.is_recurring}
                                                 value={data.is_recurring}
                                                 onClick={handleCheckChange}
@@ -499,8 +505,7 @@ function CreateEditModal({
                                                         }
                                                     >
                                                         <option>
-                                                            Select Recurring
-                                                            Frequency
+                                                            {t("Select Recurring Frequency")}
                                                         </option>
 
                                                         {recurring_types &&
@@ -579,7 +584,7 @@ function CreateEditModal({
                                                         logoFileInput.current?.click();
                                                     }}
                                                 >
-                                                    Change Event Logo
+                                                    {t("Change Event Logo")}
                                                 </Button>
                                             </div>
                                             <input
@@ -619,7 +624,7 @@ function CreateEditModal({
                                         className="d-flex align-items-center"
                                     >
                                         <h5 className="p-0 m-0">
-                                            Event Images{" "}
+                                            {t("Event Images")}{" "}
                                             {eventImagePreviews.length > 0
                                                 ? `(${eventImagePreviews.length})`
                                                 : ""}
@@ -675,7 +680,7 @@ function CreateEditModal({
                                 className="btn btn-light"
                                 onClick={hide}
                             >
-                                Close
+                                {t("Close")}
                             </Button>
                             <Button
                                 type="submit"
@@ -692,7 +697,7 @@ function CreateEditModal({
                                         className="ms-2"
                                     >
                                         <span className="visually-hidden">
-                                            Loading...
+                                            {t("Loading...")}
                                         </span>
                                     </Spinner>
                                 )}

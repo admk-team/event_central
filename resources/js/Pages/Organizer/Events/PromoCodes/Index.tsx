@@ -1,4 +1,3 @@
-
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import Layout from '../../../../Layouts/Event';
 import BreadCrumb from '../../../../Components/Common/BreadCrumb';
@@ -10,7 +9,7 @@ import DeleteManyModal from '../../../../Components/Common/DeleteManyModal';
 import HasPermission from '../../../../Components/HasPermission';
 import CreateEditModal from './CreateEditModal';
 import moment from 'moment';
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 
 function Index({ promoCodes, tickets }: any) {
 
@@ -21,6 +20,7 @@ function Index({ promoCodes, tickets }: any) {
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
 
+    const { t } = useLaravelReactI18n();
 
     const setShowCreateEditModal = (state: boolean) => {
         _setShowCreateEditModal(state);
@@ -67,27 +67,30 @@ function Index({ promoCodes, tickets }: any) {
 
     const columns: ColumnDef<typeof promoCodes.data[0]> = [
         {
-            header: () => 'ID',
+            header: () => t('ID'),
             cell: (promoCode) => promoCode.id,
             cellClass: "fw-medium"
         },
         // {
-        //     header: () => 'Event Name',
+        //     header: () => t('Event Name'),
         //     cell: (promoCode) => (<span key={promoCode.event?.id ?? ''} className="badge bg-secondary-subtle text-secondary fs-6" style={{ marginRight: '3px' }}>{promoCode.event?.name ?? ''}</span>),
         // },
         {
-            header: () => 'Code',
+            accessorKey: 'code',
+            header: () => t('Code'),
             cell: (promoCode) => {
-
                 return (<span className="text-uppercase"> {promoCode.code}</span>)
             },
+            searchable: true,
         },
         {
-            header: () => 'Description',
+            accessorKey: 'description',
+            header: () => t('Description'),
             cell: (promoCode) => promoCode.description,
+            searchable: true,
         },
         {
-            header: () => 'Discount Type',
+            header: () => t('Discount Type'),
             cell: (promoCode: any) => {
                 switch (promoCode.discount_type) {
                     case "fixed":
@@ -95,48 +98,48 @@ function Index({ promoCodes, tickets }: any) {
                     case "percentage":
                         return (<span className="badge rounded-pill border border-info text-info text-uppercase"> {promoCode.discount_type}</span>);
                     default:
-                        return (<span className="badge bg-danger-subtle  text-danger text-uppercase"> na</span>);
+                        return (<span className="badge bg-danger-subtle  text-danger text-uppercase"> {t('na')}</span>);
                 }
             },
         },
 
         {
-            header: () => 'Discount Value',
+            header: () => t('Discount Value'),
             cell: (promoCode) => promoCode.discount_value,
         },
         {
-            header: () => 'Usage Limit',
+            header: () => t('Usage Limit'),
             cell: (promoCode) => promoCode.usage_limit,
         },
         {
-            header: () => 'Used Count',
+            header: () => t('Used Count'),
             cell: (promoCode) => promoCode.used_count,
         },
         {
-            header: () => 'Status',
+            header: () => t('Status'),
             cell: (promoCode: any) => {
                 switch (promoCode.status) {
                     case "active":
-                        return (<span className="badge rounded-pill border border-success text-success text-uppercase fs-7"> Active </span>);
+                        return (<span className="badge rounded-pill border border-success text-success text-uppercase fs-7"> {t('Active')} </span>);
                     case "expired":
-                        return (<span className="badge rounded-pill border border-info text-info text-uppercase fs-7"> Expired </span>);
+                        return (<span className="badge rounded-pill border border-info text-info text-uppercase fs-7"> {t('Expired')} </span>);
                     case "disabled":
-                        return (<span className="badge rounded-pill border border-danger text-danger text-uppercase fs-7"> Disabled </span>);
+                        return (<span className="badge rounded-pill border border-danger text-danger text-uppercase fs-7"> {t('Disabled')} </span>);
                     default:
-                        return (<span className="badge bg-danger-subtle  text-danger text-uppercase"> NA</span>);
+                        return (<span className="badge bg-danger-subtle  text-danger text-uppercase"> {t('NA')}</span>);
                 }
             },
         },
         {
-            header: () => 'Start Date',
+            header: () => t('Start Date'),
             cell: (promoCode) => moment(promoCode.start_date).format('DD MMM, YYYY'),
         },
         {
-            header: () => 'End Date',
+            header: () => t('End Date'),
             cell: (promoCode) => moment(promoCode.end_date).format('DD MMM, YYYY'),
         },
         {
-            header: () => 'Tickets',
+            header: () => t('Tickets'),
             cell: (promoCode) => (
                 <div className='d-flex flex-column w-100 align-items-baseline'>
                     {promoCode.tickets.map((ticket: any) =>
@@ -146,7 +149,7 @@ function Index({ promoCodes, tickets }: any) {
             ),
         },
         {
-            header: () => 'Action',
+            header: () => t('Action'),
             cell: (promoCode) => (
                 <div className="hstack gap-3 fs-15">
                     <HasPermission permission="edit_promo_code">
@@ -163,23 +166,23 @@ function Index({ promoCodes, tickets }: any) {
     ];
     return (
         <React.Fragment>
-            <Head title='Promo Codes' />
+            <Head title={t('Promo Codes')} />
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Promo Codes" pageTitle="Promo Codes" />
+                    <BreadCrumb title={t("Promo Codes")} pageTitle={t("Promo Codes")} />
                     <Row>
                         <Col xs={12}>
                             <HasPermission permission="view_promo_code">
                                 <DataTable
                                     data={promoCodes}
                                     columns={columns}
-                                    title="Codes"
+                                    title={t("Codes")}
                                     actions={[
                                         // Delete multiple
                                         {
                                             render: (dataTable) => (
                                                 <HasPermission permission="delete_promo_code">
-                                                    <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> Delete ({dataTable.getSelectedRows().length})</Button>
+                                                    <Button className="btn-danger" onClick={() => deleteManyAction(dataTable.getSelectedRows().map(row => row.id))}><i className="ri-delete-bin-5-line"></i> {t("Delete")} ({dataTable.getSelectedRows().length})</Button>
                                                 </HasPermission>
                                             ),
                                             showOnRowSelection: true,
@@ -189,7 +192,7 @@ function Index({ promoCodes, tickets }: any) {
                                         {
                                             render: (
                                                 <HasPermission permission="create_promo_code">
-                                                    <Button onClick={() => setShowCreateEditModal(true)}><i className="ri-add-fill"></i> Add New</Button>
+                                                    <Button onClick={() => setShowCreateEditModal(true)}><i className="ri-add-fill"></i> {t("Add New")}</Button>
                                                 </HasPermission>
                                             )
                                         },
@@ -227,4 +230,3 @@ function Index({ promoCodes, tickets }: any) {
 }
 Index.layout = (page: any) => <Layout children={page} />;
 export default Index;
-

@@ -10,8 +10,9 @@ import {
     Row,
 } from "react-bootstrap";
 import Flatpickr from "react-flatpickr";
-
+import { useLaravelReactI18n } from "laravel-react-i18n";
 function AddPost({ events, editPost, session_id }: any) {
+    const { t } = useLaravelReactI18n();
     const fileInputRef = useRef<HTMLInputElement>(null);
     const [preview, setPreview] = useState<any>();
     const [schedulePost, setSchedulePost] = useState<any>(false);
@@ -134,13 +135,13 @@ function AddPost({ events, editPost, session_id }: any) {
                                             htmlFor="title"
                                             className="form-label text-start w-100"
                                         >
-                                            Title
+                                            {t("Title")}
                                         </Form.Label>
                                         <Form.Control
                                             type="text"
                                             className="form-control"
                                             id="title"
-                                            placeholder="Enter Title"
+                                            placeholder={t("Enter Title")}
                                             value={data.title}
                                             onChange={(e) =>
                                                 updateFormData(
@@ -164,12 +165,12 @@ function AddPost({ events, editPost, session_id }: any) {
                                             htmlFor="content"
                                             className="form-label text-start w-100"
                                         >
-                                            Content
+                                            {t("Content")}
                                         </Form.Label>
                                         <textarea
                                             className="form-control"
                                             id="content"
-                                            placeholder="Enter content"
+                                            placeholder={t("Enter content")}
                                             value={data.content}
                                             onChange={(e) =>
                                                 updateFormData(
@@ -195,7 +196,7 @@ function AddPost({ events, editPost, session_id }: any) {
                                             htmlFor="name"
                                             className="form-label text-start w-100"
                                         >
-                                            Sending Date
+                                            {t("Sending Date")}
                                         </Form.Label>
                                         <Flatpickr
                                             disabled={!schedulePost}
@@ -224,7 +225,7 @@ function AddPost({ events, editPost, session_id }: any) {
                                             htmlFor="name"
                                             className="form-label text-start w-100"
                                         >
-                                            Sending Time
+                                            {t("Sending Time")}
                                         </Form.Label>
                                         <Flatpickr
                                             disabled={!schedulePost}
@@ -271,7 +272,7 @@ function AddPost({ events, editPost, session_id }: any) {
                                             className="form-check-label"
                                             htmlFor="schedulePost"
                                         >
-                                            Schedule Post
+                                            {t("Schedule Post")}
                                         </Form.Check.Label>
                                     </div>
                                     <div className="form-check form-switch">
@@ -290,7 +291,7 @@ function AddPost({ events, editPost, session_id }: any) {
                                                 )
                                             }
                                         >
-                                            Send Notification
+                                            {t("Send Notification")}
                                         </Form.Check.Label>
                                     </div>
                                 </Col>
@@ -361,7 +362,7 @@ function AddPost({ events, editPost, session_id }: any) {
                                             onClick={addOption}
                                             className="mt-2"
                                         >
-                                            + Add Option
+                                            {t("+ Add Option")}
                                         </Button>
                                     ) : (
                                         <Button
@@ -369,7 +370,7 @@ function AddPost({ events, editPost, session_id }: any) {
                                             disabled
                                             className="mt-2"
                                         >
-                                            + Add Option
+                                           {t("+ Add Option")}
                                         </Button>
                                     )}
                                     {options.length > 0 ? (
@@ -378,7 +379,7 @@ function AddPost({ events, editPost, session_id }: any) {
                                             onClick={clearPoll}
                                             className="mt-2 ms-2"
                                         >
-                                            Remove
+                                            {t("Remove")}
                                         </Button>
                                     ) : null}
                                 </FormGroup>
@@ -412,7 +413,7 @@ function AddPost({ events, editPost, session_id }: any) {
                                         className="rounded-pill"
                                         disabled={processing}
                                     >
-                                        <span>Add Post</span>
+                                        <span>{t("Add Post")}</span>
                                     </Button>
                                 </Col>
                             </Row>

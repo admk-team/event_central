@@ -7,9 +7,12 @@ import DataTable, { ColumnDef } from '../../../Components/DataTable';
 import RefundTicketModal from './RefundTicketModal';
 import moment from 'moment';
 import toast from 'react-hot-toast';
-function RefundTickets({ payments }: any) {
+import { useLaravelReactI18n } from "laravel-react-i18n";
+
+function RefundTickets({ payments, getCurrency }: any) {
 
     console.log(payments);
+    const { t } = useLaravelReactI18n();
 
     const [showRefundModal, setShowRefundModal] = useState(false);
     const [currentPayment, setCurrentPayment] = useState<any>(null);
@@ -18,7 +21,7 @@ function RefundTickets({ payments }: any) {
         console.log(payment);
 
         if (payment.refund_tickets && payment.refund_tickets?.status.length > 0) {
-            toast.error('Refund request has already been submitted to event organizer');
+            toast.error(t('Refund request has already been submitted to event organizer'));
         } else {
             setCurrentPayment(payment);
             setShowRefundModal(true);
@@ -33,48 +36,48 @@ function RefundTickets({ payments }: any) {
 
     const columns: ColumnDef<typeof payments.data[0]> = [
         {
-            header: () => 'ID',
+            header: () => t('ID'),
             cell: (payment) => payment.id,
             cellClass: "fw-medium"
         },
         {
-            header: () => 'Total Amount',
-            cell: (payment) => '$' + payment.amount_paid,
+            header: () => t('Total Amount'),
+            cell: (payment) => getCurrency.currency_symbol + " " + payment.amount_paid,
         },
         {
-            header: () => 'Payment Status',
+            header: () => t('Payment Status'),
             cell: (payment) => <span className='rounded-pill badge bg-secondary text-capitalize p-2 w-100'>{payment.status}</span>,
         },
         {
-            header: () => 'Payment Method',
+            header: () => t('Payment Method'),
             cell: (payment) => <span className='text-capitalize p-20'>{payment.payment_method}</span>,
         },
         {
-            header: () => 'Payment Date',
+            header: () => t('Payment Date'),
             cell: (payment) => payment.created_at ? moment(payment.created_at).format('MMM DD, YYYY') : '',
         },
         {
-            header: () => 'Refund Type',
+            header: () => t('Refund Type'),
             cell: (payment) => (
                 <>
-                    {payment.refund_tickets?.refund_type === 'all_tickets' && <span>{'All Tickets'}</span>}
+                    {payment.refund_tickets?.refund_type === 'all_tickets' && <span>{t('All Tickets')}</span>}
                 </>
             ),
         },
         {
-            header: () => 'Amount Requested',
-            cell: (payment) => (payment.refund_tickets && payment.refund_tickets?.refund_requested_amount > 0 ? "$" : "") + (payment.refund_tickets?.refund_requested_amount ?? ''),
+            header: () => t('Amount Requested'),
+            cell: (payment) => (payment.refund_tickets && payment.refund_tickets?.refund_requested_amount > 0 ? getCurrency.currency_symbol + " " : "") + (payment.refund_tickets?.refund_requested_amount ?? ''),
         },
         {
-            header: () => 'Refund Reason',
+            header: () => t('Refund Reason'),
             cell: (payment) => payment.refund_tickets?.refund_reason ?? '',
         },
         {
-            header: () => 'Requested On',
+            header: () => t('Requested On'),
             cell: (payment) => payment.refund_tickets ? moment(payment.refund_tickets?.refund_requested_on).format('MMM DD, YYYY') : '',
         },
         {
-            header: () => 'Refund Status',
+            header: () => t('Refund Status'),
             cell: (payment) => (
                 <>
                     {payment.refund_tickets && payment.refund_tickets?.status === 'approved' && <span className='rounded-pill badge bg-secondary text-capitalize p-2 w-100'>{payment.refund_tickets?.status ?? ''}</span>}
@@ -83,15 +86,15 @@ function RefundTickets({ payments }: any) {
             ),
         },
         {
-            header: () => 'Refund Status Date',
+            header: () => t('Refund Status Date'),
             cell: (payment) => payment.refund_tickets && payment.refund_tickets?.refund_status_date ? moment(payment.refund_tickets?.refund_status_date).format('MMM DD, YYYY') : '',
         },
         {
-            header: () => 'Organizer Remarks',
+            header: () => t('Organizer Remarks'),
             cell: (payment) => payment.refund_tickets?.organizer_remarks ?? '',
         },
         {
-            header: () => "Actions",
+            header: () => t("Actions"),
             cell: (payment) => (
                 <div className="hstack gap-4 fs-15 text-center">
                     <Button size="sm" className="link-primary cursor-pointer" onClick={() => refundAction(payment)} >
@@ -106,27 +109,27 @@ function RefundTickets({ payments }: any) {
     return (
         <React.Fragment>
             <Head>
-                <title>Refund Ticket </title>
-                <meta name="description" content="Manage event attendees, edit details, and delete records from the organizer's dashboard." />
-                <meta name="keywords" content="event attendees, attendee management, conference attendees, admin dashboard" />
-                <meta name="robots" content="index, follow" />
+                <title>{t('Refund Ticket ')}</title>
+                <meta name="description" content={t("Manage event attendees, edit details, and delete records from the organizer's dashboard.")} />
+                <meta name="keywords" content={t('event attendees, attendee management, conference attendees, admin dashboard')} />
+                <meta name="robots" content={t('index, follow')} />
 
                 {/* Open Graph Meta Tags */}
-                <meta property="og:title" content="attendees Management | Organizer Dashboard" />
-                <meta property="og:description" content="Manage event attendees, edit details, and delete records from the organizer's dashboard." />
-                <meta property="og:type" content="website" />
+                <meta property="og:title" content={t('attendees Management | Organizer Dashboard')} />
+                <meta property="og:description" content={t("Manage event attendees, edit details, and delete records from the organizer's dashboard.")} />
+                <meta property="og:type" content={t('website')} />
                 <meta property="og:url" content={route('organizer.events.attendees.index')} />
             </Head>
 
             <div className="page-content">
                 <Container fluid>
-                    <BreadCrumb title="Attendees" pageTitle="Dashboard" />
+                    <BreadCrumb title={t("Attendees")} pageTitle={t("Dashboard")} />
                     <Row>
                         <Col xs={12}>
                             <DataTable
                                 data={payments}
                                 columns={columns}
-                                title="Refund Tickets"
+                                title={t("Refund Tickets")}
                             />
                         </Col>
                     </Row>
