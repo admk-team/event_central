@@ -179,4 +179,21 @@ class EventAppTicketController extends Controller
         $emailList = eventSettings(session('event_id'))->set('email_list', $emailList);
         return back()->withSuccess('Ticket Removed Successfully');
     }
+
+    public function sort()
+    {
+        $tickets = EventAppTicket::currentEvent()->orderBy('position', 'asc')->get();
+        return Inertia::render('Organizer/Events/Tickets/Sort', [
+            'tickets' => $tickets
+        ]);
+    }
+
+    public function saveSort(Request $request)
+    {
+        $orderedIds = $request->get('ids');
+        foreach ($orderedIds as $position => $id) {
+            EventAppTicket::where('id', $id)->update(['position' => $position + 1]);
+        }
+        return back()->withSuccess('Saved');
+    }
 }

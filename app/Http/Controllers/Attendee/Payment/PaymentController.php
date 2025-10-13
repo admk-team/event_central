@@ -71,55 +71,61 @@ class PaymentController extends Controller
         if ($organizerView) {     //For organizer show all tickets
             $eventApp->load([
                 'tickets.sessions',
-                'tickets' => [
-                    'addons' => function ($query) {
-                        $query->where(function ($query) {
-                            $query->where('addons.event_app_ticket_id', null)
-                                ->whereColumn('qty_total', '>', 'qty_sold');
-                        })
-                            ->orWhereHas('ticket', function ($query) {
-                                $query->whereColumn('qty_total', '>', 'qty_sold');
-                            });
+                'tickets' => function ($query) {
+                    $query->orderBy('position', 'asc')
+                    ->with([
+                        'addons' => function ($query) {
+                            $query->where(function ($query) {
+                                $query->where('addons.event_app_ticket_id', null)
+                                    ->whereColumn('qty_total', '>', 'qty_sold');
+                            })
+                                ->orWhereHas('ticket', function ($query) {
+                                    $query->whereColumn('qty_total', '>', 'qty_sold');
+                                });
 
-                        $query->with([
-                            'attributes' => [
-                                'options'
-                            ],
-                            'variants' => [
-                                'attributeValues' => [
-                                    'addonAttributeOption'
-                                ]
-                            ],
-                        ]);
-                    }
-                ],
+                            $query->with([
+                                'attributes' => [
+                                    'options'
+                                ],
+                                'variants' => [
+                                    'attributeValues' => [
+                                        'addonAttributeOption'
+                                    ]
+                                ],
+                            ]);
+                        }
+                    ]);
+                },
                 'tickets.fees'
             ]);
         } else {                //For attendees show only public tickets
             $eventApp->load([
                 'public_tickets.sessions',
-                'public_tickets' => [
-                    'addons' => function ($query) {
-                        $query->where(function ($query) {
-                            $query->where('addons.event_app_ticket_id', null)
-                                ->whereColumn('qty_total', '>', 'qty_sold');
-                        })
-                            ->orWhereHas('ticket', function ($query) {
-                                $query->whereColumn('qty_total', '>', 'qty_sold');
-                            });
+                'public_tickets' => function ($query) {
+                    $query->orderBy('position', 'asc')
+                    ->with([
+                        'addons' => function ($query) {
+                            $query->where(function ($query) {
+                                $query->where('addons.event_app_ticket_id', null)
+                                    ->whereColumn('qty_total', '>', 'qty_sold');
+                            })
+                                ->orWhereHas('ticket', function ($query) {
+                                    $query->whereColumn('qty_total', '>', 'qty_sold');
+                                });
 
-                        $query->with([
-                            'attributes' => [
-                                'options'
-                            ],
-                            'variants' => [
-                                'attributeValues' => [
-                                    'addonAttributeOption'
-                                ]
-                            ],
-                        ]);
-                    }
-                ],
+                            $query->with([
+                                'attributes' => [
+                                    'options'
+                                ],
+                                'variants' => [
+                                    'attributeValues' => [
+                                        'addonAttributeOption'
+                                    ]
+                                ],
+                            ]);
+                        }
+                    ]);
+                },
                 'public_tickets.fees'
             ]);
         }

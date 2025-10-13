@@ -23,7 +23,8 @@ class EventAppTicket extends Model
         'increment_type',
         'start_increment',
         'end_increment',
-        'show_on_attendee_side'
+        'show_on_attendee_side',
+        'position',
     ];
 
     protected $casts = [

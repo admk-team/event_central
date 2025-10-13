@@ -142,6 +142,8 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             Route::resource('event-dates', EventDateController::class)->only(['store', 'update', 'destroy']);
 
             // Tickets
+            Route::get('tickets/sort', [EventAppTicketController::class, 'sort'])->name('tickets.sort');
+            Route::post('tickets/sort', [EventAppTicketController::class, 'saveSort'])->name('tickets.sort');
             Route::resource('tickets', EventAppTicketController::class)->only(['index', 'store', 'update', 'destroy']);
             Route::delete('tickets/delete/many', [EventAppTicketController::class, 'destroyMany'])->name('tickets.destroy.many');
             Route::resource('tickets-type', EventTicketTypeController::class);

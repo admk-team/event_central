@@ -230,6 +230,18 @@ function Index({ tickets, sessions, addonsAll, fees, event_ticket_type }: any) {
                                     columns={columns}
                                     title="Tickets"
                                     actions={[
+                                        {
+                                            render: (
+                                                <HasPermission permission="edit_tickets">
+                                                    <Link href={route('organizer.events.tickets.sort')}>
+                                                        <Button type="button">
+                                                            <i className="ri-drag-drop-fill"></i>{" "}
+                                                            Sort
+                                                        </Button>
+                                                    </Link>
+                                                </HasPermission>
+                                            ),
+                                        },
                                         // Delete multiple
                                         {
                                             render: (dataTable) => (
