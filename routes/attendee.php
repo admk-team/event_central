@@ -27,6 +27,7 @@ use App\Http\Controllers\Attendee\PrayerRequestController;
 use App\Http\Controllers\Attendee\ProfileController;
 use App\Http\Controllers\Attendee\QrCodeController;
 use App\Http\Controllers\Attendee\QuestionAttendeeController as AttendeeQuestionAttendeeController;
+use App\Http\Controllers\Attendee\UpgradeTicketToTicketController;
 use App\Http\Controllers\Attendee\WaitingListController;
 use App\Http\Controllers\QuestionAttendeeController;
 use Illuminate\Support\Facades\Route;
@@ -211,6 +212,14 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
     Route::post('booths/update/{booth}', [EventBoothController::class, 'updateBooth'])->name('attendee.booth.update');
     Route::get('/boothss/checkouts/success', [EventBoothController::class, 'successView'])->name('attendee.booth.checkout.success');
     Route::get('boothss/checkouts/cancel',  [EventBoothController::class, 'paymentCancel'])->name('attendee.booth.checkout.cancel');
+
+    //upgrade purchased ticket to ticket
+    Route::prefix('attendee/upgrade/ticket-to-ticket')->name('attendee.tickets.toticket.')->group(function () {
+        Route::get('/', [UpgradeTicketToTicketController::class, 'index'])->name('index');
+        Route::post('/save', [UpgradeTicketToTicketController::class, 'saveUpgrade'])->name('save');
+        Route::post('/proceed-checkout', [UpgradeTicketToTicketController::class, 'proceedCheckout'])->name('checkout');
+        Route::get('/success/{uuid}', [UpgradeTicketToTicketController::class, 'success'])->name('success');
+    });
 });
 
 // Event questionnaire Form For Web

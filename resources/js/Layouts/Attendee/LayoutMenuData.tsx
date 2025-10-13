@@ -301,6 +301,19 @@ const Navdata = () => {
                 updateIconSidebar(e);
             },
         },
+        {
+            id: "upgradeTicket",
+            label: t("Upgrade Tickets"),
+            icon: "bx bxs-credit-card",
+            link: route("attendee.tickets.toticket.index"),
+            stateVariables: isUpgradeTicket,
+            click: function (e: any) {
+                e.preventDefault();
+                setPurchaseTickets(!isUpgradeTicket);
+                setIscurrentState("upgradeTicket");
+                updateIconSidebar(e);
+            },
+        },
         // {
         //     id: "upgradeTicket",
         //     label: t("Upgrade Tickets Sessions"),
