@@ -31,7 +31,7 @@ class UpgradeTicketToTicketController extends Controller
         $attendee = auth()->user(); // 👈 current attendee
         $eventApp = EventApp::findOrFail($attendee->event_app_id);
 
-        $tickets = $eventApp->tickets()
+        $tickets = $eventApp->tickets()->orderBy('position', 'asc')
             ->select('id', 'name', 'base_price')
             ->get();
 

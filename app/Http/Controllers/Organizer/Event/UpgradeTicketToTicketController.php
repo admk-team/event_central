@@ -39,7 +39,7 @@ class UpgradeTicketToTicketController extends Controller
             ])
             ->get();
 
-        $tickets = $eventApp->tickets()->select('id', 'name', 'base_price')->get();
+        $tickets = $eventApp->tickets()->orderBy('position', 'asc')->select('id', 'name', 'base_price')->get();
         $currency = OrganizerPaymentKeys::getCurrencyForUser($eventApp->organizer_id);
 
         return Inertia::render('Organizer/Events/UpgradeTicketToTicket/UpgradeTicketToTicket', [
