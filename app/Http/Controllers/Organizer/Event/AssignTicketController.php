@@ -21,7 +21,7 @@ class AssignTicketController extends Controller
     }
 
     public function assignTickets($attendee_id = null)
-    {
+    {//dd($attendee_id);
         if (! Auth::user()->can('assign_tickets')) {
             abort(403);
         }
