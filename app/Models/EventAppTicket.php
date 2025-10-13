@@ -25,6 +25,7 @@ class EventAppTicket extends Model
         'start_increment',
         'end_increment',
         'show_on_attendee_side',
+        'position',
         'bulk_purchase_status',
         'bulk_purchase_discount_type',
         'bulk_purchase_discount_value',

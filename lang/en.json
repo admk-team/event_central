@@ -1246,5 +1246,12 @@
     "Ticket upgraded successfully": "Ticket upgraded successfully",
     "Upgrade failed. Please try again.": "Upgrade failed. Please try again.",
     "The new ticket is cheaper. Please refund the difference manually. This will be processed as a free checkout.": "The new ticket is cheaper. Please refund the difference manually. This will be processed as a free checkout.",
-    "Upgrade Ticket Sessions": "Upgrade Ticket Sessions"
+    "Upgrade Ticket Sessions": "Upgrade Ticket Sessions",
+    "Upgrade Type": "Upgrade Type",
+    "Original Price": "Original Price",
+    "Upgrade Amount": "Upgrade Amount",
+    "Total (New Ticket Price)": "Total (New Ticket Price)",
+    "Amount Paid (This Transaction)": "Amount Paid (This Transaction)",
+    "Refund Required": "Refund Required",
+    "Created On": "Created On"
 }
