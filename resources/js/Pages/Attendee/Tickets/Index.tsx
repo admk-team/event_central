@@ -12,6 +12,11 @@ import { useLaravelReactI18n } from "laravel-react-i18n";
 const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate, getCurrency }: any) => {
     const { t } = useLaravelReactI18n();
     const Layout = organizerView ? EventLayout : AttendeeLayout;
+    
+    // Check if attendee_id is provided in the route (for direct assignment)
+    // Only hide dropdown when attendee_id exists and is a valid positive number
+    const hasAttendeeInRoute = attendee_id != null && attendee_id !== undefined && attendee_id !== '' && !isNaN(parseInt(attendee_id)) && parseInt(attendee_id) > 0;
+    
     const foundAttendee = attendees.find(attendee => attendee.value === parseInt(attendee_id));
 
     const [currentAttendee, setCurrentAttendee] = useState<any>(attendee_id);
@@ -206,22 +211,29 @@ const Index = ({ eventApp, organizerView, attendees, attendee_id, lasteventDate,
                     <Container>
                         {organizerView && <Row className="justify-content-center mt-5 mb-2 mt-md-0">
                             <Col md={12} className="text-center">
-                                <h2>{t("Purchase Ticket For Attendees")}</h2>
+                                <h2>{hasAttendeeInRoute ? t("Assign Ticket to Attendee") : t("Purchase Ticket For Attendees")}</h2>
+                                {hasAttendeeInRoute && foundAttendee && (
+                                    <p className="text-muted fs-5">
+                                        {t("Assigning ticket to")}: <strong>{foundAttendee.label}</strong>
+                                    </p>
+                                )}
                                 <hr />
                             </Col>
-                            <Col>
-                                <FormGroup className="mb-3">
-                                    <Form.Label htmlFor="attendee" className="form-label fs-4 text-start w-100">{t("Attendee")}</Form.Label>
-                                    <Select
-                                        styles={customSelect2Styles}
-                                        className="react-select-container15"
-                                        value={foundAttendee}
-                                        options={attendees} onChange={(option: any) => {
-                                            setCurrentAttendee(option.value)
-                                        }}>
-                                    </Select>
-                                </FormGroup>
-                            </Col>
+                            {!hasAttendeeInRoute && (
+                                <Col>
+                                    <FormGroup className="mb-3">
+                                        <Form.Label htmlFor="attendee" className="form-label fs-4 text-start w-100">{t("Attendee")}</Form.Label>
+                                        <Select
+                                            styles={customSelect2Styles}
+                                            className="react-select-container15"
+                                            value={foundAttendee}
+                                            options={attendees} onChange={(option: any) => {
+                                                setCurrentAttendee(option.value)
+                                            }}>
+                                        </Select>
+                                    </FormGroup>
+                                </Col>
+                            )}
                             <Col>
                                 <FormGroup className="mb-3">
                                     <Form.Label htmlFor="payment_method" className="form-label fs-4 text-start w-100">{t("Payment Method")}</Form.Label>

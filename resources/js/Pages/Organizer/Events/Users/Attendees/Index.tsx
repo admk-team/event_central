@@ -13,7 +13,7 @@ import EditAttendee from './Component/EditAttendee';
 import AddAttendee from './Component/AddAttendee';
 import ImportFromEvent from './Component/ImportFromEvent';
 import HasPermission from '../../../../../Components/HasPermission';
-import { Check, CircleCheck, CircleX } from 'lucide-react';
+import { Check, CircleCheck, CircleX, Ticket } from 'lucide-react';
 import EventCheckinButton from './Component/EventCheckinButton';
 import AssignTicketButton from './Component/AssignTicketButton';
 import axios from 'axios';
@@ -181,9 +181,11 @@ function Index({ attendees, eventList }: any) {
                     {/* <AssignTicketButton attendee={attendee} /> */}
                     <Link title={t('View attendee details')} href={route('organizer.events.attendee.info', { id: attendee.id })} className="link-primary cursor-pointer"><i className="ri-eye-fill"></i></Link>
                     <Link title={t('View QR Code attendee')} href={route('organizer.events.attendee.qrcode', { id: attendee.id })} className="link-primary cursor-pointer"><i className="ri-qr-code-line"></i></Link>
-                    <Link title={t('Purchase ticket for this attendee')} href={route('organizer.events.attendee.tickets.assign', attendee.id)} className="link-primary cursor-pointer">
-                        <i className="bx bxs-coupon"></i>
-                    </Link>
+                    <HasPermission permission="assign_tickets">
+                        <Link title={t('Assign ticket to this attendee')} href={route('organizer.events.attendee.ticket.assign.to', attendee.id)} className="link-primary cursor-pointer">
+                            <Ticket size={16} />
+                        </Link>
+                    </HasPermission>
                     <a className="link-primary cursor-pointer" onClick={() => editAction(attendee)} ><i className="ri-edit-fill"></i></a>
                     <a className="link-primary cursor-pointer" onClick={() => initiateChat(attendee)}><i className="bx bx-message-rounded-dots"></i></a>
                     <a className="link-red cursor-pointer" onClick={() => deleteAction(attendee)}>

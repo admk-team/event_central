@@ -65,7 +65,6 @@ class PaymentController extends Controller
         $organizerId = EventApp::findOrFail(auth()->user()->event_app_id ?? session('event_id'));
         $getCurrency = OrganizerPaymentKeys::getCurrencyForUser($organizerId->organizer_id);
 
-        $attendee_id = auth()->user()->id;
         //If Page is being visited by Organizer
         if ($organizerView) {
             $eventApp = EventApp::with('dates')->find(session('event_id'));
@@ -73,6 +72,7 @@ class PaymentController extends Controller
 
             $attendees = $eventApp->attendees()->select(['id as value', DB::raw("CONCAT(first_name, ' ', last_name, ' || ', email) as label")])->get();
         } else {
+            $attendee_id = auth()->user()->id;
             $eventApp =  EventApp::with('dates')->find(auth()->user()->event_app_id);
             $lasteventDate = $eventApp->dates()->orderBy('date', 'desc')->get();
         }
