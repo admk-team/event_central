@@ -81,28 +81,28 @@ class PaymentController extends Controller
                 'tickets.sessions',
                 'tickets' => function ($query) {
                     $query->orderBy('position', 'asc')
-                    ->with([
-                        'addons' => function ($query) {
-                            $query->where(function ($query) {
-                                $query->where('addons.event_app_ticket_id', null)
-                                    ->whereColumn('qty_total', '>', 'qty_sold');
-                            })
-                                ->orWhereHas('ticket', function ($query) {
-                                    $query->whereColumn('qty_total', '>', 'qty_sold');
-                                });
+                        ->with([
+                            'addons' => function ($query) {
+                                $query->where(function ($query) {
+                                    $query->where('addons.event_app_ticket_id', null)
+                                        ->whereColumn('qty_total', '>', 'qty_sold');
+                                })
+                                    ->orWhereHas('ticket', function ($query) {
+                                        $query->whereColumn('qty_total', '>', 'qty_sold');
+                                    });
 
-                            $query->with([
-                                'attributes' => [
-                                    'options'
-                                ],
-                                'variants' => [
-                                    'attributeValues' => [
-                                        'addonAttributeOption'
-                                    ]
-                                ],
-                            ]);
-                        }
-                    ]);
+                                $query->with([
+                                    'attributes' => [
+                                        'options'
+                                    ],
+                                    'variants' => [
+                                        'attributeValues' => [
+                                            'addonAttributeOption'
+                                        ]
+                                    ],
+                                ]);
+                            }
+                        ]);
                 },
                 'tickets.fees'
             ]);
@@ -111,28 +111,28 @@ class PaymentController extends Controller
                 'public_tickets.sessions',
                 'public_tickets' => function ($query) {
                     $query->orderBy('position', 'asc')
-                    ->with([
-                        'addons' => function ($query) {
-                            $query->where(function ($query) {
-                                $query->where('addons.event_app_ticket_id', null)
-                                    ->whereColumn('qty_total', '>', 'qty_sold');
-                            })
-                                ->orWhereHas('ticket', function ($query) {
-                                    $query->whereColumn('qty_total', '>', 'qty_sold');
-                                });
+                        ->with([
+                            'addons' => function ($query) {
+                                $query->where(function ($query) {
+                                    $query->where('addons.event_app_ticket_id', null)
+                                        ->whereColumn('qty_total', '>', 'qty_sold');
+                                })
+                                    ->orWhereHas('ticket', function ($query) {
+                                        $query->whereColumn('qty_total', '>', 'qty_sold');
+                                    });
 
-                            $query->with([
-                                'attributes' => [
-                                    'options'
-                                ],
-                                'variants' => [
-                                    'attributeValues' => [
-                                        'addonAttributeOption'
-                                    ]
-                                ],
-                            ]);
-                        }
-                    ]);
+                                $query->with([
+                                    'attributes' => [
+                                        'options'
+                                    ],
+                                    'variants' => [
+                                        'attributeValues' => [
+                                            'addonAttributeOption'
+                                        ]
+                                    ],
+                                ]);
+                            }
+                        ]);
                 },
                 'public_tickets.fees'
             ]);
@@ -352,33 +352,64 @@ class PaymentController extends Controller
             throw new Exception('Payment object not found with uuid ' . $paymentUuId);
         }
 
-        //1 Update Payment status to paid
+        // 1. Update Payment status
         $payment->status = 'paid';
         $payment->save();
         $this->eventBadgeDetail('purchase_ticket', $payment->event_app_id, $payment->attendee_id, $payment->id);
 
-        //2. Generate Ticket QR Code
+        // 2. Generate Ticket QR Codes
         $this->purchasedTickets($paymentUuId);
 
-        //3. Send confirmation Email to Attendee along with Ticket QR Codes  -----
+        // 3. Send confirmation emails
         $this->sendPurchasedTicketsEmailToAttendee();
         $this->sendPurchasedTicketsEmailToOrganizer();
 
-        //4. Increment discount code used count
+        // 4. Increment discount code usage (✅ updated for ticket-specific logic)
         if ($payment->discount_code) {
-            $code = PromoCode::where('code', $payment->discount_code)
+            $code = PromoCode::with('tickets')
+                ->where('code', $payment->discount_code)
                 ->where('event_app_id', Auth::user()->event_app_id ?? session('event_id'))
                 ->where('status', 'active')
                 ->whereColumn('used_count', '<', 'usage_limit')
-                ->whereDate('end_date', '>', date('Y-m-d'))->first();
+                ->whereDate('end_date', '>', date('Y-m-d'))
+                ->first();
+
             if ($code) {
-                $code->increment('used_count');
-                $code->save();
+                // Get ticket IDs attached to the promo code
+                $eligibleTickets = $code->tickets->pluck('id')->toArray();
+
+                // Get tickets in the payment
+                $purchasedTicketIds = $payment->purchased_tickets()
+                    ->pluck('event_app_ticket_id')
+                    ->toArray();
+
+                // Check if promo applied to any of the purchased tickets
+                $appliesToThisPurchase =
+                    empty($eligibleTickets) || // global promo
+                    count(array_intersect($eligibleTickets, $purchasedTicketIds)) > 0;
+
+                if ($appliesToThisPurchase) {
+                    // Count how many purchased tickets qualify for the promo
+                    $matchingTickets = collect($payment->purchased_tickets)
+                        ->whereIn('event_app_ticket_id', $eligibleTickets)
+                        ->count();
+
+                    // If promo is global, all tickets qualify
+                    if (empty($eligibleTickets)) {
+                        $matchingTickets = $payment->purchased_tickets->count();
+                    }
+
+                    // Increment by the number of matching tickets
+                    if ($matchingTickets > 0) {
+                        $code->increment('used_count', $matchingTickets);
+                        $code->save();
+                    }
+                }
             }
         }
 
-        //5. Increment Addon Sold Qty
-        $payment->load('purchased_tickets.purchased_addons'); //Load Tickets and Addons
+        // 5. Increment Addon Sold Qty
+        $payment->load('purchased_tickets.purchased_addons');
         foreach ($payment->purchased_tickets as $purchasedTicket) {
             $ticketDB = EventAppTicket::find($purchasedTicket['event_app_ticket_id']);
             $ticketDB->increment('qty_sold');
@@ -393,45 +424,56 @@ class PaymentController extends Controller
                     ->where('attendee_purchased_ticket_id', $purchasedTicket->id)
                     ->where('addon_id', $addon->id)
                     ->first();
-                $variant = AddonVariant::with(['attributeValues' => ['addonAttribute', 'addonAttributeOption']])->find($pivot->addon_variant_id);
+                $variant = AddonVariant::with(['attributeValues' => ['addonAttribute', 'addonAttributeOption']])
+                    ->find($pivot->addon_variant_id);
                 if (! $variant) continue;
                 $variant->increment('qty_sold');
                 $variant->save();
             }
         }
 
-        //6. Update Attendee Sessions
+        // 6. Update Attendee Sessions
         foreach ($payment->purchased_tickets as $purchasedTicket) {
             $session_ids = $purchasedTicket->ticket->sessions()->pluck('id');
             foreach ($session_ids as $id) {
-                // Session might be already attached to attendee from any other ticket
-                // try {
                 $attendee->eventSelectedSessions()->attach($id, ['attendee_purchased_ticket_id' => $purchasedTicket->id]);
-                // } catch (Exception $ex) {
-                //     Log::error($ex->getMessage());
-                // }
             }
         }
+
         return response()->json(['message' => 'Attendee payment status has been updated']);
     }
 
 
+
     // Validate Promo Codes
-    public function  validateDiscCode($disCode)
+    public function validateDiscCode($disCode)
     {
-        $code = PromoCode::where(function ($subQuery) use ($disCode) {
-            $subQuery->where('event_app_id', Auth::user()->event_app_id ?? session('event_id'));
-            $subQuery->where('code', $disCode);
-            $subQuery->where('status', 'active');
-            $subQuery->whereColumn('used_count', '<', 'usage_limit');
-            $subQuery->whereDate('end_date', '>', date('Y-m-d'));
-        })->first();
-        if ($code) {
-            return response()->json(['code' => $code]);
-        } else {
+        $eventId = Auth::user()->event_app_id ?? session('event_id');
+
+        $code = PromoCode::with('tickets:id') // eager load related tickets
+            ->where('event_app_id', $eventId)
+            ->where('code', $disCode)
+            ->where('status', 'active')
+            ->whereColumn('used_count', '<', 'usage_limit')
+            ->whereDate('end_date', '>', now())
+            ->first();
+
+        if (!$code) {
             throw new Exception('Invalid Code');
         }
+
+        // Optional: If a code must apply to at least one ticket
+        if ($code->tickets->count() === 0) {
+            // If you want, you can treat this as global
+            return response()->json(['code' => $code, 'applicable_ticket_ids' => []]);
+        }
+
+        return response()->json([
+            'code' => $code,
+            'applicable_ticket_ids' => $code->tickets->pluck('id'), // Return allowed tickets
+        ]);
     }
+
 
     public function sendPurchasedTicketsEmailToAttendee()
     {

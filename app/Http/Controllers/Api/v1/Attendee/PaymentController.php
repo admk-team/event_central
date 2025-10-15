@@ -117,7 +117,7 @@ class PaymentController extends Controller
         $user = auth()->user();
         $attendee = $organizerView ? $attendee : auth()->user();
         $amount = $data['totalAmount'];
-        $stripe_response = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount ,$request->input('currency') ?? 'USD');
+        $stripe_response = $this->stripe_service->createPaymentIntent($attendee->event_app_id, $amount, $request->input('currency') ?? 'USD');
         $client_secret = $stripe_response['client_secret'];
         $payment_id = $stripe_response['payment_id'];
 
@@ -277,24 +277,41 @@ class PaymentController extends Controller
 
 
     // Validate Promo Codes
-    public function  validateDiscCode(Request $request)
+    public function validateDiscCode(Request $request)
     {
         $input = $request->validate(['code' => 'required|string|max:30']);
         $disCode = $input['code'];
 
-        $code = PromoCode::where(function ($subQuery) use ($disCode) {
+        $code = PromoCode::with('tickets')->where(function ($subQuery) use ($disCode) {
             $subQuery->where('code', $disCode);
             $subQuery->where('event_app_id', Auth::user()->event_app_id ?? session('event_id'));
             $subQuery->where('status', 'active');
             $subQuery->whereColumn('used_count', '<', 'usage_limit');
             $subQuery->whereDate('end_date', '>', date('Y-m-d'));
         })->first();
+
         if ($code) {
-            return response()->json(['code' => $code]);
-        } else {
-            return response()->json(['message' => 'Promo Code Invalid', 404]);
+            // ✅ If promo is global (no tickets attached)
+            $ticketIds = $code->tickets->pluck('id')->toArray();
+            if (empty($ticketIds)) {
+                // Treat as global
+                return response()->json([
+                    'code' => $code,
+                    'applicable_ticket_ids' => [] // global
+                ]);
+            }
+
+            // ✅ Ticket-specific promo
+            return response()->json([
+                'code' => $code,
+                'applicable_ticket_ids' => $ticketIds
+            ]);
         }
+
+        // ❌ Invalid promo
+        return response()->json(['message' => 'Promo Code Invalid'], 404);
     }
+
 
     public function sendPurchasedTicketsEmailToAttendee()
     {
