@@ -74,7 +74,29 @@ class EventController extends Controller
             'tickets',
             'public_tickets' => function ($query) {
                 $query->orderBy('position', 'asc')
-                    ->with(['sessions']);
+                    ->with([
+                        'sessions',
+                        'addons' => function ($query) {
+                            $query->where(function ($query) {
+                                $query->where('addons.event_app_ticket_id', null)
+                                    ->whereColumn('qty_total', '>', 'qty_sold');
+                            })
+                                ->orWhereHas('ticket', function ($query) {
+                                    $query->whereColumn('qty_total', '>', 'qty_sold');
+                                });
+
+                            $query->with([
+                                'attributes' => [
+                                    'options'
+                                ],
+                                'variants' => [
+                                    'attributeValues' => [
+                                        'addonAttributeOption'
+                                    ]
+                                ],
+                            ]);
+                        }
+                    ]);
             }, 
             'public_tickets.addons',
             'public_tickets.fees'
