@@ -166,12 +166,12 @@ class EventApp extends Model
 
     public function tickets()
     {
-        return $this->hasMany(EventAppTicket::class);
+        return $this->hasMany(EventAppTicket::class)->orderBy('position', 'asc');
     }
 
     public function public_tickets()
     {
-        return $this->hasMany(EventAppTicket::class)->where('show_on_attendee_side', '1');
+        return $this->hasMany(EventAppTicket::class)->where('show_on_attendee_side', '1')->orderBy('position', 'asc');
     }
 
     public function partners()
