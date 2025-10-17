@@ -26,6 +26,7 @@ use App\Mail\AttendeeTicketPurchasedEmail;
 use chillerlan\QRCode\Common\EccLevel;
 use Illuminate\Support\Facades\Storage;
 use App\Models\AttendeePurchasedTickets;
+use App\Models\AttendeeTransferedTicket;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
@@ -455,7 +456,7 @@ class PaymentController extends Controller
         $emails = $request->input('emails');
         foreach ($emails as $index => $email) {
             if ($email) {
-                $transferTicket = TransferTicket::create([
+                $transferTicket = AttendeeTransferedTicket::create([
                     'attendee_id' => auth()->user()->id,
                     'attendee_payment_id' => $index,
                     'event_app_id' => auth()->user()->event_app_id,
