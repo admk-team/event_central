@@ -80,27 +80,80 @@ class EventTicketsController extends Controller
 
     public function deleteTickets(AttendeePayment $attendeepayment)
     {
+        // Calculate total quantity across all purchased tickets
+        $totalQuantity = $attendeepayment->purchased_tickets->sum('qty');
 
-        //Process Refund on Transfer
-        if ($attendeepayment->payment_method === 'stripe') {
-            $payment_intent = $attendeepayment->stripe_intent;
-            $amount = $attendeepayment->amount_paid * 100;  //Converting to cents
-            $this->stripe->refund($attendeepayment->event_app_id, $payment_intent, $amount, [
-                'refund_reason' => "Ticket Refunded",
-                'organizer_remarks' => "Deleted Ticket",
-                'refund_requested_amount' => $amount,
-                // 'refund_id' => $refund->id,
-                'organizer_id' => auth()->user()->id,
-                // 'attendee_payment_id' => $refund->attendee_payment_id
-            ]);
+        // If total quantity is more than 1, decrement by 1
+        if ($totalQuantity > 1) {
+            // Find the first ticket with qty > 0 and decrement it
+            foreach ($attendeepayment->purchased_tickets as $purchase_ticket) {
+                if ($purchase_ticket->qty > 1) {
+                    // Decrement quantity by 1
+                    $purchase_ticket->decrement('qty');
+                    
+                    // Calculate refund amount for one ticket
+                    $refundAmount = ($purchase_ticket->total / ($purchase_ticket->qty + 1)); // +1 because we already decremented
+                    
+                    // Update the total for this ticket
+                    $purchase_ticket->total = $purchase_ticket->total - $refundAmount;
+                    $purchase_ticket->save();
+                    
+                    // Process partial refund if payment method is stripe
+                    if ($attendeepayment->payment_method === 'stripe') {
+                        $payment_intent = $attendeepayment->stripe_intent;
+                        $amount = $refundAmount * 100;  // Converting to cents
+                        $this->stripe->refund($attendeepayment->event_app_id, $payment_intent, $amount, [
+                            'refund_reason' => "Partial Ticket Refund",
+                            'organizer_remarks' => "Deleted 1 ticket from quantity",
+                            'refund_requested_amount' => $amount,
+                            'organizer_id' => auth()->user()->id,
+                        ]);
+                    }
+                    
+                    return redirect()->back()->withSuccess('One ticket deleted successfully from quantity');
+                } elseif ($purchase_ticket->qty == 1 && $attendeepayment->purchased_tickets->count() > 1) {
+                    // If this ticket has qty=1 but there are other tickets, delete this one
+                    DB::table('attendee_event_session')->where('attendee_purchased_ticket_id', $purchase_ticket->id)->delete();
+                    
+                    $refundAmount = $purchase_ticket->total;
+                    
+                    // Process partial refund if payment method is stripe
+                    if ($attendeepayment->payment_method === 'stripe') {
+                        $payment_intent = $attendeepayment->stripe_intent;
+                        $amount = $refundAmount * 100;  // Converting to cents
+                        $this->stripe->refund($attendeepayment->event_app_id, $payment_intent, $amount, [
+                            'refund_reason' => "Partial Ticket Refund",
+                            'organizer_remarks' => "Deleted ticket",
+                            'refund_requested_amount' => $amount,
+                            'organizer_id' => auth()->user()->id,
+                        ]);
+                    }
+                    
+                    $purchase_ticket->delete();
+                    return redirect()->back()->withSuccess('Ticket deleted successfully');
+                }
+            }
+        } else {
+            // If total quantity is 1, delete the entire payment and all tickets
+            // Process full refund if payment method is stripe
+            if ($attendeepayment->payment_method === 'stripe') {
+                $payment_intent = $attendeepayment->stripe_intent;
+                $amount = $attendeepayment->amount_paid * 100;  // Converting to cents
+                $this->stripe->refund($attendeepayment->event_app_id, $payment_intent, $amount, [
+                    'refund_reason' => "Ticket Refunded",
+                    'organizer_remarks' => "Deleted Ticket",
+                    'refund_requested_amount' => $amount,
+                    'organizer_id' => auth()->user()->id,
+                ]);
+            }
+
+            // Delete all sessions and tickets
+            foreach ($attendeepayment->purchased_tickets as $purchase_ticket) {
+                DB::table('attendee_event_session')->where('attendee_purchased_ticket_id', $purchase_ticket->id)->delete();
+                $purchase_ticket->delete();
+            }
+
+            return redirect()->back()->withSuccess('Payment deleted successfully');
         }
-
-
-        foreach ($attendeepayment->purchased_tickets as $purchase_ticket) {
-            DB::table('attendee_event_session')->where('attendee_purchased_ticket_id', $purchase_ticket->id)->delete();
-            $purchase_ticket->delete();
-        }
-
-        return redirect()->back()->withSuccess('Payment deleted successfuly');
     }
 }
