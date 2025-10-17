@@ -608,6 +608,9 @@ class PaymentController extends Controller
                 'ticket_name' => $purchasedTicket->ticket?->name ?? '',
                 'ticket_type_name' => isset($purchasedTicket->ticket->ticketType->name) ?
                     $purchasedTicket->ticket->ticketType->name : '', // <-- added line
+                'attendee_name' => $purchasedTicket->attendee_name,
+                'attendee_position' => $purchasedTicket->attendee_position,
+                'attendee_location' => $purchasedTicket->attendee_location,
             ];
         }
         return Inertia::render('Attendee/Tickets/PurchasedTickets', [
@@ -690,5 +693,23 @@ class PaymentController extends Controller
             Log::error('Failed to cancel ticket: ' . $e->getMessage());
             return back()->withErrors(['error' => 'Failed to process cancellation.']);
         }
+    }
+
+    public function updateTicketAttendee(Request $request)
+    {
+        $data = $request->validate([
+            'id' => 'required|exists:attendee_purchased_tickets,id',
+            'attendee_name' => 'nullable|string|max:255',
+            'attendee_position' => 'nullable|string|max:255',
+            'attendee_location' => 'nullable|string|max:255',
+        ]);
+
+        $ticket = AttendeePurchasedTickets::findOrFail($data['id']);
+        $ticket->update([
+            'attendee_name' => $data['attendee_name'],
+            'attendee_position' => $data['attendee_position'],
+            'attendee_location' => $data['attendee_location'],
+        ]);
+        return redirect()->back()->withSuccess('Ticket details updated successfully.');
     }
 }

@@ -320,10 +320,10 @@ function Index({
                                                 {eventApp?.location_base}
                                             </p>
                                             <h1 className="attendee-name">
-                                                {attendee?.name}
+                                                {qr?.attendee_name || attendee?.name}
                                             </h1>
                                             <h3 className="attendee-name">
-                                                {attendee?.position}
+                                                {qr?.attendee_position || attendee?.position}
                                             </h3>
                                         </div>
 
@@ -337,7 +337,7 @@ function Index({
 
                                         <div className="attendee-details">
                                             <span className="location">
-                                                {attendee?.location}
+                                                {qr?.attendee_location || attendee?.location}
                                             </span>
                                             <p className="attendee-name">
                                                 {qr.ticket_type_name}
@@ -389,11 +389,11 @@ function Index({
                                             />
                                         </div>
                                         <h2 className="badge-1-name">
-                                            {attendee?.name}
+                                            {qr?.attendee_name || attendee?.name}
                                         </h2>
                                         <div className="badge-1-title">
                                             <p style={{ color: "white" }}>
-                                                {attendee?.position}
+                                                {qr?.attendee_position || attendee?.position}
                                             </p>
                                         </div>
                                     </div>
@@ -476,10 +476,10 @@ function Index({
                                             />
                                         </div>
                                         <h2 className="badge-4-name">
-                                            {attendee?.name}
+                                            {qr?.attendee_name || attendee?.name}
                                         </h2>
                                         <p className="badge-4-title">
-                                            {attendee?.position}
+                                            {qr?.attendee_position || attendee?.position}
                                         </p>
                                     </div>
                                     <div className="badge-4-footer-outer">
@@ -556,10 +556,10 @@ function Index({
                                             />
                                         </div>
                                         <h2 className="badge-3-name">
-                                            {attendee?.name}
+                                            {qr?.attendee_name || attendee?.name}
                                         </h2>
                                         <p className="badge-3-title">
-                                            {attendee?.position}
+                                            {qr?.attendee_position || attendee?.position}
                                         </p>
                                     </div>
                                     <div className="badge-3-footer-outer">
@@ -643,10 +643,10 @@ function Index({
                                             />
                                         </div>
                                         <h2 className="badge-2-name">
-                                            {attendee?.name}
+                                            {qr?.attendee_name || attendee?.name}
                                         </h2>
                                         <p className="badge-2-title">
-                                            {attendee?.position}
+                                            {qr?.attendee_position || attendee?.position}
                                         </p>
                                     </div>
                                     <div className="badge-2-event-detail">
@@ -713,11 +713,11 @@ function Index({
                                             />
                                         </div>
                                         <h2 className="badge-1-name">
-                                            {attendee?.name}
+                                            {qr?.attendee_name || attendee?.name}
                                         </h2>
                                         <div className="badge-1-title">
                                             <p style={{ color: "white" }}>
-                                                {attendee?.position}
+                                                {qr?.attendee_position || attendee?.position}
                                             </p>
                                         </div>
                                     </div>

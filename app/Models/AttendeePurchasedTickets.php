@@ -29,6 +29,9 @@ class AttendeePurchasedTickets extends Model
         'original_ticket_price',
         'upgrade_amount',
         'is_upgrade',
+        'attendee_name',
+        'attendee_position',
+        'attendee_location',
     ];
 
     public function payment()

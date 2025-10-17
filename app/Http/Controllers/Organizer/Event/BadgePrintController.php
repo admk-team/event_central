@@ -77,6 +77,9 @@ class BadgePrintController extends Controller
                                         : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s',
                                     'ticket_name' => optional($ticket->ticket)->name,
                                     'ticket_type_name' => optional(optional($ticket->ticket)->ticketType)->name ?? '',
+                                    'attendee_name' => $ticket->attendee_name ?? '',
+                                    'attendee_position' => $ticket->attendee_position ?? '',
+                                    'attendee_location' => $ticket->attendee_location ?? '',
                                 ];
                             });
                         })
@@ -168,6 +171,9 @@ class BadgePrintController extends Controller
                                         : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s',
                                     'ticket_name' => optional($ticket->ticket)->name,
                                     'ticket_type_name' => optional(optional($ticket->ticket)->ticketType)->name ?? '',
+                                    'attendee_name' => $ticket->attendee_name ?? '',
+                                    'attendee_position' => $ticket->attendee_position ?? '',
+                                    'attendee_location' => $ticket->attendee_location ?? '',
                                 ];
                             });
                         })

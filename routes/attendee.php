@@ -101,7 +101,8 @@ Route::middleware(['auth:attendee', 'check_attendee_registration_form'])->group(
         Route::get('view-tickets', [PaymentController::class, 'viewTickets'])->name('attendee.tickets.get');
         Route::get('purchased-tickets', [PaymentController::class, 'attendeepurchasedTickets'])->name('attendee.tickets.purchased');
         Route::post('submit-ticket-emails', [PaymentController::class, 'submitTicketTransfer'])->name('attendee.tickets.transfer');
-
+        Route::post('/attendee/tickets/update', [PaymentController::class, 'updateTicketAttendee'])
+            ->name('attendee.tickets.update');
         // Cancel Ticket
         Route::post('cancel-ticket/{id}', [PaymentController::class, 'cancelTicket'])->name('attendee.tickets.cancel');
 

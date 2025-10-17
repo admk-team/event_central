@@ -236,47 +236,47 @@ class PaymentController extends Controller
 
             //4. Increment discount code used count
             if ($payment->discount_code) {
-            $code = PromoCode::with('tickets')
-                ->where('code', $payment->discount_code)
-                ->where('event_app_id', Auth::user()->event_app_id ?? session('event_id'))
-                ->where('status', 'active')
-                ->whereColumn('used_count', '<', 'usage_limit')
-                ->whereDate('end_date', '>', date('Y-m-d'))
-                ->first();
+                $code = PromoCode::with('tickets')
+                    ->where('code', $payment->discount_code)
+                    ->where('event_app_id', Auth::user()->event_app_id ?? session('event_id'))
+                    ->where('status', 'active')
+                    ->whereColumn('used_count', '<', 'usage_limit')
+                    ->whereDate('end_date', '>', date('Y-m-d'))
+                    ->first();
 
-            if ($code) {
-                // Get ticket IDs attached to the promo code
-                $eligibleTickets = $code->tickets->pluck('id')->toArray();
+                if ($code) {
+                    // Get ticket IDs attached to the promo code
+                    $eligibleTickets = $code->tickets->pluck('id')->toArray();
 
-                // Get tickets in the payment
-                $purchasedTicketIds = $payment->purchased_tickets()
-                    ->pluck('event_app_ticket_id')
-                    ->toArray();
+                    // Get tickets in the payment
+                    $purchasedTicketIds = $payment->purchased_tickets()
+                        ->pluck('event_app_ticket_id')
+                        ->toArray();
 
-                // Check if promo applied to any of the purchased tickets
-                $appliesToThisPurchase =
-                    empty($eligibleTickets) || // global promo
-                    count(array_intersect($eligibleTickets, $purchasedTicketIds)) > 0;
+                    // Check if promo applied to any of the purchased tickets
+                    $appliesToThisPurchase =
+                        empty($eligibleTickets) || // global promo
+                        count(array_intersect($eligibleTickets, $purchasedTicketIds)) > 0;
 
-                if ($appliesToThisPurchase) {
-                    // Count how many purchased tickets qualify for the promo
-                    $matchingTickets = collect($payment->purchased_tickets)
-                        ->whereIn('event_app_ticket_id', $eligibleTickets)
-                        ->count();
+                    if ($appliesToThisPurchase) {
+                        // Count how many purchased tickets qualify for the promo
+                        $matchingTickets = collect($payment->purchased_tickets)
+                            ->whereIn('event_app_ticket_id', $eligibleTickets)
+                            ->count();
 
-                    // If promo is global, all tickets qualify
-                    if (empty($eligibleTickets)) {
-                        $matchingTickets = $payment->purchased_tickets->count();
-                    }
+                        // If promo is global, all tickets qualify
+                        if (empty($eligibleTickets)) {
+                            $matchingTickets = $payment->purchased_tickets->count();
+                        }
 
-                    // Increment by the number of matching tickets
-                    if ($matchingTickets > 0) {
-                        $code->increment('used_count', $matchingTickets);
-                        $code->save();
+                        // Increment by the number of matching tickets
+                        if ($matchingTickets > 0) {
+                            $code->increment('used_count', $matchingTickets);
+                            $code->save();
+                        }
                     }
                 }
             }
-        }
 
             //5. Increment Addon Sold Qty
             $payment->load('purchased_tickets.purchased_addons'); //Load Tickets and Addons
@@ -433,6 +433,9 @@ class PaymentController extends Controller
                     'transfer_check' => $purchasedTicket->is_transfered,
                     'ticket_name' => $purchasedTicket->ticket?->name ?? '',
                     'ticket_type_name' => $purchasedTicket->ticket->ticketType->name ?? '',
+                    'attendee_name' => $purchasedTicket->attendee_name,
+                    'attendee_position' => $purchasedTicket->attendee_position,
+                    'attendee_location' => $purchasedTicket->attendee_location,
                 ];
             }
         }
