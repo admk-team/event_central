@@ -98,6 +98,10 @@ class EventTicketsController extends Controller
                     $purchase_ticket->total = $purchase_ticket->total - $refundAmount;
                     $purchase_ticket->save();
                     
+                    // Update the payment amount_paid
+                    $attendeepayment->amount_paid = $attendeepayment->amount_paid - $refundAmount;
+                    $attendeepayment->save();
+                    
                     // Process partial refund if payment method is stripe
                     if ($attendeepayment->payment_method === 'stripe') {
                         $payment_intent = $attendeepayment->stripe_intent;
@@ -116,6 +120,10 @@ class EventTicketsController extends Controller
                     DB::table('attendee_event_session')->where('attendee_purchased_ticket_id', $purchase_ticket->id)->delete();
                     
                     $refundAmount = $purchase_ticket->total;
+                    
+                    // Update the payment amount_paid
+                    $attendeepayment->amount_paid = $attendeepayment->amount_paid - $refundAmount;
+                    $attendeepayment->save();
                     
                     // Process partial refund if payment method is stripe
                     if ($attendeepayment->payment_method === 'stripe') {
