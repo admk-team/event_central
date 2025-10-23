@@ -142,7 +142,7 @@ class DashboardController extends Controller
 
         // Extract payment IDs from ticket purchases and calculate total revenue
         $paymentIds = $ticketPurchases->pluck('attendee_payment_id')->unique()->values(); // Get unique payment IDs
-        $totalRevenue = AttendeePayment::whereIn('id', $paymentIds)->where('status','paid')->sum('amount_paid'); // Sum amount_paid from payments
+        $totalRevenue = AttendeePayment::whereIn('id', $paymentIds)->where('status', 'paid')->sum('amount_paid'); // Sum amount_paid from payments
 
         // Prepare data for all tickets (including those with zero sales)
         $ticketsData = $allTickets->map(function ($ticket) use ($ticketPurchases) {
@@ -178,16 +178,20 @@ class DashboardController extends Controller
         $totalAttendees = $attendees->count();
 
         // Fetch ticket purchases for the current event to calculate total revenue and ticket metrics
-        $ticketPurchases = AttendeePurchasedTickets::whereHas('payment', fn($query) => $query->currentEvent())
-            ->with(['payment']) // Eager load payment to avoid N+1 queries
+        // $ticketPurchases = AttendeePurchasedTickets::whereHas('payment', fn($query) => $query->currentEvent())
+        //     ->with(['payment']) // Eager load payment to avoid N+1 queries
+        //     ->get();
+        $ticketPurchases = AttendeePurchasedTickets::where('event_app_id', session('event_id'))
+            ->whereHas('payment', fn($q) => $q->where('status', 'paid'))
+            ->with('payment')
             ->get();
 
         // Total tickets sold (event-wide)
         $totalTicketsSold = $ticketPurchases->sum('qty');
 
         // Extract payment IDs from ticket purchases and calculate total revenue
-        $paymentIds = $ticketPurchases->pluck('attendee_payment_id')->unique()->values();
-        $totalRevenue = AttendeePayment::whereIn('id', $paymentIds)->sum('amount_paid');
+        // $paymentIds = $ticketPurchases->pluck('attendee_payment_id')->unique()->values();
+        $totalRevenue = $ticketPurchases->sum('total');
 
         // Fetch all ticket types for the current event
         $allTickets = EventAppTicket::currentEvent()->get();
@@ -202,9 +206,9 @@ class DashboardController extends Controller
                 'amountPaid' => $amountPaid,
             ];
         })->sortByDesc('amountPaid')
-          ->take(10)
-          ->values()
-          ->toArray();
+            ->take(10)
+            ->values()
+            ->toArray();
 
         return [
             'totalAttendees' => $totalAttendees, // Total number of attendees
@@ -216,19 +220,12 @@ class DashboardController extends Controller
     }
     public function totalRevenue()
     {
-        // Fetch all ticket types for the current event
-        $allTickets = EventAppTicket::currentEvent()->get();
-        $totalTickets = $allTickets->count(); // Total number of ticket types
-
         // Get ticket purchases for the current event
-        $ticketPurchases = AttendeePurchasedTickets::whereHas('payment', fn($query) => $query->currentEvent())->get();
-
-        // Total tickets sold and revenue (event-wide)
-        $totalTicketsSold = $ticketPurchases->sum('qty'); // Total quantity sold
-
-        // Extract payment IDs from ticket purchases and calculate total revenue
-        $paymentIds = $ticketPurchases->pluck('attendee_payment_id')->unique()->values(); // Get unique payment IDs
-        $totalRevenue = AttendeePayment::whereIn('id', $paymentIds)->where('status','paid')->sum('amount_paid'); // Sum amount_paid from payments
+        $ticketPurchases = AttendeePurchasedTickets::where('event_app_id', session('event_id'))
+            ->whereHas('payment', fn($q) => $q->where('status', 'paid'))
+            ->with('payment')
+            ->get();
+        $totalRevenue = $ticketPurchases->sum('total');
         return [
             'totalRevenue' => $totalRevenue, // Total number of attendees
         ];

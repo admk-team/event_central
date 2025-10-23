@@ -18,12 +18,18 @@ import AttendeeProfileDropdown from "../../Components/Common/AttendeeProfileDrop
 import LightDark from "../../Components/Common/LightDark";
 // import LightDark from "../../Components/Common/LightDark";
 // import NotificationDropdown from "../../Components/Common/NotificationDropdown";
-
-const HeaderAttendee = ({ onChangeLayoutMode, layoutModeType, headerClass }: any) => {
+import { useLaravelReactI18n } from "laravel-react-i18n";
+const HeaderAttendee = ({
+    onChangeLayoutMode,
+    layoutModeType,
+    headerClass,
+}: any) => {
+    const { t } = useLaravelReactI18n();
     const dispatch: any = useDispatch();
     const selectDashboardData = createSelector(
         (state: any) => state.Layout,
-        (sidebarVisibilitytype: any) => sidebarVisibilitytype.sidebarVisibilitytype
+        (sidebarVisibilitytype: any) =>
+            sidebarVisibilitytype.sidebarVisibilitytype
     );
     // Inside your component
     const sidebarVisibilitytype = useSelector(selectDashboardData);
@@ -34,34 +40,71 @@ const HeaderAttendee = ({ onChangeLayoutMode, layoutModeType, headerClass }: any
 
     const toogleMenuBtn = () => {
         var windowSize = document.documentElement.clientWidth;
-        const humberIcon = document.querySelector(".hamburger-icon") as HTMLElement;
+        const humberIcon = document.querySelector(
+            ".hamburger-icon"
+        ) as HTMLElement;
         dispatch(changeSidebarVisibility("show"));
 
-        if (windowSize > 767)
-            humberIcon.classList.toggle('open');
+        if (windowSize > 767) humberIcon.classList.toggle("open");
 
         //For collapse horizontal menu
-        if (document.documentElement.getAttribute('data-layout') === "horizontal") {
-            document.body.classList.contains("menu") ? document.body.classList.remove("menu") : document.body.classList.add("menu");
+        if (
+            document.documentElement.getAttribute("data-layout") ===
+            "horizontal"
+        ) {
+            document.body.classList.contains("menu")
+                ? document.body.classList.remove("menu")
+                : document.body.classList.add("menu");
         }
 
         //For collapse vertical and semibox menu
-        if (sidebarVisibilitytype === "show" && (document.documentElement.getAttribute('data-layout') === "vertical" || document.documentElement.getAttribute('data-layout') === "semibox")) {
+        if (
+            sidebarVisibilitytype === "show" &&
+            (document.documentElement.getAttribute("data-layout") ===
+                "vertical" ||
+                document.documentElement.getAttribute("data-layout") ===
+                    "semibox")
+        ) {
             if (windowSize < 1025 && windowSize > 767) {
-                document.body.classList.remove('vertical-sidebar-enable');
-                (document.documentElement.getAttribute('data-sidebar-size') === 'sm') ? document.documentElement.setAttribute('data-sidebar-size', '') : document.documentElement.setAttribute('data-sidebar-size', 'sm');
+                document.body.classList.remove("vertical-sidebar-enable");
+                document.documentElement.getAttribute("data-sidebar-size") ===
+                "sm"
+                    ? document.documentElement.setAttribute(
+                          "data-sidebar-size",
+                          ""
+                      )
+                    : document.documentElement.setAttribute(
+                          "data-sidebar-size",
+                          "sm"
+                      );
             } else if (windowSize > 1025) {
-                document.body.classList.remove('vertical-sidebar-enable');
-                (document.documentElement.getAttribute('data-sidebar-size') === 'lg') ? document.documentElement.setAttribute('data-sidebar-size', 'sm') : document.documentElement.setAttribute('data-sidebar-size', 'lg');
+                document.body.classList.remove("vertical-sidebar-enable");
+                document.documentElement.getAttribute("data-sidebar-size") ===
+                "lg"
+                    ? document.documentElement.setAttribute(
+                          "data-sidebar-size",
+                          "sm"
+                      )
+                    : document.documentElement.setAttribute(
+                          "data-sidebar-size",
+                          "lg"
+                      );
             } else if (windowSize <= 767) {
-                document.body.classList.add('vertical-sidebar-enable');
-                document.documentElement.setAttribute('data-sidebar-size', 'lg');
+                document.body.classList.add("vertical-sidebar-enable");
+                document.documentElement.setAttribute(
+                    "data-sidebar-size",
+                    "lg"
+                );
             }
         }
 
         //Two column menu
-        if (document.documentElement.getAttribute('data-layout') === "twocolumn") {
-            document.body.classList.contains('twocolumn-panel') ? document.body.classList.remove('twocolumn-panel') : document.body.classList.add('twocolumn-panel');
+        if (
+            document.documentElement.getAttribute("data-layout") === "twocolumn"
+        ) {
+            document.body.classList.contains("twocolumn-panel")
+                ? document.body.classList.remove("twocolumn-panel")
+                : document.body.classList.add("twocolumn-panel");
         }
     };
 
@@ -77,7 +120,11 @@ const HeaderAttendee = ({ onChangeLayoutMode, layoutModeType, headerClass }: any
                                         <img src={logoSm} alt="" height="22" />
                                     </span>
                                     <span className="logo-lg">
-                                        <img src={logoDark} alt="" height="17" />
+                                        <img
+                                            src={logoDark}
+                                            alt=""
+                                            height="17"
+                                        />
                                     </span>
                                 </Link>
 
@@ -86,7 +133,11 @@ const HeaderAttendee = ({ onChangeLayoutMode, layoutModeType, headerClass }: any
                                         <img src={logoSm} alt="" height="22" />
                                     </span>
                                     <span className="logo-lg">
-                                        <img src={logoLight} alt="" height="17" />
+                                        <img
+                                            src={logoLight}
+                                            alt=""
+                                            height="17"
+                                        />
                                     </span>
                                 </Link>
                             </div>
@@ -95,13 +146,30 @@ const HeaderAttendee = ({ onChangeLayoutMode, layoutModeType, headerClass }: any
                                 onClick={toogleMenuBtn}
                                 type="button"
                                 className="btn btn-sm px-3 fs-16 header-item vertical-menu-btn topnav-hamburger"
-                                id="topnav-hamburger-icon">
+                                id="topnav-hamburger-icon"
+                            >
                                 <span className="hamburger-icon">
                                     <span></span>
                                     <span></span>
                                     <span></span>
                                 </span>
                             </button>
+                            <a
+                                href={route("attendee.tickets.get")}
+                                rel="noopener noreferrer"
+                                className="d-flex align-items-center gap-1"
+                            >
+                                <span>{t("Buy Tickets")}</span>
+                            </a>
+                            <a
+                                href={route("attendee.event.detail.agenda")}
+                                rel="noopener noreferrer"
+                                className="d-flex align-items-center gap-1"
+                                style={{ marginLeft: 10 }}
+                            >
+                                <span>{t("Event Agenda")}</span>
+                            </a>
+
                             {/* <SearchOption /> */}
                         </div>
 
@@ -124,8 +192,8 @@ const HeaderAttendee = ({ onChangeLayoutMode, layoutModeType, headerClass }: any
                                 </Dropdown.Menu>
                             </Dropdown> */}
                             {/* ProfileDropdown */}
-                             <LanguageDropdown />
-                              <LightDark
+                            <LanguageDropdown />
+                            <LightDark
                                 layoutMode={layoutModeType}
                                 onChangeLayoutMode={onChangeLayoutMode}
                             />

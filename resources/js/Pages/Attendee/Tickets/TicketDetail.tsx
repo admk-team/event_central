@@ -215,7 +215,7 @@ const TicketDetail: React.FC<Props> = ({
                     <Form.Check
                         id={id}
                         type="checkbox"
-                        label={addon.full_name.replace(/\([^)]*\)/g, `(${priceLabel})`)}
+                        label={addon.full_name.replace(`(${priceLabel})`)}
                         onChange={(e) => handleCheckChanged(e, addon)}
                         checked={isAddonSelect(addon)}
                     />

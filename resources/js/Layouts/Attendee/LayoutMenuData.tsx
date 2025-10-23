@@ -277,7 +277,7 @@ const Navdata = () => {
         },
         {
             id: "tickets",
-            label: t("Tickets"),
+            label: t("Buy Tickets"),
             icon: "bx bx-qr",
             link: route("attendee.tickets.get"),
             stateVariables: isMore,
