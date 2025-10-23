@@ -165,9 +165,9 @@ const HeaderAttendee = ({
                                 href={route("attendee.event.detail.agenda")}
                                 rel="noopener noreferrer"
                                 className="d-flex align-items-center gap-1"
-                                style={{ marginLeft: 10 }}
+                                style={{ marginLeft: 30 }}
                             >
-                                <span>{t("Event Agenda")}</span>
+                                <span>{t("Schedule")}</span>
                             </a>
 
                             {/* <SearchOption /> */}
