@@ -142,7 +142,7 @@ class DashboardController extends Controller
 
         // Extract payment IDs from ticket purchases and calculate total revenue
         $paymentIds = $ticketPurchases->pluck('attendee_payment_id')->unique()->values(); // Get unique payment IDs
-        $totalRevenue = AttendeePayment::whereIn('id', $paymentIds)->sum('amount_paid'); // Sum amount_paid from payments
+        $totalRevenue = AttendeePayment::whereIn('id', $paymentIds)->where('status','paid')->sum('amount_paid'); // Sum amount_paid from payments
 
         // Prepare data for all tickets (including those with zero sales)
         $ticketsData = $allTickets->map(function ($ticket) use ($ticketPurchases) {
@@ -228,7 +228,7 @@ class DashboardController extends Controller
 
         // Extract payment IDs from ticket purchases and calculate total revenue
         $paymentIds = $ticketPurchases->pluck('attendee_payment_id')->unique()->values(); // Get unique payment IDs
-        $totalRevenue = AttendeePayment::whereIn('id', $paymentIds)->sum('amount_paid'); // Sum amount_paid from payments
+        $totalRevenue = AttendeePayment::whereIn('id', $paymentIds)->where('status','paid')->sum('amount_paid'); // Sum amount_paid from payments
         return [
             'totalRevenue' => $totalRevenue, // Total number of attendees
         ];

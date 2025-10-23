@@ -36,7 +36,7 @@ class AttendeePurchasedTickets extends Model
 
     public function payment()
     {
-        return $this->belongsTo(AttendeePayment::class, 'attendee_payment_id');
+        return $this->belongsTo(AttendeePayment::class, 'attendee_payment_id')->where('status','paid');
     }
 
     public function ticket()
