@@ -109,6 +109,9 @@ class EventAppTicket extends Model
 
     public function sold_tickets()
     {
-        return $this->hasMany(AttendeePurchasedTickets::class, 'event_app_ticket_id');
+        return $this->hasMany(AttendeePurchasedTickets::class, 'event_app_ticket_id')
+            ->whereHas('payment', function ($query) {
+                $query->where('status', 'paid');
+            });
     }
 }
