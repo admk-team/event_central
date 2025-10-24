@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Layout from "../../../Layouts/Attendee";
 import { Button, Modal, Form } from "react-bootstrap";
 import "../../../css/passes.css";
+import CancelTicketButton from "./Components/CancelTicket";
 import { useLaravelReactI18n } from "laravel-react-i18n";
 import { Pencil } from "lucide-react"; // icon for edit
 
@@ -49,6 +50,7 @@ const PaymentSuccess: React.FC<PaymentSuccessProps> = ({
     const { t } = useLaravelReactI18n();
 
     const [tickets, setTickets] = useState<TicketImage[]>(image);
+    const [emails, setEmails] = useState<Record<number, string>>({});
     const [showModal, setShowModal] = useState(false);
     const [selectedTicket, setSelectedTicket] = useState<TicketImage | null>(null);
 
@@ -82,12 +84,17 @@ const PaymentSuccess: React.FC<PaymentSuccessProps> = ({
             attendee_location: selectedTicket.attendee_location,
         });
 
-        // Optimistically update UI
         const updated = tickets.map((t) =>
             t.purchased_id === selectedTicket.purchased_id ? selectedTicket : t
         );
         setTickets(updated);
         handleCloseModal();
+    };
+
+    const handleTransferTickets = () => {
+        router.post(route("attendee.tickets.transfer"), {
+            emails,
+        });
     };
 
     return (
@@ -167,8 +174,46 @@ const PaymentSuccess: React.FC<PaymentSuccessProps> = ({
                                         </span>
                                         <p className="attendee-name">{img.ticket_type_name}</p>
                                     </div>
+
+                                    {/* Transfer + Cancel section (unchanged) */}
+                                    {!img.transfer_check && (
+                                        <>
+                                            <label
+                                                htmlFor={`email-${index}`}
+                                                className="form-label-pass"
+                                            >
+                                                {t("Transfer Ticket")}{" "}
+                                                <span className="text-danger ms-1">*</span>
+                                            </label>
+                                            <input
+                                                className="input-email-qrcode mb-3"
+                                                id={`email-${img.purchased_id}`}
+                                                type="text"
+                                                name={`email-${img.purchased_id}`}
+                                                placeholder={t("Enter New Email")}
+                                                value={emails[img.purchased_id] || ""}
+                                                autoComplete="email"
+                                                onChange={(e) =>
+                                                    setEmails({
+                                                        ...emails,
+                                                        [img.purchased_id]: e.target.value,
+                                                    })
+                                                }
+                                            />
+                                            <CancelTicketButton purchased_id={img.purchased_id} />
+                                        </>
+                                    )}
                                 </div>
                             ))}
+
+                            {tickets.some((img) => !img.transfer_check) && (
+                                <Button
+                                    className="btn btn-primary btn-primary-pass mt-4 mb-4"
+                                    onClick={handleTransferTickets}
+                                >
+                                    {t("Transfer Tickets")}
+                                </Button>
+                            )}
                         </>
                     )}
                 </div>
