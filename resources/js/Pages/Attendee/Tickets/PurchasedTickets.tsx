@@ -52,7 +52,9 @@ const PaymentSuccess: React.FC<PaymentSuccessProps> = ({
     const [tickets, setTickets] = useState<TicketImage[]>(image);
     const [emails, setEmails] = useState<Record<number, string>>({});
     const [showModal, setShowModal] = useState(false);
-    const [selectedTicket, setSelectedTicket] = useState<TicketImage | null>(null);
+    const [selectedTicket, setSelectedTicket] = useState<TicketImage | null>(
+        null
+    );
 
     const formatDate = (dateString: string) => {
         if (!dateString) return "";
@@ -92,9 +94,15 @@ const PaymentSuccess: React.FC<PaymentSuccessProps> = ({
     };
 
     const handleTransferTickets = () => {
-        router.post(route("attendee.tickets.transfer"), {
-            emails,
-        });
+        router.post(
+            route("attendee.tickets.transfer"),
+            { emails },
+            {
+                onSuccess: () => {
+                    router.visit(route("attendee.tickets.purchased")); // 🔁 reload component with fresh data
+                },
+            }
+        );
     };
 
     return (
@@ -105,7 +113,11 @@ const PaymentSuccess: React.FC<PaymentSuccessProps> = ({
                     {!hasTickets ? (
                         <div className="text-center mt-5">
                             <h4>{t("No tickets purchased yet.")}</h4>
-                            <p>{t("Please check back later or contact support.")}</p>
+                            <p>
+                                {t(
+                                    "Please check back later or contact support."
+                                )}
+                            </p>
                         </div>
                     ) : (
                         <>
@@ -146,7 +158,8 @@ const PaymentSuccess: React.FC<PaymentSuccessProps> = ({
 
                                         <p className="event-location">
                                             {formatDate(eventApp?.start_date)}{" "}
-                                            {eventApp?.start_date && eventApp?.location_base
+                                            {eventApp?.start_date &&
+                                            eventApp?.location_base
                                                 ? " | "
                                                 : ""}{" "}
                                             {eventApp?.location_base}
@@ -156,7 +169,8 @@ const PaymentSuccess: React.FC<PaymentSuccessProps> = ({
                                             {img.attendee_name || attendee.name}
                                         </h1>
                                         <h3 className="attendee-name">
-                                            {img.attendee_position || attendee.position}
+                                            {img.attendee_position ||
+                                                attendee.position}
                                         </h3>
                                     </div>
 
@@ -170,9 +184,12 @@ const PaymentSuccess: React.FC<PaymentSuccessProps> = ({
 
                                     <div className="attendee-details text-center">
                                         <span className="location">
-                                            {img.attendee_location || attendee.location}
+                                            {img.attendee_location ||
+                                                attendee.location}
                                         </span>
-                                        <p className="attendee-name">{img.ticket_type_name}</p>
+                                        <p className="attendee-name">
+                                            {img.ticket_type_name}
+                                        </p>
                                     </div>
 
                                     {/* Transfer + Cancel section (unchanged) */}
@@ -183,24 +200,34 @@ const PaymentSuccess: React.FC<PaymentSuccessProps> = ({
                                                 className="form-label-pass"
                                             >
                                                 {t("Transfer Ticket")}{" "}
-                                                <span className="text-danger ms-1">*</span>
+                                                <span className="text-danger ms-1">
+                                                    *
+                                                </span>
                                             </label>
                                             <input
                                                 className="input-email-qrcode mb-3"
                                                 id={`email-${img.purchased_id}`}
                                                 type="text"
                                                 name={`email-${img.purchased_id}`}
-                                                placeholder={t("Enter New Email")}
-                                                value={emails[img.purchased_id] || ""}
+                                                placeholder={t(
+                                                    "Enter New Email"
+                                                )}
+                                                value={
+                                                    emails[img.purchased_id] ||
+                                                    ""
+                                                }
                                                 autoComplete="email"
                                                 onChange={(e) =>
                                                     setEmails({
                                                         ...emails,
-                                                        [img.purchased_id]: e.target.value,
+                                                        [img.purchased_id]:
+                                                            e.target.value,
                                                     })
                                                 }
                                             />
-                                            <CancelTicketButton purchased_id={img.purchased_id} />
+                                            <CancelTicketButton
+                                                purchased_id={img.purchased_id}
+                                            />
                                         </>
                                     )}
                                 </div>
@@ -245,7 +272,9 @@ const PaymentSuccess: React.FC<PaymentSuccessProps> = ({
                                 <Form.Label>{t("Position")}</Form.Label>
                                 <Form.Control
                                     type="text"
-                                    value={selectedTicket.attendee_position || ""}
+                                    value={
+                                        selectedTicket.attendee_position || ""
+                                    }
                                     onChange={(e) =>
                                         setSelectedTicket({
                                             ...selectedTicket,
@@ -259,7 +288,9 @@ const PaymentSuccess: React.FC<PaymentSuccessProps> = ({
                                 <Form.Label>{t("Location")}</Form.Label>
                                 <Form.Control
                                     type="text"
-                                    value={selectedTicket.attendee_location || ""}
+                                    value={
+                                        selectedTicket.attendee_location || ""
+                                    }
                                     onChange={(e) =>
                                         setSelectedTicket({
                                             ...selectedTicket,
