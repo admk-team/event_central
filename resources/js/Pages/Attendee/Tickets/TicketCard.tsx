@@ -26,6 +26,7 @@ const TicketCard = ({
     submitCheckOut,
     onBlockCheckout,
     attendee_id,
+    onPersonDetailsUpdated
 }: {
     currency_symbol: string;
     ticket: Ticket;
@@ -34,6 +35,7 @@ const TicketCard = ({
     submitCheckOut?: () => void;
     onBlockCheckout?: (blocked: boolean) => void;
     attendee_id: number | string;
+    onPersonDetailsUpdated?: (details: any[], ticket_no: number) => void;
 }) => {
     const { t } = useLaravelReactI18n();
 
@@ -147,6 +149,16 @@ const TicketCard = ({
             })
         );
     };
+// ---------- Handel Person detail ----------
+    const handlePersonDetailsUpdated = (details: any[], ticket_no: number) => {
+    setTicketDetails((prev: any[]) =>
+        prev.map((row) =>
+            row.ticket_no === ticket_no
+                ? { ...row, person_details: details }
+                : row
+        )
+    );
+};
 
     // ---------- derived UI (memoized) ----------
     const feesOptions = useMemo(() => {
@@ -502,6 +514,7 @@ const TicketCard = ({
                                 // ✅ EXTRA SERVICES: hydrate & receive updates
                                 initialExtras={row.extra_services}
                                 onExtraServicesUpdated={handleExtraServicesUpdated}
+                                onPersonDetailsUpdated={handlePersonDetailsUpdated}
                             />
                         ))}
                     </Accordion.Body>

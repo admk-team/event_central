@@ -43,6 +43,8 @@ class AttendeeCheckoutRequest extends FormRequest
             'ticketsDetails.*.extra_services.*.name'           => ['required', 'string', 'max:255'],
             'ticketsDetails.*.extra_services.*.quantity'       => ['required', 'integer', 'min:1'],
 
+            'ticketsDetails.*.person_details'                  => ['nullable', 'array'],
+
         ];
     }
 }

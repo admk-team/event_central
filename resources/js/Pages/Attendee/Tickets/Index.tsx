@@ -108,7 +108,6 @@ const Index = ({
             totalAmount: totalAmount,
             organizer_payment_note: paymnetNote,
         };
-
         setProcessing(true);
         if (organizerView && currentAttendee > 0) {
             if (totalAmount > 0 && paymentMethod === "stripe") {
@@ -134,6 +133,7 @@ const Index = ({
                                 "Minimum amount required is 50 cents. Please increase the amount."
                             )
                         );
+                        console.log(error);
                     })
                     .finally(() => {
                         setProcessing(false);

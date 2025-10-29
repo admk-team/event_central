@@ -243,6 +243,7 @@ class PaymentController extends Controller
         foreach ($data['ticketsDetails'] as $ticketsDetail) {
             $addons = $ticketsDetail['addons'];
             $ticket = $ticketsDetail['ticket'];
+            $personInfos = $ticketsDetail['person_details'] ?? [];
 
             $attendee_purchased_ticket = AttendeePurchasedTickets::create([
                 'attendee_payment_id' => $payment->id,
@@ -253,7 +254,10 @@ class PaymentController extends Controller
                 'price' => $ticket['base_price'],
                 'fees_sub_total' => $ticketsDetail['fees_sub_total'],
                 'addons_sub_total' => $ticketsDetail['addons_sub_total'],
-                'total' => $ticket['base_price'] + $ticketsDetail['fees_sub_total'] + $ticketsDetail['addons_sub_total']
+                'total' => $ticket['base_price'] + $ticketsDetail['fees_sub_total'] + $ticketsDetail['addons_sub_total'],
+                'attendee_name'       => $personInfos[0]['name'] ?? null,
+                'attendee_position'   => $personInfos[0]['position'] ?? null,
+                'attendee_location'   => $personInfos[0]['location'] ?? null,
             ]);
 
             foreach ($addons as $addon) {

@@ -34,6 +34,7 @@ type Props = {
     // NEW: pass current selection from parent row and receive updates back
     initialExtras?: Array<{ name: string; quantity: number }>;
     onExtraServicesUpdated?: (extras: Array<{ name: string; quantity: number }>, ticket_no: number) => void;
+    onPersonDetailsUpdated?: (details: Array<{ name: string; position: string; location: string }>, ticket_no: number) => void;
 };
 
 const TicketDetail: React.FC<Props> = ({
@@ -47,6 +48,7 @@ const TicketDetail: React.FC<Props> = ({
 
     initialExtras = [],
     onExtraServicesUpdated,
+    onPersonDetailsUpdated,
 }) => {
     const { t } = useLaravelReactI18n();
 
@@ -54,6 +56,34 @@ const TicketDetail: React.FC<Props> = ({
     const [selectedAddons, setSelectedAddons] = useState<any[]>([]);
     const [addonVariantErrors, setAddonVariantErrors] = useState<Record<number, string | null>>({});
     const [addonExtraFieldValues, setAddonExtraFieldValues] = useState<Record<number, Record<string, string>>>({});
+    // NEW: Manage person details for each ticket quantity
+    const [personDetails, setPersonDetails] = useState<
+        Array<{ enabled: boolean; name: string; position: string; location: string }>
+    >([]);
+
+    // Whenever ticket quantity changes, rebuild the person details array
+    useEffect(() => {
+        const qty = toInt(ticket?.quantity ?? 1, 1);
+        setPersonDetails((prev) => {
+            const updated = [...prev];
+            // Extend if needed
+            while (updated.length < qty) {
+                updated.push({ enabled: false, name: "", position: "", location: "" });
+            }
+            // Trim excess
+            return updated.slice(0, qty);
+        });
+    }, [ticket?.quantity]);
+    const personDetailsRef = useRef<typeof onPersonDetailsUpdated>();
+    useEffect(() => {
+        personDetailsRef.current = onPersonDetailsUpdated;
+    }, [onPersonDetailsUpdated]);
+
+    useEffect(() => {
+        const payload = personDetails.filter(p => p.enabled && p.name.trim());
+        personDetailsRef.current?.(payload, ticket_no);
+    }, [personDetails, ticket_no]);
+
 
     /** --------------- Extra services state ----------------- */
     type ExtraRow = { name: string; max: number; selected: boolean; qty: number };
@@ -362,6 +392,74 @@ const TicketDetail: React.FC<Props> = ({
                     {addons_sub_total}
                 </span>
             </Col>
+
+            {/* Person Details per Ticket */}
+{personDetails.length > 0 && (
+    <Col md={12} className="mt-3">
+        <hr className="mt-2 mb-2" />
+        <p className="fs-5 fw-bold mb-2">{t("Person Details")}</p>
+
+        {personDetails.map((person, idx) => (
+            <div key={idx} className="border p-3 rounded mb-3 bg-white shadow-sm">
+                <Form.Check
+                    type="checkbox"
+                    label={`${t("Enable person detail")}`}
+                    checked={person.enabled}
+                    onChange={(e) =>
+                        setPersonDetails((prev) =>
+                            prev.map((p, i) =>
+                                i === idx ? { ...p, enabled: e.target.checked } : p
+                            )
+                        )
+                    }
+                />
+
+                {person.enabled && (
+                    <div className="mt-3 d-flex flex-column gap-2">
+                        <Form.Control
+                            type="text"
+                            placeholder="Enter name"
+                            value={person.name}
+                            onChange={(e) =>
+                                setPersonDetails((prev) =>
+                                    prev.map((p, i) =>
+                                        i === idx ? { ...p, name: e.target.value } : p
+                                    )
+                                )
+                            }
+                        />
+                        <Form.Control
+                            type="text"
+                            placeholder="Enter position"
+                            value={person.position}
+                            onChange={(e) =>
+                                setPersonDetails((prev) =>
+                                    prev.map((p, i) =>
+                                        i === idx ? { ...p, position: e.target.value } : p
+                                    )
+                                )
+                            }
+                        />
+                        <Form.Control
+                            type="text"
+                            placeholder="Enter location"
+                            value={person.location}
+                            onChange={(e) =>
+                                setPersonDetails((prev) =>
+                                    prev.map((p, i) =>
+                                        i === idx ? { ...p, location: e.target.value } : p
+                                    )
+                                )
+                            }
+                        />
+                    </div>
+                )}
+            </div>
+        ))}
+    </Col>
+)}
+
+
 
             {/* Extra Services */}
             {(ticket?.extra_service_name || normalizedExtras.length > 0) && (
