@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Button, Card, Col, Container, Row, Table } from "react-bootstrap";
-import { Head, Link } from "@inertiajs/react";
+import { Button, Card, Col, Container, Row, Table, Modal, Form } from "react-bootstrap";
+import { Head, Link, router } from "@inertiajs/react";
 import Layout from "../../../../../../Layouts/Event";
 import CheckInModal from "./Component/CheckInModal";
 import TicketAddonsModal from "./Component/TicketAddonsModal";
@@ -15,6 +15,14 @@ const Profile = ({ attendee, user, sessions, tickets, sessionsPurchased }: any) 
     const [showAddonModal, setShowAddonsModal] = useState(false);
     const [showExtraModal, setShowExtraModal] = useState(false);
     const [currentExtras, setCurrentExtras] = useState<any[]>([]);
+    const [showTicketEditModal, setShowTicketEditModal] = useState(false);
+    const [editingTicketId, setEditingTicketId] = useState<number | null>(null);
+    const [editFields, setEditFields] = useState<{ person_name: string; position: string; location: string; attendee_purchased_ticket_id: number | null }>({
+        person_name: "",
+        position: "",
+        location: "",
+        attendee_purchased_ticket_id: null,
+    });
     const handleShowAddonsModal = (ticketId: number) => {
         setCurrentTicketId(ticketId);
         setShowAddonsModal(true);
@@ -25,6 +33,35 @@ const Profile = ({ attendee, user, sessions, tickets, sessionsPurchased }: any) 
     const handleShowExtraModal = (extras: any[]) => {
         setCurrentExtras(extras);
         setShowExtraModal(true);
+    };
+
+    const handleOpenTicketEdit = (ticket: any) => {
+        setEditingTicketId(ticket.attendee_purchased_ticket_id ?? null);
+        const derivedPurchasedId = ticket.attendee_purchased_ticket_id ?? null;
+        setEditFields({
+            person_name: ticket.attendee_name ?? `${user.first_name ?? ''} ${user.last_name ?? ''}`.trim(),
+            position: ticket.attendee_position ?? "",
+            location: ticket.attendee_location ?? "",
+            attendee_purchased_ticket_id: derivedPurchasedId,
+        });
+        setShowTicketEditModal(true);
+    };
+
+    const handleSubmitTicketEdit = (e: React.FormEvent) => {
+        e.preventDefault();
+        // Adjust this endpoint to your actual backend route. Controller can dd($request->form_fields)
+        const endpoint = "/organizer/tickets/edit-form-fields";
+        router.post(endpoint, {
+            attendee_purchased_ticket_id: editingTicketId,
+            form_fields: {
+                person_name: editFields.person_name,
+                position: editFields.position,
+                location: editFields.location,
+                attendee_purchased_ticket_id: editFields.attendee_purchased_ticket_id,
+            },
+        }, {
+            onFinish: () => setShowTicketEditModal(false),
+        });
     };
 
 
@@ -265,6 +302,7 @@ const Profile = ({ attendee, user, sessions, tickets, sessionsPurchased }: any) 
                                                             <th scope="col">{t("Status")}</th>
                                                             <th scope="col">{("Addons")}</th>
                                                             <th scope="col">{t("Extra Services")}</th>
+                                                            <th scope="col">{t("Edit")}</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -302,6 +340,16 @@ const Profile = ({ attendee, user, sessions, tickets, sessionsPurchased }: any) 
                                                                                 </Button>
                                                                             );
                                                                         })()}
+                                                                    </td>
+                                                                    <td>
+                                                                        <Button
+                                                                            variant="outline-secondary"
+                                                                            size="sm"
+                                                                            onClick={() => handleOpenTicketEdit(ticket)}
+                                                                            title={t("Edit")}
+                                                                        >
+                                                                            <i className="ri-edit-line"></i>
+                                                                        </Button>
                                                                     </td>
                                                                 </tr>
                                                             ))
@@ -379,6 +427,49 @@ const Profile = ({ attendee, user, sessions, tickets, sessionsPurchased }: any) 
                 onHide={() => setShowExtraModal(false)}
                 extras={currentExtras}
             />
+
+            <Modal show={showTicketEditModal} onHide={() => setShowTicketEditModal(false)} centered>
+                <Form onSubmit={handleSubmitTicketEdit}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>{t("Edit Ticket Info")}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Form.Group className="mb-3" controlId="editPersonName">
+                            <Form.Label>{t("Purchaser Name")}</Form.Label>
+                            <Form.Control
+                                type="text"
+                                value={editFields.person_name}
+                                onChange={(e) => setEditFields({ ...editFields, person_name: e.target.value })}
+                                required
+                            />
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="editPosition">
+                            <Form.Label>{t("Position")}</Form.Label>
+                            <Form.Control
+                                type="text"
+                                value={editFields.position}
+                                onChange={(e) => setEditFields({ ...editFields, position: e.target.value })}
+                            />
+                        </Form.Group>
+                        <Form.Group className="mb-0" controlId="editLocation">
+                            <Form.Label>{t("Location")}</Form.Label>
+                            <Form.Control
+                                type="text"
+                                value={editFields.location}
+                                onChange={(e) => setEditFields({ ...editFields, location: e.target.value })}
+                            />
+                        </Form.Group>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="secondary" onClick={() => setShowTicketEditModal(false)}>
+                            {t("Cancel")}
+                        </Button>
+                        <Button variant="primary" type="submit">
+                            {t("Save")}
+                        </Button>
+                    </Modal.Footer>
+                </Form>
+            </Modal>
 
         </React.Fragment>
     );

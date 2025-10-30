@@ -109,6 +109,9 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
     Route::get('/zoho/sync', [ZohoController::class, 'showSyncPage'])->name('zoho.sync.page');
     Route::post('/zoho/sync/{event}', [ZohoController::class, 'sync'])->name('zoho.sync');
 
+    // Ticket edit form-fields endpoint for Attendee Profile modal
+    Route::post('tickets/edit-form-fields', [AttendeeController::class, 'editPurchasedTicketFormFields'])->name('tickets.edit-form-fields');
+
     // MailChimp
     Route::get('/mailchimp/settings', [MailChimpController::class, 'index'])->name('mailchimp.index');
     Route::post('/mailchimp/store', [MailChimpController::class, 'store'])->name('mailchimp.store');
