@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import GuestLayout from '../../Layouts/Theme/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { Alert, Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
-import logoLight from '../../../images/logo-white.png'
+import logoLight from '../../../images/logo-white.png';
 
 export default function ResetPassword({ token, email }: any) {
     const { data, setData, post, processing, errors, reset } = useForm({
@@ -20,7 +20,6 @@ export default function ResetPassword({ token, email }: any) {
 
     const submit = (e: any) => {
         e.preventDefault();
-
         post(route('password.store'));
     };
 
@@ -48,38 +47,62 @@ export default function ResetPassword({ token, email }: any) {
                                 <Card className="mt-4">
                                     <Card.Body className="p-4">
                                         <div className="text-center mt-2">
-                                            <h5 className="text-primary">Forgot Password?</h5>
-                                            <p className="text-muted">Reset password with velzon</p>
-                                            <i className="ri-mail-send-line display-5 text-success"></i>
+                                            {/* --- Text Updated --- */}
+                                            <h5 className="text-primary">Create New Password</h5>
+                                            <p className="text-muted">Set your new password below.</p>
+                                            <i className="ri-lock-password-line display-5 text-success"></i>
                                         </div>
 
-                                        <Alert className="border-0 alert-warning text-center mb-2 mx-2" role="alert">
-                                            Enter your email and instructions will be sent to you!
+                                        {/* --- Alert Text Updated --- */}
+                                        <Alert className="border-0 alert-info text-center mb-2 mx-2" role="alert">
+                                            Your new password must be different from the old one!
                                         </Alert>
                                         <div className="p-2">
                                             <form onSubmit={submit}>
-                                                <div>
-                                                    <Form.Label htmlFor="email" value="Email" className='form-label'> Email </Form.Label>
+                                                
+                                                {/* --- Password Field Added --- */}
+                                                <div className="mb-3">
+                                                    <Form.Label htmlFor="password" value="Password" className='form-label'>Password</Form.Label>
                                                     <span className='text-danger ms-1'>*</span>
                                                     <Form.Control
-                                                        id="email"
-                                                        type="email"
-                                                        name="email"
-                                                        placeholder="Enter Email"
-                                                        value={data.email}
-                                                        className={"mt-1 form-control" + (errors.email) ? 'is-invalid' : ''}
-                                                        autoComplete="username"
-                                                        onChange={(e: any) => setData('email', e.target.value)}
+                                                        id="password"
+                                                        type="password"
+                                                        name="password"
+                                                        placeholder="Enter new password"
+                                                        value={data.password}
+                                                        // Corrected className logic
+                                                        className={`mt-1 form-control ${errors.password ? 'is-invalid' : ''}`}
+                                                        autoComplete="new-password"
+                                                        onChange={(e: any) => setData('password', e.target.value)}
                                                         required
                                                     />
+                                                    <Form.Control.Feedback type="invalid" className='mt-2 d-block'>{errors.password}</Form.Control.Feedback>
+                                                </div>
 
-                                                    <Form.Control.Feedback type="invalid" className='mt-2 d-block'>{errors.email}</Form.Control.Feedback>
+                                                {/* --- Confirm Password Field Added --- */}
+                                                <div className="mb-3">
+                                                    <Form.Label htmlFor="password_confirmation" value="Confirm Password" className='form-label'>Confirm Password</Form.Label>
+                                                    <span className='text-danger ms-1'>*</span>
+                                                    <Form.Control
+                                                        id="password_confirmation"
+                                                        type="password"
+                                                        name="password_confirmation"
+                                                        placeholder="Confirm new password"
+                                                        value={data.password_confirmation}
+                                                        // Corrected className logic
+                                                        className={`mt-1 form-control ${errors.password_confirmation ? 'is-invalid' : ''}`}
+                                                        autoComplete="new-password"
+                                                        onChange={(e: any) => setData('password_confirmation', e.target.value)}
+                                                        required
+                                                    />
+                                                    <Form.Control.Feedback type="invalid" className='mt-2 d-block'>{errors.password_confirmation}</Form.Control.Feedback>
                                                 </div>
 
 
                                                 <div className="flex items-center justify-end mt-4">
+                                                    {/* --- Button Text Updated --- */}
                                                     <Button type="submit" className="btn btn-success w-100" disabled={processing}>
-                                                        Send Reset Link
+                                                        Reset Password
                                                     </Button>
                                                 </div>
                                             </form>
