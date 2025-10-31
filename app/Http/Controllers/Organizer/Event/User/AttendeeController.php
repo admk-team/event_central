@@ -235,6 +235,11 @@ class AttendeeController extends Controller
             ->groupBy(
                 'attendee_purchased_tickets.id',
                 'attendee_payments.id',
+                'attendee_purchased_tickets.event_app_ticket_id',
+                'attendee_purchased_tickets.attendee_name',
+                'attendee_purchased_tickets.attendee_position',
+                'attendee_purchased_tickets.attendee_location',
+                'event_app_tickets.id',
                 'event_app_tickets.name',
                 'attendee_payments.payment_method',
                 'attendee_payments.extra_services',
@@ -243,6 +248,11 @@ class AttendeeController extends Controller
             )
             ->select(
                 'attendee_purchased_tickets.id as attendee_purchased_ticket_id',
+                'attendee_purchased_tickets.event_app_ticket_id',
+                'attendee_purchased_tickets.attendee_name',
+                'attendee_purchased_tickets.attendee_position',
+                'attendee_purchased_tickets.attendee_location',
+                'event_app_tickets.id as ticket_id',
                 'event_app_tickets.name as ticket_name',
                 DB::raw('SUM(attendee_purchased_tickets.qty) as qty'),
                 DB::raw('SUM(attendee_payments.amount_paid) as amount'),
@@ -260,6 +270,7 @@ class AttendeeController extends Controller
 
         $user = Attendee::where('id', $id)->first();
         $attendee = FormSubmission::where('attendee_id', $id)->with('fieldValues', 'attendee', 'formFields')->get();
+        // dd($tickets);
         return Inertia::render('Organizer/Events/Users/Attendees/AttendeeProfile/Profile', compact('attendee', 'user', 'sessions', 'tickets', 'sessionsPurchased'));
     }
 
@@ -438,5 +449,19 @@ class AttendeeController extends Controller
 
         $attendee = $id;
         dd($attendee);
+    }
+
+    public function editPurchasedTicketFormFields(Request $request)
+    {
+        // For debugging per request: just dump submitted form_fields
+        // Expected payload from UI:
+        // attendee_purchased_ticket_id, form_fields => [person_name, position, location, attendee_purchased_ticket_id]
+        // dd($request->input('form_fields'));
+        AttendeePurchasedTickets::where('id', $request->form_fields['attendee_purchased_ticket_id'])->update([
+            'attendee_name' => $request->form_fields['person_name'],
+            'attendee_position' => $request->form_fields['position'],
+            'attendee_location' => $request->form_fields['location'],
+        ]);
+        return back()->withSuccess('Ticket details updated successfully.');
     }
 }
