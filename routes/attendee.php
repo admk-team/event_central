@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\EventApp;
+use Inertia\Inertia;
 use App\Http\Controllers\Attendee\AppEventQuestionnaireFormController;
 use App\Http\Controllers\Attendee\AppEventRegistrationFormController;
 use App\Http\Controllers\Attendee\AttendeeUpgradeTicketController;
@@ -31,6 +33,8 @@ use App\Http\Controllers\Attendee\UpgradeTicketToTicketController;
 use App\Http\Controllers\Attendee\WaitingListController;
 use App\Http\Controllers\QuestionAttendeeController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Attendee\Auth\ForgotPasswordController;
+use App\Http\Controllers\Attendee\Auth\ResetPasswordController;
 
 Route::middleware('guest')->prefix('attendee')->group(function () {
     // Route::get('{id}', [EventController::class, 'getEventDetail'])->name('attendee.event');
@@ -45,6 +49,18 @@ Route::middleware('guest')->prefix('attendee')->group(function () {
             Route::post('{eventApp}/register', [RegisteredUserController::class, 'store'])->name('attendee.register.store');
         }
     );
+
+ Route::get('{eventApp}/forgot-password', [ForgotPasswordController::class, 'showLinkRequestForm'])
+    ->name('attendee.password.request');
+
+Route::post('{eventApp}/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])
+    ->name('attendee.password.email');
+
+    Route::get('{eventApp}/reset-password/{token}', [ResetPasswordController::class, 'create'])
+        ->name('attendee.password.reset');
+
+    Route::post('{eventApp}/reset-password', [ResetPasswordController::class, 'store'])
+        ->name('attendee.password.update');
 });
 
 // Event Registration Form for Web
@@ -228,3 +244,16 @@ Route::prefix('app-event-questionnaire-form/{eventApp}')->name('attendee.app-eve
     Route::get('/', [AppEventQuestionnaireFormController::class, 'index']);
     Route::post('/', [AppEventQuestionnaireFormController::class, 'submit'])->name('.submit');
 });
+
+
+Route::get('attendee/{eventApp}/forgot-password', function (EventApp $eventApp) {
+    return Inertia::render('Attendee/Auth/ForgotPassword', [
+        'status' => session('status'),
+        'eventApp' => $eventApp->load('dates') // <-- 'dates' ko yahan load karein
+    ]);
+})->middleware('guest')->name('attendee.password.request');
+
+
+Route::post('attendee/{eventApp}/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])
+    ->middleware('guest')
+    ->name('attendee.password.email');

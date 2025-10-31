@@ -112,6 +112,12 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
+        'attendees' => [
+            'provider' => 'attendees', // Provider ko 'attendees' karein
+            'table' => 'password_reset_tokens', // Aap same table istemal kar sakte hain
+            'expire' => 60,
+            'throttle' => 60,
+        ],
     ],
 
     /*

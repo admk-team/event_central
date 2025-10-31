@@ -6,7 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Attendee;
 use App\Observers\OrganizerAttendeeObserver;
-
+use Illuminate\Auth\Notifications\ResetPassword; 
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -22,6 +22,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        ResetPassword::createUrlUsing(function (Attendee $attendee, string $token) {
+            return route("attendee.password.reset", ['eventApp' => $attendee->event_app_id, 'token' => $token, 'email' => $attendee->email]);
+        });
+
         RedirectResponse::macro("withSuccess", function ($message) {
             return $this->with('messages', [
                 [

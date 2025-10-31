@@ -6,6 +6,7 @@ import AuthSlider from "../../Pages/Theme/AuthInner/authCarousel";
 import useToastMessages from "../../hooks/useToastMessages";
 import { Toaster } from "react-hot-toast";
 
+
 export default function GuestLayout({ children }: any) {
     const appName = import.meta.env.VITE_APP_NAME || "Event Central";
     useToastMessages();

@@ -87,7 +87,12 @@ export default function Login({
                             <div className="float-end">
                                 {canResetPassword && (
                                     <Link
-                                        href={route("password.request")}
+                                        // Purana naam: "password.request"
+                                        // Naya naam: "attendee.password.request"
+                                        href={route(
+                                            "attendee.password.request",
+                                            [eventApp.id]
+                                        )}
                                         className="text-muted"
                                     >
                                         Forgot password?
@@ -187,13 +192,15 @@ export default function Login({
                                 <button
                                     type="button"
                                     onClick={() => {
-                                        window.location.href = route("attendee.google.redirect", [eventApp.id]);
+                                        window.location.href = route(
+                                            "attendee.google.redirect",
+                                            [eventApp.id]
+                                        );
                                     }}
                                     className="btn btn-danger btn-icon me-1"
                                 >
                                     <i className="ri-google-fill fs-16" />
                                 </button>
-
                                 <Button
                                     variant="dark"
                                     className="btn-icon btn-dark"

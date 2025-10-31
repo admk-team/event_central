@@ -1,99 +1,265 @@
-import React, { useEffect } from 'react';
-import GuestLayout from '../../../Layouts/Attendee/GuestLayout';
-import { Head, Link, useForm } from '@inertiajs/react';
-import { Alert, Button, Card, Col, Container, Form, Row } from 'react-bootstrap';
-// import logoLight from '../../../images/logo-white.png'
-import logoLight from '../../../../images/logo-white.png';
-export default function ResetPassword({ token, email }: any) {
+import React, { useEffect, useState } from "react"; // <-- useState import kiya (Password toggle ke liye)
+import GuestLayout from "../../../Layouts/Attendee/GuestLayout";
+import { Head, Link, useForm } from "@inertiajs/react";
+import {
+    Alert,
+    Button,
+    Card,
+    Col,
+    Container,
+    Form,
+    Row,
+} from "react-bootstrap";
+import logoLight from "../../../../images/logo-white.png";
+
+// Props mein 'eventApp' add kiya gaya hai, taaki routes build ho sakein
+export default function ResetPassword({ token, email, eventApp }: any) {
+    // --- State Hooks (Login form ke format jaisa) ---
+    const [passwordShow, setPasswordShow] = useState<boolean>(false);
+    const [confirmPasswordShow, setConfirmPasswordShow] =
+        useState<boolean>(false);
+
     const { data, setData, post, processing, errors, reset } = useForm({
         token: token,
-        email: email,
-        password: '',
-        password_confirmation: '',
+        email: email, // Email ko form data mein rakha
+        password: "",
+        password_confirmation: "",
     });
 
+    // --- useEffect (Login form ke format jaisa) ---
     useEffect(() => {
         return () => {
-            reset('password', 'password_confirmation');
+            reset("password", "password_confirmation");
         };
     }, []);
 
+    // --- Submit Handler (Login form ke format jaisa) ---
     const submit = (e: any) => {
         e.preventDefault();
 
-        post(route('password.store'));
+        // Logic wahi hai, bas format clean hai
+        post(route("attendee.password.update", { eventApp: eventApp.id }));
     };
 
     return (
         <React.Fragment>
             <GuestLayout>
-                <Head title="Reset Password | Velzon - React Admin & Dashboard Template" />
+                <Head title="Reset Password" /> {/* Title change kiya */}
                 <div className="auth-page-content mt-lg-5">
                     <Container>
                         <Row>
                             <Col lg={12}>
                                 <div className="text-center mt-sm-5 mb-4 text-white-50">
                                     <div>
-                                        <Link href="/#" className="d-inline-block auth-logo">
-                                            <img src={logoLight} alt="" height="20" />
+                                        <Link
+                                            href="/#"
+                                            className="d-inline-block auth-logo"
+                                        >
+                                            <img
+                                                src={logoLight}
+                                                alt=""
+                                                height="20"
+                                            />
                                         </Link>
                                     </div>
-                                    <p className="mt-3 fs-15 fw-semibold">Your Ultimate Event Management Solution</p>
+                                    <p className="mt-3 fs-15 fw-semibold">
+                                        Your Ultimate Event Management Solution
+                                    </p>
                                 </div>
                             </Col>
                         </Row>
 
                         <Row className="justify-content-center">
-                            <Col md={8} lg={6} xl={5}>
+                            {/* Values ko aur barha diya hai */}
+                            <Col md={11} lg={10} xl={9}>
                                 <Card className="mt-4">
                                     <Card.Body className="p-4">
                                         <div className="text-center mt-2">
-                                            <h5 className="text-primary">Forgot Password?</h5>
-                                            <p className="text-muted">Reset password with velzon</p>
-                                            <i className="ri-mail-send-line display-5 text-success"></i>
+                                            {/* Text update kiya */}
+                                            <h5 className="text-primary">
+                                                Create New Password
+                                            </h5>
+                                            <p className="text-muted">
+                                                Set your new password below.
+                                            </p>
                                         </div>
 
-                                        <Alert className="border-0 alert-warning text-center mb-2 mx-2" role="alert">
-                                            Enter your email and instructions will be sent to you!
-                                        </Alert>
-                                        <div className="p-2">
-                                            <form onSubmit={submit}>
-                                                <div>
-                                                    <Form.Label htmlFor="email" value="Email" className='form-label'> Email </Form.Label>
-                                                    <span className='text-danger ms-1'>*</span>
-                                                    <Form.Control
-                                                        id="email"
-                                                        type="email"
-                                                        name="email"
-                                                        placeholder="Enter Email"
-                                                        value={data.email}
-                                                        className={"mt-1 form-control" + (errors.email) ? 'is-invalid' : ''}
-                                                        autoComplete="username"
-                                                        onChange={(e: any) => setData('email', e.target.value)}
-                                                        required
-                                                    />
+                                        {/* General error message (invalid token, etc.) */}
+                                        {errors.email && (
+                                            <Alert
+                                                variant="danger"
+                                                className="text-center mb-3"
+                                            >
+                                                {errors.email}
+                                            </Alert>
+                                        )}
 
-                                                    <Form.Control.Feedback type="invalid" className='mt-2 d-block'>{errors.email}</Form.Control.Feedback>
+                                        {/* --- Form Section (Login form ke format mein) --- */}
+                                        <div className="p-2 mt-4">
+                                            {" "}
+                                            {/* mt-4 add kiya Login jaisa */}
+                                            <Form onSubmit={submit}>
+                                                {/* Password Field */}
+                                                <div className="mb-3">
+                                                    <Form.Label
+                                                        className="form-label"
+                                                        htmlFor="password-input"
+                                                    >
+                                                        Password
+                                                    </Form.Label>
+                                                    <span className="text-danger ms-1">
+                                                        *
+                                                    </span>
+                                                    <div className="position-relative auth-pass-inputgroup mb-3">
+                                                        <Form.Control
+                                                            id="password-input"
+                                                            type={
+                                                                passwordShow
+                                                                    ? "text"
+                                                                    : "password"
+                                                            }
+                                                            name="password"
+                                                            placeholder="Enter New Password"
+                                                            value={
+                                                                data.password
+                                                            }
+                                                            className={
+                                                                "mt-1 " + // Login format
+                                                                (errors.password
+                                                                    ? "is-invalid"
+                                                                    : " ")
+                                                            }
+                                                            autoComplete="new-password"
+                                                            onChange={(
+                                                                e: any
+                                                            ) =>
+                                                                setData(
+                                                                    "password",
+                                                                    e.target
+                                                                        .value
+                                                                )
+                                                            }
+                                                            required
+                                                        />
+                                                        <button
+                                                            className="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted"
+                                                            type="button"
+                                                            id="password-addon"
+                                                            onClick={() =>
+                                                                setPasswordShow(
+                                                                    !passwordShow
+                                                                )
+                                                            }
+                                                        >
+                                                            <i className="ri-eye-fill align-middle"></i>
+                                                        </button>
+                                                        <Form.Control.Feedback
+                                                            type="invalid"
+                                                            className="d-block mt-2" // Login format
+                                                        >
+                                                            {errors.password}
+                                                        </Form.Control.Feedback>
+                                                    </div>
                                                 </div>
 
+                                                {/* Confirm Password Field */}
+                                                <div className="mb-3">
+                                                    <Form.Label
+                                                        className="form-label"
+                                                        htmlFor="password-confirmation-input"
+                                                    >
+                                                        Confirm Password
+                                                    </Form.Label>
+                                                    <span className="text-danger ms-1">
+                                                        *
+                                                    </span>
+                                                    <div className="position-relative auth-pass-inputgroup mb-3">
+                                                        <Form.Control
+                                                            id="password-confirmation-input"
+                                                            type={
+                                                                confirmPasswordShow
+                                                                    ? "text"
+                                                                    : "password"
+                                                            }
+                                                            name="password_confirmation"
+                                                            placeholder="Confirm New Password"
+                                                            value={
+                                                                data.password_confirmation
+                                                            }
+                                                            className={
+                                                                "mt-1 " + // Login format
+                                                                (errors.password_confirmation
+                                                                    ? "is-invalid"
+                                                                    : " ")
+                                                            }
+                                                            autoComplete="new-password"
+                                                            onChange={(
+                                                                e: any
+                                                            ) =>
+                                                                setData(
+                                                                    "password_confirmation",
+                                                                    e.target
+                                                                        .value
+                                                                )
+                                                            }
+                                                            required
+                                                        />
+                                                        <button
+                                                            className="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted"
+                                                            type="button"
+                                                            id="confirm-password-addon"
+                                                            onClick={() =>
+                                                                setConfirmPasswordShow(
+                                                                    !confirmPasswordShow
+                                                                )
+                                                            }
+                                                        >
+                                                            <i className="ri-eye-fill align-middle"></i>
+                                                        </button>
+                                                        <Form.Control.Feedback
+                                                            type="invalid"
+                                                            className="d-block mt-2" // Login format
+                                                        >
+                                                            {
+                                                                errors.password_confirmation
+                                                            }
+                                                        </Form.Control.Feedback>
+                                                    </div>
+                                                </div>
 
-                                                <div className="flex items-center justify-end mt-4">
-                                                    <Button type="submit" className="btn btn-success w-100" disabled={processing}>
-                                                        Send Reset Link
+                                                <div className="mt-4">
+                                                    <Button
+                                                        type="submit"
+                                                        className="btn btn-success w-100"
+                                                        disabled={processing}
+                                                    >
+                                                        Reset Password
                                                     </Button>
                                                 </div>
-                                            </form>
+                                            </Form>
                                         </div>
+                                        {/* --- Form Section End --- */}
                                     </Card.Body>
                                 </Card>
                                 <div className="mt-4 text-center">
-                                    <p className="mb-0">Wait, I remember my password... <Link href={route('login')} className="fw-bold text-primary text-decoration-underline"> Click here </Link> </p>
+                                    {/* Yeh bhi ab 'eventApp' prop ki wajah se sahi kaam karega */}
+                                    <p className="mb-0">
+                                        Back to{" "}
+                                        <Link
+                                            href={route("attendee.login", {
+                                                eventApp: eventApp.id,
+                                            })}
+                                            className="fw-bold text-primary text-decoration-underline"
+                                        >
+                                            {" "}
+                                            Login{" "}
+                                        </Link>{" "}
+                                    </p>
                                 </div>
                             </Col>
                         </Row>
                     </Container>
                 </div>
-
             </GuestLayout>
         </React.Fragment>
     );
