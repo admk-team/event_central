@@ -5,8 +5,10 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Http\RedirectResponse;
 use App\Models\Attendee;
+use App\Models\User; 
 use App\Observers\OrganizerAttendeeObserver;
 use Illuminate\Auth\Notifications\ResetPassword; 
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -22,9 +24,39 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        ResetPassword::createUrlUsing(function (Attendee $attendee, string $token) {
-            return route("attendee.password.reset", ['eventApp' => $attendee->event_app_id, 'token' => $token, 'email' => $attendee->email]);
+        // **** START OF CORRECTION ****
+
+        // Change the function signature from (Attendee $attendee,...) 
+        // to ($notifiable,...) to accept any model.
+        ResetPassword::createUrlUsing(function ($notifiable, string $token) {
+            
+            // Check if the model is an Attendee
+            if ($notifiable instanceof Attendee) {
+                return route("attendee.password.reset", [
+                    'eventApp' => $notifiable->event_app_id, 
+                    'token' => $token, 
+                    'email' => $notifiable->email
+                ]);
+            }
+
+            // Check if the model is a User (or add other models)
+            if ($notifiable instanceof User) {
+                // Return the default password reset URL for Users
+                return url(route('password.reset', [
+                    'token' => $token,
+                    'email' => $notifiable->getEmailForPasswordReset(),
+                ], false));
+            }
+
+            // Default fallback (you can customize this)
+             return url(route('password.reset', [
+                'token' => $token,
+                'email' => $notifiable->getEmailForPasswordReset(),
+            ], false));
         });
+
+        // **** END OF CORRECTION ****
+
 
         RedirectResponse::macro("withSuccess", function ($message) {
             return $this->with('messages', [
