@@ -40,7 +40,6 @@
                     <h1 class="banner__title">
                         <div class="col-md-12">
                             <span class="banner__title--main">{{ $event->name }}</span>
-                            <span class="banner__title--sub">{{ date('Y', strtotime($event->dates[0]->date)) }}</span>
                         </div>
                         <div class="col-md-12">
                             <span class="banner__title--tagline">

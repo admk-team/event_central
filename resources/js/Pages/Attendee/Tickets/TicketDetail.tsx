@@ -403,7 +403,7 @@ const TicketDetail: React.FC<Props> = ({
             <div key={idx} className="border p-3 rounded mb-3 bg-white shadow-sm">
                 <Form.Check
                     type="checkbox"
-                    label={`${t("Enable person detail")}`}
+                    label={`${t("Add Attendee Details")}`}
                     checked={person.enabled}
                     onChange={(e) =>
                         setPersonDetails((prev) =>

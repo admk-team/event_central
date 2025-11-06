@@ -5,6 +5,8 @@ import Layout from '../../../../Layouts/Event';
 import { useLaravelReactI18n } from "laravel-react-i18n";
 
 const TicketNotification = ({ emailList }: any) => {
+
+    console.log('email list',emailList);
     const { data, setData, post, processing, errors } = useForm({
         notificationlist: emailList || '',
     });
@@ -32,7 +34,7 @@ const TicketNotification = ({ emailList }: any) => {
                                         <Form.Control
                                             as="textarea"
                                             id="notificationlist"
-                                            placeholder={t("Enter name")}
+                                            placeholder={t("Enter email")}
                                             value={data.notificationlist}
                                             onChange={(e) => setData('notificationlist', e.target.value)}
                                         />

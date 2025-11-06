@@ -79,7 +79,7 @@
 
                 <h1 class="title chip--muted">
                     <span class="eyebrow">{{ $event->tagline ?? 'Live. In person.' }}</span>
-                    {{ $event->name }} <em>{{ date('Y', strtotime($event->dates[0]->date)) }}</em>
+                    {{ $event->name }}
                 </h1>
 
                 <div class="cta">

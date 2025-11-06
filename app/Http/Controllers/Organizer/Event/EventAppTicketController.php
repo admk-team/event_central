@@ -197,9 +197,6 @@ class EventAppTicketController extends Controller
     public function purchaseNotification()
     {
         $emailList = eventSettings(session('event_id'))->getValue('email_list');
-        if (!$emailList) {
-            $emailList = eventSettings(session('event_id'))->set('email_list', '');
-        }
         return Inertia::render('Organizer/Events/Tickets/TicketNotification', [
             'emailList' => $emailList
         ]);

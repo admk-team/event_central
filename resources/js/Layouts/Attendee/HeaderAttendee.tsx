@@ -154,21 +154,23 @@ const HeaderAttendee = ({
                                     <span></span>
                                 </span>
                             </button>
-                            <a
-                                href={route("attendee.tickets.get")}
-                                rel="noopener noreferrer"
-                                className="d-flex align-items-center gap-1"
-                            >
-                                <span>{t("Buy Tickets")}</span>
-                            </a>
-                            <a
-                                href={route("attendee.event.detail.agenda")}
-                                rel="noopener noreferrer"
-                                className="d-flex align-items-center gap-1"
-                                style={{ marginLeft: 30 }}
-                            >
-                                <span>{t("Schedule")}</span>
-                            </a>
+                            {/* Compact Buttons */}
+                            <div className="d-flex gap-2 align-items-center">
+                                <a
+                                    href={route("attendee.tickets.get")}
+                                    className="btn btn-primary btn-sm d-flex align-items-center"
+                                    style={{ height: '36px', fontSize: '0.875rem' }}
+                                >
+                                    {t("Buy Tickets")}
+                                </a>
+                                <a
+                                    href={route("attendee.event.detail.agenda")}
+                                    className="btn btn-primary btn-sm d-flex align-items-center"
+                                    style={{ height: '36px', fontSize: '0.875rem' }}
+                                >
+                                    {t("Schedule")}
+                                </a>
+                            </div>
 
                             {/* <SearchOption /> */}
                         </div>

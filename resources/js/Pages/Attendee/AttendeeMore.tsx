@@ -49,35 +49,6 @@ const AttendeeMore = ({ eventApp }: any) => {
                     <Row className="d-flex justify-content-center">
                         <Col md={12} lg={12}>
                             <Row className="d-flex justify-content-center">
-                                {/* <Col md={4} lg={4}>
-                                    <Card>
-                                        <CardHeader>
-                                            <div className="d-flex justify-content-center align-items-center">
-                                                <span className="fs-3">
-                                                    More
-                                                </span>
-                                            </div>
-                                        </CardHeader>
-                                        <CardBody>
-                                            <ListGroup>
-                                                <ListGroup.Item
-                                                    className={
-                                                        "fs-3 mb-1 active-list-item"
-                                                    }
-                                                >
-                                                    <i
-                                                        className="bx bxs-contact"
-                                                        style={{
-                                                            marginRight: "5px",
-                                                        }}
-                                                    ></i>
-                                                    Contact Organizer
-                                                </ListGroup.Item>
-                                            </ListGroup>
-                                        </CardBody>
-                                    </Card>
-                                </Col> */}
-
                                 <Col md={8} lg={8}>
                                     <Card>
                                         <CardHeader>
@@ -88,11 +59,6 @@ const AttendeeMore = ({ eventApp }: any) => {
                                             </div>
                                         </CardHeader>
                                         <CardBody>
-                                            <img
-                                                src={eventApp.featured_image}
-                                                alt="event default bg"
-                                                width={"100%"}
-                                            />
                                             <div className="d-flex align-items-center mt-3">
                                                 <img
                                                     width="50"
@@ -146,7 +112,7 @@ const AttendeeMore = ({ eventApp }: any) => {
                                                 </Col>
                                             </Row> */}
                                             <Row>
-                                                <Accordion defaultActiveKey="0">
+                                                <Accordion defaultActiveKey="1">
                                                     <Accordion.Item eventKey="1">
                                                         <Accordion.Header>
                                                             {t("Contact Form")}

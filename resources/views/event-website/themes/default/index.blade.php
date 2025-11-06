@@ -42,8 +42,7 @@
                         <span>{{ $event->location_base }}</span>
                     </div>
                 </div>
-                <h1 class="event-title">{{ $event->name }} <span
-                        class="highlight">{{ date('Y', strtotime($event->dates[0]->date)) }}</span></h1>
+                <h1 class="event-title">{{ $event->name }}</h1>
                 @isset($event->tagline)
                     <p class="event-tagline">{{ $event->tagline }}</p>
                 @endisset
