@@ -14,7 +14,7 @@ const UpgradeAccountNotise = () => {
         <React.Fragment>
             <Row>
                 <Col xs={12}>
-                    <Card>
+                    {/* <Card>
                         <Card.Body className="p-0">
                             <Alert className="alert alert-warning border-0 rounded-0 m-0 d-flex align-items-center" role="alert">
                                 <FeatherIcon
@@ -47,7 +47,7 @@ const UpgradeAccountNotise = () => {
                                 </Col>
                             </Row>
                         </Card.Body>
-                    </Card>
+                    </Card> */}
                 </Col>
             </Row>
         </React.Fragment>
