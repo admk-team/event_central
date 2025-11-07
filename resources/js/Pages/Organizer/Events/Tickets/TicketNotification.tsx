@@ -34,7 +34,7 @@ const TicketNotification = ({ emailList }: any) => {
                                         <Form.Control
                                             as="textarea"
                                             id="notificationlist"
-                                            placeholder={t("Enter email")}
+                                            placeholder={t("Enter email, e.g. john@example.com, jane@company.com")}
                                             value={data.notificationlist}
                                             onChange={(e) => setData('notificationlist', e.target.value)}
                                         />
