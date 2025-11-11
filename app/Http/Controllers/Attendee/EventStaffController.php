@@ -25,12 +25,14 @@ class EventStaffController extends Controller
 
         // Get all participant_ids where current user has initiated a chat in this event
         $chatInitiatedWith = ChatMember::where('event_id', $event_app->id)->where('user_id', $authUserId)->pluck('participant_id')->toArray();
-        $staff = $event_app->authorizedUsers->map(function ($user) use ($chatInitiatedWith) {
-            if ($user->chat_with_organizer) {
-                $user->is_chat = in_array($user->id, $chatInitiatedWith);
-                return $user;
-            }
-        })->filter();
+        $staff = $event_app->authorizedUsers
+            ->filter(fn($u) => $u->chat_with_organizer)
+            ->map(function ($u) use ($chatInitiatedWith) {
+                $u->is_chat = in_array($u->id, $chatInitiatedWith);
+                return $u;
+            })
+            ->values()
+            ->toArray();
 
         $enable_organizer_chat = EventAppSetting::where('event_app_id', $event_app->id)
             ->where('key', 'organizer_chat')
