@@ -2,6 +2,7 @@ import React from 'react';
 import { Card, ListGroup } from 'react-bootstrap';
 import Tracks from './Features/Tracks';
 import CheckIn from './Features/CheckIn';
+import OrganizerChat from './Features/OrganizerChat';
 import { useLaravelReactI18n } from "laravel-react-i18n";
 
 export default function Features() {
@@ -18,6 +19,9 @@ export default function Features() {
                 </ListGroup>
                 <ListGroup className="mb-1">
                     <CheckIn />
+                </ListGroup>
+                <ListGroup className="mb-1">
+                    <OrganizerChat />
                 </ListGroup>
             </Card.Body>
         </Card>

@@ -32,6 +32,7 @@ class EventSettingsController extends Controller
         return Inertia::render("Organizer/Events/Settings/Event/Index", [
             'event' => $event,
             'enableTracks' => eventSettings()->getValue('enable_tracks', false),
+            'organizer_chat' => eventSettings()->getValue('organizer_chat', false),
             'enableCheckIn' => eventSettings()->getValue('enable_check_in', false),
             'enablePrivateRegistraion' => eventSettings()->getValue('private_register', false),
             'reminderDays' => $reminderDays,
@@ -129,6 +130,13 @@ class EventSettingsController extends Controller
         $enableTracks = eventSettings()->getValue('enable_check_in', false);
         eventSettings()->set('enable_check_in', !$enableTracks);
     }
+
+    public function toggleOrganizerChat()
+    {
+        $enableTracks = eventSettings()->getValue('organizer_chat', false);
+        eventSettings()->set('organizer_chat', !$enableTracks);
+    }
+
     public function togglePrivateRegister()
     {
         $enableTracks = eventSettings()->getValue('private_register', false);

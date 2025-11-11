@@ -285,6 +285,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
                     Route::get('generate-link', [EventSettingsController::class, 'generateLink'])->name('link');
                     Route::post('toggle-tracks', [EventSettingsController::class, 'toggleTracks'])->name('toggle-tracks');
                     Route::post('toggle-checkin', [EventSettingsController::class, 'toggleCheckIn'])->name('toggle-checkin');
+                    Route::post('organizer-chat', [EventSettingsController::class, 'toggleOrganizerChat'])->name('organizer-chat');
                     Route::post('toggle-register', [EventSettingsController::class, 'togglePrivateRegister'])->name('toggle-register');
                     Route::post('reminder-closer', [EventSettingsController::class, 'changeReminderDays'])->name('reminder-closer');
                     Route::post('after-event', [EventSettingsController::class, 'changeAfterEvent'])->name('after-event');

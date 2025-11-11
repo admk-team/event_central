@@ -26,6 +26,7 @@ class UserRequest extends FormRequest
             'role_id' => 'required',
             'accessible_events' => 'nullable|array',
             'accessible_event_sessions' => 'nullable|array',
+            'chat_with_organizer' => 'nullable',
         ];
 
         if ($this->route()->getName() === 'organizer.users.store') {

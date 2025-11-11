@@ -33,6 +33,7 @@ class EventApp extends Model
         'recurring_type_id',
         'custom_theme',
         'custome_domain',
+        'organizer_chat',
     ];
 
     protected $appends = [
@@ -50,6 +51,7 @@ class EventApp extends Model
 
     protected $casts = [
         'is_recurring' => 'boolean',
+        'organizer_chat' => 'boolean',
         'registration_private' => 'boolean',
         'start_date' => 'datetime',
     ];

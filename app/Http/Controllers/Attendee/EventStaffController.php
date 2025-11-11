@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Attendee;
 use App\Models\ChatMember;
 use App\Models\EventApp;
+use App\Models\EventAppSetting;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -24,13 +25,20 @@ class EventStaffController extends Controller
 
         // Get all participant_ids where current user has initiated a chat in this event
         $chatInitiatedWith = ChatMember::where('event_id', $event_app->id)->where('user_id', $authUserId)->pluck('participant_id')->toArray();
-
         $staff = $event_app->authorizedUsers->map(function ($user) use ($chatInitiatedWith) {
-            $user->is_chat = in_array($user->id, $chatInitiatedWith);
-            return $user;
-        });
+            if ($user->chat_with_organizer) {
+                $user->is_chat = in_array($user->id, $chatInitiatedWith);
+                return $user;
+            }
+        })->filter();
 
-        return Inertia::render('Attendee/EventStaff/Index', compact('staff'));
+        $enable_organizer_chat = EventAppSetting::where('event_app_id', $event_app->id)
+            ->where('key', 'organizer_chat')
+            ->first();
+
+        $enable_organizer_chat = $enable_organizer_chat->value == 1 ? true : false;
+
+        return Inertia::render('Attendee/EventStaff/Index', compact('staff', 'enable_organizer_chat'));
     }
 
 

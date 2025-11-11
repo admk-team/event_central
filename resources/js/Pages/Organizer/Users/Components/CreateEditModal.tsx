@@ -19,6 +19,7 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
         role_id: user?.roles[0]?.id ?? '',
         accessible_events: user?.accessible_events.map((event: any) => event.id) ?? [],
         accessible_event_sessions: user?.accessible_event_sessions.map((session: any) => session.id) ?? [],
+        chat_with_organizer: user?.chat_with_organizer ?? false,
     });
 
     const submit = (e: any) => {
@@ -210,6 +211,22 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                             )}
                         </FormGroup>
                     )}
+                    {/* can chat with organizer  */}
+                    <FormGroup className="mb-3 d-flex align-items-center justify-content-between">
+                        <Form.Label
+                            className="form-check-label mb-0"
+                            htmlFor="chatWithOrganizer"
+                        >
+                            {t("Allow attendees to chat with organizer ?")}
+                        </Form.Label>
+                        <Form.Check
+                            type="switch"
+                            id="chatWithOrganizer"
+                            checked={data.chat_with_organizer}
+                            onChange={(e) => setData("chat_with_organizer", e.target.checked)}
+                        />
+                    </FormGroup>
+
                 </Modal.Body>
                 <div className="modal-footer">
                     <div className="hstack gap-2 justify-content-end">

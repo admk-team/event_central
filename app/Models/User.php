@@ -36,6 +36,7 @@ class User extends Authenticatable
         'email',
         'password',
         "role",
+        'chat_with_organizer'
     ];
 
     /**
@@ -56,6 +57,7 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'chat_with_organizer' => 'boolean',
     ];
 
 
