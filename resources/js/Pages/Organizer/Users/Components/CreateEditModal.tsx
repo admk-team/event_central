@@ -217,7 +217,7 @@ export default function CreateEditModal({ show, hide, onHide, user }: { show: bo
                             className="form-check-label mb-0"
                             htmlFor="chatWithOrganizer"
                         >
-                            {t("Allow attendees to chat with organizer ?")}
+                            {t("Allow attendees to chat with organizer/Staff ?")}
                         </Form.Label>
                         <Form.Check
                             type="switch"

@@ -41,7 +41,7 @@ const Index = ({staff,enable_organizer_chat}:any) => {
                     <div className="row">
                         {!enable_organizer_chat && (
                             <div className="alert alert-info text-center my-3" role="alert">
-                                Chat with organizers is not available for this event. <br />
+                                Chat with organizers/Staff is not available for this event. <br />
                                 Please contact the administrator if you need help.
                             </div>
                         )}

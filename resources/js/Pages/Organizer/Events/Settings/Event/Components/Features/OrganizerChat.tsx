@@ -26,7 +26,7 @@ export default function CheckIn() {
 
     return (
         <ListGroupItem className="d-flex justify-content-between align-items-center">
-            <div>{t("Allow attendees to chat with Event organizers")}</div>
+            <div>{t("Allow attendees to chat with Event organizers/Staff")}</div>
             <div className="d-flex align-items-center gap-3">
                 <div
                     className="form-check form-switch form-switch-lg"
