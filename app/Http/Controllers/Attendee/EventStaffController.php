@@ -36,7 +36,7 @@ class EventStaffController extends Controller
             ->where('key', 'organizer_chat')
             ->first();
 
-        $enable_organizer_chat = $enable_organizer_chat->value == 1 ? true : false;
+        $enable_organizer_chat = !empty($enable_organizer_chat->value) && $enable_organizer_chat->value == 1;
 
         return Inertia::render('Attendee/EventStaff/Index', compact('staff', 'enable_organizer_chat'));
     }
