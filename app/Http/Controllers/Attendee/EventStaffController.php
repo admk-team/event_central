@@ -74,6 +74,6 @@ class EventStaffController extends Controller
             'participant_type' => \App\Models\User::class,
         ]);
 
-        return back()->withSuccess('Chat initiated successfully.');
+        return redirect()->route('attendee.event.chat')->withSuccess('Chat initiated successfully.');
     }
 }
