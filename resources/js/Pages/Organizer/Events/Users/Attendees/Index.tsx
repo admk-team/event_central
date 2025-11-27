@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Col, Container, Row, Table } from 'react-bootstrap';
 import { Head, Link, router, useForm } from '@inertiajs/react';
 import BreadCrumb from '../../../../../Components/Common/BreadCrumb';
@@ -20,10 +20,11 @@ import axios from 'axios';
 import { useLaravelReactI18n } from "laravel-react-i18n";
 
 
-function Index({ attendees, eventList }: any) {
+function Index({ attendees, eventList,filter }: any) {
 
     const [deleteAttendee, setDeleteAttendee] = React.useState<any>(null);
     const [updateAttendee, setUpdateAttendee] = React.useState<any>(null);
+    const [filterAttendee, setFilterAttendee] = useState(filter);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
     const [showDeleteManyConfirmation, setShowDeleteManyConfirmation] = useState(false);
 
@@ -77,7 +78,7 @@ function Index({ attendees, eventList }: any) {
     const initiateChat = (attendee: any) => {
         chatForm.post(route('organizer.events.attendee.chat.initiate', attendee.id));
     }
-    // const exportSchema: any = [
+     // const exportSchema: any = [
     //     {
     //         column: 'Name',
     //         type: String,
@@ -194,6 +195,10 @@ function Index({ attendees, eventList }: any) {
                 </div>
             ),
         },
+        {
+            header: () => t('Check-In Tracking'),
+            cell: (attendee) => attendee.check_in_track,
+        },
     ];
 
 
@@ -255,6 +260,37 @@ function Index({ attendees, eventList }: any) {
                                                 <HasPermission permission="create_attendees">
                                                     <Button onClick={() => setShowImportAttendeeModal(true)}><i className="ri-add-fill"></i> {t("Import From Event")}</Button>
                                                 </HasPermission>
+                                            )
+                                        },
+                                        {
+                                            render: (
+                                                <HasPermission permission="create_attendees">
+                                                    <select
+                                                        className="form-select form-select-md w-auto"
+                                                        value={filterAttendee}
+                                                        onChange={(e) => {
+                                                            const value = e.target.value;
+                                                            setFilterAttendee(value);
+
+                                                            router.get(
+                                                                route('organizer.events.attendees.index'),
+                                                                {
+                                                                    filter: value,
+                                                                },
+                                                                {
+                                                                    preserveState: true,
+                                                                    preserveScroll: true,
+                                                                    replace: true,
+                                                                }
+                                                            );
+                                                        }}
+                                                    >
+                                                        <option value="all">All</option>
+                                                        <option value="not_checked_in">Not Checked In</option>
+                                                        <option value="checked_in">Checked In</option>
+                                                    </select>
+                                                </HasPermission>
+
                                             )
                                         },
                                     ]}

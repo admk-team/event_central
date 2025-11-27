@@ -32,14 +32,32 @@ class AttendeeController extends Controller
 {
     public function index(Request $request)
     {
+        // Store filter in session
+        if ($request->has('filter')) {
+            session(['attendee_filter' => $request->filter]);
+        }
+
         if (! Auth::user()->can('view_attendees')) {
             abort(403);
         }
+        $query = Attendee::currentEvent()->with('eventCheckin');
+
+        // Apply Filter
+        $session_filter = session('attendee_filter', 'all');
+        if ($session_filter === 'checked_in') {
+            // attendee has eventCheckin record
+            $query->whereHas('eventCheckin');
+        }
+        if ($session_filter === 'not_checked_in') {
+            // attendee has NO eventCheckin record
+            $query->whereDoesntHave('eventCheckin');
+        }
         $eventList = EventApp::ofOwner()->where('id', '!=', session('event_id'))->get();
-        $attendees = $this->datatable(Attendee::currentEvent()->with('eventCheckin'));
+        $attendees = $this->datatable($query)->appends(['filter' => $session_filter]);
         $countries = Country::orderBy('title')->get();
+        $filter = $session_filter;
         //dd($countries);
-        return Inertia::render('Organizer/Events/Users/Attendees/Index', compact('attendees', 'eventList', 'countries'));
+        return Inertia::render('Organizer/Events/Users/Attendees/Index', compact('attendees', 'eventList', 'countries', 'filter'));
     }
 
 

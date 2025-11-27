@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +14,7 @@ use Illuminate\Notifications\Notifiable;
 
 class Attendee extends Authenticatable
 {
-    use HasFactory, HasApiTokens,Notifiable;
+    use HasFactory, HasApiTokens, Notifiable;
 
     protected $fillable = [
         'parent_id',
@@ -45,6 +46,7 @@ class Attendee extends Authenticatable
     protected $appends = [
         'avatar' => 'avatar_img',
         'qr_code' => 'qr_code_img',
+        'check_in_track',
         'name',
     ];
 
@@ -68,6 +70,28 @@ class Attendee extends Authenticatable
     public function getQrCodeImgAttribute()
     {
         return $this->qr_code != 'EMPTY' ? url(Storage::url($this->qr_code)) : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s';
+    }
+    public function getCheckInTrackAttribute()
+    {
+        $data = $this->hasOne(EventCheckIns::class, 'attendee_id')->first();
+        if ($data) {
+            $eventApp = EventApp::with('dates')->find(session('event_id'));
+            $lasteventDate = $eventApp->dates()->orderBy('date', 'desc')->get();
+            $eventEnd = Carbon::parse($lasteventDate[0]->date);
+            $checkedIn = Carbon::parse($data->checked_in);
+            $diff = $eventEnd->diffInDays($checkedIn);
+            if ($diff === 0) {
+                $result = "Today";
+            } else if($diff >= 1 && $diff <= 10) {
+                $result = "checked in " . $diff . " day" . ($diff > 1 ? "s" : "") . " ago";
+            } else {
+                $result = "checked in at ". Carbon::parse($data->checked_in)->format('d-M-y');
+            }
+            $data =  $result;
+        } else {
+            $data = "Not checked in yet.";
+        }
+        return $data;
     }
 
     public function eventSelectedSessions()
