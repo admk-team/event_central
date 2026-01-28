@@ -364,9 +364,9 @@ class PaymentController extends Controller
         // 2. Generate Ticket QR Codes
         $this->purchasedTickets($paymentUuId);
 
-        // 3. Send confirmation emails
-        $this->sendPurchasedTicketsEmailToAttendee();
-        $this->sendPurchasedTicketsEmailToOrganizer();
+        // 3. Send confirmation emails (pass attendee from payment to avoid relationship issues)
+        $this->sendPurchasedTicketsEmailToAttendee($attendee);
+        $this->sendPurchasedTicketsEmailToOrganizer($attendee);
 
         // 4. Increment discount code usage (✅ updated for ticket-specific logic)
         if ($payment->discount_code) {
@@ -479,13 +479,27 @@ class PaymentController extends Controller
     }
 
 
-    public function sendPurchasedTicketsEmailToAttendee()
+    public function sendPurchasedTicketsEmailToAttendee($attendee = null)
     {
         try {
-            $attendee = auth()->user();
-            $attendee->load(['payments.purchased_tickets.purchased_addons']);
+            // If attendee is not provided, try to get from auth
+            if (!$attendee) {
+                $attendee = auth()->user();
+            }
+
+            // Handle both User and Attendee models
+            if ($attendee instanceof \App\Models\Attendee) {
+                // Attendee model has payments() relationship
+                $attendee->load(['payments.purchased_tickets.purchased_addons']);
+                $payments = $attendee->payments;
+            } else {
+                // User model has attendeePayments() relationship
+                $attendee->load(['attendeePayments.purchased_tickets.purchased_addons']);
+                $payments = $attendee->attendeePayments;
+            }
+
             $attendee_purchased_tickets = [];
-            foreach ($attendee->payments as $payment) {
+            foreach ($payments as $payment) {
                 foreach ($payment->purchased_tickets as $ticket)
                     array_push($attendee_purchased_tickets, $ticket);
             }
@@ -502,14 +516,29 @@ class PaymentController extends Controller
             Log::error($ex->getMessage());
         }
     }
-    public function sendPurchasedTicketsEmailToOrganizer()
+    public function sendPurchasedTicketsEmailToOrganizer($attendee = null)
     {
         try {
-            $attendee = auth()->user();
+            // If attendee is not provided, try to get from auth
+            if (!$attendee) {
+                $attendee = auth()->user();
+            }
+
             $eventApp = EventApp::find($attendee->event_app_id);
-            $attendee->load('payments.purchased_tickets');
+            
+            // Handle both User and Attendee models
+            if ($attendee instanceof \App\Models\Attendee) {
+                // Attendee model has payments() relationship
+                $attendee->load('payments.purchased_tickets');
+                $payments = $attendee->payments;
+            } else {
+                // User model has attendeePayments() relationship
+                $attendee->load('attendeePayments.purchased_tickets');
+                $payments = $attendee->attendeePayments;
+            }
+
             $attendee_purchased_tickets = [];
-            foreach ($attendee->payments as $payment) {
+            foreach ($payments as $payment) {
                 foreach ($payment->purchased_tickets as $ticket)
                     array_push($attendee_purchased_tickets, $ticket);
             }

@@ -214,12 +214,13 @@ class PaymentController extends Controller
 
     public function updateAttendeePaymnet($paymentUuId, Request $request)
     {
-        $attendee = auth()->user();
         $payment = AttendeePayment::where('uuid', $paymentUuId)->first();
         $status = null;
         if (!$payment) {
             throw new Exception('Payment object not found with uuid ' . $paymentUuId);
         }
+        // Get attendee from payment to ensure we have the correct Attendee model
+        $attendee = $payment->attendee;
         if ($request->status) {
             $status = $request->status;
         }
@@ -233,7 +234,7 @@ class PaymentController extends Controller
             $this->purchasedTickets($paymentUuId);
 
             //3. Send confirmation Email to Attendee along with Ticket QR Codes  -----
-            $this->sendPurchasedTicketsEmailToAttendee();
+            $this->sendPurchasedTicketsEmailToAttendee($attendee);
 
             //4. Increment discount code used count
             if ($payment->discount_code) {
@@ -345,14 +346,28 @@ class PaymentController extends Controller
     }
 
 
-    public function sendPurchasedTicketsEmailToAttendee()
+    public function sendPurchasedTicketsEmailToAttendee($attendee = null)
     {
         try {
-            $attendee = auth()->user();
-            $attendee->load('payments.purchased_tickets');
+            // If attendee is not provided, try to get from auth
+            if (!$attendee) {
+                $attendee = auth()->user();
+            }
+
+            // Handle both User and Attendee models
+            if ($attendee instanceof \App\Models\Attendee) {
+                // Attendee model has payments() relationship
+                $attendee->load('payments.purchased_tickets');
+                $payments = $attendee->payments;
+            } else {
+                // User model has attendeePayments() relationship
+                $attendee->load('attendeePayments.purchased_tickets');
+                $payments = $attendee->attendeePayments;
+            }
+
             $attendee_purchased_tickets = [];
 
-            foreach ($attendee->payments as $payment) {
+            foreach ($payments as $payment) {
                 foreach ($payment->purchased_tickets as $ticket)
                     array_push($attendee_purchased_tickets, $ticket);
             }

@@ -37,6 +37,9 @@ class BadgePrintController extends Controller
                     'linkedin_link' => $attendee->linkedin_link,
                     'twitter_link' => $attendee->twitter_link,
                     'phone' => $attendee->phone,
+                    'attendee_name' => $attendee->attendee_name,
+                    'attendee_position' => $attendee->attendee_position,
+                    'attendee_location' => $attendee->attendee_location,
                     'qr_codes' => $attendee->payments
                         ->filter(fn($payment) => $payment->status === 'paid')
                         ->flatMap(function ($payment) {
@@ -101,6 +104,7 @@ class BadgePrintController extends Controller
 
         $startDate = $startDateObj ? \Carbon\Carbon::parse($startDateObj)->format('F j, Y') : null;
         $endDate   = $endDateObj ? \Carbon\Carbon::parse($endDateObj)->format('F j, Y') : null;
+        // dd($attendees);
         return Inertia::render('Organizer/Events/BadgePrint/Index', compact(
             'attendees',
             'eventApp',
