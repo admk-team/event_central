@@ -33,6 +33,7 @@ class EventSponsorshipAwardedMail extends Mailable
         return new Envelope(
             from: new Address($fromEmail, $fromName),
             subject: 'Sponsorship Opportunity Awarded',
+            replyTo: [new Address(config('mail.reply_to.address'), config('mail.reply_to.name') ?? '')],
         );
     }
 

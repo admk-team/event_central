@@ -9,6 +9,7 @@ use App\Models\Template;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
@@ -32,6 +33,7 @@ class CampaignEmail extends Mailable implements ShouldQueue
     {
         return new Envelope(
             subject: $this->campaign->subject ?? 'Campaign Email',
+            replyTo: [new Address(config('mail.reply_to.address'), config('mail.reply_to.name') ?? '')],
         );
     }
 

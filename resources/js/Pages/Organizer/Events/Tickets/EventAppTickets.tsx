@@ -6,6 +6,7 @@ import {
     Row,
     Table,
     Button,
+    Modal,
     OverlayTrigger,
     Tooltip,
 } from "react-bootstrap";
@@ -19,15 +20,31 @@ import { useLaravelReactI18n } from "laravel-react-i18n";
 const EventAppTickets = ({ tickets }: any) => {
     const [deleteTicket, setDeleteTicket] = React.useState<any>(null);
     const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+    const [resendTicket, setResendTicket] = React.useState<any>(null);
+    const [showResendModal, setShowResendModal] = useState(false);
 
     const deleteForm = useForm({
         _method: "DELETE",
     });
+    const resendForm = useForm({});
 
     const deleteAction = (ticket: any) => {
-        console.log(ticket);
         setDeleteTicket(ticket);
         setShowDeleteConfirmation(true);
+    };
+
+    const resendAction = (ticket: any) => {
+        setResendTicket(ticket);
+        setShowResendModal(true);
+    };
+
+    const handleResendEmail = () => {
+        if (!resendTicket) return;
+        resendForm.post(
+            route("organizer.events.payments.resend-email", resendTicket.ticketId)
+        );
+        setShowResendModal(false);
+        setResendTicket(null);
     };
 
     const { t } = useLaravelReactI18n();
@@ -53,6 +70,12 @@ const EventAppTickets = ({ tickets }: any) => {
                     {ticket.attendee_email}
                 </Link>
             ),
+            cellStyle: { textWrap: "wrap" },
+        },
+        {
+            header: () => t("Confirmation Number"),
+            headerStyle: { textWrap: "wrap" },
+            cell: (ticket) => ticket.confirmation_number ?? t("N/A"),
             cellStyle: { textWrap: "wrap" },
         },
         {
@@ -184,10 +207,20 @@ const EventAppTickets = ({ tickets }: any) => {
             headerStyle: { textWrap: "wrap" },
             cell: (ticket) => (
                 <div className="hstack gap-4 fs-15 text-center">
+                    <OverlayTrigger
+                        overlay={<Tooltip>{t("Resend purchase confirmation email")}</Tooltip>}
+                    >
+                        <i
+                            className="ri-mail-send-line text-primary fs-17 align-middle"
+                            style={{ cursor: "pointer" }}
+                            onClick={() => resendAction(ticket)}
+                        />
+                    </OverlayTrigger>
                     <i
                         className="ri-delete-bin-5-line text-danger fs-17 align-middle"
+                        style={{ cursor: "pointer" }}
                         onClick={() => deleteAction(ticket)}
-                    ></i>
+                    />
                 </div>
             ),
             cellStyle: { textWrap: "wrap" },
@@ -230,6 +263,30 @@ const EventAppTickets = ({ tickets }: any) => {
                 onDeleteClick={handleDelete}
                 onCloseClick={() => setShowDeleteConfirmation(false)}
             />
+
+            <Modal show={showResendModal} onHide={() => setShowResendModal(false)} centered>
+                <Modal.Header closeButton>
+                    <Modal.Title>{t("Resend confirmation email")}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <p className="mb-0">
+                        {t("Send purchase confirmation email again to")}{" "}
+                        <strong>{resendTicket?.attendee_email}</strong>?
+                    </p>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="light" onClick={() => setShowResendModal(false)}>
+                        {t("Cancel")}
+                    </Button>
+                    <Button
+                        variant="primary"
+                        onClick={handleResendEmail}
+                        disabled={resendForm.processing}
+                    >
+                        {resendForm.processing ? t("Sending...") : t("Send email")}
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </React.Fragment>
     );
 };

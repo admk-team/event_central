@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Organizer\Event;
 
 use Inertia\Inertia;
+use App\Mail\AttendeeTicketPurchasedEmail;
 use App\Models\AttendeePayment;
 use App\Services\StripeService;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class EventTicketsController extends Controller
 {
@@ -34,6 +36,7 @@ class EventTicketsController extends Controller
             ->where('attendee_payments.status', 'paid')
             ->select(
                 'attendee_payments.id as ticketId',
+                'attendee_payments.confirmation_number as confirmation_number',
                 'event_app_tickets.name as ticket_name',
                 DB::raw('SUM(attendee_purchased_tickets.total) as total'),
                 'attendee_payments.amount_paid as amount',
@@ -58,6 +61,7 @@ class EventTicketsController extends Controller
             )
             ->groupBy(
                 'attendee_payments.id',
+                'attendee_payments.confirmation_number',
                 'event_app_tickets.id',
                 'event_app_tickets.name',
                 'attendee_payments.amount_paid',
@@ -77,6 +81,31 @@ class EventTicketsController extends Controller
         return Inertia::render('Organizer/Events/Tickets/EventAppTickets', compact(['tickets']));
     }
 
+    /**
+     * Resend the purchase confirmation email to the attendee for the given payment.
+     */
+    public function resendPurchaseEmail(AttendeePayment $attendeepayment)
+    {
+        if (! Auth::user()->can('view_payments')) {
+            abort(403);
+        }
+
+        $attendeepayment->load(['attendee', 'purchased_tickets.ticket', 'purchased_tickets.purchased_addons', 'purchased_tickets.payment']);
+
+        if ($attendeepayment->event_app_id != session('event_id')) {
+            abort(403);
+        }
+
+        Mail::to($attendeepayment->attendee->email)->send(
+            new AttendeeTicketPurchasedEmail(
+                $attendeepayment->attendee,
+                $attendeepayment->purchased_tickets,
+                $attendeepayment
+            )
+        );
+
+        return redirect()->back()->with('success', __('Purchase confirmation email has been resent to :email.', ['email' => $attendeepayment->attendee->email]));
+    }
 
     public function deleteTickets(AttendeePayment $attendeepayment)
     {

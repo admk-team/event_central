@@ -233,8 +233,8 @@ class PaymentController extends Controller
             //2. Generate Ticket QR Code
             $this->purchasedTickets($paymentUuId);
 
-            //3. Send confirmation Email to Attendee along with Ticket QR Codes  -----
-            $this->sendPurchasedTicketsEmailToAttendee($attendee);
+            //3. Send confirmation Email to Attendee (with payment so email includes confirmation_number)
+            $this->sendPurchasedTicketsEmailToAttendee($attendee, $payment);
 
             //4. Increment discount code used count
             if ($payment->discount_code) {
@@ -346,9 +346,17 @@ class PaymentController extends Controller
     }
 
 
-    public function sendPurchasedTicketsEmailToAttendee($attendee = null)
+    public function sendPurchasedTicketsEmailToAttendee($attendee = null, ?\App\Models\AttendeePayment $payment = null)
     {
         try {
+            // If a specific payment is provided, send only that payment's tickets (with confirmation_number)
+            if ($payment) {
+                $payment->load(['purchased_tickets.ticket', 'purchased_tickets.purchased_addons', 'purchased_tickets.payment']);
+                $attendee = $payment->attendee;
+                Mail::to($attendee->email)->send(new AttendeeTicketPurchasedEmail($attendee, $payment->purchased_tickets, $payment));
+                return;
+            }
+
             // If attendee is not provided, try to get from auth
             if (!$attendee) {
                 $attendee = auth()->user();
@@ -367,8 +375,8 @@ class PaymentController extends Controller
 
             $attendee_purchased_tickets = [];
 
-            foreach ($payments as $payment) {
-                foreach ($payment->purchased_tickets as $ticket)
+            foreach ($payments as $p) {
+                foreach ($p->purchased_tickets as $ticket)
                     array_push($attendee_purchased_tickets, $ticket);
             }
             Mail::to($attendee->email)->send(new AttendeeTicketPurchasedEmail($attendee, $attendee_purchased_tickets));

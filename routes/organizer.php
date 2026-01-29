@@ -201,6 +201,7 @@ Route::middleware(['auth', 'panel:organizer'])->prefix('organizer')->name('organ
             // Route::get('addon/{event_app_ticket_id?}', [AddonController::class, 'getAllAddons'])->name('fetch');
             Route::delete('addon/delete/many', [AddonController::class, 'destroyMany'])->name('addon.destroy.many');
             Route::get('payments', [EventTicketsController::class, 'index'])->name('payments');
+            Route::post('payments/resend-email/{attendeepayment}', [EventTicketsController::class, 'resendPurchaseEmail'])->name('payments.resend-email');
             Route::delete('payments/tickets/{attendeepayment}', [EventTicketsController::class, 'deleteTickets'])->name('delete.payment');
 
             //refund payments

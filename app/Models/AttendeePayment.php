@@ -5,12 +5,26 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class AttendeePayment extends Model
 {
     use HasFactory;
+
+    protected static function booted(): void
+    {
+        static::creating(function (AttendeePayment $payment) {
+            if (empty($payment->confirmation_number)) {
+                do {
+                    $payment->confirmation_number = 'EC-' . strtoupper(Str::random(8));
+                } while (static::where('confirmation_number', $payment->confirmation_number)->exists());
+            }
+        });
+    }
+
     protected $fillable = [
         'uuid',
+        'confirmation_number',
         'event_app_id',
         'attendee_id',
         'discount_code',

@@ -24,6 +24,8 @@ class PrayerRequestSubmitted extends Mailable
 
     public function build()
     {
-        return $this->subject('New Prayer Request Submitted')->view('emails.prayer_request_submitted');
+        return $this->subject('New Prayer Request Submitted')
+            ->replyTo(config('mail.reply_to.address'))
+            ->view('emails.prayer_request_submitted');
     }
 }

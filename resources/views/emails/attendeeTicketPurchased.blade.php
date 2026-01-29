@@ -147,6 +147,9 @@
 <body>
     <div class="email-container">
         <h2>Welcome, {{ $attendee->first_name }} {{ $attendee->last_name }}!</h2>
+        @if(isset($payment) && $payment && $payment->confirmation_number)
+        <p><strong>Confirmation number:</strong> {{ $payment->confirmation_number }}</p>
+        @endif
         <p>You have successfully purchased following
             {{ count($attendee_purchased_tickets) > 1 ? count($attendee_purchased_tickets) . ' tickets' : ' ticket' }}:</p>
 

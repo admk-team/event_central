@@ -6,9 +6,10 @@ use App\Models\Attendee;
 use App\Models\EventApp;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class EventTicketPurchasedNotification extends Mailable
@@ -36,6 +37,7 @@ class EventTicketPurchasedNotification extends Mailable
     {
         return new Envelope(
             subject: 'Ticket Purchase Confirmation ' . ': ' . env('APP_NAME'),
+            replyTo: [new Address(config('mail.reply_to.address'), config('mail.reply_to.name') ?? '')],
         );
     }
 

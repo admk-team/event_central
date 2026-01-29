@@ -39,7 +39,8 @@ class AvailableTicketMail extends Mailable implements ShouldQueue
         Log::info("avalileble ticket event app logo  {$this->eventApp}");
         return new Envelope(
             from: new Address("info@mail.eventcentral.net", $this->eventApp->name ?? env('APP_NAME')),
-            subject: 'Available Ticket Mail : ' . ($this->eventApp->name ?? 'Upcoming Event')
+            subject: 'Available Ticket Mail : ' . ($this->eventApp->name ?? 'Upcoming Event'),
+            replyTo: [new Address(config('mail.reply_to.address'), config('mail.reply_to.name') ?? '')],
         );
     }
 

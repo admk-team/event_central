@@ -38,6 +38,7 @@ class PrivateInviteMail extends Mailable
         return new Envelope(
             from: new Address($fromEmail, $fromName),
             subject: 'You\'re Invited: Register Now for ' . ($this->eventApp->name ?? 'Our Event'),
+            replyTo: [new Address(config('mail.reply_to.address'), config('mail.reply_to.name') ?? '')],
         );
     }
 
