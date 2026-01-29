@@ -26,71 +26,98 @@ class BadgePrintController extends Controller
         $attendees = Attendee::currentEvent()
             ->with(['payments.purchased_tickets.ticket.ticketType'])
             ->get()
-            ->map(function ($attendee) {
-                return [
-                    'name' => $attendee->first_name . ' ' . $attendee->last_name,
-                    'position' => $attendee->position,
-                    'location' => $attendee->location,
-                    'avatar' => $attendee->avatar,
-                    'other_link' => $attendee->other_link,
-                    'facebook_link' => $attendee->facebook_link,
-                    'linkedin_link' => $attendee->linkedin_link,
-                    'twitter_link' => $attendee->twitter_link,
-                    'phone' => $attendee->phone,
-                    'attendee_name' => $attendee->attendee_name,
-                    'attendee_position' => $attendee->attendee_position,
-                    'attendee_location' => $attendee->attendee_location,
-                    'qr_codes' => $attendee->payments
-                        ->filter(fn($payment) => $payment->status === 'paid')
-                        ->flatMap(function ($payment) {
-                            return $payment->purchased_tickets->map(function ($ticket) {
+            ->flatMap(function ($attendee) {
+                $badgeEntries = [];
+                
+                // Get all paid tickets for this attendee
+                $paidTickets = $attendee->payments
+                    ->filter(fn($payment) => $payment->status === 'paid')
+                    ->flatMap(fn($payment) => $payment->purchased_tickets)
+                    ->filter(fn($ticket) => !empty($ticket->code));
 
-                                // Check if QR file exists; if not, recreate using existing code
-                                if (
-                                    !empty($ticket->code) &&
-                                    (!Storage::exists($ticket->qr_code) || empty($ticket->qr_code))
-                                ) {
-                                    $qrData = $ticket->code;
+                foreach ($paidTickets as $ticket) {
+                    // Check if QR file exists; if not, recreate using existing code
+                    if (
+                        !empty($ticket->code) &&
+                        (!Storage::exists($ticket->qr_code) || empty($ticket->qr_code))
+                    ) {
+                        $qrData = $ticket->code;
 
-                                    $options = new QROptions([
-                                        'eccLevel' => EccLevel::L,
-                                        'scale' => 5,
-                                        'outputType' => QRCode::OUTPUT_IMAGE_PNG,
-                                        'imageBase64' => false,
-                                    ]);
+                        $options = new QROptions([
+                            'eccLevel' => EccLevel::L,
+                            'scale' => 5,
+                            'outputType' => QRCode::OUTPUT_IMAGE_PNG,
+                            'imageBase64' => false,
+                        ]);
 
-                                    $qrcode = new QRCode($options);
+                        $qrcode = new QRCode($options);
 
-                                    if (ob_get_length()) {
-                                        ob_end_clean();
-                                    }
+                        if (ob_get_length()) {
+                            ob_end_clean();
+                        }
 
-                                    $path = 'public/qr-codes/' . $ticket->code . '.png';
+                        $path = 'public/qr-codes/' . $ticket->code . '.png';
 
-                                    Storage::put($path, $qrcode->render($qrData));
+                        Storage::put($path, $qrcode->render($qrData));
 
-                                    $ticket->update([
-                                        'qr_code' => 'qr-codes/' . $ticket->code . '.png'
-                                    ]);
-                                }
+                        $ticket->update([
+                            'qr_code' => 'qr-codes/' . $ticket->code . '.png'
+                        ]);
+                    }
 
-                                return [
-                                    'qr_code' => $ticket->qr_code !== 'EMPTY'
-                                        ? asset('storage/' . $ticket->qr_code)
-                                        : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s',
-                                    'ticket_name' => optional($ticket->ticket)->name,
-                                    'ticket_type_name' => optional(optional($ticket->ticket)->ticketType)->name ?? '',
-                                    'attendee_name' => $ticket->attendee_name ?? '',
-                                    'attendee_position' => $ticket->attendee_position ?? '',
-                                    'attendee_location' => $ticket->attendee_location ?? '',
-                                ];
-                            });
-                        })
-                        ->filter(fn($item) => !empty($item['qr_code']))
-                        ->values(),
-                ];
+                    // Check if ticket has all three attendee fields filled
+                    $hasTicketAttendeeFields = !empty($ticket->attendee_name) 
+                        && !empty($ticket->attendee_position) 
+                        && !empty($ticket->attendee_location);
+
+                    // If ticket has attendee fields, use them; otherwise use main attendee's fields
+                    $badgeEntry = [
+                        'name' => $hasTicketAttendeeFields 
+                            ? $ticket->attendee_name 
+                            : ($attendee->first_name . ' ' . $attendee->last_name),
+                        'position' => $hasTicketAttendeeFields 
+                            ? $ticket->attendee_position 
+                            : $attendee->position,
+                        'location' => $hasTicketAttendeeFields 
+                            ? $ticket->attendee_location 
+                            : $attendee->location,
+                        'avatar' => $attendee->avatar,
+                        'other_link' => $attendee->other_link,
+                        'facebook_link' => $attendee->facebook_link,
+                        'linkedin_link' => $attendee->linkedin_link,
+                        'twitter_link' => $attendee->twitter_link,
+                        'phone' => $attendee->phone,
+                        'attendee_name' => $hasTicketAttendeeFields 
+                            ? $ticket->attendee_name 
+                            : $attendee->attendee_name,
+                        'attendee_position' => $hasTicketAttendeeFields 
+                            ? $ticket->attendee_position 
+                            : $attendee->attendee_position,
+                        'attendee_location' => $hasTicketAttendeeFields 
+                            ? $ticket->attendee_location 
+                            : $attendee->attendee_location,
+                        'qr_codes' => collect([
+                            [
+                                'qr_code' => $ticket->qr_code !== 'EMPTY'
+                                    ? asset('storage/' . $ticket->qr_code)
+                                    : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQp3ZWN0B_Nd0Jcp3vfOCQJdwYZBNMU-dotNw&s',
+                                'ticket_name' => optional($ticket->ticket)->name,
+                                'ticket_type_name' => optional(optional($ticket->ticket)->ticketType)->name ?? '',
+                                'attendee_name' => $ticket->attendee_name ?? '',
+                                'attendee_position' => $ticket->attendee_position ?? '',
+                                'attendee_location' => $ticket->attendee_location ?? '',
+                            ]
+                        ])->filter(fn($item) => !empty($item['qr_code'])),
+                    ];
+
+                    // Only add if QR code exists
+                    if ($badgeEntry['qr_codes']->isNotEmpty()) {
+                        $badgeEntries[] = $badgeEntry;
+                    }
+                }
+
+                return $badgeEntries;
             })
-            ->filter(fn($item) => $item['qr_codes']->isNotEmpty())
             ->values();
 
         $eventApp = EventApp::find($eventId);
