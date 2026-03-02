@@ -171,7 +171,7 @@
         <div class="corner corner-bottom-right"></div>
 
         <div class="header">
-            <h1>{{ $session_name }}</h1>
+            <h1>{{ $session_name ?? 'Session' }}</h1>
             <p>This certifies that the following individual has participated in</p>
         </div>
 
@@ -186,7 +186,7 @@
             <div class="attendee-name">{{ $attendee }}</div>
 
             <div class="description">
-                Awarded to acknowledge your participation in "{{ $event_name }}" and its session "{{ $session_name }}"
+                Awarded to acknowledge your participation in "{{ $event_name ?? 'Event' }}" and its session "{{ $session_name ?? 'Session' }}"
                 held on {{  \Carbon\Carbon::parse($start_date)->format('F d, Y') }}, appreciating your commitment to growth, learning, and contribution
                 toward excellence in the field of digital marketing.
             </div>

@@ -76,6 +76,9 @@ class Attendee extends Authenticatable
         $data = $this->hasOne(EventCheckIns::class, 'attendee_id')->first();
         if ($data) {
             $eventApp = EventApp::with('dates')->find(session('event_id'));
+            if (!$eventApp) {
+                return 'Not checked in yet.';
+            }
             $lasteventDate = $eventApp->dates()->orderBy('date', 'desc')->get();
             $eventEnd = Carbon::parse($lasteventDate[0]->date);
             $checkedIn = Carbon::parse($data->checked_in);

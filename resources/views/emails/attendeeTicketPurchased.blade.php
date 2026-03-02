@@ -167,7 +167,7 @@
                 <tbody>
                     @foreach ($attendee_purchased_tickets as $index => $purchased_ticket)
                         <tr>
-                            <td>{{ $index + 1 }}. {{ $purchased_ticket->ticket->name }}</td>
+                            <td>{{ $index + 1 }}. {{ optional($purchased_ticket->ticket)->name ?? 'N/A' }}</td>
                             <td>{{ $purchased_ticket->total + $purchased_ticket->purchased_addons()->sum('price') }}
                             </td>
                             <td>
@@ -191,8 +191,8 @@
                                 @endif
                             </td>
                             <td>
-                                @foreach ($purchased_ticket->purchased_addons as $addon)
-                                    {{ $addon->name }} ,
+                                @foreach ($purchased_ticket->purchased_addons ?? collect() as $addon)
+                                    {{ $addon->name ?? '' }} ,
                                 @endforeach
                             </td>
                             <td>

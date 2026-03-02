@@ -353,6 +353,10 @@ class PaymentController extends Controller
             if ($payment) {
                 $payment->load(['purchased_tickets.ticket', 'purchased_tickets.purchased_addons', 'purchased_tickets.payment']);
                 $attendee = $payment->attendee;
+                if (empty($attendee->email) || $payment->purchased_tickets->isEmpty()) {
+                    Log::warning('Skipping confirmation email: missing attendee email or no tickets.', ['payment_id' => $payment->id]);
+                    return;
+                }
                 Mail::to($attendee->email)->send(new AttendeeTicketPurchasedEmail($attendee, $payment->purchased_tickets, $payment));
                 return;
             }
@@ -378,6 +382,14 @@ class PaymentController extends Controller
             foreach ($payments as $p) {
                 foreach ($p->purchased_tickets as $ticket)
                     array_push($attendee_purchased_tickets, $ticket);
+            }
+            if (empty($attendee->email)) {
+                Log::warning('Skipping confirmation email: attendee has no email.', ['attendee_id' => $attendee->id ?? null]);
+                return;
+            }
+            if (empty($attendee_purchased_tickets)) {
+                Log::warning('Skipping confirmation email: no purchased tickets.');
+                return;
             }
             Mail::to($attendee->email)->send(new AttendeeTicketPurchasedEmail($attendee, $attendee_purchased_tickets));
         } catch (Exception $ex) {

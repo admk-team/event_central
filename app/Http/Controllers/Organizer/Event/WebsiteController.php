@@ -198,37 +198,36 @@ class WebsiteController extends Controller
     //     ]);
     // }
 
-    // public function page($uuid, $slug)
-    // {
-    //     $event = EventApp::where('uuid', $uuid)->first();
+    public function page($uuid, $slug)
+    {
+        $event = EventApp::where('uuid', $uuid)->first();
 
-    //     if (! $event) {
-    //         abort(404);
-    //     }
+        if (! $event) {
+            abort(404);
+        }
 
-    //     $page = $event->pages()
-    //         ->where('slug', $slug)
-    //         ->published()
-    //         ->first();
+        $isPreviewParam = request()->query('preview') === 'true';
+        if (!eventSettings($event->id)->getValue('website_status', false) && ! $isPreviewParam) {
+            abort(404);
+        }
 
-    //     $header = $page->header;
-    //     if ($page->default_header) {
-    //         $header = $event->headers()->default()->first();
-    //     }
+        $page = $event->pages()
+            ->where('slug', $slug)
+            ->published()
+            ->first();
 
-    //     $footer = $page->footer;
-    //     if ($page->default_footer) {
-    //         $footer = $event->footers()->default()->first();
-    //     }
+        if (! $page) {
+            abort(404);
+        }
 
-    //     if (! $page) {
-    //         abort(404);
-    //     }
+        $header = $page->default_header ? $event->headers()->default()->first() : $page->header;
+        $footer = $page->default_footer ? $event->footers()->default()->first() : $page->footer;
+        $header = $header ?? $event->headers()->default()->first();
+        $footer = $footer ?? $event->footers()->default()->first();
 
-    //     return Inertia::render('Organizer/Events/Website/Page', [
-    //         'page' => $page,
-    //         'header' => $header,
-    //         'footer' => $footer,
-    //     ]);
-    // }
+        $colors = eventSettings($event->id)->getValue('website_colors', config('event_website.colors'));
+        $privateRegister = eventSettings($event->id)->getValue('private_register', false);
+
+        return view('event-website.page', compact('event', 'page', 'header', 'footer', 'colors', 'privateRegister'));
+    }
 }

@@ -76,12 +76,13 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        $eventId = auth('attendee')->user()->event_app_id;
+        $user = auth('attendee')->user();
+        $eventId = $user?->event_app_id ?? session('event_id');
         Auth::guard('attendee')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect(route('attendee.login', [$eventId]));
+        return redirect($eventId ? route('attendee.login', [$eventId]) : url('/'));
     }
 
     public function googleRedirect($id)
