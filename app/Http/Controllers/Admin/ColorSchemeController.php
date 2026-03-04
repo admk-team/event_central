@@ -13,6 +13,7 @@ class ColorSchemeController extends Controller
     /**
      * Display a listing of the resource.
      */
+    //sibihaseb
     public function index(Request $request)
     {
         $colorschemes = ColorScheme::latest()->paginate($request->per_page ?? 10);
